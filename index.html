@@ -237,6 +237,30 @@ document.head.appendChild(s);})();</script>
       --accent: var(--cyan); --accent-soft: var(--cyan-soft); --accent-glow-color: var(--cyan-glow);
       --accent-glow: radial-gradient(70% 90% at 50% -10%, rgba(62,207,178,0.12), transparent 70%);
     }
+    /* Visite teilt den Equine-Akzent — sichtbar dieselbe Familie. */
+    .product-card.visite {
+      --accent: var(--cyan); --accent-soft: var(--cyan-soft); --accent-glow-color: var(--cyan-glow);
+      --accent-glow: radial-gradient(70% 90% at 50% -10%, rgba(62,207,178,0.12), transparent 70%);
+    }
+    /* Mono-Zeile, die die Zugehörigkeit benennt — gleiche Sprache wie .products-eyebrow. */
+    .pair-tag {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-size: 10px; letter-spacing: 0.22em; text-transform: uppercase;
+      color: var(--cyan); opacity: 0.9; margin-bottom: 8px;
+    }
+    /* Paar-Brücke unter dem Raster: erklärt den Datenweg in einem Satz. */
+    .pair-bridge {
+      margin-top: 22px; padding: 18px 22px;
+      background: linear-gradient(135deg, rgba(62,207,178,0.05) 0%, rgba(255,255,255,0.02) 100%);
+      border: 1px solid var(--border); border-left: 2px solid var(--cyan);
+      border-radius: var(--r-card, 13px);
+      font-size: 14px; line-height: 1.65; color: var(--text-secondary, #9fb6c4);
+    }
+    .pair-bridge strong { color: var(--text-primary, #e8eef0); font-weight: 600; }
+    .pair-bridge .pb-flow {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      color: var(--cyan); white-space: nowrap;
+    }
     .product-card.rrlogger {
       --accent: var(--teal); --accent-soft: var(--teal-soft); --accent-glow-color: var(--teal-glow);
       --accent-glow: radial-gradient(70% 90% at 50% -10%, rgba(62,207,178,0.14), transparent 70%);
@@ -499,32 +523,6 @@ document.head.appendChild(s);})();</script>
         </div>
       </a>
 
-      <a class="product-card equine" href="/carlon-equine/">
-        <div class="product-head">
-          <div class="product-mark" aria-hidden="true">
-            <img src="/assets/equine-mark-224.png" alt="" width="56" height="56">
-          </div>
-          <span class="product-accent-dot"></span>
-        </div>
-        <div class="platform">iPhone · Polar H10 · Browser Viewer</div>
-        <h3>CARLON <strong>Equine</strong></h3>
-        <div class="tagline"
-             data-en="Research-grade HRV for horses. With every metric vets ask for."
-             data-de="Forschungs-HRV für Pferde. Mit jeder Metrik, die Tierärzte verlangen.">Research-grade HRV for horses. With every metric vets ask for.</div>
-        <div class="desc"
-             data-en="Polar H10 → iPhone → 15+ scientific visualisations (DFA-α₁, Welch PSD, Baevsky, Poincaré, MSE). Browser-based HRV analysis built for clinics, mobile vets and equine research."
-             data-de="Polar H10 → iPhone → 15+ wissenschaftliche Visualisierungen (DFA-α₁, Welch PSD, Baevsky, Poincaré, MSE). Browser-basierte HRV-Auswertung für Kliniken, mobile Tierärzte und equine Forschung.">Polar H10 → iPhone → 15+ scientific visualisations (DFA-α₁, Welch PSD, Baevsky, Poincaré, MSE). Browser-based HRV analysis built for clinics, mobile vets and equine research.</div>
-        <div class="meta">
-          <span class="meta-pill featured" data-en="Browser viewer live" data-de="Browser-Viewer live">Browser viewer live</span>
-          <span class="meta-pill" data-en="iOS app in beta" data-de="iOS-App in Beta">iOS app in beta</span>
-          <span class="meta-pill">iOS 17+</span>
-        </div>
-        <div class="cta-row">
-          <span class="cta" data-en="Open product" data-de="Produkt öffnen">Open product</span>
-          <span class="status" data-en="Beta · viewer live" data-de="Beta · Viewer live">Beta · viewer live</span>
-        </div>
-      </a>
-
       <a class="product-card rrlogger" href="/rrloggerpro/">
         <div class="product-head">
           <div class="product-mark" aria-hidden="true">
@@ -554,7 +552,67 @@ document.head.appendChild(s);})();</script>
         </div>
       </a>
 
+      <a class="product-card equine" href="/carlon-equine/">
+        <div class="product-head">
+          <div class="product-mark" aria-hidden="true">
+            <img src="/assets/equine-mark-224.png" alt="" width="56" height="56">
+          </div>
+          <span class="product-accent-dot"></span>
+        </div>
+        <div class="platform">iPhone · Polar H10</div>
+        <h3>CARLON <strong>Equine</strong></h3>
+        <div class="tagline"
+             data-en="Research-grade HRV for horses. With every metric vets ask for."
+             data-de="Forschungs-HRV für Pferde. Mit jeder Metrik, die Tierärzte verlangen.">Research-grade HRV for horses. With every metric vets ask for.</div>
+        <div class="desc"
+             data-en="The owner measures at home — in the familiar stable, without transport stress. Polar H10 → iPhone → 15+ scientific visualisations (DFA-α₁, Welch PSD, Baevsky, Poincaré, MSE). Every recording can be handed to the vet as a signed file."
+             data-de="Der Halter misst selbst — im vertrauten Stall, ohne Transport-Stress. Polar H10 → iPhone → 15+ wissenschaftliche Visualisierungen (DFA-α₁, Welch PSD, Baevsky, Poincaré, MSE). Jede Aufnahme lässt sich als signierte Datei an die Tierärztin weitergeben.">Polar H10 → iPhone → 15+ scientific visualisations (DFA-α₁, Welch PSD, Baevsky, Poincaré, MSE). Browser-based HRV analysis built for clinics, mobile vets and equine research.</div>
+        <div class="meta">
+          <span class="meta-pill featured" data-en="Signed export" data-de="Signierter Export">Signed export</span>
+          <span class="meta-pill" data-en="iOS app in beta" data-de="iOS-App in Beta">iOS app in beta</span>
+          <span class="meta-pill">iOS 17+</span>
+        </div>
+        <div class="cta-row">
+          <span class="cta" data-en="Open product" data-de="Produkt öffnen">Open product</span>
+          <span class="status" data-en="Beta" data-de="Beta">Beta</span>
+        </div>
+      </a>
+
+      <a class="product-card visite" href="/carlon-equine/clinic.html">
+        <div class="product-head">
+          <div class="product-mark" aria-hidden="true">
+            <img src="/assets/equine-mark-224.png" alt="" width="56" height="56">
+          </div>
+          <span class="product-accent-dot"></span>
+        </div>
+        <div class="pair-tag" data-en="Counterpart to CARLON Equine" data-de="Gegenstück zu CARLON Equine">Counterpart to CARLON Equine</div>
+        <div class="platform" data-en="Browser · no account · no server" data-de="Browser · ohne Konto · ohne Server">Browser · no account · no server</div>
+        <h3>CARLON Equine <strong>Visite</strong></h3>
+        <div class="tagline"
+             data-en="For the vet and the clinic. Your patients' recordings, made readable."
+             data-de="Für Tierärztin und Klinik. Die Messungen deiner Patienten, lesbar gemacht.">For the vet and the clinic. Your patients' recordings, made readable.</div>
+        <div class="desc"
+             data-en="The owner sends the file, you open it in the browser — no upload, no login. Course over weeks against the horse's own baseline, a triage board that puts the conspicuous horse first, route, logbook and findings PDF. The data stays in your folder; the browser only makes it legible."
+             data-de="Der Halter schickt die Datei, du öffnest sie im Browser — kein Upload, kein Login. Verlauf über Wochen gegen die eigene Baseline des Pferdes, ein Triage-Board, das dir das auffällige Pferd zuerst zeigt, dazu Route, Logbuch und Befund-PDF. Die Daten bleiben in deinem Ordner; der Browser macht sie nur lesbar.">The owner sends the file, you open it in the browser — no upload, no login. Course over weeks against the horse's own baseline, a triage board that puts the conspicuous horse first, route, logbook and findings PDF. The data stays in your folder; the browser only makes it legible.</div>
+        <div class="meta">
+          <span class="meta-pill featured" data-en="Nothing is uploaded" data-de="Nichts wird hochgeladen">Nothing is uploaded</span>
+          <span class="meta-pill" data-en="Mobile vets &amp; clinics" data-de="Mobile Vets &amp; Kliniken">Mobile vets &amp; clinics</span>
+          <span class="meta-pill" data-en="Works offline" data-de="Läuft offline">Works offline</span>
+        </div>
+        <div class="cta-row">
+          <span class="cta" data-en="Open product" data-de="Produkt öffnen">Open product</span>
+          <span class="status" data-en="Live · founding partners" data-de="Live · Gründungs-Partner">Live · founding partners</span>
+        </div>
+      </a>
+
     </div>
+
+    <!-- Paar-Brücke: erklärt den Datenweg zwischen den beiden Equine-Werkzeugen
+         in einem Satz. Steht bewusst UNTER dem Raster, damit es unabhängig
+         davon funktioniert, wie viele Karten pro Zeile umbrechen. -->
+    <div class="pair-bridge"
+         data-en="<strong>CARLON Equine and CARLON Equine Visite are one pair.</strong> <span class='pb-flow'>Owner measures → file → vet reads</span>. The horse is measured where it is at ease; the recording travels as a signed file and opens in the vet's browser. No server sits in between, no account is needed — and nobody but the two of them ever sees the data."
+         data-de="<strong>CARLON Equine und CARLON Equine Visite sind ein Paar.</strong> <span class='pb-flow'>Halter misst → Datei → Tierärztin liest</span>. Gemessen wird, wo das Pferd ruhig ist; die Aufnahme wandert als signierte Datei und öffnet sich im Browser der Tierärztin. Kein Server sitzt dazwischen, kein Konto ist nötig — und niemand außer den beiden sieht die Daten je."><strong>CARLON Equine und CARLON Equine Visite sind ein Paar.</strong> <span class="pb-flow">Halter misst → Datei → Tierärztin liest</span>. Gemessen wird, wo das Pferd ruhig ist; die Aufnahme wandert als signierte Datei und öffnet sich im Browser der Tierärztin. Kein Server sitzt dazwischen, kein Konto ist nötig — und niemand außer den beiden sieht die Daten je.</div>
   </section>
 
   <section class="trust-strip">
