@@ -950,6 +950,36 @@ html { scroll-behavior: smooth; }
    (Comet-Vet-Audit 2026-05-30: "Quellenliste sieht gut aus, aber
    Methoden-Cutoffs nicht transparent → Vet-Skepsis").
    ============================================================ */
+.dataset-proof {
+  position: relative; z-index: 5; max-width: 1100px; margin: 24px auto 0;
+  padding: 18px clamp(20px, 3vw, 28px);
+  background: linear-gradient(135deg, var(--cyan-faint) 0%, rgba(6,16,26,0.4) 100%);
+  border: 1px solid var(--border-subtle); border-left: 2px solid var(--cyan); border-radius: 13px;
+}
+.dataset-proof .dp-head {
+  font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.26em;
+  text-transform: uppercase; color: var(--cyan); font-weight: 500; margin-bottom: 13px;
+}
+.dataset-proof .dp-grid {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 13px 21px;
+}
+.dataset-proof .dp-item strong {
+  display: block; font-size: 12px; color: var(--text-primary, #e6f2f5);
+  font-weight: 600; margin-bottom: 3px;
+}
+.dataset-proof .dp-item > span {
+  display: block; font-size: 12px; line-height: 1.55; color: var(--text-secondary, #9fb6c4);
+}
+/* Zahlen bleiben IM Satz — ohne diese Regel erbt jede verschachtelte
+   Zahl das display:block der Elternregel und bricht auf eine eigene Zeile. */
+.dataset-proof .dp-num {
+  display: inline; font-family: var(--font-mono); color: var(--cyan-strong);
+  white-space: nowrap;
+}
+.dataset-proof .dp-footer {
+  margin-top: 13px; padding-top: 13px; border-top: 1px solid var(--border-faint);
+  font-size: 12px; line-height: 1.6; color: var(--text-secondary, #9fb6c4);
+}
 .method-transparency {
   position: relative;
   z-index: 5;
@@ -5248,6 +5278,44 @@ html.js-reveal .reveal.in { opacity: 1 !important; transform: none !important; t
        "die haben Human-Werte 1:1 übernommen") + Regulatorik-Status
        sichtbar oben statt unten im Footer.
        ============================================================ -->
+  <!-- ============================================================
+       DATENSATZ-HERKUNFT — der Fähigkeitsbeweis benannt.
+       Die auf dieser Seite gezeigte Session ist eine ECHTE Aufnahme,
+       kein Mockup. Zahlen stammen aus assets/demo-session.json
+       (session, quality, device, integrity, provenance) — bei jeder
+       Änderung des Datensatzes hier nachziehen.
+       ============================================================ -->
+  <div class="dataset-proof">
+    <div class="dp-head"
+         data-en="The dataset shown here is real"
+         data-de="Der hier gezeigte Datensatz ist echt">Der hier gezeigte Datensatz ist echt</div>
+    <div class="dp-grid">
+      <div class="dp-item">
+        <strong data-en="Recording" data-de="Aufnahme">Aufnahme</strong>
+        <span data-en="<span class='dp-num'>24 June 2026</span> · <span class='dp-num'>9 min 27 s</span> · <span class='dp-num'>325</span> heartbeats of a resting stallion."
+              data-de="<span class='dp-num'>24. Juni 2026</span> · <span class='dp-num'>9 min 27 s</span> · <span class='dp-num'>325</span> Herzschläge eines ruhenden Hengstes."><span class="dp-num">24. Juni 2026</span> · <span class="dp-num">9 min 27 s</span> · <span class="dp-num">325</span> Herzschläge eines ruhenden Hengstes.</span>
+      </div>
+      <div class="dp-item">
+        <strong data-en="Device" data-de="Gerät">Gerät</strong>
+        <span data-en="Polar H10 at <span class='dp-num'>1024 Hz</span>, recorded on the strap itself — not a phone live stream."
+              data-de="Polar H10 mit <span class='dp-num'>1024 Hz</span>, aufgezeichnet auf dem Gurt selbst — kein Handy-Livestream.">Polar H10 mit <span class="dp-num">1024 Hz</span>, aufgezeichnet auf dem Gurt selbst — kein Handy-Livestream.</span>
+      </div>
+      <div class="dp-item">
+        <strong data-en="Left unretouched" data-de="Nicht geschönt">Nicht geschönt</strong>
+        <span data-en="<span class='dp-num'>4.62 %</span> artefacts, <span class='dp-num'>3</span> ectopic and <span class='dp-num'>12</span> short beats remain in the data. A flawless curve would be a fabricated one."
+              data-de="<span class='dp-num'>4,62 %</span> Artefakte, <span class='dp-num'>3</span> ektope und <span class='dp-num'>12</span> kurze Schläge bleiben in den Daten. Eine makellose Kurve wäre eine erfundene."><span class="dp-num">4,62 %</span> Artefakte, <span class="dp-num">3</span> ektope und <span class="dp-num">12</span> kurze Schläge bleiben in den Daten. Eine makellose Kurve wäre eine erfundene.</span>
+      </div>
+      <div class="dp-item">
+        <strong data-en="Verifiable" data-de="Nachprüfbar">Nachprüfbar</strong>
+        <span data-en="SHA-256 over the RR series, plus a W3C&nbsp;PROV-O provenance chain — both travel inside the export."
+              data-de="SHA-256 über die RR-Reihe, dazu eine W3C&nbsp;PROV-O-Herkunftskette — beides steckt im Export.">SHA-256 über die RR-Reihe, dazu eine W3C&nbsp;PROV-O-Herkunftskette — beides steckt im Export.</span>
+      </div>
+    </div>
+    <div class="dp-footer"
+         data-en="No mock-up, no rendering. Every figure on this page is computed from these <strong>325 RR intervals</strong> — and you can recompute them: the export ships the raw series together with the hash command that checks it. <a href='assets/demo-session.json' download style='color:var(--cyan)'>Download the dataset →</a>"
+         data-de="Kein Mockup, keine Illustration. Jede Zahl auf dieser Seite wird aus diesen <strong>325 RR-Intervallen</strong> gerechnet — und du kannst sie nachrechnen: Der Export enthält die Rohreihe samt Prüfbefehl für den Hash. <a href='assets/demo-session.json' download style='color:var(--cyan)'>Datensatz herunterladen →</a>">Kein Mockup, keine Illustration. Jede Zahl auf dieser Seite wird aus diesen <strong>325 RR-Intervallen</strong> gerechnet — und du kannst sie nachrechnen: Der Export enthält die Rohreihe samt Prüfbefehl für den Hash. <a href="assets/demo-session.json" download style="color:var(--cyan)">Datensatz herunterladen →</a></div>
+  </div>
+
   <div class="method-transparency">
     <div class="mt-head"
          data-en="Method transparency · equine-specific"
