@@ -1,0 +1,643 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="theme-color" content="#050505">
+  <title>Vitalkultur — Heart · Breath · Movement · Research-grade wellness apps</title>
+  <meta name="description" content="Vitalkultur — an independent team building research-grade wellness apps. Heart-rate variability, haptic breathwork, equine cardiology. Built for owners, athletes, vets and researchers who want answers — not promises.">
+  <meta property="og:title" content="Vitalkultur — Heart · Breath · Movement">
+  <meta property="og:description" content="Research-grade wellness apps for heart, breath and movement. CARLON · CARLON Equine · CARLON Research.">
+  <meta property="og:image" content="https://vitalkultur.com/app-icon.png">
+  <link rel="icon" href="/vitalkultur-mark.png">
+  <link rel="apple-touch-icon" href="/vitalkultur-mark.png">
+  <link rel="canonical" href="https://vitalkultur.com/">
+  <meta property="og:url" content="https://vitalkultur.com/">
+  <meta property="og:type" content="website">
+  <meta name="twitter:card" content="summary_large_image">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "name": "Vitalkultur",
+    "url": "https://vitalkultur.com",
+    "logo": "https://vitalkultur.com/assets/vitalkultur-wordmark.png",
+    "description": "An independent team building research-grade wellness apps: CARLON (haptic breathwork), CARLON Equine (equine HRV cardiology), CARLON Research (research RR-interval logger).",
+    "founder": {"@type": "Person", "name": "Jan Rohwedder"},
+    "address": {"@type": "PostalAddress", "addressCountry": "DE"},
+    "email": "jan@vitalkultur.com",
+    "sameAs": ["https://instagram.com/vitalkultur.de"]
+  }
+  </script>
+  <!-- GoatCounter — cookiefrei. count.js wertet DNT NICHT aus (Herstellerentscheidung),
+     deshalb laden wir es bei Do-Not-Track / Global Privacy Control gar nicht erst.
+     Erst dadurch stimmt die Opt-out-Zusage in der Datenschutzerklaerung. -->
+<script>(function(){var d=navigator.doNotTrack||window.doNotTrack||navigator.msDoNotTrack;
+if(d=='1'||d=='yes'||navigator.globalPrivacyControl===true)return;
+var s=document.createElement('script');s.async=true;s.src='//gc.zgo.at/count.js';
+s.setAttribute('data-goatcounter','https://vitalkultur.goatcounter.com/count');
+document.head.appendChild(s);})();</script>
+  <style>
+    @font-face {
+      font-family: 'Jost';
+      font-style: normal; font-weight: 100 900; font-display: swap;
+      src: url('/fonts/jost-variable.woff2') format('woff2');
+    }
+    :root {
+      --bg-void: #050505;
+      --bg-near: #0a0a0a;
+      --bg-card: rgba(255,255,255,0.025);
+      --bg-card-hover: rgba(255,255,255,0.045);
+      --border: rgba(255,255,255,0.07);
+      --border-strong: rgba(255,255,255,0.14);
+      --text: #f4f4f4;
+      --text-soft: rgba(244,244,244,0.78);
+      --text-dim: rgba(244,244,244,0.50);
+      --text-faint: rgba(244,244,244,0.32);
+      --gold: #d4a574;
+      --gold-soft: rgba(212,165,116,0.4);
+      --gold-glow: rgba(212,165,116,0.20);
+      --cyan: #3ECFB2;
+      --cyan-soft: rgba(62,207,178,0.4);
+      --cyan-glow: rgba(62,207,178,0.22);
+      --teal: #3ECFB2;
+      --teal-soft: rgba(62,207,178,0.4);
+      --teal-glow: rgba(62,207,178,0.20);
+      --r-card: 22px;
+      --r-button: 14px;
+      --maxw: 1180px;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; }
+    body {
+      font-family: 'Jost', system-ui, -apple-system, sans-serif;
+      background: var(--bg-void); color: var(--text);
+      font-weight: 300; line-height: 1.55;
+      overflow-x: hidden; min-height: 100vh;
+      position: relative;
+    }
+
+    /* Atmospheric background layers */
+    body::before {
+      content: ''; position: fixed; inset: 0; z-index: 0;
+      background:
+        radial-gradient(50% 70% at 30% 10%, rgba(212,165,116,0.07) 0%, transparent 55%),
+        radial-gradient(45% 65% at 75% 35%, rgba(62,207,178,0.06) 0%, transparent 60%),
+        radial-gradient(40% 60% at 25% 95%, rgba(62,207,178,0.05) 0%, transparent 60%);
+      pointer-events: none;
+    }
+    body::after {
+      content: ''; position: fixed; inset: 0; z-index: 0;
+      background:
+        repeating-linear-gradient(0deg, transparent 0, transparent 49px, rgba(255,255,255,0.012) 50px),
+        repeating-linear-gradient(90deg, transparent 0, transparent 49px, rgba(255,255,255,0.012) 50px);
+      pointer-events: none; opacity: 0.6;
+    }
+    main, header, footer { position: relative; z-index: 1; }
+
+    /* Nav */
+    .topnav {
+      max-width: var(--maxw); margin: 0 auto;
+      padding: 26px 32px 0;
+      display: flex; align-items: center; justify-content: space-between; gap: 24px;
+    }
+    .brand-wordmark {
+      display: flex; align-items: center; gap: 14px;
+      text-decoration: none; color: var(--text);
+    }
+    .brand-wordmark img {
+      height: 42px; width: auto;
+      opacity: 0.95;
+      transition: opacity 200ms;
+    }
+    .brand-wordmark:hover img { opacity: 1; }
+    @media (max-width: 460px) {
+      .brand-wordmark img { height: 34px; }
+    }
+    .brand-tagline-mini {
+      font-size: 10px; letter-spacing: 0.24em; text-transform: uppercase;
+      color: var(--text-faint); font-weight: 400;
+      padding-left: 14px; border-left: 1px solid var(--border);
+    }
+    @media (max-width: 640px) {
+      .brand-tagline-mini { display: none; }
+    }
+    .topnav-right { display: flex; gap: 10px; align-items: center; }
+    .lang-toggle {
+      background: transparent; border: 1px solid var(--border-strong);
+      color: var(--text-soft); font-family: ui-monospace, monospace;
+      font-size: 11px; letter-spacing: 0.12em;
+      /* Touch-target ≥44px — Apple HIG */
+      padding: 14px 16px; border-radius: 10px; cursor: pointer;
+      min-height: 44px; min-width: 44px;
+      display: inline-flex; align-items: center; justify-content: center;
+      transition: background 200ms, color 200ms, border-color 200ms;
+    }
+    .lang-toggle:hover { background: var(--bg-card-hover); color: var(--text); border-color: var(--text-dim); }
+    .lang-toggle .active { color: var(--gold); font-weight: 500; }
+
+    /* Hero */
+    .hero {
+      max-width: var(--maxw); margin: 100px auto 48px;
+      padding: 0 32px; text-align: center;
+      position: relative;
+    }
+    .hero-glow {
+      position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+      width: 110%; max-width: 800px; aspect-ratio: 2 / 1;
+      background: radial-gradient(50% 60% at 50% 50%, rgba(212,165,116,0.10), transparent 70%);
+      pointer-events: none; z-index: -1;
+      filter: blur(40px);
+    }
+    .hero .eyebrow {
+      font-size: 11px; letter-spacing: 0.34em; text-transform: uppercase;
+      color: var(--text-dim); font-weight: 400;
+      margin-bottom: 28px;
+    }
+    .hero .eyebrow .dot {
+      display: inline-block;
+      width: 6px; height: 6px; border-radius: 50%;
+      background: var(--gold);
+      box-shadow: 0 0 10px var(--gold-glow);
+      margin: 0 12px 1px;
+      vertical-align: middle;
+    }
+    .hero h1 {
+      font-size: clamp(44px, 8vw, 84px);
+      font-weight: 200;
+      line-height: 1.02;
+      letter-spacing: -0.03em;
+      color: var(--text);
+      margin-bottom: 28px;
+    }
+    .hero h1 em {
+      font-style: normal;
+      background: linear-gradient(120deg, var(--gold) 0%, var(--cyan) 55%, var(--teal) 100%);
+      -webkit-background-clip: text; background-clip: text; color: transparent;
+      filter: drop-shadow(0 0 24px rgba(212,165,116,0.15));
+    }
+    .hero p {
+      font-size: clamp(17px, 2vw, 21px);
+      color: var(--text-soft);
+      max-width: 680px; margin: 0 auto;
+      font-weight: 300; line-height: 1.6;
+    }
+
+    /* Product grid */
+    .products-section {
+      max-width: var(--maxw); margin: 60px auto 0;
+      padding: 0 32px;
+    }
+    .products-eyebrow {
+      font-size: 11px; letter-spacing: 0.28em; text-transform: uppercase;
+      color: var(--text-faint);
+      text-align: center; margin-bottom: 20px;
+    }
+    .products {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 22px;
+    }
+
+    .product-card {
+      position: relative;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--r-card);
+      padding: 32px 30px 26px;
+      text-decoration: none; color: inherit;
+      display: flex; flex-direction: column;
+      transition: border-color 300ms, transform 350ms cubic-bezier(.2,.7,.3,1), background 300ms;
+      overflow: hidden;
+      min-height: 420px;
+    }
+    .product-card::before {
+      content: ''; position: absolute; inset: 0;
+      background: var(--accent-glow, transparent);
+      opacity: 0; transition: opacity 400ms;
+      pointer-events: none; z-index: 0;
+    }
+    .product-card > * { position: relative; z-index: 1; }
+    .product-card:hover {
+      border-color: var(--border-strong);
+      transform: translateY(-4px);
+      background: var(--bg-card-hover);
+    }
+    .product-card:hover::before { opacity: 0.7; }
+
+    .product-card.breathwork {
+      /* CARLON-CI: Brand-Cyan #3ECFB2 für alle CARLON-Sub-Produkte
+         (Breathwork + Equine). Gold war alte Variante — jetzt konsistent
+         mit iOS-App-Icon, Watch-Face, Print-Reports und Equine-Viewer. */
+      --accent: var(--cyan); --accent-soft: var(--cyan-soft); --accent-glow-color: var(--cyan-glow);
+      --accent-glow: radial-gradient(70% 90% at 50% -10%, rgba(62,207,178,0.12), transparent 70%);
+    }
+    .product-card.equine {
+      --accent: var(--cyan); --accent-soft: var(--cyan-soft); --accent-glow-color: var(--cyan-glow);
+      --accent-glow: radial-gradient(70% 90% at 50% -10%, rgba(62,207,178,0.12), transparent 70%);
+    }
+    .product-card.rrlogger {
+      --accent: var(--teal); --accent-soft: var(--teal-soft); --accent-glow-color: var(--teal-glow);
+      --accent-glow: radial-gradient(70% 90% at 50% -10%, rgba(62,207,178,0.14), transparent 70%);
+    }
+
+    /* Product header — logo + accent dot */
+    .product-head {
+      display: flex; align-items: flex-start; justify-content: space-between;
+      margin-bottom: 18px;
+    }
+    .product-mark {
+      width: 56px; height: 56px;
+      border-radius: 14px;
+      background: var(--bg-near);
+      border: 1px solid var(--border-strong);
+      display: grid; place-items: center;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.06);
+      overflow: hidden;
+    }
+    .product-mark img {
+      width: 100%; height: 100%; object-fit: contain;
+      padding: 6px;
+    }
+    .product-mark svg { width: 32px; height: 32px; }
+    .product-accent-dot {
+      width: 10px; height: 10px; border-radius: 50%;
+      background: var(--accent);
+      box-shadow: 0 0 14px var(--accent-soft);
+      margin-top: 8px;
+    }
+
+    .product-card .platform {
+      font-size: 10px; letter-spacing: 0.26em; text-transform: uppercase;
+      color: var(--text-faint); font-weight: 500;
+      margin-bottom: 10px;
+    }
+    .product-card h3 {
+      font-size: 28px; font-weight: 300;
+      letter-spacing: -0.015em; line-height: 1.1;
+      color: var(--text);
+      margin-bottom: 8px;
+    }
+    .product-card h3 strong { font-weight: 500; color: var(--accent); }
+    .product-card .tagline {
+      font-size: 13.5px; color: var(--text-dim);
+      letter-spacing: 0.01em; line-height: 1.4;
+      margin-bottom: 22px;
+      min-height: 40px;
+    }
+    .product-card .desc {
+      font-size: 14.5px; color: var(--text-soft);
+      line-height: 1.6; flex: 1;
+      margin-bottom: 22px;
+    }
+    .product-card .meta {
+      display: flex; gap: 8px;
+      font-size: 11px; color: var(--text-faint);
+      letter-spacing: 0.05em;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+    .product-card .meta-pill {
+      padding: 5px 11px;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      background: rgba(255,255,255,0.02);
+    }
+    .product-card .meta-pill.featured {
+      border-color: var(--accent-soft);
+      color: var(--accent);
+      background: rgba(255,255,255,0.04);
+    }
+    .product-card .cta-row {
+      display: flex; align-items: center; justify-content: space-between;
+      padding-top: 16px;
+      border-top: 1px solid var(--border);
+    }
+    .product-card .cta {
+      display: inline-flex; align-items: center; gap: 8px;
+      font-size: 13px; font-weight: 500;
+      color: var(--accent);
+      letter-spacing: 0.04em;
+    }
+    .product-card .cta::after {
+      content: '→';
+      transition: transform 200ms;
+      font-size: 15px;
+    }
+    .product-card:hover .cta::after { transform: translateX(5px); }
+    .product-card .status {
+      font-size: 10px; letter-spacing: 0.16em; text-transform: uppercase;
+      color: var(--text-faint);
+    }
+
+    /* Trust strip */
+    .trust-strip {
+      max-width: var(--maxw); margin: 80px auto 0;
+      padding: 36px 32px;
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      display: flex; justify-content: space-around; flex-wrap: wrap;
+      gap: 28px;
+    }
+    .trust-item {
+      display: flex; align-items: center; gap: 10px;
+      font-size: 12px; color: var(--text-dim);
+      letter-spacing: 0.06em;
+    }
+    .trust-item .ico {
+      width: 18px; height: 18px;
+      color: var(--text-dim);
+    }
+
+    /* About strip */
+    .about-strip {
+      max-width: 780px; margin: 80px auto 0;
+      padding: 0 32px; text-align: center;
+    }
+    .about-strip .label {
+      font-size: 11px; letter-spacing: 0.28em; text-transform: uppercase;
+      color: var(--text-faint); margin-bottom: 16px;
+    }
+    .about-strip h2 {
+      font-size: clamp(24px, 3.5vw, 34px);
+      font-weight: 200; line-height: 1.3;
+      color: var(--text-soft);
+      letter-spacing: -0.012em;
+    }
+    .about-strip h2 em {
+      font-style: normal; color: var(--text); font-weight: 300;
+    }
+
+    /* Footer */
+    footer {
+      max-width: var(--maxw); margin: 100px auto 0;
+      padding: 60px 32px 50px;
+      border-top: 1px solid var(--border);
+    }
+    .foot-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 60px 40px;
+      margin-bottom: 38px;
+    }
+    @media (max-width: 640px) {
+      .foot-grid { grid-template-columns: 1fr; gap: 36px; }
+    }
+    .foot-brand-col img {
+      height: 36px; opacity: 0.9;
+      margin-bottom: 16px; display: block;
+    }
+    .foot-brand-col p {
+      font-size: 13px; color: var(--text-dim); line-height: 1.6;
+      max-width: 320px;
+    }
+    .foot-links-col {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 32px;
+    }
+    .foot-link-group h5 {
+      font-size: 10px; letter-spacing: 0.24em; text-transform: uppercase;
+      color: var(--text-faint); font-weight: 500;
+      margin-bottom: 14px;
+    }
+    .foot-link-group a {
+      display: block;
+      font-size: 13px; color: var(--text-soft);
+      text-decoration: none;
+      padding: 5px 0;
+      transition: color 180ms;
+    }
+    .foot-link-group a:hover { color: var(--text); }
+    .foot-meta {
+      padding-top: 24px;
+      border-top: 1px solid var(--border);
+      display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px;
+      font-size: 11px; color: var(--text-faint);
+      letter-spacing: 0.04em;
+    }
+    .foot-meta a { color: var(--text-dim); text-decoration: none; }
+    .foot-meta a:hover { color: var(--text); }
+
+    @media (max-width: 760px) {
+      .hero { margin: 56px auto 32px; padding: 0 22px; }
+      .products-section { padding: 0 22px; }
+      .trust-strip { padding: 30px 22px; gap: 18px 24px; }
+      .about-strip { padding: 0 22px; }
+      .product-card { padding: 26px 22px 22px; min-height: auto; }
+      .topnav { padding: 22px 22px 0; }
+      footer { padding: 44px 22px 36px; }
+    }
+    @media (max-width: 460px) {
+      .product-card .platform { font-size: 9px; }
+      .trust-item { font-size: 11px; }
+      .trust-strip { justify-content: flex-start; gap: 16px 20px; }
+      .brand-wordmark img { height: 22px; }
+    }
+  </style>
+</head>
+<body>
+
+<header class="topnav">
+  <a href="/" class="brand-wordmark" aria-label="Vitalkultur home">
+    <img src="/assets/vitalkultur-wordmark.png" alt="Vitalkultur">
+    <span class="brand-tagline-mini" data-en="Heart · Breath · Movement" data-de="Herz · Atem · Bewegung">Heart · Breath · Movement</span>
+  </a>
+  <div class="topnav-right">
+    <button class="lang-toggle" id="langToggle" title="Switch language">
+      <span data-lang-en class="active">EN</span> <span style="opacity:.4">|</span> <span data-lang-de>DE</span>
+    </button>
+  </div>
+</header>
+
+<main>
+
+  <section class="hero">
+    <div class="hero-glow"></div>
+    <div class="eyebrow">
+      <span data-en="Independent" data-de="Unabhängig">Independent</span><span class="dot"></span>
+      <span data-en="Research-grade" data-de="Forschungs-Grade">Research-grade</span><span class="dot"></span>
+      <span data-en="Local-first" data-de="Lokal auf deinen Geräten">Local-first</span>
+    </div>
+    <h1 data-en="Science. <em>Made tangible.</em>"
+        data-de="Wissenschaft. <em>Greifbar gemacht.</em>">Science. <em>Made tangible.</em></h1>
+    <p data-en="Apps for heart, breath and equine HRV — built so the underlying research is something you can feel, decide on, and act on. Independent, local-first, honest with every number."
+       data-de="Apps für Herz, Atem und equine HRV — so gebaut, dass die dahinterliegende Forschung etwas wird, das du fühlen, entscheiden und handeln kannst. Unabhängig, lokal-first, ehrlich bei jeder Zahl.">Apps for heart, breath and equine HRV — built so the underlying research is something you can feel, decide on, and act on. Independent, local-first, honest with every number.</p>
+  </section>
+
+  <section class="products-section">
+    <div class="products-eyebrow" data-en="One engine · one ecosystem" data-de="Eine Engine · ein Ökosystem">Eine Engine · ein Ökosystem</div>
+    <p class="products-intro" style="max-width:660px;margin:6px auto 30px;text-align:center;font-size:15px;line-height:1.65;color:var(--muted,#8a94a6)" data-en="Three apps, one foundation — the same research-grade HRV engine behind each: Polar H10, local on your devices, honest with every number. From human breath on the wrist (<strong style='color:var(--text,#e8eef5);font-weight:500'>Breathwork</strong>) to a horse's heart biometry (<strong style='color:var(--text,#e8eef5);font-weight:500'>Equine</strong>) to raw RR intervals for science (<strong style='color:var(--text,#e8eef5);font-weight:500'>Research</strong>): one platform, the same measurement rigour in every domain." data-de="Drei Apps, ein Fundament — hinter jeder dieselbe forschungsnahe HRV-Engine: Polar H10, lokal auf deinen Geräten, ehrlich bei jeder Zahl. Vom menschlichen Atem am Handgelenk (<strong style='color:var(--text,#e8eef5);font-weight:500'>Breathwork</strong>) über die Herzbiometrie des Pferds (<strong style='color:var(--text,#e8eef5);font-weight:500'>Equine</strong>) bis zu Roh-RR-Intervallen für die Forschung (<strong style='color:var(--text,#e8eef5);font-weight:500'>Research</strong>): eine Plattform, dieselbe Messgenauigkeit in jeder Domäne.">Drei Apps, ein Fundament — hinter jeder dieselbe forschungsnahe HRV-Engine: Polar H10, lokal auf deinen Geräten, ehrlich bei jeder Zahl. Vom menschlichen Atem am Handgelenk (<strong style="color:var(--text,#e8eef5);font-weight:500">Breathwork</strong>) über die Herzbiometrie des Pferds (<strong style="color:var(--text,#e8eef5);font-weight:500">Equine</strong>) bis zu Roh-RR-Intervallen für die Forschung (<strong style="color:var(--text,#e8eef5);font-weight:500">Research</strong>): eine Plattform, dieselbe Messgenauigkeit in jeder Domäne.</p>
+    <div class="products">
+
+      <a class="product-card breathwork" href="/breathwork/">
+        <div class="product-head">
+          <div class="product-mark" aria-hidden="true">
+            <!-- Echtes iOS-App-Icon (Flower-of-Life-Wordmark in CARLON-Cyan)
+                 statt des alten Gold-Marks. Konsistent mit der App im Store. -->
+            <img src="/assets/breathwork-app-icon-224.png" alt="" width="56" height="56" style="border-radius:12px;">
+          </div>
+          <span class="product-accent-dot"></span>
+        </div>
+        <div class="platform">Apple Watch · iPhone</div>
+        <h3>CARLON <strong>Breathwork</strong></h3>
+        <div class="tagline"
+             data-en="Your wrist becomes your breath coach. Eyes closed. Phone away."
+             data-de="Dein Handgelenk wird dein Atem-Coach. Augen zu. Handy weg.">Your wrist becomes your breath coach. Eyes closed. Phone away.</div>
+        <div class="desc"
+             data-en="Breathwork that lives on your wrist instead of your screen. Pure haptic guidance for every inhale, hold and exhale — from Box Breathing to Tummo, from coherence training to your own custom patterns. Live RMSSD, dive-reflex detection, four watch complications. Native to the watch."
+             data-de="Breathwork direkt am Handgelenk statt auf dem Bildschirm. Reine Haptik führt jedes Ein-, Halte- und Ausatmen — von Box Breathing bis Tummo, von Kohärenz-Training bis zu deinen eigenen Mustern. Live RMSSD, Tauchreflex-Erkennung, vier Watch-Komplikationen. Watch-nativ.">Breathwork that lives on your wrist instead of your screen. Pure haptic guidance for every inhale, hold and exhale — from Box Breathing to Tummo, from coherence training to your own custom patterns. Live RMSSD, dive-reflex detection, four watch complications. Native to the watch.</div>
+        <div class="meta">
+          <span class="meta-pill featured" data-en="Haptic-guided" data-de="Haptisch geführt">Haptic-guided</span>
+          <span class="meta-pill" data-en="16 techniques" data-de="16 Techniken">16 techniques</span>
+          <span class="meta-pill" data-en="Watch-native" data-de="Watch-nativ">Watch-native</span>
+        </div>
+        <div class="cta-row">
+          <span class="cta" data-en="Open product" data-de="Produkt öffnen">Open product</span>
+          <span class="status" data-en="Beta" data-de="Beta">Beta</span>
+        </div>
+      </a>
+
+      <a class="product-card equine" href="/carlon-equine/">
+        <div class="product-head">
+          <div class="product-mark" aria-hidden="true">
+            <img src="/assets/equine-mark-224.png" alt="" width="56" height="56">
+          </div>
+          <span class="product-accent-dot"></span>
+        </div>
+        <div class="platform">iPhone · Polar H10 · Browser Viewer</div>
+        <h3>CARLON <strong>Equine</strong></h3>
+        <div class="tagline"
+             data-en="Research-grade HRV for horses. With every metric vets ask for."
+             data-de="Forschungs-HRV für Pferde. Mit jeder Metrik, die Tierärzte verlangen.">Research-grade HRV for horses. With every metric vets ask for.</div>
+        <div class="desc"
+             data-en="Polar H10 → iPhone → 15+ scientific visualisations (DFA-α₁, Welch PSD, Baevsky, Poincaré, MSE). Browser-based HRV analysis built for clinics, mobile vets and equine research."
+             data-de="Polar H10 → iPhone → 15+ wissenschaftliche Visualisierungen (DFA-α₁, Welch PSD, Baevsky, Poincaré, MSE). Browser-basierte HRV-Auswertung für Kliniken, mobile Tierärzte und equine Forschung.">Polar H10 → iPhone → 15+ scientific visualisations (DFA-α₁, Welch PSD, Baevsky, Poincaré, MSE). Browser-based HRV analysis built for clinics, mobile vets and equine research.</div>
+        <div class="meta">
+          <span class="meta-pill featured" data-en="Browser viewer live" data-de="Browser-Viewer live">Browser viewer live</span>
+          <span class="meta-pill" data-en="iOS app in beta" data-de="iOS-App in Beta">iOS app in beta</span>
+          <span class="meta-pill">iOS 17+</span>
+        </div>
+        <div class="cta-row">
+          <span class="cta" data-en="Open product" data-de="Produkt öffnen">Open product</span>
+          <span class="status" data-en="Beta · viewer live" data-de="Beta · Viewer live">Beta · viewer live</span>
+        </div>
+      </a>
+
+      <a class="product-card rrlogger" href="/rrloggerpro/">
+        <div class="product-head">
+          <div class="product-mark" aria-hidden="true">
+            <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" style="color:var(--teal)">
+              <path d="M3 16 L7 16 L9 9 L13 23 L16 16 L19 19 L22 13 L25 16 L29 16"/>
+              <circle cx="16" cy="16" r="0.8" fill="var(--teal)" stroke="none"/>
+            </svg>
+          </div>
+          <span class="product-accent-dot"></span>
+        </div>
+        <div class="platform">iPhone · Polar H10</div>
+        <h3>CARLON <strong>Research</strong></h3>
+        <div class="tagline"
+             data-en="Lab-grade RR-interval logging. Multi-device. Kubios-ready."
+             data-de="Labor-grade RR-Intervall-Logging. Multi-Device. Kubios-ready.">Lab-grade RR-interval logging. Multi-device. Kubios-ready.</div>
+        <div class="desc"
+             data-en="Polar H10 RR-stream + 30-hour offline recording, multi-device batch workflows, atomic exports (Kubios .txt / JSON / CSV). For HRV researchers, sleep labs, biohackers and citizen-science."
+             data-de="Polar H10 RR-Stream + 30-Stunden-Offline-Recording, Multi-Device-Batch-Workflows, atomare Exporte (Kubios .txt / JSON / CSV). Für HRV-Forscher, Schlaflabore, Biohacker und Citizen-Science.">Polar H10 RR-stream + 30-hour offline recording, multi-device batch workflows, atomic exports (Kubios .txt / JSON / CSV). For HRV researchers, sleep labs, biohackers and citizen-science.</div>
+        <div class="meta">
+          <span class="meta-pill featured" data-en="Research-grade" data-de="Forschungs-Grade">Research-grade</span>
+          <span class="meta-pill" data-en="Beta" data-de="Beta">Beta</span>
+          <span class="meta-pill">iOS 17+</span>
+        </div>
+        <div class="cta-row">
+          <span class="cta" data-en="Open product" data-de="Produkt öffnen">Open product</span>
+          <span class="status" data-en="Closed beta" data-de="Closed Beta">Closed beta</span>
+        </div>
+      </a>
+
+    </div>
+  </section>
+
+  <section class="trust-strip">
+    <div class="trust-item">
+      <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2 L4 6 v6 c0 5 3.5 9 8 10 4.5 -1 8 -5 8 -10 V6z"/></svg>
+      <span data-en="GDPR · Local-first" data-de="DSGVO · Daten bleiben lokal">GDPR · Local-first</span>
+    </div>
+    <div class="trust-item">
+      <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 19l5-9 4 5 4-8 3 4"/></svg>
+      <span data-en="Research-grade" data-de="Forschungs-Grade">Research-grade</span>
+    </div>
+    <div class="trust-item">
+      <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 12c0 5-3 9-9 9s-9-4-9-9 4-9 9-9c2 0 4 .5 5 1.5"/><path d="M9 12l2 2 5-5"/></svg>
+      <span data-en="No tracking" data-de="Kein Tracking">No tracking</span>
+    </div>
+    <div class="trust-item">
+      <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2v20M2 12h20"/><circle cx="12" cy="12" r="5"/></svg>
+      <span data-en="Independent" data-de="Unabhängig">Independent</span>
+    </div>
+  </section>
+
+  <section class="about-strip">
+    <div class="label" data-en="The philosophy" data-de="Die Philosophie">The philosophy</div>
+    <h2 data-en="We don't just show the science — we make it <em>tangible.</em> Peer-reviewed depth, translated into something you can feel, decide on, act on."
+        data-de="Wir zeigen die Wissenschaft nicht nur — wir machen sie <em>greifbar.</em> Peer-reviewte Tiefe, übersetzt in etwas, das du fühlen, entscheiden, handeln kannst.">We don't just show the science — we make it <em>tangible.</em> Peer-reviewed depth, translated into something you can feel, decide on, act on.</h2>
+  </section>
+
+</main>
+
+<footer>
+  <div class="foot-grid">
+    <div class="foot-brand-col">
+      <img src="/assets/vitalkultur-wordmark.png" alt="Vitalkultur">
+      <p data-en="An independent team building research-grade wellness apps."
+         data-de="Ein unabhängiges Team für forschungsnahe Wellness-Apps.">An independent team building research-grade wellness apps.</p>
+    </div>
+    <div class="foot-links-col">
+      <div class="foot-link-group">
+        <h5 data-en="Apps" data-de="Apps">Apps</h5>
+        <a href="/breathwork/">CARLON Breathwork</a>
+        <a href="/carlon-equine/">CARLON Equine</a>
+        <a href="/rrloggerpro/">CARLON Research</a>
+      </div>
+      <div class="foot-link-group">
+        <h5 data-en="Vitalkultur" data-de="Vitalkultur">Vitalkultur</h5>
+        <a href="/support.html" data-en="Support" data-de="Support">Support</a>
+        <a href="/privacy.html" data-en="Privacy" data-de="Datenschutz">Privacy</a>
+        <a href="/terms.html" data-en="Terms" data-de="AGB">Terms</a>
+        <a href="/impressum.html">Impressum</a>
+        <a href="https://instagram.com/vitalkultur.de" target="_blank" rel="noopener">Instagram</a>
+      </div>
+    </div>
+  </div>
+  <div class="foot-meta">
+    <span>© Jan Rohwedder · <a href="mailto:jan@vitalkultur.com">jan@vitalkultur.com</a></span>
+  </div>
+</footer>
+
+<script>
+  (function() {
+    function detectLang() {
+      const stored = localStorage.getItem('vk.lang');
+      if (stored === 'en' || stored === 'de') return stored;
+      return (navigator.language || 'en').toLowerCase().startsWith('de') ? 'de' : 'en';
+    }
+    let lang = detectLang();
+    function applyLang() {
+      document.documentElement.lang = lang;
+      document.querySelectorAll('[data-en]').forEach(el => {
+        const txt = el.getAttribute('data-' + lang);
+        if (txt != null) el.innerHTML = txt;
+      });
+      document.querySelectorAll('[data-lang-en]').forEach(el => el.classList.toggle('active', lang === 'en'));
+      document.querySelectorAll('[data-lang-de]').forEach(el => el.classList.toggle('active', lang === 'de'));
+    }
+    document.getElementById('langToggle').addEventListener('click', () => {
+      lang = (lang === 'en') ? 'de' : 'en';
+      localStorage.setItem('vk.lang', lang);
+      applyLang();
+    });
+    applyLang();
+  })();
+</script>
+
+</body>
+</html>

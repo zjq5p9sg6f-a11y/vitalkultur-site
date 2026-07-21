@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="de">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Aufnahme an Tierarzt senden — CARLON</title>
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#02080d">
+<style>
+:root{--bg:#02080d;--surface:#0b1a26;--elev:#14293a;--border:#1b3548;--strong:#2a4d65;--text:#e8f8ff;--sec:#8aa9bd;--dim:#4a6478;--cyan:#3ECFB2;--cyan-deep:#1E8C78;--good:#3fe0a4;--red:#ff5263}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font-family:"Inter",-apple-system,system-ui,sans-serif;line-height:1.6;min-height:100vh;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px;
+  background-image:radial-gradient(ellipse 120% 60% at 50% -10%,rgba(62,207,178,.08),transparent 55%)}
+.card{width:100%;max-width:440px;background:linear-gradient(160deg,var(--elev),var(--surface));border:1px solid var(--border);border-radius:22px;padding:32px 28px;box-shadow:0 30px 80px -30px rgba(0,0,0,.85);text-align:center}
+img.logo{width:56px;height:56px;filter:drop-shadow(0 0 20px rgba(62,207,178,.5));margin-bottom:14px}
+h1{font-family:"Jost",system-ui,sans-serif;font-weight:600;font-size:24px;margin-bottom:8px}
+p.sub{color:var(--sec);font-size:14px;margin-bottom:24px}
+.room{font-family:ui-monospace,monospace;font-size:13px;color:var(--dim);letter-spacing:.1em;margin-bottom:20px}
+.room b{color:var(--cyan);letter-spacing:.3em}
+.drop{border:2px dashed var(--strong);border-radius:16px;padding:34px 18px;cursor:pointer;transition:all .18s;background:var(--bg)}
+.drop:hover,.drop.hot{border-color:var(--cyan);background:rgba(62,207,178,.05)}
+.drop svg{width:40px;height:40px;color:var(--cyan);opacity:.85;margin-bottom:10px}
+.drop h4{font-size:16px;margin-bottom:6px}
+.drop p{font-size:12.5px;color:var(--sec)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:14px;border-radius:14px;font-size:15px;font-weight:600;border:none;cursor:pointer;margin-top:18px;
+  background:linear-gradient(135deg,#6EE6C8,var(--cyan-deep));color:var(--bg);box-shadow:0 8px 26px -8px rgba(62,207,178,.55)}
+.status{margin-top:20px;font-size:14px;color:var(--sec);min-height:22px}
+.bar{height:8px;background:var(--bg);border:1px solid var(--border);border-radius:5px;overflow:hidden;margin-top:14px}
+.bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--cyan-deep),var(--cyan));transition:width .15s}
+.done{color:var(--good);font-weight:600}
+.err{color:var(--red);font-size:13px;margin-top:12px}
+.privacy{margin-top:22px;font-size:11px;color:var(--dim);display:flex;align-items:center;justify-content:center;gap:8px}
+.privacy svg{width:14px;height:14px;color:var(--good)}
+.hidden{display:none}
+</style>
+<div class="card">
+  <img class="logo" src="assets/carlon-logo-soft-512.png" alt="CARLON">
+  <h1>Aufnahme senden</h1>
+  <p class="sub">Übertrage die HRV-Aufnahme deines Pferds direkt an deine Tierärztin / deinen Tierarzt — Ende-zu-Ende, ohne Umweg über einen Server.</p>
+  <div class="room" id="roomLine"></div>
+
+  <div id="pickArea">
+    <label class="drop" id="drop">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M17 8l-5-5-5 5M12 3v12"/></svg>
+      <h4>CARLON-Datei wählen</h4>
+      <p>Die <b>.json</b>-Datei aus der CARLON-App antippen</p>
+      <input type="file" id="file" accept=".json,.ndjson,application/json" hidden>
+    </label>
+  </div>
+
+  <div id="sendArea" class="hidden">
+    <div id="fname" style="font-size:14px;font-weight:600;margin-bottom:6px"></div>
+    <div class="bar"><i id="pb"></i></div>
+    <div class="status" id="status"></div>
+  </div>
+  <div class="err" id="err"></div>
+
+  <div class="privacy"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>Direkt-Übertragung · kein Server sieht deine Daten</div>
+</div>
+
+<script src="p2p.js"></script>
+<script>
+const $=s=>document.querySelector(s);
+const room=new URLSearchParams(location.search).get('room');
+$('#roomLine').innerHTML = room ? `Verbindungscode: <b>${room}</b>` : '';
+if(!room){ $('#err').textContent='Kein Verbindungscode — bitte den Link/QR vom Tierarzt verwenden.'; }
+
+const drop=$('#drop'), fi=$('#file');
+['dragenter','dragover'].forEach(e=>drop.addEventListener(e,ev=>{ev.preventDefault();drop.classList.add('hot');}));
+['dragleave','drop'].forEach(e=>drop.addEventListener(e,ev=>{ev.preventDefault();drop.classList.remove('hot');}));
+drop.addEventListener('drop',ev=>{const f=[...ev.dataTransfer.files][0]; if(f) start(f);});
+fi.addEventListener('change',()=>{ if(fi.files[0]) start(fi.files[0]); });
+
+async function start(file){
+  if(!room){ $('#err').textContent='Kein Verbindungscode vorhanden.'; return; }
+  if(!/\.(json|ndjson)$/i.test(file.name)){ $('#err').textContent='Bitte die .json-Datei aus der CARLON-App wählen.'; return; }
+  $('#err').textContent='';
+  $('#pickArea').classList.add('hidden'); $('#sendArea').classList.remove('hidden');
+  $('#fname').textContent=file.name;
+  $('#status').textContent='Verbinde mit dem Tierarzt…';
+  try{
+    await P2P.send(room, file, {
+      onStatus:s=>{ if(s==='connected')$('#status').textContent='Verbunden — übertrage…'; },
+      onProgress:p=>{ $('#pb').style.width=Math.round(p*100)+'%'; }
+    });
+    $('#pb').style.width='100%';
+    $('#status').innerHTML='<span class="done">✓ Aufnahme übertragen</span>';
+  }catch(e){
+    $('#status').textContent='';
+    $('#err').textContent='Übertragung fehlgeschlagen. Ist der Tierarzt-Empfang geöffnet? Erneut versuchen.';
+    $('#pickArea').classList.remove('hidden'); $('#sendArea').classList.add('hidden');
+  }
+}
+</script>
+</html>

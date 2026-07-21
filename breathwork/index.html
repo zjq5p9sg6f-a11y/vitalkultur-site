@@ -1,0 +1,1911 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="theme-color" content="#030303">
+  <title>CARLON – Feel your breath. Mastered. · Haptic Breathwork for Apple Watch (Beta)</title>
+  <meta name="description" content="CARLON – haptic breathwork for Apple Watch. 16 techniques, felt through the Taptic Engine, eyes closed. Live HR &amp; HRV, research-grade with Polar H10. Now in closed beta — testers &amp; breath-coach partners welcome.">
+  <meta property="og:title" content="CARLON – Feel your breath. Mastered.">
+  <meta property="og:description" content="Haptic breathwork for Apple Watch. 16 techniques felt on your wrist, eyes closed. Live biometrics, research-grade with Polar H10. Now in closed beta.">
+  <meta property="og:image" content="https://vitalkultur.com/app-icon.png">
+  <link rel="icon" href="/app-icon.png">
+  <link rel="apple-touch-icon" href="/app-icon.png">
+  <link rel="canonical" href="https://vitalkultur.com/">
+  <meta property="og:url" content="https://vitalkultur.com/">
+  <meta property="og:type" content="website">
+  <meta name="twitter:card" content="summary_large_image">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "CARLON Breathwork",
+    "slogan": "Feel your breath. Mastered.",
+    "operatingSystem": "watchOS, iOS",
+    "applicationCategory": "HealthApplication",
+    "description": "16 breathing techniques with Apple Watch haptic guidance and live HRV — grounded in the physiology of slow breathing. Currently in closed beta.",
+    "creator": {
+      "@type": "Organization",
+      "name": "Vitalkultur",
+      "url": "https://vitalkultur.com"
+    },
+    "featureList": "Haptic Guidance, Double Tap, 16 Breathing Techniques, Custom Pattern Creation, Live HR Sparkline, Session RMSSD, Dive Reflex Detection, 4 Watch Complications, Siri Shortcuts, Apple Calendar, Coherence Switch, Breath Composer, Flower of Life, Focus Mode, Research Export"
+  }
+  </script>
+  <script type="application/ld+json">
+{"@context":"https://schema.org","@type":"MobileApplication","name":"CARLON","operatingSystem":"watchOS, iOS","applicationCategory":"HealthApplication","description":"Haptic-guided breathwork for Apple Watch. 16 techniques. Live biometrics, research-grade with Polar H10. Currently in closed beta."}
+  </script>
+  <!-- Analytics: GoatCounter (kostenlos, open source, DSGVO ohne Cookie-Banner)
+       Dashboard: https://vitalkultur.goatcounter.com
+       Signup: https://www.goatcounter.com — Subdomain "vitalkultur" wählen -->
+  <!-- GoatCounter — cookiefrei. count.js wertet DNT NICHT aus (Herstellerentscheidung),
+     deshalb laden wir es bei Do-Not-Track / Global Privacy Control gar nicht erst.
+     Erst dadurch stimmt die Opt-out-Zusage in der Datenschutzerklaerung. -->
+<script>(function(){var d=navigator.doNotTrack||window.doNotTrack||navigator.msDoNotTrack;
+if(d=='1'||d=='yes'||navigator.globalPrivacyControl===true)return;
+var s=document.createElement('script');s.async=true;s.src='//gc.zgo.at/count.js';
+s.setAttribute('data-goatcounter','https://vitalkultur.goatcounter.com/count');
+document.head.appendChild(s);})();</script>
+  <noscript><style>.rv{opacity:1;transform:none}</style></noscript>
+  <!-- Jost — CI-Schrift (self-hosted, DSGVO-konform) -->
+  <style>
+    @font-face {
+      font-family: 'Jost';
+      font-style: normal;
+      font-weight: 100 900;
+      font-display: swap;
+      src: url('/fonts/jost-variable.woff2') format('woff2');
+    }
+  </style>
+  <style>
+    /*
+     * ╔═══════════════════════════════════════════════════════════════╗
+     * ║  CARLON — Sacred Geometry Design System                      ║
+     * ║  "The code IS the geometry. The geometry IS the code."       ║
+     * ║                                                               ║
+     * ║  Every value in this file derives from natural constants:     ║
+     * ║  φ (1.618033...) · Fibonacci (1,1,2,3,5,8,13,21,34,55,89)  ║
+     * ║  Schumann (7.83 Hz) · Solfeggio (396,432,528,639 Hz)       ║
+     * ║                                                               ║
+     * ║  If you're reading this source code: welcome.                ║
+     * ║  You found the blueprint behind the breath.                  ║
+     * ╚═══════════════════════════════════════════════════════════════╝
+     */
+
+    :root{
+      /*
+       * ── SOLFEGGIO COLOR SYSTEM ──────────────────────────────────
+       * Each frequency shifted 40 octaves into visible light.
+       * 396 Hz × 2⁴⁰ = 435 THz ≈ 689nm (Red)
+       * 432 Hz × 2⁴⁰ = 475 THz ≈ 631nm (Gold)
+       * 528 Hz × 2⁴⁰ = 580 THz ≈ 516nm (Green)
+       * 639 Hz × 2⁴⁰ = 702 THz ≈ 427nm (Violet)
+       */
+      --glut:rgb(200,60,50);          /* 396 Hz → 689nm — Liberation  */
+      --gold:rgb(62,207,178);         /* CARLON brand cyan #3ECFB2 — primary accent (freq-strip keeps 432 Hz gold) */
+      --gold-bright:rgb(110,230,200); /* CARLON cyan bright */
+      --green:rgb(85,185,130);        /* 528 Hz → 516nm — Transformation */
+      --violet:rgb(135,55,225);       /* 639 Hz → 427nm — Connection  */
+
+      --bg:#020202;
+      --t:rgb(235,230,220);
+      --t2:rgba(235,230,220,.75);     /* Body text — OLED readable     */
+      --t3:rgba(235,230,220,.55);     /* Secondary text — OLED readable */
+
+      /*
+       * ── φ-MODULAR TYPOGRAPHY ────────────────────────────────────
+       * Base: 16px. Each step: × φ (1.618) or × φ⁻¹ (0.618)
+       *
+       * Display:  16 × φ³ = 67.8 → 68px    (hero numbers)
+       * H1:       16 × φ² = 41.9 → 42px    (section titles)
+       * H2:       16 × φ  = 25.9 → 26px    (subsections)
+       * H3:       21px                       (Fibonacci F(8))
+       * Body:     16px                       (base)
+       * Small:    16 × φ⁻¹ = 9.9 → 10px    (labels, captions)
+       * Micro:    16 × φ⁻² = 6.1 → 6px     (legal, badges)
+       */
+
+      /*
+       * ── FIBONACCI SPACING ──────────────────────────────────────
+       * Every margin, padding, gap, and dimension in this file
+       * uses a Fibonacci number: 2, 3, 5, 8, 13, 21, 34, 55, 89
+       *
+       * F(3)=2  F(4)=3  F(5)=5  F(6)=8  F(7)=13
+       * F(8)=21 F(9)=34 F(10)=55 F(11)=89
+       *
+       * Apple's 8pt grid = F(6). Not a coincidence.
+       */
+
+      /*
+       * ── SCHUMANN TIMING ────────────────────────────────────────
+       * Earth's electromagnetic heartbeat: 7.83 Hz
+       * Period: 1/7.83 = 127.71ms
+       *
+       * Animation delays: 127.71ms × Fibonacci multipliers
+       * d1: 127.71 × 1 = 128ms    d2: 127.71 × 2 = 255ms
+       * d3: 127.71 × 3 = 383ms    d4: 127.71 × 4 = 510ms
+       *
+       * Breath cycle: 127.71ms × F(9) = 4342ms ≈ 4.3s
+       * Full breath: inhale(4.3s) + exhale(4.3s) = 8.6s ≈ 7 breaths/min
+       * This is the resonance frequency of the baroreflex.
+       */
+    }
+
+    /* ── RESET + BASE (φ line-height) ── */
+    *{margin:0;padding:0;box-sizing:border-box}
+    html,body{overflow-x:hidden;max-width:100vw}
+    html{scroll-behavior:smooth;font-size:16px /* φ-scale base */}
+    body{
+      background:var(--bg);color:var(--t);
+      font-family:'Jost',-apple-system,system-ui,sans-serif;
+      -webkit-font-smoothing:antialiased;overflow-x:hidden;
+      line-height:1.618; /* φ — the golden ratio as line-height */
+    }
+    a{color:var(--gold-bright);text-decoration:none;transition:all .3s}
+    a:hover{color:var(--t)}
+
+    /* Grain — tactile texture at Fibonacci opacity */
+    body::after{content:'';position:fixed;inset:0;opacity:.005;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.7' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");pointer-events:none;z-index:9999}
+
+    /* ═══ SACRED GEOMETRY BACKGROUND — CSS SVG patterns (reliable on all devices) ═══ */
+    #bgFlower{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;pointer-events:none}
+
+    .sg-bg{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden}
+    .sg-bg-pattern{position:absolute;opacity:.05;animation:sgBgDrift 55s ease-in-out infinite}
+    .sg-bg-pattern svg{width:100%;height:100%}
+    /* Viewport-relative sizing — scales from phone to desktop */
+    .sg-bg-pattern:nth-child(1){width:610px;height:610px;top:-8%;right:-13%;opacity:.13;animation-duration:55s}
+    .sg-bg-pattern:nth-child(2){width:400px;height:400px;bottom:-5%;left:-8%;opacity:.10;animation-duration:89s;animation-direction:reverse}
+    .sg-bg-pattern:nth-child(3){width:250px;height:250px;top:55%;right:-3%;opacity:.05;animation-duration:42s}
+    .sg-bg-pattern:nth-child(4){width:400px;height:400px;top:34%;left:-8%;opacity:.09;animation-duration:68s;animation-direction:reverse}
+    .sg-bg-pattern:nth-child(5){width:250px;height:250px;bottom:21%;right:13%;opacity:.04;animation-duration:55s}
+    .sg-bg-pattern:nth-child(6){width:150px;height:150px;top:13%;left:21%;opacity:.05;animation-duration:34s}
+    /* Große zentrierte Flower of Life — klar sichtbar, wie carlon-equine */
+    .bg-flower-c{position:fixed;inset:0;background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='720' height='720' viewBox='0 0 720 720'><g fill='none' stroke='%23b2944c' stroke-width='0.6' opacity='1'><circle cx='360' cy='360' r='100'/><circle cx='360' cy='260' r='100'/><circle cx='360' cy='460' r='100'/><circle cx='273' cy='310' r='100'/><circle cx='447' cy='310' r='100'/><circle cx='273' cy='410' r='100'/><circle cx='447' cy='410' r='100'/><circle cx='360' cy='160' r='100'/><circle cx='360' cy='560' r='100'/><circle cx='186' cy='360' r='100'/><circle cx='534' cy='360' r='100'/><circle cx='186' cy='260' r='100'/><circle cx='534' cy='260' r='100'/><circle cx='186' cy='460' r='100'/><circle cx='534' cy='460' r='100'/><circle cx='273' cy='210' r='100'/><circle cx='447' cy='210' r='100'/><circle cx='273' cy='510' r='100'/><circle cx='447' cy='510' r='100'/></g></svg>");background-position:center top;background-repeat:no-repeat;background-size:min(92vh,92vw) auto;opacity:.11;pointer-events:none;z-index:0}
+    @keyframes sgBgDrift{0%,100%{transform:rotate(0deg)}50%{transform:rotate(3deg)}}
+
+    .page{position:relative;z-index:1}
+
+    /* Reveals */
+    .rv{opacity:0;transform:translateY(34px) scale(0.97);filter:blur(2px);transition:opacity 1s cubic-bezier(.16,1,.3,1),transform 1s cubic-bezier(.16,1,.3,1),filter 1s cubic-bezier(.16,1,.3,1)}
+    .rv.v{opacity:1;transform:none;filter:none}
+    .rv.d1{transition-delay:.1s}
+    .rv.d2{transition-delay:.2s}
+    .rv.d3{transition-delay:.3s}
+    .rv.d4{transition-delay:.4s}
+    .d1{transition-delay:.13s}.d2{transition-delay:.25s}.d3{transition-delay:.38s}.d4{transition-delay:.5s}
+
+    /* ═══ NAV — minimal, floating ═══ */
+    .nav{
+      display:flex;align-items:center;justify-content:center;
+      gap:21px;flex-wrap:wrap;
+      padding:0 21px;
+      position:fixed;bottom:21px;left:50%;transform:translateX(-50%);
+      z-index:88;
+      background:rgba(2,2,2,.85);
+      backdrop-filter:blur(13px);-webkit-backdrop-filter:blur(13px);
+      border:1px solid rgba(62,207,178,.06);
+      border-radius:55px;padding:8px 21px;
+      opacity:0;transition:opacity .618s;pointer-events:none;
+    }
+    .nav.show{opacity:1;pointer-events:auto}
+    .nav a{font-size:10px;color:var(--t3);letter-spacing:.06em;white-space:nowrap}
+    .nav a:hover{color:var(--gold-bright)}
+    @media(max-width:610px){.nav{display:none!important}}
+
+    /* ═══ HERO ═══ */
+    .hero{
+      min-height:100svh;display:flex;flex-direction:column;
+      align-items:center;justify-content:center;
+      position:relative;text-align:center;
+      padding:55px 21px 0; /* F(10) top for top-bar clearance, F(8) sides */
+    }
+
+    .hero-badge{
+      display:block;
+      max-width:fit-content;
+      margin-left:auto;margin-right:auto;
+
+      padding:8px 21px 6px;
+      border:1px solid rgba(62,207,178,.15);
+      border-radius:13px;
+      font-size:11px;
+      letter-spacing:.1em;text-transform:uppercase;
+      color:var(--gold);opacity:.75;
+      margin-bottom:34px;
+      backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
+      text-align:center;line-height:1.7;word-break:break-word;
+      white-space:nowrap; /* desktop: one clean line */
+    }
+    @media(max-width:610px){.hero-badge{white-space:normal;max-width:92vw}} /* mobile: wrap, don't clip off-screen */
+    /* Tap-to-zoom overlay for gallery images (ported from carlon-equine) */
+    .img-zoom-overlay{position:fixed;inset:0;z-index:9999;display:none;align-items:center;justify-content:center;background:rgba(2,2,2,.93);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);cursor:zoom-out;padding:3vh 3vw}
+    .img-zoom-overlay.show{display:flex}
+    .img-zoom-overlay img{max-width:100%;max-height:94vh;width:auto;height:auto;border-radius:22px;box-shadow:0 30px 90px rgba(0,0,0,.7)}
+    .img-zoom-hint{position:fixed;bottom:24px;left:0;right:0;text-align:center;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.5);pointer-events:none}
+    .gal-slide img,.feat-rail img,.feat-card img{cursor:zoom-in}
+
+    .flower-wrap{
+      width:clamp(300px,50vw,377px);
+      height:clamp(300px,50vw,377px);
+      position:relative;
+      margin-bottom:89px; /* F(11) — room for CI below flower */
+    }
+    #flowerCanvas{width:100%;height:100%}
+
+    .hero-title{
+      font-size:clamp(21px,3.5vw,34px); /* F(8) → F(9) — subordinate to brand */
+      font-weight:200;
+      letter-spacing:.01em;
+      line-height:1.382; /* φ⁻¹ + φ⁻³ = harmonious reading */
+      max-width:610px;  /* 16 × φ⁵ */
+      color:var(--t2); /* slightly muted — brand is the star */
+    }
+    .hero-title em{font-style:normal;color:var(--gold-bright)}
+
+    /* CI: CARLON + Claim directly below Flower — matches Watch app */
+    .flower-ci{
+      position:absolute;bottom:-55px;
+      left:50%;transform:translateX(-50%);
+      display:flex;flex-direction:column;align-items:center;
+      pointer-events:none;white-space:nowrap;
+    }
+    .flower-ci .ci-name{
+      font-size:clamp(34px,7vw,68px); /* F(9) → 16×φ³ — DOMINANT brand element */
+      font-weight:200;
+      letter-spacing:.618em; /* φ⁻¹ */
+      margin-right:-.618em; /* negate trailing letter-spacing */
+      color:var(--gold-bright);
+      text-shadow:0 0 55px rgba(62,207,178,.13); /* F(10) */
+    }
+    .flower-ci .ci-product{
+      font-size:clamp(13px,2.4vw,18px);
+      font-weight:400;
+      letter-spacing:.42em;
+      margin-right:-.42em; /* negate trailing tracking */
+      text-transform:uppercase;
+      color:var(--gold-bright); /* CARLON cyan */
+      margin-top:10px;
+      text-shadow:0 0 20px rgba(62,207,178,.28);
+    }
+    .flower-ci .ci-claim{
+      font-size:12px;
+      font-weight:300;
+      letter-spacing:.12em;
+      margin-right:-.12em; /* negate trailing letter-spacing */
+      white-space:nowrap;
+      color:var(--gold);opacity:.6;
+      margin-top:5px; /* F(5) */
+      text-transform:uppercase;
+    }
+
+    .hero-sub{
+      font-size:13px;  /* F(7) */
+      color:var(--t3);
+      margin-top:13px; /* F(7) */
+      letter-spacing:.08em;
+      max-width:377px; /* F(14) */
+    }
+    .hero-sub span{color:var(--gold);opacity:.618} /* φ⁻¹ */
+
+    .hero-cta{
+      margin-top:34px; /* F(9) */
+      display:flex;gap:13px; /* F(7) */
+      flex-wrap:wrap;justify-content:center;
+    }
+    .btn{
+      display:inline-block;
+      padding:13px 34px;     /* F(7), F(9) */
+      border-radius:55px;    /* F(10) */
+      font-size:13px;        /* F(7) */
+      font-weight:500;letter-spacing:.06em;
+      transition:all .382s;  /* φ⁻² duration */
+      cursor:pointer;text-decoration:none;
+    }
+    .btn-gold{
+      background:linear-gradient(135deg,var(--gold),rgb(0,150,140));
+      color:var(--bg);border:none;
+      box-shadow:0 0 34px rgba(62,207,178,.12);
+    }
+    .btn-gold:hover{transform:translateY(-2px);box-shadow:0 8px 55px rgba(62,207,178,.25);color:var(--bg)}
+    .btn-ghost{border:1px solid rgba(62,207,178,.15);color:var(--gold-bright);background:transparent}
+    .btn-ghost:hover{border-color:rgba(62,207,178,.35);background:rgba(62,207,178,.03);color:var(--gold-bright)}
+
+    .scroll-line{
+      position:absolute;bottom:34px;left:50%; /* F(9) from bottom */
+      width:1px;height:55px; /* F(10) */
+      background:linear-gradient(to bottom,transparent,rgba(62,207,178,.15));
+      animation:scrollDrift 2.68s ease-in-out infinite; /* Schumann × F(8) = 2681ms */
+    }
+    @keyframes scrollDrift{0%,100%{opacity:.1;transform:scaleY(.8)}50%{opacity:.25;transform:scaleY(1)}}
+
+    /*
+     * ═══ SACRED DIVIDERS ════════════════════════════════════════
+     * Between each section: Vesica Piscis (two overlapping circles)
+     * or Seed of Life (7-circle pattern) — alternating.
+     * The Vesica Piscis is φ encoded: height:width = √3:1 ≈ 1.732
+     */
+    .sacred-div{
+      display:flex;align-items:center;justify-content:center;
+      padding:34px 0;position:relative; /* F(9) */
+    }
+    .sacred-div svg{width:144px;height:34px;opacity:.12}
+
+    /*
+     * ═══ SECTIONS ═══════════════════════════════════════════════
+     * Vertical rhythm: 89px padding (F(11))
+     * Max-width: 680px ≈ 16 × φ⁶ (≈ 680.6) — NOT arbitrary
+     * All internal spacing: Fibonacci only
+     */
+    .sect{
+      padding:144px 21px; /* F(12) — Apple-level breathing room */
+      max-width:680px;   /* 16 × φ⁶ = 680.6 — golden proportion to viewport */
+      margin:0 auto;position:relative;
+    }
+    .sect--wide{max-width:987px}
+    .sect h2{
+      font-size:clamp(26px,5vw,42px); /* Apple-level headlines */
+      font-weight:200;line-height:1.2;
+      margin-bottom:21px; /* F(8) */
+      letter-spacing:-.02em;
+    }
+    .sect h2 em{font-style:normal;color:var(--gold-bright)}
+    .sect h2 .green-em{font-style:normal;color:var(--green)}
+    .lead{
+      font-size:16px; /* φ-scale base */
+      color:var(--t2);
+      line-height:1.854; /* φ × 1.146 — expanded reading ratio */
+      max-width:610px; /* F(15) ≈ 16 × φ⁵ */
+    }
+    .lead em{font-style:normal;color:var(--gold);opacity:.8}
+    .label{
+      font-size:10px;    /* φ⁻¹ scale */
+      color:var(--gold);
+      letter-spacing:.382em; /* φ⁻² */
+      text-transform:uppercase;
+      margin-bottom:8px; /* F(6) */
+      opacity:.6;
+    }
+
+    /* Section glow backgrounds */
+    .atmos{position:absolute;inset:0;pointer-events:none;overflow:hidden}
+    .atmos-orb{
+      position:absolute;border-radius:50%;filter:blur(89px);
+      mix-blend-mode:screen;animation:orbFloat 20s ease-in-out infinite;
+    }
+    @keyframes orbFloat{0%,100%{transform:translate(0,0)}50%{transform:translate(15px,-10px)}}
+
+    /* Sacred geometry watermark textures — hidden-in-plain-sight patterns */
+    .sg-watermark{
+      position:absolute;pointer-events:none;opacity:.09;
+      animation:sgDrift 45s ease-in-out infinite;
+    }
+    .sg-watermark svg{width:100%;height:100%}
+    @keyframes sgDrift{0%,100%{transform:rotate(0deg)}50%{transform:rotate(3deg)}}
+
+    /* Fibonacci spiral easter egg — discoverable on hover */
+    .sg-fibonacci{
+      position:absolute;pointer-events:none;opacity:.025;
+      transition:opacity 2s;
+    }
+    .sect:hover .sg-fibonacci{opacity:.06}
+
+    /* ═══ CARDS — F(9) padding, F(7) gap ═══ */
+    .cards{display:grid;gap:13px;margin-top:34px} /* F(7), F(9) */
+    .card{
+      padding:34px;          /* F(9) */
+      border-radius:13px;    /* F(7) — Fibonacci radius */
+      position:relative;overflow:hidden;
+      background:rgba(62,207,178,.015);
+      border:1px solid rgba(62,207,178,.06);
+      transition:all .382s;  /* φ⁻² transition */
+    }
+    .card::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(62,207,178,.1),transparent)}
+    .card:hover{border-color:rgba(62,207,178,.14);transform:translateY(-3px);box-shadow:0 13px 55px rgba(0,0,0,.3)} /* F(7) offset, F(10) blur */
+    .card .tag{font-size:8px;color:var(--gold);letter-spacing:.2em;text-transform:uppercase;opacity:.5;margin-bottom:8px} /* F(6) */
+    .card h3{font-size:21px;font-weight:300;margin-bottom:8px} /* F(8), F(6) */
+    .card p{font-size:13px;color:var(--t2);line-height:1.7}
+
+    /* Green-tinted card for Flower of Life */
+    .card--green{background:rgba(85,185,130,.015);border-color:rgba(85,185,130,.06)}
+    .card--green::before{background:linear-gradient(90deg,transparent,rgba(85,185,130,.08),transparent)}
+    .card--green:hover{border-color:rgba(85,185,130,.14)}
+    .card--green .tag{color:var(--green)}
+
+    /* ═══ SCIENCE ═══ */
+    .sci-grid{display:grid;grid-template-columns:1fr 1fr;gap:13px;margin-top:34px}
+    .sci-card{
+      padding:21px;border-radius:13px;position:relative;
+      border-left:2px solid rgba(62,207,178,.1);
+      background:rgba(62,207,178,.01);
+      transition:all .4s;
+    }
+    .sci-card:hover{border-left-color:rgba(62,207,178,.3);background:rgba(62,207,178,.02)}
+    .sci-card .journal{font-size:8px;color:var(--gold);opacity:.55;letter-spacing:.06em;text-transform:uppercase;margin-bottom:5px}
+    .sci-card p{font-size:13px;color:var(--t3);line-height:1.55}
+
+    /*
+     * ═══ BETA CARD ═══════════════════════════════════════════════
+     * Beta card: F(10) padding, F(8) radius
+     * Display font: 16 × φ³ ≈ 68px
+     */
+    .pricing-grid{
+      display:grid;grid-template-columns:1fr 1fr;gap:21px; /* F(8) */
+      margin-top:55px;max-width:987px;margin-left:auto;margin-right:auto; /* F(16) */
+    }
+    .price-card,.coach-card{
+      text-align:center;padding:55px 34px;border-radius:21px; /* F(10), F(9), F(8) */
+      position:relative;overflow:hidden;
+    }
+    .price-card{
+      border:1px solid rgba(62,207,178,.06);
+      background:linear-gradient(180deg,rgba(62,207,178,.03) 0%,transparent 50%);
+    }
+    .price-card::before{content:'';position:absolute;top:0;left:10%;right:10%;height:1px;background:linear-gradient(90deg,transparent,rgba(62,207,178,.18),transparent)}
+    .price-card::after{content:'';position:absolute;top:-89px;left:50%;transform:translateX(-50%);width:233px;height:233px;border-radius:50%;background:radial-gradient(circle,rgba(62,207,178,.04),transparent 70%);pointer-events:none}
+    .price-num{font-size:clamp(42px,6vw,55px);font-weight:200;color:var(--gold-bright);line-height:1;position:relative}
+    .price-sub{font-size:13px;color:var(--t3);margin-top:8px;position:relative}
+    .feat-list{
+      list-style:none;margin-top:34px;
+      text-align:left;
+      position:relative;
+    }
+    .feat-list li{font-size:13px;color:var(--t2);padding:6px 0 6px 21px;break-inside:avoid;position:relative}
+    .feat-list li::before{content:'';position:absolute;left:0;top:14px;width:8px;height:1px;background:var(--gold);opacity:.25}
+
+    .coach-card{
+      border:1px solid rgba(135,55,225,.2);
+      background:linear-gradient(180deg,rgba(135,55,225,.06) 0%,rgba(135,55,225,.015) 50%,transparent);
+      box-shadow:0 0 55px rgba(135,55,225,.06);
+    }
+    .coach-card::before{content:'';position:absolute;top:0;left:10%;right:10%;height:2px;background:linear-gradient(90deg,transparent,rgba(135,55,225,.35),transparent)}
+    .coach-card::after{content:'';position:absolute;top:-55px;left:50%;transform:translateX(-50%);width:233px;height:233px;border-radius:50%;background:radial-gradient(circle,rgba(135,55,225,.06),transparent 70%);pointer-events:none}
+    .coach-card h3{font-size:21px;font-weight:200;color:rgb(175,120,255)}
+    .coach-card .price-num{font-size:clamp(42px,6vw,55px);color:rgb(175,120,255)}
+    .coach-card p{font-size:13px;color:var(--t2);margin-top:8px}
+    .coach-feat{list-style:none;margin-top:34px;text-align:left}
+    .coach-feat li{font-size:13px;color:var(--t2);padding:6px 0 6px 21px;position:relative}
+    .coach-feat li{color:var(--t)}
+    .coach-feat li::before{content:'';position:absolute;left:0;top:14px;width:8px;height:1px;background:rgb(175,120,255);opacity:.4}
+
+    /* ═══ CRAFT ═══ */
+    .freq-strip{
+      display:flex;gap:3px;margin:34px 0 21px;justify-content:center;
+    }
+    .freq-bar{
+      width:3px;border-radius:2px;transition:all .6s;
+    }
+
+    /* ═══ ENTERPRISE ═══ */
+    .ent-wrap{padding:89px 21px;max-width:987px;margin:0 auto}
+    .ent-box{
+      padding:55px 42px;border-radius:21px;text-align:center;
+      position:relative;overflow:hidden;
+      border:1px solid rgba(62,207,178,.06);
+      background:linear-gradient(135deg,rgba(62,207,178,.02),rgba(135,55,225,.015));
+    }
+    .ent-box::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 20% 10%,rgba(62,207,178,.03),transparent 50%),radial-gradient(ellipse at 80% 90%,rgba(135,55,225,.025),transparent 50%);pointer-events:none}
+    .ent-box>*{position:relative}
+    .ent-box h2{font-size:clamp(21px,4vw,34px);font-weight:200;text-align:center;line-height:1.35;margin-bottom:13px}
+    .ent-box h2 em{font-style:normal;background:linear-gradient(135deg,var(--gold-bright),var(--violet));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+    .ent-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:13px;margin:34px 0;text-align:left}
+    .ent-item{padding:21px;border-radius:13px;background:rgba(255,255,255,.01);border:1px solid rgba(255,255,255,.025);transition:all .4s}
+    .ent-item:hover{border-color:rgba(62,207,178,.1);transform:translateY(-2px)}
+    .ent-item h4{font-size:13px;font-weight:500;margin-bottom:5px}
+    .ent-item p{font-size:12px;color:var(--t3);line-height:1.6}
+
+    /*
+     * ═══ FOOTER ═════════════════════════════════════════════════
+     * Peak-End Rule (Kahneman): Last impression must be warm.
+     * Padding: F(11) top, F(10) bottom — breathing room.
+     * Divider: F(10) width — golden thread.
+     */
+    footer{text-align:center;padding:89px 21px 55px;position:relative} /* F(11), F(8), F(10) */
+    footer::before{content:'';position:absolute;top:0;left:50%;transform:translateX(-50%);width:55px;height:1px;background:linear-gradient(90deg,transparent,rgba(62,207,178,.06),transparent)} /* F(10) */
+    footer .logo{height:42px;opacity:.45;margin-bottom:8px}
+    footer .claim{font-size:10px;letter-spacing:.35em;opacity:.15;text-transform:uppercase;margin-bottom:34px}
+    footer nav{display:flex;justify-content:center;gap:21px;flex-wrap:wrap;margin-bottom:21px}
+    footer nav a{font-size:10px;color:var(--t3);letter-spacing:.04em}
+    footer nav a:hover{color:var(--gold-bright)}
+    footer p{font-size:10px;color:var(--t3);opacity:.3}
+    .disclaimer{font-size:8px;opacity:.1;max-width:377px;margin:21px auto 0;line-height:1.8}
+
+    /*
+     * ═══ AUDIO PLAYER ═══════════════════════════════════════════
+     * Fixed bottom-right. Fibonacci dimensions.
+     * Starts muted — user activates consciously.
+     * Schumann-timed fade-in (127.71ms × F(8) = 2.68s).
+     */
+    /*
+     * ═══ TOP BAR — Vitalkultur brand + Audio player ═══
+     * Fixed top. Dachmarke links, Player rechts.
+     * Glassmorphism — dezent, nie im Weg.
+     */
+    .top-bar{
+      position:fixed;top:0;left:0;right:0;z-index:89; /* F(11) */
+      display:flex;align-items:center;justify-content:space-between;
+      padding:8px 21px; /* F(6), F(8) */
+      background:rgba(2,2,2,.75);
+      backdrop-filter:blur(13px);-webkit-backdrop-filter:blur(13px); /* F(7) */
+      border-bottom:1px solid rgba(62,207,178,.06);
+    }
+    .top-bar-brand{
+      font-size:10px;color:var(--gold);opacity:.45;
+      letter-spacing:.2em;text-transform:uppercase;
+      text-decoration:none;transition:opacity .382s;
+    }
+    .top-bar-brand:hover{opacity:.8;color:var(--gold)}
+    .lang-toggle{background:rgba(2,2,2,.5);border:1px solid rgba(62,207,178,.15);color:var(--t2);font-family:ui-monospace,monospace;font-size:11px;letter-spacing:.12em;padding:8px 12px;border-radius:10px;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:4px;transition:background .2s,color .2s,border-color .2s}
+    .lang-toggle:hover{background:rgba(62,207,178,.08);color:var(--t);border-color:rgba(62,207,178,.35)}
+    .lang-toggle .active{color:var(--gold-bright);font-weight:500}
+    .audio-ctrl{
+      display:flex;align-items:center;gap:8px; /* F(6) */
+      cursor:pointer;
+      transition:all .382s ease; /* φ⁻¹ */
+      opacity:.55;
+      border:none;background:none;padding:3px 0;
+    }
+    .audio-ctrl:hover{opacity:1}
+    .audio-ctrl.playing{opacity:.8}
+    .audio-ctrl svg{width:16px;height:16px;flex-shrink:0}
+    .audio-ctrl .bars{display:flex;align-items:end;gap:2px;height:13px} /* F(3), F(7) */
+    .audio-ctrl .bars span{width:2px;background:var(--gold);border-radius:1px;transition:height .382s ease} /* F(3) */
+    .audio-ctrl .bars span:nth-child(1){height:5px} /* F(5) */
+    .audio-ctrl .bars span:nth-child(2){height:8px} /* F(6) */
+    .audio-ctrl .bars span:nth-child(3){height:13px} /* F(7) */
+    .audio-ctrl .bars span:nth-child(4){height:8px} /* F(6) */
+    .audio-ctrl .bars span:nth-child(5){height:3px} /* F(4) */
+    .audio-ctrl.playing .bars span{animation:bar-bounce .618s ease-in-out infinite alternate} /* φ⁻¹ */
+    .audio-ctrl.playing .bars span:nth-child(2){animation-delay:.1s}
+    .audio-ctrl.playing .bars span:nth-child(3){animation-delay:.2s}
+    .audio-ctrl.playing .bars span:nth-child(4){animation-delay:.3s}
+    .audio-ctrl.playing .bars span:nth-child(5){animation-delay:.4s}
+    @keyframes bar-bounce{
+      0%{height:3px}
+      100%{height:13px} /* F(4) → F(7) */
+    }
+    .audio-label{font-size:10px;color:var(--t3);letter-spacing:.05em;white-space:nowrap;overflow:hidden;transition:opacity .382s ease;opacity:.35}
+    .audio-ctrl:hover .audio-label{opacity:1}
+
+    /* ═══ RESPONSIVE ═══ */
+    @media(max-width:610px){
+      .flower-wrap{width:233px;height:233px;margin-bottom:55px}
+      .flower-ci{width:auto}
+      .flower-ci .ci-name{font-size:26px} /* φ¹ on small screens */
+      .audio-label{display:none} /* no hover on touch — hide label */
+      .top-bar{padding:5px 13px;flex-wrap:nowrap;overflow:hidden} /* F(5), F(7) — tighter on mobile */
+      .top-bar-brand img{height:21px !important} /* smaller logo on mobile */
+      .sect{padding:89px 21px}
+      .sci-grid{grid-template-columns:1fr}
+      .feat-list{columns:1}
+      .ent-grid{grid-template-columns:1fr}
+      .ent-box{padding:34px 21px}
+      .ent-wrap{padding:55px 21px}
+      .nav-links{display:none}
+      .price-card{padding:34px 21px}
+      .pricing-grid{grid-template-columns:1fr}
+      .coach-card{padding:34px 21px}
+      .price-card{padding:34px 21px}
+      .result-strip{gap:13px}
+      .result-num .big{font-size:26px}
+      .email-box{flex-direction:column}
+    }
+    @media(min-width:610px){.cards{grid-template-columns:1fr 1fr}}
+    @media(min-width:987px){.cards{grid-template-columns:1fr 1fr 1fr}}
+    @supports(padding:env(safe-area-inset-bottom)){footer{padding-bottom:calc(55px + env(safe-area-inset-bottom))}}
+    .btn:focus-visible,a:focus-visible{outline:2px solid var(--gold-bright);outline-offset:3px}
+    @media(prefers-reduced-motion:reduce){.rv{transition:none;opacity:1;transform:none}.scroll-line,.atmos-orb{animation:none}}
+
+    /* ═══ TRUST BADGES ═══ */
+    .trust-strip{
+      display:flex;align-items:center;justify-content:center;
+      gap:8px;flex-wrap:wrap;
+      padding:13px 21px;
+      opacity:.35;
+    }
+    .trust-badge{
+      display:flex;align-items:center;gap:5px;
+      font-size:10px;letter-spacing:.04em;color:var(--t3);
+      white-space:nowrap;
+    }
+    .trust-badge svg{width:13px;height:13px;flex-shrink:0}
+
+
+    /* ═══ FAQ ═══ */
+    .faq-list{margin-top:34px}
+    .faq-item{
+      border-bottom:1px solid rgba(62,207,178,.06);
+      padding:21px 0;
+    }
+    .faq-q{
+      font-size:16px;font-weight:400;color:var(--t);
+      cursor:pointer;display:flex;justify-content:space-between;
+      align-items:center;gap:13px;
+    }
+    .faq-q::after{
+      content:'+';font-size:21px;font-weight:200;color:var(--gold);
+      transition:transform .382s;flex-shrink:0;
+    }
+    .faq-item.open .faq-q::after{transform:rotate(45deg)}
+    .faq-a{
+      max-height:0;overflow:hidden;transition:max-height .382s ease,padding .382s ease;
+      font-size:13px;color:var(--t2);line-height:1.7;
+    }
+    .faq-item.open .faq-a{max-height:300px;padding-top:13px}
+
+    /* ═══ EMAIL CAPTURE ═══ */
+    .email-box{
+      max-width:500px;margin:34px auto 0;
+      display:flex;gap:8px;
+    }
+    .email-box input{
+      flex:1;padding:13px 21px;
+      border-radius:55px;border:1px solid rgba(62,207,178,.12);
+      background:rgba(62,207,178,.03);
+      color:var(--t);font-size:13px;font-family:inherit;
+      outline:none;transition:border-color .382s;
+    }
+    .email-box input:focus{border-color:rgba(62,207,178,.35)}
+    .email-box input::placeholder{color:var(--t3);opacity:.5}
+
+
+    /* ═══ SCIENCE BADGES ═══ */
+    .sci-badges{
+      display:flex;gap:13px;flex-wrap:wrap;margin-top:21px;
+      justify-content:center;
+    }
+    .sci-badge{
+      display:flex;align-items:center;gap:5px;
+      padding:5px 13px;border-radius:55px;
+      border:1px solid rgba(62,207,178,.08);
+      background:rgba(62,207,178,.02);
+      font-size:10px;color:var(--gold);letter-spacing:.04em;
+      white-space:nowrap;
+    }
+    .sci-badge strong{font-weight:500;color:var(--green)}
+
+    /* ═══ TESTIMONIALS ═══ */
+    .testimonial-grid{
+      display:grid;grid-template-columns:1fr 1fr 1fr;gap:13px;
+      margin-top:34px;
+    }
+    @media(max-width:610px){.testimonial-grid{grid-template-columns:1fr}}
+    .testimonial{
+      padding:21px;border-radius:13px;
+      border:1px solid rgba(62,207,178,.04);
+      background:rgba(62,207,178,.01);
+      position:relative;
+    }
+    .testimonial::before{
+      content:'"';position:absolute;top:8px;left:13px;
+      font-size:34px;font-weight:200;color:var(--gold);opacity:.15;
+      line-height:1;
+    }
+    .testimonial p{font-size:13px;color:var(--t2);line-height:1.6;font-style:italic;padding-left:21px}
+    .testimonial .t-author{
+      margin-top:8px;padding-left:21px;
+      font-size:10px;color:var(--gold);opacity:.5;
+      font-style:normal;letter-spacing:.04em;
+    }
+
+    /* ═══ APP STORE BADGE ═══ */
+    .appstore-badge{
+      display:inline-flex;align-items:center;gap:8px;
+      padding:10px 21px;border-radius:13px;
+      background:rgba(255,255,255,.04);
+      border:1px solid rgba(255,255,255,.06);
+      font-size:13px;color:var(--t2);
+      transition:all .382s;cursor:default;
+    }
+    .appstore-badge svg{width:21px;height:21px}
+    .appstore-badge .sub{font-size:8px;color:var(--t3);display:block;margin-top:1px}
+
+    /* ═══ RESULT NUMBERS (science data) ═══ */
+    .result-strip{
+      display:flex;gap:21px;flex-wrap:wrap;justify-content:center;
+      margin-top:34px;
+    }
+    .result-num{text-align:center}
+    .result-num .big{
+      font-size:clamp(26px,4vw,42px);font-weight:200;
+      color:var(--green);line-height:1;
+    }
+    .result-num .desc{
+      font-size:10px;color:var(--t3);margin-top:3px;
+      letter-spacing:.04em;max-width:89px;
+    }
+
+    /* ═══ COMPARISON GRID — responsive ═══ */
+    @media(max-width:610px){
+      .compare-grid{font-size:11px!important}
+    }
+
+    /* ═══ APPLE-STYLE BEAT SECTIONS ═══ */
+    .beat{
+      min-height:70vh;
+      display:flex;align-items:center;justify-content:center;
+      padding:89px 21px;
+      text-align:center;
+    }
+    .beat h2{
+      font-size:clamp(28px,5vw,48px);
+      font-weight:200;line-height:1.1;
+      letter-spacing:-.03em;
+      max-width:680px;margin:0 auto;
+    }
+    .beat h2 em{font-style:normal;color:var(--gold-bright)}
+    .beat p{
+      font-size:16px;color:var(--t2);
+      max-width:500px;margin:21px auto 0;line-height:1.7;
+    }
+    .statement{
+      padding:144px 21px;
+      text-align:center;
+    }
+    .statement h2{
+      font-size:clamp(32px,6vw,55px);
+      font-weight:100;line-height:1.05;
+      letter-spacing:-.03em;
+      color:var(--gold-bright);
+      max-width:800px;margin:0 auto;
+    }
+
+    /* ═══ BREATHING SPACERS (Apple-style cognitive pacing) ═══ */
+    .breathe-space{height:21vh;pointer-events:none}
+    .breathe-space-deep{height:34vh;pointer-events:none}
+
+    /* ═══ NEURO-DETAIL (triple-brain layered typography) ═══ */
+    .neuro-detail{font-size:11px;color:var(--t3);margin-top:5px;letter-spacing:.02em}
+
+    /* ═══ NEURO-COLOR SECTIONS ═══ */
+    .sect-warm{background:rgba(62,207,178,.03)}
+    .sect-deep{background:rgba(2,8,20,.95)}
+    .sect-glow{background:radial-gradient(ellipse at center,rgba(50,215,120,.04) 0%,transparent 70%)}
+
+  </style>
+</head>
+<body>
+
+<!--
+  ╔═══════════════════════════════════════════════════════════════╗
+  ║                                                               ║
+  ║   This page is a living document of Sacred Geometry.          ║
+  ║                                                               ║
+  ║   Every spacing value is a Fibonacci number.                  ║
+  ║   Every font size derives from φ (1.618033...).              ║
+  ║   Every animation timing comes from Earth's heartbeat         ║
+  ║   at 7.83 Hz (Schumann Resonance).                           ║
+  ║   Every color maps to a Solfeggio frequency                   ║
+  ║   shifted 40 octaves into visible light.                      ║
+  ║                                                               ║
+  ║   The sum of any two adjacent Fibonacci numbers               ║
+  ║   equals the next — just like your inhale + exhale            ║
+  ║   in CARLON always sum to the next Fibonacci duration.        ║
+  ║                                                               ║
+  ║   F(7)=13  F(8)=21  F(9)=34  F(10)=55  F(11)=89             ║
+  ║   φ = 1.618033988749895...                                    ║
+  ║   Schumann = 127.71ms per cycle                               ║
+  ║                                                               ║
+  ║   Crafted with obsession by Vitalkultur.                      ║
+  ║   jan@vitalkultur.com                                         ║
+  ║                                                               ║
+  ╚═══════════════════════════════════════════════════════════════╝
+-->
+
+<!-- ═══ TOP BAR — Vitalkultur + Audio ═══ -->
+<div class="top-bar">
+  <a href="/" class="top-bar-brand"><img src="/assets/vitalkultur-wordmark.png" alt="Vitalkultur – CARLON Haptic Breathwork" style="height:34px;vertical-align:middle"></a>
+  <div style="display:flex;align-items:center;gap:3px">
+    <div class="audio-ctrl" id="audioCtrl" role="button" aria-label="Play or pause music" tabindex="0">
+      <div class="bars"><span></span><span></span><span></span><span></span><span></span></div>
+      <span class="audio-label" id="audioLabel">World Peace in Us · Soulonaut</span>
+      <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <polygon id="audioIcon" points="5,3 13,8 5,13" fill="rgba(62,207,178,.6)"/>
+      </svg>
+    </div>
+    <div class="audio-ctrl" id="audioSkip" role="button" aria-label="Next track" tabindex="0" style="padding:5px 8px;min-width:0">
+      <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:13px;height:13px" aria-hidden="true">
+        <polygon points="3,4 9,8 3,12" fill="rgba(62,207,178,.5)"/>
+        <rect x="10" y="4" width="2" height="8" rx="0.5" fill="rgba(62,207,178,.5)"/>
+      </svg>
+    </div>
+    <button class="lang-toggle" id="langToggle" title="Switch language">
+      <span data-lang-en class="active">EN</span> <span style="opacity:.4">|</span> <span data-lang-de>DE</span>
+    </button>
+  </div>
+</div>
+
+<!-- ═══ SACRED GEOMETRY BACKGROUND FIELD ═══
+     6 patterns: Seed of Life, Metatron's Cube, Vesica Piscis, Flower of Life, Chladni, Golden Spiral
+     CSS-based SVG (reliable on all devices including iOS Safari) + Canvas overlay -->
+
+<div class="bg-flower-c" aria-hidden="true"></div>
+<div class="sg-bg">
+  <!-- P1: Full Flower of Life — top right -->
+  <div class="sg-bg-pattern">
+    <svg viewBox="0 0 400 400" fill="none"><g stroke="rgba(62,207,178,1)" stroke-width=".5"><circle cx="200" cy="200" r="55"/><circle cx="255" cy="200" r="55"/><circle cx="227.5" cy="247.6" r="55"/><circle cx="172.5" cy="247.6" r="55"/><circle cx="145" cy="200" r="55"/><circle cx="172.5" cy="152.4" r="55"/><circle cx="227.5" cy="152.4" r="55"/><circle cx="310" cy="200" r="55"/><circle cx="255" cy="295.3" r="55"/><circle cx="145" cy="295.3" r="55"/><circle cx="90" cy="200" r="55"/><circle cx="145" cy="104.7" r="55"/><circle cx="255" cy="104.7" r="55"/><circle cx="282.5" cy="247.6" r="55"/><circle cx="200" cy="295.3" r="55"/><circle cx="117.5" cy="247.6" r="55"/><circle cx="117.5" cy="152.4" r="55"/><circle cx="200" cy="104.7" r="55"/><circle cx="282.5" cy="152.4" r="55"/></g><circle cx="200" cy="200" r="165" stroke="rgba(62,207,178,1)" stroke-width=".3"/><circle cx="200" cy="200" r="178" stroke="rgba(62,207,178,1)" stroke-width=".2"/></svg>
+  </div>
+
+  <!-- P2: Metatron's Cube — bottom left -->
+  <div class="sg-bg-pattern">
+    <svg viewBox="0 0 400 400" fill="none"><g stroke="rgba(62,207,178,1)" stroke-width=".4"><circle cx="200" cy="200" r="34"/><circle cx="280" cy="200" r="34"/><circle cx="240" cy="269" r="34"/><circle cx="160" cy="269" r="34"/><circle cx="120" cy="200" r="34"/><circle cx="160" cy="131" r="34"/><circle cx="240" cy="131" r="34"/></g><g stroke="rgba(62,207,178,1)" stroke-width=".25" opacity=".6"><line x1="200" y1="200" x2="280" y2="200"/><line x1="200" y1="200" x2="240" y2="269"/><line x1="200" y1="200" x2="160" y2="269"/><line x1="200" y1="200" x2="120" y2="200"/><line x1="200" y1="200" x2="160" y2="131"/><line x1="200" y1="200" x2="240" y2="131"/><line x1="280" y1="200" x2="240" y2="269"/><line x1="280" y1="200" x2="160" y2="269"/><line x1="280" y1="200" x2="120" y2="200"/><line x1="280" y1="200" x2="160" y2="131"/><line x1="280" y1="200" x2="240" y2="131"/><line x1="240" y1="269" x2="160" y2="269"/><line x1="240" y1="269" x2="120" y2="200"/><line x1="240" y1="269" x2="160" y2="131"/><line x1="240" y1="269" x2="240" y2="131"/><line x1="160" y1="269" x2="120" y2="200"/><line x1="160" y1="269" x2="160" y2="131"/><line x1="160" y1="269" x2="240" y2="131"/><line x1="120" y1="200" x2="160" y2="131"/><line x1="120" y1="200" x2="240" y2="131"/><line x1="160" y1="131" x2="240" y2="131"/></g></svg>
+  </div>
+
+  <!-- P3: Vesica Piscis — mid right -->
+  <div class="sg-bg-pattern">
+    <svg viewBox="0 0 300 300" fill="none"><circle cx="110" cy="150" r="89" stroke="rgba(62,207,178,1)" stroke-width=".5"/><circle cx="190" cy="150" r="89" stroke="rgba(62,207,178,1)" stroke-width=".5"/><ellipse cx="150" cy="150" rx="34" ry="77" stroke="rgba(62,207,178,1)" stroke-width=".3" opacity=".5"/></svg>
+  </div>
+
+  <!-- P4: Seed of Life — mid left -->
+  <div class="sg-bg-pattern">
+    <svg viewBox="0 0 300 300" fill="none"><g stroke="rgba(85,185,130,1)" stroke-width=".4"><circle cx="150" cy="150" r="55"/><circle cx="205" cy="150" r="55"/><circle cx="177.5" cy="197.6" r="55"/><circle cx="122.5" cy="197.6" r="55"/><circle cx="95" cy="150" r="55"/><circle cx="122.5" cy="102.4" r="55"/><circle cx="177.5" cy="102.4" r="55"/></g><circle cx="150" cy="150" r="110" stroke="rgba(85,185,130,1)" stroke-width=".2"/></svg>
+  </div>
+
+  <!-- P5: Chladni Eigenmode — bottom right -->
+  <div class="sg-bg-pattern">
+    <svg viewBox="0 0 300 300" fill="none"><circle cx="150" cy="150" r="110" stroke="rgba(62,207,178,1)" stroke-width=".4" opacity=".4"/><line x1="260" y1="150" x2="40" y2="150" stroke="rgba(62,207,178,1)" stroke-width=".3" opacity=".3"/><line x1="205" y1="245.3" x2="95" y2="54.7" stroke="rgba(62,207,178,1)" stroke-width=".3" opacity=".3"/><line x1="95" y1="245.3" x2="205" y2="54.7" stroke="rgba(62,207,178,1)" stroke-width=".3" opacity=".3"/><circle cx="150" cy="150" r="48" stroke="rgba(62,207,178,1)" stroke-width=".3" opacity=".25" stroke-dasharray="3 5"/><circle cx="150" cy="150" r="81" stroke="rgba(62,207,178,1)" stroke-width=".3" opacity=".25" stroke-dasharray="3 5"/></svg>
+  </div>
+
+  <!-- P6: Small Seed of Life — top left accent -->
+  <div class="sg-bg-pattern">
+    <svg viewBox="0 0 200 200" fill="none"><g stroke="rgba(62,207,178,1)" stroke-width=".5"><circle cx="100" cy="100" r="34"/><circle cx="134" cy="100" r="34"/><circle cx="117" cy="129.4" r="34"/><circle cx="83" cy="129.4" r="34"/><circle cx="66" cy="100" r="34"/><circle cx="83" cy="70.6" r="34"/><circle cx="117" cy="70.6" r="34"/></g></svg>
+  </div>
+</div>
+
+<!-- Canvas overlay for scroll-reactive parallax effect -->
+<canvas id="bgFlower" role="img" aria-label="Sacred geometry background pattern"></canvas>
+
+<!-- ═══ FLOATING NAV PILL ═══ -->
+<nav class="nav" id="floatingNav">
+  <a href="#gal-nav" data-en="The App" data-de="Die App">The App</a>
+  <a href="#gal-bio" data-en="Your Body" data-de="Dein Körper">Your Body</a>
+  <a href="#gal-science" data-en="Science" data-de="Wissenschaft">Science</a>
+  <a href="#for-coaches" data-en="Coaches" data-de="Coaches">Coaches</a>
+  <a href="#for-research" data-en="Research" data-de="Forschung">Research</a>
+  <a href="#faq" data-en="FAQ" data-de="FAQ">FAQ</a>
+  <a href="mailto:jan@vitalkultur.com" data-en="Contact" data-de="Kontakt">Contact</a>
+  <a href="#beta" class="btn btn-gold" style="padding:5px 16px;font-size:11px;border-radius:21px;margin-left:8px" data-en="Request access" data-de="Zugang anfragen">Request access</a>
+</nav>
+
+<div class="page">
+
+<!-- ═══ 1. HERO ═══ -->
+<div class="hero">
+  <div class="hero-badge" data-en="Closed beta · Haptic breathwork for Apple Watch" data-de="Geschlossene Beta · Haptische Atemarbeit für die Apple Watch">Closed beta · Haptic breathwork for Apple Watch</div>
+
+  <div class="flower-wrap">
+    <canvas id="flowerCanvas" role="img" aria-label="Flower of Life sacred geometry animation"></canvas>
+    <div class="flower-ci">
+      <div class="ci-name">CARLON</div>
+      <div class="ci-product">Breathwork</div>
+      <div class="ci-claim" data-en="Feel your breath. Mastered." data-de="Feel your breath. Mastered.">Feel your breath. Mastered.</div>
+    </div>
+  </div>
+
+  <h1 class="hero-title" style="margin-top:13px" data-en="Breathwork you feel —<br><em>not watch.</em>" data-de="Atemarbeit, die du fühlst —<br><em>nicht ansiehst.</em>">Breathwork you feel —<br><em>not watch.</em></h1>
+  <p class="hero-sub" style="margin-top:13px;font-size:14px;color:var(--t2);max-width:500px;margin-left:auto;margin-right:auto;line-height:1.6" data-en="16 evidence-based techniques, felt through the Taptic Engine — eyes closed, no screen.<br>From the first calm breath to deep, measured stillness." data-de="16 evidenzbasierte Techniken, gefühlt durch die Taptic Engine — mit geschlossenen Augen, ohne Bildschirm.<br>Vom ersten ruhigen Atemzug bis zur tiefen, gemessenen Stille.">16 evidence-based techniques, felt through the Taptic Engine — eyes closed, no screen.<br>From the first calm breath to deep, measured stillness.</p>
+  <p style="margin-top:8px;font-size:11px;color:var(--t3)" data-en="Now in closed beta · testers &amp; breath-coach partners welcome" data-de="Jetzt in geschlossener Beta · Tester &amp; Atem-Coach-Partner willkommen">Now in closed beta · testers &amp; breath-coach partners welcome</p>
+
+  <!-- Hero Lifestyle Image -->
+  <div class="rv" style="margin:34px auto 0;border-radius:21px;overflow:hidden">
+    <img src="/hero-outdoor.png" alt="Apple Watch Ultra showing CARLON Tummo session outdoors in cold conditions" style="width:100%;display:block">
+  </div>
+
+  <div class="hero-cta" style="margin-top:34px">
+    <a href="#beta" class="btn btn-gold" onclick="if(window.goatcounter)goatcounter.count({path:'cta-hero-beta',event:true})" data-en="Request beta access" data-de="Beta-Zugang anfragen">Request beta access</a>
+    <a href="#gal-nav" style="margin-top:8px;font-size:11px;color:var(--t3);opacity:.5;text-decoration:none" onclick="if(window.goatcounter)goatcounter.count({path:'cta-hero-experience',event:true})" data-en="See how it works ↓" data-de="So funktioniert's ↓">See how it works ↓</a>
+  </div>
+
+  <div class="scroll-line"></div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════════════════════════════
+     CARLON WEBSITE · COMPLETE REWRITE · USP-FIRST ARCHITECTURE
+     5 Swipe-Galerien · 15 Device-Mockups · Apple-Quality
+     Framework: 5-Stufen-Lernprozess (Aufmerksamkeit → Handlung)
+     ═══════════════════════════════════════════════════════════════════ -->
+
+<!-- Gallery CSS (einmalig, für alle Galerien) -->
+<style>
+.gal-vp{overflow-x:auto;overflow-y:hidden;scroll-snap-type:x proximity;scroll-behavior:smooth;-webkit-overflow-scrolling:touch;scrollbar-width:none;overscroll-behavior-x:contain;cursor:grab;touch-action:pan-x}
+.gal-vp:active{cursor:grabbing}
+.gal-vp::-webkit-scrollbar{display:none}
+.gal-track{display:flex;gap:21px;padding:0 calc(50% - 160px)}
+.gal-slide{flex:0 0 min(80vw,280px);scroll-snap-align:center;scroll-snap-stop:always;opacity:.3;transform:scale(.91);transition:opacity .35s,transform .35s;text-align:center;padding:13px 0}
+@media(min-width:768px){
+/* Desktop: alle Slides statisch nebeneinander (wie Equine phone-row), kein Carousel */
+.gal-head{display:none!important}
+.gal-vp{overflow:visible!important;scroll-snap-type:none}
+.gal-track{flex-wrap:wrap;justify-content:center;gap:28px 24px;padding:0}
+.gal-slide{flex:0 1 clamp(200px,26vw,300px);opacity:1;transform:none;scroll-snap-align:none}
+}
+.gal-slide.is-active{opacity:1;transform:scale(1)}
+.gal-slide img{width:100%;border-radius:21px;display:block}
+.gal-head{display:flex;justify-content:space-between;align-items:center;padding:0 21px;margin-bottom:8px}
+.gal-meta{font-size:11px;color:var(--t3)}
+.gal-btn{width:34px;height:34px;border-radius:50%;border:1px solid rgba(62,207,178,.15);background:transparent;color:var(--gold);cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center;transition:all .2s}
+.gal-btn:hover{border-color:var(--gold);background:rgba(62,207,178,.06)}
+.gal-label{font-size:11px;color:var(--gold);letter-spacing:.06em;margin-bottom:5px;font-weight:500}
+.gal-desc{font-size:12px;color:var(--t3);line-height:1.6;max-width:260px;margin:0 auto 13px}
+/* ═══ FEATURE-RAILS — swipebare Kästen nebeneinander ═══ */
+.feat-rail{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:13px;max-width:720px;margin:26px auto 0}
+.feat-card{border:1px solid rgba(62,207,178,.18);border-radius:16px;background:rgba(62,207,178,.04);padding:15px 15px 13px;text-align:left;transition:border-color .25s,transform .25s}
+.feat-card:hover{border-color:rgba(62,207,178,.4);transform:translateY(-2px)}
+.feat-card h5{font-size:13.5px;font-weight:500;color:var(--t);margin:0 0 5px;letter-spacing:.01em}
+.feat-card p{font-size:12px;color:var(--t2);line-height:1.55;margin:0}
+#for-coaches .feat-card{border-color:rgba(135,55,225,.22);background:rgba(135,55,225,.05)}
+#for-coaches .feat-card:hover{border-color:rgba(135,55,225,.5)}
+#for-research .feat-card{border-color:rgba(62,207,178,.22);background:rgba(62,207,178,.05)}
+#for-research .feat-card:hover{border-color:rgba(62,207,178,.5)}
+/* ═══ ENTRY-CHIPS — Tier-Navigation ═══ */
+.entry-chips{display:flex;flex-wrap:wrap;justify-content:center;gap:10px;max-width:640px;margin:6px auto 0;padding:0 16px}
+.entry-chip{display:flex;flex-direction:column;gap:2px;text-align:left;padding:10px 14px;border:1px solid rgba(62,207,178,.22);border-radius:13px;background:rgba(62,207,178,.04);text-decoration:none;transition:border-color .2s,background .2s,transform .2s;min-width:0}
+.entry-chip:hover{border-color:var(--gold);background:rgba(62,207,178,.09);transform:translateY(-2px)}
+.entry-chip .ec-t{font-size:13px;font-weight:600;color:var(--t)}
+.entry-chip .ec-r{font-size:11px;color:var(--gold);letter-spacing:.02em}
+@media(max-width:640px){.entry-chip{flex:1 1 calc(50% - 6px)}}
+@media(max-width:640px){
+.feat-rail{display:flex;grid-template-columns:none;flex-wrap:nowrap;overflow-x:auto;overflow-y:hidden;scroll-snap-type:x proximity;-webkit-overflow-scrolling:touch;overscroll-behavior-x:contain;touch-action:pan-x;scrollbar-width:none;gap:12px;padding:4px 2px 14px}
+.feat-rail::-webkit-scrollbar{display:none}
+.feat-rail>*{scroll-snap-align:start;scroll-snap-stop:always;flex:0 0 64%;min-width:0}
+}
+</style>
+
+<!-- ═══ TRUST STRIP (kompakt) ═══ -->
+<div class="trust-strip" style="padding:13px 0">
+  <span class="trust-badge"><svg viewBox="0 0 16 16" fill="none" style="width:13px;height:13px;vertical-align:-1px;margin-right:4px"><path d="M8 1L2 4v4c0 3.5 2.5 6.4 6 7.5 3.5-1.1 6-4 6-7.5V4L8 1z" stroke="currentColor" stroke-width="1.2"/><path d="M5.5 8l2 2 3.5-3.5" stroke="currentColor" stroke-width="1.2"/></svg><span data-en="Privacy by Design" data-de="Privacy by Design">Privacy by Design</span></span>
+  <span class="trust-badge" data-en="Apple Watch native" data-de="Apple Watch nativ">Apple Watch native</span>
+  <span class="trust-badge" data-en="Haptic-guided" data-de="Haptisch geführt">Haptic-guided</span>
+  <span class="trust-badge" data-en="Live Biometrics" data-de="Live-Biometrie">Live Biometrics</span>
+</div>
+
+<!-- ═══ ENTRY-CHIPS — Tier-Navigation ═══ -->
+<div class="entry-chips" style="margin-bottom:13px">
+  <a class="entry-chip" href="#gal-nav"><span class="ec-t" data-en="Practitioner" data-de="Praktizierende">Practitioner</span><span class="ec-r" data-en="Feel every breath" data-de="Jeden Atemzug fühlen">Feel every breath</span></a>
+  <a class="entry-chip" href="#for-coaches"><span class="ec-t" data-en="Coach" data-de="Coach">Coach</span><span class="ec-r" data-en="Design &amp; share" data-de="Gestalten &amp; teilen">Design &amp; share</span></a>
+  <a class="entry-chip" href="#for-research"><span class="ec-t" data-en="Researcher" data-de="Forschende">Researcher</span><span class="ec-r" data-en="H10 &amp; HRV" data-de="H10 &amp; HRV">H10 &amp; HRV</span></a>
+</div>
+
+<!-- ═══ 1. STATEMENT ═══ -->
+<div class="rv" style="padding:89px 21px 55px;text-align:center">
+  <h2 style="font-size:clamp(24px,5vw,42px);font-weight:200;color:#fff;line-height:1.2;letter-spacing:-.02em" data-en="Your wrist guides every breath.<br><em style=&quot;color:var(--gold)&quot;>No screen needed.</em>" data-de="Dein Handgelenk führt jeden Atemzug.<br><em style=&quot;color:var(--gold)&quot;>Kein Bildschirm nötig.</em>">Your wrist guides every breath.<br><em style="color:var(--gold)">No screen needed.</em></h2>
+
+  <div style="display:flex;gap:clamp(8px,2vw,21px);margin:55px auto 0;max-width:900px;justify-content:center;flex-wrap:wrap">
+    <div style="flex:1;min-width:200px;max-width:420px">
+      <img src="/hero-haptics.png" alt="Eyes closed — haptic waves guide every breath from the wrist" style="width:100%;display:block;border-radius:21px">
+      <p style="text-align:center;margin-top:13px;font-size:12px;color:var(--t2)" data-en="Haptic pulses rise for inhale, fall for exhale.<br><span style=&quot;color:var(--gold);opacity:.7&quot;>Close your eyes. Just feel.</span>" data-de="Haptische Impulse steigen beim Einatmen, fallen beim Ausatmen.<br><span style=&quot;color:var(--gold);opacity:.7&quot;>Schließ die Augen. Fühl einfach.</span>">Haptic pulses rise for inhale, fall for exhale.<br><span style="color:var(--gold);opacity:.7">Close your eyes. Just feel.</span></p>
+    </div>
+    <div style="flex:1;min-width:200px;max-width:420px">
+      <img src="/hero-doubletap.png" alt="Double Tap to end breath hold during Tummo retention" style="width:100%;display:block;border-radius:21px">
+      <p style="text-align:center;margin-top:13px;font-size:12px;color:var(--t2)" data-en="Holding your breath during Tummo? Double Tap ends the retention.<br><span style=&quot;color:var(--gold);opacity:.7&quot;>Eyes stay closed. Fingers decide.</span>" data-de="Luft anhalten während Tummo? Double Tap beendet die Retention.<br><span style=&quot;color:var(--gold);opacity:.7&quot;>Die Augen bleiben zu. Die Finger entscheiden.</span>">Holding your breath during Tummo? Double Tap ends the retention.<br><span style="color:var(--gold);opacity:.7">Eyes stay closed. Fingers decide.</span></p>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ 2. THE APP — "Experience it" ═══ -->
+<div class="sect rv" style="padding-bottom:34px">
+  <p class="label rv" data-en="The App" data-de="Die App">The App</p>
+  <h2 class="rv" style="font-size:26px;font-weight:300;letter-spacing:-.02em;margin-top:8px" data-en="Swipe through <em>CARLON.</em>" data-de="Wisch dich durch <em>CARLON.</em>">Swipe through <em>CARLON.</em></h2>
+  <p class="rv" style="margin-top:8px;font-size:14px;color:var(--t2);max-width:480px;margin-left:auto;margin-right:auto;text-align:center;line-height:1.6" data-en="Just like on the Watch — swipe left and right to explore." data-de="Genau wie auf der Watch — wisch nach links und rechts, um zu erkunden.">Just like on the Watch — swipe left and right to explore.</p>
+
+  <!-- Gallery A: Haupt-Navigation (Menu → Session → Music) -->
+  <section class="gal" id="gal-nav" data-start="1" aria-label="Watch Navigation" style="margin:34px auto 0;max-width:900px">
+    <div class="gal-head">
+      <span class="gal-meta" aria-live="polite">1 / 3</span>
+      <div style="display:flex;gap:6px">
+        <button class="gal-btn gal-prev" aria-label="Previous">‹</button>
+        <button class="gal-btn gal-next" aria-label="Next">›</button>
+      </div>
+    </div>
+    <div class="gal-vp" tabindex="0">
+      <div class="gal-track">
+        <article class="gal-slide">
+          <div class="gal-label" data-en="Navigate" data-de="Navigieren">Navigate</div>
+          <img src="/carlon-menu.png" alt="CARLON Watch — Main menu: Patterns, History, Settings, Recommend" loading="lazy">
+          <p class="gal-desc" data-en="Patterns, History, Settings, Recommendations — everything on your wrist." data-de="Muster, Verlauf, Einstellungen, Empfehlungen — alles auf deinem Handgelenk.">Patterns, History, Settings, Recommendations — everything on your wrist.</p>
+        </article>
+        <article class="gal-slide">
+          <div class="gal-label" data-en="Breathe" data-de="Atmen">Breathe</div>
+          <img src="/carlon-session.png" alt="CARLON Watch — Coherence breathing session with Flower of Life" loading="lazy">
+          <p class="gal-desc" data-en="Flower of Life guides your breath. Haptics pulse on your wrist. Eyes closed." data-de="Flower of Life führt deinen Atem. Haptik pulsiert an deinem Handgelenk. Augen zu.">Flower of Life guides your breath. Haptics pulse on your wrist. Eyes closed.</p>
+        </article>
+        <article class="gal-slide">
+          <div class="gal-label" data-en="Your Music" data-de="Deine Musik">Your Music</div>
+          <img src="/carlon-music.png" alt="CARLON Watch — Apple Music natively integrated during breathing session" loading="lazy">
+          <p class="gal-desc" data-en="Apple Music natively integrated. Play your favourite relaxation music during any breathing session — controlled from your wrist." data-de="Apple Music nativ integriert. Spiel deine liebste Entspannungsmusik während jeder Atemsession — gesteuert von deinem Handgelenk.">Apple Music natively integrated. Play your favourite relaxation music during any breathing session — controlled from your wrist.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- Gallery B: Tieferes Menü (Techniques → Custom) -->
+  <section class="gal" id="gal-deep" aria-label="Watch Techniques" style="margin:55px auto 0;max-width:900px">
+    <p style="text-align:center;font-size:12px;color:var(--t3);margin-bottom:8px" data-en="Go deeper" data-de="Geh tiefer">Go deeper</p>
+    <div class="gal-head">
+      <span class="gal-meta" aria-live="polite">1 / 3</span>
+      <div style="display:flex;gap:6px">
+        <button class="gal-btn gal-prev" aria-label="Previous">‹</button>
+        <button class="gal-btn gal-next" aria-label="Next">›</button>
+      </div>
+    </div>
+    <div class="gal-vp" tabindex="0">
+      <div class="gal-track">
+        <article class="gal-slide">
+          <div class="gal-label" data-en="16 Techniques" data-de="16 Techniken">16 Techniques</div>
+          <img src="/carlon-techniques.png" alt="Watch — Tummo, Coherence, Box and more" loading="lazy">
+          <p class="gal-desc" data-en="From calm to fire. Grounded in breathing physiology — evidence-based or design-inspired, always tagged." data-de="Von Ruhe bis Feuer. In der Atem-Physiologie verankert — evidenzbasiert oder design-inspiriert, immer gekennzeichnet.">From calm to fire. Grounded in breathing physiology — evidence-based or design-inspired, always tagged.</p>
+        </article>
+        <article class="gal-slide">
+          <div class="gal-label" data-en="Two atmospheres" data-de="Zwei Atmosphären">Two atmospheres</div>
+          <img src="/carlon-tummo.png" alt="Watch — Tummo session, orange Flower, Power in" loading="lazy">
+          <p class="gal-desc" data-en="Tummo burns orange. Coherence glows green. You feel the difference before you see it." data-de="Tummo brennt orange. Coherence leuchtet grün. Du fühlst den Unterschied, bevor du ihn siehst.">Tummo burns orange. Coherence glows green. You feel the difference before you see it.</p>
+        </article>
+        <article class="gal-slide">
+          <div class="gal-label" data-en="Create your own" data-de="Erschaff dein eigenes">Create your own</div>
+          <img src="/carlon-presets.png" alt="Watch — Custom Pattern builder" loading="lazy">
+          <p class="gal-desc" data-en="Build your own breathing pattern. Name it. Use Tummo as base. Make it yours." data-de="Bau dein eigenes Atemmuster. Gib ihm einen Namen. Nimm Tummo als Basis. Mach es zu deinem.">Build your own breathing pattern. Name it. Use Tummo as base. Make it yours.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+</div>
+
+<div class="breathe-space"></div>
+
+<!-- ═══ BÜNDEL: Watch + iPhone side-by-side (Apple-Schlafindex-Style) ═══ -->
+<div class="sect rv" style="padding:55px 21px">
+  <p style="text-align:center;font-size:15px;color:var(--t);max-width:550px;margin:0 auto 34px;line-height:1.6;font-weight:300" data-en="Your breathwork on your wrist.<br><span style=&quot;color:var(--green);font-size:13px&quot;>The details where you can actually read them.</span>" data-de="Deine Atemarbeit an deinem Handgelenk.<br><span style=&quot;color:var(--green);font-size:13px&quot;>Die Details dort, wo du sie wirklich lesen kannst.</span>">Your breathwork on your wrist.<br><span style="color:var(--green);font-size:13px">The details where you can actually read them.</span></p>
+  <div style="display:flex;align-items:center;justify-content:center;gap:clamp(13px,4vw,55px);max-width:900px;margin:0 auto;flex-wrap:wrap">
+    <img src="/carlon-heartrate.png" alt="Watch — heart rate curve during Tummo session" style="width:clamp(160px,28vw,260px);border-radius:21px;flex-shrink:0">
+    <img src="/carlon-iphone-heartrate.png" alt="iPhone — detailed heart rate analysis" style="width:clamp(180px,32vw,300px);border-radius:21px;flex-shrink:0">
+  </div>
+</div>
+
+<div class="breathe-space"></div>
+
+<!-- ═══ 3. YOUR BODY PROVES IT ═══ -->
+<div class="sect rv sect-glow" style="padding-bottom:34px">
+  <p class="label rv" style="color:var(--green)" data-en="Your body" data-de="Dein Körper">Your body</p>
+  <h2 class="rv" style="font-size:26px;font-weight:300;letter-spacing:-.02em;margin-top:8px" data-en="Real data. <em>Not promises.</em>" data-de="Echte Daten. <em>Keine Versprechen.</em>">Real data. <em>Not promises.</em></h2>
+  <p class="rv" style="margin-top:8px;font-size:14px;color:var(--t2);max-width:520px;margin-left:auto;margin-right:auto;text-align:center;line-height:1.6" data-en="Most breathwork apps show a timer. CARLON shows what your body actually does — on your wrist and on your iPhone." data-de="Die meisten Atem-Apps zeigen einen Timer. CARLON zeigt, was dein Körper wirklich tut — an deinem Handgelenk und auf deinem iPhone.">Most breathwork apps show a timer. CARLON shows what your body actually does — on your wrist and on your iPhone.</p>
+
+  <!-- Gallery C: Biometrik Watch → iPhone -->
+  <section class="gal" id="gal-bio" aria-label="Biometrics" style="margin:34px auto 0;max-width:900px">
+    <div class="gal-head">
+      <span class="gal-meta" aria-live="polite">1 / 6</span>
+      <div style="display:flex;gap:6px">
+        <button class="gal-btn gal-prev" aria-label="Previous">‹</button>
+        <button class="gal-btn gal-next" aria-label="Next">›</button>
+      </div>
+    </div>
+    <div class="gal-vp" tabindex="0">
+      <div class="gal-track">
+        <article class="gal-slide">
+          <div class="gal-label" data-en="Watch · Heart Rate" data-de="Watch · Herzfrequenz">Watch · Heart Rate</div>
+          <img src="/carlon-heartrate.png" alt="Watch — full session HR curve with dive reflex drop visible" loading="lazy">
+          <p class="gal-desc" data-en="Your heart rate drops during breath holds. The dive reflex — visible on your wrist." data-de="Deine Herzfrequenz sinkt beim Luftanhalten. Der Tauchreflex — sichtbar an deinem Handgelenk.">Your heart rate drops during breath holds. The dive reflex — visible on your wrist.</p>
+        </article>
+        <article class="gal-slide">
+          <div class="gal-label" data-en="Watch · Breath Sync" data-de="Watch · Atem-Sync">Watch · Breath Sync</div>
+          <img src="/carlon-breathsync.png" alt="Watch — breath synchronicity 36%, phase, frequency, depth" loading="lazy">
+          <p class="gal-desc" data-en="Heart and breath in sync. Phase, frequency, depth — measured after every session." data-de="Herz und Atem im Gleichklang. Phase, Frequenz, Tiefe — nach jeder Session gemessen.">Heart and breath in sync. Phase, frequency, depth — measured after every session.</p>
+        </article>
+        <article class="gal-slide">
+          <div class="gal-label" data-en="Watch · Retention" data-de="Watch · Retention">Watch · Retention</div>
+          <img src="/carlon-retention.png" alt="Watch — retention R1 to R3, improving +25%" loading="lazy">
+          <p class="gal-desc" data-en="Round by round, you hold longer. +25% improvement — tracked on your wrist." data-de="Runde für Runde hältst du länger. +25% Verbesserung — an deinem Handgelenk erfasst.">Round by round, you hold longer. +25% improvement — tracked on your wrist.</p>
+        </article>
+        <article class="gal-slide">
+          <div class="gal-label" data-en="iPhone · Heart Rate" data-de="iPhone · Herzfrequenz">iPhone · Heart Rate</div>
+          <img src="/carlon-iphone-heartrate.png" alt="iPhone — full session HR curve over 3 minutes" loading="lazy">
+          <p class="gal-desc" data-en="Every heartbeat plotted. See exactly where your nervous system shifted." data-de="Jeder Herzschlag geplottet. Sieh genau, wo dein Nervensystem umgeschaltet hat.">Every heartbeat plotted. See exactly where your nervous system shifted.</p>
+        </article>
+        <article class="gal-slide">
+          <div class="gal-label" data-en="iPhone · Insights" data-de="iPhone · Einblicke">iPhone · Insights</div>
+          <img src="/carlon-iphone-breathsync.png" alt="iPhone — breath sync gauges, HRV context, personal insights" loading="lazy">
+          <p class="gal-desc" data-en="Personal coaching: HRV in context, breath synchronicity, and what to do next." data-de="Persönliches Coaching: HRV im Kontext, Atem-Synchronizität und was als Nächstes zu tun ist.">Personal coaching: HRV in context, breath synchronicity, and what to do next.</p>
+        </article>
+        <article class="gal-slide">
+          <div class="gal-label" data-en="iPhone · Progress" data-de="iPhone · Fortschritt">iPhone · Progress</div>
+          <img src="/carlon-iphone-retention.png" alt="iPhone — retention progress over 30 sessions with personal best" loading="lazy">
+          <p class="gal-desc" data-en="Every session stronger. 30-session trend, personal best, body adapting." data-de="Jede Session stärker. 30-Session-Trend, persönliche Bestleistung, der Körper passt sich an.">Every session stronger. 30-session trend, personal best, body adapting.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+</div>
+
+<div class="breathe-space"></div>
+
+<!-- ═══ 4. KNOW WHAT YOU BREATHE ═══ -->
+<div class="sect rv" style="padding-bottom:34px">
+  <p class="label rv" data-en="The science" data-de="Die Wissenschaft">The science</p>
+  <h2 class="rv" style="font-size:26px;font-weight:300;letter-spacing:-.02em;margin-top:8px" data-en="Know what <em>you breathe.</em>" data-de="Wisse, was <em>du atmest.</em>">Know what <em>you breathe.</em></h2>
+  <p class="rv" style="margin-top:8px;font-size:14px;color:var(--t2);max-width:520px;margin-left:auto;margin-right:auto;text-align:center;line-height:1.6" data-en="Every technique explained. Timings grounded in slow-breathing science where evidence exists — the rest design-inspired and labelled." data-de="Jede Technik erklärt. Timings in der Wissenschaft langsamer Atmung verankert, wo Evidenz existiert — der Rest design-inspiriert und gekennzeichnet.">Every technique explained. Timings grounded in slow-breathing science where evidence exists — the rest design-inspired and labelled.</p>
+
+  <!-- Gallery D: Wissen -->
+  <section class="gal" id="gal-science" aria-label="Science and knowledge" style="margin:34px auto 0;max-width:900px">
+    <div class="gal-head">
+      <span class="gal-meta" aria-live="polite">1 / 3</span>
+      <div style="display:flex;gap:6px">
+        <button class="gal-btn gal-prev" aria-label="Previous">‹</button>
+        <button class="gal-btn gal-next" aria-label="Next">›</button>
+      </div>
+    </div>
+    <div class="gal-vp" tabindex="0">
+      <div class="gal-track">
+        <article class="gal-slide">
+          <div class="gal-label" data-en="Breathing Wiki" data-de="Atem-Wiki">Breathing Wiki</div>
+          <img src="/carlon-iphone-wiki.png" alt="iPhone — Breathing Wiki: understand your breath, patterns explained" loading="lazy">
+          <p class="gal-desc" data-en="Every pattern explained — what it does, why it works, which studies back it." data-de="Jedes Muster erklärt — was es tut, warum es wirkt, welche Studien es belegen.">Every pattern explained — what it does, why it works, which studies back it.</p>
+        </article>
+        <article class="gal-slide">
+          <div class="gal-label" data-en="Your Dashboard" data-de="Dein Dashboard">Your Dashboard</div>
+          <img src="/carlon-iphone-dashboard.png" alt="iPhone — HRV Today dashboard, 7-day trends, session count" loading="lazy">
+          <p class="gal-desc" data-en="HRV Today. 7-day trends. 20 sessions tracked. Your nervous system's report card." data-de="HRV heute. 7-Tage-Trends. 20 erfasste Sessions. Das Zeugnis deines Nervensystems.">HRV Today. 7-day trends. 20 sessions tracked. Your nervous system's report card.</p>
+        </article>
+        <article class="gal-slide">
+          <div class="gal-label" data-en="Understand Retention" data-de="Retention verstehen">Understand Retention</div>
+          <img src="/carlon-iphone-retention.png" alt="iPhone — what is retention, progress over 30 sessions" loading="lazy">
+          <p class="gal-desc" data-en="CARLON doesn't just measure — it teaches. Every metric explained in context." data-de="CARLON misst nicht nur — es lehrt. Jede Metrik im Kontext erklärt.">CARLON doesn't just measure — it teaches. Every metric explained in context.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- Research Badges -->
+  <div class="result-strip rv" style="margin-top:55px">
+    <div class="result-num"><div class="big">↓</div><div class="desc" data-en="cortisol reduction<sup><a href=&quot;#ref-c&quot; style=&quot;color:var(--gold);text-decoration:none&quot;>1</a></sup>" data-de="Cortisol-Reduktion<sup><a href=&quot;#ref-c&quot; style=&quot;color:var(--gold);text-decoration:none&quot;>1</a></sup>">cortisol reduction<sup><a href="#ref-c" style="color:var(--gold);text-decoration:none">1</a></sup></div></div>
+    <div class="result-num"><div class="big">↑</div><div class="desc" data-en="HRV improvement<sup><a href=&quot;#ref-h&quot; style=&quot;color:var(--gold);text-decoration:none&quot;>2</a></sup>" data-de="HRV-Verbesserung<sup><a href=&quot;#ref-h&quot; style=&quot;color:var(--gold);text-decoration:none&quot;>2</a></sup>">HRV improvement<sup><a href="#ref-h" style="color:var(--gold);text-decoration:none">2</a></sup></div></div>
+    <div class="result-num"><div class="big">~5.5</div><div class="desc" data-en="breaths/min resonance<sup><a href=&quot;#ref-r&quot; style=&quot;color:var(--gold);text-decoration:none&quot;>3</a></sup>" data-de="Atemzüge/min Resonanz<sup><a href=&quot;#ref-r&quot; style=&quot;color:var(--gold);text-decoration:none&quot;>3</a></sup>">breaths/min resonance<sup><a href="#ref-r" style="color:var(--gold);text-decoration:none">3</a></sup></div></div>
+    <div class="result-num"><div class="big">111</div><div class="desc" data-en="participants<sup><a href=&quot;#ref-s&quot; style=&quot;color:var(--gold);text-decoration:none&quot;>4</a></sup>" data-de="Teilnehmende<sup><a href=&quot;#ref-s&quot; style=&quot;color:var(--gold);text-decoration:none&quot;>4</a></sup>">participants<sup><a href="#ref-s" style="color:var(--gold);text-decoration:none">4</a></sup></div></div>
+  </div>
+  <div class="rv" style="margin-top:11px;text-align:center;font-size:11px;color:var(--t3);opacity:.6;max-width:520px;margin-left:auto;margin-right:auto;line-height:1.6" data-en="Observed in peer-reviewed studies of slow breathing — from the literature, not measured by the app." data-de="In peer-reviewed Studien zu langsamer Atmung beobachtet — aus der Literatur, nicht von der App gemessen.">Observed in peer-reviewed studies of slow breathing — from the literature, not measured by the app.</div>
+  <div class="rv" style="margin-top:22px;text-align:center;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--t3);opacity:.6;margin-bottom:9px" data-en="Research we build on" data-de="Forschung, auf der wir aufbauen">Research we build on</div>
+  <div class="sci-badges rv" style="margin-top:0">
+    <span class="sci-badge">Stanford University</span>
+    <span class="sci-badge">Frontiers in Psychology</span>
+    <span class="sci-badge">Cell Reports Medicine</span>
+  </div>
+  <div style="margin-top:13px;font-size:10px;color:var(--t3);max-width:610px;margin-left:auto;margin-right:auto;line-height:1.7;opacity:.5;text-align:center">
+    <span id="ref-c">[1]</span> Ma et al. (2017) "Effect of Diaphragmatic Breathing on Attention, Negative Affect and Stress" <em>Frontiers in Psychology</em> 8:874.
+    <span id="ref-h">[2]</span> Lehrer &amp; Gevirtz (2014) "Heart rate variability biofeedback: mechanisms and models" <em>Frontiers in Psychology</em> 5:756.
+    <span id="ref-r">[3]</span> Russo et al. (2017) "The physiological effects of slow breathing" <em>Breathe</em> 13(4):298-309.
+    <span id="ref-s">[4]</span> Balban et al. (2023) "Brief structured respiration practices enhance mood" <em>Cell Reports Medicine</em> 4(1):100895. n=111.
+  </div>
+</div>
+
+<div class="breathe-space"></div>
+
+<!-- ═══ TIER 2 — FOR COACHES ═══ -->
+<div class="sect rv" id="for-coaches" style="padding-bottom:34px">
+  <p class="label rv" style="text-align:center;color:rgb(175,120,255)" data-en="For coaches &amp; trainers" data-de="Für Coaches &amp; Trainer">For coaches &amp; trainers</p>
+  <h2 class="rv" style="text-align:center;font-size:26px;font-weight:300;letter-spacing:-.02em;margin-top:8px" data-en="Design the breath.<br><em>Then share it.</em>" data-de="Gestalte den Atem.<br><em>Dann teil ihn.</em>">Design the breath.<br><em>Then share it.</em></h2>
+  <p class="rv" style="max-width:560px;margin:16px auto 0;text-align:center;font-size:14px;color:var(--t2);line-height:1.7" data-en="Build a pattern for a client's evening wind-down — set the phases, the rounds, the recovery, your colour, your coaching note. Name it. Brand it. Send a link. They open it on their Watch and feel your guidance, eyes closed." data-de="Baue ein Muster für das abendliche Herunterkommen einer Klientin — leg die Phasen fest, die Runden, die Erholung, deine Farbe, deine Coaching-Notiz. Gib ihm einen Namen. Präge ihn mit deiner Marke. Schick einen Link. Sie öffnen ihn auf ihrer Watch und fühlen deine Führung, mit geschlossenen Augen.">Build a pattern for a client's evening wind-down — set the phases, the rounds, the recovery, your colour, your coaching note. Name it. Brand it. Send a link. They open it on their Watch and feel your guidance, eyes closed.</p>
+  <div class="rv" style="text-align:center;margin-top:26px"><img src="/carlon-presets.png" alt="CARLON Preset Builder — design and brand custom breathing patterns" loading="lazy" width="220" height="352" style="width:100%;max-width:220px;display:inline-block;border-radius:18px;box-shadow:0 20px 60px rgba(0,0,0,.5)"></div>
+  <div class="feat-rail">
+    <div class="feat-card"><h5 data-en="Breath Composer" data-de="Breath Composer">Breath Composer</h5><p data-en="A 6-key timeline to compose any pattern." data-de="Eine 6-Tasten-Timeline, um jedes Muster zu komponieren.">A 6-key timeline to compose any pattern.</p></div>
+    <div class="feat-card"><h5 data-en="Preset Builder" data-de="Preset Builder">Preset Builder</h5><p data-en="Phases, rounds, recovery, your colour, your coach note." data-de="Phasen, Runden, Erholung, deine Farbe, deine Coach-Notiz.">Phases, rounds, recovery, your colour, your coach note.</p></div>
+    <div class="feat-card"><h5 data-en="Share by link" data-de="Per Link teilen">Share by link</h5><p data-en="Clients open your preset in one tap — no export needed." data-de="Klienten öffnen dein Preset mit einem Tipp — kein Export nötig.">Clients open your preset in one tap — no export needed.</p></div>
+    <div class="feat-card"><h5 data-en="Programs" data-de="Programme">Programs</h5><p data-en="Chain presets into multi-session courses." data-de="Verkette Presets zu Kursen über mehrere Sessions.">Chain presets into multi-session courses.</p></div>
+    <div class="feat-card"><h5 data-en="Breathing Wiki" data-de="Atem-Wiki">Breathing Wiki</h5><p data-en="The studies behind every pattern, for your clients." data-de="Die Studien hinter jedem Muster, für deine Klienten.">The studies behind every pattern, for your clients.</p></div>
+  </div>
+  <div style="text-align:center;margin-top:28px">
+    <a href="mailto:jan@vitalkultur.com?subject=CARLON%20Coach%20Partner&body=Hi%20Jan%2C%20I%27m%20a%20breathwork%20coach%20%2F%20trainer%20and%20I%27d%20like%20to%20explore%20becoming%20a%20founding%20partner.%0A%0AMy%20practice%3A%20%0AWhat%20I%20teach%3A%20" class="btn btn-gold" onclick="if(window.goatcounter)goatcounter.count({path:'cta-coach-partner',event:true})" data-en="Become a founding coach partner" data-de="Werde Gründungs-Coach-Partner">Become a founding coach partner</a>
+    <p style="margin-top:10px;font-size:11px;color:var(--t3)" data-en="Early access · help shape the coach tools · founding-partner recognition" data-de="Früher Zugang · gestalte die Coach-Tools mit · Nennung als Gründungspartner">Early access · help shape the coach tools · founding-partner recognition</p>
+  </div>
+</div>
+
+<div class="breathe-space"></div>
+
+<!-- ═══ TIER 3 — FOR RESEARCHERS ═══ -->
+<div class="sect rv" id="for-research" style="padding-bottom:34px">
+  <p class="label rv" style="text-align:center;color:#3ECFB2" data-en="For researchers" data-de="Für Forschende">For researchers</p>
+  <h2 class="rv" style="text-align:center;font-size:26px;font-weight:300;letter-spacing:-.02em;margin-top:8px" data-en="Your breath,<br><em>as data.</em>" data-de="Dein Atem,<br><em>als Daten.</em>">Your breath,<br><em>as data.</em></h2>
+  <p class="rv" style="max-width:600px;margin:16px auto 0;text-align:center;font-size:14px;color:var(--t2);line-height:1.7" data-en="Add a Polar H10 and CARLON captures what your breathing does to your heart at research grade — beat-to-beat intervals, artifact-filtered, with an honest signal-source badge. Every session exportable, methodology included. Study what your breath actually does." data-de="Füg einen Polar H10 hinzu und CARLON erfasst in Research-Grade, was dein Atem mit deinem Herzen macht — Schlag-zu-Schlag-Intervalle, artefaktgefiltert, mit einem ehrlichen Signalquellen-Badge. Jede Session exportierbar, Methodik inklusive. Erforsche, was dein Atem wirklich tut.">Add a Polar H10 and CARLON captures what your breathing does to your heart at research grade — beat-to-beat intervals, artifact-filtered, with an honest signal-source badge. Every session exportable, methodology included. Study what your breath actually does.</p>
+  <div class="rv" style="text-align:center;margin-top:26px"><img src="/carlon-iphone-dashboard.png" alt="CARLON research cockpit — HRV metrics and analysis" loading="lazy" width="210" height="428" style="width:100%;max-width:210px;display:inline-block;border-radius:20px;box-shadow:0 20px 60px rgba(0,0,0,.5)"></div>
+  <div class="feat-rail">
+    <div class="feat-card"><h5 data-en="Polar H10, research-grade" data-de="Polar H10, Research-Grade">Polar H10, research-grade</h5><p data-en="Beat-to-beat RR, artifact filter, honest signal-source badge." data-de="Schlag-zu-Schlag-RR, Artefaktfilter, ehrliches Signalquellen-Badge.">Beat-to-beat RR, artifact filter, honest signal-source badge.</p></div>
+    <div class="feat-card"><h5 data-en="Live during sessions" data-de="Live während der Sessions">Live during sessions</h5><p data-en="Heart rate &amp; HRV on your wrist as you breathe — see the effect in real time." data-de="Herzfrequenz &amp; HRV an deinem Handgelenk beim Atmen — sieh den Effekt in Echtzeit.">Heart rate &amp; HRV on your wrist as you breathe — see the effect in real time.</p></div>
+    <div class="feat-card"><h5 data-en="Rigorous, not hyped" data-de="Seriös, nicht gehyped">Rigorous, not hyped</h5><p data-en="Established physiology — every claim tagged evidence-based or design-inspired, never marketing." data-de="Etablierte Physiologie — jede Aussage als evidenzbasiert oder design-inspiriert gekennzeichnet, nie Marketing.">Established physiology — every claim tagged evidence-based or design-inspired, never marketing.</p></div>
+    <div class="feat-card"><h5 data-en="HRV suite" data-de="HRV-Suite">HRV suite</h5><p data-en="RMSSD, Poincaré SD1/SD2, Baevsky stress index, DFA-α1." data-de="RMSSD, Poincaré SD1/SD2, Baevsky-Stress-Index, DFA-α1.">RMSSD, Poincaré SD1/SD2, Baevsky stress index, DFA-α1.</p></div>
+    <div class="feat-card"><h5 data-en="Research export" data-de="Research-Export">Research export</h5><p data-en="JSON / CSV / Markdown with methodology + SHA-256 integrity." data-de="JSON / CSV / Markdown mit Methodik + SHA-256-Integrität.">JSON / CSV / Markdown with methodology + SHA-256 integrity.</p></div>
+  </div>
+  <p style="max-width:600px;margin:20px auto 0;text-align:center;font-size:11px;color:var(--t3);line-height:1.6" data-en="A wellness product, not a medical device. Not intended to diagnose, treat, cure or prevent any disease." data-de="Ein Wellness-Produkt, kein Medizinprodukt. Nicht dazu bestimmt, Krankheiten zu diagnostizieren, zu behandeln, zu heilen oder ihnen vorzubeugen.">A wellness product, not a medical device. Not intended to diagnose, treat, cure or prevent any disease.</p>
+  <div style="text-align:center;margin-top:24px">
+    <a href="mailto:jan@vitalkultur.com?subject=CARLON%20Research&body=Hi%20Jan%2C%20I%27m%20interested%20in%20CARLON%20for%20research%20%28Polar%20H10%20%2F%20HRV%20measurement%29.%0A%0AContext%3A%20" class="btn btn-gold" onclick="if(window.goatcounter)goatcounter.count({path:'cta-research',event:true})" data-en="Talk research" data-de="Über Forschung sprechen">Talk research</a>
+  </div>
+</div>
+
+<div class="breathe-space"></div>
+
+<!-- ═══ 5. ORIGIN ═══ -->
+<div class="sect rv" id="origin" style="padding-bottom:34px">
+  <p class="label rv" data-en="Origin" data-de="Ursprung">Origin</p>
+  <h2 class="rv" style="font-size:26px;font-weight:300;letter-spacing:-.02em;margin-top:8px" data-en="Born from <em>our breath.</em>" data-de="Geboren aus <em>unserem Atem.</em>">Born from <em>our breath.</em></h2>
+
+  <div class="rv" style="width:144px;height:144px;border-radius:50%;margin:21px auto;border:1px solid rgba(62,207,178,.15);overflow:hidden">
+    <img src="/founders.png" alt="Jan & Carina — Founders of Vitalkultur" width="144" height="144" style="width:100%;height:100%;object-fit:cover;display:block">
+  </div>
+  <p style="text-align:center;font-style:italic;color:var(--gold);opacity:.5;font-size:13px" class="rv" data-en="Jan & Carina · Founders of Vitalkultur" data-de="Jan & Carina · Gründer von Vitalkultur">Jan & Carina · Founders of Vitalkultur</p>
+
+  <p class="rv" style="margin-top:21px;font-size:15px;color:var(--t);max-width:550px;margin-left:auto;margin-right:auto;text-align:center;line-height:1.8" data-en="When our son Carlon was born on a January night in 2026, breathwork became more than a technique — it became the way we stayed grounded together." data-de="Als unser Sohn Carlon in einer Januarnacht 2026 geboren wurde, wurde Atemarbeit mehr als eine Technik — sie wurde die Art, wie wir gemeinsam geerdet blieben.">When our son Carlon was born on a January night in 2026, breathwork became more than a technique — it became the way we stayed grounded together.</p>
+
+  <p class="rv" style="margin-top:13px;font-size:14px;color:var(--t2);max-width:550px;margin-left:auto;margin-right:auto;text-align:center;line-height:1.8" data-en="We couldn't find an app that matched what breathing actually feels like. So we built one during night shifts — testing thousands of haptic patterns to find the perfect rhythm for every breath." data-de="Wir fanden keine App, die dem entsprach, wie sich Atmen wirklich anfühlt. Also bauten wir selbst eine in Nachtschichten — und testeten Tausende haptischer Muster, um den perfekten Rhythmus für jeden Atemzug zu finden.">We couldn't find an app that matched what breathing actually feels like. So we built one during night shifts — testing thousands of haptic patterns to find the perfect rhythm for every breath.</p>
+
+  <p class="rv" style="margin-top:21px;font-size:14px;color:var(--t2);max-width:550px;margin-left:auto;margin-right:auto;text-align:center;line-height:1.8" data-en="One night, the family was asleep. I put CARLON on the lowest haptic level — barely there, just a whisper on my wrist. Coherence breathing, 5.5 breaths per minute. The vibration was so subtle that I had to <em>listen</em> for it. And that's exactly what pulled me out of my head. No thoughts about code. No plans for tomorrow. Just the faintest pulse, rising for inhale, falling for exhale. I fell asleep mid-session." data-de="Eines Nachts schlief die Familie. Ich stellte CARLON auf die niedrigste Haptik-Stufe — kaum spürbar, nur ein Flüstern an meinem Handgelenk. Coherence-Atmung, 5,5 Atemzüge pro Minute. Die Vibration war so fein, dass ich ihr <em>lauschen</em> musste. Und genau das holte mich aus meinem Kopf. Keine Gedanken an Code. Keine Pläne für morgen. Nur der leiseste Puls, steigend beim Einatmen, fallend beim Ausatmen. Ich schlief mitten in der Session ein.">One night, the family was asleep. I put CARLON on the lowest haptic level — barely there, just a whisper on my wrist. Coherence breathing, 5.5 breaths per minute. The vibration was so subtle that I had to <em>listen</em> for it. And that's exactly what pulled me out of my head. No thoughts about code. No plans for tomorrow. Just the faintest pulse, rising for inhale, falling for exhale. I fell asleep mid-session.</p>
+
+  <p class="rv" style="margin-top:13px;font-size:14px;color:var(--t2);max-width:550px;margin-left:auto;margin-right:auto;text-align:center;line-height:1.8" data-en="That was the moment I knew it works. Not because of the data — but because I stopped thinking and started breathing. Named after our son, because freedom is in every breath." data-de="Das war der Moment, in dem ich wusste: Es wirkt. Nicht wegen der Daten — sondern weil ich aufhörte zu denken und anfing zu atmen. Benannt nach unserem Sohn, weil Freiheit in jedem Atemzug liegt.">That was the moment I knew it works. Not because of the data — but because I stopped thinking and started breathing. Named after our son, because freedom is in every breath.</p>
+</div>
+
+<div class="breathe-space"></div>
+
+<!-- ═══ 6. THE BETA ═══ -->
+<div class="sect sect-warm rv" id="beta" style="padding-bottom:34px">
+  <p class="label rv" style="text-align:center;color:var(--gold)" data-en="The beta" data-de="Die Beta">The beta</p>
+  <h2 class="rv" style="text-align:center;font-size:26px;font-weight:300;letter-spacing:-.02em;margin-top:8px" data-en="Your Watch becomes<br><em>a breath coach.</em>" data-de="Deine Watch wird<br><em>zum Atem-Coach.</em>">Your Watch becomes<br><em>a breath coach.</em></h2>
+
+  <div style="max-width:400px;margin:34px auto 0;text-align:center">
+    <div class="price-num" style="font-size:clamp(34px,5.5vw,48px);font-weight:200;color:var(--gold-bright);letter-spacing:-.02em" data-en="By invitation" data-de="Auf Einladung">By invitation</div>
+    <p style="margin-top:8px;font-size:14px;color:var(--t2)" data-en="Full access for a small group of selected testers — before CARLON goes public." data-de="Voller Zugang für eine kleine Gruppe ausgewählter Tester — bevor CARLON öffentlich wird.">Full access for a small group of selected testers — before CARLON goes public.</p>
+    <ul style="list-style:none;padding:0;margin:21px auto 0;max-width:300px;text-align:left;font-size:13px;color:var(--t2);line-height:2.2">
+      <li style="border-bottom:1px solid rgba(62,207,178,.06);padding:2px 0" data-en="Haptic breathing guidance — eyes closed" data-de="Haptische Atemführung — mit geschlossenen Augen">Haptic breathing guidance — eyes closed</li>
+      <li style="border-bottom:1px solid rgba(62,207,178,.06);padding:2px 0" data-en="16 science-backed techniques + create your own" data-de="16 wissenschaftlich fundierte Techniken + erstelle deine eigenen">16 science-backed techniques + create your own</li>
+      <li style="border-bottom:1px solid rgba(62,207,178,.06);padding:2px 0" data-en="Live heart rate + HRV on your wrist" data-de="Live-Herzfrequenz + HRV an deinem Handgelenk">Live heart rate + HRV on your wrist</li>
+      <li style="border-bottom:1px solid rgba(62,207,178,.06);padding:2px 0" data-en="iPhone companion with full analysis" data-de="iPhone-Begleiter mit voller Analyse">iPhone companion with full analysis</li>
+      <li style="border-bottom:1px solid rgba(62,207,178,.06);padding:2px 0" data-en="Breathing Wiki with studies behind every preset" data-de="Atem-Wiki mit Studien hinter jedem Preset">Breathing Wiki with studies behind every preset</li>
+      <li style="padding:2px 0" data-en="Siri, Calendar, Complications, and more" data-de="Siri, Kalender, Komplikationen und mehr">Siri, Calendar, Complications, and more</li>
+    </ul>
+
+
+    <a href="mailto:jan@vitalkultur.com?subject=CARLON%20Beta%20Access&body=Hi%20Jan%2C%20I%27d%20like%20to%20join%20the%20CARLON%20closed%20beta.%0A%0AApple%20Watch%20model%3A%20%0AWhat%20draws%20me%20to%20CARLON%3A%20" class="btn btn-gold" onclick="if(window.goatcounter)goatcounter.count({path:'cta-beta-request',event:true})" style="margin-top:34px;display:inline-block" data-en="Request beta access" data-de="Beta-Zugang anfragen">Request beta access</a>
+    <p style="margin-top:8px;font-size:10px;color:var(--t3)" data-en="Currently in closed beta · we reply personally" data-de="Aktuell in geschlossener Beta · wir antworten persönlich">Currently in closed beta · we reply personally</p>
+  </div>
+</div>
+
+<div class="breathe-space"></div>
+
+<!-- ═══ 7. FAQ ═══ -->
+<div class="sect rv" id="faq" style="padding-bottom:34px">
+  <p class="label" data-en="Questions" data-de="Fragen">Questions</p>
+  <h2 style="font-size:26px;font-weight:300;letter-spacing:-.02em;margin-top:8px" data-en="Frequently <em>asked.</em>" data-de="Häufig <em>gefragt.</em>">Frequently <em>asked.</em></h2>
+
+  <div class="faq-list" style="margin-top:34px">
+    <div class="faq-item"><div class="faq-q" onclick="this.parentElement.classList.toggle('open')" data-en="Do I need an Apple Watch?" data-de="Brauche ich eine Apple Watch?">Do I need an Apple Watch?</div><div class="faq-a" data-en="Yes — CARLON is designed as a Watch-first experience. Haptic guidance, Double Tap, and wrist-based biometrics all require it. The iPhone companion provides session history, insights, and the Breath Composer. Requires Apple Watch Series 4 or later with watchOS 11." data-de="Ja — CARLON ist als Watch-First-Erlebnis gestaltet. Haptische Führung, Double Tap und Biometrie am Handgelenk brauchen sie alle. Der iPhone-Begleiter liefert Session-Verlauf, Einblicke und den Breath Composer. Erfordert Apple Watch Series 4 oder neuer mit watchOS 11.">Yes — CARLON is designed as a Watch-first experience. Haptic guidance, Double Tap, and wrist-based biometrics all require it. The iPhone companion provides session history, insights, and the Breath Composer. Requires Apple Watch Series 4 or later with watchOS 11.</div></div>
+    <div class="faq-item"><div class="faq-q" onclick="this.parentElement.classList.toggle('open')" data-en="How do I get in, and what will it cost?" data-de="Wie komme ich rein, und was kostet es?">How do I get in, and what will it cost?</div><div class="faq-a" data-en="CARLON is currently in closed, invitation-only beta. Request access and we'll get back to you personally. Pricing will be announced at launch." data-de="CARLON ist aktuell in geschlossener Beta, nur auf Einladung. Frag Zugang an und wir melden uns persönlich bei dir. Der Preis wird zum Launch bekannt gegeben.">CARLON is currently in closed, invitation-only beta. Request access and we'll get back to you personally. Pricing will be announced at launch.</div></div>
+    <div class="faq-item"><div class="faq-q" onclick="this.parentElement.classList.toggle('open')" data-en="Does it work with HealthKit?" data-de="Funktioniert es mit HealthKit?">Does it work with HealthKit?</div><div class="faq-a" data-en="Yes. CARLON writes Mindful Minutes to Apple Health and captures live heart rate during sessions. You get real session RMSSD, HR sparklines, dive reflex detection, and HR Range tracking." data-de="Ja. CARLON schreibt Achtsamkeitsminuten in Apple Health und erfasst die Live-Herzfrequenz während der Sessions. Du bekommst echtes Session-RMSSD, HR-Sparklines, Tauchreflex-Erkennung und HR-Range-Tracking.">Yes. CARLON writes Mindful Minutes to Apple Health and captures live heart rate during sessions. You get real session RMSSD, HR sparklines, dive reflex detection, and HR Range tracking.</div></div>
+    <div class="faq-item"><div class="faq-q" onclick="this.parentElement.classList.toggle('open')" data-en="Is this a medical device?" data-de="Ist das ein Medizinprodukt?">Is this a medical device?</div><div class="faq-a" data-en="No. CARLON is a non-regulated wellness app. It is not intended to diagnose, treat, cure, or prevent any disease. Always consult a physician before starting breathwork if you have cardiovascular, respiratory, or neurological conditions. Never hold your breath or breathe intensely in or near water, while driving, or standing — practise seated or lying down, and stop if you feel light-headed." data-de="Nein. CARLON ist eine nicht-regulierte Wellness-App. Sie ist nicht dazu bestimmt, Krankheiten zu diagnostizieren, zu behandeln, zu heilen oder ihnen vorzubeugen. Sprich immer mit einer Ärztin oder einem Arzt, bevor du mit Atemarbeit beginnst, wenn du Herz-Kreislauf-, Atemwegs- oder neurologische Beschwerden hast. Übe Atemanhalten oder intensive Atmung nie im oder am Wasser, beim Autofahren oder im Stehen — praktiziere im Sitzen oder Liegen und höre auf, wenn dir schwindelig wird.">No. CARLON is a non-regulated wellness app. It is not intended to diagnose, treat, cure, or prevent any disease. Always consult a physician before starting breathwork if you have cardiovascular, respiratory, or neurological conditions. Never hold your breath or breathe intensely in or near water, while driving, or standing — practise seated or lying down, and stop if you feel light-headed.</div></div>
+    <div class="faq-item"><div class="faq-q" onclick="this.parentElement.classList.toggle('open')" data-en="What makes CARLON different?" data-de="Was macht CARLON anders?">What makes CARLON different?</div><div class="faq-a" data-en="CARLON guides through haptics, not screens. You close your eyes and feel every breath. Plus: real biometrics (heart rate, HRV, breath sync) — not just a timer." data-de="CARLON führt durch Haptik, nicht durch Bildschirme. Du schließt die Augen und fühlst jeden Atemzug. Dazu: echte Biometrie (Herzfrequenz, HRV, Atem-Sync) — nicht bloß ein Timer.">CARLON guides through haptics, not screens. You close your eyes and feel every breath. Plus: real biometrics (heart rate, HRV, breath sync) — not just a timer.</div></div>
+  </div>
+</div>
+
+<!-- ═══ BETA CTA ═══ -->
+<div class="sect rv" id="emailCapture" style="text-align:center;padding-bottom:34px">
+  <h2 style="font-size:21px;font-weight:300" data-en="Ready to <em>feel it?</em>" data-de="Bereit, es zu <em>fühlen?</em>">Ready to <em>feel it?</em></h2>
+  <p style="margin-top:10px;font-size:13px;color:var(--t2);max-width:430px;margin-left:auto;margin-right:auto;line-height:1.6" data-en="CARLON is in closed beta. Tell us a little about you and we'll send an invite — we read and reply to every message personally." data-de="CARLON ist in geschlossener Beta. Erzähl uns ein wenig über dich und wir schicken dir eine Einladung — wir lesen und beantworten jede Nachricht persönlich.">CARLON is in closed beta. Tell us a little about you and we'll send an invite — we read and reply to every message personally.</p>
+  <div style="margin-top:21px">
+    <a href="mailto:jan@vitalkultur.com?subject=CARLON%20Beta%20Access&body=Hi%20Jan%2C%20I%27d%20like%20to%20join%20the%20CARLON%20closed%20beta.%0A%0AApple%20Watch%20model%3A%20%0AWhat%20draws%20me%20to%20CARLON%3A%20" class="btn btn-gold rv" onclick="if(window.goatcounter)goatcounter.count({path:'cta-footer-beta',event:true})" data-en="Request beta access" data-de="Beta-Zugang anfragen">Request beta access</a>
+  </div>
+  <p style="margin-top:13px;font-size:11px;color:var(--t3)" data-en="Or just write us: <a href=&quot;mailto:jan@vitalkultur.com&quot; style=&quot;color:var(--gold)&quot;>jan@vitalkultur.com</a>" data-de="Oder schreib uns einfach: <a href=&quot;mailto:jan@vitalkultur.com&quot; style=&quot;color:var(--gold)&quot;>jan@vitalkultur.com</a>">Or just write us: <a href="mailto:jan@vitalkultur.com" style="color:var(--gold)">jan@vitalkultur.com</a></p>
+</div>
+
+<!-- ═══ GALLERY JS (einmalig, initialisiert alle Galerien) ═══ -->
+<script>
+function initGal(sel){
+  const s=document.querySelector(sel);if(!s)return;
+  const vp=s.querySelector('.gal-vp'),slides=[...s.querySelectorAll('.gal-slide')],
+        prev=s.querySelector('.gal-prev'),next=s.querySelector('.gal-next'),meta=s.querySelector('.gal-meta');
+  let a=0;
+  const up=i=>{a=i;slides.forEach((s,j)=>s.classList.toggle('is-active',j===i));if(meta)meta.textContent=`${i+1} / ${slides.length}`};
+  const io=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting&&e.intersectionRatio>.5)up(slides.indexOf(e.target))})},{root:vp,threshold:[.5]});
+  slides.forEach(s=>io.observe(s));
+  if(prev)prev.onclick=()=>{const i=Math.max(0,a-1);slides[i].scrollIntoView({behavior:'smooth',inline:'center',block:'nearest'})};
+  if(next)next.onclick=()=>{const i=Math.min(slides.length-1,a+1);slides[i].scrollIntoView({behavior:'smooth',inline:'center',block:'nearest'})};
+  vp.addEventListener('keydown',e=>{if(e.key==='ArrowLeft'){e.preventDefault();prev?.click()}if(e.key==='ArrowRight'){e.preventDefault();next?.click()}});
+  const si=parseInt(s.dataset.start||'0');up(si);if(vp&&slides[si]){vp.scrollLeft=slides[si].offsetLeft-vp.offsetWidth/2+slides[si].offsetWidth/2;}
+}
+initGal('#gal-nav');initGal('#gal-deep');initGal('#gal-bio');initGal('#gal-science');
+</script>
+
+<!-- ═══ 15. FOOTER ═══ -->
+<footer>
+  <img src="/assets/vitalkultur-wordmark.png" alt="Vitalkultur" class="logo" loading="lazy">
+  <nav>
+    <a href="/privacy.html" data-en="Privacy Policy" data-de="Datenschutz">Privacy Policy</a>
+    <a href="/terms.html" data-en="Terms of Use" data-de="Nutzungsbedingungen">Terms of Use</a>
+    <a href="/support.html" data-en="Support" data-de="Support">Support</a>
+    <a href="mailto:jan@vitalkultur.com" data-en="Contact" data-de="Kontakt">Contact</a>
+    <a href="https://instagram.com/vitalkultur.de" target="_blank" rel="noopener">Instagram</a>
+    <a href="/impressum.html">Impressum</a>
+  </nav>
+  <p style="font-size:12px;letter-spacing:.03em;opacity:.72;margin:6px 0 0" data-en="Part of the Vitalkultur app family — <a href=&quot;/&quot; style=&quot;color:var(--gold-bright);text-decoration:none&quot;>Vitalkultur</a> · <a href=&quot;/carlon-equine/&quot; style=&quot;color:var(--gold-bright);text-decoration:none&quot;>CARLON Equine</a> · <a href=&quot;/rrloggerpro/&quot; style=&quot;color:var(--gold-bright);text-decoration:none&quot;>CARLON Research</a>" data-de="Teil der Vitalkultur-App-Familie — <a href=&quot;/&quot; style=&quot;color:var(--gold-bright);text-decoration:none&quot;>Vitalkultur</a> · <a href=&quot;/carlon-equine/&quot; style=&quot;color:var(--gold-bright);text-decoration:none&quot;>CARLON Equine</a> · <a href=&quot;/rrloggerpro/&quot; style=&quot;color:var(--gold-bright);text-decoration:none&quot;>CARLON Research</a>">Part of the Vitalkultur app family — <a href="/" style="color:var(--gold-bright);text-decoration:none">Vitalkultur</a> · <a href="/carlon-equine/" style="color:var(--gold-bright);text-decoration:none">CARLON Equine</a> · <a href="/rrloggerpro/" style="color:var(--gold-bright);text-decoration:none">CARLON Research</a></p>
+  <p>&copy; 2026 Vitalkultur · Jan Rohwedder</p>
+  <p class="disclaimer" data-en="CARLON is a wellness product, not a medical device. It is not intended to diagnose, treat, cure, or prevent any disease. This product is not a substitute for professional medical advice, diagnosis, or treatment. Consult a physician before beginning any breathing practice if you have cardiovascular, respiratory, or neurological conditions. Never hold your breath or breathe intensely in or near water, while driving, or standing — practise seated or lying down, and stop if you feel light-headed." data-de="CARLON ist ein Wellness-Produkt, kein Medizinprodukt. Es ist nicht dazu bestimmt, Krankheiten zu diagnostizieren, zu behandeln, zu heilen oder ihnen vorzubeugen. Dieses Produkt ersetzt keine professionelle medizinische Beratung, Diagnose oder Behandlung. Sprich mit einer Ärztin oder einem Arzt, bevor du mit einer Atempraxis beginnst, wenn du Herz-Kreislauf-, Atemwegs- oder neurologische Beschwerden hast. Übe Atemanhalten oder intensive Atmung nie im oder am Wasser, beim Autofahren oder im Stehen — praktiziere im Sitzen oder Liegen und höre auf, wenn dir schwindelig wird.">CARLON is a wellness product, not a medical device. It is not intended to diagnose, treat, cure, or prevent any disease. This product is not a substitute for professional medical advice, diagnosis, or treatment. Consult a physician before beginning any breathing practice if you have cardiovascular, respiratory, or neurological conditions. Never hold your breath or breathe intensely in or near water, while driving, or standing — practise seated or lying down, and stop if you feel light-headed.</p>
+</footer>
+
+<audio id="ambientAudio0" src="/world-peace-in-us.mp3" preload="none"></audio>
+<audio id="ambientAudio1" src="/beyond-the-sun.mp3" preload="none"></audio>
+
+
+</div><!-- /page -->
+
+<script>
+// Scroll Reveal
+const obs=new IntersectionObserver(e=>{e.forEach(e=>{e.isIntersecting&&e.target.classList.add('v')})},{threshold:.05,rootMargin:'0px 0px -40px 0px'});
+document.querySelectorAll('.rv').forEach(e=>obs.observe(e));
+const prefersReducedMotion=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+// ═══ SOLFEGGIO FREQUENCY STRIP ═══
+(function(){
+  const strip=document.getElementById('freqStrip');
+  if(!strip)return;
+  const freqs=[
+    {hz:396,color:'200,60,50',label:'Liberation'},
+    {hz:432,color:'178,148,76',label:'Harmony'},
+    {hz:528,color:'50,215,120',label:'Transformation'},
+    {hz:639,color:'135,55,225',label:'Connection'}
+  ];
+  freqs.forEach(f=>{
+    for(let i=0;i<8;i++){
+      const bar=document.createElement('div');
+      bar.className='freq-bar';
+      const h=13+Math.random()*21;
+      bar.style.height=h+'px';
+      bar.style.background=`rgba(${f.color},${.15+Math.random()*.25})`;
+      strip.appendChild(bar);
+    }
+    const gap=document.createElement('div');
+    gap.style.width='8px';
+    strip.appendChild(gap);
+  });
+})();
+
+// ═══ BACKGROUND FLOWER OF LIFE — Full viewport, parallax ═══
+// Deferred init: yields to main thread first (fixes Desktop TBT)
+(function(){
+  function initBgFlower(){
+  const c=document.getElementById('bgFlower');
+  const ctx=c.getContext('2d');
+  function resize(){
+    const dpr=window.devicePixelRatio||1;
+    c.width=window.innerWidth*dpr;c.height=window.innerHeight*dpr;
+    c.style.width=window.innerWidth+'px';c.style.height=window.innerHeight+'px';
+    ctx.setTransform(dpr,0,0,dpr,0,0);
+  }
+  resize();window.addEventListener('resize',resize);
+  const W=()=>window.innerWidth,H=()=>window.innerHeight;
+
+  function drawBg(){
+    ctx.clearRect(0,0,W(),H());
+    const scroll=window.scrollY;
+    const maxScroll=document.body.scrollHeight-window.innerHeight;
+    const progress=Math.min(1,scroll/Math.max(1,maxScroll));
+
+    // Fade as user scrolls
+    const alpha=Math.max(.02,.06*(1-progress*.5));
+
+    // Sacred Geometry patterns — layered, varied, discoverable
+    const patterns=[
+      {x:W()*.85,y:H()*.15,r:90,rot:scroll*.0002,type:'seed'},
+      {x:W()*.08,y:H()*.7,r:70,rot:-scroll*.00015,type:'seed'},
+      {x:W()*.72,y:H()*.6,r:55,rot:scroll*.00025,type:'vesica'},
+      {x:W()*.22,y:H()*.25,r:60,rot:-scroll*.0001,type:'metatron'},
+      {x:W()*.5,y:H()*.45,r:40,rot:scroll*.00012,type:'spiral'},
+      {x:W()*.92,y:H()*.85,r:50,rot:-scroll*.0002,type:'seed'},
+    ];
+
+    patterns.forEach(p=>{
+      ctx.save();
+      ctx.translate(p.x,p.y);
+      ctx.rotate(p.rot);
+      ctx.strokeStyle=`rgba(62,207,178,${alpha})`;
+      ctx.lineWidth=.4;
+
+      if(p.type==='seed'){
+        // Seed of Life — 7 circles
+        ctx.beginPath();ctx.arc(0,0,p.r,0,Math.PI*2);ctx.stroke();
+        for(let i=0;i<6;i++){
+          const a=i*60*Math.PI/180;
+          ctx.beginPath();ctx.arc(Math.cos(a)*p.r,Math.sin(a)*p.r,p.r,0,Math.PI*2);ctx.stroke();
+        }
+        ctx.strokeStyle=`rgba(62,207,178,${alpha*.3})`;
+        ctx.beginPath();ctx.arc(0,0,p.r*2,0,Math.PI*2);ctx.stroke();
+      } else if(p.type==='vesica'){
+        // Vesica Piscis — two overlapping circles
+        ctx.beginPath();ctx.arc(-p.r*.5,0,p.r,0,Math.PI*2);ctx.stroke();
+        ctx.beginPath();ctx.arc(p.r*.5,0,p.r,0,Math.PI*2);ctx.stroke();
+        ctx.strokeStyle=`rgba(62,207,178,${alpha*.5})`;ctx.lineWidth=.3;
+        ctx.beginPath();ctx.ellipse(0,0,p.r*.29,p.r*.87,0,0,Math.PI*2);ctx.stroke();
+      } else if(p.type==='metatron'){
+        // Metatron's Cube — hexagonal + connecting lines
+        const pts=[];
+        for(let i=0;i<6;i++){
+          const a=i*60*Math.PI/180;
+          pts.push({x:Math.cos(a)*p.r,y:Math.sin(a)*p.r});
+          ctx.beginPath();ctx.arc(Math.cos(a)*p.r,Math.sin(a)*p.r,p.r*.5,0,Math.PI*2);ctx.stroke();
+        }
+        ctx.beginPath();ctx.arc(0,0,p.r*.5,0,Math.PI*2);ctx.stroke();
+        ctx.strokeStyle=`rgba(62,207,178,${alpha*.4})`;ctx.lineWidth=.2;
+        for(let i=0;i<pts.length;i++)for(let j=i+1;j<pts.length;j++){
+          ctx.beginPath();ctx.moveTo(pts[i].x,pts[i].y);ctx.lineTo(pts[j].x,pts[j].y);ctx.stroke();
+        }
+      } else if(p.type==='spiral'){
+        // Golden Spiral — φ-based arcs (easter egg!)
+        ctx.strokeStyle=`rgba(62,207,178,${alpha*.7})`;ctx.lineWidth=.3;
+        let sr=p.r*.15,sa=0;
+        ctx.beginPath();
+        for(let s=0;s<20;s++){
+          const x=Math.cos(sa)*sr,y=Math.sin(sa)*sr;
+          s===0?ctx.moveTo(x,y):ctx.lineTo(x,y);
+          sa+=.3;sr*=1.05;
+        }
+        ctx.stroke();
+      }
+      ctx.restore();
+    });
+
+    if(!prefersReducedMotion)requestAnimationFrame(drawBg);
+  }
+  drawBg();
+  } // end initBgFlower
+  // Defer: let critical paint happen first, then start canvas
+  if('requestIdleCallback' in window){requestIdleCallback(initBgFlower)}
+  else{setTimeout(initBgFlower,200)}
+})();
+
+/*
+ * ═══ FLOWER OF LIFE ENGINE ══════════════════════════════════════
+ *
+ * Sacred Geometry: 19 circles arranged in the Flower of Life pattern
+ * Center(1) + Ring 1(6 × 60°) + Ring 2(12 × 30° offset)
+ *
+ * The Flower of Life contains ALL other sacred patterns:
+ * - Seed of Life (inner 7 circles)
+ * - Vesica Piscis (any two adjacent circles)
+ * - Metatron's Cube (connecting all centers)
+ * - Platonic Solids (projected from Metatron's Cube)
+ * - Tree of Life (10 nodes mapped to circle intersections)
+ *
+ * Breath timing: 4342ms = Schumann(127.71ms) × F(9)(34)
+ * This produces ~7 breaths/min — the baroreflex resonance frequency
+ * where heart rate variability (HRV) reaches its peak.
+ *
+ * Circle radius: canvas_width × 0.112 ≈ width × φ⁻⁴ × 0.3
+ * Spread range: 0.3 → 1.0 (contracted → expanded)
+ * The ratio 0.3:1.0 ≈ φ⁻² (0.382) — close but organic
+ */
+(function(){
+  function initFlower(){
+  const canvas=document.getElementById('flowerCanvas');
+  const ctx=canvas.getContext('2d');
+  let dpr=window.devicePixelRatio||1;
+  let rect=canvas.getBoundingClientRect();
+  canvas.width=rect.width*dpr;canvas.height=rect.height*dpr;
+  ctx.setTransform(dpr,0,0,dpr,0,0);
+  let W=rect.width,H=rect.height,cx=W/2,cy=H/2;
+  let R=W*.112;
+  function resizeHero(){
+    dpr=window.devicePixelRatio||1;
+    rect=canvas.getBoundingClientRect();
+    canvas.width=rect.width*dpr;canvas.height=rect.height*dpr;
+    ctx.setTransform(dpr,0,0,dpr,0,0);
+    W=rect.width;H=rect.height;cx=W/2;cy=H/2;R=W*.112;
+  }
+  window.addEventListener('resize',resizeHero);
+  window.addEventListener('orientationchange',resizeHero);
+
+  // 19 circles
+  const circles=[];
+  circles.push({x:0,y:0,ring:0});
+  for(let i=0;i<6;i++){const a=i*60*Math.PI/180;circles.push({x:Math.cos(a)*R,y:Math.sin(a)*R,ring:1})}
+  for(let i=0;i<6;i++){const a=i*60*Math.PI/180;circles.push({x:Math.cos(a)*2*R,y:Math.sin(a)*2*R,ring:2})}
+  for(let i=0;i<6;i++){const a=(i*60+30)*Math.PI/180;circles.push({x:Math.cos(a)*R*1.732,y:Math.sin(a)*R*1.732,ring:2})}
+
+  // Intersections
+  function getIx(c1,c2,r){
+    const dx=c2.x-c1.x,dy=c2.y-c1.y,d=Math.sqrt(dx*dx+dy*dy);
+    if(d>2*r||d<.01)return[];
+    const a=(d*d)/(2*d),h=Math.sqrt(Math.max(0,r*r-a*a));
+    const mx=c1.x+a*dx/d,my=c1.y+a*dy/d;
+    return[{x:mx-dy/d*h,y:my+dx/d*h},{x:mx+dy/d*h,y:my-dx/d*h}];
+  }
+  const ix=[];const seen=new Set();
+  for(let i=0;i<circles.length;i++)for(let j=i+1;j<circles.length;j++){
+    getIx(circles[i],circles[j],R).forEach(p=>{
+      const k=Math.round(p.x*8)+','+Math.round(p.y*8);
+      if(!seen.has(k)){seen.add(k);ix.push(p)}
+    });
+  }
+  // Mouse interaction
+  let mx=cx,my=cy;
+  canvas.style.pointerEvents='auto';
+  canvas.addEventListener('mousemove',e=>{
+    const r=canvas.getBoundingClientRect();
+    mx=e.clientX-r.left;my=e.clientY-r.top;
+  });
+  canvas.addEventListener('mouseleave',()=>{mx=cx;my=cy});
+
+  // Sparkle phases for intersections
+  const sparkles=ix.map(()=>({ph:Math.random()*Math.PI*2,sp:.4+Math.random()*1.5,sz:1+Math.random()*2}));
+  let phase=0,expanding=true,beam=0;
+  const breathDur=4342;
+  // Counter-rotation — matches Watch app (Ring1 CW 60s, Ring2 CCW 37.1s = 1:φ ratio)
+  const PHI=1.618033988749895;
+  let ring1Angle=0,ring2Angle=0;
+  const ring1Speed=2*Math.PI/60;    // 1 RPM = 60s/rotation
+  const ring2Speed=-2*Math.PI/(60/PHI); // φ RPM counter-clockwise
+  let lastT=performance.now();const t0=lastT;
+
+  function rotatePoint(x,y,angle){
+    const c=Math.cos(angle),s=Math.sin(angle);
+    return{x:x*c-y*s,y:x*s+y*c};
+  }
+
+  function draw(now){
+    const dt=now-lastT;lastT=now;
+    const el=(now-t0)/1000;
+    phase+=dt/breathDur;
+    if(phase>=1){phase=0;expanding=!expanding}
+    const t=expanding?phase:1-phase;
+    const ease=.5-.5*Math.cos(t*Math.PI);
+    const sp=.3+ease*.7,bv=.2+ease*.8;
+    beam+=dt*.0002;
+    // Update rotation angles
+    ring1Angle+=ring1Speed*dt/1000;
+    ring2Angle+=ring2Speed*dt/1000;
+
+    ctx.clearRect(0,0,W,H);
+
+    // L1: Rich ambient — layered depth
+    const ag=ctx.createRadialGradient(cx,cy,0,cx,cy,R*4.5*sp);
+    ag.addColorStop(0,`rgba(85,185,130,${bv*.12})`);
+    ag.addColorStop(.25,`rgba(85,185,130,${bv*.05})`);
+    ag.addColorStop(.5,`rgba(120,170,130,${bv*.02})`);
+    ag.addColorStop(.7,`rgba(62,207,178,${bv*.012})`);
+    ag.addColorStop(1,'transparent');
+    ctx.fillStyle=ag;ctx.fillRect(0,0,W,H);
+
+    // L2: Slow rotating godrays — very subtle, warm
+    ctx.save();ctx.globalCompositeOperation='screen';
+    for(let b=0;b<3;b++){
+      const ba=beam+b*Math.PI*2/3;
+      const bl=R*4*sp;
+      const bg=ctx.createLinearGradient(cx,cy,cx+Math.cos(ba)*bl,cy+Math.sin(ba)*bl);
+      const bi=bv*.02*(.3+.7*Math.sin(el*.25+b*2.1));
+      bg.addColorStop(0,`rgba(62,207,178,${bi*1.8})`);
+      bg.addColorStop(.1,`rgba(85,185,130,${bi*1.2})`);
+      bg.addColorStop(.4,`rgba(85,185,130,${bi*.3})`);
+      bg.addColorStop(1,'transparent');
+      ctx.fillStyle=bg;ctx.beginPath();
+      ctx.moveTo(cx,cy);
+      ctx.lineTo(cx+Math.cos(ba-.05)*bl,cy+Math.sin(ba-.05)*bl);
+      ctx.lineTo(cx+Math.cos(ba+.05)*bl,cy+Math.sin(ba+.05)*bl);
+      ctx.closePath();ctx.fill();
+    }
+    ctx.restore();ctx.globalCompositeOperation='source-over';
+
+    // L3: Intersection sparkles — gentle twinkling
+    ix.forEach((p,i)=>{
+      const s=sparkles[i];
+      const px=cx+p.x*sp,py=cy+p.y*sp;
+      const dist=Math.sqrt(p.x*p.x+p.y*p.y);
+      const fo=Math.max(0,1-dist/(R*3));
+      const sh=.1+.9*Math.pow(Math.max(0,Math.sin(el*s.sp+s.ph)),3);
+      const da=bv*.45*fo*sh;
+      if(da<.005)return;
+      const ds=s.sz*(.6+sh*.5);
+      const dg=ctx.createRadialGradient(px,py,0,px,py,ds*2.5);
+      dg.addColorStop(0,`rgba(200,240,215,${da*1.2})`);
+      dg.addColorStop(.2,`rgba(85,185,130,${da*.8})`);
+      dg.addColorStop(.5,`rgba(62,207,178,${da*.15})`);
+      dg.addColorStop(1,'transparent');
+      ctx.fillStyle=dg;ctx.fillRect(px-ds*2.5,py-ds*2.5,ds*5,ds*5);
+    });
+
+    // L4: Circle glow — soft bloom behind strokes (with counter-rotation)
+    ctx.globalCompositeOperation='screen';
+    circles.forEach(c=>{
+      let px=c.x,py=c.y;
+      if(c.ring===1){const r=rotatePoint(px,py,ring1Angle);px=r.x;py=r.y;}
+      if(c.ring===2){const r=rotatePoint(px,py,ring2Angle);px=r.x;py=r.y;}
+      const x=cx+px*sp,y=cy+py*sp;
+      const a=c.ring===0?.15:c.ring===1?.07:.025;
+      ctx.shadowColor=`rgba(85,185,130,${Math.min(1,a*bv*5)})`;ctx.shadowBlur=18;
+      ctx.strokeStyle=`rgba(85,185,130,${a*bv*2.5})`;ctx.lineWidth=1.8;
+      ctx.beginPath();ctx.arc(x,y,R,0,Math.PI*2);ctx.stroke();
+    });
+    ctx.shadowBlur=0;ctx.shadowColor='transparent';
+    ctx.globalCompositeOperation='source-over';
+
+    // L5: Clean geometry outlines (with counter-rotation)
+    circles.forEach(c=>{
+      let px=c.x,py=c.y;
+      if(c.ring===1){const r=rotatePoint(px,py,ring1Angle);px=r.x;py=r.y;}
+      if(c.ring===2){const r=rotatePoint(px,py,ring2Angle);px=r.x;py=r.y;}
+      const x=cx+px*sp,y=cy+py*sp;
+      const la=c.ring===0?.6:c.ring===1?.4:.16;
+      ctx.strokeStyle=`rgba(85,185,130,${la*bv})`;
+      ctx.lineWidth=c.ring===0?1.4:c.ring===1?1:.5;
+      ctx.beginPath();ctx.arc(x,y,R,0,Math.PI*2);ctx.stroke();
+    });
+
+    // L6: Warm center bloom
+    ctx.globalCompositeOperation='screen';
+    const fi=bv*(.5+.5*Math.sin(el*.7));
+    const cg=ctx.createRadialGradient(cx,cy,0,cx,cy,R*.8);
+    cg.addColorStop(0,`rgba(200,240,215,${fi*.12})`);
+    cg.addColorStop(.15,`rgba(85,185,130,${fi*.06})`);
+    cg.addColorStop(.4,`rgba(85,185,130,${fi*.02})`);
+    cg.addColorStop(1,'transparent');
+    ctx.fillStyle=cg;ctx.beginPath();ctx.arc(cx,cy,R*.8,0,Math.PI*2);ctx.fill();
+    // Wide bloom
+    const bg2=ctx.createRadialGradient(cx,cy,0,cx,cy,R*2.5);
+    bg2.addColorStop(0,`rgba(85,185,130,${fi*.035})`);
+    bg2.addColorStop(.3,`rgba(62,207,178,${fi*.012})`);
+    bg2.addColorStop(1,'transparent');
+    ctx.fillStyle=bg2;ctx.beginPath();ctx.arc(cx,cy,R*2.5,0,Math.PI*2);ctx.fill();
+    ctx.globalCompositeOperation='source-over';
+
+    // L7: Petal highlights at Vesica Piscis
+    for(let i=0;i<6;i++){
+      const a1=i*60*Math.PI/180,a2=((i+1)%6)*60*Math.PI/180;
+      const pmx=(Math.cos(a1)+Math.cos(a2))*R*.5,pmy=(Math.sin(a1)+Math.sin(a2))*R*.5;
+      const ppx=cx+pmx*sp,ppy=cy+pmy*sp;
+      const shimmer=.6+.4*Math.sin(el*.6+i*1.047);
+      const pg=ctx.createRadialGradient(ppx,ppy,0,ppx,ppy,R*.4);
+      pg.addColorStop(0,`rgba(85,185,130,${bv*.06*shimmer})`);
+      pg.addColorStop(.5,`rgba(85,185,130,${bv*.015*shimmer})`);
+      pg.addColorStop(1,'transparent');
+      ctx.globalCompositeOperation='screen';ctx.fillStyle=pg;
+      ctx.beginPath();ctx.arc(ppx,ppy,R*.4,0,Math.PI*2);ctx.fill();
+    }
+    ctx.globalCompositeOperation='source-over';
+
+    // L8: Gold bounding rings — three-ring frame
+    const or2=R*3*sp;
+    ctx.strokeStyle=`rgba(62,207,178,${.08*bv})`;ctx.lineWidth=.7;
+    ctx.beginPath();ctx.arc(cx,cy,or2,0,Math.PI*2);ctx.stroke();
+    ctx.strokeStyle=`rgba(62,207,178,${.04*bv})`;ctx.lineWidth=.45;
+    ctx.beginPath();ctx.arc(cx,cy,or2*1.12,0,Math.PI*2);ctx.stroke();
+    ctx.strokeStyle=`rgba(62,207,178,${.02*bv})`;ctx.lineWidth=.3;
+    ctx.beginPath();ctx.arc(cx,cy,or2*1.25,0,Math.PI*2);ctx.stroke();
+
+    if(!prefersReducedMotion)requestAnimationFrame(draw);
+  }
+  requestAnimationFrame(draw);
+  } // end initFlower
+  if('requestIdleCallback' in window){requestIdleCallback(initFlower)}
+  else{setTimeout(initFlower,100)}
+})();
+
+// ═══ AMBIENT AUDIO ═══
+// Two songs, alternating. Fade-out before end, crossfade to next.
+// Schumann-timed fades: 2.68s (127.71ms × F(8)=21).
+// Autoplay on load, fallback on first interaction.
+(function(){
+  const ctrl=document.getElementById('audioCtrl');
+  const icon=document.getElementById('audioIcon');
+  const label=document.getElementById('audioLabel');
+  const tracks=[
+    {el:document.getElementById('ambientAudio0'),title:'World Peace in Us · Soulonaut'},
+    {el:document.getElementById('ambientAudio1'),title:'Beyond the Sun · Soulonaut'}
+  ];
+  if(!ctrl||!tracks[0].el||!tracks[1].el)return;
+
+  let playing=false;
+  let current=Math.random()<.5?0:1;
+  const fadeDuration=2680; // Schumann × F(8)
+  const fadeSteps=34; // F(9)
+  const targetVolume=0.382; // φ⁻¹
+  const earlyFade=13; // F(7) seconds before end → crossfade
+  let fadeInterval=null;
+  let endCheckInterval=null;
+
+  // Consistent icon points (viewBox 0 0 16 16)
+  const ICON_PLAY='5,3 13,8 5,13'; // ▶ triangle
+  const ICON_PAUSE='4,3 7,3 7,13 4,13 9,3 12,3 12,13 9,13'; // ❚❚ two bars
+
+  function setPlaying(state){
+    playing=state;
+    if(state){ctrl.classList.add('playing');icon.setAttribute('points',ICON_PAUSE)}
+    else{ctrl.classList.remove('playing');icon.setAttribute('points',ICON_PLAY)}
+  }
+
+  function updateLabel(){label.textContent=tracks[current].title}
+
+  function fadeIn(){
+    var audio=tracks[current].el;
+    audio.currentTime=0;
+    audio.volume=0;
+    updateLabel();
+    audio.play().then(function(){
+      setPlaying(true);
+      var step=0;
+      clearInterval(fadeInterval);
+      fadeInterval=setInterval(function(){
+        step++;
+        audio.volume=Math.min(targetVolume,targetVolume*(step/fadeSteps));
+        if(step>=fadeSteps)clearInterval(fadeInterval);
+      },fadeDuration/fadeSteps);
+      startEndCheck();
+    }).catch(function(){/* autoplay blocked — stay in play state */});
+  }
+
+  function fadeOutAndNext(){
+    var audio=tracks[current].el;
+    var vol=audio.volume||targetVolume;
+    var step=0;
+    clearInterval(fadeInterval);
+    clearInterval(endCheckInterval);
+    fadeInterval=setInterval(function(){
+      step++;
+      audio.volume=Math.max(0,vol*(1-step/fadeSteps));
+      if(step>=fadeSteps){
+        clearInterval(fadeInterval);
+        audio.pause();
+        audio.currentTime=0;
+        current=(current+1)%tracks.length;
+        fadeIn();
+      }
+    },fadeDuration/fadeSteps);
+  }
+
+  function fadeOutAndStop(){
+    var audio=tracks[current].el;
+    var vol=audio.volume||targetVolume;
+    var step=0;
+    clearInterval(fadeInterval);
+    clearInterval(endCheckInterval);
+    fadeInterval=setInterval(function(){
+      step++;
+      audio.volume=Math.max(0,vol*(1-step/fadeSteps));
+      if(step>=fadeSteps){
+        clearInterval(fadeInterval);
+        audio.pause();
+        audio.currentTime=0;
+        setPlaying(false);
+      }
+    },fadeDuration/fadeSteps);
+  }
+
+  function startEndCheck(){
+    clearInterval(endCheckInterval);
+    endCheckInterval=setInterval(function(){
+      var audio=tracks[current].el;
+      if(audio.duration&&audio.currentTime>=audio.duration-earlyFade){
+        fadeOutAndNext();
+      }
+    },500);
+  }
+
+  function toggle(){
+    if(playing){fadeOutAndStop()}else{fadeIn()}
+  }
+
+  function skip(){
+    if(playing){fadeOutAndNext()}else{current=(current+1)%tracks.length;updateLabel()}
+  }
+
+  // Skip button
+  var skipBtn=document.getElementById('audioSkip');
+  if(skipBtn){
+    skipBtn.addEventListener('click',function(e){e.stopPropagation();skip()});
+    skipBtn.addEventListener('keydown',function(e){if(e.key==='Enter'||e.key===' '){e.preventDefault();skip()}});
+  }
+
+  // Autoplay on load (desktop)
+  fadeIn();
+
+  // iOS/mobile: browsers block autoplay without user gesture.
+  // Start on ANY first interaction — touch, click, scroll, keypress.
+  function onFirstInteraction(){
+    if(!playing){fadeIn()}
+    ['click','touchstart','touchend','scroll','keydown'].forEach(function(evt){
+      document.removeEventListener(evt,onFirstInteraction);
+    });
+  }
+  ['click','touchstart','touchend','scroll','keydown'].forEach(function(evt){
+    document.addEventListener(evt,onFirstInteraction,{once:true,passive:true});
+  });
+
+  ctrl.addEventListener('click',function(e){e.stopPropagation();toggle()});
+  ctrl.addEventListener('keydown',function(e){if(e.key==='Enter'||e.key===' '){e.preventDefault();toggle()}});
+})();
+
+// ═══ FLOATING NAV ═══
+(function(){
+  const nav=document.getElementById('floatingNav');
+  if(!nav)return;
+  let shown=false;
+  function checkNav(){
+    const y=window.scrollY;
+    const show=y>window.innerHeight*.8&&y<document.body.scrollHeight-window.innerHeight*1.5;
+    if(show&&!shown){nav.classList.add('show');shown=true}
+    else if(!show&&shown){nav.classList.remove('show');shown=false}
+  }
+  window.addEventListener('scroll',checkNav,{passive:true});
+})();
+
+
+// ═══ EMAIL CAPTURE ═══
+// ═══ UTM PARAMETER CAPTURE ═══
+// Captures campaign attribution from URL parameters
+function getUTM(){
+  const p=new URLSearchParams(window.location.search);
+  return {
+    source:p.get('utm_source')||p.get('ref')||document.referrer||'direct',
+    medium:p.get('utm_medium')||'',
+    campaign:p.get('utm_campaign')||'',
+    content:p.get('utm_content')||'',
+    term:p.get('utm_term')||'',
+    landing:window.location.pathname,
+    referrer:document.referrer
+  };
+}
+// Store UTM on page load (first touch attribution)
+if(!sessionStorage.getItem('carlon_utm')){
+  sessionStorage.setItem('carlon_utm',JSON.stringify(getUTM()));
+}
+
+// Kein externes Formular-Backend. Jeder Kontaktwunsch laeuft ausschliesslich
+// ueber mailto:jan@vitalkultur.com (siehe BETA-CTA oben).
+
+</script>
+
+<script>
+  (function() {
+    function detectLang() {
+      const stored = localStorage.getItem('vk.lang');
+      if (stored === 'en' || stored === 'de') return stored;
+      return (navigator.language || 'en').toLowerCase().startsWith('de') ? 'de' : 'en';
+    }
+    let lang = detectLang();
+    function applyLang() {
+      document.documentElement.lang = lang;
+      document.querySelectorAll('[data-en]').forEach(el => {
+        const txt = el.getAttribute('data-' + lang);
+        if (txt != null) el.innerHTML = txt;
+      });
+      document.querySelectorAll('[data-lang-en]').forEach(el => el.classList.toggle('active', lang === 'en'));
+      document.querySelectorAll('[data-lang-de]').forEach(el => el.classList.toggle('active', lang === 'de'));
+    }
+    const btn = document.getElementById('langToggle');
+    if (btn) btn.addEventListener('click', () => {
+      lang = (lang === 'en') ? 'de' : 'en';
+      localStorage.setItem('vk.lang', lang);
+      applyLang();
+    });
+    applyLang();
+  })();
+</script>
+
+<!-- Tap-to-zoom für Galerie-Bilder (Tippen = vergrößern, Wischen bleibt Swipe) -->
+<script>
+(function(){
+  try{
+    var imgs=document.querySelectorAll('.gal-slide img, .feat-rail img, .feat-card img');
+    if(!imgs.length) return;
+    var ov=document.createElement('div');
+    ov.className='img-zoom-overlay';
+    ov.innerHTML='<img alt=""><div class="img-zoom-hint" data-en="Tap to close" data-de="Tippen zum Schließen">Tippen zum Schließen</div>';
+    document.body.appendChild(ov);
+    var big=ov.querySelector('img');
+    function openZoom(src,alt){ big.src=src; big.alt=alt||''; ov.classList.add('show'); }
+    function closeZoom(){ ov.classList.remove('show'); big.removeAttribute('src'); }
+    imgs.forEach(function(im){
+      var sx=0,sy=0,moved=false,t0=0;
+      im.addEventListener('pointerdown',function(e){sx=e.clientX;sy=e.clientY;moved=false;t0=Date.now();},{passive:true});
+      im.addEventListener('pointermove',function(e){if(Math.abs(e.clientX-sx)>10||Math.abs(e.clientY-sy)>10)moved=true;},{passive:true});
+      im.addEventListener('pointerup',function(e){if(!moved&&(Date.now()-t0)<600)openZoom(im.currentSrc||im.src,im.alt);},{passive:true});
+    });
+    ov.addEventListener('click',closeZoom);
+    document.addEventListener('keydown',function(e){if(e.key==='Escape'&&ov.classList.contains('show'))closeZoom();});
+  }catch(e){}
+})();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#050505">
+<title>Support — CARLON Equine | Vitalkultur</title>
+<meta name="description" content="Support & Kontakt für CARLON Equine — Polar-H10-Pairing, Offline-Aufnahme, Browser-Auswertung, Referral. Direkter Draht zu Jan während der Beta.">
+<link rel="icon" href="/app-icon.png">
+<style>
+  :root{
+    --bg:#050505; --card:rgba(255,255,255,0.025); --border:rgba(255,255,255,0.08);
+    --text:#f4f4f4; --soft:rgba(244,244,244,0.72); --dim:rgba(244,244,244,0.42);
+    --cyan:#3ECFB2; --mono:ui-monospace,'SF Mono',Menlo,monospace;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--bg);color:var(--text);font-family:'Jost',system-ui,-apple-system,sans-serif;
+    font-weight:300;line-height:1.6;-webkit-font-smoothing:antialiased;
+    background-image:radial-gradient(50% 60% at 30% 0%,rgba(62,207,178,0.06),transparent 60%);min-height:100vh}
+  .wrap{max-width:720px;margin:0 auto;padding:48px 24px 80px}
+  a{color:var(--cyan);text-decoration:none}
+  a:hover{text-decoration:underline}
+  .back{font-family:var(--mono);font-size:12px;letter-spacing:.1em;color:var(--dim)}
+  h1{font-size:clamp(30px,6vw,44px);font-weight:200;letter-spacing:-.02em;margin:28px 0 6px}
+  .eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.28em;text-transform:uppercase;color:var(--cyan)}
+  .lead{color:var(--soft);font-size:17px;margin:14px 0 8px;max-width:600px}
+  .contact{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:24px;margin:28px 0}
+  .contact .k{font-family:var(--mono);font-size:10px;letter-spacing:.24em;text-transform:uppercase;color:var(--dim);margin-bottom:6px}
+  .contact .mail{font-size:20px;font-weight:400}
+  .contact .note{color:var(--dim);font-size:13px;margin-top:8px}
+  h2{font-size:13px;font-family:var(--mono);letter-spacing:.2em;text-transform:uppercase;color:var(--dim);margin:40px 0 8px;font-weight:500}
+  details{border-bottom:1px solid var(--border);padding:16px 0}
+  summary{cursor:pointer;font-size:17px;font-weight:400;list-style:none;display:flex;justify-content:space-between;gap:12px}
+  summary::-webkit-details-marker{display:none}
+  summary::after{content:'+';color:var(--cyan);font-weight:400}
+  details[open] summary::after{content:'–'}
+  details p{color:var(--soft);font-size:15px;margin-top:12px}
+  .disclaimer{background:rgba(212,165,116,0.05);border:1px solid rgba(212,165,116,0.22);border-radius:12px;
+    padding:18px 20px;font-size:13px;color:var(--soft);margin-top:36px;line-height:1.6}
+  .disclaimer strong{color:#d4a574;font-weight:500}
+  footer{margin-top:44px;padding-top:20px;border-top:1px solid var(--border);font-size:12px;color:var(--dim);
+    display:flex;gap:18px;flex-wrap:wrap}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <a class="back" href="/carlon-equine/">← CARLON Equine</a>
+  <div class="eyebrow" style="margin-top:24px">Support · Beta</div>
+  <h1>Hilfe &amp; Kontakt</h1>
+  <p class="lead">Fragen, Feedback oder ein technisches Problem? In der Beta hast du den direkten Draht — jede Nachricht landet bei Jan persönlich.</p>
+
+  <div class="contact">
+    <div class="k">E-Mail</div>
+    <div class="mail"><a href="mailto:jan@vitalkultur.com?subject=CARLON%20Equine%20Support">jan@vitalkultur.com</a></div>
+    <div class="note">Antwort in der Regel innerhalb von 24 Stunden.</div>
+  </div>
+
+  <h2>Häufige Fragen</h2>
+
+  <details><summary>Polar H10 koppeln</summary>
+    <p>Feuchte die Elektrodenzonen des Gurts an — beim Pferd ist Elektroden-Gel wegen der Fell-Impedanz praktisch Pflicht für ein sauberes Signal. Lege den Gurt an, öffne die App und verbinde den H10 unter „Geräte". Die Signalqualitäts-Anzeige zeigt dir, wann der Kontakt gut genug ist.</p>
+  </details>
+  <details><summary>Geräteinterne Aufnahme (ohne iPhone in Reichweite)</summary>
+    <p>Der H10 kann mehrtägig direkt am Gurt aufzeichnen — Langzeit-Weide, Übernacht-Stall, Transport. Du startest die Aufnahme in der App, trennst das iPhone, und synchronisierst später mit einem Klick. Wichtig: Der H10 hat nur einen Aufnahme-Slot; eine ältere Aufnahme muss vor der neuen gelöscht werden (die App führt dich durch).</p>
+  </details>
+  <details><summary>Auswertung im Browser öffnen</summary>
+    <p>Jeder JSON-Export öffnet sich direkt im Browser-Viewer auf <a href="/carlon-equine/">carlon-equine</a> — per Drag-and-Drop oder Datei-Auswahl. Es findet <strong>keine Übertragung</strong> statt: Der Viewer läuft rein lokal im Browser (Zero-Upload). Kein Login, keine Installation.</p>
+  </details>
+  <details><summary>Auswertung an den Tierarzt weitergeben</summary>
+    <p>Aus der App generierst du mit einem Tap ein Referral-PDF oder teilst den JSON-Export. Halter-Namen und Tierarzt-Kontakte werden per Privacy-by-Design nicht mitexportiert. Der Tierarzt öffnet den Export im Browser-Viewer und sieht die volle Auswertung.</p>
+  </details>
+  <details><summary>Warum stellt CARLON keine Diagnose?</summary>
+    <p>CARLON Equine ist ein Forschungs- und Beobachtungs-Werkzeug, <strong>kein Medizinprodukt</strong> unter MDR oder FDA. Alle On-Screen-Flags sind Screening-Indikatoren, die eine tierärztliche Folge-Konsultation erfordern — niemals Diagnosen. So bleibt der Befund immer beim Tierarzt.</p>
+  </details>
+  <details><summary>Kubios / eigene Analyse</summary>
+    <p>Der Export ist Kubios-kompatibel (Roh-RR als JSON und als CSV, eine Spalte <code>rr_ms</code>) und trägt einen SHA-256-Integritäts-Hash plus W3C-PROV-Provenance-Kette — reproduzierbar und audit-fest für R/Python/Kubios-Workflows.</p>
+  </details>
+
+  <div class="disclaimer">
+    <strong>⚠ Positionierung:</strong> CARLON Equine ist ein Forschungs- und Beobachtungs-Werkzeug, kein Medizinprodukt unter MDR oder FDA. Alle Bildschirm-Flags sind Screening-Indikatoren, die eine Tierarzt-Konsultation erfordern — niemals Diagnosen.
+  </div>
+
+  <footer>
+    <a href="/carlon-equine/">CARLON Equine</a>
+    <a href="/impressum.html">Impressum</a>
+    <a href="/privacy.html">Datenschutz</a>
+    <span>© Jan Rohwedder · Vitalkultur</span>
+  </footer>
+</div>
+</body>
+</html>

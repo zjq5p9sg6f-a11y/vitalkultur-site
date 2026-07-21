@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="de">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Datenschutzerklärung — CARLON EQUINE</title>
+<style>
+:root{--bg:#02080d;--surface:#06101a;--border:#1b3548;--text:#e8f8ff;--sec:#8aa9bd;--dim:#4a6478;--cyan:#3ECFB2;--good:#3fe0a4}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font-family:"Inter",-apple-system,system-ui,sans-serif;line-height:1.7;
+  background-image:radial-gradient(ellipse 120% 60% at 50% -10%,rgba(62,207,178,.06),transparent 55%)}
+.wrap{max-width:800px;margin:0 auto;padding:60px 24px 100px}
+a{color:var(--cyan);text-decoration:none}a:hover{text-decoration:underline}
+.top{display:flex;align-items:center;gap:12px;margin-bottom:40px}
+.top img{width:32px;height:32px}
+.top .wm{font-family:"Jost",system-ui,sans-serif;font-weight:300;letter-spacing:.24em;font-size:15px;padding-left:.24em}
+h1{font-family:"Jost",system-ui,sans-serif;font-weight:600;font-size:34px;margin-bottom:8px}
+.lead{color:var(--sec);margin-bottom:20px}
+h2{font-family:"Jost",system-ui,sans-serif;font-weight:600;font-size:20px;margin:34px 0 10px;color:var(--cyan)}
+h3{font-size:16px;margin:20px 0 6px}
+p,li{margin-bottom:10px;color:var(--sec)}
+p strong{color:var(--text)}
+ul{padding-left:20px;margin-bottom:12px}
+.ph{color:#ffb547;font-style:italic}
+.hl{background:linear-gradient(160deg,rgba(63,224,164,.08),transparent);border:1px solid rgba(63,224,164,.3);border-radius:14px;padding:20px 22px;margin:20px 0}
+.hl h2{margin-top:0;color:var(--good)}
+.note{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:16px 18px;font-size:13px;color:var(--dim);margin-top:24px}
+.back{display:inline-block;margin-top:40px;color:var(--sec)}
+table{width:100%;border-collapse:collapse;font-size:13.5px;margin:12px 0}
+th,td{text-align:left;padding:9px 10px;border-bottom:1px solid var(--border);vertical-align:top}
+th{color:var(--dim);font-size:11px;letter-spacing:.06em;text-transform:uppercase}
+</style>
+<div class="wrap">
+  <a class="top" href="landing.html"><img src="assets/carlon-logo-soft-128.png" alt=""><span class="wm">CARLON EQUINE</span></a>
+  <h1>Datenschutzerklärung</h1>
+  <p class="lead">Stand: 21.07.2026. Diese Erklärung informiert gemäß Art. 13/14 DSGVO über die Verarbeitung personenbezogener Daten.</p>
+
+  <div class="hl">
+    <h2>Privacy by Design — das Wichtigste zuerst</h2>
+    <p>CARLON EQUINE ist eine <strong>rein lokale Anwendung</strong>. Alle Gesundheits- und Messdaten der Pferde sowie
+    die von Ihnen eingegebenen Stammdaten werden <strong>ausschließlich lokal in Ihrem Browser (IndexedDB) verarbeitet
+    und gespeichert.</strong> Es findet <strong>keine Übertragung dieser Daten an unsere Server statt</strong> — wir als
+    Anbieter haben zu keinem Zeitpunkt Zugriff darauf. Sie behalten die volle Kontrolle über Ihre Daten.</p>
+  </div>
+
+  <h2>1. Verantwortlicher</h2>
+  <p>Verantwortlicher i.S.v. Art. 4 Nr. 7 DSGVO für den Betrieb dieser Anwendung als Dienst ist der Anbieter (siehe
+  <a href="impressum.html">Impressum</a>).</p>
+  <p><strong>Wichtig für Tierärzte/Kliniken:</strong> Sobald Sie als Nutzer personenbezogene Daten von Pferdebesitzern
+  (Name, Kontakt, Standort) in die Anwendung eingeben, sind <strong>Sie</strong> für diese Daten der datenschutzrechtlich
+  Verantwortliche. Da der Anbieter keinen Zugriff auf diese lokal gespeicherten Daten hat, liegt keine Auftragsverarbeitung
+  nach Art. 28 DSGVO vor. Tierärztinnen und Tierärzte, die Besitzerdaten in die Anwendung eingeben, müssen ihrerseits gegenüber den betroffenen Pferdebesitzern eine eigene datenschutzrechtliche Information nach Art. 13 DSGVO vorhalten — der Anbieter kann diese Pflicht mangels Datenzugriffs nicht erfüllen.</p>
+
+  <h2>2. Welche Daten wo verarbeitet werden</h2>
+  <table>
+    <tr><th>Datenart</th><th>Speicherort</th><th>Personenbezug</th></tr>
+    <tr><td>HRV-/Gesundheitsdaten der Pferde</td><td>lokal (IndexedDB)</td><td>nein (Tierdaten)</td></tr>
+    <tr><td>Besitzer-Stammdaten (Name, Telefon, Adresse/Standort)</td><td>lokal (IndexedDB)</td><td>ja</td></tr>
+    <tr><td>Beratungs-/Umsatz-Notizen</td><td>lokal (IndexedDB)</td><td>ggf. ja</td></tr>
+    <tr><td>Lizenz-Schlüssel</td><td>lokal + Prüfung bei Lemon Squeezy</td><td>nein</td></tr>
+  </table>
+  <p>Die Speicherung im Endgerät (IndexedDB) ist gemäß § 25 Abs. 2 TDDDG einwilligungsfrei zulässig, da sie für die von
+  Ihnen ausdrücklich gewünschte Funktion der Anwendung <strong>unbedingt erforderlich</strong> ist.</p>
+
+  <h2>3. Externe Dienste</h2>
+  <p>Für einzelne Funktionen werden folgende externe Dienste kontaktiert. Dabei werden <strong>keine Gesundheitsdaten</strong> übertragen:</p>
+  <ul>
+    <li><strong>CARTO / OpenStreetMap (Kartenkacheln):</strong> Nur wenn Sie die Kartenansicht öffnen. Übertragen werden Ihre IP-Adresse und der angezeigte Kartenausschnitt an <code>basemaps.cartocdn.com</code> — keine Gesundheitsdaten. Die Kartenbibliothek (Leaflet) und alle Schriftarten sind <strong>lokal in der Anwendung gebündelt</strong>; es werden dafür keine Server Dritter kontaktiert.</li>
+    <li><strong>OpenStreetMap Nominatim (Adress-Suche):</strong> Nur wenn Sie aktiv eine Adresse suchen — übertragen werden Ihre IP-Adresse und der eingegebene Suchtext.</li>
+    <li><strong>Google STUN-Server (Direktübertragung von Aufnahmen):</strong> Nur wenn Sie die Funktion „Aufnahme empfangen/senden" nutzen. Zum Aufbau der direkten Verbindung zwischen den beiden Geräten wird <code>stun.l.google.com</code> kontaktiert; dabei werden Ihre IP-Adresse und die Ihres Verbindungspartners an Google übermittelt. <strong>Die Aufnahme selbst läuft direkt zwischen den Geräten und niemals über einen unserer Server oder über Google.</strong> Nutzen Sie die Funktion nicht, findet keine Verbindung statt.</li>
+    <li><strong>Lemon Squeezy (Zahlung &amp; Lizenz):</strong> Erst beim künftigen Lizenzkauf — Kauf, Rechnung und Lizenzprüfung. Verantwortlich ist Lemon Squeezy als Merchant of Record (eigene Datenschutzerklärung des Anbieters). In der laufenden Beta-Phase findet kein Verkauf statt.</li>
+  </ul>
+  <p>Zusätzlich enthält die Anwendung <strong>Verweise auf externe Angebote</strong>, die ausschließlich durch Ihren eigenen Klick geöffnet werden: WhatsApp (<code>wa.me</code>) zum Teilen eines Übertragungs-Links sowie Google Maps und Google Kalender. Erst mit dem Klick verlassen Sie die Anwendung; ab diesem Moment gelten die Datenschutzbestimmungen des jeweiligen Anbieters, und es werden Daten (u. a. Ihre IP-Adresse) an diesen übermittelt. Ohne Ihren Klick erfolgt keine Verbindung.</p>
+  <p>Rechtsgrundlage für diese technisch notwendigen Verbindungen ist Art. 6 Abs. 1 lit. f DSGVO (berechtigtes Interesse an der Funktionsfähigkeit) bzw. lit. b (Vertragserfüllung bei der Zahlung).</p>
+
+  <h2>4. Speicherdauer</h2>
+  <p>Lokale Daten bleiben so lange gespeichert, bis Sie sie selbst löschen (Einstellungen → „Alle lokalen Daten löschen")
+  oder die Browser-Daten entfernen. Ein Backup-Export liegt ausschließlich in Ihrer Hand.</p>
+
+  <h2>5. Ihre Rechte</h2>
+  <p>Sie haben das Recht auf Auskunft (Art. 15), Berichtigung (Art. 16), Löschung (Art. 17), Einschränkung (Art. 18),
+  Datenübertragbarkeit (Art. 20) und Widerspruch (Art. 21). Da die Daten lokal in Ihrer Hand liegen, können Sie diese
+  Rechte weitgehend selbst unmittelbar ausüben (Einsicht, Export, Löschung in der Anwendung).</p>
+
+  <h2>6. Beschwerderecht</h2>
+  <p>Sie haben das Recht, sich bei einer Datenschutz-Aufsichtsbehörde zu beschweren, insbesondere in dem Mitgliedstaat
+  Ihres Aufenthaltsorts. Zuständig für den Anbieter ist der Landesbeauftragte für den Datenschutz und die Informationsfreiheit Baden-Württemberg (LfDI BW), Heilbronner Straße 35, 70191 Stuttgart.</p>
+
+  <div class="note">Diese Datenschutzerklärung ersetzt keine Rechtsberatung und ist durch eine/n Fachanwält/in für
+  IT-/Datenschutzrecht prüfen zu lassen.</div>
+
+  <a class="back" href="landing.html">← Zurück zur Startseite</a>
+</div>
+</html>

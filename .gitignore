@@ -1,0 +1,11 @@
+# macOS-Metadaten — verraten die Verzeichnisstruktur, wenn sie ausgeliefert werden
+.DS_Store
+**/.DS_Store
+
+# Interne Arbeitsdokumente gehoeren NICHT in ein oeffentliches Webroot.
+# GitHub Pages liefert jede Datei im Repo aus, auch unverlinkte.
+# Ablage: ~/Developer/vitalkultur-web-intern/
+_audit/
+*-backup.html
+index-old.html
+edit-console.html

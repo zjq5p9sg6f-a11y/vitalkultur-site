@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CARLON Equine – das Cockpit für Tierärzte & Kliniken</title>
+<link rel="icon" href="/app-icon.png">
+<link rel="apple-touch-icon" href="/app-icon.png">
+<!-- GoatCounter — privacy-first, cookieless. Miss Vet-Interesse getrennt: clinic-Besuche = Signal. -->
+<!-- GoatCounter — cookiefrei. count.js wertet DNT NICHT aus (Herstellerentscheidung),
+     deshalb laden wir es bei Do-Not-Track / Global Privacy Control gar nicht erst.
+     Erst dadurch stimmt die Opt-out-Zusage in der Datenschutzerklaerung. -->
+<script>(function(){var d=navigator.doNotTrack||window.doNotTrack||navigator.msDoNotTrack;
+if(d=='1'||d=='yes'||navigator.globalPrivacyControl===true)return;
+var s=document.createElement('script');s.async=true;s.src='//gc.zgo.at/count.js';
+s.setAttribute('data-goatcounter','https://vitalkultur.goatcounter.com/count');
+document.head.appendChild(s);})();</script>
+<meta name="description" content="Das browser-lokale Cockpit für Tierärzte & Kliniken. Der Halter misst mit dem Polar H10, du liest den Verlauf und erreichst das Pferd früher. Kein Server, keine Cloud, keine Diagnose durch die App.">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Vitalkultur">
+<meta property="og:title" content="CARLON Equine – für Tierärzte & Kliniken">
+<meta property="og:description" content="Betreuung, die nicht an der Stalltür endet. Der Halter misst, du liest den Verlauf, das Pferd wird früher erreicht — browser-lokal, kein Server, keine Cloud.">
+<meta property="og:url" content="https://vitalkultur.com/carlon-equine/clinic.html">
+<meta property="og:image" content="https://vitalkultur.com/carlon-equine/assets/og-equine.png">
+<meta property="og:locale" content="de_DE">
+<meta property="og:locale:alternate" content="en_US">
+<meta name="twitter:card" content="summary_large_image">
+<style>
+:root{
+  --bg-void:#000308; --bg-deep:#02080d; --bg-surface:#06101a; --bg-elev:#0b1a26;
+  --border-faint:#102230; --border-subtle:#1b3548; --border-strong:#2a4d65;
+  --text-primary:#e8f8ff; --text-secondary:#8aa9bd; --text-dim:#4a6478; --text-faint:#2e4458;
+  --cyan:#3ECFB2; --cyan-strong:#6EE6C8; --cyan-deep:#1E8C78;
+  --cyan-glow-1:rgba(62,207,178,0.55); --cyan-glow-2:rgba(62,207,178,0.25); --cyan-faint:rgba(62,207,178,0.04);
+  --equine:#d4a574;
+  --font-brand:"Jost",-apple-system,BlinkMacSystemFont,"SF Pro Display",system-ui,sans-serif;
+  --font-display:-apple-system,BlinkMacSystemFont,"SF Pro Display","Inter",system-ui,sans-serif;
+  --font-mono:ui-monospace,"SF Mono","JetBrains Mono","Menlo",monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg-void);color:var(--text-primary);font-family:var(--font-display);line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+a{color:inherit;text-decoration:none}
+em{font-style:normal;color:var(--cyan)}
+.wrap{max-width:1080px;margin:0 auto;padding-left:24px;padding-right:24px}
+
+/* Background wash */
+.bg-wash{position:fixed;inset:0;z-index:-1;background:
+  radial-gradient(1100px 620px at 50% -8%,rgba(62,207,178,0.08),transparent 60%),
+  radial-gradient(900px 700px at 90% 12%,rgba(62,207,178,0.04),transparent 55%);
+  pointer-events:none}
+
+/* Nav */
+nav{position:sticky;top:0;z-index:50;background:rgba(0,3,8,0.72);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid var(--border-faint)}
+.nav-inner{max-width:1080px;margin:0 auto;padding:11px 22px;display:flex;align-items:center;gap:16px}
+.wordmark{display:flex;flex-direction:row;align-items:center;gap:10px;line-height:1.05}
+.wordmark-logo{width:40px;height:40px;background-image:-webkit-image-set(url("assets/carlon-logo-soft-112.png") 1x,url("assets/carlon-logo-soft-224.png") 2x);background-image:image-set(url("assets/carlon-logo-soft-112.png") 1x,url("assets/carlon-logo-soft-224.png") 2x);background-size:contain;background-repeat:no-repeat;background-position:center;flex:0 0 auto}
+.wordmark-text{display:flex;flex-direction:column;line-height:1.05}
+.wordmark .brand{font-family:var(--font-brand);font-weight:300;letter-spacing:0.14em;font-size:16px;color:var(--text-primary)}
+.wordmark .sub{font-family:var(--font-mono);font-size:8.5px;letter-spacing:0.24em;text-transform:uppercase;color:var(--cyan);margin-top:3px}
+.nav-madein{display:flex;align-items:center;gap:5px;font-family:var(--font-mono);font-size:9px;letter-spacing:0.16em;text-transform:uppercase;color:var(--text-dim)}
+.nav-actions{margin-left:auto;display:flex;gap:9px;align-items:center}
+.btn{font-family:var(--font-mono);font-size:11px;font-weight:500;letter-spacing:0.12em;text-transform:uppercase;padding:0 14px;height:34px;border-radius:8px;display:inline-flex;align-items:center;justify-content:center;gap:7px;border:1px solid var(--border-subtle);background:transparent;color:var(--text-secondary);cursor:pointer;transition:border-color .18s,color .18s}
+.btn:hover{border-color:var(--cyan);color:var(--cyan)}
+.btn-back{color:var(--text-secondary)}
+
+/* Hero */
+.hero{padding-top:104px;padding-bottom:68px;text-align:center}
+.eyebrow{font-family:var(--font-mono);font-size:11px;letter-spacing:0.3em;text-transform:uppercase;color:var(--cyan);margin-bottom:26px}
+h1{font-family:var(--font-brand);font-weight:300;font-size:clamp(33px,6vw,58px);line-height:1.1;letter-spacing:-0.012em;margin-bottom:28px}
+.hero-sub{font-size:clamp(16px,1.5vw,18px);font-weight:300;color:var(--text-secondary);max-width:600px;margin:0 auto 44px;line-height:1.7}
+.cta-row{display:flex;flex-wrap:wrap;gap:16px;align-items:center;justify-content:center}
+.cta-primary{display:inline-flex;align-items:center;gap:9px;padding:15px 30px;border-radius:999px;background:var(--cyan);color:#00120f;font-weight:600;font-size:14.5px;letter-spacing:0.01em;box-shadow:0 0 34px rgba(62,207,178,0.22);transition:transform .16s,box-shadow .16s}
+.cta-primary:hover{transform:translateY(-2px);box-shadow:0 0 46px rgba(62,207,178,0.34)}
+.cta-note{font-family:var(--font-mono);font-size:11px;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-faint)}
+
+/* Sections — EIN einheitlicher vertikaler Rhythmus für alle */
+section{padding-top:78px;padding-bottom:78px}
+.sec-eyebrow{font-family:var(--font-mono);font-size:11px;letter-spacing:0.28em;text-transform:uppercase;color:var(--cyan);margin-bottom:16px;text-align:center}
+h2{font-family:var(--font-brand);font-weight:300;font-size:clamp(27px,3.6vw,40px);line-height:1.16;letter-spacing:-0.005em;text-align:center;margin:0}
+.sec-lead{text-align:center;color:var(--text-secondary);max-width:600px;margin:20px auto 0;font-weight:300;line-height:1.7}
+/* Inhalt hält IMMER denselben Abstand zum Überschriften-Block (ob mit/ohne Lead) */
+.grid,.flow,.shots{margin-top:52px}
+.path{margin-top:48px}
+.trust{margin-top:40px}
+
+/* Benefit cards */
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:22px}
+.card{border:1px solid var(--border-subtle);border-radius:18px;padding:32px;background:linear-gradient(160deg,rgba(6,16,26,0.6),rgba(2,8,13,0.4))}
+.card .k{font-family:var(--font-mono);font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--cyan);margin-bottom:15px}
+.card h3{font-size:20px;font-weight:500;margin-bottom:12px;color:var(--text-primary);letter-spacing:-0.01em}
+.card p{font-size:15px;color:var(--text-secondary);line-height:1.68;font-weight:300}
+
+/* Workflow */
+.flow{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+.flow .step{border:1px solid var(--border-subtle);border-radius:18px;padding:28px;background:rgba(6,16,26,0.5)}
+.flow .who{font-family:var(--font-mono);font-size:10px;letter-spacing:0.16em;text-transform:uppercase;color:var(--cyan);margin-bottom:13px}
+.flow h4{font-size:17px;font-weight:500;margin-bottom:11px;letter-spacing:-0.01em}
+.flow p{font-size:14px;color:var(--text-secondary);line-height:1.62;font-weight:300}
+
+/* Cockpit shots */
+.shots{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+.shot figure{margin:0}
+.shot .frame{aspect-ratio:16/10;border:1px solid var(--border-subtle);border-radius:16px;background:
+  repeating-linear-gradient(135deg,rgba(62,207,178,0.03) 0 12px,transparent 12px 24px),rgba(6,16,26,0.6);
+  display:flex;align-items:center;justify-content:center;text-align:center;padding:18px}
+.shot .frame{overflow:hidden;padding:0}
+.shot .frame img{width:100%;height:100%;object-fit:cover;object-position:top left;display:block}
+.shot .frame span{font-family:var(--font-mono);font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:var(--text-dim)}
+.shot img{width:100%;border:1px solid var(--border-subtle);border-radius:16px;display:block}
+.shot figcaption{font-size:13.5px;color:var(--text-secondary);margin-top:16px;font-weight:300;text-align:center;line-height:1.55}
+
+/* DSGVO path */
+.path{border:1px solid var(--border-subtle);border-left:3px solid var(--cyan);border-radius:16px;padding:32px;background:linear-gradient(135deg,rgba(62,207,178,0.055),rgba(62,207,178,0.012));max-width:760px;margin-left:auto;margin-right:auto}
+.path .chain{display:flex;flex-wrap:wrap;align-items:center;gap:10px 12px;font-family:var(--font-mono);font-size:12px;letter-spacing:0.03em;color:var(--text-secondary);margin-bottom:18px}
+.path .node{padding:8px 13px;border:1px solid var(--border-subtle);border-radius:9px;color:var(--text-primary)}
+.path .arr{color:var(--cyan)}
+.path p{font-size:14.5px;color:var(--text-secondary);line-height:1.7;font-weight:300}
+
+/* Trust line */
+.trust{text-align:center;font-size:12.5px;color:var(--text-faint);line-height:1.9;margin-left:auto;margin-right:auto;letter-spacing:0.02em;max-width:840px}
+
+/* Final CTA */
+.final{padding-top:96px;padding-bottom:44px;text-align:center}
+.final .cta-row{margin-top:44px}
+
+/* Footer */
+footer{border-top:1px solid var(--border-faint);padding:56px 24px 66px;text-align:center;margin-top:40px}
+.footer-brand{font-family:var(--font-brand);font-weight:300;letter-spacing:0.14em;font-size:17px}
+.footer-tagline{font-family:var(--font-mono);font-size:9px;letter-spacing:0.24em;text-transform:uppercase;color:var(--cyan);margin-top:6px}
+.footer-madein{font-family:var(--font-mono);font-size:10px;letter-spacing:0.22em;text-transform:uppercase;color:rgba(255,255,255,0.4);margin-top:14px}
+.footer-links{display:flex;gap:20px;justify-content:center;margin:22px 0;flex-wrap:wrap}
+.footer-links a{font-size:13px;color:var(--text-dim)}
+.footer-links a:hover{color:var(--cyan)}
+.footer-family{margin-top:18px}
+.fam-label{font-size:11px;color:var(--text-faint);margin-bottom:8px}
+.footer-family a{font-size:12.5px;color:var(--text-dim);margin:0 8px}
+.copyright{font-size:11px;color:var(--text-faint);margin-top:22px;line-height:1.7}
+
+/* Reveal */
+.rev{opacity:0;transform:translateY(16px);transition:opacity .6s ease,transform .6s ease}
+.rev.in{opacity:1;transform:none}
+
+@media(max-width:760px){
+  .wrap{padding-left:20px;padding-right:20px}
+  section{padding-top:56px;padding-bottom:56px}
+  .hero{padding-top:64px;padding-bottom:46px}
+  .grid,.flow,.shots{grid-template-columns:1fr;margin-top:38px}
+  .path{margin-top:34px}
+  .trust{margin-top:30px}
+  .final{padding-top:64px;padding-bottom:34px}
+  .final .cta-row{margin-top:34px}
+  .card{padding:26px}
+  .nav-madein{display:none}
+  .nav-inner{padding:9px 15px;gap:10px}
+  .wordmark{gap:8px}
+  .wordmark-logo{width:32px;height:32px}
+  .wordmark .brand{font-size:13px;letter-spacing:0.05em;white-space:nowrap}
+  .wordmark .sub{font-size:7px;letter-spacing:0.13em;margin-top:2px}
+  .nav-actions{gap:6px}
+  .btn{padding:0 9px;height:30px;font-size:9.5px;letter-spacing:0.06em}
+}
+</style>
+</head>
+<body>
+<div class="bg-wash"></div>
+
+<nav>
+  <div class="nav-inner">
+    <a class="wordmark" href="/carlon-equine/" title="Zu CARLON Equine">
+      <span class="wordmark-logo"></span>
+      <span class="wordmark-text">
+        <span class="brand">CARLON EQUINE</span>
+        <span class="sub">Equine Heart Science</span>
+      </span>
+    </a>
+    <div class="nav-madein" title="Iffezheim">
+      <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s7-6.5 7-11a7 7 0 0 0-14 0c0 4.5 7 11 7 11z"/><circle cx="12" cy="10" r="2.4"/></svg>
+      <span>Made in Iffezheim</span>
+    </div>
+    <div class="nav-actions">
+      <a class="btn btn-back" href="/carlon-equine/" data-en="&lsaquo; Equine" data-de="&lsaquo; Equine">&lsaquo; Equine</a>
+      <button class="btn" id="langToggleBtn" title="Switch language" style="min-width:58px">EN · DE</button>
+    </div>
+  </div>
+</nav>
+
+<main>
+  <!-- HERO -->
+  <header class="hero wrap rev">
+    <div class="eyebrow" data-en="For vets &amp; clinics · Beta" data-de="Für Tierärzte &amp; Kliniken · Beta">Für Tierärzte &amp; Kliniken · Beta</div>
+    <h1 data-en="Care that doesn't stop at the <em>stable door.</em>" data-de="Betreuung, die nicht an der <em>Stalltür endet.</em>">Betreuung, die nicht an der <em>Stalltür endet.</em></h1>
+    <p class="hero-sub" data-en="The owner measures at home with the Polar H10 — you read the trend, make sense of it, and reach the horse earlier. A cockpit for vets &amp; clinics: browser-local, no server, no cloud." data-de="Der Halter misst zu Hause mit dem Polar H10 — du liest den Verlauf, ordnest ihn ein und erreichst das Pferd früher. Ein Cockpit für Tierärzte &amp; Kliniken: browser-lokal, kein Server, keine Cloud.">Der Halter misst zu Hause mit dem Polar H10 — du liest den Verlauf, ordnest ihn ein und erreichst das Pferd früher. Ein Cockpit für Tierärzte &amp; Kliniken: browser-lokal, kein Server, keine Cloud.</p>
+    <div class="cta-row">
+      <a class="cta-primary" href="mailto:jan@vitalkultur.com?subject=CARLON%20Equine%20%E2%80%94%20Gr%C3%BCndungs-Partner%20(Tier%C3%A4rzte%20%26%20Kliniken)&amp;body=Hallo%20Jan%2C%0A%0Aich%20m%C3%B6chte%20Gr%C3%BCndungs-Partner%20werden.%0A%0AKurz%20zu%20mir%3A%0A-%20Praxis%2FKlinik%3A%0A-%20Rolle%20(mobiler%20Vet%20%2F%20Klinik%20%2F%20Reha)%3A%0A-%20Pferde%20mit%20Polar%20H10%3A%0A-%20Telefon%3A%0A%0AViele%20Gr%C3%BC%C3%9Fe%2C" data-track="cta:clinic-hero" data-en="Become a founding partner →" data-de="Gründungs-Partner werden →">Gründungs-Partner werden →</a>
+      <a href="app/" data-track="cta:clinic-live" style="display:inline-flex;align-items:center;gap:9px;padding:15px 30px;border-radius:999px;background:transparent;border:1px solid var(--cyan);color:var(--cyan);font-weight:600;font-size:15px;text-decoration:none" data-en="See the live cockpit →" data-de="Live-Cockpit ansehen →">Live-Cockpit ansehen →</a></div>
+  </header>
+
+  <!-- KANO-NUTZEN -->
+  <section class="wrap rev">
+    <div class="sec-eyebrow" data-en="What it gives you" data-de="Was es dir gibt">Was es dir gibt</div>
+    <h2 data-en="Built around the animal — <em>and your judgement.</em>" data-de="Um das Tier gebaut — <em>und um dein Urteil.</em>">Um das Tier gebaut — <em>und um dein Urteil.</em></h2>
+    <div class="grid">
+      <div class="card">
+        <div class="k" data-en="Relief" data-de="Entlastung">Entlastung</div>
+        <h3 data-en="Fewer drives, more horses reached" data-de="Weniger Fahrten, mehr Pferde erreicht">Weniger Fahrten, mehr Pferde erreicht</h3>
+        <p data-en="You see from the trend who really needs you — the urgent drive first, the less urgent one later. Your expertise reaches barns you can't visit every week." data-de="Du siehst am Verlauf, wer dich wirklich braucht — die dringende Fahrt zuerst, die weniger dringende später. Dein Fachwissen erreicht auch Ställe, die du nicht jede Woche schaffst.">Du siehst am Verlauf, wer dich wirklich braucht — die dringende Fahrt zuerst, die weniger dringende später. Dein Fachwissen erreicht auch Ställe, die du nicht jede Woche schaffst.</p>
+      </div>
+      <div class="card">
+        <div class="k" data-en="Continuity" data-de="Kontinuität">Kontinuität</div>
+        <h3 data-en="Trend, not a snapshot" data-de="Verlauf statt Momentaufnahme">Verlauf statt Momentaufnahme</h3>
+        <p data-en="Resting HRV over weeks, against the horse's own baseline — rehab, training and workload over time, for the vet to interpret, not on gut feel." data-de="Ruhe-HRV über Wochen, gegen die eigene Baseline des Pferdes — Reha, Training und Belastung im Verlauf, für den Tierarzt zum Einordnen, nicht aus dem Bauchgefühl.">Ruhe-HRV über Wochen, gegen die eigene Baseline des Pferdes — Reha, Training und Belastung im Verlauf, für den Tierarzt zum Einordnen, nicht aus dem Bauchgefühl.</p>
+      </div>
+      <div class="card">
+        <div class="k" data-en="Respect" data-de="Respekt">Respekt</div>
+        <h3 data-en="Your assessment stays yours" data-de="Deine Einschätzung bleibt deine">Deine Einschätzung bleibt deine</h3>
+        <p data-en="CARLON delivers the data and its preparation. The reading, the diagnosis, the decision — all yours. No automatism, no second-guessing." data-de="CARLON liefert die Daten und ihre Aufbereitung. Die Deutung, die Diagnose, die Entscheidung — alles bei dir. Kein Automatismus, keine Bevormundung.">CARLON liefert die Daten und ihre Aufbereitung. Die Deutung, die Diagnose, die Entscheidung — alles bei dir. Kein Automatismus, keine Bevormundung.</p>
+      </div>
+      <div class="card">
+        <div class="k" data-en="Data protection" data-de="Datenschutz">Datenschutz</div>
+        <h3 data-en="Data stays with the horse and with you" data-de="Daten bleiben beim Pferd und bei dir">Daten bleiben beim Pferd und bei dir</h3>
+        <p data-en="Browser-local, no server, no cloud. You are the controller under GDPR. Nothing leaves your device without your action." data-de="Browser-lokal, kein Server, keine Cloud. Du bist Verantwortlicher im Sinne der DSGVO. Nichts verlässt dein Gerät ohne dein Zutun.">Browser-lokal, kein Server, keine Cloud. Du bist Verantwortlicher im Sinne der DSGVO. Nichts verlässt dein Gerät ohne dein Zutun.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- WORKFLOW -->
+  <section class="wrap rev">
+    <div class="sec-eyebrow" data-en="How it works" data-de="Wie es läuft">Wie es läuft</div>
+    <h2 data-en="Three steps — <em>from barn to findings.</em>" data-de="Drei Schritte — <em>vom Stall zum Befund.</em>">Drei Schritte — <em>vom Stall zum Befund.</em></h2>
+    <div class="flow">
+      <div class="step">
+        <div class="who" data-en="Step 1 · Owner" data-de="Schritt 1 · Halter">Schritt 1 · Halter</div>
+        <h4 data-en="The owner records" data-de="Der Halter nimmt auf">Der Halter nimmt auf</h4>
+        <p data-en="Resting HRV on the horse with the Polar H10 — in the familiar barn, no transport stress." data-de="Ruhe-HRV am Pferd mit dem Polar H10 — im gewohnten Stall, ohne Transport-Stress.">Ruhe-HRV am Pferd mit dem Polar H10 — im gewohnten Stall, ohne Transport-Stress.</p>
+      </div>
+      <div class="step">
+        <div class="who" data-en="Step 2 · You" data-de="Schritt 2 · Du">Schritt 2 · Du</div>
+        <h4 data-en="You see the trend" data-de="Du siehst den Verlauf">Du siehst den Verlauf</h4>
+        <p data-en="The cockpit sorts horses by how they stand out in the trend — the conspicuous one first, with history over time." data-de="Das Cockpit sortiert die Pferde nach Auffälligkeit im Verlauf — das auffällige zuerst, mit Verlauf über die Zeit.">Das Cockpit sortiert die Pferde nach Auffälligkeit im Verlauf — das auffällige zuerst, mit Verlauf über die Zeit.</p>
+      </div>
+      <div class="step">
+        <div class="who" data-en="Step 3 · Care" data-de="Schritt 3 · Betreuung">Schritt 3 · Betreuung</div>
+        <h4 data-en="Early assessment, documented" data-de="Frühe Einschätzung, dokumentiert">Frühe Einschätzung, dokumentiert</h4>
+        <p data-en="A clear findings PDF goes back to the owner — your assessment, transparently documented. No diagnosis by the app; the reading stays with you." data-de="Ein klares Befund-PDF geht zurück an den Halter — deine Einschätzung, nachvollziehbar dokumentiert. Keine Diagnose durch die App; die Deutung bleibt bei dir.">Ein klares Befund-PDF geht zurück an den Halter — deine Einschätzung, nachvollziehbar dokumentiert. Keine Diagnose durch die App; die Deutung bleibt bei dir.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- COCKPIT SHOTS (Platzhalter — echte Screenshots slotten wir ein) -->
+  <section class="wrap rev">
+    <div class="sec-eyebrow" data-en="Inside the cockpit" data-de="Im Cockpit">Im Cockpit</div>
+    <h2 data-en="A view that <em>sets priorities.</em>" data-de="Ein Blick, der <em>Prioritäten setzt.</em>">Ein Blick, der <em>Prioritäten setzt.</em></h2>
+    <div class="shots">
+      <div class="shot"><figure>
+        <div class="frame"><img src="assets/shot-triage.png" alt="CARLON Clinic — Triage-Board"></div>
+        <figcaption data-en="Triage board — every horse by conspicuousness, the standout one first" data-de="Triage-Board — jedes Pferd nach Auffälligkeit, das auffällige zuerst">Triage-Board — jedes Pferd nach Auffälligkeit, das auffällige zuerst</figcaption>
+      </figure></div>
+      <div class="shot"><figure>
+        <div class="frame"><img src="assets/shot-verlauf.png" alt="CARLON Clinic — Verlauf eines Pferdes"></div>
+        <figcaption data-en="One horse's trend — weeks at a glance, against its baseline" data-de="Der Verlauf eines Pferdes — Wochen auf einen Blick, gegen die Baseline">Der Verlauf eines Pferdes — Wochen auf einen Blick, gegen die Baseline</figcaption>
+      </figure></div>
+      <div class="shot"><figure>
+        <div class="frame"><img src="assets/shot-befund.png" alt="CARLON Clinic — Befund-PDF"></div>
+        <figcaption data-en="A findings PDF anyone opens — for the owner, transparent" data-de="Ein Befund-PDF, das jeder öffnet — für den Halter, nachvollziehbar">Ein Befund-PDF, das jeder öffnet — für den Halter, nachvollziehbar</figcaption>
+      </figure></div>
+    </div>
+  </section>
+
+  <!-- DSGVO-PFAD -->
+  <section class="wrap rev">
+    <div class="sec-eyebrow" data-en="Where the data lives" data-de="Wo die Daten liegen">Wo die Daten liegen</div>
+    <h2 data-en="Local by design." data-de="Lokal by Design.">Lokal by Design.</h2>
+    <div class="path">
+      <div class="chain">
+        <span class="node" data-en="Owner app (local)" data-de="Halter-App (lokal)">Halter-App (lokal)</span>
+        <span class="arr">→</span>
+        <span class="node" data-en="Export file" data-de="Export-Datei">Export-Datei</span>
+        <span class="arr">→</span>
+        <span class="node" data-en="Your browser (local)" data-de="Dein Browser (lokal)">Dein Browser (lokal)</span>
+        <span class="arr">→</span>
+        <span class="node" data-en="Findings PDF" data-de="Befund-PDF">Befund-PDF</span>
+      </div>
+      <p data-en="No server sits in between. The data runs from the owner's device to yours and back — CARLON never sees it. You are the controller; the responsibility, and the trust, stay with you." data-de="Kein Server sitzt dazwischen. Die Daten laufen vom Gerät des Halters zu deinem und zurück — CARLON sieht sie nie. Du bist Verantwortlicher; die Verantwortung, und das Vertrauen, bleiben bei dir.">Kein Server sitzt dazwischen. Die Daten laufen vom Gerät des Halters zu deinem und zurück — CARLON sieht sie nie. Du bist Verantwortlicher; die Verantwortung, und das Vertrauen, bleiben bei dir.</p>
+    </div>
+    <p class="trust" data-en="Grounded, not claimed · An assessment, not a diagnosis · Not a medical device (MDR/FDA) · Data stays local — you are the controller · No server, no cloud." data-de="Belegt, nicht behauptet · Einschätzung, keine Diagnose · Kein Medizinprodukt (MDR/FDA) · Daten bleiben lokal — du bist Verantwortlicher · kein Server, keine Cloud.">Belegt, nicht behauptet · Einschätzung, keine Diagnose · Kein Medizinprodukt (MDR/FDA) · Daten bleiben lokal — du bist Verantwortlicher · kein Server, keine Cloud.</p>
+  </section>
+
+  <!-- FINAL CTA -->
+  <section class="final wrap rev">
+    <div class="sec-eyebrow" data-en="Beta · founding partners" data-de="Beta · Gründungs-Partner">Beta · Gründungs-Partner</div>
+    <h2 data-en="Shape it with us." data-de="Gestalte es mit.">Gestalte es mit.</h2>
+    <p class="sec-lead" data-en="We're looking for a handful of vets and clinics to build this cockpit around real practice. Access to the cockpit during the beta, a direct line to Jan for every question." data-de="Wir suchen eine Handvoll Tierärzte und Kliniken, um das Cockpit am echten Praxisalltag zu bauen. Zugang zum Cockpit während der Beta, ein direkter Draht zu Jan für jede Frage.">Wir suchen eine Handvoll Tierärzte und Kliniken, um das Cockpit am echten Praxisalltag zu bauen. Zugang zum Cockpit während der Beta, ein direkter Draht zu Jan für jede Frage.</p>
+    <div class="cta-row" style="justify-content:center">
+      <a class="cta-primary" href="mailto:jan@vitalkultur.com?subject=CARLON%20Equine%20%E2%80%94%20Gr%C3%BCndungs-Partner%20(Tier%C3%A4rzte%20%26%20Kliniken)&amp;body=Hallo%20Jan%2C%0A%0Aich%20m%C3%B6chte%20Gr%C3%BCndungs-Partner%20werden.%0A%0AKurz%20zu%20mir%3A%0A-%20Praxis%2FKlinik%3A%0A-%20Rolle%20(mobiler%20Vet%20%2F%20Klinik%20%2F%20Reha)%3A%0A-%20Pferde%20mit%20Polar%20H10%3A%0A-%20Telefon%3A%0A%0AViele%20Gr%C3%BC%C3%9Fe%2C" data-track="cta:clinic-final" data-en="Become a founding partner →" data-de="Gründungs-Partner werden →">Gründungs-Partner werden →</a>    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="footer-brand">CARLON EQUINE</div>
+  <div class="footer-tagline">Equine Heart Science</div>
+  <div class="footer-madein" data-en="Made in Iffezheim · Germany" data-de="Made in Iffezheim · Deutschland">Made in Iffezheim · Deutschland</div>
+  <div class="footer-links">
+    <a href="/carlon-equine/" data-en="CARLON Equine (the app)" data-de="CARLON Equine (die App)">CARLON Equine (die App)</a>
+    <a href="/carlon-equine/coherence.html" data-en="Therapy &amp; research" data-de="Therapie &amp; Forschung">Therapie &amp; Forschung</a>
+    <a href="/privacy.html" data-en="Privacy" data-de="Datenschutz">Datenschutz</a>
+    <a href="/impressum.html">Impressum</a>
+  </div>
+  <div class="footer-family">
+    <a href="/" aria-label="Vitalkultur" style="display:inline-block;margin-bottom:11px"><img src="/assets/vitalkultur-wordmark.png" alt="Vitalkultur" style="height:26px;width:auto;opacity:0.82"></a>
+    <div class="fam-label" data-en="Part of the Vitalkultur app family" data-de="Teil der Vitalkultur-App-Familie">Teil der Vitalkultur-App-Familie</div>
+  </div>
+  <div class="copyright">© 2026 Vitalkultur · <span data-en="Made with care for horses + their humans" data-de="Mit Sorgfalt gebaut für Pferde + ihre Menschen">Mit Sorgfalt gebaut für Pferde + ihre Menschen</span></div>
+</footer>
+
+<script>
+// Sprache geteilt mit der Hauptseite (gleicher localStorage-Key).
+window.CARLON_LANG = localStorage.getItem('carlon.viewer.lang') || 'de';
+function applyLang(){
+  var lang = window.CARLON_LANG;
+  document.querySelectorAll('[data-en][data-de]').forEach(function(el){
+    var txt = el.getAttribute('data-'+lang);
+    if(txt != null) el.innerHTML = txt;
+  });
+  var btn = document.getElementById('langToggleBtn');
+  if(btn) btn.innerHTML = lang==='en'
+    ? '<strong style="color:var(--cyan)">EN</strong> | DE'
+    : 'EN | <strong style="color:var(--cyan)">DE</strong>';
+  document.documentElement.lang = lang;
+}
+applyLang();
+var _lb = document.getElementById('langToggleBtn');
+if(_lb) _lb.addEventListener('click', function(){
+  window.CARLON_LANG = (window.CARLON_LANG==='en') ? 'de' : 'en';
+  localStorage.setItem('carlon.viewer.lang', window.CARLON_LANG);
+  applyLang();
+});
+// Reveal — IO für Scroll, aber was beim Laden schon im Viewport ist, sofort zeigen (kein Blank-Hero)
+(function(){
+  var els = [].slice.call(document.querySelectorAll('.rev'));
+  if(!els.length) return;
+  var vh = function(){ return window.innerHeight || document.documentElement.clientHeight; };
+  if(!('IntersectionObserver' in window)){ els.forEach(function(e){ e.classList.add('in'); }); return; }
+  var io = new IntersectionObserver(function(en){ en.forEach(function(e){ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); } }); }, {rootMargin:'0px 0px -8% 0px'});
+  els.forEach(function(e){ io.observe(e); });
+  // Sicherheitsnetz: above-the-fold sofort (IO feuert beim ersten Paint manchmal verzögert)
+  requestAnimationFrame(function(){
+    els.forEach(function(e){ if(e.getBoundingClientRect().top < vh()*0.94){ e.classList.add('in'); io.unobserve(e); } });
+  });
+})();
+</script>
+</body>
+</html>

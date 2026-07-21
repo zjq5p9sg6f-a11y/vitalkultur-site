@@ -1,0 +1,38 @@
+{
+  "name": "CARLON EQUINE — Telemetrie-Cockpit",
+  "short_name": "CARLON EQUINE",
+  "description": "Browser-lokales HRV-Cockpit für Pferde-Praxen: Triage, Langzeit-Monitoring, Routenplanung, Befunde — vollständig lokal.",
+  "lang": "de",
+  "start_url": "index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#02080d",
+  "theme_color": "#02080d",
+  "categories": ["medical", "productivity", "health"],
+  "icons": [
+    { "src": "assets/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "assets/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "assets/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ],
+  "shortcuts": [
+    { "name": "Triage-Board", "url": "index.html", "description": "Alle Pferde nach Dringlichkeit" },
+    { "name": "Aufnahmen importieren", "url": "index.html?import=1" }
+  ],
+  "share_target": {
+    "action": "index.html?shared=1",
+    "method": "POST",
+    "enctype": "multipart/form-data",
+    "params": {
+      "title": "title",
+      "text": "text",
+      "url": "url",
+      "files": [
+        { "name": "files", "accept": ["application/json", ".json", ".ndjson", "text/plain", ".txt"] }
+      ]
+    }
+  },
+  "file_handlers": [
+    { "action": "index.html?open=1", "accept": { "application/json": [".json", ".ndjson"], "text/plain": [".txt"] } }
+  ]
+}
