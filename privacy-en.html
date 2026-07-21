@@ -99,10 +99,22 @@
       <li>In-app usage statistics or analytics
         (for the website, see section 8)</li>
       <li>Behavioural profiles, telemetry, crash reports to external services</li>
-      <li>Location data</li>
+      <li>Movement or location profiles, GPS traces</li>
       <li>Device identifiers, ad IDs, IP addresses during app use</li>
       <li>Usernames, email addresses, accounts — the apps have no login</li>
     </ul>
+    <p>
+      <em>Location exception — CARLON Breathwork:</em> If you grant location
+      permission, the app determines your position <strong>once</strong> at the
+      start of a session (accuracy approx. 100 m) in order to store altitude,
+      temperature, barometric pressure and humidity as environmental context for
+      that session — relevant for altitude training and weather correlation. The
+      request goes to <strong>Apple WeatherKit</strong>; only the position is
+      transmitted, <strong>no health data</strong>. No movement profile and no GPS
+      trace are stored. If you decline the permission, the app remains fully
+      functional — the environmental context simply stays empty.
+      <strong>Vitalkultur never receives this data.</strong>
+    </p>
     <p>
       <em>Note:</em> If iCloud Backup is enabled on your device, app data
       (not HealthKit data) may be backed up to your personal iCloud storage.

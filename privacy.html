@@ -102,10 +102,22 @@
         (für die Website siehe Abschnitt 8)</li>
       <li>Verhaltensprofile, Nutzungsmuster, Telemetrie, Crash-Reports an
         externe Dienste</li>
-      <li>Standortdaten</li>
+      <li>Bewegungs- oder Standortprofile, GPS-Verläufe</li>
       <li>Geräte-Identifier, Werbe-IDs, IP-Adressen im App-Betrieb</li>
       <li>Nutzernamen, E-Mail-Adressen, Konten — die Apps haben keinen Login</li>
     </ul>
+    <p>
+      <em>Ausnahme Standort — CARLON Breathwork:</em> Wenn du die
+      Standort-Berechtigung erteilst, ermittelt die App beim Start einer Session
+      <strong>einmalig</strong> deine Position (Genauigkeit ca. 100 m), um Höhe,
+      Temperatur, Luftdruck und Luftfeuchte als Umgebungskontext zu deiner Sitzung
+      zu speichern — relevant für Höhentraining und Wetter-Korrelation. Die Abfrage
+      geht an <strong>Apple WeatherKit</strong>; übermittelt wird ausschließlich die
+      Position, <strong>keine Gesundheitsdaten</strong>. Es wird kein Bewegungsprofil
+      und kein GPS-Verlauf gespeichert. Verweigerst du die Berechtigung, funktioniert
+      die App vollständig weiter — der Umgebungskontext bleibt dann leer.
+      <strong>Vitalkultur erhält diese Daten zu keinem Zeitpunkt.</strong>
+    </p>
     <p>
       <em>Hinweis:</em> Sofern iCloud-Backup auf deinem Gerät aktiviert ist,
       können App-Daten (nicht HealthKit-Daten) in deinem persönlichen iCloud-Speicher
