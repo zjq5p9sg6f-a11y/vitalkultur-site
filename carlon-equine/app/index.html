@@ -2446,7 +2446,7 @@ const HRV={
     return Math.round((m*sxy-sx*sy)/den*1000)/1000;
   },
   // DFA-α1-Skalierungs-Plot (log-log Fluktuation — die Kurve, nicht nur die Zahl)
-  dfaChart(rr,{w=340,h=210}={}){
+  dfaChart(rr,{w=340,h=210,alpha1=null}={}){
     const pts=this.dfaCurve(rr); if(!pts||pts.length<3)return '';
     const pad={l:44,r:14,t:16,b:34}; const xs=pts.map(p=>p.x),ys=pts.map(p=>p.yv);
     const xmn=Math.min(...xs),xmx=Math.max(...xs),ymn=Math.min(...ys),ymx=Math.max(...ys);
@@ -2454,14 +2454,17 @@ const HRV={
     let g=`<rect x="${pad.l}" y="${pad.t}" width="${w-pad.l-pad.r}" height="${h-pad.t-pad.b}" fill="none" class="axis"/>`;
     const seg=pts.filter(p=>p.n<=16);
     if(seg.length>=2){ let sx=0,sy=0,sxy=0,sxx=0,m=seg.length; seg.forEach(p=>{sx+=p.x;sy+=p.yv;sxy+=p.x*p.yv;sxx+=p.x*p.x;});
-      const den=m*sxx-sx*sx; const a1=den?(m*sxy-sx*sy)/den:0; const ic=(sy-a1*sx)/m;
+      const den=m*sxx-sx*sx; const a1w=den?(m*sxy-sx*sy)/den:0;
+      // Kanonischer α1 (= Kachel/Export) fürs Label; Fit-Gerade mit DIESER Steigung durch den Schwerpunkt
+      // → Kachel, Chart-Label und Linien-Steigung sind eine Wahrheit (kein Export↔UI-Riss bei 2 Dezimalen).
+      const A=(alpha1!=null)?alpha1:a1w; const mnx=sx/m,mny=sy/m; const ic=mny-A*mnx;
       const segX=seg.map(p=>p.x); const x0=Math.min(...segX),x1=Math.max(...segX);
       // n=16-Grenze (Ende des Kurzzeit-Skalierungsbereichs) — dezente Markierung
       g+=`<line x1="${X(x1).toFixed(1)}" y1="${pad.t}" x2="${X(x1).toFixed(1)}" y2="${(h-pad.b).toFixed(1)}" stroke="#ffffff" stroke-opacity=".10" stroke-width=".5" stroke-dasharray="2 3"/>`;
       g+=`<text x="${(X(x1)-3).toFixed(1)}" y="${(h-pad.b-4).toFixed(1)}" text-anchor="end" style="fill:var(--text-dim);font-size:8px">n=16</text>`;
       // α1-Fit NUR über dem gefitteten Kurzzeit-Bereich (n≤16, nicht extrapoliert)
-      g+=`<line x1="${X(x0).toFixed(1)}" y1="${Y(ic+a1*x0).toFixed(1)}" x2="${X(x1).toFixed(1)}" y2="${Y(ic+a1*x1).toFixed(1)}" stroke="var(--amber)" stroke-width="2" stroke-dasharray="5 4"/>`;
-      g+=`<text x="${(w-pad.r-4).toFixed(1)}" y="${(pad.t+13).toFixed(1)}" text-anchor="end" style="fill:var(--amber);font-size:12px;font-weight:700">α1 = ${fmt2(a1)}</text>`;}
+      g+=`<line x1="${X(x0).toFixed(1)}" y1="${Y(ic+A*x0).toFixed(1)}" x2="${X(x1).toFixed(1)}" y2="${Y(ic+A*x1).toFixed(1)}" stroke="var(--amber)" stroke-width="2" stroke-dasharray="5 4"/>`;
+      g+=`<text x="${(w-pad.r-4).toFixed(1)}" y="${(pad.t+13).toFixed(1)}" text-anchor="end" style="fill:var(--amber);font-size:12px;font-weight:700">α1 = ${fmt2(A)}</text>`;}
     g+=`<path d="${pts.map((p,i)=>`${i?'L':'M'}${X(p.x).toFixed(1)},${Y(p.yv).toFixed(1)}`).join(' ')}" fill="none" stroke="var(--cyan-strong)" stroke-width="1.5"/>`;
     pts.forEach(p=>g+=`<circle cx="${X(p.x).toFixed(1)}" cy="${Y(p.yv).toFixed(1)}" r="2.6" fill="var(--cyan-strong)"/>`);
     g+=`<text x="13" y="${(pad.t+(h-pad.t-pad.b)/2).toFixed(0)}" transform="rotate(-90 13 ${(pad.t+(h-pad.t-pad.b)/2).toFixed(0)})" text-anchor="middle" class="label-axis">log F(n)</text>`;
@@ -3660,7 +3663,7 @@ const Views={
       </div>
       <div class="geo-row">
         <div><div class="ct" style="margin-bottom:8px"><span>RR-Histogramm · Dreiecks-Interpolation (TINN)</span>${Info.btn('tinn')}</div>${HRV.histChart(rr)}</div>
-        <div><div class="ct" style="margin-bottom:8px"><span>DFA — Detrended Fluctuation (α1-Skalierung)</span>${Info.btn('dfa')}</div>${HRV.dfaChart(rr)}</div>
+        <div><div class="ct" style="margin-bottom:8px"><span>DFA — Detrended Fluctuation (α1-Skalierung)</span>${Info.btn('dfa')}</div>${HRV.dfaChart(rr,{alpha1:dfa1})}</div>
       </div>
       <div style="font-size:10.5px;color:var(--text-faint);margin-top:14px;font-style:italic;line-height:1.5">Equine Bänder VLF 0–0,01 · LF 0,01–0,07 · HF 0,07–0,6 Hz (Kuwahara 1996). Lomb-Scargle-Spektrum &amp; Kennwerte aus Beat-to-Beat-RR (rrApproximated=false, Polar H10). Poincaré (Brennan 2001) · Baevsky (1984) · SampEn (Richman 2000). Priorisierungshilfe, keine Diagnose.</div>
     </div>`;
