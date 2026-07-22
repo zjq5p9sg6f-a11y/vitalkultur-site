@@ -110,6 +110,22 @@ h2{font-family:var(--font-brand);font-weight:300;font-size:clamp(27px,3.6vw,40px
 .usp h4{font-size:17px;font-weight:500;color:var(--text-primary);margin:0 0 8px;letter-spacing:-0.005em}
 .usp p{font-size:14px;color:var(--text-secondary);line-height:1.62;font-weight:300;margin:0}
 @media(max-width:720px){.usps{grid-template-columns:1fr}.shots.two{grid-template-columns:1fr}}
+/* Feature: grosses Bild + Text nebeneinander */
+.feature{margin-top:52px;display:grid;grid-template-columns:1.05fr 0.95fr;gap:40px;align-items:center}
+.feature.flip{grid-template-columns:0.95fr 1.05fr}
+.feature .f-shot{border:1px solid var(--border-subtle);border-radius:18px;overflow:hidden;background:rgba(6,16,26,0.5);box-shadow:0 30px 70px -40px rgba(0,0,0,0.8)}
+.feature .f-shot img{width:100%;height:auto;display:block}
+.feature .f-k{font-family:var(--font-mono);font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--cyan);margin-bottom:12px}
+.feature .f-txt h3{font-size:clamp(22px,2.6vw,30px);font-weight:400;font-family:var(--font-brand);color:var(--text-primary);line-height:1.2;letter-spacing:-0.01em;margin-bottom:18px}
+.feature .f-txt ul{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:15px}
+.feature .f-txt li{position:relative;padding-left:22px;font-size:15px;line-height:1.62;color:var(--text-secondary);font-weight:300}
+.feature .f-txt li b{color:var(--text-primary);font-weight:500}
+.feature .f-txt li::before{content:"";position:absolute;left:0;top:8px;width:7px;height:7px;border-radius:2px;background:var(--cyan);transform:rotate(45deg)}
+/* 3er-Raster, Bilder in voller Hoehe (kein Crop) */
+.shots.three{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+.shots.three .frame{aspect-ratio:auto;border:1px solid var(--border-subtle);border-radius:14px;overflow:hidden;background:rgba(6,16,26,0.5)}
+.shots.three .frame img{width:100%;height:auto;display:block}
+@media(max-width:860px){.feature,.feature.flip{grid-template-columns:1fr;gap:24px}.shots.three{grid-template-columns:1fr}}
 .shot figure{margin:0}
 .shot .frame{aspect-ratio:16/10;border:1px solid var(--border-subtle);border-radius:16px;background:
   repeating-linear-gradient(135deg,rgba(62,207,178,0.03) 0 12px,transparent 12px 24px),rgba(6,16,26,0.6);
@@ -257,27 +273,66 @@ footer{border-top:1px solid var(--border-faint);padding:56px 24px 66px;text-alig
     </div>
   </section>
 
-  <!-- COCKPIT SHOTS — echte Screenshots aus dem Demo-Cockpit -->
+  <!-- TAGESPLANUNG — der Kern fuer den mobilen Vet -->
   <section class="wrap rev">
-    <div class="sec-eyebrow" data-en="Inside the cockpit" data-de="Im Cockpit">Im Cockpit</div>
-    <h2 data-en="A view that <em>sets priorities.</em>" data-de="Ein Blick, der <em>Prioritäten setzt.</em>">Ein Blick, der <em>Prioritäten setzt.</em></h2>
+    <div class="sec-eyebrow" data-en="The day, planned" data-de="Der Tag, geplant">Der Tag, geplant</div>
+    <h2 data-en="It plans the day. <em>You keep the wheel.</em>" data-de="Es plant den Tag. <em>Du behältst das Steuer.</em>">Es plant den Tag. <em>Du behältst das Steuer.</em></h2>
+    <div class="feature">
+      <div class="f-shot"><img src="assets/visite-shots/05-tagesplan.jpg" alt="Tagesplan: Einsatzplan mit Stopps, kritische zuerst, 62 km gespart, jede Karte per Drag verschiebbar" loading="lazy"></div>
+      <div class="f-txt">
+        <div class="f-k" data-en="Vital-data-driven, not rigid" data-de="Vitaldatengestützt, nicht starr">Vitaldatengestützt, nicht starr</div>
+        <h3 data-en="The order suggests itself — you drag it into place." data-de="Die Reihenfolge schlägt sich vor — du ziehst sie zurecht.">Die Reihenfolge schlägt sich vor — du ziehst sie zurecht.</h3>
+        <ul>
+          <li data-en="The plan puts the <b>critical horses first</b> and computes the shortest way between the stops of each level — the day is ordered before you sit in the car." data-de="Der Plan setzt die <b>kritischen Pferde zuerst</b> und rechnet den kürzesten Weg zwischen den Stopps jeder Stufe — der Tag steht geordnet, bevor du im Auto sitzt.">Der Plan setzt die <b>kritischen Pferde zuerst</b> und rechnet den kürzesten Weg zwischen den Stopps jeder Stufe — der Tag steht geordnet, bevor du im Auto sitzt.</li>
+          <li data-en="Not what it says goes — what <b>you</b> say. Drag any card into a new order, even with a full day of stops, in the compact overview." data-de="Nicht der Vorschlag entscheidet — <b>du</b> entscheidest. Zieh jede Karte an ihren Platz, auch bei einem vollen Tag, in der kompakten Übersicht.">Nicht der Vorschlag entscheidet — <b>du</b> entscheidest. Zieh jede Karte an ihren Platz, auch bei einem vollen Tag, in der kompakten Übersicht.</li>
+          <li data-en="Every horse's data at a glance and the owner <b>one tap away</b> — if you run late at a stop, you reach the next barn without leaving the plan." data-de="Alle Daten des Pferds auf einen Blick und der Halter <b>einen Tipp entfernt</b> — verspätest du dich an einem Stopp, erreichst du den nächsten Stall, ohne den Plan zu verlassen.">Alle Daten des Pferds auf einen Blick und der Halter <b>einen Tipp entfernt</b> — verspätest du dich an einem Stopp, erreichst du den nächsten Stall, ohne den Plan zu verlassen.</li>
+          <li data-en="Offline-capable, saved locally. The hectic day gets simpler, and nothing of it leaves your device." data-de="Offline-fähig, lokal gesichert. Der hektische Tag wird einfacher — und nichts davon verlässt dein Gerät.">Offline-fähig, lokal gesichert. Der hektische Tag wird einfacher — und nichts davon verlässt dein Gerät.</li>
+        </ul>
+      </div>
+    </div>
+    <div class="shots two" style="margin-top:40px">
+      <figure class="shot">
+        <div class="frame"><img src="assets/visite-shots/06-kompakt.jpg" alt="Kompakte Tagesübersicht: alle Stopps als kleine Karten, per Drag sortierbar, mit Fahrzeiten" loading="lazy"></div>
+        <figcaption data-en="Compact — the whole day as small cards on a timeline, each with a drag handle and the drive time to the next stop." data-de="Kompakt — der ganze Tag als kleine Karten auf einer Zeitachse, jede mit Greifpunkt und der Fahrzeit zum nächsten Stopp.">Kompakt — der ganze Tag als kleine Karten auf einer Zeitachse, jede mit Greifpunkt und der Fahrzeit zum nächsten Stopp.</figcaption>
+      </figure>
+      <figure class="shot">
+        <div class="frame"><img src="assets/visite-shots/08-route.jpg" alt="Abfahrroute auf der Karte, kritische Pferde zuerst, an Google Maps übergebbar" loading="lazy"></div>
+        <figcaption data-en="Map &amp; route — the departure order on the map, critical horses first, handed straight to Google Maps." data-de="Karte &amp; Route — die Abfahrfolge auf der Karte, kritische Pferde zuerst, direkt an Google Maps übergeben.">Karte &amp; Route — die Abfahrfolge auf der Karte, kritische Pferde zuerst, direkt an Google Maps übergeben.</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <!-- IM COCKPIT — die HRV-Tiefe -->
+  <section class="wrap rev">
+    <div class="sec-eyebrow" data-en="Inside a case" data-de="Im Fall">Im Fall</div>
+    <h2 data-en="The horse's heart, <em>read against itself.</em>" data-de="Das Herz des Pferds, <em>gegen sich selbst gelesen.</em>">Das Herz des Pferds, <em>gegen sich selbst gelesen.</em></h2>
     <div class="shots two">
       <figure class="shot">
-        <div class="frame"><img src="assets/visite-shots/02-triage.jpg" alt="Triage-Board: alle Pferde nach biometrischer Dringlichkeit sortiert" loading="lazy"></div>
-        <figcaption data-en="Triage board — every horse by how far it deviates from its own baseline. The conspicuous one is on top before anyone calls." data-de="Triage-Board — jedes Pferd nach Abweichung von der eigenen Baseline. Das auffällige steht oben, bevor jemand anruft.">Triage-Board — jedes Pferd nach Abweichung von der eigenen Baseline. Das auffällige steht oben, bevor jemand anruft.</figcaption>
+        <div class="frame"><img src="assets/visite-shots/10-triage.jpg" alt="Triage-Board mit Ein-Tipp-Anruf je Pferd" loading="lazy"></div>
+        <figcaption data-en="Triage board — every horse by deviation from its own baseline, the owner one tap away on each card." data-de="Triage-Board — jedes Pferd nach Abweichung von der eigenen Baseline, der Halter je Karte einen Tipp entfernt.">Triage-Board — jedes Pferd nach Abweichung von der eigenen Baseline, der Halter je Karte einen Tipp entfernt.</figcaption>
       </figure>
       <figure class="shot">
-        <div class="frame"><img src="assets/visite-shots/04-akte.jpg" alt="Pferde-Akte mit Frühwarnung gegen individuelle Baseline und HRV-Kennwerten" loading="lazy"></div>
-        <figcaption data-en="One horse's file — early warning against its individual baseline, RMSSD, resting HR, SDNN and DFA-α₁, each with a plain-language reading." data-de="Die Akte eines Pferdes — Frühwarnung gegen die individuelle Baseline, RMSSD, Ruhe-HF, SDNN und DFA-α₁, jeweils klar eingeordnet.">Die Akte eines Pferdes — Frühwarnung gegen die individuelle Baseline, RMSSD, Ruhe-HF, SDNN und DFA-α₁, jeweils klar eingeordnet.</figcaption>
+        <div class="frame"><img src="assets/visite-shots/09-akte.jpg" alt="Pferde-Akte mit Frühwarnung gegen individuelle Baseline und Abrechnen-Knopf" loading="lazy"></div>
+        <figcaption data-en="The file — early warning against the horse's individual baseline, and remote assessment you record and bill in the same place." data-de="Die Akte — Frühwarnung gegen die individuelle Baseline des Pferds, und die Ferneinschätzung, die du gleich hier erfasst und abrechnest.">Die Akte — Frühwarnung gegen die individuelle Baseline des Pferds, und die Ferneinschätzung, die du gleich hier erfasst und abrechnest.</figcaption>
       </figure>
-      <figure class="shot">
-        <div class="frame"><img src="assets/visite-shots/01-heute.jpg" alt="Heute-Ansicht: Einsatzplan mit Stopps, Fahrstrecke und kritischen Fällen" loading="lazy"></div>
-        <figcaption data-en="Today — the day's plan: stops, drive distance, the critical cases first. Works offline, saved locally." data-de="Heute — der Tagesplan: Stopps, Fahrstrecke, die kritischen Fälle zuerst. Offline-fähig, lokal gesichert.">Heute — der Tagesplan: Stopps, Fahrstrecke, die kritischen Fälle zuerst. Offline-fähig, lokal gesichert.</figcaption>
-      </figure>
-      <figure class="shot">
-        <div class="frame"><img src="assets/visite-shots/03-karte.jpg" alt="Karte mit Abfahrroute, kritische Pferde zuerst, nach Google Maps übertragbar" loading="lazy"></div>
-        <figcaption data-en="Map &amp; route — the departure route orders itself by urgency, critical horses first, then the shortest way. One click to Google Maps." data-de="Karte &amp; Route — die Abfahrroute stellt sich nach Dringlichkeit, kritische Pferde zuerst, dann der kürzeste Weg. Ein Klick nach Google Maps.">Karte &amp; Route — die Abfahrroute stellt sich nach Dringlichkeit, kritische Pferde zuerst, dann der kürzeste Weg. Ein Klick nach Google Maps.</figcaption>
-      </figure>
+    </div>
+  </section>
+
+  <!-- VERWALTUNG — die Erleichterung, die man nicht erwartet -->
+  <section class="wrap rev">
+    <div class="sec-eyebrow" data-en="And the admin runs with it" data-de="Und die Verwaltung läuft mit">Und die Verwaltung läuft mit</div>
+    <h2 data-en="Your whole practice day, <em>in one place.</em>" data-de="Dein ganzer Praxistag, <em>an einem Ort.</em>">Dein ganzer Praxistag, <em>an einem Ort.</em></h2>
+    <div class="feature flip">
+      <div class="f-txt">
+        <div class="f-k" data-en="Not just measurement" data-de="Nicht nur Messung">Nicht nur Messung</div>
+        <h3 data-en="Logbook, hours, billing and backup — already inside." data-de="Fahrtenbuch, Zeiten, Abrechnung und Backup — schon drin.">Fahrtenbuch, Zeiten, Abrechnung und Backup — schon drin.</h3>
+        <ul>
+          <li data-en="Every remote assessment becomes a billable service — bill all open ones at once, or export the consultations as CSV." data-de="Jede Ferneinschätzung wird zur abrechenbaren Leistung — alle offenen auf einmal abrechnen oder die Beratungen als CSV exportieren.">Jede Ferneinschätzung wird zur abrechenbaren Leistung — alle offenen auf einmal abrechnen oder die Beratungen als CSV exportieren.</li>
+          <li data-en="The <b>drive log and time tracking</b> fill themselves from your day — turnover, this month, still open, average fee, all at a glance." data-de="<b>Fahrtenbuch und Zeiterfassung</b> füllen sich aus deinem Tag — Umsatz, dieser Monat, noch offen, Ø Honorar, alles auf einen Blick."><b>Fahrtenbuch und Zeiterfassung</b> füllen sich aus deinem Tag — Umsatz, dieser Monat, noch offen, Ø Honorar, alles auf einen Blick.</li>
+          <li data-en="One button exports the whole practice as a single file. It stays local — and you can carry it anywhere." data-de="Ein Knopf exportiert die ganze Praxis als eine Datei. Sie bleibt lokal — und du kannst sie überallhin mitnehmen.">Ein Knopf exportiert die ganze Praxis als eine Datei. Sie bleibt lokal — und du kannst sie überallhin mitnehmen.</li>
+        </ul>
+      </div>
+      <div class="f-shot"><img src="assets/visite-shots/07-verwaltung.jpg" alt="Umsatz & Verwaltung: Fahrtenbuch, Zeiterfassung, Beratungen abrechnen, Backup, mit Umsatz-KPIs und Verlaufs-Chart" loading="lazy"></div>
     </div>
   </section>
 
