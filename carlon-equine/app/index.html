@@ -1062,6 +1062,18 @@ svg.viz .sd-lbl{fill:var(--cyan-strong);font-size:10px;font-weight:600;font-fami
 .ts-cross{stroke:var(--cyan);stroke-width:1;stroke-dasharray:3 3;opacity:0;transition:opacity .1s}
 .ts-cross.on{opacity:.5}
 .ts-focus{opacity:0;transition:opacity .1s} .ts-focus.on{opacity:1}
+.viz-hov{position:relative}
+.viz-hov svg.viz{cursor:crosshair}
+.viz-hov .hov-cross{stroke:var(--cyan);stroke-width:1;stroke-dasharray:3 3;opacity:0;transition:opacity .1s;pointer-events:none}
+.viz-hov .hov-cross.on{opacity:.5}
+.viz-hov .hov-focus{fill:var(--cyan);stroke:var(--bg-void);stroke-width:2.5;opacity:0;transition:opacity .1s;pointer-events:none;filter:drop-shadow(0 0 5px var(--cyan))}
+.viz-hov .hov-focus2{fill:var(--amber);filter:drop-shadow(0 0 5px var(--amber))}
+.viz-hov .hov-focus.on{opacity:1}
+.viz-hov .hov-tip{position:absolute;pointer-events:none;transform:translate(-50%,calc(-100% - 12px));background:var(--bg-elev-2);border:1px solid var(--border-strong);border-radius:9px;padding:7px 11px;opacity:0;transition:opacity .1s;white-space:nowrap;z-index:4;box-shadow:0 8px 24px -8px rgba(0,0,0,.7)}
+.viz-hov .hov-tip.on{opacity:1}
+.viz-hov .hov-tip .tt-date{font-size:10px;color:var(--text-dim);letter-spacing:.04em;margin-bottom:3px}
+.viz-hov .hov-tip .tt-val{font-family:var(--font-mono);font-size:15px;font-weight:600;letter-spacing:-.02em}
+.viz-hov .hov-tip .tt-cls{font-family:var(--font-mono);font-size:12px;font-weight:600;margin-top:1px}
 /* Zeitbereich-Filter */
 .range-seg{display:inline-flex;background:var(--bg-deep);border:1px solid var(--border-faint);border-radius:10px;padding:3px}
 .range-seg button{padding:5px 11px;font-size:11px;font-weight:600;border-radius:7px;color:var(--text-dim)}
@@ -2036,10 +2048,10 @@ const Chart={
       g+=`<line x1="${cx.toFixed(1)}" y1="${cy.toFixed(1)}" x2="${(cx+Math.cos(a+Math.PI/2)*sd1*sc).toFixed(1)}" y2="${(cy+Math.sin(a+Math.PI/2)*sd1*sc).toFixed(1)}" stroke="var(--equine)" stroke-width="1.5"/>`;
       g+=`<text class="sd-lbl" x="${(cx+Math.cos(a)*sd2*sc+4).toFixed(1)}" y="${(cy+Math.sin(a)*sd2*sc).toFixed(1)}">SD2 ${fmt0(sd2)}</text>`;
       g+=`<text class="sd-lbl" style="fill:var(--equine)" x="${(cx+Math.cos(a+Math.PI/2)*sd1*sc-8).toFixed(1)}" y="${(cy+Math.sin(a+Math.PI/2)*sd1*sc-4).toFixed(1)}">SD1 ${fmt0(sd1)}</text>`;}
-    for(let i=0;i<xs.length;i++)g+=`<circle cx="${P(xs[i]).toFixed(1)}" cy="${(size-P(ys[i])).toFixed(1)}" r="1.9" fill="var(--cyan-strong)" opacity=".5"/>`;
+    const _hpts=[];for(let i=0;i<xs.length;i++){const px=+P(xs[i]).toFixed(1),py=+(size-P(ys[i])).toFixed(1);g+=`<circle cx="${px}" cy="${py}" r="1.9" fill="var(--cyan-strong)" opacity=".5"/>`;_hpts.push({x:px,y:py,rn:Math.round(xs[i]),rn1:Math.round(ys[i])});}
     g+=`<text x="${(size/2).toFixed(0)}" y="${size-2}" text-anchor="middle" class="label-axis">RRₙ<tspan class="label-unit"> (ms)</tspan></text>`;
     g+=`<text x="11" y="${(size/2).toFixed(0)}" transform="rotate(-90 11 ${(size/2).toFixed(0)})" text-anchor="middle" class="label-axis">RRₙ₊₁<tspan class="label-unit"> (ms)</tspan></text>`;
-    return `<svg class="viz" viewBox="0 0 ${size} ${size}" style="max-width:${size}px">${g}</svg>`;
+    return Chart._hov(g,size,size,_hpts,"scatter",`max-width:${size}px`);
   },
   tachogram(rr,{w=720,h=230,color='var(--cyan)'}={}){
     if(!rr||rr.length<2) return `<div style="color:var(--text-faint);font-size:12px;text-align:center;padding:30px">Keine RR-Daten</div>`;
@@ -2056,7 +2068,8 @@ const Chart={
     g+=`<path d="${rr.map((v,i)=>`${i?'L':'M'}${X(i).toFixed(1)},${Y(v).toFixed(1)}`).join(' ')}" fill="none" stroke="${color}" stroke-width="1.3"/>`;
     const my=pad.t+(h-pad.t-pad.b)/2;g+=`<text x="12" y="${my.toFixed(0)}" transform="rotate(-90 12 ${my.toFixed(0)})" text-anchor="middle" class="label-axis">RR-INTERVALL<tspan class="label-unit"> (ms)</tspan></text>`;
     g+=`<text x="${(pad.l+(w-pad.l-pad.r)/2).toFixed(0)}" y="${h-2}" text-anchor="middle" class="label-axis">SCHLAG-NR.</text>`;
-    return `<svg class="viz" viewBox="0 0 ${w} ${h}">${g}</svg>`;
+    const _tm=rr.map((v,i)=>({x:+X(i).toFixed(1),y:+Y(v).toFixed(1),i,rr:Math.round(v),hr:Math.round(60000/v)}));
+    return Chart._hov(g,w,h,_tm,"seq");
   },
   dualHrvBpm(rr,{w=720,h=300}={}){
     if(!rr||rr.length<2) return '';
@@ -2075,7 +2088,12 @@ const Chart={
     g+=panel(hr,topH+gap,botH-padBot+14,'HERZFREQUENZ','bpm','var(--amber)',v=>fmt0(v));
     const xt=Chart.niceTicks(0,n-1,8);xt.forEach(t=>{if(t>n-1)return;g+=`<line class="grid-minor" x1="${X(t).toFixed(1)}" x2="${X(t).toFixed(1)}" y1="${padTop}" y2="${topH}"/><line class="grid-minor" x1="${X(t).toFixed(1)}" x2="${X(t).toFixed(1)}" y1="${topH+gap}" y2="${h-padBot}"/><text x="${X(t).toFixed(1)}" y="${h-8}" text-anchor="middle">${fmt0(t)}</text>`;});
     g+=`<text x="${(padL+(w-padL-padR)/2).toFixed(0)}" y="${h+6}" text-anchor="middle" class="label-axis">SCHLAG-NR.</text>`;
-    return `<svg class="viz" viewBox="0 0 ${w} ${h+10}">${g}</svg>`;
+    let _dmnR=Math.min(...rr),_dmxR=Math.max(...rr);{const pd=(_dmxR-_dmnR)*0.1||1;_dmnR-=pd;_dmxR+=pd;}
+    let _dmnH=Math.min(...hr),_dmxH=Math.max(...hr);{const pd=(_dmxH-_dmnH)*0.1||1;_dmnH-=pd;_dmxH+=pd;}
+    const _YR=v=>padTop+(1-(v-_dmnR)/(_dmxR-_dmnR))*(topH-padTop);
+    const _YH=v=>(topH+gap)+(1-(v-_dmnH)/(_dmxH-_dmnH))*(botH-padBot+14);
+    const _dm=rr.map((v,i)=>({x:+X(i).toFixed(1),y:+_YR(v).toFixed(1),y2:+_YH(hr[i]).toFixed(1),i,rr:Math.round(v),hr:Math.round(hr[i])}));
+    return Chart._hov(g,w,h+10,_dm,"dual");
   },
   ring(score,{size=120,color='var(--cyan)',label='Score'}={}){
     const r=size/2-10, c=2*Math.PI*r, cx=size/2, cy=size/2;
@@ -2175,6 +2193,43 @@ const Chart={
       <span style="color:var(--text-secondary)">${esc(label)}</span><span class="mono" style="font-weight:600">${sub||fmt1(value)}</span></div>
       <div style="height:8px;background:var(--bg-deep);border-radius:5px;overflow:hidden;border:1px solid var(--border-faint)">
         <div style="height:100%;width:${pct}%;background:${color};border-radius:5px;box-shadow:0 0 8px ${color}"></div></div></div>`;
+  },
+  // Interaktiver Hover-Wrapper: Fadenkreuz + Fokuspunkt(e) + Tooltip mit echten Werten am Cursor.
+  _hov(inner,w,h,pts,mode,extraStyle=''){
+    const cross=mode==='scatter'?'':`<line class="hov-cross" x1="0" x2="0" y1="0" y2="${h}"/>`;
+    const foc=`<circle class="hov-focus" r="${mode==='scatter'?5.5:4.5}"/>`+(mode==='dual'?`<circle class="hov-focus hov-focus2" r="4.5"/>`:'');
+    const mj=JSON.stringify(pts).replace(/'/g,'&#39;').replace(/</g,'&lt;');
+    return `<div class="viz-hov" data-hov='${mj}' data-mode="${mode}" data-w="${w}" data-h="${h}">`
+      +`<svg class="viz" viewBox="0 0 ${w} ${h}"${extraStyle?` style="${extraStyle}"`:''}>${inner}${cross}${foc}</svg><div class="hov-tip"></div></div>`;
+  },
+  initVizHover(){
+    if(Chart._vhInit)return; Chart._vhInit=true;
+    const clear=w=>{if(!w)return;w.querySelectorAll('.hov-cross,.hov-focus').forEach(e=>e.classList.remove('on'));w.querySelector('.hov-tip')?.classList.remove('on');};
+    document.addEventListener('mousemove',e=>{
+      const wrap=e.target.closest&&e.target.closest('.viz-hov');
+      if(!wrap){if(Chart._vhActive){clear(Chart._vhActive);Chart._vhActive=null;}return;}
+      if(Chart._vhActive&&Chart._vhActive!==wrap)clear(Chart._vhActive);
+      Chart._vhActive=wrap;
+      if(!wrap._pts){try{wrap._pts=JSON.parse(wrap.dataset.hov.replace(/&#39;/g,"'").replace(/&lt;/g,'<'));}catch(_){wrap._pts=[];}}
+      const pts=wrap._pts; if(!pts.length)return;
+      const mode=wrap.dataset.mode, W=+wrap.dataset.w, H=+wrap.dataset.h;
+      const svg=wrap.querySelector('svg'),rect=svg.getBoundingClientRect();
+      const vx=(e.clientX-rect.left)/rect.width*W, vy=(e.clientY-rect.top)/rect.height*H;
+      let best=pts[0],bd=Infinity;
+      if(mode==='scatter'){pts.forEach(m=>{const d=(m.x-vx)**2+(m.y-vy)**2;if(d<bd){bd=d;best=m;}});}
+      else{pts.forEach(m=>{const d=Math.abs(m.x-vx);if(d<bd){bd=d;best=m;}});}
+      const cross=svg.querySelector('.hov-cross'),focs=svg.querySelectorAll('.hov-focus'),tip=wrap.querySelector('.hov-tip');
+      if(cross){cross.setAttribute('x1',best.x);cross.setAttribute('x2',best.x);cross.classList.add('on');}
+      focs[0].setAttribute('cx',best.x);focs[0].setAttribute('cy',best.y);focs[0].classList.add('on');
+      if(focs[1]&&best.y2!=null){focs[1].setAttribute('cx',best.x);focs[1].setAttribute('cy',best.y2);focs[1].classList.add('on');}
+      let html;
+      if(mode==='scatter') html=`<div class="tt-date">Schlagpaar</div><div class="tt-val">${best.rn} → ${best.rn1} ms</div><div class="tt-cls" style="color:var(--text-secondary)">ΔRR ${best.rn1-best.rn>0?'+':''}${best.rn1-best.rn} ms</div>`;
+      else if(mode==='dual') html=`<div class="tt-date">Schlag ${best.i+1}</div><div class="tt-val" style="color:var(--cyan)">${best.rr} ms</div><div class="tt-cls" style="color:var(--amber)">${best.hr} bpm</div>`;
+      else html=`<div class="tt-date">Schlag ${best.i+1}</div><div class="tt-val">${best.rr} ms</div><div class="tt-cls" style="color:var(--text-secondary)">${best.hr} bpm</div>`;
+      const ay=best.y2!=null?Math.min(best.y,best.y2):best.y;
+      tip.style.left=(best.x/W*rect.width)+'px';tip.style.top=(ay/H*rect.height)+'px';
+      tip.innerHTML=html;tip.classList.add('on');
+    },{passive:true});
   },
   tacho(rr,{w=560,h=110}={}){
     if(!rr||rr.length<2) return '';
@@ -5327,7 +5382,7 @@ const Nav={
     const map={today:Views.today,board:Views.board,station:Views.station,map:Views.map,roster:Views.roster,detail:Views.detail,revenue:Views.revenue,logbook:Views.logbook,coherence:Views.coherence,cohdetail:Views.coherenceDetail,pairdetail:Views.pairDetail};
     $('#main').innerHTML=(map[this.cur]||Views.today).call(Views);
     if(this.cur==='map')setTimeout(()=>Dispatch.render(),60);
-    ChartZoom.enhance();
+    ChartZoom.enhance();Chart.initVizHover&&Chart.initVizHover();
     clearInterval(Views._tlTimer); Views._tlTimer=null;
     if(this.cur==='today'){
       Sortable.bind($('#todayStops'),ids=>Views.applyManualOrder(ids));
