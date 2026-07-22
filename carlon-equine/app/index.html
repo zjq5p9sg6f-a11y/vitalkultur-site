@@ -1016,7 +1016,7 @@ svg.viz .sd-lbl{fill:var(--cyan-strong);font-size:10px;font-weight:600;font-fami
   background:rgba(6,16,26,.72);border:1px solid var(--border-subtle);color:var(--text-secondary);cursor:zoom-in;backdrop-filter:blur(6px);transition:color .15s,border-color .15s,background .15s}
 .chart-zoombtn:hover{color:var(--cyan-strong);border-color:var(--cyan-deep);background:var(--cyan-g3)}
 .chart-zoombtn svg{width:15px;height:15px}
-#chartZoom{position:fixed;inset:0;z-index:300;background:rgba(2,6,10,.94);backdrop-filter:blur(10px);display:none;flex-direction:column;
+#chartZoom{position:fixed;inset:0;z-index:300;background:rgba(2,6,10,.985);backdrop-filter:blur(14px);display:none;flex-direction:column;
   padding:calc(12px + env(safe-area-inset-top,0)) 14px calc(14px + env(safe-area-inset-bottom,0))}
 #chartZoom.on{display:flex;animation:fade .25s ease}
 #chartZoom .zhead{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px;flex-shrink:0}
@@ -1385,6 +1385,7 @@ const el = (t,c,h)=>{const e=document.createElement(t);if(c)e.className=c;if(h!=
 const num = v => (typeof v==='number'&&isFinite(v))?v:(v!=null&&!isNaN(parseFloat(v))?parseFloat(v):null);
 const esc = s => String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const fmt1 = v => v==null?'—':(Math.round(v*10)/10).toLocaleString('de-DE');
+const fmt2 = v => v==null?'—':(Math.round(v*100)/100).toLocaleString('de-DE',{minimumFractionDigits:2,maximumFractionDigits:2});
 const fmt0 = v => v==null?'—':Math.round(v).toLocaleString('de-DE');
 const fmtTime = m => { m=Math.round(m); return `${String(Math.floor(m/60)%24).padStart(2,'0')}:${String(((m%60)+60)%60).padStart(2,'0')}`; };
 const parseTime = s => { const [h,mi]=(s||'').split(':').map(Number); return (isNaN(h)?8:h)*60+(isNaN(mi)?0:mi); };
@@ -2453,9 +2454,14 @@ const HRV={
     let g=`<rect x="${pad.l}" y="${pad.t}" width="${w-pad.l-pad.r}" height="${h-pad.t-pad.b}" fill="none" class="axis"/>`;
     const seg=pts.filter(p=>p.n<=16);
     if(seg.length>=2){ let sx=0,sy=0,sxy=0,sxx=0,m=seg.length; seg.forEach(p=>{sx+=p.x;sy+=p.yv;sxy+=p.x*p.yv;sxx+=p.x*p.x;});
-      const den=m*sxx-sx*sx; const a1=den?(m*sxy-sx*sy)/den:0; const ic=(sy-a1*sx)/m; const x0=xmn,x1=xmx;
+      const den=m*sxx-sx*sx; const a1=den?(m*sxy-sx*sy)/den:0; const ic=(sy-a1*sx)/m;
+      const segX=seg.map(p=>p.x); const x0=Math.min(...segX),x1=Math.max(...segX);
+      // n=16-Grenze (Ende des Kurzzeit-Skalierungsbereichs) — dezente Markierung
+      g+=`<line x1="${X(x1).toFixed(1)}" y1="${pad.t}" x2="${X(x1).toFixed(1)}" y2="${(h-pad.b).toFixed(1)}" stroke="#ffffff" stroke-opacity=".10" stroke-width=".5" stroke-dasharray="2 3"/>`;
+      g+=`<text x="${(X(x1)-3).toFixed(1)}" y="${(h-pad.b-4).toFixed(1)}" text-anchor="end" style="fill:var(--text-dim);font-size:8px">n=16</text>`;
+      // α1-Fit NUR über dem gefitteten Kurzzeit-Bereich (n≤16, nicht extrapoliert)
       g+=`<line x1="${X(x0).toFixed(1)}" y1="${Y(ic+a1*x0).toFixed(1)}" x2="${X(x1).toFixed(1)}" y2="${Y(ic+a1*x1).toFixed(1)}" stroke="var(--amber)" stroke-width="2" stroke-dasharray="5 4"/>`;
-      g+=`<text x="${(w-pad.r-4).toFixed(1)}" y="${(pad.t+13).toFixed(1)}" text-anchor="end" style="fill:var(--amber);font-size:12px;font-weight:700">α1 = ${fmt1(a1)}</text>`;}
+      g+=`<text x="${(w-pad.r-4).toFixed(1)}" y="${(pad.t+13).toFixed(1)}" text-anchor="end" style="fill:var(--amber);font-size:12px;font-weight:700">α1 = ${fmt2(a1)}</text>`;}
     g+=`<path d="${pts.map((p,i)=>`${i?'L':'M'}${X(p.x).toFixed(1)},${Y(p.yv).toFixed(1)}`).join(' ')}" fill="none" stroke="var(--cyan-strong)" stroke-width="1.5"/>`;
     pts.forEach(p=>g+=`<circle cx="${X(p.x).toFixed(1)}" cy="${Y(p.yv).toFixed(1)}" r="2.6" fill="var(--cyan-strong)"/>`);
     g+=`<text x="13" y="${(pad.t+(h-pad.t-pad.b)/2).toFixed(0)}" transform="rotate(-90 13 ${(pad.t+(h-pad.t-pad.b)/2).toFixed(0)})" text-anchor="middle" class="label-axis">log F(n)</text>`;
@@ -2817,7 +2823,7 @@ const Views={
       <div class="row2">
         <div class="metric"><b>${fmt0(m.rmssd)}</b><span>RMSSD ms</span></div>
         <div class="metric"><b>${fmt0(m.meanHR)}</b><span>HF bpm</span></div>
-        ${(h.baselineRMSSD&&m.rmssd!=null)?`<div class="metric"><b class="mdelta ${m.rmssd<h.baselineRMSSD*0.7?'bad':m.rmssd<h.baselineRMSSD*0.86?'warn':'ok'}">${m.rmssd>=h.baselineRMSSD?'+':''}${fmt0((m.rmssd-h.baselineRMSSD)/h.baselineRMSSD*100)}%</b><span>vs Baseline</span></div>`:(m.dfa!=null?`<div class="metric"><b>${fmt1(m.dfa)}</b><span>DFA α1</span></div>`:(m.quality!=null?`<div class="metric"><b>${fmt0(m.quality)}</b><span>Signalqual.</span></div>`:''))}
+        ${(h.baselineRMSSD&&m.rmssd!=null)?`<div class="metric"><b class="mdelta ${m.rmssd<h.baselineRMSSD*0.7?'bad':m.rmssd<h.baselineRMSSD*0.86?'warn':'ok'}">${m.rmssd>=h.baselineRMSSD?'+':''}${fmt0((m.rmssd-h.baselineRMSSD)/h.baselineRMSSD*100)}%</b><span>vs Baseline</span></div>`:(m.dfa!=null?`<div class="metric"><b>${fmt2(m.dfa)}</b><span>DFA α1</span></div>`:(m.quality!=null?`<div class="metric"><b>${fmt0(m.quality)}</b><span>Signalqual.</span></div>`:''))}
       </div>
       ${(()=>{const s=State.recsFor(h.id).map(r=>({x:r.startedAt,y:r.metrics.rmssd}));return s.length>=3?`<div style="margin-top:9px;opacity:.85">${Chart.spark(s,{w:250,h:26,color:tri.level==='crit'?'var(--red)':tri.level==='elev'?'var(--amber)':'var(--cyan)'})}</div>`:'';})()}
       ${flags?`<div class="chips">${flags}</div>`:''}
@@ -3498,7 +3504,7 @@ const Views={
               ${Views.stat('RMSSD','ms',m.rmssd,Views.clsRMSSD(m.rmssd))}
               ${Views.stat('Ruhe-HF','bpm',m.meanHR,Views.clsHR(m.meanHR))}
               ${Views.stat('SDNN','ms',m.sdnn,Views.clsSDNN(m.sdnn))}
-              ${Views.stat('DFA α1','',dfa,Views.clsDFA(dfa),true)}
+              ${Views.stat('DFA α1','',dfa,Views.clsDFA(dfa),2)}
             </div>
             ${tri.reasons&&tri.reasons.length?`<div style="margin-top:8px;padding:14px;background:var(--bg-deep);border:1px solid var(--border-faint);border-radius:var(--r-m)">
               <div style="font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--text-dim);font-weight:600;margin-bottom:9px">Warum diese Einstufung?</div>
@@ -3581,7 +3587,7 @@ const Views={
   },
   stat(k,unit,v,c,dec){
     if(v==null)return `<div class="stat"><div class="k">${k}</div><div class="v na" title="Bei 5-Min-Aufnahme bzw. ohne Frequenz-Export nicht valide berechenbar">n. v.</div><div class="cls" style="color:var(--text-faint)">kurze Aufnahme</div></div>`;
-    return `<div class="stat"><div class="k">${k}</div><div class="v">${dec?fmt1(v):fmt0(v)}${unit?`<small> ${unit}</small>`:''}</div>${c?`<div class="cls ${c.cls}">${c.text}</div>`:''}</div>`;},
+    return `<div class="stat"><div class="k">${k}</div><div class="v">${dec===2?fmt2(v):dec?fmt1(v):fmt0(v)}${unit?`<small> ${unit}</small>`:''}</div>${c?`<div class="cls ${c.cls}">${c.text}</div>`:''}</div>`;},
   clsRMSSD(v){if(v==null)return null;if(v>302)return{text:'Rhythmus prüfen',cls:'alert'};if(v<20)return{text:'stark reduziert',cls:'alert'};if(v<40)return{text:'niedrig',cls:'warn'};return{text:'im Referenzbereich (indiv.)',cls:'good'};},
   clsHR(v){if(v==null)return null;if(v>90)return{text:'über Ruhebereich',cls:'alert'};if(v>48)return{text:'erhöht',cls:'warn'};if(v<22)return{text:'unter Ruhebereich',cls:'warn'};return{text:'physiologisch',cls:'good'};},
   clsSDNN(v){if(v==null)return null;if(v<40)return{text:'reduziert',cls:'alert'};if(v<80)return{text:'niedrig-normal',cls:'warn'};return{text:'normal',cls:'good'};},
@@ -3610,7 +3616,7 @@ const Views={
     const dfa1=(m.dfa!=null)?m.dfa:HRV.dfaAlpha1(rr);
     const meanRR=rr.reduce((a,b)=>a+b,0)/rr.length;
     const lfhf=(bd&&bd.lfhf!=null)?bd.lfhf:m.lfhf;
-    const vm=(k,v,u,dec)=>`<div class="vm"><div class="k">${k}</div><div class="v">${v==null?'<span class="na" title="kurze Aufnahme / nicht im Export">n. v.</span>':(dec?fmt1(v):fmt0(v))}${(v!=null&&u)?`<small> ${u}</small>`:''}</div></div>`;
+    const vm=(k,v,u,dec)=>`<div class="vm"><div class="k">${k}</div><div class="v">${v==null?'<span class="na" title="kurze Aufnahme / nicht im Export">n. v.</span>':(dec===2?fmt2(v):dec?fmt1(v):fmt0(v))}${(v!=null&&u)?`<small> ${u}</small>`:''}</div></div>`;
     const pw=(k,label,v)=>`<div class="pwr"><span class="pk" style="color:${HRV.BANDCOL[k]||'var(--text-secondary)'}">${label}</span><b>${v==null?'n.v.':fmt0(v)}</b></div>`;
     return `<div class="panel" style="margin-bottom:var(--s4)">
       <h2 style="font-size:16px"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 12h3l2-7 4 15 3-11 2 6h6"/></svg>Signalanalyse · ${fmtDate(rec.startedAt,true)}</h2>
@@ -3624,11 +3630,11 @@ const Views={
               ${vm('meanRR',meanRR,'ms')}${vm('Min-HF',m.minHR,'bpm')}${vm('Max-HF',m.maxHR,'bpm')}
             </div></div>
             <div class="vm-group"><div class="vm-glabel">Geometrie · Poincaré</div><div class="viz-metrics">
-              ${vm('SD1',m.sd1,'ms')}${vm('SD2',m.sd2,'ms')}${vm('SD2/SD1',m.sd2sd1,'',true)}
+              ${vm('SD1',m.sd1,'ms')}${vm('SD2',m.sd2,'ms')}${vm('SD2/SD1',m.sd2sd1,'',2)}
               ${vm('TINN',tt?tt.tinn:null,'ms')}${vm('Tri-Index',tt?tt.triIndex:null,'',true)}
             </div></div>
             <div class="vm-group"><div class="vm-glabel">Nichtlinear</div><div class="viz-metrics">
-              ${vm('DFA α1',dfa1,'',true)}${vm('SampEn',se,'',true)}
+              ${vm('DFA α1',dfa1,'',2)}${vm('SampEn',se,'',true)}
             </div></div>
             <div class="vm-group"><div class="vm-glabel">Signalqualität</div><div class="viz-metrics">
               ${vm('Artefakt',m.artifactPct,'%',true)}${vm('AV-Block',m.avBlock,'')}
@@ -3642,7 +3648,7 @@ const Views={
           ${HRV.psdChart(psd)}
           <div class="pwr-row">
             ${pw('vlf','VLF',bd?bd.vlf:null)}${pw('lf','LF',bd?bd.lf:null)}${pw('hf','HF',bd?bd.hf:null)}
-            ${pw('total','Total',bd?bd.total:null)}<div class="pwr"><span class="pk">LF/HF</span><b>${lfhf!=null?fmt1(lfhf):'n.v.'}</b></div>
+            ${pw('total','Total',bd?bd.total:null)}<div class="pwr"><span class="pk">LF/HF</span><b>${lfhf!=null?fmt2(lfhf):'n.v.'}</b></div>
           </div>
         </div>
         <div class="baev-box">
@@ -4513,7 +4519,7 @@ const Report={
     const recs=State.recsFor(h.id); const rec=recs[recs.length-1];
     const m=rec.metrics; const tri=rec.triage||{level:'stable',reasons:[]};
     const s=State.settings;
-    const st=(k,unit,v,c,dec)=>`<div class="pr-stat"><div class="k">${k}</div><div class="v">${v==null?'n.v.':(dec?fmt1(v):fmt0(v))}${(v!=null&&unit)?' '+unit:''}</div>${c?`<div class="c ${c.cls}">${c.text}</div>`:''}</div>`;
+    const st=(k,unit,v,c,dec)=>`<div class="pr-stat"><div class="k">${k}</div><div class="v">${v==null?'n.v.':(dec===2?fmt2(v):dec?fmt1(v):fmt0(v))}${(v!=null&&unit)?' '+unit:''}</div>${c?`<div class="c ${c.cls}">${c.text}</div>`:''}</div>`;
     const series=recs.map(r=>({x:r.startedAt,y:r.metrics.rmssd}));
     const rr=rec.rr||[];
     const dfa=(m.dfa!=null)?m.dfa:(rr.length?HRV.dfaAlpha1(rr):null);
@@ -4544,18 +4550,18 @@ const Report={
         ${st('SDNN','ms',m.sdnn,Views.clsSDNN(m.sdnn))}
         ${st('meanRR','ms',meanRR)}
         ${st('Min-HF','bpm',m.minHR)}${st('Max-HF','bpm',m.maxHR)}
-        ${st('pNN50','%',m.pnn50,null,true)}${st('DFA α1','',dfa,Views.clsDFA(dfa),true)}
+        ${st('pNN50','%',m.pnn50,null,true)}${st('DFA α1','',dfa,Views.clsDFA(dfa),2)}
         ${st('SD1','ms',m.sd1)}${st('SD2','ms',m.sd2)}
-        ${st('SD2/SD1','',m.sd2sd1,null,true)}${st('SampEn','',se,null,true)}
+        ${st('SD2/SD1','',m.sd2sd1,null,2)}${st('SampEn','',se,null,true)}
         ${st('TINN','ms',tt?tt.tinn:null)}${st('Tri-Index','',tt?tt.triIndex:null,null,true)}
-        ${st('LF/HF','',lfhf,null,true)}${st('Baevsky-SI','',bv?bv.SI:null)}
+        ${st('LF/HF','',lfhf,null,2)}${st('Baevsky-SI','',bv?bv.SI:null)}
         ${st('Artefakt','%',m.artifactPct,null,true)}${st('AV-Block','',m.avBlock)}
         ${st('Signalqualität','',m.quality)}
       </div>
       ${psd?`<h2>Frequenzspektrum — Welch/Lomb (equine Bänder)</h2>
       <div class="pr-chart-box">${HRV.psdChart(psd,{w:720,h:210})}</div>
       <div class="pr-stats" style="grid-template-columns:repeat(5,1fr)">
-        ${st('VLF','ms²',bd.vlf)}${st('LF','ms²',bd.lf)}${st('HF','ms²',bd.hf)}${st('Total','ms²',bd.total)}${st('LF/HF','',bd.lfhf,null,true)}
+        ${st('VLF','ms²',bd.vlf)}${st('LF','ms²',bd.lf)}${st('HF','ms²',bd.hf)}${st('Total','ms²',bd.total)}${st('LF/HF','',bd.lfhf,null,2)}
       </div>`:''}
       ${rec.rr&&rec.rr.length>4?`<h2>Poincaré — Herzschlag-Streuung (SD1/SD2)</h2><div class="pr-chart-box" style="display:flex;justify-content:center">${Chart.poincare(rec.rr,{size:300,sd1:m.sd1,sd2:m.sd2})}</div>`:''}
       <h2>Tierärztliche Einschätzung</h2>
