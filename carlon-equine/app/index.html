@@ -1542,7 +1542,7 @@ const Triage = {
     let forced=null;
     // ---- 1) App-eigene klinische Indikatoren (echte Exporte) ----
     const c=n.clinical||{};
-    if(c.afib && (c.afib.triggered||c.afib.exceedsCutoff)){forced='crit';flags.push('AFib-Verdacht');reasons.push('Auffällig hohe Kurzzeit-Variabilität — Vorhofflimmern-Abklärung per EKG ratsam (Broux 2018: RMSSD trennt AF/Sinus, AUC>0,9)');}
+    if(c.afib && (c.afib.triggered||c.afib.exceedsCutoff)){forced='crit';flags.push('Rhythmus prüfen');reasons.push('Auffällig unregelmäßige Kurzzeit-Variabilität — 12-Kanal-EKG zur Rhythmus-Abklärung erwägen (Broux 2018: RMSSD trennt AF/Sinus, AUC>0,9)');}
     if(c.colic && c.colic.triggered){
       const sev=(c.colic.severity||'').toLowerCase();
       flags.push('Kolik-Indikator');
@@ -1560,17 +1560,17 @@ const Triage = {
     // ---- 2) Ableitung aus Rohmetriken (kalibriert an Referenz-Kohorten) ----
     const rm=mt.rmssd, hr=mt.meanHR, dfa=mt.dfa;
     if(rm!=null){
-      if(rm>302){score+=55;flags.push('AFib?');reasons.push('RMSSD stark erhöht — auffällige Kurzzeit-Variabilität, Vorhofflimmern-Abklärung ratsam (Broux 2018)');}
-      else if(rm<15){score+=50;reasons.push('RMSSD < 15 ms — stark reduzierte vagale Aktivität (Kolik-assoziierter Bereich, Gehlen 2020 / Vitale 2020)');}
+      if(rm>302){score+=55;flags.push('Rhythmus prüfen');reasons.push('RMSSD stark erhöht — auffällig unregelmäßige Kurzzeit-Variabilität, 12-Kanal-EKG zur Rhythmus-Abklärung erwägen (Broux 2018)');}
+      else if(rm<15){score+=50;reasons.push('RMSSD < 15 ms — sehr niedrig gegen Referenz (Gehlen 2020 / Vitale 2020)');}
       else if(rm<30){score+=28;reasons.push('RMSSD < 30 ms — deutlich reduzierte Herzratenvariabilität');}
       else if(rm<50){score+=15;reasons.push('RMSSD < 50 ms — reduzierte Herzratenvariabilität');}
       else if(rm<80){score+=8;reasons.push('RMSSD im unteren Bereich — kein Konsens-Referenzwert, gegen individuelle Baseline bewerten');}
     }
     if(hr!=null){
-      if(hr>90){score+=40;reasons.push('Ruhe-HF > 90 bpm — Tachykardie / Schmerz-/Schockindikator');}
+      if(hr>90){score+=40;reasons.push('Ruhe-HF > 90 bpm — deutlich über Ruhebereich');}
       else if(hr>64){score+=12;reasons.push('Ruhe-HF > 64 bpm — erhöht (Gehlen 2020: Nicht-Überlebende 67±28)');}
       else if(hr>48){score+=5;reasons.push('Ruhe-HF leicht erhöht');}
-      else if(hr<22){score+=12;reasons.push('Ruhe-HF < 22 bpm — Bradykardie / AV-Block prüfen');}
+      else if(hr<22){score+=12;reasons.push('Ruhe-HF < 22 bpm — deutlich unter Ruhebereich, Rhythmus prüfen');}
     }
     if(dfa!=null){
       if(dfa<0.5){score+=22;reasons.push('DFA α1 < 0,5 — unkorreliert (Signalabbau / kritischer Zustand)');}
@@ -1611,8 +1611,8 @@ const Triage = {
     const base=h&&h.baselineRMSSD, rm=rec&&rec.metrics?rec.metrics.rmssd:null;
     if(!base||rm==null) return null;
     const ratio=rm/base, pct=Math.round((1-ratio)*100);
-    if(ratio<0.5) return {level:'alarm',ratio,pct,text:`RMSSD ${pct} % unter individueller Baseline (${fmt0(rm)} vs. ${fmt0(base)} ms) — deutliche parasympathische Depression`};
-    if(ratio<0.7) return {level:'warn',ratio,pct,text:`RMSSD ${pct} % unter Baseline (${fmt0(rm)} vs. ${fmt0(base)} ms) — Frühwarnung, engmaschig beobachten`};
+    if(ratio<0.5) return {level:'alarm',ratio,pct,text:`RMSSD ${pct} % unter individueller Baseline (${fmt0(rm)} vs. ${fmt0(base)} ms) — deutlich unter der eigenen Baseline, tierärztlich einordnen`};
+    if(ratio<0.7) return {level:'warn',ratio,pct,text:`RMSSD ${pct} % unter Baseline (${fmt0(rm)} vs. ${fmt0(base)} ms) — auffällig unter der Baseline, engmaschig beobachten`};
     return null;
   },
   // Wie viele Messungen in Folge ist RMSSD gefallen? (Trend-Frühwarnung ab 3)
@@ -2685,7 +2685,7 @@ const Views={
   pcard({h,rec,tri}){
     const m=rec.metrics; const tr=Triage.trend(h.id);
     const flags=(tri.flags||[]).slice(0,3).map(f=>{
-      const cls=/AFib|Kolik|Schock/.test(f)?'red':/Asthma|Signal/.test(f)?'amber':'cyan';
+      const cls=/Rhythmus|Kolik/.test(f)?'red':/Asthma|Signal/.test(f)?'amber':'cyan';
       return `<span class="chip ${cls}">${esc(f)}</span>`;}).join('');
     return `<div class="pcard" onclick="Views.openHorse('${h.id}')">
       <div class="top">
@@ -2777,7 +2777,7 @@ const Views={
       return `<button class="rr-chip" onclick="Views.openHorse('${h.id}')" title="${esc(h.name)}">${Views.avatar(h,22)}<span>${esc(h.name.split(/[\s(]/)[0])}</span><i class="rr-dot ${lvl}"></i></button>`;
     }).join('')}</div>`;
   },
-  keyFlag(tri){const f=(tri.flags||[]).find(x=>/AFib|Kolik/.test(x))||(tri.flags||[]).find(x=>/Asthma|Signal|nachmessen/.test(x));if(!f)return'';const cls=/AFib|Kolik/.test(f)?'red':'amber';return ` · <span class="chip ${cls}" style="padding:1px 6px;font-size:9px">${esc(f)}</span>`;},
+  keyFlag(tri){const f=(tri.flags||[]).find(x=>/Rhythmus|Kolik/.test(x))||(tri.flags||[]).find(x=>/Asthma|Signal|nachmessen/.test(x));if(!f)return'';const cls=/Rhythmus|Kolik/.test(f)?'red':'amber';return ` · <span class="chip ${cls}" style="padding:1px 6px;font-size:9px">${esc(f)}</span>`;},
   _suggestIdx:-1, _suggestList:[],
   updateSuggest(q){
     const box=$('#searchSuggest'); if(!box)return;
@@ -3353,7 +3353,7 @@ const Views={
               <div style="margin-top:8px;display:flex;gap:8px;align-items:center;flex-wrap:wrap">
                 <span class="tri-badge tri-${tri.level}"><span class="dot"></span>${Triage.LEVELS[tri.level].label}</span>
                 ${h.needsVisit?'<span class="chip visit">Besuch fällig</span>':''}
-                ${(tri.flags||[]).map(f=>`<span class="chip ${/AFib|Kolik/.test(f)?'red':/Asthma|Signal/.test(f)?'amber':'cyan'}">${esc(f)}</span>`).join('')}
+                ${(tri.flags||[]).map(f=>`<span class="chip ${/Rhythmus|Kolik/.test(f)?'red':/Asthma|Signal/.test(f)?'amber':'cyan'}">${esc(f)}</span>`).join('')}
               </div>
               ${(h.owner||h.phone)?`<div class="detail-owner">
                 <span class="do-id">${IC.owner}<span class="do-txt"><b>${esc(h.owner||'Halter unbekannt')}</b><span>Halter</span></span></span>
@@ -3374,7 +3374,7 @@ const Views={
         <div>
           <div class="panel" style="margin-bottom:var(--s4)">
             <h2><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12h4l3 8 4-16 3 8h4"/></svg>Aktueller Status</h2>
-            ${(()=>{const amp=Triage.baselineAmpel(h,rec);const streak=Triage.fallingStreak(h.id);if(!amp&&streak<3)return'';const lvl=amp?amp.level:'warn';const parts=[];if(amp)parts.push(amp.text);if(streak>=3)parts.push(`RMSSD ${streak}× in Folge fallend`);return `<div class="warnbanner ${lvl}">${IC.bolt}<div><b>Frühwarnung · gegen individuelle Baseline</b><span>${parts.map(esc).join(' · ')}</span></div></div>`;})()}
+            ${(()=>{const amp=Triage.baselineAmpel(h,rec);const streak=Triage.fallingStreak(h.id);if(!amp&&streak<3)return'';const lvl=amp?amp.level:'warn';const parts=[];if(amp)parts.push(amp.text);if(streak>=3)parts.push(`RMSSD ${streak}× in Folge fallend`);return `<div class="warnbanner ${lvl}">${IC.bolt}<div><b>Auffällig · gegen die individuelle Baseline</b><span>${parts.map(esc).join(' · ')}</span></div></div>`;})()}
             <div class="stat-row">
               ${Views.stat('RMSSD','ms',m.rmssd,Views.clsRMSSD(m.rmssd))}
               ${Views.stat('Ruhe-HF','bpm',m.meanHR,Views.clsHR(m.meanHR))}
@@ -3463,10 +3463,10 @@ const Views={
   stat(k,unit,v,c,dec){
     if(v==null)return `<div class="stat"><div class="k">${k}</div><div class="v na" title="Bei 5-Min-Aufnahme bzw. ohne Frequenz-Export nicht valide berechenbar">n. v.</div><div class="cls" style="color:var(--text-faint)">kurze Aufnahme</div></div>`;
     return `<div class="stat"><div class="k">${k}</div><div class="v">${dec?fmt1(v):fmt0(v)}${unit?`<small> ${unit}</small>`:''}</div>${c?`<div class="cls ${c.cls}">${c.text}</div>`:''}</div>`;},
-  clsRMSSD(v){if(v==null)return null;if(v>302)return{text:'AFib-Verdacht',cls:'alert'};if(v<20)return{text:'stark reduziert',cls:'alert'};if(v<40)return{text:'niedrig',cls:'warn'};return{text:'im Referenzbereich (indiv.)',cls:'good'};},
-  clsHR(v){if(v==null)return null;if(v>90)return{text:'Tachykardie',cls:'alert'};if(v>48)return{text:'erhöht',cls:'warn'};if(v<22)return{text:'Bradykardie',cls:'warn'};return{text:'physiologisch',cls:'good'};},
+  clsRMSSD(v){if(v==null)return null;if(v>302)return{text:'Rhythmus prüfen',cls:'alert'};if(v<20)return{text:'stark reduziert',cls:'alert'};if(v<40)return{text:'niedrig',cls:'warn'};return{text:'im Referenzbereich (indiv.)',cls:'good'};},
+  clsHR(v){if(v==null)return null;if(v>90)return{text:'über Ruhebereich',cls:'alert'};if(v>48)return{text:'erhöht',cls:'warn'};if(v<22)return{text:'unter Ruhebereich',cls:'warn'};return{text:'physiologisch',cls:'good'};},
   clsSDNN(v){if(v==null)return null;if(v<40)return{text:'reduziert',cls:'alert'};if(v<80)return{text:'niedrig-normal',cls:'warn'};return{text:'normal',cls:'good'};},
-  clsDFA(v){if(v==null)return null;if(v<0.5)return{text:'unkorreliert',cls:'alert'};if(v<0.75)return{text:'vagal-hyper',cls:'warn'};if(v<1.15)return{text:'physiologisch',cls:'good'};if(v<1.5)return{text:'sympathikoton',cls:'warn'};return{text:'hochkorreliert',cls:'alert'};},
+  clsDFA(v){if(v==null)return null;if(v<0.5)return{text:'unkorreliert',cls:'alert'};if(v<0.75)return{text:'sehr niedrig',cls:'warn'};if(v<1.15)return{text:'physiologisch',cls:'good'};if(v<1.5)return{text:'erhöht',cls:'warn'};return{text:'hochkorreliert',cls:'alert'};},
   asthmaPanel(recs){
     const a=Asthma.assess(recs); if(!a) return '';
     const sev=a.severity?Asthma.SEV[a.severity]:null;
