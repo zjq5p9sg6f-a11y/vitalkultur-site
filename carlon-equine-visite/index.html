@@ -186,6 +186,72 @@ footer{border-top:1px solid var(--border-faint);padding:56px 24px 66px;text-alig
   .nav-actions{gap:6px}
   .btn{padding:0 9px;height:30px;font-size:9.5px;letter-spacing:0.06em}
 }
+
+/* ===== Bilder tappbar (Lightbox) ===== */
+.shot .frame, .f-shot { cursor: zoom-in; }
+.shot .frame img, .f-shot img { pointer-events: none; }
+
+/* ===== Mobile: Screenshot-Reihen horizontal swipebar (wie Equine-Homepage) ===== */
+@media (max-width: 720px){
+  .shots.two, .shots.three{
+    display: flex; grid-template-columns: none;
+    overflow-x: auto; overflow-y: hidden;
+    scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch;
+    overscroll-behavior-x: contain; scrollbar-width: none;
+    gap: 14px; margin-left: -20px; margin-right: -20px; padding: 4px 20px 14px;
+    scroll-padding: 20px;
+  }
+  .shots.two::-webkit-scrollbar, .shots.three::-webkit-scrollbar{ display: none; }
+  .shots.two > .shot, .shots.three > .shot{
+    flex: 0 0 86%; min-width: 0; scroll-snap-align: center; scroll-snap-stop: always;
+  }
+  .shots.two > .shot .frame, .shots.three > .shot .frame{ cursor: pointer; }
+  /* Wisch-Hinweis */
+  .swipe-hint{ display:flex; align-items:center; gap:7px; justify-content:center;
+    font-family:var(--font-mono); font-size:10px; letter-spacing:0.14em; text-transform:uppercase;
+    color:var(--cyan); opacity:0.8; margin-top:4px; }
+}
+@media (min-width: 721px){ .swipe-hint{ display:none; } }
+
+/* ===== Lightbox ===== */
+.lb-overlay{
+  position: fixed; inset: 0; z-index: 200; display: none;
+  align-items: center; justify-content: center;
+  background: rgba(2,8,13,0.92); backdrop-filter: blur(10px);
+  padding: max(16px, env(safe-area-inset-top)) 16px max(16px, env(safe-area-inset-bottom));
+  cursor: zoom-out; opacity: 0; transition: opacity .2s ease;
+}
+.lb-overlay.on{ display: flex; opacity: 1; }
+.lb-overlay img{
+  max-width: 96vw; max-height: 90vh; width: auto; height: auto;
+  border-radius: 12px; border: 1px solid var(--border-subtle);
+  box-shadow: 0 40px 100px -30px rgba(0,0,0,0.9);
+  touch-action: pinch-zoom; /* Pinch-Zoom auf mobilen Geraeten */
+  animation: lbPop .24s cubic-bezier(.2,.8,.3,1.1);
+}
+@keyframes lbPop{ from{ transform: scale(.96); opacity:.4 } to{ transform: scale(1); opacity:1 } }
+.lb-close{
+  position: absolute; top: max(14px, env(safe-area-inset-top)); right: 16px;
+  width: 42px; height: 42px; border-radius: 50%;
+  background: rgba(255,255,255,0.08); border: 1px solid var(--border-subtle);
+  color: var(--text-primary); font-size: 22px; line-height: 1; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+}
+.lb-nav{
+  position: absolute; top: 50%; transform: translateY(-50%);
+  width: 46px; height: 46px; border-radius: 50%;
+  background: rgba(255,255,255,0.06); border: 1px solid var(--border-subtle);
+  color: var(--text-primary); font-size: 22px; cursor: pointer;
+  display: flex; align-items: center; justify-content: center; user-select: none;
+}
+.lb-prev{ left: 14px; } .lb-next{ right: 14px; }
+@media (max-width: 720px){ .lb-nav{ display: none; } }
+.lb-cap{
+  position: absolute; bottom: max(18px, env(safe-area-inset-bottom)); left: 0; right: 0;
+  text-align: center; font-size: 13px; color: var(--text-secondary); padding: 0 24px;
+  font-weight: 300; pointer-events: none;
+}
+
 </style>
 </head>
 <body>
@@ -225,7 +291,7 @@ footer{border-top:1px solid var(--border-faint);padding:56px 24px 66px;text-alig
   <!-- KANO-NUTZEN -->
   <section class="wrap rev">
     <div class="sec-eyebrow" data-en="What it gives you" data-de="Was es dir gibt">Was es dir gibt</div>
-    <h2 data-en="Built around the animal — <em>and your judgement.</em>" data-de="Um das Tier gebaut — <em>und um dein Urteil.</em>">Um das Tier gebaut — <em>und um dein Urteil.</em></h2>
+    <h2 data-en="For the horse — <em>and for your judgement.</em>" data-de="Für das Pferd — <em>und für dein Urteil.</em>">Für das Pferd — <em>und für dein Urteil.</em></h2>
     <div class="grid">
       <div class="card">
         <div class="k" data-en="Priority" data-de="Priorität">Priorität</div>
@@ -304,8 +370,8 @@ footer{border-top:1px solid var(--border-faint);padding:56px 24px 66px;text-alig
 
   <!-- IM COCKPIT — die HRV-Tiefe -->
   <section class="wrap rev">
-    <div class="sec-eyebrow" data-en="Inside a case" data-de="Im Fall">Im Fall</div>
-    <h2 data-en="The horse's heart, <em>read against itself.</em>" data-de="Das Herz des Pferds, <em>gegen sich selbst gelesen.</em>">Das Herz des Pferds, <em>gegen sich selbst gelesen.</em></h2>
+    <div class="sec-eyebrow" data-en="The individual horse" data-de="Am einzelnen Pferd">Am einzelnen Pferd</div>
+    <h2 data-en="Every horse is <em>its own measure.</em>" data-de="Jedes Pferd ist <em>sein eigener Maßstab.</em>">Jedes Pferd ist <em>sein eigener Maßstab.</em></h2>
     <div class="shots two">
       <figure class="shot">
         <div class="frame"><img src="assets/visite-shots/10-triage.jpg" alt="Triage-Board mit Ein-Tipp-Anruf je Pferd" loading="lazy"></div>
@@ -402,6 +468,15 @@ footer{border-top:1px solid var(--border-faint);padding:56px 24px 66px;text-alig
     <div class="cta-row" style="justify-content:center">
       <a class="cta-primary" href="mailto:jan@vitalkultur.com?subject=CARLON%20Equine%20%E2%80%94%20Gr%C3%BCndungs-Partner%20(Tier%C3%A4rzte%20%26%20Kliniken)&amp;body=Hallo%20Jan%2C%0A%0Aich%20m%C3%B6chte%20Gr%C3%BCndungs-Partner%20werden.%0A%0AKurz%20zu%20mir%3A%0A-%20Praxis%2FKlinik%3A%0A-%20Rolle%20(mobiler%20Vet%20%2F%20Klinik%20%2F%20Reha)%3A%0A-%20Pferde%20mit%20Polar%20H10%3A%0A-%20Telefon%3A%0A%0AViele%20Gr%C3%BC%C3%9Fe%2C" data-track="cta:clinic-final" data-en="Become a founding partner →" data-de="Gründungs-Partner werden →">Gründungs-Partner werden →</a>    </div>
   </section>
+
+  <!-- Lightbox: Screenshots auf Tap vergroessern (self-contained, kein Lib) -->
+  <div class="lb-overlay" id="lightbox" role="dialog" aria-modal="true" aria-label="Vergrößerte Ansicht">
+    <button class="lb-close" id="lbClose" aria-label="Schließen">×</button>
+    <button class="lb-nav lb-prev" id="lbPrev" aria-label="Vorheriges Bild">‹</button>
+    <img id="lbImg" src="" alt="">
+    <button class="lb-nav lb-next" id="lbNext" aria-label="Nächstes Bild">›</button>
+    <div class="lb-cap" id="lbCap"></div>
+  </div>
 </main>
 
 <footer>
@@ -455,6 +530,53 @@ if(_lb) _lb.addEventListener('click', function(){
   requestAnimationFrame(function(){
     els.forEach(function(e){ if(e.getBoundingClientRect().top < vh()*0.94){ e.classList.add('in'); io.unobserve(e); } });
   });
+})();
+
+// ===== Lightbox: Screenshots auf Tap/Klick vergroessern =====
+(function(){
+  var ov=document.getElementById('lightbox'); if(!ov) return;
+  var img=document.getElementById('lbImg'), cap=document.getElementById('lbCap');
+  var btnClose=document.getElementById('lbClose'), btnPrev=document.getElementById('lbPrev'), btnNext=document.getElementById('lbNext');
+  // Alle zoombaren Container einsammeln (Reihenfolge im Dokument = Galerie-Reihenfolge)
+  var frames=[].slice.call(document.querySelectorAll('.shot .frame, .f-shot'));
+  var items=frames.map(function(f){
+    var im=f.querySelector('img'); if(!im) return null;
+    var fc=f.parentNode&&f.parentNode.querySelector('figcaption');
+    return {src:im.getAttribute('src'), cap:(fc?fc.textContent:im.getAttribute('alt'))||''};
+  }).filter(Boolean);
+  var idx=0;
+  function show(i){ idx=(i+items.length)%items.length; img.setAttribute('src',items[idx].src); img.setAttribute('alt',items[idx].cap); cap.textContent=items[idx].cap; }
+  function open(i){ show(i); ov.classList.add('on'); document.body.style.overflow='hidden'; }
+  function close(){ ov.classList.remove('on'); document.body.style.overflow=''; }
+  frames.forEach(function(f,i){ f.addEventListener('click', function(){ open(i); }); });
+  btnClose.addEventListener('click', function(e){ e.stopPropagation(); close(); });
+  btnPrev.addEventListener('click', function(e){ e.stopPropagation(); show(idx-1); });
+  btnNext.addEventListener('click', function(e){ e.stopPropagation(); show(idx+1); });
+  ov.addEventListener('click', function(e){ if(e.target===ov) close(); });
+  img.addEventListener('click', function(e){ e.stopPropagation(); }); // Klick aufs Bild schliesst NICHT
+  document.addEventListener('keydown', function(e){
+    if(!ov.classList.contains('on')) return;
+    if(e.key==='Escape') close(); else if(e.key==='ArrowLeft') show(idx-1); else if(e.key==='ArrowRight') show(idx+1);
+  });
+  // Touch-Swipe auf dem Bild: links/rechts blaettern, runter/tap schliessen
+  var x0=null,y0=null,t0=0;
+  img.addEventListener('touchstart', function(e){ if(e.touches.length!==1) return; x0=e.touches[0].clientX; y0=e.touches[0].clientY; t0=Date.now(); }, {passive:true});
+  img.addEventListener('touchend', function(e){
+    if(x0===null) return; var t=e.changedTouches[0]; var dx=t.clientX-x0, dy=t.clientY-y0, dt=Date.now()-t0;
+    if(dt<600 && Math.abs(dx)>50 && Math.abs(dx)>Math.abs(dy)){ show(idx+(dx<0?1:-1)); }
+    else if(dt<600 && dy>90 && Math.abs(dy)>Math.abs(dx)){ close(); }
+    x0=y0=null;
+  }, {passive:true});
+  // Swipe-Hinweis unter mobile Carousels
+  if(window.matchMedia && window.matchMedia('(max-width:720px)').matches){
+    [].slice.call(document.querySelectorAll('.shots.two, .shots.three')).forEach(function(row){
+      if(row.children.length<2) return;
+      var h=document.createElement('div'); h.className='swipe-hint';
+      var de=(window.CARLON_LANG==='en')?'Swipe · tap to enlarge':'Wischen · tippen zum Vergrößern';
+      h.textContent='‹ '+de+' ›';
+      row.parentNode.insertBefore(h, row.nextSibling);
+    });
+  }
 })();
 </script>
 </body>
