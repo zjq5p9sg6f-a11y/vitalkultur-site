@@ -1002,13 +1002,13 @@ b.mdelta.bad{color:var(--red)}b.mdelta.warn{color:var(--amber)}b.mdelta.ok{color
 svg.chart{width:100%;display:block;overflow:visible}
 /* ---- Präzisions-Viz (Tachogramm/Poincaré/Dual) — EKG-Papier-Grid ---- */
 svg.viz{width:100%;display:block;overflow:visible}
-svg.viz .grid-major{stroke:#ffffff;stroke-opacity:.12;stroke-width:.6}
-svg.viz .grid-minor{stroke:#ffffff;stroke-opacity:.045;stroke-width:.5}
-svg.viz .axis{stroke:#ffffff;stroke-opacity:.16;stroke-width:.8}
-svg.viz .tick{stroke:#ffffff;stroke-opacity:.16;stroke-width:.8}
+svg.viz .grid-major,svg.chart .grid-major{stroke:#ffffff;stroke-opacity:.12;stroke-width:.6}
+svg.viz .grid-minor,svg.chart .grid-minor{stroke:#ffffff;stroke-opacity:.045;stroke-width:.5}
+svg.viz .axis,svg.chart .axis{stroke:#ffffff;stroke-opacity:.16;stroke-width:.8}
+svg.viz .tick,svg.chart .tick{stroke:#ffffff;stroke-opacity:.16;stroke-width:.8}
 svg.viz text{fill:var(--text-dim);font-size:9px;font-family:var(--font-mono)}
-svg.viz .label-axis{fill:var(--text-secondary);font-size:9.5px;letter-spacing:.1em;font-family:var(--font-ui);font-weight:600}
-svg.viz .label-unit{fill:var(--text-dim);font-weight:400}
+svg.viz .label-axis,svg.chart .label-axis{fill:var(--text-secondary);font-size:9.5px;letter-spacing:.1em;font-family:var(--font-ui);font-weight:600}
+svg.viz .label-unit,svg.chart .label-unit{fill:var(--text-dim);font-weight:400}
 svg.viz .sd-lbl{fill:var(--cyan-strong);font-size:10px;font-weight:600;font-family:var(--font-ui)}
 /* ---- Chart Tap-to-Zoom (Vollbild-Präzision) ---- */
 .chart-wrap{position:relative}
@@ -2014,10 +2014,10 @@ const Chart={
     if(bandVis){g+=`<rect x="${pad.l}" y="${Y(bandVis[1])}" width="${w-pad.l-pad.r}" height="${Math.max(0,Y(bandVis[0])-Y(bandVis[1]))}" fill="var(--good-g)" opacity=".08"/>`;
       if(band[0]>=minY)g+=`<line x1="${pad.l}" x2="${w-pad.r}" y1="${Y(band[0])}" y2="${Y(band[0])}" stroke="var(--good)" stroke-width="1" stroke-dasharray="3 4" opacity=".3"/>`;}
     else if(bandAbove){g+=`<text x="${w-pad.r}" y="${pad.t+9}" text-anchor="end" font-size="9" fill="var(--good)" opacity=".55">typ. Ruhebereich ↑ ${fmt0(band[0])}+</text>`;}
-    // Y-Gridlines
-    for(let i=0;i<=2;i++){const yv=minY+(maxY-minY)*i/2;const yy=Y(yv);
-      g+=`<line x1="${pad.l}" x2="${w-pad.r}" y1="${yy}" y2="${yy}" stroke="var(--border-faint)" stroke-width="1"/>`;
-      g+=`<text x="${pad.l-6}" y="${yy+3}" text-anchor="end" font-size="9" fill="var(--text-dim)" font-family="var(--font-mono)">${fmt0(yv)}</text>`;}
+    // Y-Grid — CI-Tokens (major .12/.6 + minor .045/.5, mono-Ticks)
+    const _yt=Chart.niceTicks(minY,maxY,3); const _ys=_yt.length>1?_yt[1]-_yt[0]:((maxY-minY)/3||1);
+    for(let v=_yt[0]-_ys;v<=maxY+_ys*1e-6;v+=_ys/5){if(v<minY-1e-6||v>maxY+1e-6)continue;const maj=_yt.some(t=>Math.abs(t-v)<_ys*0.05);g+=`<line class="grid-${maj?'major':'minor'}" x1="${pad.l}" x2="${w-pad.r}" y1="${Y(v).toFixed(1)}" y2="${Y(v).toFixed(1)}"/>`;}
+    _yt.forEach(yv=>{if(yv<minY-1e-6||yv>maxY+1e-6)return;g+=`<text x="${pad.l-6}" y="${(Y(yv)+3).toFixed(1)}" text-anchor="end" font-size="9" fill="var(--text-dim)" font-family="var(--font-mono)">${fmt0(yv)}</text>`;});
     // Area + line
     const path=pts.map((p,i)=>`${i?'L':'M'}${X(+new Date(p.x)).toFixed(1)},${Y(p.y).toFixed(1)}`).join(' ');
     const area=`M${X(minX===maxX?minX:+new Date(pts[0].x)).toFixed(1)},${Y(minY).toFixed(1)} `+pts.map(p=>`L${X(+new Date(p.x)).toFixed(1)},${Y(p.y).toFixed(1)}`).join(' ')+` L${X(+new Date(pts[pts.length-1].x)).toFixed(1)},${Y(minY).toFixed(1)} Z`;
@@ -2025,6 +2025,7 @@ const Chart={
     g+=`<path d="${path}" fill="none" stroke="${color}" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>`;
     pts.forEach(p=>{g+=`<circle cx="${X(+new Date(p.x)).toFixed(1)}" cy="${Y(p.y).toFixed(1)}" r="3.2" fill="var(--bg-void)" stroke="${color}" stroke-width="2"/>`;});
     // X labels (first & last)
+    g+=`<rect x="${pad.l}" y="${pad.t}" width="${(w-pad.l-pad.r).toFixed(1)}" height="${(h-pad.t-pad.b).toFixed(1)}" fill="none" class="axis"/>`;
     g+=`<text x="${pad.l}" y="${h-6}" font-size="9" fill="var(--text-dim)">${fmtDate(pts[0].x)}</text>`;
     if(pts.length>1)g+=`<text x="${w-pad.r}" y="${h-6}" text-anchor="end" font-size="9" fill="var(--text-dim)">${fmtDate(pts[pts.length-1].x)}</text>`;
     return `<svg class="chart" viewBox="0 0 ${w} ${h}">${g}</svg>`;
@@ -2070,7 +2071,7 @@ const Chart={
     if(sd1&&sd2){g+=`<ellipse cx="${cx.toFixed(1)}" cy="${cy.toFixed(1)}" rx="${(sd2*sc).toFixed(1)}" ry="${(sd1*sc).toFixed(1)}" transform="rotate(-45 ${cx.toFixed(1)} ${cy.toFixed(1)})" fill="rgba(62,207,178,.05)" stroke="var(--cyan)" stroke-width="1.4"/>`;
       const a=-Math.PI/4;
       g+=`<line x1="${cx.toFixed(1)}" y1="${cy.toFixed(1)}" x2="${(cx+Math.cos(a)*sd2*sc).toFixed(1)}" y2="${(cy+Math.sin(a)*sd2*sc).toFixed(1)}" stroke="var(--cyan-strong)" stroke-width="1.6"/>`;
-      g+=`<line x1="${cx.toFixed(1)}" y1="${cy.toFixed(1)}" x2="${(cx+Math.cos(a+Math.PI/2)*sd1*sc).toFixed(1)}" y2="${(cy+Math.sin(a+Math.PI/2)*sd1*sc).toFixed(1)}" stroke="var(--equine)" stroke-width="1.6"/>`;
+      g+=`<line x1="${cx.toFixed(1)}" y1="${cy.toFixed(1)}" x2="${(cx+Math.cos(a+Math.PI/2)*sd1*sc).toFixed(1)}" y2="${(cy+Math.sin(a+Math.PI/2)*sd1*sc).toFixed(1)}" stroke="var(--equine)" stroke-width="1.6" stroke-dasharray="4 3"/>`;
       g+=`<text class="sd-lbl" x="${(cx+Math.cos(a)*sd2*sc+4).toFixed(1)}" y="${(cy+Math.sin(a)*sd2*sc).toFixed(1)}">SD2 ${fmt0(sd2)}</text>`;
       g+=`<text class="sd-lbl" style="fill:var(--equine)" x="${(cx+Math.cos(a+Math.PI/2)*sd1*sc-8).toFixed(1)}" y="${(cy+Math.sin(a+Math.PI/2)*sd1*sc-4).toFixed(1)}">SD1 ${fmt0(sd1)}</text>`;}
     g+=`<text x="${(pL+W/2).toFixed(0)}" y="${size-2}" text-anchor="middle" class="label-axis">RRₙ<tspan class="label-unit"> (ms)</tspan></text>`;
@@ -2093,7 +2094,7 @@ const Chart={
     const my=pad.t+(h-pad.t-pad.b)/2;g+=`<text x="12" y="${my.toFixed(0)}" transform="rotate(-90 12 ${my.toFixed(0)})" text-anchor="middle" class="label-axis">RR-INTERVALL<tspan class="label-unit"> (ms)</tspan></text>`;
     g+=`<text x="${(pad.l+(w-pad.l-pad.r)/2).toFixed(0)}" y="${h-2}" text-anchor="middle" class="label-axis">SCHLAG-NR.</text>`;
     const _taf=Chart._artifacts(rr);
-    rr.forEach((v,i)=>{if(_taf[i])g+=`<circle cx="${X(i).toFixed(1)}" cy="${Y(v).toFixed(1)}" r="3" fill="none" stroke="var(--amber)" stroke-width="1.4" opacity=".9"/>`;});
+    rr.forEach((v,i)=>{if(_taf[i]){const ax=X(i),ay=Y(v),ar=3.4;g+=`<path d="M${ax.toFixed(1)},${(ay-ar).toFixed(1)} L${(ax+ar).toFixed(1)},${ay.toFixed(1)} L${ax.toFixed(1)},${(ay+ar).toFixed(1)} L${(ax-ar).toFixed(1)},${ay.toFixed(1)} Z" fill="none" stroke="var(--amber)" stroke-width="1.4" opacity=".92"/>`;}});
     const _tm=rr.map((v,i)=>({x:+X(i).toFixed(1),y:+Y(v).toFixed(1),i,rr:Math.round(v),hr:Math.round(60000/v),af:_taf[i]}));
     return Chart._hov(g,w,h,_tm,"seq");
   },
@@ -2119,7 +2120,7 @@ const Chart={
     const _YR=v=>padTop+(1-(v-_dmnR)/(_dmxR-_dmnR))*(topH-padTop);
     const _YH=v=>(topH+gap)+(1-(v-_dmnH)/(_dmxH-_dmnH))*(botH-padBot+14);
     const _daf=Chart._artifacts(rr);
-    rr.forEach((v,i)=>{if(_daf[i])g+=`<circle cx="${X(i).toFixed(1)}" cy="${_YR(v).toFixed(1)}" r="3" fill="none" stroke="var(--amber)" stroke-width="1.4" opacity=".9"/>`;});
+    rr.forEach((v,i)=>{if(_daf[i]){const ax=X(i),ay=_YR(v),ar=3.4;g+=`<path d="M${ax.toFixed(1)},${(ay-ar).toFixed(1)} L${(ax+ar).toFixed(1)},${ay.toFixed(1)} L${ax.toFixed(1)},${(ay+ar).toFixed(1)} L${(ax-ar).toFixed(1)},${ay.toFixed(1)} Z" fill="none" stroke="var(--amber)" stroke-width="1.4" opacity=".92"/>`;}});
     const _dm=rr.map((v,i)=>({x:+X(i).toFixed(1),y:+_YR(v).toFixed(1),y2:+_YH(hr[i]).toFixed(1),i,rr:Math.round(v),hr:Math.round(hr[i]),af:_daf[i]}));
     return Chart._hov(g,w,h+10,_dm,"dual");
   },
@@ -2169,9 +2170,11 @@ const Chart={
     if(band){let bv=null;if(band[0]<maxY&&band[1]>minY)bv=[Math.max(band[0],minY),Math.min(band[1],maxY)];
       if(bv)g+=`<rect x="${pad.l}" y="${Y(bv[1])}" width="${w-pad.l-pad.r}" height="${Math.max(0,Y(bv[0])-Y(bv[1]))}" fill="var(--good-g)" opacity=".08"/>`;
       else if(band[0]>=maxY)g+=`<text x="${w-pad.r}" y="${pad.t+9}" text-anchor="end" font-size="9" fill="var(--good)" opacity=".55">typ. Ruhebereich ↑ ${fmt0(band[0])}+</text>`;}
-    const ticks=domain?[domain[0],(domain[0]+domain[1])/2,domain[1]]:[minY,(minY+maxY)/2,maxY];
-    ticks.forEach(v=>{g+=`<line x1="${pad.l}" x2="${w-pad.r}" y1="${Y(v)}" y2="${Y(v)}" stroke="var(--border-faint)" stroke-width="1"/>`;
-      g+=`<text x="${pad.l-6}" y="${Y(v)+3}" text-anchor="end" font-size="9" fill="var(--text-dim)" font-family="var(--font-mono)">${fmt0(v)}</text>`;});
+    // Y-Grid — CI-Tokens (major .12/.6 + minor .045/.5, Minor = Major/5, mono-Ticks)
+    const yt=Chart.niceTicks(minY,maxY,4); const ystep=yt.length>1?yt[1]-yt[0]:((maxY-minY)/4||1);
+    for(let v=yt[0]-ystep;v<=maxY+ystep*1e-6;v+=ystep/5){ if(v<minY-1e-6||v>maxY+1e-6)continue; const maj=yt.some(t=>Math.abs(t-v)<ystep*0.05);
+      g+=`<line class="grid-${maj?'major':'minor'}" x1="${pad.l}" x2="${w-pad.r}" y1="${Y(v).toFixed(1)}" y2="${Y(v).toFixed(1)}"/>`;}
+    yt.forEach(v=>{ if(v<minY-1e-6||v>maxY+1e-6)return; g+=`<text x="${pad.l-6}" y="${(Y(v)+3).toFixed(1)}" text-anchor="end" font-size="9" fill="var(--text-dim)" font-family="var(--font-mono)">${fmt0(v)}</text>`;});
     if(baseline!=null&&baseline>=minY&&baseline<=maxY){g+=`<line x1="${pad.l}" x2="${w-pad.r}" y1="${Y(baseline)}" y2="${Y(baseline)}" stroke="var(--text-secondary)" stroke-width="1" stroke-dasharray="5 4" opacity=".55"/>`;
       g+=`<text x="${pad.l+3}" y="${Y(baseline)-4}" font-size="8.5" fill="var(--text-secondary)" opacity=".8">${esc(baselineLabel)} ${fmt0(baseline)}</text>`;}
     const path=pts.map((p,i)=>`${i?'L':'M'}${X(xs[i]).toFixed(1)},${Y(p.y).toFixed(1)}`).join(' ');
@@ -2186,6 +2189,7 @@ const Chart={
       meta.push({cx:+cx.toFixed(1),cy:+cy.toFixed(1),x:p.x,y:p.y,c:cl?cl.text:null,k:cl?cl.cls:null});});
     g+=`<text x="${pad.l}" y="${h-6}" font-size="9" fill="var(--text-dim)">${fmtDate(pts[0].x)}</text>`;
     if(pts.length>1)g+=`<text x="${w-pad.r}" y="${h-6}" text-anchor="end" font-size="9" fill="var(--text-dim)">${fmtDate(pts[pts.length-1].x)}</text>`;
+    g+=`<rect x="${pad.l}" y="${pad.t}" width="${(w-pad.l-pad.r).toFixed(1)}" height="${(h-pad.t-pad.b).toFixed(1)}" fill="none" class="axis"/>`;
     g+=`<line class="ts-cross" x1="0" x2="0" y1="${pad.t}" y2="${h-pad.b}"/>`;
     g+=`<circle class="ts-focus" r="5" fill="${color}" stroke="var(--bg-void)" stroke-width="2.5"/>`;
     const mj=JSON.stringify(meta).replace(/'/g,'&#39;').replace(/</g,'&lt;');
@@ -2347,18 +2351,26 @@ const HRV={
   // Powerspektrum-Chart (Welch/Lomb) mit equine Bändern
   psdChart(psd,{w=720,h=250}={}){
     if(!psd)return `<div style="color:var(--text-faint);font-size:12px;text-align:center;padding:30px">Zu wenige Schläge fürs Spektrum</div>`;
-    const pad={l:56,r:14,t:14,b:34}; const fmax=0.6;
+    const pad={l:60,r:14,t:16,b:34}; const fmax=0.6;
     const pmax=Math.max(...psd.power)||1;
-    const X=f=>pad.l+f/fmax*(w-pad.l-pad.r), Y=p=>pad.t+(1-p/pmax)*(h-pad.t-pad.b);
+    // Log-Y (Task-Force/Kubios-Standard): linear würde LF/HF unter dem VLF-Riesenpeak zerquetschen. 4 Dekaden.
+    const lmax=Math.ceil(Math.log10(pmax)), lmin=lmax-4, span=lmax-lmin;
+    const floor=Math.pow(10,lmin), yb=h-pad.b;
+    const X=f=>pad.l+f/fmax*(w-pad.l-pad.r), Y=p=>pad.t+(1-(Math.log10(Math.max(p,floor))-lmin)/span)*(h-pad.t-pad.b);
     let g='';
-    // Band-Flächen
+    // Band-Flächen (Hintergrund)
     for(const k in this.BANDS){const[a,b]=this.BANDS[k];const x0=X(Math.max(a,0)),x1=X(Math.min(b,fmax));
-      g+=`<rect x="${x0.toFixed(1)}" y="${pad.t}" width="${(x1-x0).toFixed(1)}" height="${h-pad.t-pad.b}" fill="${this.BANDCOL[k]}" opacity=".07"/>`;
+      g+=`<rect x="${x0.toFixed(1)}" y="${pad.t}" width="${(x1-x0).toFixed(1)}" height="${(h-pad.t-pad.b).toFixed(1)}" fill="${this.BANDCOL[k]}" opacity=".07"/>`;
       g+=`<text x="${((x0+x1)/2).toFixed(1)}" y="${pad.t+12}" text-anchor="middle" style="fill:${this.BANDCOL[k]};font-size:10px;font-weight:600;letter-spacing:.05em">${k.toUpperCase()}</text>`;}
-    // Grid + x-Ticks
-    [0,0.1,0.2,0.3,0.4,0.5,0.6].forEach(f=>{g+=`<line class="grid-minor" x1="${X(f).toFixed(1)}" x2="${X(f).toFixed(1)}" y1="${pad.t}" y2="${h-pad.b}"/><text x="${X(f).toFixed(1)}" y="${h-pad.b+14}" text-anchor="middle">${f.toFixed(2)}</text>`;});
+    // Y-Grid: Dekaden (major) + log-Minor (2…9), mono 10ᵏ-Labels
+    for(let e=Math.ceil(lmin);e<=lmax;e++){const yy=Y(Math.pow(10,e));
+      g+=`<line class="grid-major" x1="${pad.l}" x2="${w-pad.r}" y1="${yy.toFixed(1)}" y2="${yy.toFixed(1)}"/>`;
+      g+=`<text x="${pad.l-7}" y="${(yy+3).toFixed(1)}" text-anchor="end">10<tspan baseline-shift="super" font-size="6">${e}</tspan></text>`;
+      for(let m=2;m<=9;m++){const yv=Math.log10(m)+e; if(yv<=lmin||yv>=lmax)continue; const ym=pad.t+(1-(yv-lmin)/span)*(h-pad.t-pad.b);
+        g+=`<line class="grid-minor" x1="${pad.l}" x2="${w-pad.r}" y1="${ym.toFixed(1)}" y2="${ym.toFixed(1)}"/>`;}}
+    // X-Grid + Ticks
+    [0,0.1,0.2,0.3,0.4,0.5,0.6].forEach(f=>{g+=`<line class="grid-minor" x1="${X(f).toFixed(1)}" x2="${X(f).toFixed(1)}" y1="${pad.t}" y2="${yb}"/><text x="${X(f).toFixed(1)}" y="${(yb+14).toFixed(1)}" text-anchor="middle">${f.toFixed(2)}</text>`;});
     // Flächenweise Band-Füllung unter der Kurve (VLF/LF/HF farbig — zeigt Bandbeiträge)
-    const yb=h-pad.b;
     for(const k in this.BANDS){const[a,b]=this.BANDS[k];
       const seg=psd.freqs.map((f,i)=>({f,p:psd.power[i]})).filter(o=>o.f>=a&&o.f<=Math.min(b,fmax));
       if(seg.length<2)continue;
@@ -2373,8 +2385,8 @@ const HRV={
         g+=`<line x1="${mx2.toFixed(1)}" y1="${my.toFixed(1)}" x2="${mx2.toFixed(1)}" y2="${yb.toFixed(1)}" stroke="${this.BANDCOL[k]}" stroke-width="0.8" stroke-dasharray="2 3" opacity=".55"/>`;
         g+=`<circle cx="${mx2.toFixed(1)}" cy="${my.toFixed(1)}" r="2.8" fill="var(--bg-void)" stroke="${this.BANDCOL[k]}" stroke-width="1.6"/>`;
         g+=`<text x="${mx2.toFixed(1)}" y="${(my-7).toFixed(1)}" text-anchor="middle" style="fill:${this.BANDCOL[k]};font-size:9px;font-weight:600;font-family:var(--font-mono)">${pk.f.toFixed(3)}</text>`;}}
-    g+=`<rect x="${pad.l}" y="${pad.t}" width="${w-pad.l-pad.r}" height="${h-pad.t-pad.b}" fill="none" class="axis"/>`;
-    g+=`<text x="14" y="${(pad.t+(h-pad.t-pad.b)/2).toFixed(0)}" transform="rotate(-90 14 ${(pad.t+(h-pad.t-pad.b)/2).toFixed(0)})" text-anchor="middle" class="label-axis">SPEKTRALE DICHTE<tspan class="label-unit"> (ms²/Hz)</tspan></text>`;
+    g+=`<rect x="${pad.l}" y="${pad.t}" width="${(w-pad.l-pad.r).toFixed(1)}" height="${(h-pad.t-pad.b).toFixed(1)}" fill="none" class="axis"/>`;
+    g+=`<text x="14" y="${(pad.t+(h-pad.t-pad.b)/2).toFixed(0)}" transform="rotate(-90 14 ${(pad.t+(h-pad.t-pad.b)/2).toFixed(0)})" text-anchor="middle" class="label-axis">SPEKTRALE DICHTE<tspan class="label-unit"> (ms²/Hz · log)</tspan></text>`;
     g+=`<text x="${(pad.l+(w-pad.l-pad.r)/2).toFixed(0)}" y="${h-2}" text-anchor="middle" class="label-axis">FREQUENZ<tspan class="label-unit"> (Hz)</tspan></text>`;
     const bandOf=f=>{for(const k in HRV.BANDS){const[a,b]=HRV.BANDS[k];if(f>=a&&f<b)return k.toUpperCase();}return '';};
     const _sm=psd.freqs.map((f,i)=>({x:+X(f).toFixed(1),y:+Y(psd.power[i]).toFixed(1),f:+f.toFixed(3),pw:Math.round(psd.power[i]),bd:bandOf(f)}));
@@ -2561,9 +2573,10 @@ const Conditioning={
     let sx=0,sy=0,sxy=0,sxx=0,n=pts.length; pts.forEach((p,i)=>{sx+=i;sy+=p.y;sxy+=i*p.y;sxx+=i*i;});
     const den=n*sxx-sx*sx; const sl=den?(n*sxy-sx*sy)/den:0; const ic=(sy-sl*sx)/n;
     const good=(sl*goodDir)>0; const fitCol=good?'var(--good)':(Math.abs(sl)<1e-6?'var(--text-dim)':'var(--amber)');
-    const yt=Chart.niceTicks(ymn,ymx,3);
-    let g='';
-    yt.forEach(t=>{g+=`<line class="grid-minor" x1="${pad.l}" x2="${w-pad.r}" y1="${Y(t).toFixed(1)}" y2="${Y(t).toFixed(1)}"/><text x="${pad.l-5}" y="${(Y(t)+3).toFixed(1)}" text-anchor="end" font-size="9" fill="var(--text-dim)">${fmt0(t)}</text>`;});
+    const yt=Chart.niceTicks(ymn,ymx,3); const ystep=yt.length>1?yt[1]-yt[0]:((ymx-ymn)/3||1);
+    let g=`<rect x="${pad.l}" y="${pad.t}" width="${(w-pad.l-pad.r).toFixed(1)}" height="${(h-pad.t-pad.b).toFixed(1)}" fill="none" class="axis"/>`;
+    for(let v=yt[0]-ystep;v<=ymx+ystep*1e-6;v+=ystep/5){if(v<ymn-1e-6||v>ymx+1e-6)continue;const maj=yt.some(t=>Math.abs(t-v)<ystep*0.05);g+=`<line class="grid-${maj?'major':'minor'}" x1="${pad.l}" x2="${w-pad.r}" y1="${Y(v).toFixed(1)}" y2="${Y(v).toFixed(1)}"/>`;}
+    yt.forEach(t=>{if(t<ymn-1e-6||t>ymx+1e-6)return;g+=`<text x="${pad.l-5}" y="${(Y(t)+3).toFixed(1)}" text-anchor="end" font-size="9" fill="var(--text-dim)" font-family="var(--font-mono)">${fmt0(t)}</text>`;});
     g+=`<line x1="${X(0).toFixed(1)}" y1="${Y(ic).toFixed(1)}" x2="${X(xmx).toFixed(1)}" y2="${Y(ic+sl*xmx).toFixed(1)}" stroke="${fitCol}" stroke-width="2" stroke-dasharray="5 3" opacity=".9"/>`;
     g+=`<path d="${pts.map((p,i)=>`${i?'L':'M'}${X(i).toFixed(1)},${Y(p.y).toFixed(1)}`).join(' ')}" fill="none" stroke="var(--cyan-strong)" stroke-width="1.6"/>`;
     pts.forEach((p,i)=>g+=`<circle cx="${X(i).toFixed(1)}" cy="${Y(p.y).toFixed(1)}" r="2.3" fill="var(--cyan-strong)"/>`);
