@@ -1002,10 +1002,10 @@ b.mdelta.bad{color:var(--red)}b.mdelta.warn{color:var(--amber)}b.mdelta.ok{color
 svg.chart{width:100%;display:block;overflow:visible}
 /* ---- Präzisions-Viz (Tachogramm/Poincaré/Dual) — EKG-Papier-Grid ---- */
 svg.viz{width:100%;display:block;overflow:visible}
-svg.viz .grid-major{stroke:var(--border-subtle);stroke-width:1}
-svg.viz .grid-minor{stroke:var(--border-faint);stroke-width:.6;opacity:.55}
-svg.viz .axis{stroke:var(--border-strong);stroke-width:1}
-svg.viz .tick{stroke:var(--border-strong);stroke-width:1}
+svg.viz .grid-major{stroke:#ffffff;stroke-opacity:.12;stroke-width:.6}
+svg.viz .grid-minor{stroke:#ffffff;stroke-opacity:.045;stroke-width:.5}
+svg.viz .axis{stroke:#ffffff;stroke-opacity:.16;stroke-width:.8}
+svg.viz .tick{stroke:#ffffff;stroke-opacity:.16;stroke-width:.8}
 svg.viz text{fill:var(--text-dim);font-size:9px;font-family:var(--font-mono)}
 svg.viz .label-axis{fill:var(--text-secondary);font-size:9.5px;letter-spacing:.1em;font-family:var(--font-ui);font-weight:600}
 svg.viz .label-unit{fill:var(--text-dim);font-weight:400}
@@ -2031,26 +2031,50 @@ const Chart={
   },
   niceTicks(min,max,n){const span=(max-min)||1;const raw=span/n;const mag=Math.pow(10,Math.floor(Math.log10(raw)));const nrm=raw/mag;
     const step=(nrm<1.5?1:nrm<3?2:nrm<7?5:10)*mag;const start=Math.ceil(min/step)*step;const t=[];for(let v=start;v<=max+step*1e-6;v+=step)t.push(+v.toFixed(6));return t;},
-  poincare(rr,{size=300,sd1=null,sd2=null}={}){
+  poincare(rr,{size=340,sd1=null,sd2=null}={}){
     if(!rr||rr.length<4) return `<div style="color:var(--text-faint);font-size:12px;text-align:center;padding:30px">Keine RR-Daten</div>`;
-    const xs=rr.slice(0,-1),ys=rr.slice(1);const pad=44;
-    const mn=Math.min(...rr),mx=Math.max(...rr);const r=(mx-mn)||1;const lo=mn-r*0.1,hi=mx+r*0.1;
-    const P=v=>pad+((v-lo)/(hi-lo))*(size-2*pad);
+    const xs=rr.slice(0,-1),ys=rr.slice(1);
+    const pad=46, M=26;                                     // M = Randdichte-Streifen (marginal histograms)
+    const mn=Math.min(...rr),mx=Math.max(...rr);const rg=(mx-mn)||1;const lo=mn-rg*0.1,hi=mx+rg*0.1;
+    const pL=pad, pT=pad+M, pB=size-pad, plotR=size-pad-M;  // Plot-Region (quadratisch)
+    const W=plotR-pL, H=pB-pT;
+    const PX=v=>pL+(v-lo)/(hi-lo)*W, PY=v=>pB-(v-lo)/(hi-lo)*H;
     let g='';const t=Chart.niceTicks(lo,hi,5);
-    t.forEach(tv=>{if(tv<lo||tv>hi)return;g+=`<line class="grid-minor" x1="${P(tv).toFixed(1)}" y1="${pad}" x2="${P(tv).toFixed(1)}" y2="${size-pad}"/><line class="grid-minor" x1="${pad}" y1="${(size-P(tv)).toFixed(1)}" x2="${size-pad}" y2="${(size-P(tv)).toFixed(1)}"/>`;
-      g+=`<text x="${P(tv).toFixed(1)}" y="${size-pad+13}" text-anchor="middle">${fmt0(tv)}</text><text x="${pad-6}" y="${(size-P(tv)+3).toFixed(1)}" text-anchor="end">${fmt0(tv)}</text>`;});
-    g+=`<rect x="${pad}" y="${pad}" width="${size-2*pad}" height="${size-2*pad}" fill="none" class="axis"/>`;
-    g+=`<line class="grid-major" x1="${P(lo).toFixed(1)}" y1="${(size-P(lo)).toFixed(1)}" x2="${P(hi).toFixed(1)}" y2="${(size-P(hi)).toFixed(1)}" stroke-dasharray="4 4"/>`;
-    const mean=rr.reduce((a,b)=>a+b,0)/rr.length;const cx=P(mean),cy=size-P(mean);const sc=(size-2*pad)/(hi-lo);
-    if(sd1&&sd2){g+=`<ellipse cx="${cx.toFixed(1)}" cy="${cy.toFixed(1)}" rx="${(sd2*sc).toFixed(1)}" ry="${(sd1*sc).toFixed(1)}" transform="rotate(-45 ${cx.toFixed(1)} ${cy.toFixed(1)})" fill="rgba(62,207,178,.06)" stroke="var(--cyan)" stroke-width="1.3"/>`;
-      // SD1 (quer, ry) + SD2 (längs, rx) Achsen
-      const a=-Math.PI/4;g+=`<line x1="${cx.toFixed(1)}" y1="${cy.toFixed(1)}" x2="${(cx+Math.cos(a)*sd2*sc).toFixed(1)}" y2="${(cy+Math.sin(a)*sd2*sc).toFixed(1)}" stroke="var(--cyan-strong)" stroke-width="1.5"/>`;
-      g+=`<line x1="${cx.toFixed(1)}" y1="${cy.toFixed(1)}" x2="${(cx+Math.cos(a+Math.PI/2)*sd1*sc).toFixed(1)}" y2="${(cy+Math.sin(a+Math.PI/2)*sd1*sc).toFixed(1)}" stroke="var(--equine)" stroke-width="1.5"/>`;
+    // Grid (symmetrisch X=Y, nur Plot-Fläche)
+    t.forEach(tv=>{if(tv<lo||tv>hi)return;
+      g+=`<line class="grid-minor" x1="${PX(tv).toFixed(1)}" y1="${pT}" x2="${PX(tv).toFixed(1)}" y2="${pB}"/><line class="grid-minor" x1="${pL}" y1="${PY(tv).toFixed(1)}" x2="${plotR}" y2="${PY(tv).toFixed(1)}"/>`;
+      g+=`<text x="${PX(tv).toFixed(1)}" y="${pB+13}" text-anchor="middle">${fmt0(tv)}</text><text x="${(pL-7).toFixed(1)}" y="${(PY(tv)+3).toFixed(1)}" text-anchor="end">${fmt0(tv)}</text>`;});
+    // Identitätslinie RRₙ = RRₙ₊₁ (sehr subtil, weiß 0.14/0.5pt — CI)
+    g+=`<line x1="${PX(lo).toFixed(1)}" y1="${PY(lo).toFixed(1)}" x2="${PX(hi).toFixed(1)}" y2="${PY(hi).toFixed(1)}" stroke="#ffffff" stroke-opacity="0.14" stroke-width="0.5"/>`;
+    // Randdichte-Histogramme (RRₙ oben, RRₙ₊₁ rechts) — Research-Grade-Signatur
+    const NB=32, bw=(hi-lo)/NB; const hx=new Array(NB).fill(0),hy=new Array(NB).fill(0);
+    for(let i=0;i<xs.length;i++){hx[Math.min(NB-1,Math.max(0,Math.floor((xs[i]-lo)/bw)))]++;hy[Math.min(NB-1,Math.max(0,Math.floor((ys[i]-lo)/bw)))]++;}
+    const hxm=Math.max(...hx)||1,hym=Math.max(...hy)||1,bxw=W/NB,byh=H/NB;
+    for(let b=0;b<NB;b++){if(hx[b]){const bh=hx[b]/hxm*(M-5);g+=`<rect x="${(pL+b*bxw+0.5).toFixed(1)}" y="${(pT-bh).toFixed(1)}" width="${(bxw-1).toFixed(1)}" height="${bh.toFixed(1)}" fill="var(--cyan)" opacity="0.42" rx="0.7"/>`;}}
+    for(let b=0;b<NB;b++){if(hy[b]){const bl=hy[b]/hym*(M-5);g+=`<rect x="${plotR.toFixed(1)}" y="${(pB-(b+1)*byh+0.5).toFixed(1)}" width="${bl.toFixed(1)}" height="${(byh-1).toFixed(1)}" fill="var(--cyan)" opacity="0.42" rx="0.7"/>`;}}
+    // Dichte-Kodierung der Punkte (lokale Punktdichte → Helligkeit/Radius, Kubios-Research-Look)
+    const gs=Math.max(8,Math.min(28,Math.round(Math.sqrt(xs.length)*1.3))),dc=(hi-lo)/gs,dcnt={};
+    const key=(a,b)=>Math.floor((a-lo)/dc)+'_'+Math.floor((b-lo)/dc);
+    for(let i=0;i<xs.length;i++){const k=key(xs[i],ys[i]);dcnt[k]=(dcnt[k]||0)+1;}
+    let dmax=1;for(const k in dcnt)if(dcnt[k]>dmax)dmax=dcnt[k];
+    const _hpts=[];
+    for(let i=0;i<xs.length;i++){const px=+PX(xs[i]).toFixed(1),py=+PY(ys[i]).toFixed(1);
+      const d=(dcnt[key(xs[i],ys[i])]||1)/dmax;
+      const col=d>0.62?'#cbf7ee':d>0.30?'var(--cyan-strong)':'var(--cyan)';
+      g+=`<circle cx="${px}" cy="${py}" r="${(1.7+1.1*d).toFixed(1)}" fill="${col}" opacity="${(0.32+0.55*d).toFixed(2)}"/>`;
+      _hpts.push({x:px,y:py,rn:Math.round(xs[i]),rn1:Math.round(ys[i])});}
+    // Plot-Rahmen (über der Wolke)
+    g+=`<rect x="${pL}" y="${pT}" width="${W}" height="${H}" fill="none" class="axis"/>`;
+    // SD1/SD2-Ellipse + Achsen (klar über der Wolke)
+    const mean=rr.reduce((a,b)=>a+b,0)/rr.length;const cx=PX(mean),cy=PY(mean);const sc=W/(hi-lo);
+    if(sd1&&sd2){g+=`<ellipse cx="${cx.toFixed(1)}" cy="${cy.toFixed(1)}" rx="${(sd2*sc).toFixed(1)}" ry="${(sd1*sc).toFixed(1)}" transform="rotate(-45 ${cx.toFixed(1)} ${cy.toFixed(1)})" fill="rgba(62,207,178,.05)" stroke="var(--cyan)" stroke-width="1.4"/>`;
+      const a=-Math.PI/4;
+      g+=`<line x1="${cx.toFixed(1)}" y1="${cy.toFixed(1)}" x2="${(cx+Math.cos(a)*sd2*sc).toFixed(1)}" y2="${(cy+Math.sin(a)*sd2*sc).toFixed(1)}" stroke="var(--cyan-strong)" stroke-width="1.6"/>`;
+      g+=`<line x1="${cx.toFixed(1)}" y1="${cy.toFixed(1)}" x2="${(cx+Math.cos(a+Math.PI/2)*sd1*sc).toFixed(1)}" y2="${(cy+Math.sin(a+Math.PI/2)*sd1*sc).toFixed(1)}" stroke="var(--equine)" stroke-width="1.6"/>`;
       g+=`<text class="sd-lbl" x="${(cx+Math.cos(a)*sd2*sc+4).toFixed(1)}" y="${(cy+Math.sin(a)*sd2*sc).toFixed(1)}">SD2 ${fmt0(sd2)}</text>`;
       g+=`<text class="sd-lbl" style="fill:var(--equine)" x="${(cx+Math.cos(a+Math.PI/2)*sd1*sc-8).toFixed(1)}" y="${(cy+Math.sin(a+Math.PI/2)*sd1*sc-4).toFixed(1)}">SD1 ${fmt0(sd1)}</text>`;}
-    const _hpts=[];for(let i=0;i<xs.length;i++){const px=+P(xs[i]).toFixed(1),py=+(size-P(ys[i])).toFixed(1);g+=`<circle cx="${px}" cy="${py}" r="1.9" fill="var(--cyan-strong)" opacity=".5"/>`;_hpts.push({x:px,y:py,rn:Math.round(xs[i]),rn1:Math.round(ys[i])});}
-    g+=`<text x="${(size/2).toFixed(0)}" y="${size-2}" text-anchor="middle" class="label-axis">RRₙ<tspan class="label-unit"> (ms)</tspan></text>`;
-    g+=`<text x="11" y="${(size/2).toFixed(0)}" transform="rotate(-90 11 ${(size/2).toFixed(0)})" text-anchor="middle" class="label-axis">RRₙ₊₁<tspan class="label-unit"> (ms)</tspan></text>`;
+    g+=`<text x="${(pL+W/2).toFixed(0)}" y="${size-2}" text-anchor="middle" class="label-axis">RRₙ<tspan class="label-unit"> (ms)</tspan></text>`;
+    g+=`<text x="12" y="${(pT+H/2).toFixed(0)}" transform="rotate(-90 12 ${(pT+H/2).toFixed(0)})" text-anchor="middle" class="label-axis">RRₙ₊₁<tspan class="label-unit"> (ms)</tspan></text>`;
     return Chart._hov(g,size,size,_hpts,"scatter",`max-width:${size}px`);
   },
   tachogram(rr,{w=720,h=230,color='var(--cyan)'}={}){
@@ -2065,7 +2089,7 @@ const Chart={
     for(let v=0;v<=n-1;v+=Math.max(1,xs2/5)){const maj=xt.some(t=>Math.abs(t-v)<0.5);g+=`<line class="grid-${maj?'major':'minor'}" x1="${X(v).toFixed(1)}" x2="${X(v).toFixed(1)}" y1="${pad.t}" y2="${h-pad.b}"/>`;}
     xt.forEach(t=>{if(t>n-1)return;g+=`<text x="${X(t).toFixed(1)}" y="${h-pad.b+13}" text-anchor="middle">${fmt0(t)}</text>`;});
     const mv=rr.reduce((a,b)=>a+b,0)/n;g+=`<line x1="${pad.l}" x2="${w-pad.r}" y1="${Y(mv).toFixed(1)}" y2="${Y(mv).toFixed(1)}" stroke="var(--text-secondary)" stroke-width="1" stroke-dasharray="4 4" opacity=".45"/>`;
-    g+=`<path d="${rr.map((v,i)=>`${i?'L':'M'}${X(i).toFixed(1)},${Y(v).toFixed(1)}`).join(' ')}" fill="none" stroke="${color}" stroke-width="1.3"/>`;
+    g+=`<path d="${rr.map((v,i)=>`${i?'L':'M'}${X(i).toFixed(1)},${Y(v).toFixed(1)}`).join(' ')}" fill="none" stroke="${color}" stroke-width="1.5" stroke-linejoin="round"/>`;
     const my=pad.t+(h-pad.t-pad.b)/2;g+=`<text x="12" y="${my.toFixed(0)}" transform="rotate(-90 12 ${my.toFixed(0)})" text-anchor="middle" class="label-axis">RR-INTERVALL<tspan class="label-unit"> (ms)</tspan></text>`;
     g+=`<text x="${(pad.l+(w-pad.l-pad.r)/2).toFixed(0)}" y="${h-2}" text-anchor="middle" class="label-axis">SCHLAG-NR.</text>`;
     const _tm=rr.map((v,i)=>({x:+X(i).toFixed(1),y:+Y(v).toFixed(1),i,rr:Math.round(v),hr:Math.round(60000/v)}));
@@ -2081,7 +2105,7 @@ const Chart={
       const Y=v=>y0+(1-(v-mn)/(mx-mn))*ph;let s='';const yt=Chart.niceTicks(mn,mx,4);const ys=yt.length>1?yt[1]-yt[0]:1;
       for(let v=yt[0]-ys;v<=mx+ys;v+=ys/5){if(v<mn||v>mx)continue;const maj=yt.some(t=>Math.abs(t-v)<ys*0.05);s+=`<line class="grid-${maj?'major':'minor'}" x1="${padL}" x2="${w-padR}" y1="${Y(v).toFixed(1)}" y2="${Y(v).toFixed(1)}"/>`;}
       yt.forEach(t=>{s+=`<text x="${padL-7}" y="${(Y(t)+3).toFixed(1)}" text-anchor="end">${fmtV(t)}</text>`;});
-      s+=`<path d="${vals.map((v,i)=>`${i?'L':'M'}${X(i).toFixed(1)},${Y(v).toFixed(1)}`).join(' ')}" fill="none" stroke="${col}" stroke-width="1.3"/>`;
+      s+=`<path d="${vals.map((v,i)=>`${i?'L':'M'}${X(i).toFixed(1)},${Y(v).toFixed(1)}`).join(' ')}" fill="none" stroke="${col}" stroke-width="1.6" stroke-linejoin="round"/>`;
       const my=y0+ph/2;s+=`<text x="12" y="${my.toFixed(0)}" transform="rotate(-90 12 ${my.toFixed(0)})" text-anchor="middle" class="label-axis" style="fill:${col}">${label}<tspan class="label-unit"> (${unit})</tspan></text>`;
       return s;};
     let g=panel(rr,padTop,topH-padTop,'RR','ms','var(--cyan)',v=>fmt0(v));
