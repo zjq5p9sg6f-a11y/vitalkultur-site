@@ -63,6 +63,11 @@ nav{position:sticky;top:0;z-index:50;background:rgba(0,3,8,0.72);backdrop-filter
 .btn{font-family:var(--font-mono);font-size:11px;font-weight:500;letter-spacing:0.12em;text-transform:uppercase;padding:0 14px;height:34px;border-radius:8px;display:inline-flex;align-items:center;justify-content:center;gap:7px;border:1px solid var(--border-subtle);background:transparent;color:var(--text-secondary);cursor:pointer;transition:border-color .18s,color .18s}
 .btn:hover{border-color:var(--cyan);color:var(--cyan)}
 .btn-back{color:var(--text-secondary)}
+.btn-demo{background:var(--cyan);border-color:var(--cyan);color:#052018;font-weight:700}
+.btn-demo:hover{filter:brightness(1.08);color:#052018;border-color:var(--cyan)}
+.nav-equine{font-family:var(--font-mono);font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-dim,#4a6478);text-decoration:none;white-space:nowrap}
+.nav-equine:hover{color:var(--cyan)}
+@media(max-width:560px){.nav-equine{display:none}}
 
 /* Hero */
 .hero{padding-top:104px;padding-bottom:68px;text-align:center}
@@ -271,7 +276,8 @@ footer{border-top:1px solid var(--border-faint);padding:56px 24px 66px;text-alig
       <span>Made in Iffezheim</span>
     </div>
     <div class="nav-actions">
-      <a class="btn btn-back" href="/carlon-equine/" data-en="&lsaquo; Equine" data-de="&lsaquo; Equine">&lsaquo; Equine</a>
+      <a class="nav-equine" href="/carlon-equine/" data-en="&lsaquo; Equine App" data-de="&lsaquo; Equine App">&lsaquo; Equine App</a>
+      <a class="btn btn-demo" href="/carlon-equine/app/" title="Live-Cockpit mit Demo-Daten öffnen" data-en="&#9654; Demo" data-de="&#9654; Demo">&#9654; Demo</a>
       <button class="btn" id="langToggleBtn" title="Switch language" style="min-width:58px">EN · DE</button>
     </div>
   </div>
@@ -282,9 +288,9 @@ footer{border-top:1px solid var(--border-faint);padding:56px 24px 66px;text-alig
   <header class="hero wrap rev">
     <div class="eyebrow" data-en="CARLON Equine Visite · for vets &amp; clinics · Beta" data-de="CARLON Equine Visite · für Tierärzte &amp; Kliniken · Beta">CARLON Equine Visite · für Tierärzte &amp; Kliniken · Beta</div>
     <h1 data-en="Care that doesn't stop at the <em>stable door.</em>" data-de="Betreuung, die nicht an der <em>Stalltür endet.</em>">Betreuung, die nicht an der <em>Stalltür endet.</em></h1>
-    <p class="hero-sub" data-en="<strong>CARLON Equine Visite is the counterpart to the CARLON Equine app.</strong> The owner measures at home with the Polar H10; you open the recording in the browser, read the trend against the horse's own baseline and reach the horse earlier. No upload, no login — the data stays in your folder." data-de="<strong>CARLON Equine Visite ist das Gegenstück zur CARLON Equine App.</strong> Der Halter misst zu Hause mit dem Polar H10; du öffnest die Aufnahme im Browser, liest den Verlauf gegen die eigene Baseline des Pferdes und erreichst das Pferd früher. Kein Upload, kein Login — die Daten bleiben in deinem Ordner."><strong>CARLON Equine Visite ist das Gegenstück zur CARLON Equine App.</strong> Der Halter misst zu Hause mit dem Polar H10; du öffnest die Aufnahme im Browser, liest den Verlauf gegen die eigene Baseline des Pferdes und erreichst das Pferd früher. Kein Upload, kein Login — die Daten bleiben in deinem Ordner.</p>
+    <p class="hero-sub" data-en="<strong>CARLON Equine Visite is the counterpart to the <a href='/carlon-equine/' style='color:var(--cyan);text-decoration:none'>CARLON Equine app</a>.</strong> The owner measures at home with the Polar H10; you open the recording in the browser, read the trend against the horse's own baseline and reach the horse earlier. No upload, no login — the data stays in your folder." data-de="<strong>CARLON Equine Visite ist das Gegenstück zur <a href='/carlon-equine/' style='color:var(--cyan);text-decoration:none'>CARLON Equine App</a>.</strong> Der Halter misst zu Hause mit dem Polar H10; du öffnest die Aufnahme im Browser, liest den Verlauf gegen die eigene Baseline des Pferdes und erreichst das Pferd früher. Kein Upload, kein Login — die Daten bleiben in deinem Ordner."><strong>CARLON Equine Visite ist das Gegenstück zur <a href='/carlon-equine/' style='color:var(--cyan);text-decoration:none'>CARLON Equine App</a>.</strong> Der Halter misst zu Hause mit dem Polar H10; du öffnest die Aufnahme im Browser, liest den Verlauf gegen die eigene Baseline des Pferdes und erreichst das Pferd früher. Kein Upload, kein Login — die Daten bleiben in deinem Ordner.</p>
     <div class="cta-row">
-      <a class="cta-primary" href="mailto:jan@vitalkultur.com?subject=CARLON%20Equine%20%E2%80%94%20Gr%C3%BCndungs-Partner%20(Tier%C3%A4rzte%20%26%20Kliniken)&amp;body=Hallo%20Jan%2C%0A%0Aich%20m%C3%B6chte%20Gr%C3%BCndungs-Partner%20werden.%0A%0AKurz%20zu%20mir%3A%0A-%20Praxis%2FKlinik%3A%0A-%20Rolle%20(mobiler%20Vet%20%2F%20Klinik%20%2F%20Reha)%3A%0A-%20Pferde%20mit%20Polar%20H10%3A%0A-%20Telefon%3A%0A%0AViele%20Gr%C3%BC%C3%9Fe%2C" data-track="cta:clinic-hero" data-en="Become a founding partner →" data-de="Gründungs-Partner werden →">Gründungs-Partner werden →</a>
+      <a class="cta-primary" href="mailto:jan@vitalkultur.com?subject=CARLON%20Equine%20%E2%80%94%20Mitgestalter%20(Tier%C3%A4rzte%20%26%20Kliniken)&amp;body=Hallo%20Jan%2C%0A%0Aich%20m%C3%B6chte%20als%20Mitgestalter%20dabei%20sein.%0A%0AKurz%20zu%20mir%3A%0A-%20Praxis%2FKlinik%3A%0A-%20Rolle%20(mobiler%20Vet%20%2F%20Klinik%20%2F%20Reha)%3A%0A-%20Pferde%20mit%20Polar%20H10%3A%0A-%20Telefon%3A%0A%0AViele%20Gr%C3%BC%C3%9Fe%2C" data-track="cta:clinic-hero" data-en="Become a co-creator →" data-de="Mitgestalter werden →">Mitgestalter werden →</a>
       <a href="/carlon-equine/app/" data-track="cta:clinic-live" style="display:inline-flex;align-items:center;gap:9px;padding:15px 30px;border-radius:999px;background:transparent;border:1px solid var(--cyan);color:var(--cyan);font-weight:600;font-size:15px;text-decoration:none" data-en="See the live cockpit →" data-de="Live-Cockpit ansehen →">Live-Cockpit ansehen →</a></div>
   </header>
 
@@ -429,8 +435,8 @@ footer{border-top:1px solid var(--border-faint);padding:56px 24px 66px;text-alig
       </div>
       <div class="usp">
         <div class="u-k" data-en="Voice notes" data-de="Sprachnotizen">Sprachnotizen</div>
-        <h4 data-en="Speak it at the horse, type it later" data-de="Sprich es am Pferd, tippe später">Sprich es am Pferd, tippe später</h4>
-        <p data-en="Record the finding by voice — offline, stored locally. Hands on the horse now, documentation afterwards." data-de="Sprich den Befund ein — offline, lokal gespeichert. Hände am Pferd jetzt, Doku später.">Sprich den Befund ein — offline, lokal gespeichert. Hände am Pferd jetzt, Doku später.</p>
+        <h4 data-en="Speak it at the horse — typing optional" data-de="Sprich es am Pferd — Tippen entfällt">Sprich es am Pferd — Tippen entfällt</h4>
+        <p data-en="Record the finding by voice — offline, local, without typing a single letter. The recording flows on as an audio file into your transcription or AI system. Hands on the horse now, the paperwork follows." data-de="Sprich den Befund ein — offline, lokal, ohne einen Buchstaben zu tippen. Die Aufnahme geht als Audiodatei in dein Transkriptions- oder KI-System weiter. Hände am Pferd jetzt, die Doku läuft danach.">Sprich den Befund ein — offline, lokal, ohne einen Buchstaben zu tippen. Die Aufnahme geht als Audiodatei in dein Transkriptions- oder KI-System weiter. Hände am Pferd jetzt, die Doku läuft danach.</p>
       </div>
       <div class="usp">
         <div class="u-k" data-en="Safekeeping" data-de="Verlust-Schutz">Verlust-Schutz</div>
@@ -462,11 +468,11 @@ footer{border-top:1px solid var(--border-faint);padding:56px 24px 66px;text-alig
 
   <!-- FINAL CTA -->
   <section class="final wrap rev">
-    <div class="sec-eyebrow" data-en="Beta · founding partners" data-de="Beta · Gründungs-Partner">Beta · Gründungs-Partner</div>
+    <div class="sec-eyebrow" data-en="Beta · co-creators welcome" data-de="Beta · Mitgestalter willkommen">Beta · Mitgestalter willkommen</div>
     <h2 data-en="Shape it with us." data-de="Gestalte es mit.">Gestalte es mit.</h2>
-    <p class="sec-lead" data-en="We're looking for a handful of vets and clinics to build this cockpit around real practice. Access to the cockpit during the beta, a direct line to Jan for every question." data-de="Wir suchen eine Handvoll Tierärzte und Kliniken, um das Cockpit am echten Praxisalltag zu bauen. Zugang zum Cockpit während der Beta, ein direkter Draht zu Jan für jede Frage.">Wir suchen eine Handvoll Tierärzte und Kliniken, um das Cockpit am echten Praxisalltag zu bauen. Zugang zum Cockpit während der Beta, ein direkter Draht zu Jan für jede Frage.</p>
+    <p class="sec-lead" data-en="We're looking for a handful of vets and clinics to shape this cockpit around real practice — relaxed, at your pace. Full access during the beta and a direct line to Jan for every question." data-de="Wir suchen eine Handvoll Tierärzte und Kliniken, die das Cockpit am echten Praxisalltag mitgestalten — ganz entspannt, in deinem Tempo. Voller Zugang während der Beta und ein direkter Draht zu Jan für jede Frage.">Wir suchen eine Handvoll Tierärzte und Kliniken, die das Cockpit am echten Praxisalltag mitgestalten — ganz entspannt, in deinem Tempo. Voller Zugang während der Beta und ein direkter Draht zu Jan für jede Frage.</p>
     <div class="cta-row" style="justify-content:center">
-      <a class="cta-primary" href="mailto:jan@vitalkultur.com?subject=CARLON%20Equine%20%E2%80%94%20Gr%C3%BCndungs-Partner%20(Tier%C3%A4rzte%20%26%20Kliniken)&amp;body=Hallo%20Jan%2C%0A%0Aich%20m%C3%B6chte%20Gr%C3%BCndungs-Partner%20werden.%0A%0AKurz%20zu%20mir%3A%0A-%20Praxis%2FKlinik%3A%0A-%20Rolle%20(mobiler%20Vet%20%2F%20Klinik%20%2F%20Reha)%3A%0A-%20Pferde%20mit%20Polar%20H10%3A%0A-%20Telefon%3A%0A%0AViele%20Gr%C3%BC%C3%9Fe%2C" data-track="cta:clinic-final" data-en="Become a founding partner →" data-de="Gründungs-Partner werden →">Gründungs-Partner werden →</a>    </div>
+      <a class="cta-primary" href="mailto:jan@vitalkultur.com?subject=CARLON%20Equine%20%E2%80%94%20Mitgestalter%20(Tier%C3%A4rzte%20%26%20Kliniken)&amp;body=Hallo%20Jan%2C%0A%0Aich%20m%C3%B6chte%20als%20Mitgestalter%20dabei%20sein.%0A%0AKurz%20zu%20mir%3A%0A-%20Praxis%2FKlinik%3A%0A-%20Rolle%20(mobiler%20Vet%20%2F%20Klinik%20%2F%20Reha)%3A%0A-%20Pferde%20mit%20Polar%20H10%3A%0A-%20Telefon%3A%0A%0AViele%20Gr%C3%BC%C3%9Fe%2C" data-track="cta:clinic-final" data-en="Become a co-creator →" data-de="Mitgestalter werden →">Mitgestalter werden →</a>    </div>
   </section>
 
   <!-- Lightbox: Screenshots auf Tap vergroessern (self-contained, kein Lib) -->
