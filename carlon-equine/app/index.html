@@ -24,7 +24,7 @@
   --bg-elev-2:#14293a; --bg-glass:rgba(11,26,38,.72);
   --border-faint:#102230; --border-subtle:#1b3548; --border-strong:#2a4d65;
   --text-primary:#e8f8ff; --text-secondary:#8aa9bd; --text-dim:#4a6478; --text-faint:#2e4458;
-  --cyan:#3ECFB2; --cyan-strong:#4dffe6; --cyan-deep:#00b8a0;
+  --cyan:#3ECFB2; --cyan-strong:#6EE6C8; --cyan-deep:#1E8C78;
   --cyan-g1:rgba(62,207,178,.55); --cyan-g2:rgba(62,207,178,.25); --cyan-g3:rgba(62,207,178,.08); --cyan-faint:rgba(62,207,178,.04);
   --good:#3fe0a4; --good-g:rgba(63,224,164,.4);
   --amber:#ffb547; --amber-g:rgba(255,181,71,.4);
@@ -1002,11 +1002,12 @@ b.mdelta.bad{color:var(--red)}b.mdelta.warn{color:var(--amber)}b.mdelta.ok{color
 svg.chart{width:100%;display:block;overflow:visible}
 /* ---- Präzisions-Viz (Tachogramm/Poincaré/Dual) — EKG-Papier-Grid ---- */
 svg.viz{width:100%;display:block;overflow:visible}
-svg.viz .grid-major,svg.chart .grid-major{stroke:#ffffff;stroke-opacity:.12;stroke-width:.6}
-svg.viz .grid-minor,svg.chart .grid-minor{stroke:#ffffff;stroke-opacity:.045;stroke-width:.5}
-svg.viz .axis,svg.chart .axis{stroke:#ffffff;stroke-opacity:.16;stroke-width:.8}
-svg.viz .tick,svg.chart .tick{stroke:#ffffff;stroke-opacity:.16;stroke-width:.8}
-svg.viz text{fill:var(--text-dim);font-size:9px;font-family:var(--font-mono)}
+/* Cyan EKG-Papier-Grid — exakt wie die iOS-App (edle, gebrandete Signatur, NICHT weiß) */
+svg.viz .grid-major,svg.chart .grid-major{stroke:#3ECFB2;stroke-opacity:.40;stroke-width:.6}
+svg.viz .grid-minor,svg.chart .grid-minor{stroke:#3ECFB2;stroke-opacity:.16;stroke-width:.5}
+svg.viz .axis,svg.chart .axis{stroke:#3ECFB2;stroke-opacity:.55;stroke-width:.8}
+svg.viz .tick,svg.chart .tick{stroke:#3ECFB2;stroke-opacity:.55;stroke-width:.8}
+svg.viz text{fill:var(--text-secondary);font-size:9px;font-family:var(--font-mono)}
 svg.viz .label-axis,svg.chart .label-axis{fill:var(--text-secondary);font-size:9.5px;letter-spacing:.1em;font-family:var(--font-ui);font-weight:600}
 svg.viz .label-unit,svg.chart .label-unit{fill:var(--text-dim);font-weight:400}
 svg.viz .sd-lbl{fill:var(--cyan-strong);font-size:10px;font-weight:600;font-family:var(--font-ui)}
@@ -2054,7 +2055,7 @@ const Chart={
     t.forEach(tv=>{if(tv<lo||tv>hi)return;
       g+=`<text x="${PX(tv).toFixed(1)}" y="${(pB+13).toFixed(1)}" text-anchor="middle">${fmt0(tv)}</text><text x="${(pL-8).toFixed(1)}" y="${(PY(tv)+3).toFixed(1)}" text-anchor="end">${fmt0(tv)}</text>`;});
     // Identitätslinie RRₙ = RRₙ₊₁ (subtil gestrichelt)
-    g+=`<line x1="${PX(lo).toFixed(1)}" y1="${PY(lo).toFixed(1)}" x2="${PX(hi).toFixed(1)}" y2="${PY(hi).toFixed(1)}" stroke="#ffffff" stroke-opacity="0.15" stroke-width="0.6" stroke-dasharray="3 5"/>`;
+    g+=`<line x1="${PX(lo).toFixed(1)}" y1="${PY(lo).toFixed(1)}" x2="${PX(hi).toFixed(1)}" y2="${PY(hi).toFixed(1)}" stroke="var(--cyan-deep)" stroke-opacity="0.55" stroke-width="0.7" stroke-dasharray="3 5"/>`;
     // Punkte — kristallklar, gleichmäßig cyan; Dichte entsteht durch Überlappung (App-Standard, kein Dimming)
     const _hpts=[];
     for(let i=0;i<xs.length;i++){const px=+PX(xs[i]).toFixed(1),py=+PY(ys[i]).toFixed(1);
@@ -5437,7 +5438,9 @@ const ChartZoom={
       else{host=node;svg=node.querySelector('svg.viz,svg.chart');}
       if(!svg||!host||host.querySelector(':scope > .chart-zoombtn'))return;
       if(getComputedStyle(host).position==='static')host.style.position='relative';
-      if(svg.classList.contains('viz')){svg.style.cursor='zoom-in';svg.addEventListener('click',()=>ChartZoom.open(svg,host));}
+      // Interaktive Charts (.viz-hov: Poincaré/Tachogramm/Dual/Spektrum): KEIN Tap-zum-Vollbild —
+      // sonst öffnet auf dem iPhone jeder Tap das Vollbild statt den Wert zu zeigen. Vollbild via Expand-Button.
+      if(svg.classList.contains('viz') && !svg.closest('.viz-hov')){svg.style.cursor='zoom-in';svg.addEventListener('click',()=>ChartZoom.open(svg,host));}
       const b=document.createElement('button');
       b.className='chart-zoombtn';b.title='Vergrößern';b.innerHTML=IC.expand;
       b.addEventListener('click',e=>{e.stopPropagation();ChartZoom.open(svg,host);});
