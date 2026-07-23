@@ -1032,7 +1032,7 @@ svg.viz .sd-lbl{fill:var(--cyan-strong);font-size:10px;font-weight:600;font-fami
 #chartZoom .zbody.wide svg{min-width:820px;width:100%}
 #chartZoom .zbody.square svg{max-width:min(94vw,560px);width:100%}
 .viz{cursor:zoom-in}
-.vm-groups{display:flex;flex-direction:column;gap:15px}
+.vm-groups{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px 22px;align-items:start}
 .vm-glabel{font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--text-dim);font-weight:700;margin-bottom:8px;padding-left:2px}
 .viz-metrics{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
 .viz-metrics .vm{background:var(--bg-deep);border:1px solid var(--border-faint);border-radius:9px;padding:9px 11px}
@@ -3640,9 +3640,9 @@ const Views={
     return `<div class="panel" style="margin-bottom:var(--s4)">
       <h2 style="font-size:16px"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 12h3l2-7 4 15 3-11 2 6h6"/></svg>Signalanalyse · ${fmtDate(rec.startedAt,true)}</h2>
       <div class="chart-wrap" style="margin:0 0 14px"><div class="ct"><span>Tachogramm &amp; Herzfrequenz</span><span class="leg"><i style="color:var(--cyan)">RR ms</i><i style="color:var(--amber)">HF bpm</i></span></div>${Chart.dualHrvBpm(rr)}</div>
-      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:20px;align-items:start">
-        <div><div class="ct" style="margin-bottom:8px"><span>Poincaré-Plot · SD1/SD2-Ellipse</span>${Info.btn('poincare')}</div>${Chart.poincare(rr,{sd1:m.sd1,sd2:m.sd2})}</div>
-        <div><div class="ct" style="margin-bottom:10px"><span>HRV-Kennwerte</span></div>
+      <div class="ct" style="margin-bottom:12px"><span>Poincaré-Plot · SD1/SD2-Ellipse</span>${Info.btn('poincare')}</div>
+      <div style="display:flex;justify-content:center;margin-bottom:26px">${Chart.poincare(rr,{sd1:m.sd1,sd2:m.sd2,size:460})}</div>
+        <div><div class="ct" style="margin-bottom:12px"><span>HRV-Kennwerte</span></div>
           <div class="vm-groups">
             <div class="vm-group"><div class="vm-glabel">Zeitdomäne</div><div class="viz-metrics">
               ${vm('RMSSD',m.rmssd,'ms')}${vm('SDNN',m.sdnn,'ms')}${vm('pNN50',m.pnn50,'%',true)}
@@ -3660,7 +3660,6 @@ const Views={
             </div></div>
           </div>
         </div>
-      </div>
       <div class="freq-row">
         <div class="freq-spec">
           <div class="ct" style="margin-bottom:8px"><span>Frequenzspektrum · Welch/Lomb · equine Bänder</span>${Info.btn('freq')}</div>
