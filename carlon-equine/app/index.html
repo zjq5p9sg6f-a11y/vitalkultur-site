@@ -1094,6 +1094,9 @@ svg.viz .sd-lbl{fill:var(--cyan-strong);font-size:10px;font-weight:600;font-fami
 .pfs-plot{flex:1;min-width:0;display:flex;align-items:center;justify-content:center;overflow:hidden}
 #chartZoom .zbody.poinca-fs .viz-hov{position:relative;aspect-ratio:1;height:100%;max-width:100%;max-height:100%;margin:0;width:auto}
 #chartZoom .zbody.poinca-fs .viz-hov svg{width:100%!important;height:100%!important;max-width:none!important;max-height:none!important}
+/* Baevsky-Vollbild: große Gauge (nutzt den Poincaré-Sidebar-Rahmen) */
+#chartZoom .zbody.baev-fs .baev-plot{align-items:center;justify-content:center}
+#chartZoom .zbody.baev-fs .baev-plot svg{width:100%!important;height:auto!important;max-width:min(88vw,540px)!important;max-height:none!important;aspect-ratio:auto}
 @media(max-width:860px){
   /* Schmaler Schirm (iPhone): PLOT ZUERST + groß, Kennwerte kompakt darunter (nicht umgekehrt) */
   #chartZoom .zbody.poinca-fs{flex-direction:column-reverse;overflow:auto;gap:14px}
@@ -3875,7 +3878,7 @@ const Views={
             <div class="bl bl-sum"><div class="bl-t"><b style="color:var(--text-secondary)">GESAMT · LF/HF</b><span>Total Power · sympatho-vagale Balance</span></div><b class="bl-v">${bd?fmt0(bd.total):'–'} <small>ms²</small> · ${lfhf!=null?fmt2(lfhf):'–'}</b></div>
           </div>
         </div>
-        <div class="baev-box">
+        <div class="baev-box" data-si="${bv?bv.SI.toFixed(1):''}" data-sqrtsi="${bv?bv.sqrtSI.toFixed(1):''}" data-amo="${bv?bv.AMo.toFixed(1):''}" data-mo="${bv?(bv.Mo*1000).toFixed(0):''}" data-mxdmn="${bv?(bv.MxDMn*1000).toFixed(0):''}">
           ${chead('gauge','Baevsky-Stress-Index','baevsky')}
           ${HRV.gauge(bv?bv.sqrtSI:null)}
           ${HRV.gaugeZones(bv?bv.sqrtSI:null)}
@@ -5663,6 +5666,7 @@ const ChartZoom={
     if(csvg){csvg.removeAttribute('style');csvg.style.cursor=wrap?'crosshair':'default';}
     const body=$('#zoomBody');
     const scatter=wrap&&wrap.dataset.mode==='scatter';
+    const baev=host&&host.classList&&host.classList.contains('baev-box');
     if(scatter){
       // Dedizierter Poincaré-Vollbild-Viewer (App-Stil): Seitenleiste (Kennwerte + Form-Guide) + großer Plot
       let pts=[]; try{pts=JSON.parse(wrap.dataset.hov.replace(/&#39;/g,"'").replace(/&lt;/g,'<'));}catch(_){}
@@ -5686,6 +5690,25 @@ const ChartZoom={
       body.appendChild(side); body.appendChild(plot);
       $('#zoomTitle').textContent='Poincaré-Plot';
       $('#zoomHint').textContent=`${n+1} Intervalle · Tippen = Inspektor`; $('#zoomHint').style.display='';
+    } else if(baev){
+      // Dedizierter Baevsky-Vollbild-Viewer: große Gauge + alle Komponenten + Zonen + Formel/Deutung
+      const d=host.dataset; const si=parseFloat(d.sqrtsi)||0;
+      const zone=si<7?['Ruhig','var(--good)']:si<15?['Aktiv','var(--cyan)']:si<25?['Stress','var(--amber)']:['Alarm','var(--red)'];
+      const gaugeSvg=host.querySelector('svg.viz'); const gclone=gaugeSvg?gaugeSvg.cloneNode(true):document.createElement('div'); gclone.removeAttribute('style');
+      body.className='zbody poinca-fs baev-fs'; body.innerHTML='';
+      const side=document.createElement('div'); side.className='pfs-side';
+      side.innerHTML=`<div class="pfs-hd">Baevsky<span>Stress-Index · equine-skaliert</span></div>`
+        +`<div class="pfs-stat"><span class="k">√SI</span><b>${d.sqrtsi||'–'}</b><span class="s" style="color:${zone[1]}">${zone[0]} · stabile Skala 0–30</span></div>`
+        +`<div class="pfs-stat"><span class="k">SI · roh</span><b>${d.si||'–'}</b><span class="s">Baevsky-Stress-Index (unskaliert)</span></div>`
+        +`<div class="pfs-stat"><span class="k">Komponenten</span><b style="font-size:17px;line-height:1.3">${d.amo||'–'} % · ${d.mo||'–'} ms · ${d.mxdmn||'–'} ms</b><span class="s">AMo (Modalamplitude) · Mo (Modus) · MxDMn (Variationsbreite)</span></div>`
+        +`<div class="pfs-guide"><div class="gh">Zonen · √SI (Stucke 2015)</div>`
+          + [['Ruhig','0–7','var(--good)'],['Aktiv','7–15','var(--cyan)'],['Stress','15–25','var(--amber)'],['Alarm','25+','var(--red)']].map(([n,r,c])=>`<div class="gr"><span style="width:16px;height:4px;border-radius:2px;background:${c};flex:0 0 auto"></span><div class="gt"><b style="color:${c}">${n}</b><span>√SI ${r}</span></div></div>`).join('')
+        +`</div>`
+        +`<div class="pfs-hint">√SI = √( AMo / (2 · Mo · MxDMn) )<br>Die Wurzel stabilisiert die Skala. Orientierend, keine equine Norm — individuelle Baseline maßgeblich.</div>`;
+      const plot=document.createElement('div'); plot.className='pfs-plot baev-plot'; plot.appendChild(gclone);
+      body.appendChild(side); body.appendChild(plot);
+      $('#zoomTitle').textContent='Baevsky-Stress-Index';
+      $('#zoomHint').textContent=`√SI ${d.sqrtsi||''} · ${zone[0]}`; $('#zoomHint').style.display='';
     } else {
       const vb=(svg.getAttribute('viewBox')||'0 0 700 400').split(/\s+/).map(Number);
       const wide=(vb[2]/vb[3])>1.4;
