@@ -1119,9 +1119,9 @@ svg.viz .sd-lbl{fill:var(--cyan-strong);font-size:10px;font-weight:600;font-fami
   .pfs-side .pfs-stat b small{font-size:9px}
   .pfs-side .pfs-stat .s{display:none}
   .pfs-plot{flex:1;min-height:0;align-items:center;justify-content:center}
-  /* Poincaré (quadratisch): füllt die volle Höhe des Plot-Bereichs → dominanter Plot wie in der App */
-  #chartZoom .zbody.scatter-fs .viz-hov{aspect-ratio:1;height:100%;width:auto;max-width:100%;max-height:100%;margin:0}
-  #chartZoom .zbody.scatter-fs .viz-hov svg{width:100%!important;height:100%!important;max-width:none!important;max-height:none!important}
+  /* Poincaré: quadratisch (gleiche ms-Skala X=Y → korrekte 45°-Linie), so groß wie Breite erlaubt → dominant */
+  #chartZoom .zbody.scatter-fs .viz-hov{aspect-ratio:1;width:100%;height:auto;max-width:100%;max-height:100%;margin:0}
+  #chartZoom .zbody.scatter-fs .viz-hov svg{width:100%!important;height:auto!important;max-width:none!important;max-height:none!important}
   /* Breite Zeitreihen/Spektrum (spec-fs/dual-fs): breitenbasiert, mittig */
   #chartZoom .zbody.spec-fs .viz-hov{aspect-ratio:auto;height:auto;width:100%;max-height:100%}
   #chartZoom .zbody.spec-fs .viz-hov svg{width:100%!important;height:auto!important;max-height:calc(100% - 2px)!important}
@@ -2218,7 +2218,9 @@ const Chart={
       +`</g>`;
     g+=`<text x="${(pL+W/2).toFixed(0)}" y="${size-2}" text-anchor="middle" class="label-axis">RRₙ<tspan class="label-unit"> (ms)</tspan></text>`;
     g+=`<text x="12" y="${(pT+H/2).toFixed(0)}" transform="rotate(-90 12 ${(pT+H/2).toFixed(0)})" text-anchor="middle" class="label-axis">RRₙ₊₁<tspan class="label-unit"> (ms)</tspan></text>`;
-    return Chart._hov(g,size,size,_hpts,"scatter",`max-width:${size}px`);
+    // Kanonische SD1/SD2 (= dieselben Werte wie im Plot-Readout) roh mitgeben → Vollbild-Viewer rechnet nicht neu (kein Rundungs-Drift)
+    const _da=(sd1!=null&&sd2!=null)?` data-sd1="${sd1}" data-sd2="${sd2}" data-ratio="${sd2/sd1}" data-beats="${xs.length}"`:'';
+    return Chart._hov(g,size,size,_hpts,"scatter",`max-width:${size}px`,_da);
   },
   tachogram(rr,{w=720,h=230,color='var(--cyan)'}={}){
     if(!rr||rr.length<2) return `<div style="color:var(--text-faint);font-size:12px;text-align:center;padding:30px">Keine RR-Daten</div>`;
@@ -2383,13 +2385,13 @@ const Chart={
     return flags;
   },
   // Interaktiver Hover-Wrapper: Fadenkreuz + Fokuspunkt(e) + Tooltip mit echten Werten am Cursor.
-  _hov(inner,w,h,pts,mode,extraStyle=''){
+  _hov(inner,w,h,pts,mode,extraStyle='',dataAttrs=''){
     const cross=mode==='scatter'
       ?`<line class="hov-cross" x1="0" x2="${w}" y1="0" y2="0"/><line class="hov-cross" x1="0" x2="0" y1="0" y2="${h}"/>`
       :`<line class="hov-cross" x1="0" x2="0" y1="0" y2="${h}"/>`;
     const foc=`<circle class="hov-focus" r="${mode==='scatter'?6:4.5}"/>`+(mode==='dual'?`<circle class="hov-focus hov-focus2" r="4.5"/>`:'');
     const mj=JSON.stringify(pts).replace(/'/g,'&#39;').replace(/</g,'&lt;');
-    return `<div class="viz-hov" data-hov='${mj}' data-mode="${mode}" data-w="${w}" data-h="${h}">`
+    return `<div class="viz-hov" data-hov='${mj}' data-mode="${mode}" data-w="${w}" data-h="${h}"${dataAttrs}>`
       +`<svg class="viz" viewBox="0 0 ${w} ${h}"${extraStyle?` style="${extraStyle}"`:''}>${inner}${cross}${foc}</svg><div class="hov-tip"></div></div>`;
   },
   initVizHover(){
@@ -5697,16 +5699,18 @@ const ChartZoom={
     if(scatter){
       // Dedizierter Poincaré-Vollbild-Viewer (App-Stil): Seitenleiste (Kennwerte + Form-Guide) + großer Plot
       let pts=[]; try{pts=JSON.parse(wrap.dataset.hov.replace(/&#39;/g,"'").replace(/&lt;/g,'<'));}catch(_){}
-      const n=pts.length||1; let sx=0,sy=0; pts.forEach(p=>{sx+=p.rn;sy+=p.rn1;});
-      const mx=sx/n,my=sy/n; let s1=0,s2=0; pts.forEach(p=>{s1+=Math.pow((p.rn-p.rn1)-(mx-my),2);s2+=Math.pow((p.rn+p.rn1)-(mx+my),2);});
-      const sd1=Math.sqrt(s1/n/2),sd2=Math.sqrt(s2/n/2),ratio=sd1>0?sd2/sd1:0;
+      const n=pts.length||1;
+      // Kanonische SD1/SD2 aus den data-Attributen (identisch zum Plot-Readout); Fallback: aus Punkten schätzen
+      let sd1,sd2,ratio; const wd=wrap.dataset;
+      if(wd.sd1!=null&&wd.sd1!==''){sd1=parseFloat(wd.sd1);sd2=parseFloat(wd.sd2);ratio=parseFloat(wd.ratio);}
+      else{let sx=0,sy=0; pts.forEach(p=>{sx+=p.rn;sy+=p.rn1;}); const mx=sx/n,my=sy/n; let s1=0,s2=0; pts.forEach(p=>{s1+=Math.pow((p.rn-p.rn1)-(mx-my),2);s2+=Math.pow((p.rn+p.rn1)-(mx+my),2);}); sd1=Math.sqrt(s1/n/2);sd2=Math.sqrt(s2/n/2);ratio=sd1>0?sd2/sd1:0;}
       const shp=sd1<10?['Ball','var(--red)']:sd1<25?['Torpedo','var(--amber)']:['Komet','var(--good)'];
       body.className='zbody poinca-fs scatter-fs'; body.innerHTML='';
       const side=document.createElement('div'); side.className='pfs-side';
       side.innerHTML=`<div class="pfs-hd">Poincaré<span>${n+1} Intervalle</span></div>`
-        +`<div class="pfs-stat"><span class="k">SD1</span><b>${sd1.toFixed(1)} <small>ms</small></b><span class="s">Kurzzeit-Variabilität</span></div>`
-        +`<div class="pfs-stat"><span class="k">SD2</span><b>${sd2.toFixed(1)} <small>ms</small></b><span class="s">Langzeit-Variabilität</span></div>`
-        +`<div class="pfs-stat"><span class="k">SD2/SD1</span><b>${ratio.toFixed(2)}</b><span class="s">Streuungs-Verhältnis · <span style="color:${shp[1]}">${shp[0]}</span></span></div>`
+        +`<div class="pfs-stat"><span class="k">SD1</span><b>${fmt1(sd1)} <small>ms</small></b><span class="s">Kurzzeit-Variabilität</span></div>`
+        +`<div class="pfs-stat"><span class="k">SD2</span><b>${fmt1(sd2)} <small>ms</small></b><span class="s">Langzeit-Variabilität</span></div>`
+        +`<div class="pfs-stat"><span class="k">SD2/SD1</span><b>${fmt2(ratio)}</b><span class="s">Streuungs-Verhältnis · <span style="color:${shp[1]}">${shp[0]}</span></span></div>`
         +`<div class="pfs-guide"><div class="gh">Form-Guide</div>`
           +`<div class="gr"><svg viewBox="0 0 26 16" fill="none"><ellipse cx="13" cy="8" rx="11" ry="3.4" transform="rotate(-22 13 8)" stroke="var(--good)" stroke-width="1.6"/></svg><div class="gt"><b style="color:var(--good)">Komet</b><span>hohe Variabilität</span></div></div>`
           +`<div class="gr"><svg viewBox="0 0 26 16" fill="none"><ellipse cx="13" cy="8" rx="11" ry="2" transform="rotate(-22 13 8)" stroke="var(--amber)" stroke-width="1.6"/></svg><div class="gt"><b style="color:var(--amber)">Torpedo</b><span>reduziert</span></div></div>`
