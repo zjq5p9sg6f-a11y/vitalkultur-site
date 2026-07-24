@@ -1002,11 +1002,11 @@ b.mdelta.bad{color:var(--red)}b.mdelta.warn{color:var(--amber)}b.mdelta.ok{color
 svg.chart{width:100%;display:block;overflow:visible}
 /* ---- Präzisions-Viz (Tachogramm/Poincaré/Dual) — EKG-Papier-Grid ---- */
 svg.viz{width:100%;display:block;overflow:visible}
-/* Cyan EKG-Papier-Grid — exakt wie die iOS-App (edle, gebrandete Signatur, NICHT weiß) */
-svg.viz .grid-major,svg.chart .grid-major{stroke:#3ECFB2;stroke-opacity:.40;stroke-width:.6}
-svg.viz .grid-minor,svg.chart .grid-minor{stroke:#3ECFB2;stroke-opacity:.16;stroke-width:.5}
-svg.viz .axis,svg.chart .axis{stroke:#3ECFB2;stroke-opacity:.55;stroke-width:.8}
-svg.viz .tick,svg.chart .tick{stroke:#3ECFB2;stroke-opacity:.55;stroke-width:.8}
+/* Cyan EKG-Papier-Grid — dezent/edel wie die iOS-App (branded, aber fein, NICHT weiß, NICHT laut) */
+svg.viz .grid-major,svg.chart .grid-major{stroke:#3ECFB2;stroke-opacity:.24;stroke-width:.6}
+svg.viz .grid-minor,svg.chart .grid-minor{stroke:#3ECFB2;stroke-opacity:.08;stroke-width:.5}
+svg.viz .axis,svg.chart .axis{stroke:#3ECFB2;stroke-opacity:.42;stroke-width:.8}
+svg.viz .tick,svg.chart .tick{stroke:#3ECFB2;stroke-opacity:.42;stroke-width:.8}
 svg.viz text{fill:var(--text-secondary);font-size:9px;font-family:var(--font-mono)}
 svg.viz .label-axis,svg.chart .label-axis{fill:var(--text-secondary);font-size:9.5px;letter-spacing:.1em;font-family:var(--font-ui);font-weight:600}
 svg.viz .label-unit,svg.chart .label-unit{fill:var(--text-dim);font-weight:400}
@@ -2246,8 +2246,10 @@ const Chart={
   },
   // Interaktiver Hover-Wrapper: Fadenkreuz + Fokuspunkt(e) + Tooltip mit echten Werten am Cursor.
   _hov(inner,w,h,pts,mode,extraStyle=''){
-    const cross=mode==='scatter'?'':`<line class="hov-cross" x1="0" x2="0" y1="0" y2="${h}"/>`;
-    const foc=`<circle class="hov-focus" r="${mode==='scatter'?5.5:4.5}"/>`+(mode==='dual'?`<circle class="hov-focus hov-focus2" r="4.5"/>`:'');
+    const cross=mode==='scatter'
+      ?`<line class="hov-cross" x1="0" x2="${w}" y1="0" y2="0"/><line class="hov-cross" x1="0" x2="0" y1="0" y2="${h}"/>`
+      :`<line class="hov-cross" x1="0" x2="0" y1="0" y2="${h}"/>`;
+    const foc=`<circle class="hov-focus" r="${mode==='scatter'?6:4.5}"/>`+(mode==='dual'?`<circle class="hov-focus hov-focus2" r="4.5"/>`:'');
     const mj=JSON.stringify(pts).replace(/'/g,'&#39;').replace(/</g,'&lt;');
     return `<div class="viz-hov" data-hov='${mj}' data-mode="${mode}" data-w="${w}" data-h="${h}">`
       +`<svg class="viz" viewBox="0 0 ${w} ${h}"${extraStyle?` style="${extraStyle}"`:''}>${inner}${cross}${foc}</svg><div class="hov-tip"></div></div>`;
@@ -2268,12 +2270,15 @@ const Chart={
       let best=pts[0],bd=Infinity;
       if(mode==='scatter'){pts.forEach(m=>{const d=(m.x-vx)**2+(m.y-vy)**2;if(d<bd){bd=d;best=m;}});}
       else{pts.forEach(m=>{const d=Math.abs(m.x-vx);if(d<bd){bd=d;best=m;}});}
-      const cross=svg.querySelector('.hov-cross'),focs=svg.querySelectorAll('.hov-focus'),tip=wrap.querySelector('.hov-tip');
-      if(cross){cross.setAttribute('x1',best.x);cross.setAttribute('x2',best.x);cross.classList.add('on');}
+      const crosses=svg.querySelectorAll('.hov-cross'),focs=svg.querySelectorAll('.hov-focus'),tip=wrap.querySelector('.hov-tip');
+      if(mode==='scatter'){
+        if(crosses[0]){crosses[0].setAttribute('y1',best.y);crosses[0].setAttribute('y2',best.y);crosses[0].classList.add('on');}
+        if(crosses[1]){crosses[1].setAttribute('x1',best.x);crosses[1].setAttribute('x2',best.x);crosses[1].classList.add('on');}
+      }else if(crosses[0]){crosses[0].setAttribute('x1',best.x);crosses[0].setAttribute('x2',best.x);crosses[0].classList.add('on');}
       focs[0].setAttribute('cx',best.x);focs[0].setAttribute('cy',best.y);focs[0].classList.add('on');
       if(focs[1]&&best.y2!=null){focs[1].setAttribute('cx',best.x);focs[1].setAttribute('cy',best.y2);focs[1].classList.add('on');}
       let html;
-      if(mode==='scatter') html=`<div class="tt-date">Schlagpaar</div><div class="tt-val">${best.rn} → ${best.rn1} ms</div><div class="tt-cls" style="color:var(--text-secondary)">ΔRR ${best.rn1-best.rn>0?'+':''}${best.rn1-best.rn} ms</div>`;
+      if(mode==='scatter'){const dR=best.rn1-best.rn;html=`<div class="tt-date">RRₙ → RRₙ₊₁</div><div class="tt-val">${best.rn} → ${best.rn1} ms</div><div class="tt-cls" style="color:var(--text-secondary)">HR ${Math.round(60000/best.rn)} bpm · ΔRR ${dR>0?'+':''}${dR} ms</div>`;}
       else if(mode==='dual') html=`<div class="tt-date">Schlag ${best.i+1}${best.af?' · ⚠ Fehlbeat':''}</div><div class="tt-val" style="color:var(--cyan)">${best.rr} ms</div><div class="tt-cls" style="color:var(--amber)">${best.hr} bpm</div>`;
       else if(mode==='spec') html=`<div class="tt-date">${best.f} Hz${best.bd?' · '+best.bd:''}</div><div class="tt-val">${best.pw} <span style="font-size:11px;color:var(--text-dim)">ms²/Hz</span></div>`;
       else html=`<div class="tt-date">Schlag ${best.i+1}</div><div class="tt-val">${best.rr} ms</div><div class="tt-cls" style="color:var(--text-secondary)">${best.hr} bpm</div>`;
@@ -5447,7 +5452,13 @@ const ChartZoom={
     });
   },
   open(svg,host){
-    const clone=svg.cloneNode(true);clone.removeAttribute('style');clone.style.cursor='default';
+    // Interaktive Charts (.viz-hov): den ganzen Wrapper klonen, damit Touch-Inspektor + Fadenkreuz
+    // auch im Vollbild leben (die globalen Pointer-Handler greifen auf jede .viz-hov im DOM).
+    const wrap=svg.closest('.viz-hov');
+    const clone=(wrap||svg).cloneNode(true);
+    const csvg=(clone.tagName&&clone.tagName.toLowerCase()==='svg')?clone:clone.querySelector('svg');
+    clone.removeAttribute('style');
+    if(csvg){csvg.removeAttribute('style');csvg.style.cursor=wrap?'crosshair':'default';}
     const vb=(svg.getAttribute('viewBox')||'0 0 700 400').split(/\s+/).map(Number);
     const wide=(vb[2]/vb[3])>1.4;
     const body=$('#zoomBody');body.className='zbody '+(wide?'wide':'square');body.innerHTML='';body.appendChild(clone);
