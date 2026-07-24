@@ -1030,7 +1030,11 @@ svg.viz .sd-lbl{fill:var(--cyan-strong);font-size:10px;font-weight:600;font-fami
   background:linear-gradient(160deg,rgba(9,22,33,.6),rgba(4,12,20,.5));display:flex;align-items:center;justify-content:center;padding:10px}
 #chartZoom .zbody svg{height:auto;display:block}
 #chartZoom .zbody.wide svg{min-width:820px;width:100%}
-#chartZoom .zbody.square svg{max-width:min(94vw,560px);width:100%}
+#chartZoom .zbody.square svg{max-width:min(94vw,78vh);width:100%}
+/* Interaktiver Wrapper im Vollbild: der Wrapper trägt die Größe (Tooltip sitzt relativ zu ihm) */
+#chartZoom .zbody .viz-hov{position:relative;width:100%;max-width:min(94vw,78vh);margin:0 auto}
+#chartZoom .zbody.wide .viz-hov{max-width:none;min-width:820px}
+#chartZoom .zbody .viz-hov svg{width:100%!important;max-width:none!important;height:auto}
 .viz{cursor:zoom-in}
 .vm-groups{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px 22px;align-items:start}
 .vm-glabel{font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--text-dim);font-weight:700;margin-bottom:8px;padding-left:2px}
