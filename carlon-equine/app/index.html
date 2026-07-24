@@ -659,6 +659,12 @@ b.mdelta.bad{color:var(--red)}b.mdelta.warn{color:var(--amber)}b.mdelta.ok{color
 .detail-grid{display:grid;grid-template-columns:1.6fr 1fr;gap:var(--s4);align-items:start}
 /* Analyse spannt volle Breite unter dem 2-spaltigen Status/Stall-Kopf (nutzt breite iPad-Schirme, kein leerer Rechtsrand) */
 .detail-full{grid-column:1/-1;order:9;min-width:0}
+/* Pferdeakte: Haupt-Analysespalte (lang, dominant) + feste Metadaten-Sidebar rechts — KEIN Spalten-Totraum mehr.
+   Die lange Spalte gibt den Takt vor; die Sidebar endet natürlich (Dashboard-/CRM-Standard). */
+.detail-layout{display:grid;grid-template-columns:minmax(0,1fr) 336px;gap:var(--s4);align-items:start}
+.detail-layout>.detail-main,.detail-layout>.detail-side{min-width:0}
+.detail-layout>.detail-main>*:last-child,.detail-layout>.detail-side>*:last-child{margin-bottom:0}
+@media(max-width:1040px){.detail-layout{grid-template-columns:1fr}}
 .verlauf-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:14px}
 .verlauf-grid .chart-wrap{margin:0}
 .subject-hero{display:flex;align-items:center;gap:var(--s4);margin-bottom:var(--s4);flex-wrap:wrap}
@@ -1039,11 +1045,12 @@ svg.chart{width:100%;display:block;overflow:visible}
 /* ---- Präzisions-Viz (Tachogramm/Poincaré/Dual) — EKG-Papier-Grid ---- */
 svg.viz{width:100%;display:block;overflow:visible}
 /* Cyan EKG-Papier-Grid — dezent/edel wie die iOS-App (branded, aber fein, NICHT weiß, NICHT laut) */
-/* Grid-CI = 1:1 iOS-App (EquineChartCI): dezent-WEISS, tritt zurück (Tufte) — kein Cyan das mit dem Signal konkurriert */
-svg.viz .grid-major,svg.chart .grid-major{stroke:#fff;stroke-opacity:.15;stroke-width:.5}
-svg.viz .grid-minor,svg.chart .grid-minor{stroke:#fff;stroke-opacity:.07;stroke-width:.25}
-svg.viz .axis,svg.chart .axis{stroke:#fff;stroke-opacity:.16;stroke-width:.8}
-svg.viz .tick,svg.chart .tick{stroke:#fff;stroke-opacity:.5;stroke-width:.8}
+/* Grid-CI = iOS-App (EquineChartCI) dezent-WEISS (Tufte), aber Strichstärke fürs Web angehoben:
+   App-0,5px sind für 3×-Retina; auf dem ~1:1-Web-Render (600px-Poincaré) würden sie sub-pixel verschwinden → Plot wirkte leer. */
+svg.viz .grid-major,svg.chart .grid-major{stroke:#fff;stroke-opacity:.16;stroke-width:.9}
+svg.viz .grid-minor,svg.chart .grid-minor{stroke:#fff;stroke-opacity:.08;stroke-width:.6}
+svg.viz .axis,svg.chart .axis{stroke:#fff;stroke-opacity:.18;stroke-width:1}
+svg.viz .tick,svg.chart .tick{stroke:#fff;stroke-opacity:.5;stroke-width:.9}
 svg.viz text{fill:var(--text-secondary);font-size:9px;font-family:var(--font-mono)}
 svg.viz .label-axis,svg.chart .label-axis{fill:var(--text-secondary);font-size:9.5px;letter-spacing:.1em;font-family:var(--font-ui);font-weight:600}
 svg.viz .label-unit,svg.chart .label-unit{fill:var(--text-dim);font-weight:400}
@@ -2212,9 +2219,10 @@ const Chart={
     // SD1/SD2-Ellipse + Achsen + Zentrums-Punkt mit Glow (SD1 gestrichelt, SD2 durchgezogen)
     const mean=rr.reduce((a,b)=>a+b,0)/rr.length;const cx=PX(mean),cy=PY(mean);const sc=W/(hi-lo);
     if(sd1&&sd2){const a=-Math.PI/4;
-      g+=`<ellipse cx="${cx.toFixed(1)}" cy="${cy.toFixed(1)}" rx="${(sd2*sc).toFixed(1)}" ry="${(sd1*sc).toFixed(1)}" transform="rotate(-45 ${cx.toFixed(1)} ${cy.toFixed(1)})" fill="rgba(62,207,178,.10)" stroke="var(--cyan)" stroke-width="1.5"/>`;
-      g+=`<line x1="${cx.toFixed(1)}" y1="${cy.toFixed(1)}" x2="${(cx+Math.cos(a)*sd2*sc).toFixed(1)}" y2="${(cy+Math.sin(a)*sd2*sc).toFixed(1)}" stroke="var(--cyan-strong)" stroke-width="1.6"/>`;
-      g+=`<line x1="${cx.toFixed(1)}" y1="${cy.toFixed(1)}" x2="${(cx+Math.cos(a+Math.PI/2)*sd1*sc).toFixed(1)}" y2="${(cy+Math.sin(a+Math.PI/2)*sd1*sc).toFixed(1)}" stroke="var(--equine)" stroke-width="1.6" stroke-dasharray="4 3"/>`;
+      // App EquinePoincareChartView: Ellipse cyan 1,5 (stroke-only) · SD1/SD2-Achsen BEIDE cyan 0,7 tertiär
+      g+=`<ellipse cx="${cx.toFixed(1)}" cy="${cy.toFixed(1)}" rx="${(sd2*sc).toFixed(1)}" ry="${(sd1*sc).toFixed(1)}" transform="rotate(-45 ${cx.toFixed(1)} ${cy.toFixed(1)})" fill="none" stroke="var(--cyan)" stroke-width="1.5"/>`;
+      g+=`<line x1="${cx.toFixed(1)}" y1="${cy.toFixed(1)}" x2="${(cx+Math.cos(a)*sd2*sc).toFixed(1)}" y2="${(cy+Math.sin(a)*sd2*sc).toFixed(1)}" stroke="var(--cyan)" stroke-opacity="0.7" stroke-width="1.1"/>`;
+      g+=`<line x1="${cx.toFixed(1)}" y1="${cy.toFixed(1)}" x2="${(cx+Math.cos(a+Math.PI/2)*sd1*sc).toFixed(1)}" y2="${(cy+Math.sin(a+Math.PI/2)*sd1*sc).toFixed(1)}" stroke="var(--cyan)" stroke-opacity="0.7" stroke-width="1.1"/>`;
       g+=`<circle cx="${cx.toFixed(1)}" cy="${cy.toFixed(1)}" r="3.4" fill="var(--cyan)" style="filter:drop-shadow(0 0 5px var(--cyan))"/>`;}
     // In-Plot-Kennwerte oben-links (App-Standard — die Werte gehören IN den Plot, nicht extern verstreut)
     const ratio=(sd1&&sd2)?fmt2(sd2/sd1):'—';
@@ -3722,8 +3730,8 @@ const Views={
           <button class="btn ghost" onclick="Views.editHorse('${h.id}')">Stammdaten</button>
         </div>
       </div>
-      <div class="detail-grid">
-        <div>
+      <div class="detail-layout">
+        <div class="detail-main">
           <div class="panel" style="margin-bottom:var(--s4)">
             <h2><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12h4l3 8 4-16 3 8h4"/></svg>Aktueller Status</h2>
             ${(()=>{const amp=Triage.baselineAmpel(h,rec);const streak=Triage.fallingStreak(h.id);if(!amp&&streak<3)return'';const lvl=amp?amp.level:'warn';const parts=[];if(amp)parts.push(amp.text);if(streak>=3)parts.push(`RMSSD ${streak}× in Folge fallend`);return `<div class="warnbanner ${lvl}">${IC.bolt}<div><b>Auffällig · gegen die individuelle Baseline</b><span>${parts.map(esc).join(' · ')}</span></div></div>`;})()}
@@ -3739,8 +3747,6 @@ const Views={
               <div style="font-size:11px;color:var(--text-faint);margin-top:8px;font-style:italic">Priorisierungshilfe, keine Diagnose. Klinische Beurteilung durch Tierarzt/Tierärztin.</div>
             </div>`:''}
           </div>
-        </div>
-        <div class="detail-full">
           ${Views.readinessCard(h)}
           ${Views.conditioningCard(h)}
           ${Views.voicePanel(h.id)}
@@ -3783,7 +3789,7 @@ const Views={
             </div>
           </div>
         </div>
-        <div>
+        <div class="detail-side">
           <div class="panel" style="margin-bottom:var(--s4)">
             <h2 style="font-size:16px"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2C8 2 5 5 5 9c0 5 7 13 7 13s7-8 7-13c0-4-3-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>Stall &amp; Standort</h2>
             <div class="ref-lines">
