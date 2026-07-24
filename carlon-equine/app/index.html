@@ -1105,18 +1105,28 @@ svg.viz .sd-lbl{fill:var(--cyan-strong);font-size:10px;font-weight:600;font-fami
 #chartZoom .zbody.dfa-fs .pfs-plot>svg.viz,#chartZoom .zbody.hist-fs .pfs-plot>svg.viz{width:100%;height:auto;max-width:100%;max-height:calc(100vh - 150px);cursor:default}
 #chartZoom .zbody.dfa-fs .pfs-plot,#chartZoom .zbody.hist-fs .pfs-plot{align-items:center}
 @media(max-width:860px){
-  #chartZoom .zbody.dfa-fs .pfs-plot>svg.viz,#chartZoom .zbody.hist-fs .pfs-plot>svg.viz{max-height:none}
-  /* Schmaler Schirm (iPhone): PLOT ZUERST + groß, Kennwerte kompakt darunter (nicht umgekehrt) */
-  #chartZoom .zbody.poinca-fs{flex-direction:column-reverse;overflow:auto;gap:14px}
-  .pfs-side{flex:0 0 auto;display:flex;flex-direction:row;flex-wrap:wrap;gap:8px;overflow:visible}
+  /* Schmaler Schirm (iPhone) — App-Philosophie: DÜNNER Kennwert-Streifen oben, PLOT DOMINANT darunter.
+     Guide/Hint/Kontextzeilen raus (leben im Info-Modal) → maximaler Raum für den Plot. */
+  #chartZoom .zbody.poinca-fs{flex-direction:column;overflow:hidden;gap:9px;padding:12px 12px 14px}
+  .pfs-side{flex:0 0 auto;display:flex;flex-direction:row;flex-wrap:nowrap;gap:6px;overflow-x:auto;-webkit-overflow-scrolling:touch}
   .pfs-side .pfs-hd{display:none}
   .pfs-hint{display:none}
-  .pfs-side .pfs-stat{flex:1;min-width:96px;padding:9px 11px}
-  .pfs-side .pfs-stat b{font-size:20px}
-  .pfs-side .pfs-guide{flex-basis:100%;order:9}
-  .pfs-plot{align-items:flex-start}
-  #chartZoom .zbody.poinca-fs .viz-hov{aspect-ratio:auto;height:auto;width:100%;max-height:none}
-  #chartZoom .zbody.poinca-fs .viz-hov svg{width:100%!important;height:auto!important;max-height:none!important}
+  .pfs-side .pfs-guide{display:none}
+  .pfs-side .pfs-stat{flex:1 1 0;min-width:0;padding:6px 9px 7px}
+  .pfs-side .pfs-stat::before{display:none}
+  .pfs-side .pfs-stat .k{font-size:8px;letter-spacing:.08em}
+  .pfs-side .pfs-stat b{font-size:16px;margin-top:1px;white-space:nowrap}
+  .pfs-side .pfs-stat b small{font-size:9px}
+  .pfs-side .pfs-stat .s{display:none}
+  .pfs-plot{flex:1;min-height:0;align-items:center;justify-content:center}
+  /* Poincaré (quadratisch): füllt die volle Höhe des Plot-Bereichs → dominanter Plot wie in der App */
+  #chartZoom .zbody.scatter-fs .viz-hov{aspect-ratio:1;height:100%;width:auto;max-width:100%;max-height:100%;margin:0}
+  #chartZoom .zbody.scatter-fs .viz-hov svg{width:100%!important;height:100%!important;max-width:none!important;max-height:none!important}
+  /* Breite Zeitreihen/Spektrum (spec-fs/dual-fs): breitenbasiert, mittig */
+  #chartZoom .zbody.spec-fs .viz-hov{aspect-ratio:auto;height:auto;width:100%;max-height:100%}
+  #chartZoom .zbody.spec-fs .viz-hov svg{width:100%!important;height:auto!important;max-height:calc(100% - 2px)!important}
+  /* DFA/Histogramm (nackte .viz): breitenbasiert, mittig, füllt Höhe wo möglich */
+  #chartZoom .zbody.dfa-fs .pfs-plot>svg.viz,#chartZoom .zbody.hist-fs .pfs-plot>svg.viz{max-height:100%}
 }
 .viz{cursor:zoom-in}
 .vm-groups{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px 22px;align-items:start}
@@ -5691,7 +5701,7 @@ const ChartZoom={
       const mx=sx/n,my=sy/n; let s1=0,s2=0; pts.forEach(p=>{s1+=Math.pow((p.rn-p.rn1)-(mx-my),2);s2+=Math.pow((p.rn+p.rn1)-(mx+my),2);});
       const sd1=Math.sqrt(s1/n/2),sd2=Math.sqrt(s2/n/2),ratio=sd1>0?sd2/sd1:0;
       const shp=sd1<10?['Ball','var(--red)']:sd1<25?['Torpedo','var(--amber)']:['Komet','var(--good)'];
-      body.className='zbody poinca-fs'; body.innerHTML='';
+      body.className='zbody poinca-fs scatter-fs'; body.innerHTML='';
       const side=document.createElement('div'); side.className='pfs-side';
       side.innerHTML=`<div class="pfs-hd">Poincaré<span>${n+1} Intervalle</span></div>`
         +`<div class="pfs-stat"><span class="k">SD1</span><b>${sd1.toFixed(1)} <small>ms</small></b><span class="s">Kurzzeit-Variabilität</span></div>`
