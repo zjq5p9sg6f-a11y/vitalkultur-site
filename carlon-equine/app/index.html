@@ -659,11 +659,12 @@ b.mdelta.bad{color:var(--red)}b.mdelta.warn{color:var(--amber)}b.mdelta.ok{color
 .detail-grid{display:grid;grid-template-columns:1.6fr 1fr;gap:var(--s4);align-items:start}
 /* Analyse spannt volle Breite unter dem 2-spaltigen Status/Stall-Kopf (nutzt breite iPad-Schirme, kein leerer Rechtsrand) */
 .detail-full{grid-column:1/-1;order:9;min-width:0}
-/* Pferdeakte: Haupt-Analysespalte (lang, dominant) + feste Metadaten-Sidebar rechts — KEIN Spalten-Totraum mehr.
-   Die lange Spalte gibt den Takt vor; die Sidebar endet natürlich (Dashboard-/CRM-Standard). */
-.detail-layout{display:grid;grid-template-columns:minmax(0,1fr) 336px;gap:var(--s4);align-items:start}
-.detail-layout>.detail-main,.detail-layout>.detail-side{min-width:0}
-.detail-layout>.detail-main>*:last-child,.detail-layout>.detail-side>*:last-child{margin-bottom:0}
+/* Pferdeakte: OBEN balancierter 2-Spalter (Status+Readiness+Kondition | Metadaten-Sidebar),
+   DARUNTER die schwere Analyse (Charts) in VOLLER Breite → kein Spalten-Totraum, Charts nutzen die ganze Breite. */
+.detail-layout{display:grid;grid-template-columns:minmax(0,1.55fr) minmax(300px,1fr);gap:var(--s4);align-items:start}
+.detail-layout>.detail-topmain,.detail-layout>.detail-side{min-width:0}
+.detail-layout>.detail-full{grid-column:1/-1;order:9;min-width:0}
+.detail-layout>.detail-topmain>*:last-child,.detail-layout>.detail-side>*:last-child{margin-bottom:0}
 @media(max-width:1040px){.detail-layout{grid-template-columns:1fr}}
 .verlauf-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:14px}
 .verlauf-grid .chart-wrap{margin:0}
@@ -3731,7 +3732,7 @@ const Views={
         </div>
       </div>
       <div class="detail-layout">
-        <div class="detail-main">
+        <div class="detail-topmain">
           <div class="panel" style="margin-bottom:var(--s4)">
             <h2><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12h4l3 8 4-16 3 8h4"/></svg>Aktueller Status</h2>
             ${(()=>{const amp=Triage.baselineAmpel(h,rec);const streak=Triage.fallingStreak(h.id);if(!amp&&streak<3)return'';const lvl=amp?amp.level:'warn';const parts=[];if(amp)parts.push(amp.text);if(streak>=3)parts.push(`RMSSD ${streak}× in Folge fallend`);return `<div class="warnbanner ${lvl}">${IC.bolt}<div><b>Auffällig · gegen die individuelle Baseline</b><span>${parts.map(esc).join(' · ')}</span></div></div>`;})()}
@@ -3749,6 +3750,8 @@ const Views={
           </div>
           ${Views.readinessCard(h)}
           ${Views.conditioningCard(h)}
+        </div>
+        <div class="detail-full">
           ${Views.voicePanel(h.id)}
           <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;flex-wrap:wrap;gap:8px">
             <div style="font-size:13px;font-weight:600;color:var(--text-secondary);display:flex;align-items:center;gap:8px">
