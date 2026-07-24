@@ -569,7 +569,10 @@ b.mdelta.bad{color:var(--red)}b.mdelta.warn{color:var(--amber)}b.mdelta.ok{color
 .panel{background:linear-gradient(160deg,rgba(26,26,30,.72),rgba(22,22,26,.64));border:1px solid var(--border-faint);
   border-radius:var(--r-l);padding:var(--s5);position:relative}
 .panel h2{font-family:var(--font-brand);font-weight:700;font-size:21px;letter-spacing:-.01em;margin-bottom:var(--s4);display:flex;align-items:center;gap:10px}
+/* Basis-Sizing für alle Sektions-Icons — verhindert Riesen-Icon wenn h2 NICHT in .panel steht (Signalanalyse-Umbau) */
+svg.ic{width:20px;height:20px;flex:0 0 auto;color:var(--cyan-deep)}
 .panel h2 .ic{width:20px;height:20px;color:var(--cyan-deep)}
+h2 svg.ic{width:20px;height:20px}
 
 /* ---- Roster grid ---- */
 .roster{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:var(--s3)}
@@ -1200,6 +1203,7 @@ svg.viz .sd-lbl{fill:var(--cyan-strong);font-size:10px;font-weight:600;font-fami
 .chart-hint{font-size:10.5px;color:var(--text-faint);margin-top:10px;font-family:var(--font-mono);letter-spacing:.01em;line-height:1.4}
 .chart-hint b{color:var(--text-dim);font-family:var(--font-ui)}
 .baev-box{text-align:center}
+.baev-box>svg.viz{margin:0 auto}   /* Gauge zentrieren (svg ist display:block → margin:auto statt text-align) */
 .baev-sub{font-size:10.5px;color:var(--text-secondary);line-height:1.5;margin-top:8px;font-variant-numeric:tabular-nums}
 /* ---- Interaktives Zeitreihen-Chart ---- */
 .ts-chart{position:relative;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none}
