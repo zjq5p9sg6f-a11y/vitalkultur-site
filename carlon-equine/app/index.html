@@ -2252,6 +2252,44 @@ const Chart={
     const _da=(sd1!=null&&sd2!=null)?` data-sd1="${sd1}" data-sd2="${sd2}" data-ratio="${sd2/sd1}" data-beats="${xs.length}"`:'';
     return Chart._hov(g,size,size,_hpts,"scatter",`max-width:${size}px`,_da);
   },
+  // Atemkurve (EDR/RSA-derived) — 1:1 iOS-App EquineBreathWaveChartView:
+  // RR − lokaler Moving-Average (10 Beats) = HF/Atem-Komponente · 98-Perzentil-Norm ·
+  // Einatmen Koralle #F27359 / Ausatmen Blau #4DA6F2 · Insp/Exsp-Achse · BrPM-Pille.
+  breathWave(rr,{w=720,h=220,dur=null}={}){
+    if(!rr||rr.length<16) return `<div style="color:var(--text-faint);font-size:12px;text-align:center;padding:30px">Zu wenige Schläge für die Atemkurve</div>`;
+    const pad={l:54,r:16,t:20,b:34};const plotW=w-pad.l-pad.r,plotH=h-pad.t-pad.b;
+    const raw=[];let cum=0;
+    for(let i=0;i<rr.length;i++){cum+=rr[i];const lo=Math.max(0,i-5),hi=Math.min(rr.length-1,i+5);let s=0;for(let j=lo;j<=hi;j++)s+=rr[j];raw.push({t:cum/1000,v:rr[i]-s/(hi-lo+1)});}
+    const absV=raw.map(r=>Math.abs(r.v)).sort((a,b)=>a-b);
+    const scale=Math.max(0.001,absV[Math.max(0,Math.min(absV.length-1,Math.floor(absV.length*0.98)))])/0.92;
+    const sm=raw.map((r,i)=>{const nv=Math.max(-1,Math.min(1,r.v/scale));let ph='unknown';if(i>0){const pv=Math.max(-1,Math.min(1,raw[i-1].v/scale));const sl=nv-pv;ph=Math.abs(sl)<0.06?'pause':(sl>0?'inhale':'exhale');}return{t:r.t,v:nv,ph};});
+    const T=dur||sm[sm.length-1].t||1;
+    const X=t=>pad.l+(t/T)*plotW,Y=v=>pad.t+(1-(v+1)/2)*plotH;
+    const COL={inhale:'#F27359',exhale:'#4DA6F2',pause:'rgba(150,150,150,.85)',unknown:'rgba(77,166,242,.7)'};
+    const midY=Y(0);
+    let g=`<rect x="${pad.l}" y="${pad.t}" width="${plotW.toFixed(1)}" height="${plotH.toFixed(1)}" rx="8" fill="#0E0E0E"/>`;
+    [1,0.5,-0.5,-1].forEach(v=>{const yy=Y(v);g+=`<line class="grid-minor" x1="${pad.l}" x2="${w-pad.r}" y1="${yy.toFixed(1)}" y2="${yy.toFixed(1)}"/>`;});
+    const xt=Chart.niceTicks(0,T,6);const xs=xt.length>1?xt[1]-xt[0]:30;
+    for(let v=0;v<=T+1e-6;v+=xs){const xx=X(v);g+=`<line class="grid-minor" x1="${xx.toFixed(1)}" x2="${xx.toFixed(1)}" y1="${pad.t}" y2="${h-pad.b}"/><text x="${xx.toFixed(1)}" y="${h-pad.b+13}" text-anchor="middle">${fmt0(v)}s</text>`;}
+    g+=`<line x1="${pad.l}" x2="${w-pad.r}" y1="${midY.toFixed(1)}" y2="${midY.toFixed(1)}" stroke="#fff" stroke-opacity=".28" stroke-width=".8" stroke-dasharray="4 4"/>`;
+    // Flächen ober-/unterhalb der Nulllinie (Koralle über, Blau unter)
+    let above=`M${X(sm[0].t).toFixed(1)},${midY.toFixed(1)}`,below=`M${X(sm[0].t).toFixed(1)},${midY.toFixed(1)}`;
+    sm.forEach(s=>{const x=X(s.t).toFixed(1);above+=` L${x},${(s.v>0?Y(s.v):midY).toFixed(1)}`;below+=` L${x},${(s.v<0?Y(s.v):midY).toFixed(1)}`;});
+    const lastX=X(sm[sm.length-1].t).toFixed(1);
+    g+=`<path d="${above} L${lastX},${midY.toFixed(1)} Z" fill="${COL.inhale}" fill-opacity="0.10"/><path d="${below} L${lastX},${midY.toFixed(1)} Z" fill="${COL.exhale}" fill-opacity="0.10"/>`;
+    // Phasen-segmentierte Kurve
+    let seg=`M${X(sm[0].t).toFixed(1)},${Y(sm[0].v).toFixed(1)}`,cur=sm[0].ph;
+    for(let i=1;i<sm.length;i++){if(sm[i].ph!==cur){g+=`<path d="${seg}" fill="none" stroke="${COL[cur]}" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>`;seg=`M${X(sm[i-1].t).toFixed(1)},${Y(sm[i-1].v).toFixed(1)}`;cur=sm[i].ph;}seg+=` L${X(sm[i].t).toFixed(1)},${Y(sm[i].v).toFixed(1)}`;}
+    g+=`<path d="${seg}" fill="none" stroke="${COL[cur]}" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>`;
+    g+=`<text x="${pad.l-8}" y="${(Y(1)+3).toFixed(1)}" text-anchor="end" style="fill:${COL.inhale};font-size:9px;font-weight:600">Insp</text>`;
+    g+=`<text x="${pad.l-8}" y="${(Y(-1)+3).toFixed(1)}" text-anchor="end" style="fill:${COL.exhale};font-size:9px;font-weight:600">Exsp</text>`;
+    g+=`<text x="${(pad.l+plotW/2).toFixed(0)}" y="${h-2}" text-anchor="middle" class="label-axis">ZEIT<tspan class="label-unit"> (s)</tspan></text>`;
+    // Atemfrequenz (BrPM) aus Abwärts-Nulldurchgängen — confidence-gated
+    let cross=0;for(let i=1;i<sm.length;i++){if(sm[i-1].v>0&&sm[i].v<=0)cross++;}
+    const brpm=T>0?cross/(T/60):0;
+    if(brpm>=3&&brpm<=60){const bc=brpm<=16?'var(--cyan)':brpm<=24?'#F0A93C':'#F27359';g+=`<g transform="translate(${pad.l+6},${pad.t+5})"><rect x="0" y="0" width="66" height="19" rx="9.5" fill="rgba(0,0,0,.55)" stroke="${bc}" stroke-opacity=".45"/><text x="10" y="13.5" style="fill:${bc};font-size:11px;font-weight:700;font-family:var(--font-mono)">${Math.round(brpm)} /min</text></g>`;}
+    return `<svg class="viz" viewBox="0 0 ${w} ${h}">${g}</svg>`;
+  },
   tachogram(rr,{w=720,h=230,color='var(--cyan)'}={}){
     if(!rr||rr.length<2) return `<div style="color:var(--text-faint);font-size:12px;text-align:center;padding:30px">Keine RR-Daten</div>`;
     const pad={l:52,r:16,t:14,b:32};const n=rr.length;
@@ -3901,12 +3939,14 @@ const Views={
       spectrum:'<path d="M4 20V11M9 20V5M14 20V13M19 20V8"/>',
       gauge:'<path d="M5 17a7 7 0 0114 0"/><path d="M12 17l4-4"/>',
       bars:'<path d="M5 20V12M10 20V6M15 20V10M20 20V15"/>',
-      dfa:'<path d="M3 18l5-5 4 3 8-9"/>'
+      dfa:'<path d="M3 18l5-5 4 3 8-9"/>',
+      lungs:'<path d="M12 4v8M8.5 12C6 13 5 15.5 5 18a2.5 2.5 0 005 0M15.5 12c2.5 1 3.5 3.5 3.5 6a2.5 2.5 0 01-5 0"/>'
     };
     const chead=(ico,title,ikey,right,rcol)=>`<div class="ct ct-app"><span class="ct-t"><svg class="ct-ico" viewBox="0 0 24 24" fill="none" stroke="var(--cyan)" stroke-width="2">${CHICO[ico]||''}</svg>${title}</span>${ikey?Info.btn(ikey):''}<span class="ct-sp"></span>${right?`<span class="ct-rt" style="color:${rcol||'var(--cyan)'}">${right}</span>`:''}</div>`;
     return `<div class="panel" style="margin-bottom:var(--s4)">
       <h2 style="font-size:16px"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 12h3l2-7 4 15 3-11 2 6h6"/></svg>Signalanalyse · ${fmtDate(rec.startedAt,true)}</h2>
       <div class="chart-wrap" style="margin:0 0 14px">${chead('tacho','Signalanalyse · Tachogramm',null,`<span style="font-family:var(--font-ui);font-weight:600;font-size:10.5px;letter-spacing:.03em"><span style="color:var(--cyan)">━ RR ms</span>&nbsp;&nbsp;<span style="color:var(--amber)">━ HF bpm</span></span>`)}${Chart.dualHrvBpm(rr)}<div class="chart-hint">Tippen zeigt die Schlag-Werte unter dem Finger · <b>⤢</b> öffnet die Vollbild-Analyse mit Fadenkreuz-Inspektor</div></div>
+      <div class="chart-wrap" style="margin:0 0 14px">${chead('lungs','Atemkurve · RSA-derived',null,`<span style="font-family:var(--font-ui);font-weight:600;font-size:10.5px;letter-spacing:.03em"><span style="color:#F27359">● Inspiration</span>&nbsp;&nbsp;<span style="color:#4DA6F2">● Expiration</span></span>`)}${Chart.breathWave(rr,{dur:rec.durationSec})}<div class="chart-hint">EDR — respiratorische Sinusarrhythmie aus der HRV-HF-Modulation. Einatmen verkürzt RR (Sympathikus), Ausatmen verlängert RR (Vagus).</div></div>
       ${chead('scatter','Poincaré-Plot','poincare', (m.sd1!=null&&m.sd2!=null)?`SD1 ${fmt1(m.sd1)} · SD2 ${fmt1(m.sd2)} <small>ms</small>`:'')}
       <div class="poinca-card">
         <div class="poinca-plot">${Chart.poincare(rr,{sd1:m.sd1,sd2:m.sd2,size:820})}</div>
