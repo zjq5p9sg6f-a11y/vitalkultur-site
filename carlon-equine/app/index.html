@@ -3901,7 +3901,7 @@ const Views={
       <div class="chart-wrap" style="margin:0 0 14px">${chead('tacho','Signalanalyse · Tachogramm',null,`<span style="font-family:var(--font-ui);font-weight:600;font-size:10.5px;letter-spacing:.03em"><span style="color:var(--cyan)">━ RR ms</span>&nbsp;&nbsp;<span style="color:var(--amber)">━ HF bpm</span></span>`)}${Chart.dualHrvBpm(rr)}<div class="chart-hint">Tippen zeigt die Schlag-Werte unter dem Finger · <b>⤢</b> öffnet die Vollbild-Analyse mit Fadenkreuz-Inspektor</div></div>
       ${chead('scatter','Poincaré-Plot','poincare', (m.sd1!=null&&m.sd2!=null)?`SD1 ${fmt1(m.sd1)} · SD2 ${fmt1(m.sd2)} <small>ms</small>`:'')}
       <div class="poinca-row">
-        <div class="poinca-plot">${Chart.poincare(rr,{sd1:m.sd1,sd2:m.sd2,size:620})}</div>
+        <div class="poinca-plot">${Chart.poincare(rr,{sd1:m.sd1,sd2:m.sd2,size:780})}</div>
         <div class="poinca-aside">
           <div class="shape-leg">
             <div class="sl${m.sd1!=null&&m.sd1>=25?' on':''}"><svg class="sl-ic" viewBox="0 0 26 16"><ellipse cx="13" cy="8" rx="11" ry="3.4" transform="rotate(-22 13 8)" fill="none" stroke="var(--good)" stroke-width="1.6"/></svg><div class="sl-t"><b style="color:var(--good)">Komet</b><span>breite Wolke mit Schweif — flexibles, gesundes autonomes System</span></div></div>
