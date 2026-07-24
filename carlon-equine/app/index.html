@@ -1076,6 +1076,9 @@ svg.viz .sd-lbl{fill:var(--cyan-strong);font-size:10px;font-weight:600;font-fami
 .viz-hov .hov-focus2{fill:var(--amber);filter:drop-shadow(0 0 5px var(--amber))}
 .viz-hov .hov-focus.on{opacity:1}
 .viz-hov .hov-tip{position:absolute;pointer-events:none;transform:translate(-50%,calc(-100% - 12px));background:var(--bg-elev-2);border:1px solid var(--border-strong);border-radius:9px;padding:7px 11px;opacity:0;transition:opacity .1s;white-space:nowrap;z-index:4;box-shadow:0 8px 24px -8px rgba(0,0,0,.7)}
+/* Touch: Box höher ÜBER dem Finger und nach LINKS versetzt (Finger verdeckt sie sonst) — nahe linkem Rand nach rechts kippen */
+.viz-hov .hov-tip.touch{transform:translate(calc(-100% - 14px),calc(-100% - 30px))}
+.viz-hov .hov-tip.touch.tright{transform:translate(14px,calc(-100% - 30px))}
 .viz-hov .hov-tip.on{opacity:1}
 .viz-hov .hov-tip .tt-date{font-size:10px;color:var(--text-dim);letter-spacing:.04em;margin-bottom:3px}
 .viz-hov .hov-tip .tt-val{font-family:var(--font-mono);font-size:15px;font-weight:600;letter-spacing:-.02em}
@@ -2289,6 +2292,9 @@ const Chart={
       else html=`<div class="tt-date">Schlag ${best.i+1}</div><div class="tt-val">${best.rr} ms</div><div class="tt-cls" style="color:var(--text-secondary)">${best.hr} bpm</div>`;
       const ay=best.y2!=null?Math.min(best.y,best.y2):best.y;
       tip.style.left=(best.x/W*rect.width)+'px';tip.style.top=(ay/H*rect.height)+'px';
+      const _isTouch=(e.pointerType==='touch'||e.pointerType==='pen');
+      tip.classList.toggle('touch',_isTouch);
+      tip.classList.toggle('tright',_isTouch && (best.x/W)<0.42);   // nahe linkem Rand: nach rechts kippen
       tip.innerHTML=html;tip.classList.add('on');
     };
     document.addEventListener('mousemove',onMove,{passive:true});
