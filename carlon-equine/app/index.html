@@ -657,6 +657,10 @@ b.mdelta.bad{color:var(--red)}b.mdelta.warn{color:var(--amber)}b.mdelta.ok{color
 
 /* ---- Detail ---- */
 .detail-grid{display:grid;grid-template-columns:1.6fr 1fr;gap:var(--s4);align-items:start}
+/* Analyse spannt volle Breite unter dem 2-spaltigen Status/Stall-Kopf (nutzt breite iPad-Schirme, kein leerer Rechtsrand) */
+.detail-full{grid-column:1/-1;order:9;min-width:0}
+.verlauf-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:14px}
+.verlauf-grid .chart-wrap{margin:0}
 .subject-hero{display:flex;align-items:center;gap:var(--s4);margin-bottom:var(--s4);flex-wrap:wrap}
 .avatar{width:74px;height:74px;border-radius:20px;background:linear-gradient(135deg,var(--bg-elev-2),var(--bg-surface));
   border:1px solid var(--border-strong);display:flex;align-items:center;justify-content:center;font-family:var(--font-brand);
@@ -3684,6 +3688,8 @@ const Views={
               <div style="font-size:11px;color:var(--text-faint);margin-top:8px;font-style:italic">Priorisierungshilfe, keine Diagnose. Klinische Beurteilung durch Tierarzt/Tierärztin.</div>
             </div>`:''}
           </div>
+        </div>
+        <div class="detail-full">
           ${Views.readinessCard(h)}
           ${Views.conditioningCard(h)}
           ${Views.voicePanel(h.id)}
@@ -3693,6 +3699,7 @@ const Views={
               Historische Werte &amp; Monitoring</div>
             ${recs.length>1?Views.rangeSeg():''}
           </div>
+          <div class="verlauf-grid">
           <div class="chart-wrap">
             <div class="ct"><span>RMSSD-Verlauf ${Views.deltaChip(rmssdSeries,true)}</span><span class="leg"><i style="color:var(--cyan)">RMSSD ms</i><i style="color:var(--good)">typ. Bereich</i><i style="color:var(--text-secondary)">Baseline</i></span></div>
             ${Chart.ts(rmssdSeries,{band:[40,100],color:'var(--cyan)',unit:'ms',baseline:h.baselineRMSSD,baselineLabel:'Baseline',classify:Views.clsRMSSD})}
@@ -3704,6 +3711,7 @@ const Views={
           <div class="chart-wrap">
             <div class="ct"><span>SDNN-Verlauf ${Views.deltaChip(sdnnSeries,true)}</span><span class="leg"><i style="color:var(--cyan-strong)">SDNN ms</i></span></div>
             ${Chart.ts(sdnnSeries,{color:'var(--cyan-strong)',unit:'ms',classify:Views.clsSDNN})}
+          </div>
           </div>
           ${Views.signalPanel(rec)}
           ${Views.asthmaPanel(recs)}
@@ -3854,7 +3862,7 @@ const Views={
           </div>
         </div>
         <div class="baev-box">
-          ${chead('gauge','Baevsky-Stress-Index','baevsky', bv?`√SI ${fmt1(bv.sqrtSI)}`:'', 'var(--amber)')}
+          ${chead('gauge','Baevsky-Stress-Index','baevsky')}
           ${HRV.gauge(bv?bv.sqrtSI:null)}
           ${HRV.gaugeZones(bv?bv.sqrtSI:null)}
           <div class="baev-sub">AMo ${bv?fmt1(bv.AMo):'–'} % · Mo ${bv?fmt0(bv.Mo*1000):'–'} ms · √SI ${bv?fmt1(bv.sqrtSI):'–'}<br>
