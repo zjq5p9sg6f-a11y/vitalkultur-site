@@ -1138,29 +1138,26 @@ svg.viz .sd-lbl{fill:var(--cyan-strong);font-size:10px;font-weight:600;font-fami
   #chartZoom .zbody.dfa-fs .pfs-plot>svg.viz,#chartZoom .zbody.hist-fs .pfs-plot>svg.viz{max-height:100%}
 }
 .viz{cursor:zoom-in}
-/* Kennwerte als gestapelte KATEGORIE-BÄNDER (volle Breite, gleich große Kacheln) statt 4 ungleich hoher Spalten → kein ausgefranster Boden */
-.vm-groups{display:flex;flex-direction:column;gap:18px}
-.vm-glabel{font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--text-dim);font-weight:700;margin-bottom:9px;padding-left:2px}
-.viz-metrics{display:flex;flex-wrap:wrap;gap:9px}
-.viz-metrics .vm{flex:1 1 158px;min-width:150px;max-width:230px}
+/* Kennwerte = gleichmäßiges Raster wie die iOS-App (gleiche Kacheln, KEINE Kategorie-Überschriften) */
+.vm-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(185px,1fr));gap:9px}
 /* Metrik-Kacheln wie die App: farbcodiertes Label + großer Wert + Kontext-Zeile, Anthrazit + Licht-Oberkante */
-.viz-metrics .vm{background:var(--bg-elev);border:1px solid var(--border-faint);border-radius:13px;padding:13px 15px 14px;position:relative;overflow:hidden}
-.viz-metrics .vm::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,.07),transparent)}
-.viz-metrics .vm .k{font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--cyan);font-weight:700}
-.viz-metrics .vm .v{font-family:var(--font-mono);font-size:25px;font-weight:700;font-variant-numeric:tabular-nums;color:var(--text-primary);margin-top:5px;letter-spacing:-.015em;line-height:1.02}
-.viz-metrics .vm .v small{font-size:12px;color:var(--text-dim);font-weight:500}
-.viz-metrics .vm .ctx{font-size:10px;color:var(--text-dim);margin-top:6px;letter-spacing:.01em;line-height:1.35}
+.vm-grid .vm{background:var(--bg-elev);border:1px solid var(--border-faint);border-radius:13px;padding:13px 15px 14px;position:relative;overflow:hidden}
+.vm-grid .vm::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,.07),transparent)}
+.vm-grid .vm .k{font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--cyan);font-weight:700}
+.vm-grid .vm .v{font-family:var(--font-mono);font-size:25px;font-weight:700;font-variant-numeric:tabular-nums;color:var(--text-primary);margin-top:5px;letter-spacing:-.015em;line-height:1.02}
+.vm-grid .vm .v small{font-size:12px;color:var(--text-dim);font-weight:500}
+.vm-grid .vm .ctx{font-size:10px;color:var(--text-dim);margin-top:6px;letter-spacing:.01em;line-height:1.35}
 .freq-row{display:block;margin-top:22px;padding-top:18px;border-top:1px solid var(--border-faint)}
 .freq-spec{margin-bottom:22px}
 .geo-row{display:grid;grid-template-columns:1fr 1fr;gap:20px;align-items:start;margin-top:20px;padding-top:18px;border-top:1px solid var(--border-faint)}
 @media(max-width:820px){.freq-row,.geo-row{grid-template-columns:1fr}}
 /* Poincaré-Zeile: GROSSER quadratischer Plot + Form-Legende — füllt die Karte, kein Totraum (App-Stil).
    Breit (≥900px): Plot links dominant, Legende rechts gestapelt. Schmal: Plot groß oben, Legende darunter. */
-.poinca-row{display:grid;grid-template-columns:1fr;gap:24px;margin-bottom:22px;align-items:center}
-/* Plot DOMINANT (füllt bis 780px), Legende schmal fixiert — nicht mehr Plot≈Legende breit */
-@media(min-width:900px){.poinca-row{grid-template-columns:minmax(0,1fr) 280px}}
-.poinca-plot{display:flex;justify-content:center;min-width:0;margin:0}
-.poinca-plot .viz-hov{width:100%;max-width:780px}   /* großer quadratischer Plot */
+/* Poincaré wie iOS-App: eigene Karte, Plot GROSS + ZENTRIERT, einzeilige Bildunterschrift darunter — KEINE Legende daneben */
+.poinca-card{margin-bottom:22px}
+.poinca-plot{display:flex;justify-content:center;min-width:0;margin:0 0 12px}
+.poinca-plot .viz-hov{width:100%;max-width:820px}
+.poinca-cap{font-size:11px;color:var(--text-dim);line-height:1.6}
 .poinca-aside{min-width:0;margin:0}
 .shape-leg{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
 @media(min-width:900px){.shape-leg{grid-template-columns:1fr}}   /* rechte Spalte: vertikal gestapelt */
@@ -3900,33 +3897,13 @@ const Views={
       <h2 style="font-size:16px"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 12h3l2-7 4 15 3-11 2 6h6"/></svg>Signalanalyse · ${fmtDate(rec.startedAt,true)}</h2>
       <div class="chart-wrap" style="margin:0 0 14px">${chead('tacho','Signalanalyse · Tachogramm',null,`<span style="font-family:var(--font-ui);font-weight:600;font-size:10.5px;letter-spacing:.03em"><span style="color:var(--cyan)">━ RR ms</span>&nbsp;&nbsp;<span style="color:var(--amber)">━ HF bpm</span></span>`)}${Chart.dualHrvBpm(rr)}<div class="chart-hint">Tippen zeigt die Schlag-Werte unter dem Finger · <b>⤢</b> öffnet die Vollbild-Analyse mit Fadenkreuz-Inspektor</div></div>
       ${chead('scatter','Poincaré-Plot','poincare', (m.sd1!=null&&m.sd2!=null)?`SD1 ${fmt1(m.sd1)} · SD2 ${fmt1(m.sd2)} <small>ms</small>`:'')}
-      <div class="poinca-row">
-        <div class="poinca-plot">${Chart.poincare(rr,{sd1:m.sd1,sd2:m.sd2,size:780})}</div>
-        <div class="poinca-aside">
-          <div class="shape-leg">
-            <div class="sl${m.sd1!=null&&m.sd1>=25?' on':''}"><svg class="sl-ic" viewBox="0 0 26 16"><ellipse cx="13" cy="8" rx="11" ry="3.4" transform="rotate(-22 13 8)" fill="none" stroke="var(--good)" stroke-width="1.6"/></svg><div class="sl-t"><b style="color:var(--good)">Komet</b><span>breite Wolke mit Schweif — flexibles, gesundes autonomes System</span></div></div>
-            <div class="sl${m.sd1!=null&&m.sd1>=10&&m.sd1<25?' on':''}"><svg class="sl-ic" viewBox="0 0 26 16"><ellipse cx="13" cy="8" rx="11" ry="2" transform="rotate(-22 13 8)" fill="none" stroke="var(--amber)" stroke-width="1.6"/></svg><div class="sl-t"><b style="color:var(--amber)">Torpedo</b><span>schmale Ellipse — reduzierte Variabilität, Anspannung</span></div></div>
-            <div class="sl${m.sd1!=null&&m.sd1<10?' on':''}"><svg class="sl-ic" viewBox="0 0 26 16"><circle cx="13" cy="8" r="3.4" fill="none" stroke="var(--red)" stroke-width="1.6"/></svg><div class="sl-t"><b style="color:var(--red)">Ball</b><span>kompakt/rund — sehr niedrige HRV, kritisch prüfen</span></div></div>
-          </div>
-          <div class="shape-now">Diese Aufnahme: <b style="color:${m.sd1==null?'var(--text-dim)':m.sd1<10?'var(--red)':m.sd1<25?'var(--amber)':'var(--good)'}">${m.sd1==null?'—':m.sd1<10?'Ball · sehr niedrig':m.sd1<25?'Torpedo-Tendenz':'Komet · flexibel'}</b> · SD1 ${m.sd1!=null?fmt1(m.sd1):'—'} ms</div>
-        </div>
+      <div class="poinca-card">
+        <div class="poinca-plot">${Chart.poincare(rr,{sd1:m.sd1,sd2:m.sd2,size:820})}</div>
+        <div class="poinca-cap">Jeder Punkt = ein Herzschlag (RRₙ) gegen den nächsten (RRₙ₊₁). <b style="color:var(--cyan)">SD1</b> (quer zur Diagonale) = Kurzzeit-/Vagus-Variabilität, <b style="color:var(--cyan)">SD2</b> (entlang) = Langzeit-Variabilität. Kompakte Wolke = geringe HRV, breite Wolke = flexibles autonomes Nervensystem.${m.sd1!=null?` · <b style="color:${m.sd1<10?'var(--red)':m.sd1<25?'var(--amber)':'var(--good)'}">Diese Aufnahme: ${m.sd1<10?'Ball · sehr niedrig':m.sd1<25?'Torpedo-Tendenz':'Komet · flexibel'}</b>`:''}</div>
       </div>
         <div><div class="ct" style="margin-bottom:12px"><span>HRV-Kennwerte</span></div>
-          <div class="vm-groups">
-            <div class="vm-group"><div class="vm-glabel">Zeitdomäne</div><div class="viz-metrics">
-              ${vm('RMSSD',m.rmssd,'ms')}${vm('SDNN',m.sdnn,'ms')}${vm('pNN50',m.pnn50,'%',true)}
-              ${vm('meanRR',meanRR,'ms')}${vm('Min-HF',m.minHR,'bpm')}${vm('Max-HF',m.maxHR,'bpm')}
-            </div></div>
-            <div class="vm-group"><div class="vm-glabel">Geometrie · Poincaré</div><div class="viz-metrics">
-              ${vm('SD1',m.sd1,'ms')}${vm('SD2',m.sd2,'ms')}${vm('SD2/SD1',m.sd2sd1,'',2)}
-              ${vm('TINN',tt?tt.tinn:null,'ms')}${vm('Tri-Index',tt?tt.triIndex:null,'',true)}
-            </div></div>
-            <div class="vm-group"><div class="vm-glabel">Nichtlinear</div><div class="viz-metrics">
-              ${vm('DFA α1',dfa1,'',2)}${vm('SampEn',se,'',true)}
-            </div></div>
-            <div class="vm-group"><div class="vm-glabel">Signalqualität</div><div class="viz-metrics">
-              ${vm('Artefakt',m.artifactPct,'%',true)}${vm('AV-Block',m.avBlock,'')}
-            </div></div>
+          <div class="vm-grid">
+            ${vm('RMSSD',m.rmssd,'ms')}${vm('SDNN',m.sdnn,'ms')}${vm('pNN50',m.pnn50,'%',true)}${vm('meanRR',meanRR,'ms')}${vm('Min-HF',m.minHR,'bpm')}${vm('Max-HF',m.maxHR,'bpm')}${vm('SD1',m.sd1,'ms')}${vm('SD2',m.sd2,'ms')}${vm('SD2/SD1',m.sd2sd1,'',2)}${vm('TINN',tt?tt.tinn:null,'ms')}${vm('Tri-Index',tt?tt.triIndex:null,'',true)}${vm('DFA α1',dfa1,'',2)}${vm('SampEn',se,'',true)}${vm('Artefakt',m.artifactPct,'%',true)}${vm('AV-Block',m.avBlock,'')}
           </div>
         </div>
       <div class="freq-row">
