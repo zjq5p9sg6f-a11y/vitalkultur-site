@@ -2587,17 +2587,29 @@ const HRV={
     return Chart._hov(g,w,h,_sm,"spec");
   },
   // Baevsky-Gauge (Halbkreis-Tacho, orientierend)
-  gauge(si,{w=230,h=140}={}){   // si = √SI (equine-skaliert, Stucke 2015) — stabile Skala 0–30
+  gauge(si,{w=360,h=214}={}){   // si = √SI (equine-skaliert, Stucke 2015) — stabile Skala 0–30 · Optik 1:1 iOS-App
     if(si==null)return '';
-    const cx=w/2,cy=h-14,r=w/2-22; const smax=30; const v=Math.max(0,Math.min(smax,si));
+    const cx=w/2,cy=h-30,r=w/2-42; const smax=30; const v=Math.max(0,Math.min(smax,si));
     const ang=a=>Math.PI-(a/smax)*Math.PI; // 0→π (links), smax→0 (rechts)
     const pt=(a,rr)=>[cx+Math.cos(ang(a))*rr,cy-Math.sin(ang(a))*rr];
-    const arc=(a0,a1,rr,col)=>{const[x0,y0]=pt(a0,rr),[x1,y1]=pt(a1,rr);const laf=(a1-a0)>smax/2?1:0;return `<path d="M${x0.toFixed(1)},${y0.toFixed(1)} A${rr},${rr} 0 ${laf} 1 ${x1.toFixed(1)},${y1.toFixed(1)}" fill="none" stroke="${col}" stroke-width="11" stroke-linecap="butt"/>`;};
-    let g=arc(0,7,r,'var(--good)')+arc(7,15,r,'var(--cyan)')+arc(15,25,r,'var(--amber)')+arc(25,smax,r,'var(--red)');
-    const[nx,ny]=pt(v,r-4);
-    g+=`<line x1="${cx}" y1="${cy}" x2="${nx.toFixed(1)}" y2="${ny.toFixed(1)}" stroke="var(--text-primary)" stroke-width="2.5"/><circle cx="${cx}" cy="${cy}" r="4" fill="var(--text-primary)"/>`;
-    g+=`<text x="${cx}" y="${(cy-r*0.42).toFixed(0)}" text-anchor="middle" font-family="var(--font-brand)" font-weight="600" font-size="26" fill="var(--text-primary)">${fmt1(si)}</text>`;
-    g+=`<text x="${cx}" y="${(cy-r*0.42+16).toFixed(0)}" text-anchor="middle" font-size="9" fill="var(--text-dim)" letter-spacing="1">√SI</text>`;
+    // Gedämpfte App-Zonenfarben (nicht grell): Ruhig grün · Aktiv stahlblau · Stress braun · Alarm dunkelrot
+    const ZC={ruhig:'#3E8E57',aktiv:'#3E76A0',stress:'#9C6A2E',alarm:'#9C3A3A'};
+    const gap=0.35;
+    const arc=(a0,a1,col)=>{const[x0,y0]=pt(a0+gap,r),[x1,y1]=pt(Math.max(a0+gap,a1-gap),r);const laf=(a1-a0)>smax/2?1:0;return `<path d="M${x0.toFixed(1)},${y0.toFixed(1)} A${r},${r} 0 ${laf} 1 ${x1.toFixed(1)},${y1.toFixed(1)}" fill="none" stroke="${col}" stroke-width="15" stroke-linecap="butt"/>`;};
+    let g=arc(0,7,ZC.ruhig)+arc(7,15,ZC.aktiv)+arc(15,25,ZC.stress)+arc(25,smax,ZC.alarm);
+    // Zonen-Labels auf dem Bogen (Mitte jeder Zone, in Zonenfarbe)
+    const zl=(mid,txt,col)=>{const[x,y]=pt(mid,r-28);return `<text x="${x.toFixed(1)}" y="${(y+3).toFixed(1)}" text-anchor="middle" font-size="9" font-weight="700" letter-spacing=".05em" fill="${col}">${txt}</text>`;};
+    g+=zl(3.5,'RUHIG',ZC.ruhig)+zl(11,'AKTIV',ZC.aktiv)+zl(20,'STRESS',ZC.stress)+zl(27.5,'ALARM',ZC.alarm);
+    // Tick-Zahlen an den Zonen-Grenzen (0 · 7 · 25 · 30)
+    const tk=(a,txt)=>{const[x,y]=pt(a,r+17);return `<text x="${x.toFixed(1)}" y="${(y+3).toFixed(1)}" text-anchor="middle" font-size="9.5" font-family="var(--font-mono)" fill="var(--text-dim)">${txt}</text>`;};
+    g+=tk(0,'0')+tk(7,'7')+tk(25,'25')+tk(30,'30');
+    // Nadel hellblau + Pivot (wie App)
+    const[nx,ny]=pt(v,r-8);
+    g+=`<line x1="${cx}" y1="${cy}" x2="${nx.toFixed(1)}" y2="${ny.toFixed(1)}" stroke="#5AB8E8" stroke-width="3" stroke-linecap="round"/>`;
+    g+=`<circle cx="${cx}" cy="${cy}" r="7.5" fill="#5AB8E8"/><circle cx="${cx}" cy="${cy}" r="3.2" fill="var(--bg-void)"/>`;
+    // Große Zahl mittig
+    g+=`<text x="${cx}" y="${(cy-50).toFixed(0)}" text-anchor="middle" font-family="var(--font-brand)" font-weight="700" font-size="40" fill="var(--text-primary)">${fmt1(si)}</text>`;
+    g+=`<text x="${cx}" y="${(cy-31).toFixed(0)}" text-anchor="middle" font-size="12" fill="var(--text-dim)" letter-spacing="2">√SI</text>`;
     return `<svg class="viz" viewBox="0 0 ${w} ${h}" style="max-width:${w}px">${g}</svg>`;
   },
   // Zonen-Legende für die Baevsky-Gauge (√SI, equine — Stucke 2015)
@@ -3915,9 +3927,8 @@ const Views={
           </div>
         </div>
         <div class="baev-box" data-si="${bv?bv.SI.toFixed(1):''}" data-sqrtsi="${bv?bv.sqrtSI.toFixed(1):''}" data-amo="${bv?bv.AMo.toFixed(1):''}" data-mo="${bv?(bv.Mo*1000).toFixed(0):''}" data-mxdmn="${bv?(bv.MxDMn*1000).toFixed(0):''}">
-          ${chead('gauge','Baevsky-Stress-Index','baevsky')}
+          ${(()=>{const si=bv?bv.sqrtSI:null;const z=si==null?['—','var(--text-dim)']:si<7?['Ruhig','#3E8E57']:si<15?['Aktiv','#3E76A0']:si<25?['Stress','#9C6A2E']:['Alarm','#9C3A3A'];return chead('gauge','Baevsky-Stress-Index','baevsky',`<span style="font-weight:700;font-size:10.5px;letter-spacing:.09em;padding:3px 12px;border-radius:99px;background:color-mix(in srgb,${z[1]} 16%,transparent);color:${z[1]};border:1px solid color-mix(in srgb,${z[1]} 55%,transparent)">${z[0].toUpperCase()}</span>`,z[1]);})()}
           ${HRV.gauge(bv?bv.sqrtSI:null)}
-          ${HRV.gaugeZones(bv?bv.sqrtSI:null)}
           <div class="baev-sub">AMo ${bv?fmt1(bv.AMo):'–'} % · Mo ${bv?fmt0(bv.Mo*1000):'–'} ms · √SI ${bv?fmt1(bv.sqrtSI):'–'}<br>
           <span style="color:var(--text-faint)">orientierend · keine equine Norm — individuelle Baseline maßgeblich</span></div>
         </div>
