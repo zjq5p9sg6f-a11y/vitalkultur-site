@@ -3753,11 +3753,11 @@ const Views={
         </div>
         <div class="detail-full">
           ${Views.voicePanel(h.id)}
-          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;flex-wrap:wrap;gap:8px">
+          ${recs.length>1?`<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;flex-wrap:wrap;gap:8px">
             <div style="font-size:13px;font-weight:600;color:var(--text-secondary);display:flex;align-items:center;gap:8px">
               <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--cyan)" stroke-width="2"><path d="M3 3v18h18"/><path d="M7 14l4-4 3 3 5-6"/></svg>
               Historische Werte &amp; Monitoring</div>
-            ${recs.length>1?Views.rangeSeg():''}
+            ${Views.rangeSeg()}
           </div>
           <div class="verlauf-grid">
           <div class="chart-wrap">
@@ -3772,7 +3772,7 @@ const Views={
             <div class="ct"><span>SDNN-Verlauf ${Views.deltaChip(sdnnSeries,true)}</span><span class="leg"><i style="color:var(--cyan-strong)">SDNN ms</i></span></div>
             ${Chart.ts(sdnnSeries,{color:'var(--cyan-strong)',unit:'ms',classify:Views.clsSDNN})}
           </div>
-          </div>
+          </div>`:''}
           ${Views.signalPanel(rec)}
           ${Views.asthmaPanel(recs)}
           ${Views.trainingPanel(recs,h)}
