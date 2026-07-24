@@ -2263,7 +2263,8 @@ const Chart={
     const absV=raw.map(r=>Math.abs(r.v)).sort((a,b)=>a-b);
     const scale=Math.max(0.001,absV[Math.max(0,Math.min(absV.length-1,Math.floor(absV.length*0.98)))])/0.92;
     const sm=raw.map((r,i)=>{const nv=Math.max(-1,Math.min(1,r.v/scale));let ph='unknown';if(i>0){const pv=Math.max(-1,Math.min(1,raw[i-1].v/scale));const sl=nv-pv;ph=Math.abs(sl)<0.06?'pause':(sl>0?'inhale':'exhale');}return{t:r.t,v:nv,ph};});
-    const T=dur||sm[sm.length-1].t||1;
+    // Achse folgt der tatsächlichen Datenspanne (dur nur, wenn sie dazu passt) → Kurve füllt die Breite, kein Leerraum rechts
+    const span=sm[sm.length-1].t||1; const T=(dur&&Math.abs(dur-span)<=span*0.15)?dur:span;
     const X=t=>pad.l+(t/T)*plotW,Y=v=>pad.t+(1-(v+1)/2)*plotH;
     const COL={inhale:'#F27359',exhale:'#4DA6F2',pause:'rgba(150,150,150,.85)',unknown:'rgba(77,166,242,.7)'};
     const midY=Y(0);
