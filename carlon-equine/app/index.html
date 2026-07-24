@@ -1040,10 +1040,13 @@ svg.viz .sd-lbl{fill:var(--cyan-strong);font-size:10px;font-weight:600;font-fami
 .vm-groups{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px 22px;align-items:start}
 .vm-glabel{font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--text-dim);font-weight:700;margin-bottom:8px;padding-left:2px}
 .viz-metrics{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
-.viz-metrics .vm{background:var(--bg-deep);border:1px solid var(--border-faint);border-radius:9px;padding:9px 11px}
-.viz-metrics .vm .k{font-size:9px;letter-spacing:.08em;text-transform:uppercase;color:var(--text-dim);font-weight:600}
-.viz-metrics .vm .v{font-family:var(--font-mono);font-size:17px;font-weight:600;font-variant-numeric:tabular-nums;margin-top:2px}
-.viz-metrics .vm .v small{font-size:10px;color:var(--text-secondary);font-weight:400}
+/* Metrik-Kacheln wie die App: farbcodiertes Label + großer Wert + Kontext-Zeile, Anthrazit + Licht-Oberkante */
+.viz-metrics .vm{background:var(--bg-elev);border:1px solid var(--border-faint);border-radius:12px;padding:11px 13px 12px;position:relative;overflow:hidden}
+.viz-metrics .vm::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,.07),transparent)}
+.viz-metrics .vm .k{font-size:9.5px;letter-spacing:.11em;text-transform:uppercase;color:var(--cyan);font-weight:700}
+.viz-metrics .vm .v{font-family:var(--font-mono);font-size:21px;font-weight:700;font-variant-numeric:tabular-nums;color:var(--text-primary);margin-top:4px;letter-spacing:-.01em;line-height:1.05}
+.viz-metrics .vm .v small{font-size:11px;color:var(--text-dim);font-weight:500}
+.viz-metrics .vm .ctx{font-size:10px;color:var(--text-dim);margin-top:6px;letter-spacing:.01em;line-height:1.35}
 .freq-row{display:grid;grid-template-columns:1fr 250px;gap:20px;align-items:start;margin-top:20px;padding-top:18px;border-top:1px solid var(--border-faint)}
 .geo-row{display:grid;grid-template-columns:1fr 1fr;gap:20px;align-items:start;margin-top:20px;padding-top:18px;border-top:1px solid var(--border-faint)}
 @media(max-width:820px){.freq-row,.geo-row{grid-template-columns:1fr}}
@@ -3651,7 +3654,18 @@ const Views={
     const dfa1=(m.dfa!=null)?m.dfa:HRV.dfaAlpha1(rr);
     const meanRR=rr.reduce((a,b)=>a+b,0)/rr.length;
     const lfhf=(bd&&bd.lfhf!=null)?bd.lfhf:m.lfhf;
-    const vm=(k,v,u,dec)=>`<div class="vm"><div class="k">${k}</div><div class="v">${v==null?'<span class="na" title="kurze Aufnahme / nicht im Export">n. v.</span>':(dec===2?fmt2(v):dec?fmt1(v):fmt0(v))}${(v!=null&&u)?`<small> ${u}</small>`:''}</div></div>`;
+    // Metrik-Meta wie die App: [Label-Farbe, Kontext-Zeile (Bereich/Bedeutung · Quelle)]
+    const VMETA={
+      'RMSSD':['var(--cyan)','Vagal · 25–120'], 'SDNN':['var(--cyan)','Overall · 50–200'],
+      'pNN50':['var(--cyan)','Vagal · 5–40'], 'meanRR':['var(--cyan)','Mittleres RR'],
+      'Min-HF':['var(--cyan)','Ruhe-Tiefe'], 'Max-HF':['var(--cyan)','Belastungs-Spitze'],
+      'SD1':['var(--cyan)','Kurzzeit · vagal'], 'SD2':['var(--cyan)','Langzeit'],
+      'SD2/SD1':['var(--cyan)','Sympatho/Parasym'], 'TINN':['var(--cyan)','Geometrisch'],
+      'Tri-Index':['var(--cyan)','Verteilungsbreite'],
+      'DFA α1':['var(--harmony)','≈1,0 gesund · Peng 1995'], 'SampEn':['var(--cyan)','Komplexität · Richman 2000'],
+      'Artefakt':['var(--amber)','Signalqualität'], 'AV-Block':['var(--cyan)','benigne bei Sport']
+    };
+    const vm=(k,v,u,dec)=>{const mm=VMETA[k]||['var(--cyan)',''];return `<div class="vm"><div class="k" style="color:${mm[0]}">${k}</div><div class="v">${v==null?'<span class="na" title="kurze Aufnahme / nicht im Export">n. v.</span>':(dec===2?fmt2(v):dec?fmt1(v):fmt0(v))}${(v!=null&&u)?`<small> ${u}</small>`:''}</div>${mm[1]?`<div class="ctx">${mm[1]}</div>`:''}</div>`;};
     const pw=(k,label,v)=>`<div class="pwr"><span class="pk" style="color:${HRV.BANDCOL[k]||'var(--text-secondary)'}">${label}</span><b>${v==null?'n.v.':fmt0(v)}</b></div>`;
     return `<div class="panel" style="margin-bottom:var(--s4)">
       <h2 style="font-size:16px"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 12h3l2-7 4 15 3-11 2 6h6"/></svg>Signalanalyse · ${fmtDate(rec.startedAt,true)}</h2>
