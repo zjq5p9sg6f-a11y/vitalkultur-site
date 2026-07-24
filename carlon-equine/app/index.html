@@ -1097,6 +1097,10 @@ svg.viz .sd-lbl{fill:var(--cyan-strong);font-size:10px;font-weight:600;font-fami
 /* Baevsky-Vollbild: große Gauge (nutzt den Poincaré-Sidebar-Rahmen) */
 #chartZoom .zbody.baev-fs .baev-plot{align-items:center;justify-content:center}
 #chartZoom .zbody.baev-fs .baev-plot svg{width:100%!important;height:auto!important;max-width:min(88vw,540px)!important;max-height:none!important;aspect-ratio:auto}
+/* Spektrum-Vollbild: breite Balken (kein Quadrat-Zwang, überschreibt die Poincaré-Regel) */
+#chartZoom .zbody.spec-fs .viz-hov,#chartZoom .zbody.spec-fs .spec-plot .viz-hov{aspect-ratio:auto;height:auto;width:100%;max-width:100%;max-height:none;margin:0}
+#chartZoom .zbody.spec-fs .viz-hov svg,#chartZoom .zbody.spec-fs .spec-plot .viz-hov svg{width:100%!important;height:auto!important;max-width:none!important;max-height:calc(100vh - 170px)!important}
+#chartZoom .zbody.spec-fs .spec-plot{align-items:center}
 @media(max-width:860px){
   /* Schmaler Schirm (iPhone): PLOT ZUERST + groß, Kennwerte kompakt darunter (nicht umgekehrt) */
   #chartZoom .zbody.poinca-fs{flex-direction:column-reverse;overflow:auto;gap:14px}
@@ -5661,11 +5665,13 @@ const ChartZoom={
     // auch im Vollbild leben (die globalen Pointer-Handler greifen auf jede .viz-hov im DOM).
     const wrap=svg.closest('.viz-hov');
     const clone=(wrap||svg).cloneNode(true);
+    if(clone.querySelectorAll)clone.querySelectorAll('.chart-zoombtn').forEach(b=>b.remove());  // Inline-Expand-Button nie ins Vollbild klonen
     const csvg=(clone.tagName&&clone.tagName.toLowerCase()==='svg')?clone:clone.querySelector('svg');
     clone.removeAttribute('style');
     if(csvg){csvg.removeAttribute('style');csvg.style.cursor=wrap?'crosshair':'default';}
     const body=$('#zoomBody');
     const scatter=wrap&&wrap.dataset.mode==='scatter';
+    const spec=wrap&&wrap.dataset.mode==='spec';
     const baev=host&&host.classList&&host.classList.contains('baev-box');
     if(scatter){
       // Dedizierter Poincaré-Vollbild-Viewer (App-Stil): Seitenleiste (Kennwerte + Form-Guide) + großer Plot
@@ -5709,12 +5715,36 @@ const ChartZoom={
       body.appendChild(side); body.appendChild(plot);
       $('#zoomTitle').textContent='Baevsky-Stress-Index';
       $('#zoomHint').textContent=`√SI ${d.sqrtsi||''} · ${zone[0]}`; $('#zoomHint').style.display='';
+    } else if(spec){
+      // Dedizierter Spektrum-Vollbild-Viewer: große Balken + Band-Werte (Power/%/Peak) + LF/HF-Deutung
+      let pts=[]; try{pts=JSON.parse(wrap.dataset.hov.replace(/&#39;/g,"'").replace(/&lt;/g,'<'));}catch(_){}
+      const bb={}; pts.forEach(p=>bb[p.bd]=p);
+      const V=bb.VLF||{pw:0,pct:0,f:0}, L=bb.LF||{pw:0,pct:0,f:0}, H=bb.HF||{pw:0,pct:0,f:0};
+      const tot=(V.pw+L.pw+H.pw)||1, lfhf=H.pw>0?L.pw/H.pw:0;
+      const ip=lfhf>4?['sympathikoton','var(--amber)']:lfhf<1?['vagoton','var(--good)']:['balanciert','var(--cyan)'];
+      const COL={VLF:'#C77DDB',LF:'var(--cyan)',HF:'var(--good)'};
+      const card=(k,fr,mn,d2)=>`<div class="pfs-stat"><span class="k" style="color:${COL[k]}">${k}</span><b>${fmt0(d2.pw)} <small>ms²</small></b><span class="s">${d2.pct}% · ${fr} · ${mn}${d2.f?' · Peak '+d2.f+' Hz':''}</span></div>`;
+      body.className='zbody poinca-fs spec-fs'; body.innerHTML='';
+      const side=document.createElement('div'); side.className='pfs-side';
+      side.innerHTML=`<div class="pfs-hd">Frequenz-Spektrum<span>Welch/Lomb · equine Bänder</span></div>`
+        +card('VLF','0,003–0,01 Hz','Thermoreg. + Hormone',V)
+        +card('LF','0,01–0,07 Hz','Baroreflex',L)
+        +card('HF','0,07–0,6 Hz','Atmung · RSA · vagal',H)
+        +`<div class="pfs-stat"><span class="k" style="color:var(--amber)">LF/HF</span><b>${fmt2(lfhf)}</b><span class="s" style="color:${ip[1]}">${ip[0]} · Total ${fmt0(tot)} ms²</span></div>`
+        +`<div class="pfs-hint">Lomb-Scargle-Spektrum, auf die RR-Varianz kalibriert (∫PSD·df = Varianz).<br>HF ≈ respiratorische Sinusarrhythmie (vagal) · LF gemischt · VLF langsame Regulation.</div>`;
+      const plot=document.createElement('div'); plot.className='pfs-plot spec-plot'; plot.appendChild(clone);
+      body.appendChild(side); body.appendChild(plot);
+      $('#zoomTitle').textContent='Frequenz-Spektrum';
+      $('#zoomHint').textContent=`LF/HF ${fmt2(lfhf)} · ${ip[0]}`; $('#zoomHint').style.display='';
     } else {
       const vb=(svg.getAttribute('viewBox')||'0 0 700 400').split(/\s+/).map(Number);
       const wide=(vb[2]/vb[3])>1.4;
       body.className='zbody '+(wide?'wide':'square');body.innerHTML='';body.appendChild(clone);
-      const t=(host.querySelector('.ct span')||host.querySelector('.ct-t')||{}).textContent||(host.previousElementSibling&&host.previousElementSibling.textContent)||'Signalanalyse';
-      $('#zoomTitle').textContent=String(t).trim().slice(0,60);
+      // Sauberer Titel: nur der Titel-Text (.ct-t), nicht die rechte Kennzahl mitgrabben
+      const hdr=host.previousElementSibling;
+      const tEl=host.querySelector('.ct-t')||host.querySelector('.ct span')||(hdr&&(hdr.querySelector('.ct-t')||hdr.querySelector('.ct span')));
+      const t=(tEl?tEl.textContent:(hdr?hdr.textContent:''))||'Signalanalyse';
+      $('#zoomTitle').textContent=String(t).trim().slice(0,50);
       $('#zoomHint').style.display=wide?'':'none';
     }
     $('#chartZoom').classList.add('on');document.body.style.overflow='hidden';
