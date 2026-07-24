@@ -1440,9 +1440,12 @@ nav.tabs button.on{text-shadow:none}
   .rec{flex-wrap:wrap;row-gap:8px}
   /* Grid-Blowout-Schutz: minmax(0,1fr) lässt Spalten schrumpfen statt Container zu sprengen */
   .stat-row{grid-template-columns:repeat(2,minmax(0,1fr))!important}
-  .viz-metrics,.vm-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important}   /* iPhone: HRV-Kacheln 2 nebeneinander statt 1 gestapelt */
-  .vm-grid .vm{padding:11px 12px 12px}
-  .vm-grid .vm .v{font-size:21px}
+  .viz-metrics,.vm-grid{grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:7px}   /* iPhone: 3 Kacheln pro Reihe wie iOS-App */
+  .vm-grid .vm{padding:9px 9px 10px}
+  .vm-grid .vm .k{font-size:8.5px;letter-spacing:.05em}
+  .vm-grid .vm .v{font-size:18px;margin-top:3px}
+  .vm-grid .vm .v small{font-size:9.5px}
+  .vm-grid .vm .ctx{font-size:9px;margin-top:4px;line-height:1.3}
   .panel,.detail-grid>*,.chart-wrap,.stat,.vm{min-width:0}
   .stat .v{font-size:18px}
   .panel{overflow:hidden}
