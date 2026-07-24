@@ -1101,7 +1101,11 @@ svg.viz .sd-lbl{fill:var(--cyan-strong);font-size:10px;font-weight:600;font-fami
 #chartZoom .zbody.spec-fs .viz-hov,#chartZoom .zbody.spec-fs .spec-plot .viz-hov{aspect-ratio:auto;height:auto;width:100%;max-width:100%;max-height:none;margin:0}
 #chartZoom .zbody.spec-fs .viz-hov svg,#chartZoom .zbody.spec-fs .spec-plot .viz-hov svg{width:100%!important;height:auto!important;max-width:none!important;max-height:calc(100vh - 170px)!important}
 #chartZoom .zbody.spec-fs .spec-plot{align-items:center}
+/* DFA + Histogramm-Vollbild: nackte .viz-SVG (kein .viz-hov-Wrapper) im Sidebar-Layout skalieren */
+#chartZoom .zbody.dfa-fs .pfs-plot>svg.viz,#chartZoom .zbody.hist-fs .pfs-plot>svg.viz{width:100%;height:auto;max-width:100%;max-height:calc(100vh - 150px);cursor:default}
+#chartZoom .zbody.dfa-fs .pfs-plot,#chartZoom .zbody.hist-fs .pfs-plot{align-items:center}
 @media(max-width:860px){
+  #chartZoom .zbody.dfa-fs .pfs-plot>svg.viz,#chartZoom .zbody.hist-fs .pfs-plot>svg.viz{max-height:none}
   /* Schmaler Schirm (iPhone): PLOT ZUERST + groß, Kennwerte kompakt darunter (nicht umgekehrt) */
   #chartZoom .zbody.poinca-fs{flex-direction:column-reverse;overflow:auto;gap:14px}
   .pfs-side{flex:0 0 auto;display:flex;flex-direction:row;flex-wrap:wrap;gap:8px;overflow:visible}
@@ -2572,7 +2576,8 @@ const HRV={
     const rrAt=i=>fmt0(H.mn+i*H.binMs);
     [lo,peakI,hi].forEach(i=>g+=`<text x="${(X(i)+bw/2).toFixed(1)}" y="${(h-pad.b+13).toFixed(1)}" text-anchor="middle">${rrAt(i)}</text>`);
     g+=`<text x="${(pad.l+(w-pad.l-pad.r)/2).toFixed(0)}" y="${h-2}" text-anchor="middle" class="label-axis">RR-INTERVALL<tspan class="label-unit"> (ms)</tspan></text>`;
-    return `<svg class="viz" viewBox="0 0 ${w} ${h}">${g}</svg>`;
+    const _tt=this.tinnTri(rr); const _modeRR=Math.round(H.mn+peakI*H.binMs);
+    return `<svg class="viz" data-chart="hist" data-tinn="${_tt?fmt0(_tt.tinn):''}" data-moderr="${_modeRR}" data-tri="${_tt&&_tt.triIndex!=null?fmt1(_tt.triIndex):''}" data-n="${rr.length}" viewBox="0 0 ${w} ${h}">${g}</svg>`;
   },
   dfaCurve(rr){
     if(!rr||rr.length<32)return null; const N=rr.length; const mean=rr.reduce((a,b)=>a+b,0)/N;
@@ -2620,7 +2625,8 @@ const HRV={
     pts.forEach(p=>g+=`<circle cx="${X(p.x).toFixed(1)}" cy="${Y(p.yv).toFixed(1)}" r="2.6" fill="var(--cyan-strong)"/>`);
     g+=`<text x="13" y="${(pad.t+(h-pad.t-pad.b)/2).toFixed(0)}" transform="rotate(-90 13 ${(pad.t+(h-pad.t-pad.b)/2).toFixed(0)})" text-anchor="middle" class="label-axis">log F(n)</text>`;
     g+=`<text x="${(pad.l+(w-pad.l-pad.r)/2).toFixed(0)}" y="${h-2}" text-anchor="middle" class="label-axis">log n · Fenstergröße</text>`;
-    return `<svg class="viz" viewBox="0 0 ${w} ${h}">${g}</svg>`;
+    const _aOut=(alpha1!=null)?alpha1:this.dfaAlpha1(rr);
+    return `<svg class="viz" data-chart="dfa" data-alpha1="${_aOut!=null?fmt2(_aOut):''}" viewBox="0 0 ${w} ${h}">${g}</svg>`;
   }
 };
 
@@ -5672,6 +5678,9 @@ const ChartZoom={
     const body=$('#zoomBody');
     const scatter=wrap&&wrap.dataset.mode==='scatter';
     const spec=wrap&&wrap.dataset.mode==='spec';
+    const dual=wrap&&wrap.dataset.mode==='dual';
+    const kind=(!wrap&&svg.dataset&&svg.dataset.chart)||'';
+    const dfa=kind==='dfa', hist=kind==='hist';
     const baev=host&&host.classList&&host.classList.contains('baev-box');
     if(scatter){
       // Dedizierter Poincaré-Vollbild-Viewer (App-Stil): Seitenleiste (Kennwerte + Form-Guide) + großer Plot
@@ -5736,6 +5745,60 @@ const ChartZoom={
       body.appendChild(side); body.appendChild(plot);
       $('#zoomTitle').textContent='Frequenz-Spektrum';
       $('#zoomHint').textContent=`LF/HF ${fmt2(lfhf)} · ${ip[0]}`; $('#zoomHint').style.display='';
+    } else if(dual){
+      // Dedizierter Tachogramm-Vollbild-Viewer: breiter Zeitreihen-Plot + Kennwerte je Schlag
+      let pts=[]; try{pts=JSON.parse(wrap.dataset.hov.replace(/&#39;/g,"'").replace(/&lt;/g,'<'));}catch(_){}
+      const n=pts.length||1; const rrs=pts.map(p=>p.rr), hrs=pts.map(p=>p.hr);
+      const sum=a=>a.reduce((x,y)=>x+y,0); const mRR=sum(rrs)/n, mHR=sum(hrs)/n;
+      const mnRR=Math.min(...rrs),mxRR=Math.max(...rrs),mnHR=Math.min(...hrs),mxHR=Math.max(...hrs);
+      const sdnn=Math.sqrt(rrs.reduce((s,v)=>s+(v-mRR)*(v-mRR),0)/n);
+      const af=pts.filter(p=>p.af).length;
+      body.className='zbody poinca-fs spec-fs dual-fs'; body.innerHTML='';
+      const side=document.createElement('div'); side.className='pfs-side';
+      side.innerHTML=`<div class="pfs-hd">Tachogramm<span>RR + Herzfrequenz je Schlag</span></div>`
+        +`<div class="pfs-stat"><span class="k" style="color:var(--cyan)">Ø RR</span><b>${fmt0(mRR)} <small>ms</small></b><span class="s">${fmt0(mnRR)}–${fmt0(mxRR)} ms · Spanne ${fmt0(mxRR-mnRR)}</span></div>`
+        +`<div class="pfs-stat"><span class="k" style="color:var(--amber)">Ø HF</span><b>${fmt0(mHR)} <small>bpm</small></b><span class="s">${fmt0(mnHR)}–${fmt0(mxHR)} bpm · reziprok zu RR</span></div>`
+        +`<div class="pfs-stat"><span class="k">SDNN</span><b>${fmt1(sdnn)} <small>ms</small></b><span class="s">Streuung aller RR-Intervalle (Gesamt-HRV)</span></div>`
+        +`<div class="pfs-stat"><span class="k">Schläge</span><b>${n}${af?` <small style="color:var(--amber)">· ${af} Artefakt${af>1?'e':''}</small>`:''}</b><span class="s">${af?'gelbe Rauten = markierte Ausreißer':'keine Artefakte markiert'}</span></div>`
+        +`<div class="pfs-hint">Tippen zeigt RR + HF am Schlag unter dem Finger.<br>HF = 60000 / RR — die beiden Kurven sind spiegelbildlich.</div>`;
+      const plot=document.createElement('div'); plot.className='pfs-plot spec-plot'; plot.appendChild(clone);
+      body.appendChild(side); body.appendChild(plot);
+      $('#zoomTitle').textContent='Tachogramm';
+      $('#zoomHint').textContent=`Ø RR ${fmt0(mRR)} ms · Ø HF ${fmt0(mHR)} bpm`; $('#zoomHint').style.display='';
+    } else if(dfa){
+      // Dedizierter DFA-α₁-Vollbild-Viewer: log-log-Fluktuationskurve + Einordnung des Exponenten
+      const A=parseFloat(svg.dataset.alpha1); const has=!isNaN(A);
+      const ip=!has?['—','var(--text-dim)']:A<0.75?['unkorreliert · random-artig','var(--amber)']:A<1.15?['fraktal · physiologisch','var(--good)']:A<1.5?['korreliert · rigider','var(--cyan)']:['stark korreliert · reduzierte Komplexität','var(--red)'];
+      body.className='zbody poinca-fs dfa-fs'; body.innerHTML='';
+      const side=document.createElement('div'); side.className='pfs-side';
+      side.innerHTML=`<div class="pfs-hd">DFA-α₁<span>Detrended Fluctuation Analysis</span></div>`
+        +`<div class="pfs-stat"><span class="k" style="color:var(--harmony)">α1</span><b>${has?fmt2(A):'–'}</b><span class="s" style="color:${ip[1]}">${ip[0]}</span></div>`
+        +`<div class="pfs-stat"><span class="k">Skalenbereich</span><b style="font-size:20px">n = 4–16</b><span class="s">Schläge · Kurzzeit-Skalierungsexponent</span></div>`
+        +`<div class="pfs-guide"><div class="gh">Einordnung α1</div>`
+          +`<div class="gr"><span style="width:16px;height:4px;border-radius:2px;background:var(--amber);flex:0 0 auto"></span><div class="gt"><b style="color:var(--amber)">≈ 0,5</b><span>unkorreliert (weißes Rauschen)</span></div></div>`
+          +`<div class="gr"><span style="width:16px;height:4px;border-radius:2px;background:var(--good);flex:0 0 auto"></span><div class="gt"><b style="color:var(--good)">≈ 1,0</b><span>1/f · fraktal · physiologisch</span></div></div>`
+          +`<div class="gr"><span style="width:16px;height:4px;border-radius:2px;background:var(--red);flex:0 0 auto"></span><div class="gt"><b style="color:var(--red)">≈ 1,5</b><span>Brown'sches Rauschen · rigide</span></div></div>`
+        +`</div>`
+        +`<div class="pfs-hint">Steigung der log-log-Fluktuation F(n) über der Fenstergröße n.<br>Gesunde Regulation liegt nahe 1,0 (selbstähnlich), nicht 0,5 und nicht 1,5.</div>`;
+      const plot=document.createElement('div'); plot.className='pfs-plot dfa-plot'; plot.appendChild(clone);
+      body.appendChild(side); body.appendChild(plot);
+      $('#zoomTitle').textContent='DFA-α₁-Skalierung';
+      $('#zoomHint').textContent=has?`α1 ${fmt2(A)} · ${ip[0]}`:'DFA-α₁'; $('#zoomHint').style.display='';
+    } else if(hist){
+      // Dedizierter Histogramm-Vollbild-Viewer: RR-Verteilung + geometrische Kennwerte
+      const d=svg.dataset; const tinn=d.tinn, mode=d.moderr, tri=d.tri, nb=d.n;
+      body.className='zbody poinca-fs hist-fs'; body.innerHTML='';
+      const side=document.createElement('div'); side.className='pfs-side';
+      side.innerHTML=`<div class="pfs-hd">RR-Verteilung<span>Geometrische HRV</span></div>`
+        +`<div class="pfs-stat"><span class="k" style="color:var(--cyan)">TINN</span><b>${tinn||'–'} <small>ms</small></b><span class="s">Basisbreite der Dreiecks-Interpolation</span></div>`
+        +`<div class="pfs-stat"><span class="k" style="color:var(--amber)">Modus</span><b>${mode||'–'} <small>ms</small></b><span class="s">häufigstes RR-Intervall (Verteilungsgipfel)</span></div>`
+        +`<div class="pfs-stat"><span class="k">HRV-Dreiecksindex</span><b>${tri||'–'}</b><span class="s">Schläge gesamt / Höhe des Modalbins</span></div>`
+        +`<div class="pfs-stat"><span class="k">Schläge</span><b>${nb||'–'}</b><span class="s">Stichprobenumfang der Verteilung</span></div>`
+        +`<div class="pfs-hint">Geometrische Maße sind robust gegen einzelne Artefakte.<br>Breitere Verteilung = höhere Gesamt-HRV. Verlässlich ab ≥ 5 min Aufnahme.</div>`;
+      const plot=document.createElement('div'); plot.className='pfs-plot hist-plot'; plot.appendChild(clone);
+      body.appendChild(side); body.appendChild(plot);
+      $('#zoomTitle').textContent='RR-Verteilung · TINN';
+      $('#zoomHint').textContent=tinn?`TINN ${tinn} ms · Modus ${mode} ms`:'RR-Verteilung'; $('#zoomHint').style.display='';
     } else {
       const vb=(svg.getAttribute('viewBox')||'0 0 700 400').split(/\s+/).map(Number);
       const wide=(vb[2]/vb[3])>1.4;
