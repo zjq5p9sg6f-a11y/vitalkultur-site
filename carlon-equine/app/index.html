@@ -1157,6 +1157,7 @@ svg.viz .sd-lbl{fill:var(--cyan-strong);font-size:10px;font-weight:600;font-fami
    Breit (≥900px): Plot links dominant, Legende rechts gestapelt. Schmal: Plot groß oben, Legende darunter. */
 /* App-ChartCard: JEDE Grafik ihre eigene Karte (heller BG + Rahmen + Radius), Plot-Substrat #0E0E0E innen = Tiefe. Nicht mehr alles in EINEM Panel zusammengestückelt. */
 .chart-card{background:var(--bg-surface);border:1px solid var(--border-subtle);border-radius:16px;padding:15px 16px 16px;margin-bottom:14px;position:relative}
+.chart-subtitle{font-family:var(--font-mono);font-size:10.5px;color:var(--text-dim);letter-spacing:.02em;margin:-8px 0 10px 30px}
 .chart-card>.chart-wrap{margin:0}
 .charts-2up{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin-bottom:14px}
 .charts-2up>.chart-card{margin-bottom:0}
@@ -2657,8 +2658,8 @@ const HRV={
     g+=`<line x1="${cx}" y1="${cy}" x2="${nx.toFixed(1)}" y2="${ny.toFixed(1)}" stroke="#5AB8E8" stroke-width="3" stroke-linecap="round"/>`;
     g+=`<circle cx="${cx}" cy="${cy}" r="7.5" fill="#5AB8E8"/><circle cx="${cx}" cy="${cy}" r="3.2" fill="var(--bg-void)"/>`;
     // Große Zahl mittig
-    g+=`<text x="${cx}" y="${(cy-50).toFixed(0)}" text-anchor="middle" font-family="var(--font-brand)" font-weight="700" font-size="40" fill="var(--text-primary)">${fmt1(si)}</text>`;
-    g+=`<text x="${cx}" y="${(cy-31).toFixed(0)}" text-anchor="middle" font-size="12" fill="var(--text-dim)" letter-spacing="2">√SI</text>`;
+    g+=`<text x="${cx}" y="${(cy-50).toFixed(0)}" text-anchor="middle" font-family="var(--font-brand)" font-weight="700" font-size="40" fill="var(--text-primary)" stroke="var(--bg-void)" stroke-width="5" stroke-linejoin="round" paint-order="stroke">${fmt1(si)}</text>`;
+    g+=`<text x="${cx}" y="${(cy-31).toFixed(0)}" text-anchor="middle" font-size="12" fill="var(--text-dim)" letter-spacing="2" stroke="var(--bg-void)" stroke-width="3" paint-order="stroke">√SI</text>`;
     return `<svg class="viz" viewBox="0 0 ${w} ${h}" style="max-width:${w}px">${g}</svg>`;
   },
   // Zonen-Legende für die Baevsky-Gauge (√SI, equine — Stucke 2015)
@@ -3978,9 +3979,10 @@ const Views={
       </div>
       <div class="chart-card baev-box" data-si="${bv?bv.SI.toFixed(1):''}" data-sqrtsi="${bv?bv.sqrtSI.toFixed(1):''}" data-amo="${bv?bv.AMo.toFixed(1):''}" data-mo="${bv?(bv.Mo*1000).toFixed(0):''}" data-mxdmn="${bv?(bv.MxDMn*1000).toFixed(0):''}">
         ${(()=>{const si=bv?bv.sqrtSI:null;const z=si==null?['—','var(--text-dim)']:si<7?['Ruhig','#3E8E57']:si<15?['Aktiv','#3E76A0']:si<25?['Stress','#9C6A2E']:['Alarm','#9C3A3A'];return chead('gauge','Baevsky-Stress-Index','baevsky',`<span style="font-weight:700;font-size:10.5px;letter-spacing:.09em;padding:3px 12px;border-radius:99px;background:color-mix(in srgb,${z[1]} 16%,transparent);color:${z[1]};border:1px solid color-mix(in srgb,${z[1]} 55%,transparent)">${z[0].toUpperCase()}</span>`,z[1]);})()}
+        <div class="chart-subtitle">√SI · Baevsky 1979 · equine-skaliert (Stucke 2015)</div>
         ${HRV.gauge(bv?bv.sqrtSI:null)}
         <div class="baev-sub">AMo ${bv?fmt1(bv.AMo):'–'} % · Mo ${bv?fmt0(bv.Mo*1000):'–'} ms · √SI ${bv?fmt1(bv.sqrtSI):'–'}<br>
-        <span style="color:var(--text-faint)">orientierend · keine equine Norm — individuelle Baseline maßgeblich</span></div>
+        <span style="color:var(--text-faint)">orientierend · individuelle Baseline maßgeblich</span></div>
       </div>
       <div class="chart-card">${chead('bars','RR-Verteilung · TINN','tinn', tt?`TINN ${fmt0(tt.tinn)} <small>ms</small>`:'')}${HRV.histChart(rr,{w:720,h:250})}</div>
       <div class="chart-card">${chead('dfa','DFA-α₁-Skalierung','dfa', dfa1!=null?`α1 ${fmt2(dfa1)}`:'', 'var(--harmony)')}${HRV.dfaChart(rr,{w:720,h:250,alpha1:dfa1})}</div>
