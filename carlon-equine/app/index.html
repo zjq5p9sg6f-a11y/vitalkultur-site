@@ -2577,7 +2577,8 @@ const HRV={
     [lo,peakI,hi].forEach(i=>g+=`<text x="${(X(i)+bw/2).toFixed(1)}" y="${(h-pad.b+13).toFixed(1)}" text-anchor="middle">${rrAt(i)}</text>`);
     g+=`<text x="${(pad.l+(w-pad.l-pad.r)/2).toFixed(0)}" y="${h-2}" text-anchor="middle" class="label-axis">RR-INTERVALL<tspan class="label-unit"> (ms)</tspan></text>`;
     const _tt=this.tinnTri(rr); const _modeRR=Math.round(H.mn+peakI*H.binMs);
-    return `<svg class="viz" data-chart="hist" data-tinn="${_tt?fmt0(_tt.tinn):''}" data-moderr="${_modeRR}" data-tri="${_tt&&_tt.triIndex!=null?fmt1(_tt.triIndex):''}" data-n="${rr.length}" viewBox="0 0 ${w} ${h}">${g}</svg>`;
+    // Rohe Maschinenzahlen (Punkt-Dezimal) in die data-Attribute — Formatierung erst im Viewer (parseFloat verträgt kein DE-Komma)
+    return `<svg class="viz" data-chart="hist" data-tinn="${_tt?Math.round(_tt.tinn):''}" data-moderr="${_modeRR}" data-tri="${_tt&&_tt.triIndex!=null?Math.round(_tt.triIndex*10)/10:''}" data-n="${rr.length}" viewBox="0 0 ${w} ${h}">${g}</svg>`;
   },
   dfaCurve(rr){
     if(!rr||rr.length<32)return null; const N=rr.length; const mean=rr.reduce((a,b)=>a+b,0)/N;
@@ -2626,7 +2627,8 @@ const HRV={
     g+=`<text x="13" y="${(pad.t+(h-pad.t-pad.b)/2).toFixed(0)}" transform="rotate(-90 13 ${(pad.t+(h-pad.t-pad.b)/2).toFixed(0)})" text-anchor="middle" class="label-axis">log F(n)</text>`;
     g+=`<text x="${(pad.l+(w-pad.l-pad.r)/2).toFixed(0)}" y="${h-2}" text-anchor="middle" class="label-axis">log n · Fenstergröße</text>`;
     const _aOut=(alpha1!=null)?alpha1:this.dfaAlpha1(rr);
-    return `<svg class="viz" data-chart="dfa" data-alpha1="${_aOut!=null?fmt2(_aOut):''}" viewBox="0 0 ${w} ${h}">${g}</svg>`;
+    // Rohe Maschinenzahl (Punkt-Dezimal) — Viewer formatiert per fmt2 (parseFloat verträgt kein DE-Komma)
+    return `<svg class="viz" data-chart="dfa" data-alpha1="${_aOut!=null?_aOut:''}" viewBox="0 0 ${w} ${h}">${g}</svg>`;
   }
 };
 
@@ -5786,7 +5788,8 @@ const ChartZoom={
       $('#zoomHint').textContent=has?`α1 ${fmt2(A)} · ${ip[0]}`:'DFA-α₁'; $('#zoomHint').style.display='';
     } else if(hist){
       // Dedizierter Histogramm-Vollbild-Viewer: RR-Verteilung + geometrische Kennwerte
-      const d=svg.dataset; const tinn=d.tinn, mode=d.moderr, tri=d.tri, nb=d.n;
+      const d=svg.dataset;
+      const tinn=d.tinn?fmt0(+d.tinn):null, mode=d.moderr?fmt0(+d.moderr):null, tri=d.tri?fmt1(+d.tri):null, nb=d.n?fmt0(+d.n):null;
       body.className='zbody poinca-fs hist-fs'; body.innerHTML='';
       const side=document.createElement('div'); side.className='pfs-side';
       side.innerHTML=`<div class="pfs-hd">RR-Verteilung<span>Geometrische HRV</span></div>`
