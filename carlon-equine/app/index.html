@@ -1039,10 +1039,11 @@ svg.chart{width:100%;display:block;overflow:visible}
 /* ---- Präzisions-Viz (Tachogramm/Poincaré/Dual) — EKG-Papier-Grid ---- */
 svg.viz{width:100%;display:block;overflow:visible}
 /* Cyan EKG-Papier-Grid — dezent/edel wie die iOS-App (branded, aber fein, NICHT weiß, NICHT laut) */
-svg.viz .grid-major,svg.chart .grid-major{stroke:#3ECFB2;stroke-opacity:.24;stroke-width:.6}
-svg.viz .grid-minor,svg.chart .grid-minor{stroke:#3ECFB2;stroke-opacity:.08;stroke-width:.5}
-svg.viz .axis,svg.chart .axis{stroke:#3ECFB2;stroke-opacity:.42;stroke-width:.8}
-svg.viz .tick,svg.chart .tick{stroke:#3ECFB2;stroke-opacity:.42;stroke-width:.8}
+/* Grid-CI = 1:1 iOS-App (EquineChartCI): dezent-WEISS, tritt zurück (Tufte) — kein Cyan das mit dem Signal konkurriert */
+svg.viz .grid-major,svg.chart .grid-major{stroke:#fff;stroke-opacity:.15;stroke-width:.5}
+svg.viz .grid-minor,svg.chart .grid-minor{stroke:#fff;stroke-opacity:.07;stroke-width:.25}
+svg.viz .axis,svg.chart .axis{stroke:#fff;stroke-opacity:.16;stroke-width:.8}
+svg.viz .tick,svg.chart .tick{stroke:#fff;stroke-opacity:.5;stroke-width:.8}
 svg.viz text{fill:var(--text-secondary);font-size:9px;font-family:var(--font-mono)}
 svg.viz .label-axis,svg.chart .label-axis{fill:var(--text-secondary);font-size:9.5px;letter-spacing:.1em;font-family:var(--font-ui);font-weight:600}
 svg.viz .label-unit,svg.chart .label-unit{fill:var(--text-dim);font-weight:400}
@@ -2193,11 +2194,11 @@ const Chart={
     t.forEach(tv=>{if(tv<lo||tv>hi)return;
       g+=`<text x="${PX(tv).toFixed(1)}" y="${(pB+13).toFixed(1)}" text-anchor="middle">${fmt0(tv)}</text><text x="${(pL-8).toFixed(1)}" y="${(PY(tv)+3).toFixed(1)}" text-anchor="end">${fmt0(tv)}</text>`;});
     // Identitätslinie RRₙ = RRₙ₊₁ (subtil gestrichelt)
-    g+=`<line x1="${PX(lo).toFixed(1)}" y1="${PY(lo).toFixed(1)}" x2="${PX(hi).toFixed(1)}" y2="${PY(hi).toFixed(1)}" stroke="var(--cyan-deep)" stroke-opacity="0.55" stroke-width="0.7" stroke-dasharray="3 5"/>`;
-    // Punkte — kristallklar, gleichmäßig cyan; Dichte entsteht durch Überlappung (App-Standard, kein Dimming)
+    g+=`<line x1="${PX(lo).toFixed(1)}" y1="${PY(lo).toFixed(1)}" x2="${PX(hi).toFixed(1)}" y2="${PY(hi).toFixed(1)}" stroke="#fff" stroke-opacity="0.18" stroke-width="0.6" stroke-dasharray="2 2"/>`;
+    // Punkte — kristallklar, dicht (App-Standard: klein + hohe Deckung, Dichte durch Überlappung)
     const _hpts=[];
     for(let i=0;i<xs.length;i++){const px=+PX(xs[i]).toFixed(1),py=+PY(ys[i]).toFixed(1);
-      g+=`<circle cx="${px}" cy="${py}" r="2.6" fill="var(--cyan)" fill-opacity="0.62"/>`;
+      g+=`<circle cx="${px}" cy="${py}" r="2" fill="var(--cyan)" fill-opacity="0.8"/>`;
       _hpts.push({x:px,y:py,rn:Math.round(xs[i]),rn1:Math.round(ys[i])});}
     // Plot-Rahmen (über der Wolke)
     g+=`<rect x="${pL}" y="${pT}" width="${W}" height="${H}" fill="none" class="axis"/>`;
@@ -2454,7 +2455,7 @@ const Chart={
    ════════════════════════════════════════════════════════════════════════ */
 const HRV={
   BANDS:{vlf:[0,0.01],lf:[0.01,0.07],hf:[0.07,0.6]},   // equine (Hz)
-  BANDCOL:{vlf:'#C77DDB',lf:'var(--cyan)',hf:'var(--good)'},   // App-Schema: VLF magenta · LF cyan · HF grün
+  BANDCOL:{vlf:'#BD85FC',lf:'#FFBD5C',hf:'#66E6FF'},   // 1:1 iOS-App (SciBrand): VLF violett · LF amber · HF cyan
   // Lomb-Scargle-Periodogramm (RR sind ungleichmäßig abgetastet → korrekt ohne Resampling)
   lombPSD(rr){
     if(!rr||rr.length<24)return null;
@@ -5747,7 +5748,7 @@ const ChartZoom={
       const V=bb.VLF||{pw:0,pct:0,f:0}, L=bb.LF||{pw:0,pct:0,f:0}, H=bb.HF||{pw:0,pct:0,f:0};
       const tot=(V.pw+L.pw+H.pw)||1, lfhf=H.pw>0?L.pw/H.pw:0;
       const ip=lfhf>4?['sympathikoton','var(--amber)']:lfhf<1?['vagoton','var(--good)']:['balanciert','var(--cyan)'];
-      const COL={VLF:'#C77DDB',LF:'var(--cyan)',HF:'var(--good)'};
+      const COL={VLF:'#BD85FC',LF:'#FFBD5C',HF:'#66E6FF'};
       const card=(k,fr,mn,d2)=>`<div class="pfs-stat"><span class="k" style="color:${COL[k]}">${k}</span><b>${fmt0(d2.pw)} <small>ms²</small></b><span class="s">${d2.pct}% · ${fr} · ${mn}${d2.f?' · Peak '+d2.f+' Hz':''}</span></div>`;
       body.className='zbody poinca-fs spec-fs'; body.innerHTML='';
       const side=document.createElement('div'); side.className='pfs-side';
