@@ -1596,6 +1596,18 @@ const esc = s => String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>'
 const fmt1 = v => v==null?'—':(Math.round(v*10)/10).toLocaleString('de-DE');
 const fmt2 = v => v==null?'—':(Math.round(v*100)/100).toLocaleString('de-DE',{minimumFractionDigits:2,maximumFractionDigits:2});
 const fmt0 = v => v==null?'—':Math.round(v).toLocaleString('de-DE');
+// Poincaré-Formklassifikation — GEOMETRISCH korrekt, exakt nach den Info-Modal-Definitionen (n. Woo et al. 1992):
+//   Komet  = hohe Kurz- UND Langzeit-Variabilität (SD1 groß, auffächernd)
+//   Torpedo= kleines SD1 bei erhaltener Länge → hohes SD2/SD1-Verhältnis (schmale Zigarre)
+//   Ball   = niedrig in BEIDE Richtungen, rund (Verhältnis nahe 1)
+// Bewusst NICHT allein aus SD1 (alter Bug: niedriges SD1 → fälschlich „Ball", obwohl hohe Ratio = Torpedo).
+const poincaShape = (sd1,sd2) => {
+  if(sd1==null||sd2==null) return null;
+  const r = sd2/Math.max(sd1,0.1);
+  if(sd1>=20) return {name:'Komet',col:'var(--good)',note:'auffächernd · flexibles Herzmuster'};
+  if(r>=2.5)  return {name:'Torpedo',col:'var(--amber)',note:'schmale Zigarre · niedrige Kurzzeit-HRV'};
+  return {name:'Ball',col:'var(--red)',note:'runder Cluster · niedrige Variabilität'};
+};
 const fmtTime = m => { m=Math.round(m); return `${String(Math.floor(m/60)%24).padStart(2,'0')}:${String(((m%60)+60)%60).padStart(2,'0')}`; };
 const parseTime = s => { const [h,mi]=(s||'').split(':').map(Number); return (isNaN(h)?8:h)*60+(isNaN(mi)?0:mi); };
 const euro = v => (v==null?0:v).toLocaleString('de-DE',{style:'currency',currency:'EUR'});
@@ -4039,7 +4051,7 @@ const Views={
       <div class="chart-card">
         ${chead('scatter','Poincaré-Plot','poincare', (m.sd1!=null&&m.sd2!=null)?`SD1 ${fmt1(m.sd1)} · SD2 ${fmt1(m.sd2)} <small>ms</small>`:'')}
         <div class="poinca-plot">${Chart.poincare(rr,{sd1:m.sd1,sd2:m.sd2,size:820})}</div>
-        <div class="poinca-cap">Jeder Punkt = ein Herzschlag (RRₙ) gegen den nächsten (RRₙ₊₁). <b style="color:var(--cyan)">SD1</b> (quer zur Diagonale) = Kurzzeit-/Vagus-Variabilität, <b style="color:var(--cyan)">SD2</b> (entlang) = Langzeit-Variabilität. Kompakte Wolke = geringe HRV, breite Wolke = flexibles autonomes Nervensystem.${m.sd1!=null?` · <b style="color:${m.sd1<10?'var(--red)':m.sd1<25?'var(--amber)':'var(--good)'}">Diese Aufnahme: ${m.sd1<10?'Ball · sehr niedrig':m.sd1<25?'Torpedo-Tendenz':'Komet · flexibel'}</b>`:''}</div>
+        <div class="poinca-cap">Jeder Punkt = ein Herzschlag (RRₙ) gegen den nächsten (RRₙ₊₁). <b style="color:var(--cyan)">SD1</b> (quer zur Diagonale) = Kurzzeit-/Vagus-Variabilität, <b style="color:var(--cyan)">SD2</b> (entlang) = Langzeit-Variabilität. Kompakte Wolke = geringe HRV, breite Wolke = flexibles autonomes Nervensystem.${(()=>{const sh=poincaShape(m.sd1,m.sd2);return sh?` · <b style="color:${sh.col}">Diese Aufnahme: ${sh.name} — ${sh.note}</b>`:'';})()}</div>
       </div>
       <div class="chart-card"><div class="ct" style="margin-bottom:12px"><span>HRV-Kennwerte</span></div>
         <div class="vm-grid">
@@ -5859,7 +5871,7 @@ const ChartZoom={
       let sd1,sd2,ratio; const wd=wrap.dataset;
       if(wd.sd1!=null&&wd.sd1!==''){sd1=parseFloat(wd.sd1);sd2=parseFloat(wd.sd2);ratio=parseFloat(wd.ratio);}
       else{let sx=0,sy=0; pts.forEach(p=>{sx+=p.rn;sy+=p.rn1;}); const mx=sx/n,my=sy/n; let s1=0,s2=0; pts.forEach(p=>{s1+=Math.pow((p.rn-p.rn1)-(mx-my),2);s2+=Math.pow((p.rn+p.rn1)-(mx+my),2);}); sd1=Math.sqrt(s1/n/2);sd2=Math.sqrt(s2/n/2);ratio=sd1>0?sd2/sd1:0;}
-      const shp=sd1<10?['Ball','var(--red)']:sd1<25?['Torpedo','var(--amber)']:['Komet','var(--good)'];
+      const _sh=poincaShape(sd1,sd2)||{name:'—',col:'var(--text-dim)'}; const shp=[_sh.name,_sh.col];
       body.className='zbody poinca-fs scatter-fs'; body.innerHTML='';
       const side=document.createElement('div'); side.className='pfs-side';
       side.innerHTML=`<div class="pfs-hd">Poincaré<span>${n+1} Intervalle</span></div>`
