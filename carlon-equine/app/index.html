@@ -1224,6 +1224,8 @@ svg.viz .sd-lbl{fill:var(--cyan-strong);font-size:10px;font-weight:600;font-fami
 .zone-leg .zl b{font-size:10px;font-weight:700;color:var(--text-secondary)}
 .zone-leg .zl span{font-family:var(--font-mono);font-size:9px;color:var(--text-dim)}
 .chart-hint{font-size:10.5px;color:var(--text-faint);margin-top:10px;font-family:var(--font-mono);letter-spacing:.01em;line-height:1.4}
+.dfa-verdict{display:flex;align-items:center;gap:8px;margin-top:12px;padding:9px 13px;background:var(--bg-void);border:1px solid var(--border-subtle);border-radius:11px;font-size:13px;font-weight:600;color:var(--text-primary)}
+.dfa-verdict .dot{width:9px;height:9px;border-radius:50%;flex:0 0 auto}
 .chart-hint b{color:var(--text-dim);font-family:var(--font-ui)}
 .baev-box{text-align:center}
 .baev-box>svg.viz{margin:0 auto}   /* Gauge zentrieren (svg ist display:block → margin:auto statt text-align) */
@@ -2787,6 +2789,28 @@ const HRV={
     const _aOut=(alpha1!=null)?alpha1:this.dfaAlpha1(rr);
     // Rohe Maschinenzahl (Punkt-Dezimal) — Viewer formatiert per fmt2 (parseFloat verträgt kein DE-Komma)
     return `<svg class="viz" data-chart="dfa" data-alpha1="${_aOut!=null?_aOut:''}" viewBox="0 0 ${w} ${h}">${g}</svg>`;
+  },
+  // DFA-α₁ als interpretierbares Zonen-FARBBAND (1:1 iOS-App): Random/Vagal-Hyper/Physiologisch/Sympathisch/Hochkorr.
+  // mit Marker — für den Vet sofort deutbar (statt abstrakter Log-Log-Kurve). Log-Log bleibt Fachdetail im Info/Vollbild.
+  dfaBand(dfa1,{w=720,h=180}={}){
+    if(dfa1==null)return `<div style="color:var(--text-faint);font-size:12px;text-align:center;padding:30px">DFA nicht berechenbar (zu kurze Aufnahme)</div>`;
+    const pad={l:16,r:16,t:38,b:40}; const plotW=w-pad.l-pad.r; const lo=0.3,hi=2.0;
+    const X=v=>pad.l+(Math.max(lo,Math.min(hi,v))-lo)/(hi-lo)*plotW;
+    const bandY=pad.t+16, bandH=30;
+    const Z=[[0.3,0.5,'Random','#9C3A3A'],[0.5,0.75,'Vagal-Hyper','#C77D3A'],[0.75,1.15,'Physiologisch','#3E8E57'],[1.15,1.5,'Sympathisch','#9C6A2E'],[1.5,2.0,'Hochkorr.','#9C3A3A']];
+    let g=`<rect x="${pad.l}" y="${bandY}" width="${plotW.toFixed(1)}" height="${bandH}" rx="7" fill="#0E0E0E"/>`;
+    Z.forEach(([a,b,lab,col])=>{const x0=X(a),x1=X(b);
+      g+=`<rect x="${x0.toFixed(1)}" y="${bandY}" width="${(x1-x0).toFixed(1)}" height="${bandH}" fill="${col}" opacity="0.88"/>`;
+      g+=`<text x="${((x0+x1)/2).toFixed(1)}" y="${(bandY-9).toFixed(1)}" text-anchor="middle" style="fill:${col};font-size:9.5px;font-weight:700;letter-spacing:.02em">${lab}</text>`;});
+    // dünne Zonen-Trenner + Grenz-Ticks
+    [0.5,0.75,1.15,1.5].forEach(v=>{const x=X(v);g+=`<line x1="${x.toFixed(1)}" y1="${bandY}" x2="${x.toFixed(1)}" y2="${(bandY+bandH).toFixed(1)}" stroke="#0E0E0E" stroke-width="1.5"/>`;});
+    [0.3,0.5,0.75,1.0,1.15,1.5,2.0].forEach(v=>{const x=X(v);g+=`<text x="${x.toFixed(1)}" y="${(bandY+bandH+15).toFixed(1)}" text-anchor="middle" style="fill:var(--text-dim);font-size:9px;font-family:var(--font-mono)">${fmt2(v)}</text>`;});
+    // Marker (Dreieck oben + Linie) am α1
+    const mx=X(dfa1);
+    g+=`<line x1="${mx.toFixed(1)}" y1="${(bandY-3).toFixed(1)}" x2="${mx.toFixed(1)}" y2="${(bandY+bandH+3).toFixed(1)}" stroke="#fff" stroke-width="2"/>`;
+    g+=`<path d="M${(mx-6).toFixed(1)},${(bandY-5).toFixed(1)} L${(mx+6).toFixed(1)},${(bandY-5).toFixed(1)} L${mx.toFixed(1)},${(bandY+2).toFixed(1)} Z" fill="#fff"/>`;
+    g+=`<text x="${mx.toFixed(1)}" y="${(bandY+bandH+34).toFixed(1)}" text-anchor="middle" style="fill:var(--text-primary);font-family:var(--font-mono);font-size:15px;font-weight:700">α1 = ${fmt2(dfa1)}</text>`;
+    return `<svg class="viz" data-chart="dfa" data-alpha1="${dfa1}" viewBox="0 0 ${w} ${h}">${g}</svg>`;
   }
 };
 
@@ -4038,7 +4062,7 @@ const Views={
         <span style="color:var(--text-faint)">orientierend · individuelle Baseline maßgeblich</span></div>
       </div>
       <div class="chart-card">${chead('bars','RR-Verteilung · TINN','tinn', tt?`TINN ${fmt0(tt.tinn)} <small>ms</small>`:'')}${HRV.histChart(rr,{w:720,h:250})}</div>
-      <div class="chart-card">${chead('dfa','DFA-α₁-Skalierung','dfa', dfa1!=null?`α1 ${fmt2(dfa1)}`:'', 'var(--harmony)')}${HRV.dfaChart(rr,{w:720,h:250,alpha1:dfa1})}</div>
+      <div class="chart-card">${chead('dfa','DFA-α₁','dfa', dfa1!=null?`α1 ${fmt2(dfa1)}`:'', 'var(--harmony)')}${HRV.dfaBand(dfa1)}${dfa1!=null?(()=>{const dv=dfa1<0.5?['Random — unkorreliert, fragmentierte Regulation','var(--red)']:dfa1<0.75?['Vagal-hyper — sehr parasympathisch','#C77D3A']:dfa1<1.15?['Physiologisch — 1/f-Skalierung, gesunde Balance','var(--good)']:dfa1<1.5?['Sympathisch — erhöhte Korrelation, Sympathikus-Tendenz','var(--amber)']:['Hochkorreliert — starre Regulation, starke Sympathikus-Dominanz','var(--red)'];return `<div class="dfa-verdict"><span class="dot" style="background:${dv[1]}"></span><span>${dv[0]}</span></div>`;})():''}<div class="chart-hint">Detrended Fluctuation Analysis: fraktale Korrelation der Herzschlag-Folge. α1 ≈ 1,0 = gesunde 1/f-Dynamik · &lt;0,75 = zu zufällig · &gt;1,5 = zu starr. Vollbild öffnet die Zonen-Einordnung.</div></div>
       <div style="font-size:10.5px;color:var(--text-faint);margin-top:2px;font-style:italic;line-height:1.5">Equine Bänder VLF 0–0,01 · LF 0,01–0,07 · HF 0,07–0,6 Hz (Kuwahara 1996). Lomb-Scargle-Spektrum &amp; Kennwerte aus Beat-to-Beat-RR (rrApproximated=false, Polar H10). Poincaré SD1/SD2 (Brennan 2001), Formmuster n. Woo 1992 · Baevsky (1984, equine-skaliert Stucke 2015) · SampEn (Richman 2000). Priorisierungshilfe, keine Diagnose.</div>
     </div>`;
   },
@@ -5915,21 +5939,23 @@ const ChartZoom={
     } else if(dfa){
       // Dedizierter DFA-α₁-Vollbild-Viewer: log-log-Fluktuationskurve + Einordnung des Exponenten
       const A=parseFloat(svg.dataset.alpha1); const has=!isNaN(A);
-      const ip=!has?['—','var(--text-dim)']:A<0.75?['unkorreliert · random-artig','var(--amber)']:A<1.15?['fraktal · physiologisch','var(--good)']:A<1.5?['korreliert · rigider','var(--cyan)']:['stark korreliert · reduzierte Komplexität','var(--red)'];
+      const ip=!has?['—','var(--text-dim)']:A<0.5?['Random · unkorreliert','var(--red)']:A<0.75?['Vagal-hyper · sehr parasympathisch','#C77D3A']:A<1.15?['Physiologisch · 1/f · fraktal','var(--good)']:A<1.5?['Sympathisch · erhöhte Korrelation','var(--amber)']:['Hochkorreliert · starre Regulation','var(--red)'];
       body.className='zbody poinca-fs dfa-fs'; body.innerHTML='';
       const side=document.createElement('div'); side.className='pfs-side';
       side.innerHTML=`<div class="pfs-hd">DFA-α₁<span>Detrended Fluctuation Analysis</span></div>`
         +`<div class="pfs-stat"><span class="k" style="color:var(--harmony)">α1</span><b>${has?fmt2(A):'–'}</b><span class="s" style="color:${ip[1]}">${ip[0]}</span></div>`
         +`<div class="pfs-stat"><span class="k">Skalenbereich</span><b style="font-size:20px">n = 4–16</b><span class="s">Schläge · Kurzzeit-Skalierungsexponent</span></div>`
-        +`<div class="pfs-guide"><div class="gh">Einordnung α1</div>`
-          +`<div class="gr"><span style="width:16px;height:4px;border-radius:2px;background:var(--amber);flex:0 0 auto"></span><div class="gt"><b style="color:var(--amber)">≈ 0,5</b><span>unkorreliert (weißes Rauschen)</span></div></div>`
-          +`<div class="gr"><span style="width:16px;height:4px;border-radius:2px;background:var(--good);flex:0 0 auto"></span><div class="gt"><b style="color:var(--good)">≈ 1,0</b><span>1/f · fraktal · physiologisch</span></div></div>`
-          +`<div class="gr"><span style="width:16px;height:4px;border-radius:2px;background:var(--red);flex:0 0 auto"></span><div class="gt"><b style="color:var(--red)">≈ 1,5</b><span>Brown'sches Rauschen · rigide</span></div></div>`
+        +`<div class="pfs-guide"><div class="gh">Zonen des Exponenten α1</div>`
+          +`<div class="gr"><span style="width:16px;height:10px;border-radius:2px;background:#9C3A3A;flex:0 0 auto"></span><div class="gt"><b style="color:#9C3A3A">&lt; 0,5 · Random</b><span>unkorreliert, fragmentierte Regulation</span></div></div>`
+          +`<div class="gr"><span style="width:16px;height:10px;border-radius:2px;background:#C77D3A;flex:0 0 auto"></span><div class="gt"><b style="color:#C77D3A">0,5–0,75 · Vagal-hyper</b><span>sehr parasympathisch</span></div></div>`
+          +`<div class="gr"><span style="width:16px;height:10px;border-radius:2px;background:#3E8E57;flex:0 0 auto"></span><div class="gt"><b style="color:#3E8E57">0,75–1,15 · Physiologisch</b><span>1/f · fraktal · gesunde Balance</span></div></div>`
+          +`<div class="gr"><span style="width:16px;height:10px;border-radius:2px;background:#9C6A2E;flex:0 0 auto"></span><div class="gt"><b style="color:#9C6A2E">1,15–1,5 · Sympathisch</b><span>erhöhte Korrelation, Sympathikus-Tendenz</span></div></div>`
+          +`<div class="gr"><span style="width:16px;height:10px;border-radius:2px;background:#9C3A3A;flex:0 0 auto"></span><div class="gt"><b style="color:#9C3A3A">&gt; 1,5 · Hochkorr.</b><span>starre Regulation, Sympathikus-Dominanz</span></div></div>`
         +`</div>`
-        +`<div class="pfs-hint">Steigung der log-log-Fluktuation F(n) über der Fenstergröße n.<br>Gesunde Regulation liegt nahe 1,0 (selbstähnlich), nicht 0,5 und nicht 1,5.</div>`;
+        +`<div class="pfs-hint">DFA misst die fraktale Selbstähnlichkeit der Herzschlag-Folge (Peng et al. 1995).<br>Gesunde Regulation liegt nahe 1,0 (1/f) — nicht zu zufällig (0,5), nicht zu starr (1,5).</div>`;
       const plot=document.createElement('div'); plot.className='pfs-plot dfa-plot'; plot.appendChild(clone);
       body.appendChild(side); body.appendChild(plot);
-      $('#zoomTitle').textContent='DFA-α₁-Skalierung';
+      $('#zoomTitle').textContent='DFA-α₁-Zonen';
       $('#zoomHint').textContent=has?`α1 ${fmt2(A)} · ${ip[0]}`:'DFA-α₁'; $('#zoomHint').style.display='';
     } else if(hist){
       // Dedizierter Histogramm-Vollbild-Viewer: RR-Verteilung + geometrische Kennwerte
