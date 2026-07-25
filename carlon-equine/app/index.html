@@ -217,6 +217,21 @@ main{flex:1;overflow-y:auto;overflow-x:hidden;position:relative}
 .tstop .tremote span{font-size:11.5px;color:var(--text-secondary);line-height:1.4}.tstop .tremote b{color:var(--cyan);font-weight:700}
 .tact.remote{background:var(--cyan-g3);border-color:var(--cyan-deep);color:var(--cyan)}
 .tact.remote svg{width:15px;height:15px}
+.tstop .tremote{cursor:pointer;align-items:center}.tstop .tremote:hover{background:color-mix(in srgb,var(--cyan) 14%,transparent)}
+.tstop .tremote-go{width:16px;height:16px;color:var(--cyan);flex:0 0 auto;margin-left:auto;opacity:.75}
+/* Fern-Check-Sheet — Verdikt sehen, remote entscheiden, abrechnen */
+.fc-sheet .fc-saved{display:flex;align-items:center;gap:11px;margin:14px 0 12px;padding:11px 13px;background:linear-gradient(135deg,rgba(62,207,178,.16),rgba(62,207,178,.05));border:1px solid var(--cyan-deep);border-radius:12px}
+.fc-sheet .fc-saved>svg{width:22px;height:22px;color:var(--cyan);flex:0 0 auto}
+.fc-sheet .fc-saved b{display:block;font-size:13.5px;color:var(--cyan)}.fc-sheet .fc-saved span{display:block;font-size:11.5px;color:var(--text-secondary);margin-top:2px}
+.fc-sheet .fc-verdict{font-size:13px;color:var(--text-secondary);line-height:1.45;margin-bottom:12px;padding-left:2px}
+.fc-sheet .fc-verdict svg{width:15px;height:15px;color:var(--good);vertical-align:-2px}
+.fc-sheet .fc-metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:12px}
+.fc-sheet .fc-m{background:var(--bg-void);border:1px solid var(--border-subtle);border-radius:10px;padding:8px 6px;text-align:center}
+.fc-sheet .fc-m span{display:block;font-size:9.5px;color:var(--text-dim);letter-spacing:.03em;text-transform:uppercase}
+.fc-sheet .fc-m b{display:block;font-size:16px;margin-top:2px;color:var(--text-primary);font-family:var(--font-mono)}.fc-sheet .fc-m small{font-size:9px;color:var(--text-dim)}
+.fc-sheet .fc-chart{margin-bottom:14px;border-radius:12px;overflow:hidden}
+.fc-sheet .fc-acts{display:flex;flex-direction:column;gap:9px}
+@media(max-width:560px){.fc-sheet .fc-metrics{grid-template-columns:repeat(2,1fr)}}
 .tstop{display:flex;gap:var(--s3);align-items:flex-start;background:linear-gradient(160deg,rgba(26,26,30,.72),rgba(22,22,26,.6));
   border:1px solid var(--border-faint);border-left:3px solid var(--cyan);border-radius:var(--r-m);padding:12px var(--s4) 12px 13px;margin-bottom:10px;
   user-select:none;-webkit-user-select:none;cursor:grab}
@@ -3622,7 +3637,7 @@ const Views={
           ${h.place?`<button class="taddr" onclick="event.stopPropagation();Dispatch.navTo('${h.id}')" title="In Navigation öffnen"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2C8 2 5 5 5 9c0 5 7 13 7 13s7-8 7-13c0-4-3-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg><span>${esc(h.place)}</span><em>${IC.nav}Navi</em></button>`:`<button class="taddr missing" onclick="event.stopPropagation();Views.openHorse('${h.id}')">${IC.warn}<span>Adresse fehlt — ergänzen</span></button>`}
           ${h.owner||h.phone?`<div class="towner">${IC.owner}<span class="tow-txt"><b>${esc(h.owner||'—')}</b>${h.phone?`<em>${esc(h.phone)}</em>`:''}</span></div>`:''}
           ${r.lateBy?`<div class="twarn">${IC.warn} ${r.lateBy} min nach Termin ${fmtTime(r.appt)}<button class="twarn-btn" onclick="event.stopPropagation();Views.notifyDelay('${h.id}',${r.arrive})">${IC.phone}Halter benachrichtigen</button></div>`:(r.wait?`<div class="tbuffer">${IC.clock} ${r.wait} min Puffer bis Termin ${fmtTime(r.appt)}</div>`:'')}
-          ${remoteOk?`<div class="tremote">${ICremote}<span><b>Fern-Check möglich</b> — stabile Kontrolle, Telemetrie statt Anfahrt. Spart die Fahrt zu ${esc(h.stable||h.place||'diesem Stall')}.</span></div>`:''}
+          ${remoteOk?`<div class="tremote" onclick="event.stopPropagation();Views.fernCheck('${h.id}')" title="Fern-Check öffnen">${ICremote}<span><b>Fern-Check möglich</b> — stabile Kontrolle, Telemetrie statt Anfahrt. Spart die Fahrt zu ${esc(h.stable||h.place||'diesem Stall')}.</span><svg class="tremote-go" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 6l6 6-6 6"/></svg></div>`:''}
           ${flag}
           ${h.arrivedAt?`<div class="tarrived">${IC.check} angekommen ${fmtTime(new Date(h.arrivedAt).getHours()*60+new Date(h.arrivedAt).getMinutes())} — Behandlung läuft</div>`:''}
           <div class="tsched">
@@ -3635,7 +3650,7 @@ const Views={
               : `<button class="tact primary done full" onclick="Views.completeStop('${h.id}')">${IC.check}Erledigt</button>`}
             <button class="tact" onclick="Dispatch.navTo('${h.id}')">${IC.nav}Navi</button>
             <a class="tact call ${h.phone?'':'off'}" ${h.phone?`href="tel:${esc(h.phone)}"`:''}>${IC.phone}Anrufen</a>
-            <button class="tact${remoteOk?' remote':''}" onclick="Views.logConsult('${h.id}')">${remoteOk?ICremote+'Fern-Check':IC.euro+'Beratung'}</button>
+            <button class="tact${remoteOk?' remote':''}" onclick="${remoteOk?`Views.fernCheck('${h.id}')`:`Views.logConsult('${h.id}')`}">${remoteOk?ICremote+'Fern-Check':IC.euro+'Beratung'}</button>
             <button class="tact" onclick="Views.openHorse('${h.id}')">${IC.eye}Akte</button>
             <button class="tact ghost2" onclick="Views.reschedule('${h.id}',event)">${IC.clock}Nicht heute</button>
           </div>
@@ -4534,6 +4549,49 @@ const Views={
       date:new Date().toISOString(),type:$('#cType').value,durationMin:num($('#cDur').value),
       fee:num($('#cFee').value)||0,notes:$('#cNote').value,billed:$('#cBilled').checked};
     await DB.put('consults',c);State.consults.push(c);UI.closeModal();Toast.show('Beratung erfasst · '+euro(c.fee),'ok');Nav.refresh();
+  },
+  // ══ FERN-CHECK-FLOW — der Faktor-5-Moment: Telemetrie-Verdikt sehen → remote entscheiden → abschließen+abrechnen,
+  //    die Fahrt verschwindet aus dem Tag. Genau hier fasst der Vet den Nutzen an (= Zahlungsbereitschaft). ══
+  fernCheck(hid){
+    const h=State.horses.find(x=>x.id===hid); if(!h)return;
+    const rec=State.latestFor(hid); const m=rec?rec.metrics:{}; const tri=rec?rec.triage:{level:'stable',reasons:[]};
+    const lvl=tri.level, L=Triage.LEVELS[lvl];
+    let km=null,min=null; try{const pd=Dispatch.plannedDay();const idx=pd.order.findIndex(x=>x.h.id===hid);if(idx>=0){km=pd.order[idx].dist;min=pd.sch.rows[idx].driveMin;}}catch(e){}
+    const dfa=(m.dfa!=null)?m.dfa:(rec&&rec.rr?HRV.dfaAlpha1(rec.rr):null);
+    const met=(k,v,u)=>v==null?'':`<div class="fc-m"><span>${k}</span><b>${u==='2'?fmt2(v):fmt0(v)}${(u&&u!=='2')?`<small> ${u}</small>`:''}</b></div>`;
+    const reason=(tri.reasons&&tri.reasons[0])?tri.reasons[0]:'Werte im erwarteten Bereich — stabile Kontrolle, kein Vor-Ort-Befund nötig.';
+    const sig='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="1.8"/><path d="M16.5 7.5a6.4 6.4 0 010 9M7.5 16.5a6.4 6.4 0 010-9M19.5 4.5a10.6 10.6 0 010 15M4.5 19.5a10.6 10.6 0 010-15"/></svg>';
+    const fee=State.settings.tariff||State.settings.tariffRemote||0;
+    UI.modal(`<div class="qa fc-sheet">
+      <div class="qa-head">${Views.avatar(h,42)}<div class="qa-id"><b>${esc(h.name)}</b><span>${esc(h.owner||'Halter')}${h.stable||h.place?' · '+esc(h.stable||h.place):''}</span></div><span class="tri-badge tri-${lvl}"><span class="dot"></span>${L.label}</span></div>
+      <div class="fc-saved">${sig}<div><b>Fern-Check statt Anfahrt</b><span>${km!=null?`spart ~${fmt0(km)} km · ${min} min Fahrt`:'spart die Anfahrt'}${h.stable||h.place?` zu ${esc(h.stable||h.place)}`:''}</span></div></div>
+      <div class="fc-verdict">${IC.check||''} ${esc(reason)}</div>
+      <div class="fc-metrics">${met('RMSSD',m.rmssd,'ms')}${met('Ruhe-HF',m.meanHR,'bpm')}${met('DFA α1',dfa,'2')}${met('SD1',m.sd1,'ms')}</div>
+      ${rec&&rec.rr&&rec.rr.length>=8?`<div class="fc-chart">${Chart.dualVitals(rec.rr,{w:660,h:150})}</div>`:''}
+      <div class="fc-acts">
+        <button class="btn primary block" onclick="Views.completeRemote('${hid}')">${IC.euro} Fern-Check abschließen &amp; abrechnen</button>
+        <button class="btn ghost block" onclick="UI.closeModal();Toast.show('Bleibt als Vor-Ort-Termin heute','info')">Doch rausfahren</button>
+      </div>
+    </div>`,{sheet:true});
+  },
+  async completeRemote(hid){
+    const h=State.horses.find(x=>x.id===hid); if(!h)return;
+    const now=new Date();
+    let km=0,dmin=0; try{const pd=Dispatch.plannedDay();const idx=pd.order.findIndex(x=>x.h.id===hid);if(idx>=0){km=pd.order[idx].dist||0;dmin=pd.sch.rows[idx].driveMin||0;}}catch(e){}
+    const fee=State.settings.tariff||State.settings.tariffRemote||0;
+    const lvl=(State.latestFor(hid)&&State.latestFor(hid).triage&&State.latestFor(hid).triage.level)||'stable';
+    // Abrechenbare Fern-Beratung
+    const c={id:'c_'+Math.abs(hashStr(hid+performance.now())).toString(36),horseId:hid,date:now.toISOString(),
+      type:'Telemetrie-Ferneinschätzung',durationMin:15,fee:fee,
+      notes:`Fern-Check statt Anfahrt · ~${Math.round(km*10)/10} km / ${dmin} min Fahrt gespart`,billed:false,remote:true};
+    await DB.put('consults',c); State.consults.push(c);
+    // Fahrtenbuch: erledigt, OHNE Fahrt (savedKm dokumentiert den Nutzen)
+    const entry={id:'log:'+now.toISOString().slice(0,10)+':'+hid+':'+now.getTime(),date:now.toISOString().slice(0,10),
+      horseId:hid,horseName:h.name,owner:h.owner||'',place:h.place||h.stable||'',arriveAt:null,departAt:now.toISOString(),
+      treatmentMin:15,driveKm:0,driveMin:0,savedKm:Math.round(km*10)/10,triageLevel:lvl,remote:true,estimated:true};
+    await DB.put('settings',entry); State.daylog.push(entry);
+    delete h.arrivedAt; h.needsVisit=false; h.visitDoneAt=now.toISOString(); h.resolvedRemote=true; await DB.put('horses',h);
+    UI.closeModal(); Toast.show(`✓ Fern-Check · ~${fmt0(km)} km gespart · ${euro(fee)} abgerechnet`,'ok'); Nav.refresh();
   },
   async toggleBilledInline(){},
   planVisit(hid){
