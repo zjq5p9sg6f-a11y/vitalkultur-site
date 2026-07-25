@@ -5655,7 +5655,20 @@ const Seed={
     await Seed.synthConsults();
     await Seed.synthDaylog();
     await Seed.loadCoherence(true);
-    await State.load();Nav.refresh();Toast.show(`${cnt} Demo-Pferde geladen · inkl. synthetischem Verlauf`,'ok');
+    await State.load();
+    await Seed.synthRoutineVisits();
+    Nav.refresh();Toast.show(`${cnt} Demo-Pferde geladen · inkl. synthetischem Verlauf`,'ok');
+  },
+  // Realistischer Tagesmix: neben den Notfällen ein paar STABILE Routine-Kontrollen in den Tag legen.
+  // Genau diese werden zu Fern-Check-Kandidaten (Telemetrie statt Anfahrt) → der sichtbare Fahrt-spar-Nutzen.
+  // Ein echter Vet-Tag ist nie 100% Notfall — das macht die Demo glaubwürdig UND zeigt den Wedge.
+  async synthRoutineVisits(){
+    const cand=State.horses
+      .filter(h=>!h.needsVisit && h.lat!=null && State.recsFor(h.id).length>0)
+      .map(h=>({h,lvl:(State.latestFor(h.id)||{}).triage?(State.latestFor(h.id).triage.level):null}))
+      .filter(o=>o.lvl==='stable'||o.lvl==='watch');
+    cand.sort((a,b)=>((a.lvl==='stable'?0:1)-(b.lvl==='stable'?0:1))||String(a.h.name).localeCompare(String(b.h.name)));
+    for(const o of cand.slice(0,3)){o.h.needsVisit=true;await DB.put('horses',o.h);}
   },
   // Demo-Umsätze: abrechenbare Ferneinschätzungen über die letzten Wochen — macht die Einnahmequelle sichtbar
   async synthConsults(){
