@@ -2643,12 +2643,20 @@ const HRV={
     const cnt=mm=>{let c=0;for(let i=0;i<N-mm;i++)for(let j=i+1;j<N-mm;j++){let ok=true;for(let k=0;k<mm;k++)if(Math.abs(x[i+k]-x[j+k])>r){ok=false;break;}if(ok)c++;}return c;};
     const A=cnt(m+1),B=cnt(m); return (A>0&&B>0)?-Math.log(A/B):null;
   },
+  // TINN = Baseline-Breite der kleinste-Quadrate-DREIECKS-Interpolation (Task Force 1996), nicht die rohe
+  // belegte Spannweite. Wichtig: robust gegen einzelne Artefakt-/Ektopie-Ausreißer (die die reine Spannweite
+  // vervielfachen würden). Links/rechts vom Modus separabel gelöst. Gibt Stützpunkte (triN/triX/triM) fürs Chart mit.
   tinnTri(rr){
     if(!rr||rr.length<20)return null; const binMs=7.8125;
-    const mn=Math.min(...rr); const bins={}; let peak=0,tot=0;
-    rr.forEach(v=>{const b=Math.floor((v-mn)/binMs);bins[b]=(bins[b]||0)+1;if(bins[b]>peak)peak=bins[b];tot++;});
-    const ks=Object.keys(bins).map(Number); const tinn=(Math.max(...ks)-Math.min(...ks))*binMs;
-    return {tinn, triIndex:peak>0?tot/peak:null};
+    const mn=Math.min(...rr); const bins={}; let peak=0,X=0,tot=0;
+    rr.forEach(v=>{const b=Math.floor((v-mn)/binMs);bins[b]=(bins[b]||0)+1;if(bins[b]>peak){peak=bins[b];X=b;}tot++;});
+    const ks=Object.keys(bins).map(Number).sort((a,b)=>a-b); const bmin=ks[0],bmax=ks[ks.length-1];
+    const D=b=>bins[b]||0, Y=peak;
+    let triN=X,eL=Infinity;
+    for(let N=bmin-2;N<X;N++){let e=0;for(let b=bmin;b<=X;b++){const q=b<N?0:Math.min(Y,Y*(b-N)/((X-N)||1));e+=(D(b)-q)*(D(b)-q);}if(e<eL){eL=e;triN=N;}}
+    let triM=X,eR=Infinity;
+    for(let M=X+1;M<=bmax+2;M++){let e=0;for(let b=X;b<=bmax;b++){const q=b>M?0:Math.min(Y,Y*(M-b)/((M-X)||1));e+=(D(b)-q)*(D(b)-q);}if(e<eR){eR=e;triM=M;}}
+    return {tinn:(triM-triN)*binMs, triIndex:peak>0?tot/peak:null, triN, triX:X, triM};
   },
   histogram(rr,binMs=7.8125){
     if(!rr||rr.length<8)return null; const mn=Math.min(...rr),mx=Math.max(...rr);
@@ -2741,13 +2749,16 @@ const HRV={
     let g=`<rect x="${pad.l}" y="${pad.t}" width="${(w-pad.l-pad.r).toFixed(1)}" height="${(h-pad.t-pad.b).toFixed(1)}" rx="8" fill="#0E0E0E"/>`; const yt=Chart.niceTicks(0,peak,4);
     yt.forEach(t=>{g+=`<line class="grid-minor" x1="${pad.l}" x2="${w-pad.r}" y1="${Y(t).toFixed(1)}" y2="${Y(t).toFixed(1)}"/><text x="${pad.l-6}" y="${(Y(t)+3).toFixed(1)}" text-anchor="end">${fmt0(t)}</text>`;});
     H.bins.forEach((v,i)=>{ if(!v)return; g+=`<rect x="${(X(i)+0.5).toFixed(1)}" y="${Y(v).toFixed(1)}" width="${Math.max(1,bw-1).toFixed(1)}" height="${(Y(0)-Y(v)).toFixed(1)}" fill="var(--cyan)" opacity=".5" rx="1"/>`;});
-    const nz=H.bins.map((v,i)=>({v,i})).filter(o=>o.v>0); const peakI=H.bins.indexOf(peak); const lo=nz[0].i, hi=nz[nz.length-1].i;
-    g+=`<polyline points="${(X(lo)).toFixed(1)},${Y(0).toFixed(1)} ${(X(peakI)+bw/2).toFixed(1)},${Y(peak).toFixed(1)} ${(X(hi)+bw).toFixed(1)},${Y(0).toFixed(1)}" fill="none" stroke="var(--amber)" stroke-width="1.8"/>`;
+    const peakI=H.bins.indexOf(peak);
+    // Dreiecks-Interpolation an den ECHTEN TINN-Stützpunkten (kleinste Quadrate), nicht an der rohen Spannweite → deckt sich mit der TINN-Zahl
+    const _ttFit=this.tinnTri(rr); const clampI=i=>Math.max(0,Math.min(H.bins.length,i));
+    const triN=_ttFit?clampI(_ttFit.triN):0, triX=_ttFit?_ttFit.triX:peakI, triM=_ttFit?clampI(_ttFit.triM):H.bins.length;
+    g+=`<polyline points="${(X(triN)+bw/2).toFixed(1)},${Y(0).toFixed(1)} ${(X(triX)+bw/2).toFixed(1)},${Y(peak).toFixed(1)} ${(X(triM)+bw/2).toFixed(1)},${Y(0).toFixed(1)}" fill="none" stroke="var(--amber)" stroke-width="1.8"/>`;
     g+=`<rect x="${pad.l}" y="${pad.t}" width="${w-pad.l-pad.r}" height="${h-pad.t-pad.b}" fill="none" class="axis"/>`;
     const rrAt=i=>fmt0(H.mn+i*H.binMs);
-    [lo,peakI,hi].forEach(i=>g+=`<text x="${(X(i)+bw/2).toFixed(1)}" y="${(h-pad.b+13).toFixed(1)}" text-anchor="middle">${rrAt(i)}</text>`);
+    [triN,triX,triM].forEach(i=>g+=`<text x="${(X(i)+bw/2).toFixed(1)}" y="${(h-pad.b+13).toFixed(1)}" text-anchor="middle">${rrAt(i)}</text>`);
     g+=`<text x="${(pad.l+(w-pad.l-pad.r)/2).toFixed(0)}" y="${h-2}" text-anchor="middle" class="label-axis">RR-INTERVALL<tspan class="label-unit"> (ms)</tspan></text>`;
-    const _tt=this.tinnTri(rr); const _modeRR=Math.round(H.mn+peakI*H.binMs);
+    const _tt=_ttFit; const _modeRR=Math.round(H.mn+peakI*H.binMs);
     // Rohe Maschinenzahlen (Punkt-Dezimal) in die data-Attribute — Formatierung erst im Viewer (parseFloat verträgt kein DE-Komma)
     return `<svg class="viz" data-chart="hist" data-tinn="${_tt?Math.round(_tt.tinn):''}" data-moderr="${_modeRR}" data-tri="${_tt&&_tt.triIndex!=null?Math.round(_tt.triIndex*10)/10:''}" data-n="${rr.length}" viewBox="0 0 ${w} ${h}">${g}</svg>`;
   },
