@@ -203,6 +203,20 @@ main{flex:1;overflow-y:auto;overflow-x:hidden;position:relative}
 .today-hero .ths b small{font-size:13px;color:var(--text-secondary);font-weight:400}
 .today-hero .ths span{font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--text-dim);font-weight:600}
 @media(max-width:560px){.today-hero .th-stats{grid-template-columns:repeat(2,1fr);gap:16px 14px}.today-hero .ths b{font-size:24px}}
+/* Fern-Check-Wedge — der telemetrie-native Fahrt-spar-Nutzen, sichtbar in der Tagesplanung */
+.today-hero .th-remote{display:flex;align-items:center;gap:11px;width:100%;margin-top:var(--s4);padding:11px 13px;text-align:left;
+  background:linear-gradient(135deg,rgba(62,207,178,.16),rgba(62,207,178,.05));border:1px solid var(--cyan-deep);border-radius:13px;cursor:pointer;transition:transform .12s,background .12s}
+.today-hero .th-remote:hover{background:linear-gradient(135deg,rgba(62,207,178,.24),rgba(62,207,178,.08));transform:translateY(-1px)}
+.today-hero .th-remote>svg{width:22px;height:22px;color:var(--cyan);flex:0 0 auto}
+.today-hero .thr-t{flex:1;min-width:0}.today-hero .thr-t b{display:block;font-size:13.5px;color:var(--cyan);letter-spacing:.01em}
+.today-hero .thr-t span{display:block;font-size:11.5px;color:var(--text-secondary);margin-top:2px;line-height:1.35}
+.today-hero .thr-go{color:var(--cyan);font-size:20px;flex:0 0 auto;opacity:.7}
+.tstop.remote-ok{border-left-color:var(--cyan)}
+.tstop .tremote{display:flex;align-items:flex-start;gap:8px;margin-top:9px;padding:8px 10px;background:var(--cyan-g3);border:1px solid var(--cyan-deep);border-radius:10px}
+.tstop .tremote>svg{width:16px;height:16px;color:var(--cyan);flex:0 0 auto;margin-top:1px}
+.tstop .tremote span{font-size:11.5px;color:var(--text-secondary);line-height:1.4}.tstop .tremote b{color:var(--cyan);font-weight:700}
+.tact.remote{background:var(--cyan-g3);border-color:var(--cyan-deep);color:var(--cyan)}
+.tact.remote svg{width:15px;height:15px}
 .tstop{display:flex;gap:var(--s3);align-items:flex-start;background:linear-gradient(160deg,rgba(26,26,30,.72),rgba(22,22,26,.6));
   border:1px solid var(--border-faint);border-left:3px solid var(--cyan);border-radius:var(--r-m);padding:12px var(--s4) 12px 13px;margin-bottom:10px;
   user-select:none;-webkit-user-select:none;cursor:grab}
@@ -3543,6 +3557,19 @@ const Views={
       savedKm=Math.max(0,nd-optKm);
     }
     const savedMin=Math.round(savedKm/45*60);      // ~45 km/h Landstraße
+    // ══ Fern-Check-Wedge — unser unfairer Vorteil: stabile Kontrollen per Telemetrie statt Anfahrt ══
+    // Ehrliche Eligibility: nur klar STABILE Follow-ups (stable/watch), kein Analog-Patient, MIT Vor-Aufnahme
+    // (H10-Baseline vorhanden). Kritische/erhöhte Fälle bleiben immer physische Fahrt.
+    const remoteOkFn=x=>(x.tri.level==='stable'||x.tri.level==='watch') && !x.h.analog && !!State.latestFor(x.h.id);
+    const remoteStops=order.filter(remoteOkFn);
+    let remoteSavedKm=0;
+    if(remoteStops.length){
+      const remain=order.filter(x=>!remoteOkFn(x));
+      let rc=origin,pk=0; remain.forEach(x=>{pk+=haversine(rc,{lat:x.h.lat,lng:x.h.lng});rc={lat:x.h.lat,lng:x.h.lng};});
+      remoteSavedKm=Math.max(0,optKm-pk);                 // reale Routen-Differenz, kein Schätzwert
+    }
+    const remoteSavedMin=Math.round(remoteSavedKm/45*60)+remoteStops.length*20;   // gesparte Fahrzeit + Besuchszeit
+    const ICremote='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="1.8"/><path d="M16.5 7.5a6.4 6.4 0 010 9M7.5 16.5a6.4 6.4 0 010-9M19.5 4.5a10.6 10.6 0 010 15M4.5 19.5a10.6 10.6 0 010-15"/></svg>';
     const noLoc=State.horses.filter(h=>h.needsVisit&&(h.lat==null||h.lng==null));
     const critCount=order.filter(x=>x.tri.level==='crit').length;
     // Stall-Cluster: mehrere Pferde am selben Ort = Sammelbesuch
@@ -3575,6 +3602,7 @@ const Views={
         <div class="ths"><b>~${dayStr}</b><span>Tagesdauer</span></div>
         <div class="ths${critCount?' crit':''}"><b>${critCount}</b><span>kritisch</span></div>
       </div>
+      ${remoteStops.length?`<button class="th-remote" onclick="Nav.go('today');document.querySelector('.tstop.remote-ok')?.scrollIntoView({block:'center',behavior:'smooth'})">${ICremote}<div class="thr-t"><b>${remoteStops.length} Fahrt${remoteStops.length>1?'en':''} vermeidbar · Fern-Check</b><span>Stabile Kontrollen per Telemetrie statt Anfahrt — spart ~${fmt0(remoteSavedKm)} km · ${remoteSavedMin} min</span></div><span class="thr-go">${IC.chevron||'›'}</span></button>`:''}
     </div>`;
 
     const noLocHtml=noLoc.length?`<div class="chip amber" style="display:block;margin:2px 0 12px">${IC.warn} ${noLoc.length} Besuch${noLoc.length>1?'e':''} ohne Standort — Ort in der Akte ergänzen: ${noLoc.map(h=>esc(h.name)).join(', ')}</div>`:'';
@@ -3583,7 +3611,8 @@ const Views={
     const stops=order.map((x,i)=>{
       const h=x.h, lvl=x.tri.level, lbl=Triage.LEVELS[lvl].label; const r=srows[i];
       const flag=(x.tri.flags&&x.tri.flags[0])?`<div class="tflag">${IC.warn} ${esc(x.tri.flags[0])}</div>`:'';
-      return `<div class="tstop ${lvl}${r.lateBy?' late':''}" data-sort="${h.id}" data-eta="${r.arrive}" data-depart="${r.depart}" data-arrived="${h.arrivedAt?'1':'0'}">
+      const remoteOk=remoteOkFn(x);
+      return `<div class="tstop ${lvl}${r.lateBy?' late':''}${remoteOk?' remote-ok':''}" data-sort="${h.id}" data-eta="${r.arrive}" data-depart="${r.depart}" data-arrived="${h.arrivedAt?'1':'0'}">
         <div class="tdrag" title="Ziehen zum Umsortieren">${IC.grip}</div>
         <div class="tl"><div class="tord">${i+1}</div></div>
         <div class="tmain">
@@ -3593,6 +3622,7 @@ const Views={
           ${h.place?`<button class="taddr" onclick="event.stopPropagation();Dispatch.navTo('${h.id}')" title="In Navigation öffnen"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2C8 2 5 5 5 9c0 5 7 13 7 13s7-8 7-13c0-4-3-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg><span>${esc(h.place)}</span><em>${IC.nav}Navi</em></button>`:`<button class="taddr missing" onclick="event.stopPropagation();Views.openHorse('${h.id}')">${IC.warn}<span>Adresse fehlt — ergänzen</span></button>`}
           ${h.owner||h.phone?`<div class="towner">${IC.owner}<span class="tow-txt"><b>${esc(h.owner||'—')}</b>${h.phone?`<em>${esc(h.phone)}</em>`:''}</span></div>`:''}
           ${r.lateBy?`<div class="twarn">${IC.warn} ${r.lateBy} min nach Termin ${fmtTime(r.appt)}<button class="twarn-btn" onclick="event.stopPropagation();Views.notifyDelay('${h.id}',${r.arrive})">${IC.phone}Halter benachrichtigen</button></div>`:(r.wait?`<div class="tbuffer">${IC.clock} ${r.wait} min Puffer bis Termin ${fmtTime(r.appt)}</div>`:'')}
+          ${remoteOk?`<div class="tremote">${ICremote}<span><b>Fern-Check möglich</b> — stabile Kontrolle, Telemetrie statt Anfahrt. Spart die Fahrt zu ${esc(h.stable||h.place||'diesem Stall')}.</span></div>`:''}
           ${flag}
           ${h.arrivedAt?`<div class="tarrived">${IC.check} angekommen ${fmtTime(new Date(h.arrivedAt).getHours()*60+new Date(h.arrivedAt).getMinutes())} — Behandlung läuft</div>`:''}
           <div class="tsched">
@@ -3605,7 +3635,7 @@ const Views={
               : `<button class="tact primary done full" onclick="Views.completeStop('${h.id}')">${IC.check}Erledigt</button>`}
             <button class="tact" onclick="Dispatch.navTo('${h.id}')">${IC.nav}Navi</button>
             <a class="tact call ${h.phone?'':'off'}" ${h.phone?`href="tel:${esc(h.phone)}"`:''}>${IC.phone}Anrufen</a>
-            <button class="tact" onclick="Views.logConsult('${h.id}')">${IC.euro}Beratung</button>
+            <button class="tact${remoteOk?' remote':''}" onclick="Views.logConsult('${h.id}')">${remoteOk?ICremote+'Fern-Check':IC.euro+'Beratung'}</button>
             <button class="tact" onclick="Views.openHorse('${h.id}')">${IC.eye}Akte</button>
             <button class="tact ghost2" onclick="Views.reschedule('${h.id}',event)">${IC.clock}Nicht heute</button>
           </div>
