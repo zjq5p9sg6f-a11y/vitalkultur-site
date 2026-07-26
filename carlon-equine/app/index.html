@@ -288,6 +288,10 @@ main{flex:1;overflow-y:auto;overflow-x:hidden;position:relative}
 .fc-week .fcw-t small{font-size:13px;color:var(--text-dim);font-weight:600}
 .fc-week .fcw-t span{display:block;font-size:11px;color:var(--text-dim);margin-top:3px;letter-spacing:.02em}
 @media(max-width:560px){.fc-week .fcw-grid{grid-template-columns:repeat(2,1fr);gap:14px 10px}.fc-week .fcw-t b{font-size:23px}}
+.logo-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.logo-prev{width:120px;height:52px;border-radius:10px;background:var(--bg-void);border:1px solid var(--border-subtle);display:flex;align-items:center;justify-content:center;flex:0 0 auto;overflow:hidden}
+.logo-prev img{max-width:100%;max-height:100%;object-fit:contain}
+.logo-prev span{font-size:11px;color:var(--text-dim)}
 .tstop{display:flex;gap:var(--s3);align-items:flex-start;background:linear-gradient(160deg,rgba(26,26,30,.72),rgba(22,22,26,.6));
   border:1px solid var(--border-faint);border-left:3px solid var(--cyan);border-radius:var(--r-m);padding:12px var(--s4) 12px 13px;margin-bottom:10px;
   user-select:none;-webkit-user-select:none;cursor:grab}
@@ -1429,6 +1433,8 @@ svg.viz .sd-lbl{fill:var(--cyan-strong);font-size:10px;font-weight:600;font-fami
   .pr-head .wm{font-family:var(--font-brand);font-weight:600;letter-spacing:.22em;font-size:20px;color:#04303a}
   .pr-head .wm small{display:block;font-size:9px;letter-spacing:.2em;color:#00b8a0;font-weight:600}
   .pr-head .meta{text-align:right;font-size:11px;color:#5a7080}
+  .pr-head .pr-logo{max-height:56px;max-width:240px;object-fit:contain}
+  .pr-cobrand{font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:#8aa0ac;margin:-14px 0 20px}
   #printArea h1{font-family:var(--font-brand);font-size:26px;color:#04303a;margin-bottom:2px}
   #printArea h2{font-size:14px;color:#00867a;margin:22px 0 10px;border-bottom:1px solid #d5e2e8;padding-bottom:5px;text-transform:uppercase;letter-spacing:.06em}
   #printArea .sub{color:#5a7080;font-size:13px;margin-bottom:18px}
@@ -5222,9 +5228,10 @@ const Report={
       <div class="pv-u">▶ ${Report.URL}</div></div></div>`:'';
     $('#printArea').innerHTML=`
       <div class="pr-head">
-        <div class="wm">CARLON EQUINE<small>EQUINE HEART SCIENCE · TELEMETRIE-BEFUND</small></div>
+        ${s.logo?`<img class="pr-logo" src="${s.logo}" alt="${esc(s.clinicName||'Praxis')}">`:`<div class="wm">CARLON EQUINE<small>EQUINE HEART SCIENCE · TELEMETRIE-BEFUND</small></div>`}
         <div class="meta"><b>${esc(s.clinicName||'')}</b>${d.vet?'<br>'+esc(d.vet):(s.vetName?'<br>'+esc(s.vetName):'')}<br>${fmtDate(new Date().toISOString(),true)}</div>
       </div>
+      ${s.logo?`<div class="pr-cobrand">Telemetrie-Befund · erstellt mit CARLON EQUINE — Equine Heart Science</div>`:''}
       <h1>${esc(h.name)}</h1>
       <div class="sub">${esc(h.breed||'—')}${h.sex?' · '+esc(h.sex):''}${h.age?' · '+h.age+' Jahre':''}${h.owner?' · Besitzer: '+esc(h.owner):''}${h.stable?' · '+esc(h.stable):''}</div>
       <div class="pr-tri ${tri.level}">Screening-Einstufung: ${Triage.LEVELS[tri.level].label}</div>
@@ -5419,12 +5426,33 @@ const UI={
     const b=$('#fieldBtn'); if(b)b.classList.toggle('on',on);
     Toast.show(on?'Feldmodus an — Hochkontrast & große Touch-Ziele':'Feldmodus aus','info');
   },
+  // Praxis-Logo hochladen (auf 320px skaliert, lokal gespeichert) → erscheint auf Befund-PDFs im eigenen Branding
+  uploadLogo(){
+    const inp=el('input');inp.type='file';inp.accept='image/*';
+    inp.onchange=()=>{const f=inp.files[0];if(!f)return;const r=new FileReader();
+      r.onload=()=>{const img=new Image();img.onload=async()=>{
+        const M=320;const sc=Math.min(1,M/Math.max(img.width,img.height));const w=Math.max(1,Math.round(img.width*sc)),hh=Math.max(1,Math.round(img.height*sc));
+        const c=el('canvas');c.width=w;c.height=hh;c.getContext('2d').drawImage(img,0,0,w,hh);
+        State.settings.logo=c.toDataURL('image/png');await State.saveSettings();
+        const pv=$('#sLogoPrev');if(pv)pv.innerHTML=`<img src="${State.settings.logo}" alt="Logo">`;
+        Toast.show('Logo gespeichert — erscheint auf deinen Befund-PDFs','ok');
+      };img.src=r.result;};r.readAsDataURL(f);};
+    inp.click();
+  },
+  async removeLogo(){ delete State.settings.logo; await State.saveSettings(); const pv=$('#sLogoPrev');if(pv)pv.innerHTML='<span>kein Logo</span>'; Toast.show('Logo entfernt','info'); },
   openSettings(){
     const s=State.settings;
     this.modal(`<div class="modal-head"><button class="closex" onclick="UI.closeModal()">${IC.x}</button><h3>Praxis-Einstellungen</h3></div>
     <div class="modal-body">
       <div class="field"><label>Praxisname</label><input id="sName" value="${esc(s.clinicName)}"></div>
       <div class="field"><label>Tierarzt / Tierärztin</label><input id="sVet" value="${esc(s.vetName||'')}"></div>
+      <div class="field"><label>Praxis-Logo <span style="color:var(--text-dim);font-weight:400">— erscheint auf deinen Befund-PDFs (dein Branding, nicht unseres)</span></label>
+        <div class="logo-row">
+          <div class="logo-prev" id="sLogoPrev">${s.logo?`<img src="${s.logo}" alt="Logo">`:'<span>kein Logo</span>'}</div>
+          <button type="button" class="btn ghost" style="font-size:13px" onclick="UI.uploadLogo()">${IC.download||''} Logo hochladen</button>
+          ${s.logo?`<button type="button" class="btn ghost" style="font-size:13px" onclick="UI.removeLogo()">Entfernen</button>`:''}
+        </div>
+        <div class="hint">PNG/JPG, quer oder quadratisch — wird auf 320 px skaliert und lokal gespeichert.</div></div>
       <div class="field"><label>Startort der Route (Adresse oder Ort)</label>
         <div style="display:flex;gap:8px"><input id="sOrigin" value="${esc(s.originLabel)}" placeholder="z. B. Tierklinik, Musterstr. 1, Rastatt" style="flex:1">
         <button class="btn ghost" style="padding:0 14px;white-space:nowrap" onclick="geoLookup('sOrigin','sLat','sLng',this)">${IC.pin} Suchen</button></div>
