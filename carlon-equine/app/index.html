@@ -5826,11 +5826,14 @@ const Seed={
   // Genau diese werden zu Fern-Check-Kandidaten (Telemetrie statt Anfahrt) → der sichtbare Fahrt-spar-Nutzen.
   // Ein echter Vet-Tag ist nie 100% Notfall — das macht die Demo glaubwürdig UND zeigt den Wedge.
   async synthRoutineVisits(){
+    const origin={lat:State.settings.originLat,lng:State.settings.originLng};
     const cand=State.horses
       .filter(h=>!h.needsVisit && h.lat!=null && State.recsFor(h.id).length>0)
-      .map(h=>({h,lvl:(State.latestFor(h.id)||{}).triage?(State.latestFor(h.id).triage.level):null}))
+      .map(h=>({h,lvl:(State.latestFor(h.id)||{}).triage?(State.latestFor(h.id).triage.level):null,
+        d:(origin.lat!=null?haversine(origin,{lat:h.lat,lng:h.lng}):999)}))
       .filter(o=>o.lvl==='stable'||o.lvl==='watch');
-    cand.sort((a,b)=>((a.lvl==='stable'?0:1)-(b.lvl==='stable'?0:1))||String(a.h.name).localeCompare(String(b.h.name)));
+    // Routine-Kontrollen sind typisch lokale Stammklienten → nach Nähe wählen (glaubwürdige, nicht dramatische Fahrt-Ersparnis)
+    cand.sort((a,b)=>a.d-b.d);
     for(const o of cand.slice(0,3)){o.h.needsVisit=true;await DB.put('horses',o.h);}
   },
   // Demo-Umsätze: abrechenbare Ferneinschätzungen über die letzten Wochen — macht die Einnahmequelle sichtbar
