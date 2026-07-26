@@ -275,6 +275,19 @@ main{flex:1;overflow-y:auto;overflow-x:hidden;position:relative}
 .owner-mode .om-chart-lbl{font-size:14px;font-weight:600;color:var(--text-secondary);margin-bottom:8px}
 .owner-mode .om-foot{font-size:13px;color:var(--text-dim);text-align:center;padding:8px 0 30px;line-height:1.5}
 @media(max-width:560px){.owner-mode .om-inner{padding:40px 4px}.owner-mode .om-name{font-size:25px}.owner-mode .om-word{font-size:21px}.owner-mode .om-plain{font-size:17px}.owner-mode .om-ring{width:46px;height:46px}}
+/* Fern-Check-Wochenbilanz — der kumulative Nutzen, der das Abo rechtfertigt */
+.fc-week{margin-bottom:var(--s4);padding:16px 18px;border-radius:16px;
+  background:linear-gradient(135deg,color-mix(in srgb,var(--cyan) 14%,transparent),color-mix(in srgb,var(--cyan) 3%,var(--bg-surface)));border:1px solid var(--cyan-deep)}
+.fc-week .fcw-head{display:flex;align-items:center;gap:11px;margin-bottom:14px}
+.fc-week .fcw-head>svg{width:24px;height:24px;color:var(--cyan);flex:0 0 auto}
+.fc-week .fcw-head b{display:block;font-size:15px;color:var(--cyan)}
+.fc-week .fcw-head span{display:block;font-size:11.5px;color:var(--text-secondary);margin-top:2px;line-height:1.35}
+.fc-week .fcw-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.fc-week .fcw-t{text-align:center;padding:6px 4px}
+.fc-week .fcw-t b{display:block;font-family:var(--font-brand);font-weight:700;font-size:26px;color:var(--text-primary)}
+.fc-week .fcw-t small{font-size:13px;color:var(--text-dim);font-weight:600}
+.fc-week .fcw-t span{display:block;font-size:11px;color:var(--text-dim);margin-top:3px;letter-spacing:.02em}
+@media(max-width:560px){.fc-week .fcw-grid{grid-template-columns:repeat(2,1fr);gap:14px 10px}.fc-week .fcw-t b{font-size:23px}}
 .tstop{display:flex;gap:var(--s3);align-items:flex-start;background:linear-gradient(160deg,rgba(26,26,30,.72),rgba(22,22,26,.6));
   border:1px solid var(--border-faint);border-left:3px solid var(--cyan);border-radius:var(--r-m);padding:12px var(--s4) 12px 13px;margin-bottom:10px;
   user-select:none;-webkit-user-select:none;cursor:grab}
@@ -4306,6 +4319,17 @@ const Views={
           <button class="btn ghost" onclick="Backup.doExport()" title="Praxis-Backup jetzt sichern">${IC.download} Backup sichern</button>
         </div>
       </div>
+      ${(()=>{const wk=new Date(now);wk.setDate(wk.getDate()-7);const fc=cons.filter(c=>c.remote&&new Date(c.date)>=wk);
+        if(!fc.length)return'';const km=fc.reduce((s,c)=>s+(c.savedKm||0),0);const rev=fc.reduce((s,c)=>s+(c.fee||0),0);
+        const hrs=km/45+fc.length*20/60;const sig='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="1.8"/><path d="M16.5 7.5a6.4 6.4 0 010 9M7.5 16.5a6.4 6.4 0 010-9M19.5 4.5a10.6 10.6 0 010 15M4.5 19.5a10.6 10.6 0 010-15"/></svg>';
+        return `<div class="fc-week">
+          <div class="fcw-head">${sig}<div><b>Fern-Check-Bilanz · diese Woche</b><span>Was dir die Telemetrie an Fahrt, Zeit und Nerven erspart hat — die Zahl, die das Abo trägt.</span></div></div>
+          <div class="fcw-grid">
+            <div class="fcw-t"><b>${fc.length}</b><span>Fern-Checks</span></div>
+            <div class="fcw-t"><b>${fmt0(km)}<small> km</small></b><span>nicht gefahren</span></div>
+            <div class="fcw-t"><b>${hrs.toFixed(1).replace('.',',')}<small> h</small></b><span>Zeit gespart</span></div>
+            <div class="fcw-t"><b>${euro(rev).replace(/\s?€/,'')}<small> €</small></b><span>remote abgerechnet</span></div>
+          </div></div>`;})()}
       <div class="kpis">
         <div class="kpi good"><div class="lbl">Umsatz gesamt</div><div class="val">${euro(total).replace(/\s?€/,'')}<small>€</small></div><div class="hint">${cons.length} Beratungen</div></div>
         <div class="kpi"><div class="lbl">Diesen Monat</div><div class="val">${euro(monthSum).replace(/\s?€/,'')}<small>€</small></div><div class="hint">${thisMonth.length} Beratungen</div></div>
@@ -4659,7 +4683,7 @@ const Views={
     const lvl=(State.latestFor(hid)&&State.latestFor(hid).triage&&State.latestFor(hid).triage.level)||'stable';
     // Abrechenbare Fern-Beratung
     const c={id:'c_'+Math.abs(hashStr(hid+performance.now())).toString(36),horseId:hid,date:now.toISOString(),
-      type:'Telemetrie-Ferneinschätzung',durationMin:15,fee:fee,
+      type:'Telemetrie-Ferneinschätzung',durationMin:15,fee:fee,savedKm:Math.round(km*10)/10,
       notes:`Fern-Check statt Anfahrt · ~${Math.round(km*10)/10} km / ${dmin} min Fahrt gespart`,billed:false,remote:true};
     await DB.put('consults',c); State.consults.push(c);
     // Fahrtenbuch: erledigt, OHNE Fahrt (savedKm dokumentiert den Nutzen)
@@ -5854,6 +5878,16 @@ const Seed={
           fee,notes:'Telemetrie-Ferneinschätzung (Demo)',billed:!(mAgo===0&&k%2===0),report:true};
         await DB.put('consults',c); seq++;
       }
+    }
+    // Fern-Checks der LAUFENDEN Woche (remote, mit gesparten km) → speisen die Wochenbilanz
+    const week=[[0,32,'Sunny'],[1,18,'Cocoa'],[2,41,'Champion'],[3,26,'Bella'],[5,23,'Phoenix']];
+    for(let i=0;i<week.length;i++){const [dAgo,km,nm]=week[i];
+      const h=horses.find(x=>(x.name||'').toLowerCase()===nm.toLowerCase())||horses[i%horses.length];
+      const d=new Date(now); d.setDate(d.getDate()-dAgo); d.setHours(10+i,15,0,0);
+      const fee=[60,45,75,55,50][i];
+      const c={id:'c_fcw_'+i,horseId:h.id,date:d.toISOString(),type:'Telemetrie-Ferneinschätzung',
+        durationMin:15,fee,savedKm:km,notes:`Fern-Check statt Anfahrt · ~${km} km gespart (Demo)`,billed:i%2===0,remote:true};
+      await DB.put('consults',c);
     }
   },
   // Demo-Fahrtenbuch/Zeiterfassung: abgeschlossene Besuchstage mit Fahr-/Behandlungszeiten (Klinik-Vet-Programm sichtbar)
