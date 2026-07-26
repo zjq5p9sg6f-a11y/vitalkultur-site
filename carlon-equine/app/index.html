@@ -311,8 +311,9 @@ main{flex:1;overflow-y:auto;overflow-x:hidden;position:relative}
   user-select:none;-webkit-user-select:none;cursor:grab}
 .tstop.sort-drag,.tstop:active{cursor:grabbing}
 .tstop.crit{border-left-color:var(--red)}.tstop.elev{border-left-color:var(--amber)}.tstop.watch{border-left-color:var(--cyan)}.tstop.stable{border-left-color:var(--good)}
-.tstop .tord{width:29px;height:29px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-family:var(--font-brand);font-weight:600;font-size:15px;color:#fff}
-.tstop.crit .tord{background:var(--red);box-shadow:0 0 12px var(--red-g)}.tstop.elev .tord{background:var(--amber);color:var(--bg-void)}.tstop.watch .tord{background:var(--cyan);color:var(--bg-void)}.tstop.stable .tord{background:var(--good);color:var(--bg-void)}
+.tstop .tord{width:24px;height:24px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-family:var(--font-mono);font-weight:600;font-size:12px;color:var(--text-dim);background:var(--bg-elev);border:1px solid var(--border-subtle)}
+/* Nummer = stiller Index (grau), nicht der Blickfang — Dringlichkeit steht im Badge + linkem Rand */
+.tstop.crit .tord,.tstop.elev .tord,.tstop.watch .tord,.tstop.stable .tord{background:var(--bg-elev);color:var(--text-dim);box-shadow:none}
 .tstop.late{border-left-color:var(--red)}
 .tstop.next{border-color:var(--cyan);box-shadow:0 0 0 1px var(--cyan-g2),0 6px 20px -8px var(--cyan-g1)}
 .tstop.next::after{content:"JETZT DRAN";position:absolute;top:-8px;right:12px;background:var(--cyan);color:var(--bg-void);font-size:9px;font-weight:700;letter-spacing:.08em;padding:2px 8px;border-radius:6px}
@@ -336,8 +337,8 @@ main{flex:1;overflow-y:auto;overflow-x:hidden;position:relative}
 .tstop .tord::after{content:'';position:absolute;top:calc(100% + 2px);left:50%;transform:translateX(-50%);width:2px;height:calc(100% + 44px);
   background:linear-gradient(var(--border-strong),var(--border-strong) 72%,transparent)}
 .tstop.overdue .tord::after{background:linear-gradient(var(--border-faint),transparent)}
-.tstop .tmain .ttime{display:flex;align-items:baseline;gap:8px;margin-bottom:5px}
-.tstop .tmain .ttime b{font-family:var(--font-mono);font-size:17px;font-weight:700;color:var(--text-primary);letter-spacing:-.02em}
+.tstop .tmain .ttime{display:flex;align-items:baseline;gap:7px;margin-bottom:3px}
+.tstop .tmain .ttime b{font-family:var(--font-mono);font-size:13px;font-weight:600;color:var(--text-secondary);letter-spacing:-.01em}
 .tstop .tmain .ttime b.late{color:var(--red)}
 .tstop .tmain .ttime span{font-size:11px;color:var(--text-dim);font-weight:600;display:inline-flex;align-items:center;gap:2px}
 .tstop .tmain .ttime span svg{width:11px;height:11px;color:var(--text-dim)}
@@ -400,7 +401,7 @@ h2.sech svg{width:17px;height:17px;color:var(--cyan);flex:none}
 .today-log .tlog-stats b small{font-size:12px;color:var(--text-secondary);font-weight:400}
 .today-log .tlog-stats span{font-size:10px;letter-spacing:.06em;text-transform:uppercase;color:var(--text-dim);font-weight:600}
 .tstop .tmain{flex:1;min-width:0}
-.tstop .tname{font-weight:600;font-size:15.5px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;letter-spacing:-.01em;cursor:pointer}
+.tstop .tname{font-weight:700;font-size:20px;color:var(--text-primary);display:flex;align-items:center;gap:9px;flex-wrap:wrap;letter-spacing:-.02em;cursor:pointer;line-height:1.1}
 .tstop .tname .tname-go{width:15px;height:15px;color:var(--text-dim);flex-shrink:0;transition:transform .15s,color .15s}
 .tstop .tname:hover{color:var(--cyan-strong)}
 .tstop .tname:hover .tname-go{color:var(--cyan);transform:translateX(2px)}
@@ -414,12 +415,12 @@ h2.sech svg{width:17px;height:17px;color:var(--cyan);flex:none}
 .tstop .towner{display:flex;align-items:center;gap:7px;font-size:13px;color:var(--text-dim);margin-top:5px;min-width:0}
 .tstop .towner svg{width:14px;height:14px;color:var(--text-dim);flex-shrink:0}
 .tstop .towner .tow-txt{display:flex;flex-direction:column;min-width:0;line-height:1.28}
-.tstop .towner b{color:var(--text-primary);font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tstop .towner b{color:var(--text-primary);font-weight:600;font-size:14.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .tstop .towner em{font-style:normal;font-size:12px;color:var(--text-dim);font-variant-numeric:tabular-nums}
 @media(max-width:560px){
   .tstop{padding:15px 16px 16px 14px}
-  .tstop .tord{width:34px;height:34px;font-size:16px}
-  .tstop .tname{font-size:18px}
+  .tstop .tord{width:26px;height:26px;font-size:12.5px}
+  .tstop .tname{font-size:21px}
   .tstop .tname .tsev{font-size:11px;padding:2px 9px}
   .tstop .tmeta{font-size:13.5px}
   .tstop .towner{font-size:15px;margin-top:6px}
