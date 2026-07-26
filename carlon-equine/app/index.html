@@ -1770,7 +1770,8 @@ const Normalizer = {
       // SD1/SD2: die App legt sie unter metrics.nonLinear ab (nicht geometric!). Reihenfolge: nonLinear → geometric → aus RR berechnet.
       ...(()=>{const _sd=this.deriveSD(rr);const sd1=num(nl.sd1Ms)??num(geo.sd1Ms)??_sd.sd1;const sd2=num(nl.sd2Ms)??num(geo.sd2Ms)??_sd.sd2;return {sd1,sd2,sd2sd1:num(nl.sd2OverSd1)??num(geo.sd2sd1Ratio)??num(geo.sd2sd1)??((sd1&&sd2)?sd2/sd1:null)};})(),
       lfhf:  num(fd.lfHfRatio),
-      quality: num(eq.equineQualityScore) ?? (q.artifactRatePct!=null? Math.max(0,Math.round(100-num(q.artifactRatePct)*4)):null),
+      // App liefert equineQualityScore auf 0–1-Skala → auf 0–100 normalisieren (≤1 = Bruch ×100), sonst Artefakt-Fallback
+      quality: (()=>{const _q=num(eq.equineQualityScore); if(_q!=null) return _q<=1?Math.round(_q*100):Math.round(_q); return q.artifactRatePct!=null?Math.max(0,Math.round(100-num(q.artifactRatePct)*4)):null;})(),
       artifactPct: num(q.artifactRatePct) ?? num(eq.adjustedArtifactRatePct),
       avBlock: num(eq.avBlockCount) ?? num(q.avBlockCount) ?? 0,
       motion: eq.motionContext||sess.intent||null,
