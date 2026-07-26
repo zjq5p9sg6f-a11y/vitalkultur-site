@@ -3794,7 +3794,17 @@ const Views={
     };
     await DB.put('settings',entry); State.daylog.push(entry);
     delete h.arrivedAt; h.needsVisit=false; h.visitDoneAt=now.toISOString(); await DB.put('horses',h);
-    Toast.show(`✓ ${h.name} erledigt${arrivedAt?` · ${treatmentMin} min behandelt`:''}`,'ok');
+    // EIN-TAP-DOKU: Besuchsnotiz + abrechnungsbereite Rechnung entstehen automatisch — der Verwaltungsmist verschwindet.
+    const rec=State.latestFor(id); const m=rec?rec.metrics:{}; const tri=rec?rec.triage:null;
+    const reason=(tri&&tri.reasons&&tri.reasons[0])?tri.reasons[0]:'unauffälliger Befund';
+    const note=`Praxisbesuch ${fmtDate(now.toISOString())} · ${Triage.LEVELS[lvl]?Triage.LEVELS[lvl].label:lvl}`
+      +(m.rmssd!=null?` · RMSSD ${fmt0(m.rmssd)} ms`:'')+(m.meanHR!=null?`, Ruhe-HF ${fmt0(m.meanHR)} bpm`:'')
+      +`. ${reason}.`;
+    const fee=State.settings.tariff||State.settings.tariffVisit||0;
+    const c={id:'c_visit_'+id+'_'+now.getTime(),horseId:id,date:now.toISOString(),type:'Praxisbesuch',
+      durationMin:treatmentMin,fee,notes:note,billed:false,visit:true};
+    await DB.put('consults',c); State.consults.push(c);
+    Toast.show(`✓ ${h.name} erledigt · Besuch dokumentiert · ${euro(fee)} abrechnungsbereit`,'ok');
     Nav.refresh();
   },
   async applyManualOrder(ids){
