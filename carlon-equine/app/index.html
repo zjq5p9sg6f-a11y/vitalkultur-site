@@ -311,9 +311,9 @@ main{flex:1;overflow-y:auto;overflow-x:hidden;position:relative}
   user-select:none;-webkit-user-select:none;cursor:grab}
 .tstop.sort-drag,.tstop:active{cursor:grabbing}
 .tstop.crit{border-left-color:var(--red)}.tstop.elev{border-left-color:var(--amber)}.tstop.watch{border-left-color:var(--cyan)}.tstop.stable{border-left-color:var(--good)}
-.tstop .tord{width:24px;height:24px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-family:var(--font-mono);font-weight:600;font-size:12px;color:var(--text-dim);background:var(--bg-elev);border:1px solid var(--border-subtle)}
-/* Nummer = stiller Index (grau), nicht der Blickfang — Dringlichkeit steht im Badge + linkem Rand */
-.tstop.crit .tord,.tstop.elev .tord,.tstop.watch .tord,.tstop.stable .tord{background:var(--bg-elev);color:var(--text-dim);box-shadow:none}
+.tstop .tord{width:25px;height:25px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-family:var(--font-mono);font-weight:700;font-size:12.5px;color:var(--text-secondary);background:var(--bg-elev-2);border:1px solid var(--border-strong)}
+/* Nummer = ruhiger Index — lesbar (Text-secondary 6,4:1, Ring border-strong), aber klar unter dem Namen. Dringlichkeit steht im Badge + linkem Rand. */
+.tstop.crit .tord,.tstop.elev .tord,.tstop.watch .tord,.tstop.stable .tord{background:var(--bg-elev-2);color:var(--text-secondary);box-shadow:none}
 .tstop.late{border-left-color:var(--red)}
 .tstop.next{border-color:var(--cyan);box-shadow:0 0 0 1px var(--cyan-g2),0 6px 20px -8px var(--cyan-g1)}
 .tstop.next::after{content:"JETZT DRAN";position:absolute;top:-8px;right:12px;background:var(--cyan);color:var(--bg-void);font-size:9px;font-weight:700;letter-spacing:.08em;padding:2px 8px;border-radius:6px}
@@ -401,8 +401,10 @@ h2.sech svg{width:17px;height:17px;color:var(--cyan);flex:none}
 .today-log .tlog-stats b small{font-size:12px;color:var(--text-secondary);font-weight:400}
 .today-log .tlog-stats span{font-size:10px;letter-spacing:.06em;text-transform:uppercase;color:var(--text-dim);font-weight:600}
 .tstop .tmain{flex:1;min-width:0}
-.tstop .tname{font-weight:700;font-size:20px;color:var(--text-primary);display:flex;align-items:center;gap:9px;flex-wrap:wrap;letter-spacing:-.02em;cursor:pointer;line-height:1.1}
-.tstop .tname .tname-go{width:15px;height:15px;color:var(--text-dim);flex-shrink:0;transition:transform .15s,color .15s}
+.tstop .tname{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;cursor:pointer}
+.tstop .tname-id{display:flex;align-items:center;gap:9px;flex-wrap:wrap;flex:1;min-width:0}
+.tstop .tname-txt{font-weight:700;font-size:20px;color:var(--text-primary);letter-spacing:-.02em;line-height:1.12}
+.tstop .tname .tname-go{width:16px;height:16px;color:var(--text-dim);flex-shrink:0;margin-top:5px;transition:transform .15s,color .15s}
 .tstop .tname:hover{color:var(--cyan-strong)}
 .tstop .tname:hover .tname-go{color:var(--cyan);transform:translateX(2px)}
 .tstop .tname:active{opacity:.7}
@@ -419,8 +421,8 @@ h2.sech svg{width:17px;height:17px;color:var(--cyan);flex:none}
 .tstop .towner em{font-style:normal;font-size:12px;color:var(--text-dim);font-variant-numeric:tabular-nums}
 @media(max-width:560px){
   .tstop{padding:15px 16px 16px 14px}
-  .tstop .tord{width:26px;height:26px;font-size:12.5px}
-  .tstop .tname{font-size:21px}
+  .tstop .tord{width:27px;height:27px;font-size:13px}
+  .tstop .tname-txt{font-size:21px}
   .tstop .tname .tsev{font-size:11px;padding:2px 9px}
   .tstop .tmeta{font-size:13.5px}
   .tstop .towner{font-size:15px;margin-top:6px}
@@ -3736,7 +3738,7 @@ const Views={
         <div class="tl"><div class="tord">${i+1}</div></div>
         <div class="tmain">
           <div class="ttime"><b class="${r.lateBy?'late':''}">${fmtTime(r.arrive)}</b><span>${i===0?'ab Praxis':(r.driveMin?IC.nav+r.driveMin+'′':'gleicher Stall')}</span></div>
-          <div class="tname" onclick="Views.openHorse('${h.id}')" title="Akte öffnen">${esc(h.name)}<span class="tsev">${lbl}</span>${(()=>{const dm=Triage.domain(x.tri);return dm?`<span class="tdomain" style="color:${dm.col}" title="Klinische Domäne: ${dm.label}">${dm.svg}${dm.label}</span>`:'';})()}${h.analog?'<span class="tsev" style="background:var(--bg-elev);color:var(--text-dim)">analog</span>':''}<svg class="tname-go" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 6l6 6-6 6"/></svg></div>
+          <div class="tname" onclick="Views.openHorse('${h.id}')" title="Akte öffnen"><span class="tname-id"><span class="tname-txt">${esc(h.name)}</span><span class="tsev">${lbl}</span>${(()=>{const dm=Triage.domain(x.tri);return dm?`<span class="tdomain" style="color:${dm.col}" title="Klinische Domäne: ${dm.label}">${dm.svg}${dm.label}</span>`:'';})()}${h.analog?'<span class="tsev" style="background:var(--bg-elev);color:var(--text-dim)">analog</span>':''}</span><svg class="tname-go" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 6l6 6-6 6"/></svg></div>
           <div class="tmeta">${esc(h.stable||(h.place?h.place.split(',').pop().trim():'—'))}${placeCount[(h.place||h.stable||'').trim()]>1?' <b style="color:var(--cyan-strong);font-weight:600">· Sammelstall</b>':''} · ${fmt1(x.dist)} km</div>
           ${h.place?`<button class="taddr" onclick="event.stopPropagation();Dispatch.navTo('${h.id}')" title="In Navigation öffnen"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2C8 2 5 5 5 9c0 5 7 13 7 13s7-8 7-13c0-4-3-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg><span>${esc(h.place)}</span><em>${IC.nav}Navi</em></button>`:`<button class="taddr missing" onclick="event.stopPropagation();Views.openHorse('${h.id}')">${IC.warn}<span>Adresse fehlt — ergänzen</span></button>`}
           ${h.owner||h.phone?`<div class="towner">${IC.owner}<span class="tow-txt"><b>${esc(h.owner||'—')}</b>${h.phone?`<em>${esc(h.phone)}</em>`:''}</span></div>`:''}
