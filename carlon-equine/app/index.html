@@ -232,6 +232,26 @@ main{flex:1;overflow-y:auto;overflow-x:hidden;position:relative}
 .fc-sheet .fc-chart{margin-bottom:14px;border-radius:12px;overflow:hidden}
 .fc-sheet .fc-acts{display:flex;flex-direction:column;gap:9px}
 @media(max-width:560px){.fc-sheet .fc-metrics{grid-template-columns:repeat(2,1fr)}}
+/* Erst-Blick-Verdikt-Hero — Antwort vor Tiefe */
+.verdict-hero{position:relative;margin-bottom:var(--s4);padding:16px 18px 16px 20px;border-radius:16px;overflow:hidden;
+  background:linear-gradient(135deg,color-mix(in srgb,var(--vc) 16%,transparent),color-mix(in srgb,var(--vc) 4%,var(--bg-surface)));
+  border:1px solid color-mix(in srgb,var(--vc) 42%,transparent);border-left:4px solid var(--vc)}
+.verdict-hero .vh-top{display:flex;align-items:center;gap:11px;flex-wrap:wrap}
+.verdict-hero .vh-dot{width:11px;height:11px;border-radius:50%;background:var(--vc);box-shadow:0 0 10px var(--vc);flex:0 0 auto}
+.verdict-hero .vh-lvl{font-family:var(--font-brand);font-weight:700;font-size:22px;color:var(--vc);letter-spacing:.01em}
+.verdict-hero .vh-vital{margin-left:auto;font-size:12.5px;color:var(--text-secondary);font-family:var(--font-mono)}
+.verdict-hero .vh-vital b{color:var(--text-primary);font-size:16px}.verdict-hero .vh-vital small{color:var(--text-dim)}
+.verdict-hero .vh-reason{font-size:14px;color:var(--text-primary);line-height:1.45;margin-top:10px;max-width:62ch}
+.verdict-hero .vh-flags{display:flex;gap:7px;flex-wrap:wrap;margin-top:11px}
+.verdict-hero .vh-flag{font-size:11px;font-weight:600;padding:3px 10px;border-radius:99px;background:color-mix(in srgb,var(--vc) 18%,transparent);color:var(--vc);border:1px solid color-mix(in srgb,var(--vc) 45%,transparent)}
+.verdict-hero .vh-act{margin-top:14px}
+.verdict-hero .vh-cta{display:inline-flex;align-items:center;gap:8px;padding:11px 18px;border-radius:12px;font-size:14px;font-weight:700;cursor:pointer;
+  background:var(--vc);color:#08110e;border:none;transition:transform .12s,filter .12s}
+.verdict-hero .vh-cta:hover{transform:translateY(-1px);filter:brightness(1.08)}
+.verdict-hero .vh-cta svg{width:16px;height:16px}
+.verdict-hero .vh-cta.ghost{background:transparent;color:var(--vc);border:1px solid color-mix(in srgb,var(--vc) 50%,transparent)}
+.verdict-hero.v-stable .vh-cta,.verdict-hero.v-watch .vh-cta{color:#08110e}
+@media(max-width:560px){.verdict-hero .vh-lvl{font-size:19px}.verdict-hero .vh-vital{margin-left:0;flex-basis:100%;margin-top:2px}.verdict-hero .vh-cta{width:100%;justify-content:center}}
 .tstop{display:flex;gap:var(--s3);align-items:flex-start;background:linear-gradient(160deg,rgba(26,26,30,.72),rgba(22,22,26,.6));
   border:1px solid var(--border-faint);border-left:3px solid var(--cyan);border-radius:var(--r-m);padding:12px var(--s4) 12px 13px;margin-bottom:10px;
   user-select:none;-webkit-user-select:none;cursor:grab}
@@ -3996,8 +4016,9 @@ const Views={
       </div>
       <div class="detail-layout">
         <div class="detail-topmain">
+          ${Views.verdictHero(h,rec,tri)}
           <div class="panel" style="margin-bottom:var(--s4)">
-            <h2><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12h4l3 8 4-16 3 8h4"/></svg>Aktueller Status</h2>
+            <h2 style="font-size:13px;color:var(--text-dim);letter-spacing:.06em;text-transform:uppercase"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12h4l3 8 4-16 3 8h4"/></svg>Kernwerte &amp; Begründung</h2>
             ${(()=>{const amp=Triage.baselineAmpel(h,rec);const streak=Triage.fallingStreak(h.id);if(!amp&&streak<3)return'';const lvl=amp?amp.level:'warn';const parts=[];if(amp)parts.push(amp.text);if(streak>=3)parts.push(`RMSSD ${streak}× in Folge fallend`);return `<div class="warnbanner ${lvl}">${IC.bolt}<div><b>Auffällig · gegen die individuelle Baseline</b><span>${parts.map(esc).join(' · ')}</span></div></div>`;})()}
             <div class="stat-row">
               ${Views.stat('RMSSD','ms',m.rmssd,Views.clsRMSSD(m.rmssd))}
@@ -4109,6 +4130,28 @@ const Views={
       :`<p style="font-size:12px;color:var(--text-dim);margin-bottom:10px">Ein validiertes Screening liefert die CARLON-App als Random-Forest-Score. Hier siehst du den atemwegs-relevanten Marker im Verlauf.</p>`}
       ${a.sd2sd1Series.length>1?`<div class="chart-wrap" style="margin:0"><div class="ct"><span>SD2/SD1-Ratio · sympatho-vagale Balance</span></div>${Chart.ts(a.sd2sd1Series,{color:'var(--equine)',h:120,unit:''})}</div>`:''}
       <div style="font-size:11px;color:var(--text-faint);margin-top:10px;font-style:italic">Equine-spezifisches HRV-Atemwegs-Screening (Nyerges-Bohák 2025 · Random-Forest · n=40 · BAL-validiert). Screening-Hinweis, keine Diagnose — klinische Abklärung (BAL) bleibt tierärztlich.</div>
+    </div>`;
+  },
+  // ERST-BLICK-VERDIKT — das Erste, was der Vet sieht: großes farbiges Urteil + der EINE Grund + Kernwert + nächste Aktion.
+  // Antwort vor Tiefe (nicht chart-first). Der Sofort-Faktor-5 beim Öffnen einer Akte.
+  verdictHero(h,rec,tri){
+    if(!tri)return '';
+    const lvl=tri.level, L=Triage.LEVELS[lvl]||{label:'—'};
+    const COL={crit:'var(--red)',elev:'var(--amber)',watch:'var(--cyan)',stable:'var(--good)'};
+    const col=COL[lvl]||'var(--cyan)';
+    const HEAD={crit:'Kritisch — jetzt handeln',elev:'Erhöht — zeitnah prüfen',watch:'Beobachten',stable:'Stabil'};
+    const m=rec?rec.metrics:{};
+    const reason=(tri.reasons&&tri.reasons[0])?tri.reasons[0]:(lvl==='stable'?'Alle Kernwerte im erwarteten Bereich — stabile Kontrolle, kein akuter Handlungsbedarf.':'Beobachtung gegen die individuelle Baseline empfohlen.');
+    const streak=Triage.fallingStreak?Triage.fallingStreak(h.id):0;
+    // Kontextuelle Primär-Aktion je Dringlichkeit
+    const act=(lvl==='crit'||lvl==='elev')
+      ? `<button class="vh-cta" onclick="Report.print('${h.id}')">${IC.euro} Ferneinschätzung &amp; abrechnen</button>`
+      : `<button class="vh-cta ghost" onclick="Views.ownerFeedback('${h.id}')">Rückmeldung für Halter</button>`;
+    return `<div class="verdict-hero v-${lvl}" style="--vc:${col}">
+      <div class="vh-top"><span class="vh-dot"></span><span class="vh-lvl">${HEAD[lvl]||L.label}</span>${m.rmssd!=null?`<span class="vh-vital">RMSSD <b>${fmt0(m.rmssd)}</b><small> ms</small>${streak>=3?` · <span style="color:var(--red)">${streak}× fallend</span>`:''}</span>`:''}</div>
+      <div class="vh-reason">${esc(reason)}</div>
+      ${(tri.flags&&tri.flags.length)?`<div class="vh-flags">${tri.flags.map(f=>`<span class="vh-flag">${esc(f)}</span>`).join('')}</div>`:''}
+      <div class="vh-act">${act}</div>
     </div>`;
   },
   signalPanel(rec){
