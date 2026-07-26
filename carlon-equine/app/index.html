@@ -2235,6 +2235,8 @@ const Importer = {
     Toast.show(`${added} Aufnahme${added!==1?'n':''} importiert`,'ok');
   },
   async ingest(n){
+    // Echter Import (kein Seed) → Demo-Flag löschen, damit echte Daten wieder die Backup-Erinnerung bekommen
+    if(!n._seed && State.settings && State.settings.isDemo){ State.settings.isDemo=false; await State.saveSettings(); }
     // Pferd anlegen oder finden
     let horse=State.horses.find(h=>h.subjectId===n.subjectId);
     if(!horse){
@@ -5844,6 +5846,7 @@ const Seed={
     await Seed.loadCoherence(true);
     await State.load();
     await Seed.synthRoutineVisits();
+    State.settings.isDemo=true; await State.saveSettings();   // Demo-Daten sind wegwerfbar → kein Backup-Nag beim First-Touch
     Nav.refresh();Toast.show(`${cnt} Demo-Pferde geladen · inkl. synthetischem Verlauf`,'ok');
   },
   // Realistischer Tagesmix: neben den Notfällen ein paar STABILE Routine-Kontrollen in den Tag legen.
@@ -6408,6 +6411,8 @@ const Safe={
     // Weiche Ermahnung ist wegklickbar (7-Tage-Snooze). Notfall (Schreibfehler / voller Speicher) NICHT.
     const snoozed=State.settings&&State.settings.safeSnoozeUntil&&Date.now()<State.settings.safeSnoozeUntil;
     if(snoozed&&!urgent){ el.style.display='none'; return; }
+    // Demo-Daten sind wegwerfbar → keine Datensicherheits-Ermahnung beim First-Touch (echte Notfälle bleiben)
+    if(State.settings&&State.settings.isDemo&&!urgent){ el.style.display='none'; return; }
     el.style.display='';
     el.classList.toggle('urgent',urgent);
     el.innerHTML=`<div class="sb-in">
