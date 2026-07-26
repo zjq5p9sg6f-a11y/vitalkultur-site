@@ -252,6 +252,29 @@ main{flex:1;overflow-y:auto;overflow-x:hidden;position:relative}
 .verdict-hero .vh-cta.ghost{background:transparent;color:var(--vc);border:1px solid color-mix(in srgb,var(--vc) 50%,transparent)}
 .verdict-hero.v-stable .vh-cta,.verdict-hero.v-watch .vh-cta{color:#08110e}
 @media(max-width:560px){.verdict-hero .vh-lvl{font-size:19px}.verdict-hero .vh-vital{margin-left:0;flex-basis:100%;margin-top:2px}.verdict-hero .vh-cta{width:100%;justify-content:center}}
+/* Besitzer-Modus — ruhige Vollbild-Präsentation, iPad umdrehen */
+.owner-mode{position:fixed;inset:0;z-index:9000;background:radial-gradient(120% 90% at 50% 0%,color-mix(in srgb,var(--oc) 12%,var(--bg-void)),var(--bg-void));
+  overflow-y:auto;display:flex;flex-direction:column;align-items:center;padding:20px;animation:omIn .28s ease}
+@keyframes omIn{from{opacity:0;transform:scale(.98)}to{opacity:1;transform:none}}
+.owner-mode .om-close{position:fixed;top:16px;right:16px;display:inline-flex;align-items:center;gap:6px;padding:9px 15px;border-radius:99px;
+  background:var(--bg-surface);border:1px solid var(--border-subtle);color:var(--text-secondary);font-size:12.5px;cursor:pointer;z-index:2}
+.owner-mode .om-close svg{width:14px;height:14px}
+.owner-mode .om-inner{max-width:720px;width:100%;margin:auto;padding:48px 8px}
+.owner-mode .om-horse{display:flex;align-items:center;gap:14px;margin-bottom:28px}
+.owner-mode .om-name{font-family:var(--font-brand);font-weight:700;font-size:30px;color:var(--text-primary)}
+.owner-mode .om-sub{font-size:13px;color:var(--text-dim);margin-top:2px}
+.owner-mode .om-status{display:flex;align-items:center;gap:18px;padding:22px 24px;border-radius:20px;
+  background:linear-gradient(135deg,color-mix(in srgb,var(--oc) 18%,transparent),color-mix(in srgb,var(--oc) 5%,var(--bg-surface)));
+  border:1px solid color-mix(in srgb,var(--oc) 40%,transparent);margin-bottom:22px}
+.owner-mode .om-ring{width:56px;height:56px;border-radius:50%;flex:0 0 auto;background:var(--oc);
+  box-shadow:0 0 0 8px color-mix(in srgb,var(--oc) 18%,transparent),0 0 24px color-mix(in srgb,var(--oc) 55%,transparent)}
+.owner-mode .om-word{font-family:var(--font-brand);font-weight:700;font-size:26px;color:var(--oc);line-height:1.15}
+.owner-mode .om-trend{font-size:15px;color:var(--text-secondary);margin-top:6px}
+.owner-mode .om-plain{font-size:19px;line-height:1.55;color:var(--text-primary);margin:0 0 26px;max-width:60ch}
+.owner-mode .om-chart{background:var(--bg-surface);border:1px solid var(--border-subtle);border-radius:16px;padding:16px 16px 8px;margin-bottom:22px}
+.owner-mode .om-chart-lbl{font-size:14px;font-weight:600;color:var(--text-secondary);margin-bottom:8px}
+.owner-mode .om-foot{font-size:13px;color:var(--text-dim);text-align:center;padding:8px 0 30px;line-height:1.5}
+@media(max-width:560px){.owner-mode .om-inner{padding:40px 4px}.owner-mode .om-name{font-size:25px}.owner-mode .om-word{font-size:21px}.owner-mode .om-plain{font-size:17px}.owner-mode .om-ring{width:46px;height:46px}}
 .tstop{display:flex;gap:var(--s3);align-items:flex-start;background:linear-gradient(160deg,rgba(26,26,30,.72),rgba(22,22,26,.6));
   border:1px solid var(--border-faint);border-left:3px solid var(--cyan);border-radius:var(--r-m);padding:12px var(--s4) 12px 13px;margin-bottom:10px;
   user-select:none;-webkit-user-select:none;cursor:grab}
@@ -4010,6 +4033,7 @@ const Views={
           <button class="btn primary" onclick="Report.print('${h.id}')" title="Gebrandeter PDF-Befund + Umsatz in einem Schritt">${IC.euro} Ferneinschätzung &amp; abrechnen</button>
           <button class="btn ghost" onclick="Views.logConsult('${h.id}')" title="Beratung ohne PDF erfassen">Beratung erfassen</button>
           <button class="btn ghost" onclick="Views.planVisit('${h.id}')" title="Termin in Google/Apple Kalender">${IC.calendar} Termin</button>
+          <button class="btn ghost" onclick="Views.ownerMode('${h.id}')" title="Vollbild zum Zeigen für den Besitzer — iPad umdrehen">${IC.eye||''} Besitzer-Modus</button>
           <button class="btn ghost" onclick="Views.ownerFeedback('${h.id}')" title="Befundtext für den Besitzer erzeugen">Rückmeldung</button>
           <button class="btn ghost" onclick="Views.editHorse('${h.id}')">Stammdaten</button>
         </div>
@@ -4708,6 +4732,34 @@ const Views={
   mailOwner(hid){const h=State.horses.find(x=>x.id===hid);const body=encodeURIComponent($('#ownerTxt').value);
     const subj=encodeURIComponent(`HRV-Befund ${h.name} · ${State.settings.clinicName||'CARLON EQUINE'}`);
     window.open(`mailto:?subject=${subj}&body=${body}`,'_blank');},
+  // BESITZER-MODUS — der „iPad umdrehen"-Moment: ruhige Vollbild-Ansicht in Klartext, ohne Fachjargon/Zitate.
+  // Große Ampel + ein Satz + einfacher Verlauf. Baut Vertrauen, rechtfertigt das Honorar, bringt den Folgetermin.
+  ownerMode(hid){
+    const h=State.horses.find(x=>x.id===hid); if(!h)return;
+    const recs=State.recsFor(hid); const rec=recs[recs.length-1];
+    if(!rec){Toast.show('Keine Aufnahme vorhanden','warn');return;}
+    const tri=rec.triage, lvl=tri.level;
+    const COL={crit:'var(--red)',elev:'var(--amber)',watch:'var(--cyan)',stable:'var(--good)'};
+    const STATUS={crit:'Bitte tierärztlich abklären',elev:'Bitte im Blick behalten',watch:'Weitgehend unauffällig',stable:'Alles im grünen Bereich'};
+    const PLAIN={crit:`${h.name} zeigt in dieser Messung auffällige Herzwerte. Wir schauen da am besten zeitnah gemeinsam drauf.`,
+      elev:`${h.name} zeigt leichte Belastungszeichen. Das behalten wir zusammen im Blick.`,
+      watch:`${h.name} ist weitgehend unauffällig — einzelne Werte beobachten wir weiter.`,
+      stable:`${h.name} hat einen ruhigen, entspannten Herzrhythmus. Ein gutes Zeichen für Wohlbefinden und Erholung.`}[lvl];
+    const tr=Triage.trend?Triage.trend(hid):null;
+    const trendTxt=tr?(tr.dir==='up'?'↗ Die Herzfitness verbessert sich':tr.dir==='down'?'↘ Die Herzfitness hat zuletzt nachgelassen':'→ Die Herzfitness bleibt stabil'):'';
+    const series=recs.map(r=>({x:r.startedAt,y:r.metrics.rmssd})).filter(p=>p.y!=null);
+    const chart=series.length>1?Chart.ts(series,{color:COL[lvl],unit:'',h:160,w:660}):'';
+    const wrap=document.createElement('div'); wrap.className='owner-mode'; wrap.style.setProperty('--oc',COL[lvl]);
+    wrap.innerHTML=`<button class="om-close" onclick="this.parentNode.remove();document.body.style.overflow=''">${IC.x} Praxis-Ansicht</button>
+      <div class="om-inner">
+        <div class="om-horse">${Views.avatar(h,60)}<div><div class="om-name">${esc(h.name)}</div><div class="om-sub">Herzbericht · ${fmtDate(rec.startedAt)}</div></div></div>
+        <div class="om-status"><span class="om-ring"></span><div class="om-st-t"><div class="om-word">${STATUS[lvl]}</div>${trendTxt?`<div class="om-trend">${esc(trendTxt)}</div>`:''}</div></div>
+        <p class="om-plain">${esc(PLAIN)}</p>
+        ${chart?`<div class="om-chart"><div class="om-chart-lbl">Herzfitness über die letzten Wochen</div>${chart}</div>`:''}
+        <div class="om-foot">Gemessen mit einem Herzsensor am Sattelgurt — schmerzfrei und ohne Stress fürs Pferd.</div>
+      </div>`;
+    document.body.appendChild(wrap); document.body.style.overflow='hidden';
+  },
   editHorse(id){
     const h=id?State.horses.find(x=>x.id===id):{};
     const isNew=!id;
