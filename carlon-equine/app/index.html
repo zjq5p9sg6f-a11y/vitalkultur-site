@@ -1733,6 +1733,14 @@ const Normalizer = {
     if(!rr.length) return null;
     const m=rr.reduce((a,b)=>a+b,0)/rr.length; return m>0?60000/m:null;
   },
+  // Poincaré SD1/SD2 aus RR (Brennan 2001) — Fallback, falls der Export sie nicht mitliefert
+  deriveSD(rr){
+    if(!rr||rr.length<4) return {sd1:null,sd2:null};
+    const xs=rr.slice(0,-1),ys=rr.slice(1),n=xs.length; let sx=0,sy=0;
+    for(let i=0;i<n;i++){sx+=xs[i];sy+=ys[i];} const mx=sx/n,my=sy/n; let a=0,b=0;
+    for(let i=0;i<n;i++){a+=Math.pow((xs[i]-ys[i])-(mx-my),2);b+=Math.pow((xs[i]+ys[i])-(mx+my),2);}
+    return {sd1:Math.sqrt(a/n/2),sd2:Math.sqrt(b/n/2)};
+  },
   // Ist das überhaupt ein CARLON-Equine-HRV-Export?
   detect(raw){
     if(!raw||typeof raw!=='object') return {ok:false,reason:'Kein gültiges JSON-Objekt'};
@@ -1759,7 +1767,8 @@ const Normalizer = {
       pnn50: num(td.pNN50Pct),
       dfa:   num(nl.dfaAlpha1) ?? (typeof HRV!=='undefined'?HRV.dfaAlpha1(rr):null),
       dfaReliability: nl.dfaAlpha1Reliability||null,
-      sd1:   num(geo.sd1Ms), sd2:num(geo.sd2Ms), sd2sd1:num(geo.sd2sd1Ratio),
+      // SD1/SD2: die App legt sie unter metrics.nonLinear ab (nicht geometric!). Reihenfolge: nonLinear → geometric → aus RR berechnet.
+      ...(()=>{const _sd=this.deriveSD(rr);const sd1=num(nl.sd1Ms)??num(geo.sd1Ms)??_sd.sd1;const sd2=num(nl.sd2Ms)??num(geo.sd2Ms)??_sd.sd2;return {sd1,sd2,sd2sd1:num(nl.sd2OverSd1)??num(geo.sd2sd1Ratio)??num(geo.sd2sd1)??((sd1&&sd2)?sd2/sd1:null)};})(),
       lfhf:  num(fd.lfHfRatio),
       quality: num(eq.equineQualityScore) ?? (q.artifactRatePct!=null? Math.max(0,Math.round(100-num(q.artifactRatePct)*4)):null),
       artifactPct: num(q.artifactRatePct) ?? num(eq.adjustedArtifactRatePct),
