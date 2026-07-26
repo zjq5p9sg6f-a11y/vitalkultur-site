@@ -296,6 +296,16 @@ main{flex:1;overflow-y:auto;overflow-x:hidden;position:relative}
 .logo-prev{width:120px;height:52px;border-radius:10px;background:var(--bg-void);border:1px solid var(--border-subtle);display:flex;align-items:center;justify-content:center;flex:0 0 auto;overflow:hidden}
 .logo-prev img{max-width:100%;max-height:100%;object-fit:contain}
 .logo-prev span{font-size:11px;color:var(--text-dim)}
+/* Atemkurven-Vollbild — horizontal scroll- + zoombar (Zeitachse dehnen) */
+#chartZoom .zbody.breath-fs{display:flex;flex-direction:column;padding:0;height:100%}
+.bfs-bar{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 16px;flex-wrap:wrap;border-bottom:1px solid var(--border-subtle)}
+.bfs-bar .bfs-hint{font-size:12px;color:var(--text-dim)}
+.bfs-btns{display:flex;gap:8px}
+.bfs-z{min-width:44px;height:36px;padding:0 12px;border-radius:10px;background:var(--bg-surface);border:1px solid var(--border-subtle);color:var(--text-primary);font-size:16px;font-weight:700;cursor:pointer}
+.bfs-z[data-z="fit"]{font-size:13px;font-weight:600;color:var(--text-secondary)}
+.bfs-z:hover{border-color:var(--cyan-deep);color:var(--cyan)}
+.bfs-scroll{flex:1;overflow-x:auto;overflow-y:hidden;-webkit-overflow-scrolling:touch;overscroll-behavior-x:contain;display:flex;align-items:center}
+.bfs-scroll svg{flex:0 0 auto}
 .tstop{display:flex;gap:var(--s3);align-items:flex-start;background:linear-gradient(160deg,rgba(26,26,30,.72),rgba(22,22,26,.6));
   border:1px solid var(--border-faint);border-left:3px solid var(--cyan);border-radius:var(--r-m);padding:12px var(--s4) 12px 13px;margin-bottom:10px;
   user-select:none;-webkit-user-select:none;cursor:grab}
@@ -2469,7 +2479,7 @@ const Chart={
     let cross=0;for(let i=1;i<sm.length;i++){if(sm[i-1].v>0&&sm[i].v<=0)cross++;}
     const brpm=T>0?cross/(T/60):0;
     if(brpm>=3&&brpm<=60){const bc=brpm<=16?'var(--cyan)':brpm<=24?'#F0A93C':'#F27359';g+=`<g transform="translate(${pad.l+6},${pad.t+5})"><rect x="0" y="0" width="66" height="19" rx="9.5" fill="rgba(0,0,0,.55)" stroke="${bc}" stroke-opacity=".45"/><text x="10" y="13.5" style="fill:${bc};font-size:11px;font-weight:700;font-family:var(--font-mono)">${Math.round(brpm)} /min</text></g>`;}
-    return `<svg class="viz" viewBox="0 0 ${w} ${h}">${g}</svg>`;
+    return `<svg class="viz" data-chart="breath" data-rr="${rr.map(v=>Math.round(v)).join(',')}" data-dur="${dur!=null?dur:''}" viewBox="0 0 ${w} ${h}">${g}</svg>`;
   },
   tachogram(rr,{w=720,h=230,color='var(--cyan)'}={}){
     if(!rr||rr.length<2) return `<div style="color:var(--text-faint);font-size:12px;text-align:center;padding:30px">Keine RR-Daten</div>`;
@@ -6198,7 +6208,7 @@ const ChartZoom={
     const spec=wrap&&wrap.dataset.mode==='spec';
     const dual=wrap&&wrap.dataset.mode==='dual';
     const kind=(!wrap&&svg.dataset&&svg.dataset.chart)||'';
-    const dfa=kind==='dfa', hist=kind==='hist';
+    const dfa=kind==='dfa', hist=kind==='hist', breath=kind==='breath';
     const baev=host&&host.classList&&host.classList.contains('baev-box');
     if(scatter){
       // Dedizierter Poincaré-Vollbild-Viewer (App-Stil): Seitenleiste (Kennwerte + Form-Guide) + großer Plot
@@ -6325,6 +6335,35 @@ const ChartZoom={
       body.appendChild(side); body.appendChild(plot);
       $('#zoomTitle').textContent='RR-Verteilung · TINN';
       $('#zoomHint').textContent=tinn?`TINN ${tinn} ms · Modus ${mode} ms`:'RR-Verteilung'; $('#zoomHint').style.display='';
+    } else if(breath){
+      // Dedizierter Atemkurven-Viewer: horizontal scroll- UND zoombar (Zeitachse dehnen) wie die iOS-App
+      let rrs=[]; try{rrs=(svg.dataset.rr||'').split(',').map(Number).filter(v=>v>0);}catch(_){}
+      const durAttr=parseFloat(svg.dataset.dur); const dur=(!isNaN(durAttr)&&durAttr>0)?durAttr:null;
+      const totalSec=Math.max(1,dur||(rrs.reduce((a,b)=>a+b,0)/1000));
+      body.className='zbody breath-fs'; body.innerHTML='';
+      const vw=(window.innerWidth||720);
+      const fitPps=Math.max(2,(vw-52)/totalSec);          // px/Sekunde bei „Alles sichtbar"
+      let pps=fitPps;
+      const H=Math.max(240,Math.min(420,(window.innerHeight||700)-210));
+      const bar=document.createElement('div'); bar.className='bfs-bar';
+      bar.innerHTML=`<span class="bfs-hint">Wischen = scrollen · − / + dehnt die Zeitachse</span><div class="bfs-btns"><button class="bfs-z" data-z="out" aria-label="rein">−</button><button class="bfs-z" data-z="fit">Alles</button><button class="bfs-z" data-z="in" aria-label="raus">+</button></div>`;
+      const scroller=document.createElement('div'); scroller.className='bfs-scroll';
+      const render=()=>{const w=Math.max(vw-8,Math.round(totalSec*pps));scroller.innerHTML=Chart.breathWave(rrs,{w,h:H,dur});const s=scroller.querySelector('svg');if(s){s.style.width=w+'px';s.style.height=H+'px';s.style.maxWidth='none';s.style.display='block';}};
+      render();
+      const zoom=(z)=>{const sw0=scroller.scrollWidth||1;const frac=(scroller.scrollLeft+scroller.clientWidth/2)/sw0;
+        if(z==='in')pps=Math.min(fitPps*10,pps*1.7);else if(z==='out')pps=Math.max(fitPps,pps/1.7);else pps=fitPps;
+        render();requestAnimationFrame(()=>{scroller.scrollLeft=Math.max(0,frac*scroller.scrollWidth-scroller.clientWidth/2);});};
+      bar.querySelectorAll('.bfs-z').forEach(b=>b.addEventListener('click',()=>zoom(b.dataset.z)));
+      // Pinch-Zoom (Touch — mobile Vets)
+      let pb=null;
+      scroller.addEventListener('touchstart',e=>{if(e.touches.length===2){pb={d:Math.hypot(e.touches[0].clientX-e.touches[1].clientX,e.touches[0].clientY-e.touches[1].clientY),pps};}},{passive:true});
+      scroller.addEventListener('touchmove',e=>{if(e.touches.length===2&&pb){e.preventDefault?0:0;const d=Math.hypot(e.touches[0].clientX-e.touches[1].clientX,e.touches[0].clientY-e.touches[1].clientY);pps=Math.max(fitPps,Math.min(fitPps*10,pb.pps*d/pb.d));render();}},{passive:true});
+      scroller.addEventListener('touchend',()=>{pb=null;},{passive:true});
+      // Desktop: Strg/⌘ + Mausrad zoomt
+      scroller.addEventListener('wheel',e=>{if(e.ctrlKey||e.metaKey){e.preventDefault();zoom(e.deltaY<0?'in':'out');}},{passive:false});
+      body.appendChild(bar); body.appendChild(scroller);
+      $('#zoomTitle').textContent='Atemkurve';
+      $('#zoomHint').textContent=`${rrs.length} Intervalle · ${Math.round(totalSec)} s`; $('#zoomHint').style.display='';
     } else {
       const vb=(svg.getAttribute('viewBox')||'0 0 700 400').split(/\s+/).map(Number);
       const wide=(vb[2]/vb[3])>1.4;
