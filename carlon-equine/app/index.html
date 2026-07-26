@@ -260,6 +260,10 @@ main{flex:1;overflow-y:auto;overflow-x:hidden;position:relative}
   background:var(--bg-surface);border:1px solid var(--border-subtle);color:var(--text-secondary);font-size:12.5px;cursor:pointer;z-index:2}
 .owner-mode .om-close svg{width:14px;height:14px}
 .owner-mode .om-inner{max-width:720px;width:100%;margin:auto;padding:48px 8px}
+.owner-mode .om-brand{display:flex;align-items:center;gap:12px;margin-bottom:22px;padding-bottom:16px;border-bottom:1px solid var(--border-subtle)}
+.owner-mode .om-brand img{max-height:44px;max-width:200px;object-fit:contain}
+.owner-mode .om-brand b{font-family:var(--font-brand);font-size:17px;color:var(--text-primary)}
+.owner-mode .om-brand span{font-size:13px;color:var(--text-dim)}
 .owner-mode .om-horse{display:flex;align-items:center;gap:14px;margin-bottom:28px}
 .owner-mode .om-name{font-family:var(--font-brand);font-weight:700;font-size:30px;color:var(--text-primary)}
 .owner-mode .om-sub{font-size:13px;color:var(--text-dim);margin-top:2px}
@@ -4751,7 +4755,9 @@ const Views={
       watch:'Eine erneute Messung in der kommenden Woche gibt zusätzliche Sicherheit.',
       stable:'Weiter so — regelmäßige Messungen helfen, Veränderungen früh zu erkennen.'}[tri.level];
     const anrede=h.owner?' '+h.owner.split(' ').slice(-1)[0]:'';
-    let txt=`Hallo${anrede},\n\nvielen Dank für die Herzraten-Aufnahme von ${h.name} vom ${fmtDate(rec.startedAt)}.\n\n`+
+    const s=State.settings; const letterhead=s.clinicName?`${s.clinicName}\n${'—'.repeat(Math.min(28,s.clinicName.length))}\n\n`:'';
+    const sign=[s.vetName,s.clinicName].filter(Boolean).join('\n');
+    let txt=letterhead+`Hallo${anrede},\n\nvielen Dank für die Herzraten-Aufnahme von ${h.name} vom ${fmtDate(rec.startedAt)}.\n\n`+
       `Zusammenfassung: ${h.name} ${lvl}.\n\nKennwerte dieser Messung:\n`+
       `• Herzratenvariabilität (RMSSD): ${fmt0(m.rmssd)} ms\n`+
       `• Ruhe-Herzfrequenz: ${fmt0(m.meanHR)} bpm\n`+
@@ -4759,7 +4765,7 @@ const Views={
       (trend?`\n${trend}\n`:'')+
       `\nEmpfehlung: ${empf}\n\n`+
       `Diese Einschätzung basiert auf der Herzratenvariabilität und ersetzt keine tierärztliche Diagnose.\n\n`+
-      `Herzliche Grüße\n${State.settings.vetName||State.settings.clinicName||''}`;
+      `Herzliche Grüße\n${sign||''}`;
     UI.modal(`<div class="modal-head"><button class="closex" onclick="UI.closeModal()">${IC.x}</button><h3>Rückmeldung an Besitzer</h3></div>
     <div class="modal-body">
       <p style="font-size:13px;color:var(--text-secondary);margin-bottom:12px">Fertiger, besitzerfreundlicher Befundtext für ${esc(h.name)}. Frei editierbar.</p>
@@ -4792,8 +4798,11 @@ const Views={
     const series=recs.map(r=>({x:r.startedAt,y:r.metrics.rmssd})).filter(p=>p.y!=null);
     const chart=series.length>1?Chart.ts(series,{color:COL[lvl],unit:'',h:160,w:660}):'';
     const wrap=document.createElement('div'); wrap.className='owner-mode'; wrap.style.setProperty('--oc',COL[lvl]);
+    const s=State.settings;
+    const brand=(s.logo||s.clinicName)?`<div class="om-brand">${s.logo?`<img src="${s.logo}" alt="${esc(s.clinicName||'')}">`:`<b>${esc(s.clinicName||'')}</b>`}${s.logo&&s.clinicName?`<span>${esc(s.clinicName)}</span>`:''}</div>`:'';
     wrap.innerHTML=`<button class="om-close" onclick="this.parentNode.remove();document.body.style.overflow=''">${IC.x} Praxis-Ansicht</button>
       <div class="om-inner">
+        ${brand}
         <div class="om-horse">${Views.avatar(h,60)}<div><div class="om-name">${esc(h.name)}</div><div class="om-sub">Herzbericht · ${fmtDate(rec.startedAt)}</div></div></div>
         <div class="om-status"><span class="om-ring"></span><div class="om-st-t"><div class="om-word">${STATUS[lvl]}</div>${trendTxt?`<div class="om-trend">${esc(trendTxt)}</div>`:''}</div></div>
         <p class="om-plain">${esc(PLAIN)}</p>
