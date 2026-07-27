@@ -1452,6 +1452,9 @@ svg.viz .sd-lbl{fill:var(--cyan-strong);font-size:10px;font-weight:600;font-fami
 .demo-ribbon svg{width:18px;height:18px;color:var(--amber);flex-shrink:0}
 .demo-ribbon b{color:var(--amber)}
 .demo-ribbon button{margin-left:auto;white-space:nowrap}
+.demo-ribbon.compact{padding:7px 12px 7px 13px;font-size:12.5px;gap:9px;margin-bottom:var(--s3)}
+.demo-ribbon.compact svg{width:15px;height:15px}
+.demo-ribbon.compact>div{color:var(--text-secondary)}
 
 /* ---- Befund-Report (Druck / PDF) ---- */
 #printArea{display:none}
@@ -3185,9 +3188,9 @@ const Views={
     const colDef=[['crit','Kritisch'],['elev','Erhöht'],['watch','Beobachten'],['stable','Stabil']];
     return `
     <div class="view">
-      ${License.isPaid()?'':`<div class="demo-ribbon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
-        <div><b>Demo-Modus</b> — volles Cockpit zum Ausprobieren. Befund-PDF, Kohärenz-Modul, Besitzer-Rückmeldung &amp; Karten-Export sind der Vollversion vorbehalten.</div>
-        <button class="btn primary" style="padding:8px 14px;font-size:13px" onclick="${License.trialAvailable()?'License.startTrial()':'UI.upgrade()'}">${License.trialAvailable()?'30 Tage voll testen':'Freischalten'}</button></div>`}
+      ${License.isPaid()?'':`<div class="demo-ribbon compact"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+        <div><b>Demo-Modus</b> — Befund-PDF &amp; Karten-Export in der Vollversion.</div>
+        <button class="btn primary" style="padding:7px 13px;font-size:12.5px;white-space:nowrap" onclick="${License.trialAvailable()?'License.startTrial()':'UI.upgrade()'}">${License.trialAvailable()?'30 Tage testen':'Freischalten'}</button></div>`}
       <div class="view-head">
         <div><span class="eyebrow">Praxis-Übersicht</span>
           <h1>Triage-Board</h1>
@@ -5000,6 +5003,7 @@ const Dispatch={
       // fadeAnimation/zoomAnimation aus → verhindert eingefrorene opacity:0-Kacheln
       this._map=L.map(cont,{zoomControl:true,attributionControl:false,fadeAnimation:false,zoomAnimation:false,tap:false}).setView([origin.lat,origin.lng],10);
       L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',{maxZoom:19,crossOrigin:true}).addTo(this._map);
+      this._needFit=true;   // frisch erzeugt → beim ersten Rendern automatisch auf die Route zoomen
     }
     this._map.invalidateSize(false);
     if(this._layer)this._layer.remove();
@@ -5022,6 +5026,8 @@ const Dispatch={
       L.marker([h.lat,h.lng],{icon:pin(colors[x.tri.level],i+1)}).addTo(this._layer).bindPopup(pop);
     });
     if(latlngs.length>1)L.polyline(latlngs,{color:'#3ECFB2',weight:2.5,opacity:.7,dashArray:'6 8'}).addTo(this._layer);
+    // Auto-Zoom auf die Tagesroute (Bounding-Box aller Stopps + Praxis) beim ersten Öffnen der Karte
+    if(this._needFit && latlngs.length>1){ try{ this._map.fitBounds(latlngs,{padding:[46,46],maxZoom:13}); }catch(e){} this._needFit=false; }
     // Alle Kunden einblenden (Terminakquise): weitere Pferde mit Standort gedimmt zeigen
     if(this._showAll){
       const routeIds=new Set(order.map(x=>x.h.id));
