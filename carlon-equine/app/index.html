@@ -7280,14 +7280,47 @@ const ChartZoom={
       const scroller=document.createElement('div'); scroller.className='bfs-scroll';
       const render=()=>{const w=Math.max(vw-8,Math.round(totalSec*pps));scroller.innerHTML=Chart.breathWave(rrs,{w,h:H,dur});const s=scroller.querySelector('svg');if(s){s.style.width=w+'px';s.style.height=H+'px';s.style.maxWidth='none';s.style.display='block';}};
       render();
-      const zoom=(z)=>{const sw0=scroller.scrollWidth||1;const frac=(scroller.scrollLeft+scroller.clientWidth/2)/sw0;
-        if(z==='in')pps=Math.min(fitPps*10,pps*1.7);else if(z==='out')pps=Math.max(fitPps,pps/1.7);else pps=fitPps;
-        render();requestAnimationFrame(()=>{scroller.scrollLeft=Math.max(0,frac*scroller.scrollWidth-scroller.clientWidth/2);});};
+      const zoom=(z)=>{
+        if(z==='fit'){ pps=fitPps; render(); scroller.scrollLeft=0; return; }
+        zoomAuf(z==='in'?pps*1.7:pps/1.7, scroller.clientWidth/2);
+      };
       bar.querySelectorAll('.bfs-z').forEach(b=>b.addEventListener('click',()=>zoom(b.dataset.z)));
-      // Pinch-Zoom (Touch — mobile Vets)
-      let pb=null;
-      scroller.addEventListener('touchstart',e=>{if(e.touches.length===2){pb={d:Math.hypot(e.touches[0].clientX-e.touches[1].clientX,e.touches[0].clientY-e.touches[1].clientY),pps};}},{passive:true});
-      scroller.addEventListener('touchmove',e=>{if(e.touches.length===2&&pb){e.preventDefault?0:0;const d=Math.hypot(e.touches[0].clientX-e.touches[1].clientX,e.touches[0].clientY-e.touches[1].clientY);pps=Math.max(fitPps,Math.min(fitPps*10,pb.pps*d/pb.d));render();}},{passive:true});
+      /* Pinch-Zoom (Touch — mobile Vets).
+         Drei Dinge waren hier kaputt:
+         1) `e.preventDefault?0:0` prueft nur, OB die Methode existiert, und
+            ruft sie nie auf — der Ausdruck hatte keinerlei Wirkung. Zusammen
+            mit {passive:true} konnte der Listener ohnehin nicht abbrechen, der
+            Browser hat also parallel seinen eigenen Seiten-Zoom gefahren.
+            Zwei Zoomstufen uebereinander fuehlen sich schlicht kaputt an.
+         2) Der Zoom lief auf den Mittelpunkt des Sichtfensters statt auf den
+            Punkt zwischen den Fingern — die Stelle, die man gerade ansieht,
+            rutschte beim Aufziehen weg.
+         3) Neu gezeichnet wurde bei JEDEM touchmove. Bei einer langen
+            Aufnahme faellt das als Ruckeln auf; jetzt hoechstens einmal je
+            Bildwiederholung. */
+      let pb=null, warte=false;
+      const zoomAuf=(neuPps,ankerX)=>{
+        const vor=scroller.scrollWidth||1;
+        const frac=(scroller.scrollLeft+ankerX)/vor;
+        pps=Math.max(fitPps,Math.min(fitPps*10,neuPps));
+        render();
+        scroller.scrollLeft=Math.max(0,frac*scroller.scrollWidth-ankerX);
+      };
+      scroller.addEventListener('touchstart',e=>{
+        if(e.touches.length!==2) return;
+        const r=scroller.getBoundingClientRect();
+        pb={ d:Math.hypot(e.touches[0].clientX-e.touches[1].clientX,
+                          e.touches[0].clientY-e.touches[1].clientY),
+             pps, x:(e.touches[0].clientX+e.touches[1].clientX)/2-r.left };
+      },{passive:false});
+      scroller.addEventListener('touchmove',e=>{
+        if(e.touches.length!==2||!pb) return;
+        e.preventDefault();                       // sonst zoomt der Browser mit
+        if(warte) return; warte=true;
+        const d=Math.hypot(e.touches[0].clientX-e.touches[1].clientX,
+                           e.touches[0].clientY-e.touches[1].clientY);
+        requestAnimationFrame(()=>{ warte=false; zoomAuf(pb.pps*d/pb.d, pb.x); });
+      },{passive:false});
       scroller.addEventListener('touchend',()=>{pb=null;},{passive:true});
       // Desktop: Strg/⌘ + Mausrad zoomt
       scroller.addEventListener('wheel',e=>{if(e.ctrlKey||e.metaKey){e.preventDefault();zoom(e.deltaY<0?'in':'out');}},{passive:false});
