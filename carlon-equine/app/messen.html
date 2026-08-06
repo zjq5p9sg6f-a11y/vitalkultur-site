@@ -235,6 +235,8 @@ p.sub{color:var(--sec);font-size:clamp(13px,1.15vw,15px);margin:0 auto clamp(var
 .tile.gold span{color:var(--amber)}
 .tile.neutral span{color:var(--sec)}
 .tile em{font-style:normal;display:block;font-size:10.5px;color:var(--dim);line-height:1.35;margin-top:6px}
+.tile em i{font-style:normal;display:block;margin-top:4px;color:var(--sec)}
+.tile em i b{font-family:var(--font-mono);font-weight:600;color:var(--text)}
 /* Anklickbare Protokollzeile */
 .proto-row{width:100%;font:inherit;color:inherit;text-align:left;cursor:pointer;transition:background .14s}
 .proto-row:hover{background:rgba(255,255,255,.028)}
@@ -696,7 +698,7 @@ svg.viz .bezel{stroke:var(--cyan);stroke-opacity:.55;stroke-width:1.1;stroke-lin
       <button class="tile" data-info="beats" aria-label="Herzschläge — erklären"><span data-i18n="tBeatsDone">Herzschläge</span><b id="dBeats">0</b><em data-i18n="tBeatsDoneSub">erfasste Einzelschläge</em></button>
       <button class="tile neutral" data-info="dur" aria-label="Dauer — erklären"><span data-i18n="tDurDone">Dauer</span><b id="dDur">0:00</b><em data-i18n="tDurDoneSub">Länge der Aufnahme</em></button>
       <button class="tile gold" data-info="hr" aria-label="Durchschnittlicher Puls — erklären"><span data-i18n="tHr">Ø Puls</span><b id="dHR">–</b><em data-i18n="tHrSub">zeitgewichtetes Mittel</em></button>
-      <button class="tile" data-info="rmssd" aria-label="HRV RMSSD — erklären"><span data-i18n="tRmssd">RMSSD</span><b id="dRmssd">–</b><em data-i18n="tRmssdSub">Streuung von Schlag zu Schlag</em></button>
+      <button class="tile" data-info="rmssd" aria-label="HRV RMSSD — erklären"><span data-i18n="tRmssd">RMSSD</span><b id="dRmssd">–</b><em><span data-i18n="tRmssdSub">Streuung von Schlag zu Schlag</span><i id="dRmssdClean"></i></em></button>
       <button class="tile" data-info="sdnn" aria-label="HRV SDNN — erklären"><span data-i18n="tSdnn">SDNN</span><b id="dSdnn">–</b><em data-i18n="tSdnnSub">Streuung aller Abstände</em></button>
     </div>
 
@@ -901,7 +903,7 @@ de:{
  tBeatsDone:'Herzschläge', tBeatsDoneSub:'erfasste Einzelschläge',
  tDurDone:'Dauer', tDurDoneSub:'Länge der Aufnahme',
  tHr:'Ø Puls', tHrSub:'zeitgewichtetes Mittel',
- tRmssd:'RMSSD', tRmssdSub:'Streuung von Schlag zu Schlag',
+ tRmssd:'RMSSD', tRmssdSub:'Streuung von Schlag zu Schlag', tRmssdClean:'nur unauffällige Paare:',
  tSdnn:'SDNN', tSdnnSub:'Streuung aller Abstände',
  chartVitals:'Puls + HRV · Verlauf',
  chartVitalsCap:'Puls (Gold) und HRV (Cyan) über die gesamte Aufnahme. Die HRV ist ein gleitendes Fenster und reagiert auf Puls-Übergänge — sie zeigt die kurzfristige Dynamik, keinen ruhenden Einzelwert.',
@@ -981,7 +983,7 @@ en:{
  tBeatsDone:'Heartbeats', tBeatsDoneSub:'individual beats captured',
  tDurDone:'Duration', tDurDoneSub:'length of the recording',
  tHr:'Avg. pulse', tHrSub:'time-weighted mean',
- tRmssd:'RMSSD', tRmssdSub:'beat-to-beat variation',
+ tRmssd:'RMSSD', tRmssdSub:'beat-to-beat variation', tRmssdClean:'plausible pairs only:',
  tSdnn:'SDNN', tSdnnSub:'variation across all intervals',
  chartVitals:'Pulse + HRV · over time',
  chartVitalsCap:'Pulse (gold) and HRV (cyan) across the whole recording. HRV is computed over a rolling window and responds to changes in pulse — it shows short-term dynamics, not a resting value.',
@@ -1790,6 +1792,8 @@ de:{
     ['Spannweite','Die Pille über der Grafik zeigt zusätzlich den niedrigsten und höchsten Wert der Aufnahme.'],
     ['Einordnung','Ob ein Wert für dein Pferd üblich ist, hängt von Alter, Rasse, Training und Situation ab — das beurteilt deine Tierärztin.']]},
   rmssd:{t:'HRV · RMSSD',r:[
+    ['Warum zwei Zahlen','Die obere Zahl nimmt jeden Schlag. Die untere lässt Paare weg, bei denen der Abstand um mehr als 20 % vom vorigen abweicht (Task Force 1996). Beim Pferd stecken in dieser Lücke zwei völlig verschiedene Dinge: echte Störungen — und der AV-Block zweiten Grades, eine Pause, die beim ruhenden Pferd normal ist. Ein Filter kann beides nicht auseinanderhalten, er wirft es zusammen weg.'],
+    ['Was das bedeutet','Liegen die beiden Zahlen weit auseinander, war die Messung nicht schlecht. Es heißt, dass in dieser Aufnahme etwas steckt, das eine Einordnung braucht — und genau die leistet die tierärztliche Auswertung: sie unterscheidet Pause von Störung. Deshalb darf dort eine dritte Zahl stehen, ohne dass eine der beiden hier falsch wäre.'],
     ['Was','Ein Maß für die Streuung von einem Schlag zum nächsten, in Millisekunden.'],
     ['Rechenweg','Wurzel aus dem Mittel der quadrierten Differenzen aufeinanderfolgender Schlagabstände (Task Force 1996).'],
     ['Lesart','Große Werte heißen: die Abstände ändern sich von Schlag zu Schlag deutlich. Kleine Werte: das Herz läuft gleichmäßiger.'],
@@ -1853,6 +1857,8 @@ en:{
     ['Range','The pill above the chart additionally shows the lowest and highest value of the recording.'],
     ['Interpretation','Whether a value is usual for your horse depends on age, breed, training and situation — your veterinarian assesses that.']]},
   rmssd:{t:'HRV · RMSSD',r:[
+    ['Why two numbers','The upper number uses every beat. The lower one drops pairs whose interval deviates by more than 20 % from the preceding one (Task Force 1996). In the horse that gap holds two entirely different things: genuine disturbances — and second-degree AV block, a pause that is normal in a resting horse. A filter cannot tell them apart; it discards both together.'],
+    ['What it means','If the two numbers are far apart, the recording was not poor. It means this recording contains something that needs interpreting — which is exactly what the veterinary assessment provides: it separates pause from disturbance. A third number may well appear there without either of these two being wrong.'],
     ['What','A measure of the variation from one beat to the next, in milliseconds.'],
     ['How it is calculated','Root of the mean squared differences between consecutive beat intervals (Task Force 1996).'],
     ['Reading it','Large values mean the intervals change noticeably from beat to beat. Small values: the heart runs more evenly.'],
@@ -2206,6 +2212,11 @@ function finish(){
   const m=metrics(rr);
   $('#dHR').innerHTML=Math.round(m.meanHRBpm)+'<u>bpm</u>';
   $('#dRmssd').innerHTML=fmt1(m.rmssdMs)+'<u>ms</u>';
+  /* Der zweite Wert steht gleichberechtigt darunter, nicht im Kleingedruckten.
+     Er ist der Grund, warum die tieraerztliche Auswertung eine andere Zahl
+     nennen darf, ohne dass eine der beiden falsch waere. */
+  $('#dRmssdClean').innerHTML = (m.rmssdCleanMs!=null && m.allPairs>0 && m.cleanPairs<m.allPairs)
+    ? t('tRmssdClean')+' <b>'+fmt1(m.rmssdCleanMs)+' ms</b>' : '';
   $('#dSdnn').innerHTML=fmt1(m.sdnnMs)+'<u>ms</u>';
 
   /* ── Der Beleg ────────────────────────────────────────────────────────
@@ -2280,7 +2291,20 @@ function metrics(rr){
   const sdnn=Math.sqrt(sd/(n>1?n-1:1));
   let sq=0,c=0; for(let i=1;i<n;i++){ const d=rr[i]-rr[i-1]; sq+=d*d; c++; }
   const rmssd=c?Math.sqrt(sq/c):0;
-  return { rmssdMs:round2(rmssd), sdnnMs:round2(sdnn), meanHRBpm:round2(60000/mean) };
+  /* ZWEITE LESART, ueber unauffaellige Paare (Task Force 1996 / Malik:
+     Paar verwerfen, wenn ein Abstand um mehr als 20 % vom vorigen abweicht).
+     Warum ueberhaupt zwei Zahlen: an echten Aufnahmen liegen die beiden Werte
+     weit auseinander — bei einer 9-Minuten-Aufnahme 55,5 ms gegen 17,6 ms.
+     Beim Pferd liegen physiologische Pausen (AV-Block 2. Grades, beim
+     ruhenden Pferd normal) und echte Stoerungen in derselben Serie; ein
+     Filter kann sie nicht unterscheiden, er wirft beides weg. Welcher Anteil
+     wovon stammt, entscheidet die tieraerztliche Auswertung. Eine einzelne
+     Zahl hier waere in jedem Fall eine Behauptung — zwei Zahlen sind die
+     Messung samt ihrer Unsicherheit. */
+  let sqC=0,cC=0;
+  for(let i=1;i<n;i++){ if(Math.abs(rr[i]-rr[i-1])<=0.20*rr[i-1]){ const d=rr[i]-rr[i-1]; sqC+=d*d; cC++; } }
+  return { rmssdMs:round2(rmssd), sdnnMs:round2(sdnn), meanHRBpm:round2(60000/mean),
+           rmssdCleanMs:cC?round2(Math.sqrt(sqC/cC)):null, cleanPairs:cC, allPairs:c };
 }
 const round2=x=>Math.round(x*100)/100;
 
@@ -2295,7 +2319,18 @@ function buildExport(name,rr,m,secs){
     session:{ id:(crypto.randomUUID?crypto.randomUUID().toUpperCase():String(Date.now())),
               startedAt:S.startedAt.toISOString().replace(/\.\d+Z$/,'Z'),
               durationSec:Math.round(secs), beatCount:rr.length },
-    metrics:{ timeDomain:m },
+    /* Das erzeugende System deklariert sein eigenes Korrekturverfahren.
+       Ohne diese Angabe kaeme der Rohwert im Cockpit an, als waere er
+       artefaktkorrigiert — und wuerde dort gegen Referenzbereiche gehalten,
+       fuer die er nicht taugt (an echten Aufnahmen bis 130 % zu hoch).
+       Wer misst, sagt WIE er misst; wer liest, entscheidet, wie weit er traut. */
+    metrics:{ timeDomain:{ rmssdMs:m.rmssdMs, sdnnMs:m.sdnnMs, meanHRBpm:m.meanHRBpm,
+                           nnCleaningMethod:'none_raw_series_v1' } },
+    quality:{ method:'task_force_1996_relative_20pct',
+              plausiblePairPct: m.allPairs?Math.round(1000*m.cleanPairs/m.allPairs)/10:null,
+              plausiblePairs:m.cleanPairs, totalPairs:m.allPairs,
+              rmssdPlausiblePairsMs:m.rmssdCleanMs,
+              note:'Diese Seite klassifiziert Schlaege NICHT. Der 20-%-Filter ist eine Plausibilitaetsangabe, keine Rhythmus-Beurteilung — beim Pferd verwirft er auch physiologische Pausen (AV-Block 2. Grades).' },
     // Labels bleiben durchgehend 'N': diese Seite klassifiziert NICHT.
     // Artefakt- und Rhythmus-Erkennung ist Sache des Cockpits.
     rrData: rr.map((v,i)=>({ index:i, label:'N', rrMs:v }))

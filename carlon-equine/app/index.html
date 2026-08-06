@@ -1904,6 +1904,34 @@ const Normalizer = {
       avBlock: num(eq.avBlockCount) ?? num(q.avBlockCount) ?? 0,
       motion: eq.motionContext||sess.intent||null,
     };
+    /* HERKUNFT JEDER KENNZAHL — an echten Aufnahmen gemessen (Mistral,
+       12j Hannoveraner): der Rueckfall auf die Rohserie ueberschaetzt RMSSD
+       um bis zu 130 % (9-min-Aufnahme: 24,2 ms artefaktkorrigiert gegen
+       55,5 ms roh), weil beim Pferd der physiologische AV-Block 2. Grades
+       und echte Bewegungsartefakte in derselben Serie liegen. Ein
+       empfangendes System darf einen so abgeleiteten Wert NIE stillschweigend
+       wie einen korrigierten behandeln — darum reist die Herkunft mit. */
+    /* Erklaert das erzeugende System selbst, dass es NICHT artefaktkorrigiert
+       hat (Feld nnCleaningMethod, von der Browser-Mess-Station gesetzt), dann
+       zaehlt der gemeldete Wert nicht als belastbar — sonst waere die
+       Selbstauskunft folgenlos und der Rohwert liefe ungebremst in die
+       Referenzbereiche. */
+    const roh=/^(none|raw)/i.test(String(td.nnCleaningMethod||''));
+    const prov=(reported,value)=>reported!=null?(roh?'reported-uncorrected':'reported')
+                                              :(value!=null?'derived-uncorrected':null);
+    metrics.provenance={
+      rmssd: prov(num(td.rmssdMs),metrics.rmssd),
+      sdnn:  prov(num(td.sdnnMs),metrics.sdnn),
+      meanHR:prov(num(td.meanHRBpm),metrics.meanHR),
+      sd1:   prov(num(nl.sd1Ms)??num(geo.sd1Ms),metrics.sd1),
+      sd2:   prov(num(nl.sd2Ms)??num(geo.sd2Ms),metrics.sd2),
+      dfa:   prov(num(nl.dfaAlpha1),metrics.dfa)
+    };
+    /* "uncorrected" meint eng die Zeitbereichs-Kennzahlen, auf denen die
+       Triage fusst. Ein bloss abgeleitetes DFA-alpha1 ist eine andere Frage
+       und darf die RMSSD-Bewertung nicht mitreissen. */
+    metrics.uncorrected=['rmssd','sdnn','meanHR']
+      .some(k=>/uncorrected$/.test(String(metrics.provenance[k])));
     const det=this.detect(raw);
     return {
       subjectId: subj.id || (subj.nameAtTime? 'name:'+subj.nameAtTime.toLowerCase().trim() : 'unknown:'+hashStr(JSON.stringify(sess))),
@@ -1960,7 +1988,16 @@ const Triage = {
     }
     // ---- 2) Ableitung aus Rohmetriken (kalibriert an Referenz-Kohorten) ----
     const rm=mt.rmssd, hr=mt.meanHR, dfa=mt.dfa;
-    if(rm!=null){
+    /* Unkorrigierte Werte duerfen keinen Rhythmus-Alarm ausloesen. Die
+       Rohserie ueberschaetzt RMSSD messbar (siehe Normalizer.provenance);
+       ein Fehlalarm "Vorhofflimmern" auf Basis von Bewegungsartefakten
+       schickt ein gesundes Pferd ins EKG und beschaedigt das Vertrauen in
+       jeden weiteren Hinweis. Stattdessen: Qualitaet benennen. */
+    const rmRoh=!!(mt.provenance&&/uncorrected$/.test(String(mt.provenance.rmssd)));
+    if(rmRoh){
+      reasons.push('RMSSD aus der Rohserie abgeleitet, ohne Artefaktkorrektur — an echten Aufnahmen bis zu 130 % zu hoch. Nicht gegen Referenzbereiche bewerten; fuer eine belastbare Einordnung den vollstaendigen Export einlesen.');
+    }
+    if(rm!=null && !rmRoh){
       if(rm>302){score+=55;flags.push('Rhythmus prüfen');reasons.push('RMSSD stark erhöht — auffällig unregelmäßige Kurzzeit-Variabilität, 12-Kanal-EKG zur Rhythmus-Abklärung erwägen (Broux 2018)');}
       else if(rm<15){score+=50;reasons.push('RMSSD < 15 ms — sehr niedrig gegen Referenz (Gehlen 2020 / Vitale 2020)');}
       else if(rm<30){score+=28;reasons.push('RMSSD < 30 ms — deutlich reduzierte Herzratenvariabilität');}
@@ -1995,6 +2032,17 @@ const Triage = {
       else if(!flags.includes('Signal prüfen'))flags.push('Signal prüfen');
     }
     if(mt.quality!=null && mt.quality<45 && Triage.LEVELS[level].rank<1) level='watch';
+    /* BODEN BEI UNKORRIGIERTEN DATEN. Der RMSSD-Zweig ist oben stillgelegt,
+       weil ein Rohwert bis zu 130 % zu hoch liegt — dadurch faellt die
+       Einstufung aber auch dann auf "stabil", wenn das Pferd in Wahrheit
+       auffaellig ist (an echten Daten geprueft: vollstaendiger Export
+       "kritisch", derselbe Fall nur als Rohserie "beobachten"). Fehlende
+       Information darf nicht wie fehlendes Risiko aussehen. Kein Gruen auf
+       Daten, die wir nicht beurteilen koennen. */
+    if(rmRoh){
+      if(Triage.LEVELS[level].rank<1) level='watch';
+      if(!flags.includes('nicht beurteilbar')) flags.push('nicht beurteilbar');
+    }
     return {level,score:Math.round(score),reasons,flags};
   },
   // Klinische Domäne der Auffälligkeit — zeigt dem Vet auf einen Blick WARUM (Atemweg/Rhythmus/Kolik/autonom).
@@ -2212,6 +2260,12 @@ const Importer = {
     const rawObs=obs.find(o=>codeOf(o)==='rr-intervals-raw'&&o.valueAttachment&&o.valueAttachment.data);
     if(rawObs){ try{ rr=JSON.parse(decodeURIComponent(escape(atob(rawObs.valueAttachment.data))))
       .map(Number).filter(v=>isFinite(v)&&v>0); }catch(e){ rr=[]; } }
+    // Schlag-Klassifikation zurueckholen, sonst kaeme jeder Schlag als "normal" an
+    let labels=null;
+    const labObs=obs.find(o=>codeOf(o)==='rr-beat-labels'&&o.valueAttachment&&o.valueAttachment.data);
+    if(labObs){ try{ const rle=JSON.parse(decodeURIComponent(escape(atob(labObs.valueAttachment.data))));
+      if(Array.isArray(rle)){ labels=[]; for(const [l,c] of rle) for(let i=0;i<c;i++) labels.push(l); }
+    }catch(e){ labels=null; } }
     const when=(obs[0]&&obs[0].effectiveDateTime)||b.timestamp||new Date().toISOString();
     const idOf=sys=>{ const i=(pat.identifier||[]).find(x=>x.system===sys); return i&&i.value; };
     return {
@@ -2227,7 +2281,7 @@ const Importer = {
                 nonLinear:{ sd1Ms:num('hrv-sd1'), sd2Ms:num('hrv-sd2'), dfaAlpha1:num('dfa-alpha1') },
                 equineSpecific:{ avBlockCount:num('rr-pattern-av-block-2deg') } },
       quality:{ artifactRatePct:num('artifact-rate-pct') },
-      rrData: rr.map((v,i)=>({index:i,label:'N',rrMs:v}))
+      rrData: rr.map((v,i)=>({index:i,label:(labels&&labels[i])||'N',rrMs:v}))
     };
   },
   /* Die Befund-Datei traegt das Bundle als data-URI in sich. */
@@ -5253,6 +5307,24 @@ const FHIR={
   IDLABEL:{ clinicPMS:'Klinik-Patienten-ID', ueln:'UELN', microchip:'Mikrochip (ISO)',
             fei:'FEI-ID', passport:'Equidenpass-Nr.', other:'Andere ID' },
 
+  /* Lauflaengen-Kodierung der Schlag-Klassifikation aus dem Originalexport.
+     Gibt null zurueck, wenn die Aufnahme gar keine Labels traegt (dann wird
+     auch nichts behauptet) oder wenn ausnahmslos alles normal ist — in dem
+     Fall ist die Abwesenheit der Observation die ehrlichere Aussage als eine
+     Liste, die Vollstaendigkeit suggeriert. */
+  beatLabels(rec){
+    const src=(rec&&rec.raw&&Array.isArray(rec.raw.rrData))?rec.raw.rrData:null;
+    if(!src||!src.length||typeof src[0]!=='object') return null;
+    const out=[]; let cur=null,cnt=0,seen=new Set();
+    for(const b of src){
+      const l=(b&&b.label)||'N'; seen.add(l);
+      if(l===cur){cnt++;} else { if(cur!==null) out.push([cur,cnt]); cur=l; cnt=1; }
+    }
+    if(cur!==null) out.push([cur,cnt]);
+    if(seen.size<=1 && seen.has('N')) return null;
+    return out;
+  },
+
   bundle(rec,horse){
     const m=rec.metrics||{};
     const rr=(rec.rr&&rec.rr.length?rec.rr:null)
@@ -5323,16 +5395,47 @@ const FHIR={
        Abtastrate voraussetzt und RR-Intervalle naturgemaess ungleichmaessig
        sind. */
     if(rr&&rr.length){
-      const payload=btoa(unescape(encodeURIComponent(JSON.stringify(rr.map(v=>Math.round(v))))));
+      /* KEIN Runden. Der Polar H10 liefert RR in 1/1024-s-Schritten
+         (0,977 ms); die Aufnahme haelt daher Werte wie 552,73 ms. Runden auf
+         ganze Millisekunden verletzt das Bit-Identitaets-Kriterium (§2.2 des
+         Standards) und damit jede L3-Konformitaetsaussage — an echten
+         Aufnahmen gemessen verschiebt es RMSSD/SDNN zwar nur um ≤0,14 %,
+         aber "reproduzierbar" ist eine Ja/Nein-Eigenschaft, kein Prozentwert. */
+      const json=JSON.stringify(rr.map(Number));
+      const payload=btoa(unescape(encodeURIComponent(json)));
       entries.push({resource:{ resourceType:'Observation', status:'final',
         category:[{coding:[{system:'http://terminology.hl7.org/CodeSystem/observation-category',code:'procedure'}]}],
         code:{coding:[{system:FHIR.CS,code:'rr-intervals-raw',display:'RR-Intervalle (Rohdaten)'}],text:'RR-Intervalle (Rohdaten)'},
         subject:{reference:'Patient/'+pid}, effectiveDateTime:when,
         device:{reference:'Device/carlon-pipeline'},
-        note:[{text:'Unbearbeitete Schlag-zu-Schlag-Intervalle in Millisekunden, JSON-Array. Grundlage aller abgeleiteten Kennzahlen dieses Bundles — jede davon ist daraus reproduzierbar.'}],
+        note:[{text:'Unbearbeitete Schlag-zu-Schlag-Intervalle in Millisekunden, JSON-Array, ungerundet. Grundlage aller abgeleiteten Kennzahlen dieses Bundles — jede davon ist daraus reproduzierbar.'}],
         valueAttachment:{ contentType:'application/json', language:'de',
-          title:'RR intervals (ms)', data:payload, size:payload.length }
+          title:'RR intervals (ms)', data:payload,
+          size:(new TextEncoder().encode(json)).length }
       }});
+
+      /* BEAT-KLASSIFIKATION MUSS MITREISEN. Ohne sie sieht die empfangende
+         Klinik eine Serie, in der jeder Schlag normal aussieht — ausgerechnet
+         der AV-Block 2. Grades, der beim Pferd der haeufigste und klinisch
+         relevanteste Rhythmusbefund ist, verschwindet lautlos. An einer
+         echten 1h47-Aufnahme: 10 735 N, 192 LS, 33 S, 3 AVB, 2 X — beim
+         Export blieben bisher 10 965 × "normal" uebrig.
+         Lauflaengen-kodiert, weil die Serie fast durchgehend N ist. */
+      const labels=FHIR.beatLabels(rec);
+      if(labels){
+        const lj=JSON.stringify(labels);
+        const lp=btoa(unescape(encodeURIComponent(lj)));
+        entries.push({resource:{ resourceType:'Observation', status:'final',
+          category:[{coding:[{system:'http://terminology.hl7.org/CodeSystem/observation-category',code:'exam'}]}],
+          code:{coding:[{system:FHIR.CS,code:'rr-beat-labels',display:'Schlag-Klassifikation (lauflaengenkodiert)'}],text:'Schlag-Klassifikation'},
+          subject:{reference:'Patient/'+pid}, effectiveDateTime:when,
+          device:{reference:'Device/carlon-pipeline'},
+          note:[{text:'Lauflaengen-kodierte Klassifikation je Schlag, positionsgleich zu rr-intervals-raw: [["N",26],["LS",1],…]. N = normal, LS = Lang-Kurz-Paar, S = vorzeitig, AVB = RR-Muster vom AV-Block-Typ (2°), X = verworfen. Deskriptive Musterzuordnung, keine Diagnose — Beurteilung ausschliesslich im EKG durch die Tierarztpraxis.'}],
+          valueAttachment:{ contentType:'application/json', language:'de',
+            title:'Beat labels (RLE)', data:lp,
+            size:(new TextEncoder().encode(lj)).length }
+        }});
+      }
     }
 
     return { resourceType:'Bundle', type:'collection',
