@@ -154,29 +154,23 @@ a{color:var(--cyan);text-decoration:none} a:hover{text-decoration:underline}
 const $=s=>document.querySelector(s);
 const room=new URLSearchParams(location.search).get('room');
 
-/* ══ PARTNER-MODUS (CARLON Inside) ════════════════════════════════════════
-   Die Station ist von Anfang an einbettbar: ein Gerätehersteller kann sie
-   unter eigener Marke ausliefern, die Messtechnik bleibt CARLON.
-
-   Bewusst als CONFIG-TABELLE, nicht als Sonderfälle im Code. Ein neuer Partner
-   ist eine Zeile hier — keine Verzweigung, kein Deploy-Risiko für bestehende.
-   SASCOTEC ist Kunde Nr. 1, kein privilegierter Spezialfall.
+/* ══ EINBETTBARER MODUS (weisslabel-faehig) ═══════════════════════════════
+   Die Station kann unter fremder Marke ausgeliefert werden; die Messtechnik
+   bleibt CARLON. Bewusst als CONFIG-TABELLE, nicht als Sonderfaelle im Code:
+   ein Eintrag pro Marke, keine Verzweigung, kein Deploy-Risiko fuer bestehende.
 
    Aufruf:  messen.html?room=<code>&partner=<key>
-   Unbekannter oder fehlender Key → CARLON-Standard. Kein Fehlerfall.
+   Unbekannter oder fehlender Key -> CARLON-Standard. Kein Fehlerfall.
 
-   Strategisch entscheidend: der Key wandert als source.partner in den Export.
-   Ohne diese Zuordnung lässt sich später keine Umsatzbeteiligung abrechnen —
-   man wüsste nicht, welche Messungen über welchen Kanal entstanden sind.      */
-const PARTNERS = {
-  sascotec: {
-    name  : 'SASCOTEC',
-    claim : 'Herzraten-Messung · CARLON Inside',
-    logo  : null,                 // 'assets/partner/sascotec.png' sobald geliefert
-    accent: '#4FB3E8',            // Partner-Akzent; alles andere bleibt CARLON
-  },
-  // weitere Partner: EIN Eintrag pro Zeile, keine Code-Änderung nötig
-};
+   Die Tabelle ist LEER und bleibt es, bis eine Zusammenarbeit unterschrieben
+   ist. Ein live erreichbarer Schluessel wuerde eine Partnerschaft nach aussen
+   behaupten, bevor sie besteht — diese Datei wird oeffentlich ausgeliefert.
+   Namen, Farben und Vorlage stehen deshalb NICHT hier, sondern intern in
+   carlon-clinic/PARTNER-MODUS.md. Aktivierung = eine Zeile, kein Umbau.
+
+   Attribution: der Schluessel wandert als source.partner in den Export. Ohne
+   diese Kanal-Zuordnung ist spaeter keine Umsatzbeteiligung abrechenbar.     */
+const PARTNERS = {};
 const partnerKey = (new URLSearchParams(location.search).get('partner')||'')
                      .toLowerCase().replace(/[^a-z0-9_-]/g,'').slice(0,32);
 const partner = PARTNERS[partnerKey] || null;
