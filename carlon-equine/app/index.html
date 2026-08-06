@@ -6472,7 +6472,9 @@ const UI={
           <div style="flex:1"><h4>${name}${badge?` <span class="chip cyan">${badge}</span>`:''}</h4>
             <div style="font-size:12px;color:var(--text-dim)">${note}</div></div>
           <div class="price"><b>${price}</b><span>€ / Monat</span>
-            <a class="btn primary" style="margin-top:8px;padding:7px 12px;font-size:12px" href="${License.CHECKOUT[id]||'#'}" target="_blank" rel="noopener">Abonnieren</a></div>
+            ${(()=>{const u=License.checkoutLink(id);
+              return u?`<a class="btn primary" style="margin-top:8px;padding:7px 12px;font-size:12px" href="${u}" target="_blank" rel="noopener">Abonnieren</a>`
+                      :`<button class="btn ghost" style="margin-top:8px;padding:7px 12px;font-size:12px" onclick="UI.activate()">Schlüssel eingeben</button>`;})()}</div>
         </div>`).join('')}
       </div>
       <p style="font-size:12px;color:var(--text-dim);margin-top:16px">Preise zzgl. MwSt. — als Praxis ziehst du die Vorsteuer ab. Zahlung und Rechnung laufen über Stripe, für EU-Praxen mit USt-IdNr. greift das Reverse-Charge-Verfahren. Nach dem Abschluss erhältst du deinen Lizenz-Schlüssel per E-Mail. Alle Gesundheitsdaten bleiben auch mit Lizenz zu 100 % lokal auf diesem Gerät.</p>
@@ -6526,6 +6528,18 @@ const License={
     year :'https://buy.stripe.com/test_4gMbJ1eopaGmbdmfjQ1RC02',   // 490 €/Jahr  (= 40,83 €/Mo)
     month:'https://buy.stripe.com/test_dRmdR99455m25T20oW1RC01',   //  49 €/Monat
   },
+  /* Die Zahlungs-Links zeigen noch auf Stripes Testumgebung. Wird die
+     Beta-Sperre geloest, ohne sie zu tauschen, laeuft der Kunde durch eine
+     Kasse, die kein Geld einzieht — und wir merken es an nichts ausser einer
+     ausbleibenden Zahlung. Deshalb hier eine harte Sperre statt einer Notiz
+     in einem Kommentar. */
+  checkoutLink(art){
+    const url=this.CHECKOUT[art]||'';
+    if(!url) return null;
+    const test=/\/test_/.test(url);
+    if(test && !BETA_GATED && !/^(localhost|127\.0\.0\.1)$/.test(location.hostname)) return null;
+    return url;
+  },
   _expTs(lk){if(lk&&lk.expires_at){const t=Date.parse(lk.expires_at);return isNaN(t)?null:Math.floor(t/1000);}return null;},
   _b64(s){s=s.replace(/-/g,'+').replace(/_/g,'/');while(s.length%4)s+='=';const b=atob(s);const u=new Uint8Array(b.length);for(let i=0;i<b.length;i++)u[i]=b.charCodeAt(i);return u;},
   async verify(rawKey){
@@ -6537,15 +6551,62 @@ const License={
       if(!ok)return{valid:false,reason:'Signatur ungültig'};
       const p=JSON.parse(new TextDecoder().decode(this._b64(pB64)));
       if(p.iss!=='carlon-clinic')return{valid:false,reason:'Fremder Aussteller'};
+      /* Ohne Ablaufdatum galt ein Schluessel bisher unbegrenzt: bei fehlendem
+         exp ist p.exp*1000 gleich NaN, und NaN < Date.now() ist false — der
+         Schluessel lief also nie ab. Ein Tippfehler beim Ausstellen haette
+         eine ewige Lizenz erzeugt. Ein Abo ohne Ablaufdatum ist kein Abo. */
+      if(typeof p.exp!=='number'||!isFinite(p.exp))
+        return{valid:false,reason:'Kein Ablaufdatum im Schlüssel'};
+      if(!this.TIERS[p.tier]) return{valid:false,reason:'Unbekannte Stufe'};
       const expired=p.exp*1000<Date.now();
-      return{valid:!expired,expired,tier:p.tier,lic:p.lic,exp:p.exp,founder:!!p.founder};
+      return{valid:!expired,expired,tier:p.tier,lic:p.lic,exp:p.exp,founder:!!p.founder,
+             seats:(typeof p.seats==='number'&&p.seats>0)?p.seats:1};
     }catch(e){return{valid:false,reason:e.message||'Fehler'};}
   },
   tier(){return (State.license&&State.license.tier)||'demo';},
   isPaid(){return this.tier()!=='demo';},
   maxHorses(){return this.isPaid()?Infinity:3;},
   PAID_ONLY:['pdf','csv','routeHandoff','coherence','ownerFeedback'],
-  can(f){return this.isPaid()?true:!this.PAID_ONLY.includes(f);},
+  /* WAS DIE STUFEN UNTERSCHEIDET — vorher: nichts.
+     can() gab fuer JEDE bezahlte Stufe true zurueck, maxHorses() ebenso.
+     "vet_clinic" tauchte im gesamten Code nur in zwei Beschriftungstabellen
+     auf. Damit kostete die Klinik-Stufe das Dreifache der Solo-Stufe fuer ein
+     identisches Produkt — das haelt der erste Kunde nicht aus, der beides
+     nebeneinander sieht, und es beschaedigt genau das Vertrauen, auf dem der
+     Direktvertrieb beruht. Unterschiede gehoeren in den CODE, nicht in die
+     Preisliste. Diese Tabelle ist die einzige Stelle, an der eine Stufe etwas
+     mehr kann als die andere; steht ein Merkmal hier nicht, gibt es den
+     Unterschied nicht — und dann darf er auch nicht bepreist werden. */
+  FEATURES:{
+    demo:      [],
+    research:  ['pdf','csv','coherence'],
+    vet_solo:  ['pdf','csv','routeHandoff','coherence','ownerFeedback'],
+    vet_clinic:['pdf','csv','routeHandoff','coherence','ownerFeedback',
+                'multiSeat']        // Lizenz nennt eine Platzzahl; siehe seats()
+  },
+  /* OFFENER PUNKT, bewusst hier und nicht in einer Notiz nebenan:
+     Zwischen vet_solo (49 €) und vet_clinic (149 €) steht damit genau EIN
+     Merkmal — die im Schluessel genannte Platzzahl, und die ist vertraglich,
+     nicht technisch. Das traegt den dreifachen Preis nicht.
+     Geprueft und VERWORFEN: den Praxis-Briefkopf zum Klinik-Merkmal zu machen.
+     Er steht heute schon in Befund und Ueberweisung, und ihn dem Solo-Vet
+     wegzunehmen waere eine Verschlechterung, die als Bezahlschranke gelesen
+     wird — teuer erkauftes Misstrauen an genau der Stelle, an der der
+     Direktvertrieb Vertrauen braucht.
+     Was den Unterschied tatsaechlich tragen wuerde, ist Mehrbenutzer-Betrieb
+     (mehrere Tieraerzt:innen auf einer gemeinsamen Pferdekartei mit
+     Zustaendigkeiten) — das ist Produktarbeit und eine Entscheidung von Jan,
+     keine, die beim Aufraeumen der Lizenz-Logik nebenbei faellt. */
+  can(f){
+    if(!this.PAID_ONLY.includes(f) && !this.CLINIC_ONLY.includes(f)) return true;
+    return (this.FEATURES[this.tier()]||[]).includes(f);
+  },
+  CLINIC_ONLY:['clinicBranding','multiSeat'],
+  /* Die Platzzahl steht im Schluessel und wird ANGEZEIGT, nicht technisch
+     erzwungen — ohne Server laesst sich geraeteuebergreifend nichts durchsetzen,
+     und ein Schein-Schutz waere schlechter als eine klare Angabe. Sie ist eine
+     vertragliche Groesse, und genau so wird sie benannt. */
+  seats(){ const l=State.license; return (l&&l.seats)||1; },
   async activate(rawKey){
     const key=(rawKey||'').trim();
     if(!key){Toast.show('Bitte Schlüssel eingeben','warn');return false;}
@@ -6554,7 +6615,7 @@ const License={
   async _activateOffline(key){
     const r=await this.verify(key);
     if(!r.valid){Toast.show(r.expired?'Lizenz abgelaufen — bitte verlängern':('Lizenz ungültig'+(r.reason?' ('+r.reason+')':'')),'warn');return false;}
-    State.license={provider:'offline',tier:r.tier,lic:r.lic,exp:r.exp,key,founder:r.founder};
+    State.license={provider:'offline',tier:r.tier,lic:r.lic,exp:r.exp,key,founder:r.founder,seats:r.seats};
     State.settings.license=State.license;await State.saveSettings();
     UI.closeModal();Toast.show(`Freigeschaltet: ${this.TIERS[r.tier].name} · ${r.lic}`,'ok');Nav.render();return true;
   },
@@ -6567,7 +6628,7 @@ const License={
     State.license=l;                          // sofort anwenden (Grace-Period, funktioniert offline)
     const r=await this.verify(l.key);
     if(r.valid){
-      State.license={provider:'offline',tier:r.tier,lic:r.lic,exp:r.exp,key:l.key,founder:r.founder};
+      State.license={provider:'offline',tier:r.tier,lic:r.lic,exp:r.exp,key:l.key,founder:r.founder,seats:r.seats};
       // Alt-Lizenzen (abgeloester Lemon-Squeezy-/Trial-Pfad) einmalig auf 'offline' normalisieren
       if(l.provider!=='offline'){State.settings.license=State.license;await State.saveSettings();}
     } else {
