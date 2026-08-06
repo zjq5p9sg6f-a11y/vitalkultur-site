@@ -2523,6 +2523,9 @@ const Toast={
    CHARTS — leichte, eigenständige SVG-Visualisierungen
    ════════════════════════════════════════════════════════════════════════ */
 const Chart={
+  /* Rohserien, auf die Vollbild-Ansichten zurueckgreifen. Bleibt bewusst im
+     Arbeitsspeicher und nicht im DOM — siehe breathWave. */
+  _series:{},
   line(series,{w=560,h=150,color='var(--cyan)',band=null,unit=''}={}){
     // series: [{x:Date-ish, y:number}]
     const pts=series.filter(p=>p.y!=null);
@@ -2608,16 +2611,52 @@ const Chart={
          +`<text x="${(bx+bw/2).toFixed(1)}" y="${(by+13).toFixed(1)}" text-anchor="middle" style="fill:${col};font-family:var(--font-mono);font-size:11px;font-weight:700">${txt}</text>`
          +`<circle cx="${x2.toFixed(1)}" cy="${yy.toFixed(1)}" r="3.4" fill="${col}"/>`;
   },
+  /* ROBUSTER ACHSENBEREICH. An der echten 1h47-Aufnahme sichtbar geworden:
+     einzelne Ausreisser bis 1 200 ms zogen die Achse so weit auf, dass das
+     eigentliche Signal (550–650 ms) in einem Band von wenigen Pixeln lag —
+     die Grafik war formal korrekt und praktisch blind. Der Bereich folgt
+     deshalb den Perzentilen statt Minimum und Maximum.
+     WICHTIG: Ausreisser werden dadurch NICHT unsichtbar. Sie werden am Rand
+     gekappt gezeichnet und gezaehlt; die aufrufende Grafik weist sie aus.
+     Beim Pferd kann ein Ausreisser eine physiologische AV-Block-Pause sein —
+     etwas, das man sehen koennen muss, nicht etwas, das man wegskaliert. */
+  _robustRange(vals,{lo=0.005,hi=0.995,pad=0.08,minSpan=1}={}){
+    const n=vals.length;
+    if(!n) return {min:0,max:1,clipped:0};
+    const s=Float64Array.from(vals).sort();
+    const at=q=>s[Math.max(0,Math.min(n-1,Math.round(q*(n-1))))];
+    let a=at(lo), b=at(hi);
+    // Zu wenige Punkte fuer sinnvolle Perzentile → volle Spanne
+    if(n<40){ a=s[0]; b=s[n-1]; }
+    if(b-a<minSpan){ const m=(a+b)/2; a=m-minSpan/2; b=m+minSpan/2; }
+    const p=(b-a)*pad; a-=p; b+=p;
+    let clipped=0; for(let i=0;i<n;i++) if(vals[i]<a||vals[i]>b) clipped++;
+    return {min:a,max:b,clipped};
+  },
+  /* Hinweis am Rand, wenn Werte ausserhalb des gezeigten Bereichs liegen.
+     Ohne diesen Hinweis waere die Achsenwahl eine stille Behauptung. */
+  _clipNote(x,y,n){
+    if(!n) return '';
+    return `<text x="${x.toFixed(1)}" y="${y.toFixed(1)}" text-anchor="end" style="fill:var(--amber);font-family:var(--font-mono);font-size:9.5px;opacity:.85">${n} ${n===1?'Wert':'Werte'} ausserhalb</text>`;
+  },
   niceTicks(min,max,n){const span=(max-min)||1;const raw=span/n;const mag=Math.pow(10,Math.floor(Math.log10(raw)));const nrm=raw/mag;
     const step=(nrm<1.5?1:nrm<3?2:nrm<7?5:10)*mag;const start=Math.ceil(min/step)*step;const t=[];for(let v=start;v<=max+step*1e-6;v+=step)t.push(+v.toFixed(6));return t;},
   poincare(rr,{size=360,sd1=null,sd2=null}={}){
     if(!rr||rr.length<4) return `<div style="color:var(--text-faint);font-size:12px;text-align:center;padding:30px">Keine RR-Daten</div>`;
     const xs=rr.slice(0,-1),ys=rr.slice(1);
     const pad=52;                                            // volle Plot-Fläche (App-Standard, keine Randhistogramme)
-    const mn=Math.min(...rr),mx=Math.max(...rr);const rg=(mx-mn)||1;const lo=mn-rg*0.08,hi=mx+rg*0.08;
+    /* Beide Achsen MUESSEN denselben Bereich haben, sonst waere die
+       Identitaetslinie keine 45-Grad-Linie mehr und die Wolkenform gelogen.
+       Der Bereich folgt den Perzentilen: an der echten 1h47-Aufnahme zogen
+       einzelne Werte um 1 200 ms die Achse so weit auf, dass die Wolke auf
+       etwa ein Drittel der Flaeche schrumpfte — gerade die Form, wegen der
+       man dieses Diagramm ueberhaupt betrachtet. */
+    const _pr=Chart._robustRange(rr,{lo:0.004,hi:0.996,pad:0.10,minSpan:40});
+    const lo=_pr.min, hi=_pr.max;
     const pL=pad, pT=pad-18, pB=size-pad, plotR=size-16;
     const W=plotR-pL, H=pB-pT;
-    const PX=v=>pL+(v-lo)/(hi-lo)*W, PY=v=>pB-(v-lo)/(hi-lo)*H;
+    const _cl=v=>Math.max(lo,Math.min(hi,v));
+    const PX=v=>pL+(_cl(v)-lo)/(hi-lo)*W, PY=v=>pB-(_cl(v)-lo)/(hi-lo)*H;
     // Plot-Substrat #0E0E0E (App EquineChartCI.plotBg — Near-Black IN der Karte → Tiefe, Signal brilliert)
     let g=`<rect x="${pL}" y="${pT}" width="${W}" height="${H}" rx="8" fill="#0E0E0E"/>`;const t=Chart.niceTicks(lo,hi,6);
     // EKG-Paper-Grid: major + minor (Minor = Major/5), symmetrisch X=Y — wie die App
@@ -2631,15 +2670,45 @@ const Chart={
     // Identitätslinie y=x — App: refLine weiß 0,55 · dash[4,3] · + „y = x"-Label oben rechts
     g+=`<line x1="${PX(lo).toFixed(1)}" y1="${PY(lo).toFixed(1)}" x2="${PX(hi).toFixed(1)}" y2="${PY(hi).toFixed(1)}" stroke="#fff" stroke-opacity="0.5" stroke-width="0.8" stroke-dasharray="4 3"/>`;
     g+=`<text x="${(plotR-4).toFixed(1)}" y="${(pT+11).toFixed(1)}" text-anchor="end" style="fill:var(--text-dim);font-size:9px;font-family:var(--font-mono)">y = x</text>`;
+    // Ein Paar zaehlt als ausserhalb, sobald EINE seiner beiden Koordinaten gekappt wurde
+    let _pout=0; for(let i=0;i<xs.length;i++){ if(xs[i]<lo||xs[i]>hi||ys[i]<lo||ys[i]>hi) _pout++; }
+
     // Punkte — App-Standard: zart (r 1,9 · Deckung 0,55), Dichte entsteht durch Überlappung (kein Dimming)
-    const _hpts=[];
+    /* Die Dichte der Wolke entsteht durch Ueberlappung, nicht durch Faerbung.
+       Bei 0,55 Deckung ist ab vier gestapelten Punkten optisch Saettigung
+       erreicht (1 − 0,45⁴ = 96 %); jeder weitere Punkt auf demselben
+       Bildpunkt aendert nichts mehr am Bild, kostet aber einen Knoten. An der
+       echten 1h47-Aufnahme waren das 10 964 Kreise. Gedeckelt wird das
+       ZEICHNEN — gerechnet wird unveraendert auf allen Schlaegen. */
+    /* Die Dichte der Wolke entsteht durch Ueberlappung, nicht durch Faerbung.
+       Statt 10 964 einzelner Kreise werden die Punkte nach ihrer Stapeltiefe
+       auf VIER Pfade verteilt: der erste Punkt je Bildpunkt in Ebene 0, der
+       zweite in Ebene 1 und so fort. Jede Ebene wird einmal mit 0,55 Deckung
+       gezeichnet — uebereinanderliegende Ebenen addieren sich optisch genau
+       wie zuvor die einzelnen Kreise, das Bild ist unveraendert.
+       Ab der vierten Ebene ist Saettigung erreicht (1 − 0,45⁴ = 96 %), weitere
+       Punkte auf demselben Bildpunkt aendern nichts mehr.
+       Gezeichnet werden Punkte als Nulllaengen-Teilpfade mit runder Kappe —
+       das ist der in SVG dafuer vorgesehene Weg und kostet je Punkt rund ein
+       Viertel des Textes eines <circle>-Knotens.
+       Gerechnet wird unveraendert auf ALLEN Schlaegen. */
+    const _hpts=[]; const stack=new Map(); const EBENEN=4;
+    const ebene=Array.from({length:EBENEN},()=>[]);
     for(let i=0;i<xs.length;i++){const px=+PX(xs[i]).toFixed(1),py=+PY(ys[i]).toFixed(1);
-      g+=`<circle cx="${px}" cy="${py}" r="1.9" fill="var(--cyan)" fill-opacity="0.55"/>`;
+      const key=(px|0)+':'+(py|0); const c=stack.get(key)||0;
+      if(c<EBENEN){ stack.set(key,c+1); ebene[c].push(`M${px},${py}l0 0`); }
       _hpts.push({x:px,y:py,rn:Math.round(xs[i]),rn1:Math.round(ys[i])});}
+    ebene.forEach(e=>{ if(e.length)
+      g+=`<path d="${e.join('')}" fill="none" stroke="var(--cyan)" stroke-opacity="0.55" stroke-width="3.8" stroke-linecap="round"/>`; });
     // Plot-Rahmen (über der Wolke)
     g+=`<rect x="${pL}" y="${pT}" width="${W}" height="${H}" fill="none" class="axis"/>`;
     // SD1/SD2-Ellipse + Achsen + Zentrums-Punkt mit Glow (SD1 gestrichelt, SD2 durchgezogen)
-    const mean=rr.reduce((a,b)=>a+b,0)/rr.length;const cx=PX(mean),cy=PY(mean);const sc=W/(hi-lo);
+    // Median statt Mittelwert: gegen Ausreisser unempfindlich, und die Wolke
+    // sitzt sichtbar um ihn herum — beim Mittelwert zog ein einzelner
+    // 1 200-ms-Wert das Ellipsenzentrum aus der Punktwolke heraus.
+    const _srt=Float64Array.from(rr).sort();
+    const mean=_srt[_srt.length>>1];
+    const cx=PX(mean),cy=PY(mean);const sc=W/(hi-lo);
     if(sd1&&sd2){const a=-Math.PI/4;
       // App EquinePoincareChartView: Ellipse cyan 1,5 (stroke-only) · SD1/SD2-Achsen BEIDE cyan 0,7 tertiär
       g+=`<ellipse cx="${cx.toFixed(1)}" cy="${cy.toFixed(1)}" rx="${(sd2*sc).toFixed(1)}" ry="${(sd1*sc).toFixed(1)}" transform="rotate(-45 ${cx.toFixed(1)} ${cy.toFixed(1)})" fill="none" stroke="var(--cyan)" stroke-width="1.5"/>`;
@@ -2652,7 +2721,8 @@ const Chart={
       +`<text y="0" style="fill:var(--cyan);font-family:var(--font-ui);font-size:14px;font-weight:700;letter-spacing:.01em">SD1 · ${sd1!=null?fmt1(sd1):'—'} ms</text>`
       +`<text y="20" style="fill:var(--cyan);font-family:var(--font-ui);font-size:14px;font-weight:700;letter-spacing:.01em">SD2 · ${sd2!=null?fmt1(sd2):'—'} ms</text>`
       +`<text y="37" style="fill:var(--text-dim);font-family:var(--font-mono);font-size:10.5px;letter-spacing:.02em">SD2/SD1 · ${ratio}</text>`
-      +`<text y="52" style="fill:var(--text-dim);font-family:var(--font-mono);font-size:10.5px;letter-spacing:.02em">${xs.length} normale Beats</text>`
+      +`<text y="52" style="fill:var(--text-dim);font-family:var(--font-mono);font-size:10.5px;letter-spacing:.02em">${fmt0(xs.length)} Paare</text>`
+      +(_pout?`<text y="69" style="fill:var(--amber);font-family:var(--font-mono);font-size:10.5px;letter-spacing:.02em;opacity:.85">${fmt0(_pout)} am Rand gehalten</text>`:'')
       +`</g>`;
     g+=`<text x="${(pL+W/2).toFixed(0)}" y="${size-2}" text-anchor="middle" class="label-axis" style="fill:var(--cyan)">RRₙ<tspan style="fill:var(--cyan-deep)"> (ms)</tspan></text>`;
     g+=`<text x="12" y="${(pT+H/2).toFixed(0)}" transform="rotate(-90 12 ${(pT+H/2).toFixed(0)})" text-anchor="middle" class="label-axis" style="fill:var(--cyan)">RRₙ₊₁<tspan style="fill:var(--cyan-deep)"> (ms)</tspan></text>`;
@@ -2670,7 +2740,54 @@ const Chart={
     for(let i=0;i<rr.length;i++){cum+=rr[i];const lo=Math.max(0,i-5),hi=Math.min(rr.length-1,i+5);let s=0;for(let j=lo;j<=hi;j++)s+=rr[j];raw.push({t:cum/1000,v:rr[i]-s/(hi-lo+1)});}
     const absV=raw.map(r=>Math.abs(r.v)).sort((a,b)=>a-b);
     const scale=Math.max(0.001,absV[Math.max(0,Math.min(absV.length-1,Math.floor(absV.length*0.98)))])/0.92;
-    const sm=raw.map((r,i)=>{const nv=Math.max(-1,Math.min(1,r.v/scale));let ph='unknown';if(i>0){const pv=Math.max(-1,Math.min(1,raw[i-1].v/scale));const sl=nv-pv;ph=Math.abs(sl)<0.06?'pause':(sl>0?'inhale':'exhale');}return{t:r.t,v:nv,ph};});
+    let sm=raw.map((r,i)=>{const nv=Math.max(-1,Math.min(1,r.v/scale));let ph='unknown';if(i>0){const pv=Math.max(-1,Math.min(1,raw[i-1].v/scale));const sl=nv-pv;ph=Math.abs(sl)<0.06?'pause':(sl>0?'inhale':'exhale');}return{t:r.t,v:nv,ph};});
+    /* AUF DIE ZEICHENFLAECHE VERDICHTEN. Bei einer 1h47-Aufnahme kommen auf
+       720 px rund 10 900 Abtastpunkte — etwa 15 je Pixel. Die Phasenwechsel
+       liegen dort weit unter der Aufloesung des Bildschirms und erzeugten
+       7 000 Pfadsegmente. Je Spalte bleiben Minimum UND Maximum (die
+       Huellkurve ist damit unveraendert) sowie die dort vorherrschende Phase,
+       damit die Ein-/Ausatem-Faerbung erhalten bleibt. Im Vollbild waechst
+       die Breite mit der Zoomstufe — dort kehrt die volle Aufloesung von
+       selbst zurueck, ohne Sonderfall. */
+    const _cols=Math.round(w-pad.l-pad.r);
+    /* KANN DIESE FLAECHE EINZELNE ATEMZUEGE UEBERHAUPT ZEIGEN?
+       Bei der echten 1h47-Aufnahme kommen rund 1 300 Atemzuege auf 900 px —
+       0,7 Pixel je Atemzug. Die Wellenform war dort ein durchgehender
+       rot-blauer Block, der nichts aussagt, und die daneben stehende
+       Atemfrequenz stammte aus Nulldurchgaengen, die bei dieser Stauchung
+       ueberwiegend Rauschen zaehlen. Statt eine unlesbare Kurve schoen zu
+       zeichnen, wechselt die Darstellung auf das, was ueber diese Dauer
+       tatsaechlich Aussage hat: den VERLAUF der Atemfrequenz.
+       Im Vollbild waechst die Breite mit der Zoomstufe — dort kippt die
+       Ansicht von selbst zurueck auf die Wellenform, ohne Sonderfall. */
+    {
+      const _spanS=(sm[sm.length-1].t)||1;
+      let _cr=0; for(let i=1;i<sm.length;i++){ if(sm[i-1].v>0&&sm[i].v<=0) _cr++; }
+      const _pxProAtemzug=_cr>0?_cols/_cr:Infinity;
+      if(_cr>=12 && _pxProAtemzug<3 && _spanS>=240)
+        // Farben hier direkt: COL wird erst weiter unten angelegt, und der
+        // Verlauf braucht ohnehin nur den Ausatem-Ton als Kurvenfarbe.
+        return Chart._breathRate(sm,_spanS,{w,h,pad,COL:{exhale:'#4DA6F2'}});
+    }
+    if(sm.length>_cols*1.5){
+      const red=[], per=sm.length/_cols;
+      for(let c=0;c<_cols;c++){
+        const a=Math.floor(c*per), b=Math.min(sm.length,Math.floor((c+1)*per));
+        if(b<=a) continue;
+        let lo=a,hi=a; const zaehl={};
+        for(let i=a;i<b;i++){
+          if(sm[i].v<sm[lo].v) lo=i;
+          if(sm[i].v>sm[hi].v) hi=i;
+          zaehl[sm[i].ph]=(zaehl[sm[i].ph]||0)+1;
+        }
+        let ph='unknown',best=-1;
+        for(const k in zaehl) if(zaehl[k]>best){best=zaehl[k];ph=k;}
+        const [e1,e2]=lo<=hi?[lo,hi]:[hi,lo];
+        red.push({t:sm[e1].t,v:sm[e1].v,ph});
+        if(e2!==e1) red.push({t:sm[e2].t,v:sm[e2].v,ph});
+      }
+      if(red.length>1) sm=red;
+    }
     // Achse folgt der tatsächlichen Datenspanne (dur nur, wenn sie dazu passt) → Kurve füllt die Breite, kein Leerraum rechts
     const span=sm[sm.length-1].t||1; const T=(dur&&Math.abs(dur-span)<=span*0.15)?dur:span;
     const X=t=>pad.l+(t/T)*plotW,Y=v=>pad.t+(1-(v+1)/2)*plotH;
@@ -2697,13 +2814,70 @@ const Chart={
     let cross=0;for(let i=1;i<sm.length;i++){if(sm[i-1].v>0&&sm[i].v<=0)cross++;}
     const brpm=T>0?cross/(T/60):0;
     if(brpm>=3&&brpm<=60){const bc=brpm<=16?'var(--cyan)':brpm<=24?'#F0A93C':'#F27359';g+=`<g transform="translate(${pad.l+6},${pad.t+5})"><rect x="0" y="0" width="66" height="19" rx="9.5" fill="rgba(0,0,0,.55)" stroke="${bc}" stroke-opacity=".45"/><text x="10" y="13.5" style="fill:${bc};font-size:11px;font-weight:700;font-family:var(--font-mono)">${Math.round(brpm)} /min</text></g>`;}
-    return `<svg class="viz" data-chart="breath" data-rr="${rr.map(v=>Math.round(v)).join(',')}" data-dur="${dur!=null?dur:''}" viewBox="0 0 ${w} ${h}">${g}</svg>`;
+    /* Die Serie liegt im Register, nicht im Attribut. Der Vollbild-Betrachter
+       zeichnet die Atemkurve bei jeder Zoomstufe neu und braucht sie deshalb
+       vollstaendig — als data-Attribut waren das 44 kB je Grafik, und das
+       Runden auf ganze Millisekunden hat die Aufloesung des Gurts verworfen. */
+    const sid='bw'+(Chart._sid=(Chart._sid||0)+1);
+    Chart._series[sid]=rr;
+    return `<svg class="viz" data-chart="breath" data-series="${sid}" data-dur="${dur!=null?dur:''}" viewBox="0 0 ${w} ${h}">${g}</svg>`;
+  },
+  /* Verlauf der Atemfrequenz statt der Wellenform. Fenster von 60 s, um je
+     eine Minute geschoben; gezaehlt werden Abwaerts-Nulldurchgaenge der
+     RSA-Komponente — dasselbe Kriterium wie in der Wellenform, nur ueber ein
+     Fenster gemittelt statt ueber die ganze Aufnahme. Bewusst OHNE
+     Ampelfaerbung: eine Atemfrequenz ist ohne Kenntnis von Umgebung,
+     Belastung und Aussentemperatur kein Befund, und diese Grafik sieht der
+     Besitzer. Zahl ja, Urteil nein. */
+  _breathRate(sm,spanS,{w,h,pad,COL}){
+    const FEN=60, SCHRITT=60;
+    const pts=[];
+    for(let a=0;a+FEN<=spanS+1e-6;a+=SCHRITT){
+      const b=a+FEN; let cr=0, n=0;
+      for(let i=1;i<sm.length;i++){
+        if(sm[i].t<a) continue; if(sm[i].t>b) break;
+        n++; if(sm[i-1].v>0&&sm[i].v<=0) cr++;
+      }
+      if(n>=8) pts.push({t:(a+b)/2, v:cr*(60/FEN)});
+    }
+    if(pts.length<2) return `<div style="color:var(--text-faint);font-size:12px;text-align:center;padding:30px">Aufnahme zu kurz fuer einen Atem-Verlauf</div>`;
+    const plotW=w-pad.l-pad.r, plotH=h-pad.t-pad.b;
+    const vs=pts.map(p=>p.v);
+    const r=Chart._robustRange(vs,{pad:0.18,minSpan:6});
+    const X=t=>pad.l+(t/spanS)*plotW;
+    const Y=v=>pad.t+(1-(Math.max(r.min,Math.min(r.max,v))-r.min)/(r.max-r.min))*plotH;
+    let g=`<rect x="${pad.l}" y="${pad.t}" width="${plotW.toFixed(1)}" height="${plotH.toFixed(1)}" rx="8" fill="#0E0E0E"/>`;
+    Chart.niceTicks(r.min,r.max,4).forEach(tk=>{ if(tk<r.min||tk>r.max) return;
+      g+=`<line class="grid-minor" x1="${pad.l}" x2="${w-pad.r}" y1="${Y(tk).toFixed(1)}" y2="${Y(tk).toFixed(1)}"/>`
+       +`<text x="${pad.l-7}" y="${(Y(tk)+3).toFixed(1)}" text-anchor="end">${fmt0(tk)}</text>`; });
+    const xt=Chart.niceTicks(0,spanS,6);
+    xt.forEach(tv=>{ if(tv<0||tv>spanS) return; const xx=X(tv);
+      g+=`<line class="grid-minor" x1="${xx.toFixed(1)}" x2="${xx.toFixed(1)}" y1="${pad.t}" y2="${(h-pad.b).toFixed(1)}"/>`
+       +`<text x="${xx.toFixed(1)}" y="${(h-pad.b+13).toFixed(1)}" text-anchor="middle">${fmt0(tv/60)}min</text>`; });
+    const uid='br'+Math.round(w*7+h);
+    g=Chart._area(uid,COL.exhale)+g;
+    const d=pts.map((p,i)=>`${i?'L':'M'}${X(p.t).toFixed(1)},${Y(p.v).toFixed(1)}`).join(' ');
+    g+=`<path d="${d} L${X(pts[pts.length-1].t).toFixed(1)},${(h-pad.b).toFixed(1)} L${X(pts[0].t).toFixed(1)},${(h-pad.b).toFixed(1)} Z" fill="url(#ar-${uid})" stroke="none"/>`;
+    g+=`<path d="${d}" fill="none" stroke="${COL.exhale}" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round"/>`;
+    const med=Float64Array.from(vs).sort()[vs.length>>1];
+    g+=`<line x1="${pad.l}" x2="${w-pad.r}" y1="${Y(med).toFixed(1)}" y2="${Y(med).toFixed(1)}" stroke="#fff" stroke-opacity=".28" stroke-width=".8" stroke-dasharray="4 4"/>`;
+    g+=`<rect x="${pad.l}" y="${pad.t}" width="${plotW.toFixed(1)}" height="${plotH.toFixed(1)}" fill="none" class="axis"/>`;
+    g+=`<text x="12" y="${(pad.t+plotH/2).toFixed(0)}" transform="rotate(-90 12 ${(pad.t+plotH/2).toFixed(0)})" text-anchor="middle" class="label-axis" style="fill:${COL.exhale}">ATEMZUEGE<tspan class="label-unit"> (/min)</tspan></text>`;
+    g+=`<text x="${(pad.l+plotW/2).toFixed(0)}" y="${h-2}" text-anchor="middle" class="label-axis">ZEIT<tspan class="label-unit"> (min)</tspan></text>`;
+    g+=`<g transform="translate(${pad.l+8},${pad.t+6})"><rect x="0" y="0" width="188" height="19" rx="9.5" fill="rgba(0,0,0,.6)" stroke="${COL.exhale}" stroke-opacity=".4"/>`
+      +`<text x="9" y="13.5" style="fill:var(--text-secondary);font-size:10px;font-family:var(--font-mono)">Verlauf · Median ${fmt0(med)}/min</text></g>`;
+    g+=Chart._clipNote(w-pad.r,h-3,r.clipped);
+    const hov=pts.map(p=>({x:+X(p.t).toFixed(1),y:+Y(p.v).toFixed(1),i:Math.round(p.t),rr:Math.round(p.v),hr:Math.round(p.v)}));
+    return Chart._hov(g,w,h,hov,"seq");
   },
   tachogram(rr,{w=720,h=230,color='var(--cyan)'}={}){
     if(!rr||rr.length<2) return `<div style="color:var(--text-faint);font-size:12px;text-align:center;padding:30px">Keine RR-Daten</div>`;
     const pad={l:52,r:16,t:14,b:32};const n=rr.length;
-    let mn=Math.min(...rr),mx=Math.max(...rr);const pd=(mx-mn)*0.08||10;mn-=pd;mx+=pd;
-    const X=i=>pad.l+i/(n-1)*(w-pad.l-pad.r),Y=v=>pad.t+(1-(v-mn)/(mx-mn))*(h-pad.t-pad.b);
+    const _rr=Chart._robustRange(rr,{minSpan:40});
+    const mn=_rr.min, mx=_rr.max;
+    const X=i=>pad.l+i/(n-1)*(w-pad.l-pad.r);
+    // Ausserhalb liegende Werte werden am Rand gehalten statt aus dem Bild zu laufen
+    const Y=v=>pad.t+(1-(Math.max(mn,Math.min(mx,v))-mn)/(mx-mn))*(h-pad.t-pad.b);
     let g='';const yt=Chart.niceTicks(mn,mx,5);const ys=yt.length>1?yt[1]-yt[0]:100;
     for(let v=yt[0]-ys;v<=mx+ys;v+=ys/5){if(v<mn||v>mx)continue;const maj=yt.some(t=>Math.abs(t-v)<ys*0.05);g+=`<line class="grid-${maj?'major':'minor'}" x1="${pad.l}" x2="${w-pad.r}" y1="${Y(v).toFixed(1)}" y2="${Y(v).toFixed(1)}"/>`;}
     yt.forEach(t=>{g+=`<line class="tick" x1="${pad.l-4}" x2="${pad.l}" y1="${Y(t).toFixed(1)}" y2="${Y(t).toFixed(1)}"/><text x="${pad.l-7}" y="${(Y(t)+3).toFixed(1)}" text-anchor="end">${fmt0(t)}</text>`;});
@@ -2711,11 +2885,17 @@ const Chart={
     for(let v=0;v<=n-1;v+=Math.max(1,xs2/5)){const maj=xt.some(t=>Math.abs(t-v)<0.5);g+=`<line class="grid-${maj?'major':'minor'}" x1="${X(v).toFixed(1)}" x2="${X(v).toFixed(1)}" y1="${pad.t}" y2="${h-pad.b}"/>`;}
     xt.forEach(t=>{if(t>n-1)return;g+=`<text x="${X(t).toFixed(1)}" y="${h-pad.b+13}" text-anchor="middle">${fmt0(t)}</text>`;});
     const mv=rr.reduce((a,b)=>a+b,0)/n;g+=`<line x1="${pad.l}" x2="${w-pad.r}" y1="${Y(mv).toFixed(1)}" y2="${Y(mv).toFixed(1)}" stroke="var(--text-secondary)" stroke-width="1" stroke-dasharray="4 4" opacity=".45"/>`;
-    g+=`<path d="${rr.map((v,i)=>`${i?'L':'M'}${X(i).toFixed(1)},${Y(v).toFixed(1)}`).join(' ')}" fill="none" stroke="${color}" stroke-width="1.5" stroke-linejoin="round"/>`;
+    // Gezeichnet wird je Pixelspalte Min UND Max — die Huellkurve bleibt exakt,
+    // kein Ausschlag verschwindet, aber der Pfad wird nicht laenger als die Flaeche.
+    const _tdec=Chart._decimate(rr,Math.round(w-pad.l-pad.r));
+    g+=`<path d="${_tdec.map(([i,v],k)=>`${k?'L':'M'}${X(i).toFixed(1)},${Y(v).toFixed(1)}`).join(' ')}" fill="none" stroke="${color}" stroke-width="1.5" stroke-linejoin="round"/>`;
     const my=pad.t+(h-pad.t-pad.b)/2;g+=`<text x="12" y="${my.toFixed(0)}" transform="rotate(-90 12 ${my.toFixed(0)})" text-anchor="middle" class="label-axis">RR-INTERVALL<tspan class="label-unit"> (ms)</tspan></text>`;
     g+=`<text x="${(pad.l+(w-pad.l-pad.r)/2).toFixed(0)}" y="${h-2}" text-anchor="middle" class="label-axis">SCHLAG-NR.</text>`;
     const _taf=Chart._artifacts(rr);
     rr.forEach((v,i)=>{if(_taf[i]){const ax=X(i),ay=Y(v),ar=3.4;g+=`<path d="M${ax.toFixed(1)},${(ay-ar).toFixed(1)} L${(ax+ar).toFixed(1)},${ay.toFixed(1)} L${ax.toFixed(1)},${(ay+ar).toFixed(1)} L${(ax-ar).toFixed(1)},${ay.toFixed(1)} Z" fill="none" stroke="var(--amber)" stroke-width="1.4" opacity=".92"/>`;}});
+    // ueber den Rahmen, sonst legt sich der Hinweis genau ueber die
+    // Ausreisser, auf die er sich bezieht
+    g+=Chart._clipNote(w-pad.r,h-3,_rr.clipped);
     const _tm=rr.map((v,i)=>({x:+X(i).toFixed(1),y:+Y(v).toFixed(1),i,rr:Math.round(v),hr:Math.round(60000/v),af:_taf[i]}));
     return Chart._hov(g,w,h,_tm,"seq");
   },
@@ -2725,11 +2905,13 @@ const Chart={
     const gap=20;const topH=(h-gap)*0.56,botH=(h-gap)*0.44;const padL=52,padR=16,padTop=14,padBot=30;
     const X=i=>padL+i/(n-1)*(w-padL-padR);
     const panel=(vals,y0,ph,label,unit,col,fmtV)=>{
-      let mn=Math.min(...vals),mx=Math.max(...vals);const pd=(mx-mn)*0.1||1;mn-=pd;mx+=pd;
-      const Y=v=>y0+(1-(v-mn)/(mx-mn))*ph;let s='';const yt=Chart.niceTicks(mn,mx,4);const ys=yt.length>1?yt[1]-yt[0]:1;
+      const _r=Chart._robustRange(vals,{pad:0.1,minSpan:8});
+      const mn=_r.min,mx=_r.max;
+      const Y=v=>y0+(1-(Math.max(mn,Math.min(mx,v))-mn)/(mx-mn))*ph;let s='';const yt=Chart.niceTicks(mn,mx,4);const ys=yt.length>1?yt[1]-yt[0]:1;
       for(let v=yt[0]-ys;v<=mx+ys;v+=ys/5){if(v<mn||v>mx)continue;const maj=yt.some(t=>Math.abs(t-v)<ys*0.05);s+=`<line class="grid-${maj?'major':'minor'}" x1="${padL}" x2="${w-padR}" y1="${Y(v).toFixed(1)}" y2="${Y(v).toFixed(1)}"/>`;}
       yt.forEach(t=>{s+=`<text x="${padL-7}" y="${(Y(t)+3).toFixed(1)}" text-anchor="end">${fmtV(t)}</text>`;});
-      s+=`<path d="${vals.map((v,i)=>`${i?'L':'M'}${X(i).toFixed(1)},${Y(v).toFixed(1)}`).join(' ')}" fill="none" stroke="${col}" stroke-width="1.6" stroke-linejoin="round"/>`;
+      const dec=Chart._decimate(vals,Math.round(w-padL-padR));
+      s+=`<path d="${dec.map(([i,v],k)=>`${k?'L':'M'}${X(i).toFixed(1)},${Y(v).toFixed(1)}`).join(' ')}" fill="none" stroke="${col}" stroke-width="1.6" stroke-linejoin="round"/>`;
       const my=y0+ph/2;s+=`<text x="12" y="${my.toFixed(0)}" transform="rotate(-90 12 ${my.toFixed(0)})" text-anchor="middle" class="label-axis" style="fill:${col}">${label}<tspan class="label-unit"> (${unit})</tspan></text>`;
       return s;};
     let g=`<rect x="${padL}" y="${padTop}" width="${(w-padL-padR).toFixed(1)}" height="${(h-padTop-padBot).toFixed(1)}" rx="8" fill="#0E0E0E"/>`;
@@ -2737,10 +2919,13 @@ const Chart={
     g+=panel(hr,topH+gap,botH-padBot+14,'HERZFREQUENZ','bpm','var(--amber)',v=>fmt0(v));
     const xt=Chart.niceTicks(0,n-1,8);xt.forEach(t=>{if(t>n-1)return;g+=`<line class="grid-minor" x1="${X(t).toFixed(1)}" x2="${X(t).toFixed(1)}" y1="${padTop}" y2="${topH}"/><line class="grid-minor" x1="${X(t).toFixed(1)}" x2="${X(t).toFixed(1)}" y1="${topH+gap}" y2="${h-padBot}"/><text x="${X(t).toFixed(1)}" y="${h-8}" text-anchor="middle">${fmt0(t)}</text>`;});
     g+=`<text x="${(padL+(w-padL-padR)/2).toFixed(0)}" y="${h+6}" text-anchor="middle" class="label-axis">SCHLAG-NR.</text>`;
-    let _dmnR=Math.min(...rr),_dmxR=Math.max(...rr);{const pd=(_dmxR-_dmnR)*0.1||1;_dmnR-=pd;_dmxR+=pd;}
-    let _dmnH=Math.min(...hr),_dmxH=Math.max(...hr);{const pd=(_dmxH-_dmnH)*0.1||1;_dmnH-=pd;_dmxH+=pd;}
-    const _YR=v=>padTop+(1-(v-_dmnR)/(_dmxR-_dmnR))*(topH-padTop);
-    const _YH=v=>(topH+gap)+(1-(v-_dmnH)/(_dmxH-_dmnH))*(botH-padBot+14);
+    // Muss exakt derselbe Bereich sein wie in panel(), sonst zeigt das
+    // Fadenkreuz auf eine andere Stelle als die gezeichnete Kurve.
+    const _rR=Chart._robustRange(rr,{pad:0.1,minSpan:8}), _rH=Chart._robustRange(hr,{pad:0.1,minSpan:8});
+    const _dmnR=_rR.min,_dmxR=_rR.max,_dmnH=_rH.min,_dmxH=_rH.max;
+    const _cR=v=>Math.max(_dmnR,Math.min(_dmxR,v)), _cH=v=>Math.max(_dmnH,Math.min(_dmxH,v));
+    const _YR=v=>padTop+(1-(_cR(v)-_dmnR)/(_dmxR-_dmnR))*(topH-padTop);
+    const _YH=v=>(topH+gap)+(1-(_cH(v)-_dmnH)/(_dmxH-_dmnH))*(botH-padBot+14);
     const _daf=Chart._artifacts(rr);
     rr.forEach((v,i)=>{if(_daf[i]){const ax=X(i),ay=_YR(v),ar=3.4;g+=`<path d="M${ax.toFixed(1)},${(ay-ar).toFixed(1)} L${(ax+ar).toFixed(1)},${ay.toFixed(1)} L${ax.toFixed(1)},${(ay+ar).toFixed(1)} L${(ax-ar).toFixed(1)},${ay.toFixed(1)} Z" fill="none" stroke="var(--amber)" stroke-width="1.4" opacity=".92"/>`;}});
     const _dm=rr.map((v,i)=>({x:+X(i).toFixed(1),y:+_YR(v).toFixed(1),y2:+_YH(hr[i]).toFixed(1),i,rr:Math.round(v),hr:Math.round(hr[i]),af:_daf[i]}));
@@ -2760,9 +2945,16 @@ const Chart={
     const pad={l:50,r:50,t:16,b:34};const plotW=w-pad.l-pad.r,plotH=h-pad.t-pad.b;
     const X=tt=>pad.l+(tt/T)*plotW;
     const GOLD='#FFB547',CY='#3ECFB2';
-    const rng=a=>{let mn=Math.min(...a),mx=Math.max(...a);const pd=(mx-mn)*0.14||1;return[mn-pd,mx+pd];};
-    const [hfLo,hfHi]=rng(hf),[hvLo,hvHi]=rng(hrv);
-    const YH=v=>pad.t+(1-(v-hfLo)/(hfHi-hfLo))*plotH, YV=v=>pad.t+(1-(v-hvLo)/(hvHi-hvLo))*plotH;
+    /* Beide Achsen perzentil-basiert. Ohne das zog ein einzelner Artefakt-
+       Ausschlag die Puls-Achse auf 200 bpm, obwohl das Pferd zwischen 90 und
+       110 lag — das eigentliche Geschehen lag dann in einem Band von wenigen
+       Pixeln. Ausserhalb liegende Werte werden am Rand gehalten, nicht
+       verworfen, und ausgewiesen. */
+    const rHF=Chart._robustRange(hf,{pad:0.14,minSpan:8});
+    const rHV=Chart._robustRange(hrv,{pad:0.14,minSpan:4});
+    const hfLo=rHF.min,hfHi=rHF.max,hvLo=rHV.min,hvHi=rHV.max;
+    const YH=v=>pad.t+(1-(Math.max(hfLo,Math.min(hfHi,v))-hfLo)/(hfHi-hfLo))*plotH;
+    const YV=v=>pad.t+(1-(Math.max(hvLo,Math.min(hvHi,v))-hvLo)/(hvHi-hvLo))*plotH;
     const uid=Math.round(w*13+h+7);
     let g=Chart._area(uid,CY)
       +`<rect x="${pad.l}" y="${pad.t}" width="${plotW.toFixed(1)}" height="${plotH.toFixed(1)}" rx="8" fill="#0E0E0E"/>`;
@@ -2780,6 +2972,7 @@ const Chart={
     g+=`<path d="${dHF.map(([i,v],k)=>`${k?'L':'M'}${X(t[i]).toFixed(1)},${YH(v).toFixed(1)}`).join(' ')}" fill="none" stroke="${GOLD}" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round"/>`;
     g+=`<path d="${pHV}" fill="none" stroke="${CY}" stroke-width="1.7" stroke-linejoin="round" stroke-linecap="round"/>`;
     g+=`<rect x="${pad.l}" y="${pad.t}" width="${plotW.toFixed(1)}" height="${plotH.toFixed(1)}" fill="none" class="axis"/>`;
+    g+=Chart._clipNote(w-pad.r-4,h-3,rHF.clipped+rHV.clipped);
     g+=Chart._bezel(pad.l,pad.t,plotW,plotH);
     /* Einheiten waagerecht oben an ihrer Achse statt gedreht am Rand —
        gedrehte Achsentitel liest man nicht, sie kosten nur Rand. */
@@ -2916,7 +3109,24 @@ const Chart={
       ?`<line class="hov-cross" x1="0" x2="${w}" y1="0" y2="0"/><line class="hov-cross" x1="0" x2="0" y1="0" y2="${h}"/>`
       :`<line class="hov-cross" x1="0" x2="0" y1="0" y2="${h}"/>`;
     const foc=`<circle class="hov-focus" r="${mode==='scatter'?6:4.5}"/>`+(mode==='dual'?`<circle class="hov-focus hov-focus2" r="4.5"/>`:'');
-    const mj=JSON.stringify(pts).replace(/'/g,'&#39;').replace(/</g,'&lt;');
+    /* AUF PIXELAUFLOESUNG AUSDUENNEN. Der Zeiger kann keine Stelle zwischen
+       zwei Pixeln treffen — mehr Punkte als Pixelspalten sind im DOM tote
+       Last. An der echten 1h47-Aufnahme gemessen: 10 965 Punkte ergaben
+       ~800 kB je Grafik, bei fuenf Grafiken auf einer Seite rund 4 MB
+       Attributtext. Die Trefferauswahl bleibt exakt, weil pro Spalte (bzw.
+       pro Bildpunkt beim Streudiagramm) ohnehin nur ein Punkt waehlbar ist. */
+    const thin=(()=>{
+      if(!Array.isArray(pts)||pts.length<=w) return pts;
+      if(mode==='scatter'){
+        const seen=new Set(), o=[];
+        for(const p of pts){ const k=(p.x|0)+':'+(p.y|0); if(seen.has(k)) continue; seen.add(k); o.push(p); }
+        return o;
+      }
+      const best=new Map();
+      for(const p of pts){ const c=Math.round(p.x); if(!best.has(c)) best.set(c,p); }
+      return [...best.values()].sort((a,b)=>a.x-b.x);
+    })();
+    const mj=JSON.stringify(thin).replace(/'/g,'&#39;').replace(/</g,'&lt;');
     return `<div class="viz-hov" data-hov='${mj}' data-mode="${mode}" data-w="${w}" data-h="${h}"${dataAttrs}>`
       +`<svg class="viz" viewBox="0 0 ${w} ${h}"${extraStyle?` style="${extraStyle}"`:''}>${inner}${cross}${foc}</svg><div class="hov-tip"></div></div>`;
   },
@@ -6995,7 +7205,8 @@ const ChartZoom={
       $('#zoomHint').textContent=tinn?`TINN ${tinn} ms · Modus ${mode} ms`:'RR-Verteilung'; $('#zoomHint').style.display='';
     } else if(breath){
       // Dedizierter Atemkurven-Viewer: horizontal scroll- UND zoombar (Zeitachse dehnen) wie die iOS-App
-      let rrs=[]; try{rrs=(svg.dataset.rr||'').split(',').map(Number).filter(v=>v>0);}catch(_){}
+      let rrs=Chart._series[svg.dataset.series]||[];
+      if(!rrs.length){ try{rrs=(svg.dataset.rr||'').split(',').map(Number).filter(v=>v>0);}catch(_){} }
       const durAttr=parseFloat(svg.dataset.dur); const dur=(!isNaN(durAttr)&&durAttr>0)?durAttr:null;
       const totalSec=Math.max(1,dur||(rrs.reduce((a,b)=>a+b,0)/1000));
       body.className='zbody breath-fs'; body.innerHTML='';
