@@ -4,7 +4,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Messung für den Tierarzt — CARLON</title>
 <link rel="manifest" href="manifest.webmanifest">
-<meta name="theme-color" content="#02080d">
+<meta name="theme-color" content="#0A0A0C">
 <meta name="robots" content="noindex">
 <!-- ══════════════════════════════════════════════════════════════════════════
      CARLON EQUINE — Mess-Station (Besitzer-Seite)
@@ -22,13 +22,15 @@
      ausgelieferten Browser-Code.
      ══════════════════════════════════════════════════════════════════════════ -->
 <style>
-:root{--bg:#02080d;--surface:#0b1a26;--elev:#14293a;--border:#1b3548;--strong:#2a4d65;--text:#e8f8ff;--sec:#8aa9bd;--dim:#4a6478;--cyan:#3ECFB2;--cyan-light:#6EE6C8;--cyan-deep:#1E8C78;--good:#3fe0a4;--amber:#ffb547;--red:#ff5263;--font-mono:ui-monospace,'SF Mono','JetBrains Mono',Menlo,monospace;--grid:#fff;--grid-op:.16}
+:root{--bg:#0A0A0C;--surface:#101013;--elev:#161619;--border:#26262C;--strong:#45454E;--text:#EDEEF1;--sec:#A4A5AC;--dim:#66666E;--cyan:#3ECFB2;--cyan-light:#6EE6C8;--cyan-deep:#1E8C78;--good:#3fe0a4;--amber:#ffb547;--red:#ff5263;--font-mono:ui-monospace,'SF Mono','JetBrains Mono',Menlo,monospace;--grid:#fff;--grid-op:.16}
 *{box-sizing:border-box;margin:0;padding:0}
 body{background:var(--bg);color:var(--text);font-family:"Inter",-apple-system,system-ui,sans-serif;line-height:1.6;min-height:100vh;
   display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px;
-  background-image:radial-gradient(ellipse 120% 60% at 50% -10%,rgba(62,207,178,.08),transparent 55%)}
-.card{width:100%;max-width:440px;background:linear-gradient(160deg,var(--elev),var(--surface));border:1px solid var(--border);border-radius:22px;padding:32px 28px;box-shadow:0 30px 80px -30px rgba(0,0,0,.85);text-align:center}
-img.logo{width:56px;height:56px;filter:drop-shadow(0 0 20px rgba(62,207,178,.5));margin-bottom:14px}
+  background-image:radial-gradient(ellipse 110% 55% at 50% -12%,color-mix(in srgb,var(--cyan) 9%,transparent),transparent 58%)}
+.card{width:100%;max-width:440px;position:relative;background:linear-gradient(168deg,var(--elev),var(--surface) 62%,var(--bg));border:1px solid var(--border);border-radius:24px;padding:34px 28px 28px;box-shadow:0 40px 90px -34px rgba(0,0,0,.9),inset 0 1px 0 rgba(255,255,255,.045);text-align:center}.card::before{content:'';position:absolute;inset:0 0 auto;height:1px;border-radius:24px 24px 0 0;background:linear-gradient(90deg,transparent,color-mix(in srgb,var(--cyan) 38%,transparent),transparent)}
+img.logo{width:92px;height:92px;filter:drop-shadow(0 0 34px color-mix(in srgb,var(--cyan) 55%,transparent));margin-bottom:6px}
+.wordmark{font-family:'Jost',system-ui,sans-serif;font-size:12px;font-weight:600;letter-spacing:.34em;color:var(--cyan);opacity:.92;margin-bottom:18px;text-transform:uppercase}
+.wordmark small{display:block;font-size:9px;letter-spacing:.18em;color:var(--dim);font-weight:500;margin-top:3px}
 h1{font-family:"Jost",system-ui,sans-serif;font-weight:600;font-size:24px;margin-bottom:8px}
 p.sub{color:var(--sec);font-size:14px;margin-bottom:22px}
 .room{font-family:ui-monospace,monospace;font-size:13px;color:var(--dim);letter-spacing:.1em;margin-bottom:18px}
@@ -54,7 +56,9 @@ p.sub{color:var(--sec);font-size:14px;margin-bottom:22px}
 .tile{background:var(--bg);border:1px solid var(--border);border-radius:12px;padding:12px 8px 10px;position:relative;overflow:hidden}.tile::before{content:'';position:absolute;inset:0 0 auto;height:1px;background:linear-gradient(90deg,transparent,color-mix(in srgb,var(--cyan) 45%,transparent),transparent)}
 .tile b{display:block;font-family:var(--font-mono);font-size:18px;font-weight:600;font-variant-numeric:tabular-nums;font-feature-settings:'tnum' 1;letter-spacing:-.02em}
 .tile span{font-size:9.5px;color:var(--dim);letter-spacing:.09em;font-weight:500}
-.spark{width:100%;height:76px;display:block;margin:10px 0 14px;overflow:visible}.spark .grid-major{stroke:var(--grid);stroke-opacity:var(--grid-op);stroke-width:.9}.spark .axis{fill:var(--dim);font-family:var(--font-mono);font-size:7.5px;font-variant-numeric:tabular-nums}
+.spark{width:100%;height:104px;display:block;margin:12px 0 16px;overflow:visible;}.spark .grid-major{stroke:var(--grid);stroke-opacity:var(--grid-op);stroke-width:.8}
+.spark .grid-minor{stroke:var(--grid);stroke-opacity:.055;stroke-width:.4}
+.spark .frame{stroke:var(--grid);stroke-opacity:.13;stroke-width:.8;fill:none}.spark .axis{fill:var(--dim);font-family:var(--font-mono);font-size:7.5px;font-variant-numeric:tabular-nums}
 .qual{display:flex;align-items:center;gap:9px;font-size:12.5px;color:var(--sec);justify-content:center;margin-bottom:4px}
 .dot{width:8px;height:8px;border-radius:50%;background:var(--dim);flex:none}
 .dot.ok{background:var(--good);box-shadow:0 0 9px rgba(63,224,164,.6)}
@@ -75,6 +79,7 @@ a{color:var(--cyan);text-decoration:none} a:hover{text-decoration:underline}
 </style>
 <div class="card">
   <img class="logo" src="assets/carlon-logo-soft-512.png" alt="CARLON">
+  <div class="wordmark">CARLON<small>Equine Heart Science</small></div>
 
   <!-- ── 0) Gerät kann kein Web Bluetooth (iPhone/iPad) ── -->
   <div id="vUnsupported" class="hidden">
@@ -113,7 +118,7 @@ a{color:var(--cyan);text-decoration:none} a:hover{text-decoration:underline}
     <h1 id="liveTitle">Messung läuft</h1>
     <p class="sub" id="liveSub">Ruhig stehen lassen. Je ruhiger das Pferd, desto aussagekräftiger die Aufnahme.</p>
     <div class="pulse"><svg class="heart" id="heart" viewBox="0 0 24 24" fill="currentColor"><path d="M12 21s-8-4.6-8-10.4A4.6 4.6 0 0112 7a4.6 4.6 0 018 3.6C20 16.4 12 21 12 21z"/></svg><span id="hr">–</span><small>bpm</small></div>
-    <svg class="spark" id="spark" viewBox="0 0 320 76" aria-hidden="true"></svg>
+    <svg class="spark" id="spark" viewBox="0 0 320 104" aria-hidden="true"></svg>
     <div class="grid">
       <div class="tile"><b id="beats">0</b><span>HERZSCHLÄGE</span></div>
       <div class="tile"><b id="dur">0:00</b><span>DAUER</span></div>
@@ -336,31 +341,60 @@ function updateQuality(){
 
 function drawSpark(){
   const rr=S.rr.slice(-90); if(rr.length<3) return;
-  const W=320,H=76,PAD_L=2,PAD_R=26,PAD_T=8,PAD_B=10;
+  const W=320,H=104,L=4,R=30,T=9,B=13;
+  const iw=W-L-R, ih=H-T-B;
   const lo=Math.min(...rr), hi=Math.max(...rr), span=(hi-lo)||1;
-  const X=i=>PAD_L+(i/(rr.length-1))*(W-PAD_L-PAD_R);
-  const Y=v=>PAD_T+(1-(v-lo)/span)*(H-PAD_T-PAD_B);
-  // Grid nach Chart-CI: weiss, 16% — traegt die Skala, ohne die Kurve zu stoeren
-  const ticks=[lo, lo+span/2, hi];
-  const grid=ticks.map(v=>
-    `<line class="grid-major" x1="${PAD_L}" x2="${W-PAD_R}" y1="${Y(v).toFixed(1)}" y2="${Y(v).toFixed(1)}"/>`
-    +`<text class="axis" x="${W-PAD_R+4}" y="${(Y(v)+2.6).toFixed(1)}">${Math.round(v)}</text>`).join('');
+  const X=i=>L+(i/(rr.length-1))*iw;
+  const Y=v=>T+(1-(v-lo)/span)*ih;
+  // Praezisionsraster nach dem Vorbild von EKG-Papier: feines Raster, jede
+  // fuenfte Linie kraeftiger. Das Raster ist der Grund, warum eine Kurve als
+  // Messung gelesen wird und nicht als Dekoration.
+  const step=iw/30;               // 30 feine Spalten
+  const rows=6;                   // 6 feine Zeilen
+  let minor='', major='';
+  for(let i=0;i<=30;i++){
+    const x=(L+i*step).toFixed(2);
+    (i%5===0?major:minor)!==undefined && (i%5===0
+      ? major+=`<line class="grid-major" x1="${x}" x2="${x}" y1="${T}" y2="${T+ih}"/>`
+      : minor+=`<line class="grid-minor" x1="${x}" x2="${x}" y1="${T}" y2="${T+ih}"/>`);
+  }
+  for(let j=0;j<=rows;j++){
+    const y=(T+j*ih/rows).toFixed(2);
+    (j%3===0
+      ? major+=`<line class="grid-major" x1="${L}" x2="${L+iw}" y1="${y}" y2="${y}"/>`
+      : minor+=`<line class="grid-minor" x1="${L}" x2="${L+iw}" y1="${y}" y2="${y}"/>`);
+  }
+  // Skala rechts: ohne Zahlen bleibt das Raster Ornament
+  const labels=[hi, lo+span/2, lo].map((v,k)=>
+    `<text class="axis" x="${L+iw+5}" y="${(Y(v)+2.6).toFixed(1)}">${Math.round(v)}</text>`).join('');
   const pts=rr.map((v,i)=>`${X(i).toFixed(1)},${Y(v).toFixed(1)}`).join(' ');
-  // Flaeche unter der Kurve: gibt dem Verlauf Koerper, ohne Datenpunkte zu erfinden
-  const area=`${PAD_L},${(H-PAD_B).toFixed(1)} ${pts} ${(W-PAD_R).toFixed(1)},${(H-PAD_B).toFixed(1)}`;
+  const area=`${L},${(T+ih).toFixed(1)} ${pts} ${(L+iw).toFixed(1)},${(T+ih).toFixed(1)}`;
+  const lx=X(rr.length-1).toFixed(1), ly=Y(rr[rr.length-1]).toFixed(1);
   $('#spark').innerHTML =
-    `<defs><linearGradient id="sg" x1="0" y1="0" x2="0" y2="1">
-       <stop offset="0" stop-color="var(--cyan)" stop-opacity=".22"/>
-       <stop offset="1" stop-color="var(--cyan)" stop-opacity="0"/>
-     </linearGradient></defs>
-     ${grid}
+    `<defs>
+       <linearGradient id="sg" x1="0" y1="0" x2="0" y2="1">
+         <stop offset="0" stop-color="var(--cyan)" stop-opacity=".26"/>
+         <stop offset="1" stop-color="var(--cyan)" stop-opacity="0"/>
+       </linearGradient>
+       <filter id="sgl" x="-20%" y="-40%" width="140%" height="180%">
+         <feGaussianBlur stdDeviation="1.6" result="b"/>
+         <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+       </filter>
+     </defs>
+     <rect x="${L}" y="${T}" width="${iw}" height="${ih}" rx="3"
+       fill="color-mix(in srgb, var(--bg) 78%, black)"/>
+     ${minor}${major}
+     <rect class="frame" x="${L}" y="${T}" width="${iw}" height="${ih}" rx="3"/>
      <polygon points="${area}" fill="url(#sg)"/>
-     <polyline points="${pts}" fill="none" stroke="var(--cyan)" stroke-width="1.8"
-       stroke-linejoin="round" stroke-linecap="round"/>
-     <circle cx="${X(rr.length-1).toFixed(1)}" cy="${Y(rr[rr.length-1]).toFixed(1)}" r="2.2"
-       fill="var(--cyan)"/>
-     <text class="axis" x="${PAD_L}" y="${H-1.5}">RR-Intervall in ms</text>`;
+     <polyline points="${pts}" fill="none" stroke="var(--cyan)" stroke-width="1.9"
+       stroke-linejoin="round" stroke-linecap="round" filter="url(#sgl)"/>
+     <circle cx="${lx}" cy="${ly}" r="3.4" fill="var(--cyan)" opacity=".28"/>
+     <circle cx="${lx}" cy="${ly}" r="1.9" fill="var(--cyan)"/>
+     ${labels}
+     <text class="axis" x="${L}" y="${H-3}">RR-INTERVALL &#183; ms</text>
+     <text class="axis" x="${L+iw}" y="${H-3}" text-anchor="end">${rr.length} SCHL\u00c4GE</text>`;
 }
+
 
 /* ── Beenden ───────────────────────────────────────────────────────────── */
 $('#btnStop').addEventListener('click', async ()=>{
