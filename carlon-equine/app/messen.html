@@ -1,0 +1,414 @@
+<!doctype html>
+<html lang="de">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Messung für den Tierarzt — CARLON</title>
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#02080d">
+<meta name="robots" content="noindex">
+<!-- ══════════════════════════════════════════════════════════════════════════
+     CARLON EQUINE — Mess-Station (Besitzer-Seite)
+     Erfasst RR-Intervalle vom Polar H10 über Web Bluetooth und übergibt sie
+     direkt an den Tierarzt (WebRTC, p2p.js) oder als Datei.
+
+     🔒 THIN-CLIENT-GUARDRAIL (nicht verhandelbar):
+     Diese Seite enthält AUSSCHLIESSLICH Erfassung + Transport. Kein Urteil,
+     keine Triage, keine Schwellen, keine Referenzbereiche, keine Gewichte,
+     keine Spezies-Kalibrierung, kein Patentkern. Die drei Werte in
+     metrics.timeDomain (RMSSD/SDNN/Ø-Puls) sind publizierte Lehrbuch-Formeln
+     und Pflichtfelder des Importschemas — sie werden berechnet, aber NICHT
+     bewertet. Jede Deutung entsteht erst im Cockpit des Tierarztes.
+     Grund: unsere equine Kalibrierung ist das Produkt. Sie gehört nicht in
+     ausgelieferten Browser-Code.
+     ══════════════════════════════════════════════════════════════════════════ -->
+<style>
+:root{--bg:#02080d;--surface:#0b1a26;--elev:#14293a;--border:#1b3548;--strong:#2a4d65;--text:#e8f8ff;--sec:#8aa9bd;--dim:#4a6478;--cyan:#3ECFB2;--cyan-deep:#1E8C78;--good:#3fe0a4;--amber:#ffb547;--red:#ff5263}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font-family:"Inter",-apple-system,system-ui,sans-serif;line-height:1.6;min-height:100vh;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px;
+  background-image:radial-gradient(ellipse 120% 60% at 50% -10%,rgba(62,207,178,.08),transparent 55%)}
+.card{width:100%;max-width:440px;background:linear-gradient(160deg,var(--elev),var(--surface));border:1px solid var(--border);border-radius:22px;padding:32px 28px;box-shadow:0 30px 80px -30px rgba(0,0,0,.85);text-align:center}
+img.logo{width:56px;height:56px;filter:drop-shadow(0 0 20px rgba(62,207,178,.5));margin-bottom:14px}
+h1{font-family:"Jost",system-ui,sans-serif;font-weight:600;font-size:24px;margin-bottom:8px}
+p.sub{color:var(--sec);font-size:14px;margin-bottom:22px}
+.room{font-family:ui-monospace,monospace;font-size:13px;color:var(--dim);letter-spacing:.1em;margin-bottom:18px}
+.room b{color:var(--cyan);letter-spacing:.3em}
+.field{text-align:left;margin-bottom:16px}
+.field label{display:block;font-size:12px;color:var(--sec);margin-bottom:6px;letter-spacing:.02em}
+.field input{width:100%;padding:13px 14px;border-radius:13px;border:1px solid var(--border);background:var(--bg);color:var(--text);font-size:15px;font-family:inherit}
+.field input:focus{outline:none;border-color:var(--cyan);box-shadow:0 0 0 3px rgba(62,207,178,.12)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:9px;width:100%;padding:14px;border-radius:14px;font-size:15px;font-weight:600;border:none;cursor:pointer;font-family:inherit;
+  background:linear-gradient(135deg,#6EE6C8,var(--cyan-deep));color:var(--bg);box-shadow:0 8px 26px -8px rgba(62,207,178,.55);transition:transform .12s,filter .12s}
+.btn:hover{filter:brightness(1.06)} .btn:active{transform:translateY(1px)}
+.btn:disabled{opacity:.45;cursor:not-allowed;filter:none;box-shadow:none}
+.btn.ghost{background:none;border:1px solid var(--strong);color:var(--text);box-shadow:none;margin-top:10px}
+.btn.stop{background:linear-gradient(135deg,#ff7a86,#c9313f);box-shadow:0 8px 26px -8px rgba(255,82,99,.45)}
+.btn svg{width:18px;height:18px}
+/* Live-Messung */
+.pulse{font-family:"Jost",system-ui,sans-serif;font-size:64px;font-weight:600;line-height:1;letter-spacing:-.02em;margin:6px 0 2px}
+.pulse small{font-size:16px;color:var(--sec);font-weight:400;margin-left:6px;letter-spacing:0}
+.heart{width:15px;height:15px;color:var(--cyan);display:inline-block;vertical-align:middle;margin-right:7px}
+.heart.beat{animation:b .8s ease-out}
+@keyframes b{0%{transform:scale(1)}22%{transform:scale(1.32)}100%{transform:scale(1)}}
+.grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:9px;margin:18px 0 14px}
+.tile{background:var(--bg);border:1px solid var(--border);border-radius:13px;padding:11px 8px}
+.tile b{display:block;font-family:"Jost",system-ui,sans-serif;font-size:19px;font-weight:600}
+.tile span{font-size:10.5px;color:var(--dim);letter-spacing:.03em}
+.spark{width:100%;height:52px;display:block;margin:4px 0 12px}
+.qual{display:flex;align-items:center;gap:9px;font-size:12.5px;color:var(--sec);justify-content:center;margin-bottom:4px}
+.dot{width:8px;height:8px;border-radius:50%;background:var(--dim);flex:none}
+.dot.ok{background:var(--good);box-shadow:0 0 9px rgba(63,224,164,.6)}
+.dot.mid{background:var(--amber)} .dot.bad{background:var(--red)}
+.bar{height:8px;background:var(--bg);border:1px solid var(--border);border-radius:5px;overflow:hidden;margin-top:14px}
+.bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--cyan-deep),var(--cyan));transition:width .15s}
+.status{margin-top:16px;font-size:14px;color:var(--sec);min-height:22px}
+.done{color:var(--good);font-weight:600}
+.err{color:var(--red);font-size:13px;margin-top:12px;min-height:0}
+.hint{font-size:11.5px;color:var(--dim);margin-top:14px;line-height:1.5}
+.privacy{margin-top:20px;font-size:11px;color:var(--dim);display:flex;align-items:center;justify-content:center;gap:8px}
+.privacy svg{width:14px;height:14px;color:var(--good);flex:none}
+.hidden{display:none}
+.ios{text-align:left;font-size:13.5px;color:var(--sec)}
+.ios b{color:var(--text)}
+.ios ul{margin:12px 0 0 18px} .ios li{margin-bottom:7px}
+a{color:var(--cyan);text-decoration:none} a:hover{text-decoration:underline}
+</style>
+<div class="card">
+  <img class="logo" src="assets/carlon-logo-soft-512.png" alt="CARLON">
+
+  <!-- ── 0) Gerät kann kein Web Bluetooth (iPhone/iPad) ── -->
+  <div id="vUnsupported" class="hidden">
+    <h1>Messung per Browser</h1>
+    <p class="sub">Dieses Gerät kann keine Bluetooth-Verbindung im Browser aufbauen.</p>
+    <div class="ios">
+      <p>Auf <b>iPhone und iPad</b> lässt Apple Bluetooth im Browser grundsätzlich nicht zu — das gilt für Safari und ebenso für Chrome auf iOS.</p>
+      <ul>
+        <li><b>Android-Handy oder Tablet mit Chrome:</b> öffne diesen Link dort, dann funktioniert die Messung sofort.</li>
+        <li><b>Computer mit Chrome oder Edge:</b> funktioniert ebenfalls.</li>
+        <li><b>iPhone-Nutzer:</b> für iOS gibt es die CARLON-App — sie misst nativ und kann deutlich mehr als diese Seite.</li>
+      </ul>
+    </div>
+    <div class="hint">Du hast bereits eine Aufnahme als Datei? Dann kannst du sie direkt
+      <a href="senden.html">an deinen Tierarzt senden</a>.</div>
+  </div>
+
+  <!-- ── 1) Bereit ── -->
+  <div id="vReady" class="hidden">
+    <h1>Messung für den Tierarzt</h1>
+    <p class="sub">Verbinde den Polar-H10-Gurt deines Pferds. Die Aufnahme geht direkt an deine Tierärztin oder deinen Tierarzt — ohne Umweg über einen Server.</p>
+    <div class="room" id="roomLine"></div>
+    <div class="field">
+      <label for="horse">Name des Pferds</label>
+      <input id="horse" type="text" placeholder="z. B. Mistral" autocomplete="off" spellcheck="false">
+    </div>
+    <button class="btn" id="btnConnect">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 7l10 10M17 7L7 17M12 2v20"/></svg>
+      Polar H10 verbinden
+    </button>
+    <div class="hint">Der Gurt muss angelegt und die Elektrodenfläche <b>gut angefeuchtet</b> sein — sonst bricht das Signal ab. Halte das Gerät während der Messung in der Nähe und lass den Bildschirm an.</div>
+  </div>
+
+  <!-- ── 2) Messung läuft ── -->
+  <div id="vLive" class="hidden">
+    <h1 id="liveTitle">Messung läuft</h1>
+    <p class="sub" id="liveSub">Ruhig stehen lassen. Je ruhiger das Pferd, desto aussagekräftiger die Aufnahme.</p>
+    <div class="pulse"><svg class="heart" id="heart" viewBox="0 0 24 24" fill="currentColor"><path d="M12 21s-8-4.6-8-10.4A4.6 4.6 0 0112 7a4.6 4.6 0 018 3.6C20 16.4 12 21 12 21z"/></svg><span id="hr">–</span><small>bpm</small></div>
+    <svg class="spark" id="spark" viewBox="0 0 300 52" preserveAspectRatio="none" aria-hidden="true"></svg>
+    <div class="grid">
+      <div class="tile"><b id="beats">0</b><span>HERZSCHLÄGE</span></div>
+      <div class="tile"><b id="dur">0:00</b><span>DAUER</span></div>
+      <div class="tile"><b id="batt">–</b><span>GURT-AKKU</span></div>
+    </div>
+    <div class="qual"><span class="dot" id="qdot"></span><span id="qtxt">Signal wird geprüft…</span></div>
+    <button class="btn stop" id="btnStop" style="margin-top:14px">Messung beenden</button>
+    <div class="hint" id="liveHint">Empfehlung: mindestens <b>5 Minuten</b> ruhige Messung — kürzere Aufnahmen sind für den Verlauf oft zu wenig.</div>
+  </div>
+
+  <!-- ── 3) Fertig / Übergabe ── -->
+  <div id="vDone" class="hidden">
+    <h1>Aufnahme fertig</h1>
+    <p class="sub" id="doneSub"></p>
+    <div class="grid">
+      <div class="tile"><b id="dBeats">0</b><span>HERZSCHLÄGE</span></div>
+      <div class="tile"><b id="dDur">0:00</b><span>DAUER</span></div>
+      <div class="tile"><b id="dHR">–</b><span>Ø PULS</span></div>
+    </div>
+    <div class="bar"><i id="pb"></i></div>
+    <div class="status" id="status"></div>
+    <button class="btn" id="btnSend">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/></svg>
+      An den Tierarzt senden
+    </button>
+    <button class="btn ghost" id="btnSave">Als Datei speichern</button>
+    <button class="btn ghost hidden" id="btnAgain">Neue Messung</button>
+    <div class="err" id="err"></div>
+    <div class="hint">Die Auswertung nimmt deine Tierärztin oder dein Tierarzt vor. Diese Seite erfasst nur die Messwerte und liefert keine Beurteilung.</div>
+  </div>
+
+  <div class="privacy"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>Direkt-Übertragung · kein Server sieht die Messwerte</div>
+</div>
+
+<script src="p2p.js"></script>
+<script>
+'use strict';
+const $=s=>document.querySelector(s);
+const room=new URLSearchParams(location.search).get('room');
+
+/* ── Ansichten ─────────────────────────────────────────────────────────── */
+const VIEWS=['vUnsupported','vReady','vLive','vDone'];
+function show(id){ VIEWS.forEach(v=>$('#'+v).classList.toggle('hidden', v!==id)); }
+
+/* ── Zustand ───────────────────────────────────────────────────────────── */
+const S={ device:null, hrChar:null, battChar:null, rr:[], hr:0, batt:null,
+          startedAt:null, timer:null, wake:null, stopped:false, blob:null, fname:null };
+
+/* ── Pferd-Identität: stabile UUID je Pferdename ────────────────────────
+   Der Importer des Cockpits ordnet Aufnahmen über subject.id demselben Pferd
+   zu — nur so entsteht ein Verlauf über Wochen statt lauter Einzelbilder.
+   Deshalb wird die ID lokal gemerkt und wiederverwendet.                  */
+function subjectId(name){
+  const key='carlon.subject.'+name.trim().toLowerCase();
+  let id=null;
+  try{ id=localStorage.getItem(key); }catch(e){}
+  if(!id){
+    id = (crypto.randomUUID ? crypto.randomUUID() : 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'
+      .replace(/[xy]/g,c=>{const r=crypto.getRandomValues(new Uint8Array(1))[0]%16;
+        return (c==='x'?r:(r&0x3|0x8)).toString(16);})).toUpperCase();
+    try{ localStorage.setItem(key,id); }catch(e){}
+  }
+  return id;
+}
+
+/* ── Start ─────────────────────────────────────────────────────────────── */
+if(!('bluetooth' in navigator)){ show('vUnsupported'); }
+else {
+  show('vReady');
+  $('#roomLine').innerHTML = room ? `Verbindungscode: <b>${room.replace(/[<>&]/g,'')}</b>` : '';
+  try{ const last=localStorage.getItem('carlon.lastHorse'); if(last) $('#horse').value=last; }catch(e){}
+}
+
+/* ── Verbinden ─────────────────────────────────────────────────────────── */
+$('#btnConnect').addEventListener('click', async ()=>{
+  const name=$('#horse').value.trim();
+  if(!name){ $('#horse').focus(); $('#horse').style.borderColor='var(--amber)'; return; }
+  try{ localStorage.setItem('carlon.lastHorse',name); }catch(e){}
+  try{
+    const dev = await navigator.bluetooth.requestDevice({
+      filters:[{namePrefix:'Polar'},{services:['heart_rate']}],
+      optionalServices:['heart_rate','battery_service']
+    });
+    await connect(dev);
+  }catch(e){
+    if(e && e.name==='NotFoundError') return;      // Nutzer hat den Dialog abgebrochen
+    alert('Bluetooth-Fehler: '+(e && e.message ? e.message : e));
+  }
+});
+
+async function connect(dev){
+  S.device=dev;
+  dev.addEventListener('gattserverdisconnected', onDrop);
+  const server = await dev.gatt.connect();
+  const svc = await server.getPrimaryService('heart_rate');
+  S.hrChar = await svc.getCharacteristic('heart_rate_measurement');
+  await S.hrChar.startNotifications();
+  S.hrChar.addEventListener('characteristicvaluechanged', onBeat);
+  // Gurt-Akku (optional — ein leerer Gurt ist die häufigste Abbruchursache)
+  try{
+    const bsvc=await server.getPrimaryService('battery_service');
+    S.battChar=await bsvc.getCharacteristic('battery_level');
+    S.batt=(await S.battChar.readValue()).getUint8(0);
+    await S.battChar.startNotifications();
+    S.battChar.addEventListener('characteristicvaluechanged',e=>{
+      S.batt=e.target.value.getUint8(0); $('#batt').textContent=S.batt+'%';
+    });
+  }catch(e){}
+  startSession();
+}
+
+function onDrop(){
+  if(S.stopped) return;
+  $('#liveTitle').textContent='Verbindung unterbrochen';
+  $('#liveSub').innerHTML='Der Gurt ist nicht mehr erreichbar. Sitz und Feuchtigkeit prüfen, dann erneut verbinden — die bisher erfassten Schläge bleiben erhalten.';
+  $('#btnStop').textContent='Aufnahme abschließen';
+}
+
+/* ── Messung ───────────────────────────────────────────────────────────── */
+function startSession(){
+  S.startedAt=new Date(); S.stopped=false;
+  show('vLive');
+  if(S.batt!=null) $('#batt').textContent=S.batt+'%';
+  S.timer=setInterval(tick,1000);
+  // Bildschirm wach halten: schläft er ein, stoppt der Bluetooth-Strom.
+  if('wakeLock' in navigator){
+    navigator.wakeLock.request('screen').then(l=>{S.wake=l;}).catch(()=>{});
+    document.addEventListener('visibilitychange',()=>{
+      if(document.visibilityState==='visible' && !S.wake && !S.stopped){
+        navigator.wakeLock.request('screen').then(l=>{S.wake=l;}).catch(()=>{});
+      }
+    });
+  }
+}
+
+/* Standard-BLE-Heart-Rate-Measurement (0x2A37).
+   Flags: Bit0 = HF 16-bit · Bit3 = Energy vorhanden · Bit4 = RR vorhanden.
+   RR kommt in 1/1024-Sekunden-Einheiten. */
+function onBeat(ev){
+  const v=ev.target.value, flags=v.getUint8(0);
+  let off=1, hr;
+  if(flags&0x01){ hr=v.getUint16(off,true); off+=2; } else { hr=v.getUint8(off); off+=1; }
+  S.hr=hr;
+  if(flags&0x08) off+=2;
+  if(flags&0x10){
+    while(off+2<=v.byteLength){
+      const rrMs=Math.round(v.getUint16(off,true)*1000/1024);
+      if(S.rr.length<50000) S.rr.push(rrMs);
+      off+=2;
+    }
+  }
+  $('#hr').textContent=hr||'–';
+  $('#beats').textContent=S.rr.length;
+  const h=$('#heart'); h.classList.remove('beat'); void h.offsetWidth; h.classList.add('beat');
+  if(S.rr.length%2===0) drawSpark();
+  if(S.rr.length%5===0) updateQuality();
+}
+
+function tick(){
+  if(!S.startedAt) return;
+  $('#dur').textContent=mmss((Date.now()-S.startedAt.getTime())/1000);
+}
+function mmss(sec){ sec=Math.max(0,Math.floor(sec)); return Math.floor(sec/60)+':'+String(sec%60).padStart(2,'0'); }
+
+/* Signalgüte = Anteil aufeinanderfolgender Schläge ohne unplausiblen Sprung.
+   Rein generisches Artefakt-Kriterium (relative Sprunghöhe) — bewusst OHNE
+   Spezies-Referenz, Schwellenwerk oder Bewertung. Sagt nur: ist die Messung
+   technisch brauchbar. */
+function updateQuality(){
+  const rr=S.rr; if(rr.length<12){ return; }
+  let clean=0, n=0;
+  for(let i=1;i<rr.length;i++){ n++; if(Math.abs(rr[i]-rr[i-1]) <= 0.20*rr[i-1]) clean++; }
+  const pct = n? clean/n : 0;
+  const d=$('#qdot'), t=$('#qtxt');
+  d.className='dot '+(pct>=0.90?'ok':pct>=0.75?'mid':'bad');
+  t.textContent = pct>=0.90 ? 'Signal stabil'
+    : pct>=0.75 ? 'Signal unruhig — Gurtsitz und Feuchtigkeit prüfen'
+    : 'Signal stark gestört — Gurt neu anfeuchten und nachsetzen';
+}
+
+function drawSpark(){
+  const rr=S.rr.slice(-70); if(rr.length<3) return;
+  const lo=Math.min(...rr), hi=Math.max(...rr), span=(hi-lo)||1;
+  const pts=rr.map((v,i)=>`${(i/(rr.length-1)*300).toFixed(1)},${(46-((v-lo)/span)*40).toFixed(1)}`).join(' ');
+  $('#spark').innerHTML=`<polyline points="${pts}" fill="none" stroke="var(--cyan)" stroke-width="1.6"
+    stroke-linejoin="round" stroke-linecap="round" opacity=".9"/>`;
+}
+
+/* ── Beenden ───────────────────────────────────────────────────────────── */
+$('#btnStop').addEventListener('click', async ()=>{
+  S.stopped=true;
+  clearInterval(S.timer);
+  try{ if(S.hrChar) await S.hrChar.stopNotifications(); }catch(e){}
+  try{ if(S.device && S.device.gatt.connected) S.device.gatt.disconnect(); }catch(e){}
+  try{ if(S.wake){ S.wake.release(); S.wake=null; } }catch(e){}
+  finish();
+});
+
+function finish(){
+  const rr=S.rr;
+  const secs=(Date.now()-S.startedAt.getTime())/1000;
+  $('#dBeats').textContent=rr.length;
+  $('#dDur').textContent=mmss(secs);
+  if(rr.length<12){
+    $('#doneSub').textContent='Es sind zu wenige Herzschläge erfasst worden, um die Aufnahme sinnvoll weiterzugeben.';
+    $('#dHR').textContent='–';
+    $('#btnSend').disabled=true; $('#btnSave').disabled=true;
+    $('#btnAgain').classList.remove('hidden');
+    show('vDone'); return;
+  }
+  const m=metrics(rr);
+  $('#dHR').textContent=Math.round(m.meanHRBpm);
+  $('#doneSub').textContent = room
+    ? 'Die Aufnahme kann jetzt direkt an die Praxis übertragen werden.'
+    : 'Speichere die Datei und schicke sie deiner Praxis — oder öffne den Link, den du von ihr bekommst.';
+  if(!room) $('#btnSend').disabled=true;
+
+  const name=$('#horse').value.trim()||'Pferd';
+  const payload=buildExport(name,rr,m,secs);
+  S.blob=new Blob([JSON.stringify(payload)],{type:'application/json'});
+  S.fname=`${name.replace(/[^\p{L}\p{N}_-]+/gu,'-')}_HRV-Session_${S.startedAt.toISOString().slice(0,10)}.json`;
+  show('vDone');
+}
+
+/* Pflichtfelder des Importschemas. Publizierte Formeln, keine Bewertung.
+   Ø-Puls bewusst ZEITGEWICHTET (60000 / mittleres RR) — der Mittelwert der
+   Momentan-Pulse wäre wegen der Jensen-Ungleichung systematisch zu hoch. */
+function metrics(rr){
+  const n=rr.length;
+  const sum=rr.reduce((a,b)=>a+b,0), mean=sum/n;
+  let sd=0; for(const v of rr) sd+=(v-mean)*(v-mean);
+  const sdnn=Math.sqrt(sd/(n>1?n-1:1));
+  let sq=0,c=0; for(let i=1;i<n;i++){ const d=rr[i]-rr[i-1]; sq+=d*d; c++; }
+  const rmssd=c?Math.sqrt(sq/c):0;
+  return { rmssdMs:round2(rmssd), sdnnMs:round2(sdnn), meanHRBpm:round2(60000/mean) };
+}
+const round2=x=>Math.round(x*100)/100;
+
+function buildExport(name,rr,m,secs){
+  return {
+    schema:{ name:'carlon_equine_v1', version:'1.0' },
+    source:{ app:'CARLON Mess-Station (Browser)', transport:'web-bluetooth',
+             sensor:(S.device&&S.device.name)||'Polar H10',
+             beltBatteryPct:S.batt, userAgent:navigator.userAgent },
+    subject:{ id:subjectId(name), nameAtTime:name, species:'horse' },
+    session:{ id:(crypto.randomUUID?crypto.randomUUID().toUpperCase():String(Date.now())),
+              startedAt:S.startedAt.toISOString().replace(/\.\d+Z$/,'Z'),
+              durationSec:Math.round(secs), beatCount:rr.length },
+    metrics:{ timeDomain:m },
+    // Labels bleiben durchgehend 'N': diese Seite klassifiziert NICHT.
+    // Artefakt- und Rhythmus-Erkennung ist Sache des Cockpits.
+    rrData: rr.map((v,i)=>({ index:i, label:'N', rrMs:v }))
+  };
+}
+
+/* ── Übergabe ──────────────────────────────────────────────────────────── */
+$('#btnSend').addEventListener('click', async ()=>{
+  if(!S.blob||!room) return;
+  $('#err').textContent=''; $('#btnSend').disabled=true; $('#btnSave').disabled=true;
+  $('#status').textContent='Verbinde mit der Praxis…';
+  try{
+    const file=new File([S.blob],S.fname,{type:'application/json'});
+    await P2P.send(room,file,{
+      onStatus:s=>{ if(s==='connected') $('#status').textContent='Verbunden — übertrage…'; },
+      onProgress:p=>{ $('#pb').style.width=Math.round(p*100)+'%'; }
+    });
+    $('#pb').style.width='100%';
+    $('#status').innerHTML='<span class="done">✓ Aufnahme übertragen</span>';
+    $('#btnSend').classList.add('hidden'); $('#btnSave').disabled=false;
+    $('#btnAgain').classList.remove('hidden');
+  }catch(e){
+    $('#status').textContent='';
+    $('#err').textContent='Übertragung fehlgeschlagen — ist der Empfang in der Praxis geöffnet? Du kannst die Datei speichern und stattdessen senden.';
+    $('#btnSend').disabled=false; $('#btnSave').disabled=false;
+  }
+});
+
+$('#btnSave').addEventListener('click',()=>{
+  if(!S.blob) return;
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(S.blob); a.download=S.fname;
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(()=>URL.revokeObjectURL(a.href),4000);
+  $('#btnAgain').classList.remove('hidden');
+});
+
+$('#btnAgain').addEventListener('click',()=>{
+  S.rr=[]; S.hr=0; S.blob=null; S.startedAt=null; S.stopped=false;
+  $('#pb').style.width='0'; $('#status').textContent=''; $('#err').textContent='';
+  $('#btnSend').disabled=false; $('#btnSend').classList.remove('hidden');
+  $('#btnSave').disabled=false; $('#btnAgain').classList.add('hidden');
+  $('#spark').innerHTML=''; $('#beats').textContent='0'; $('#dur').textContent='0:00';
+  $('#qdot').className='dot'; $('#qtxt').textContent='Signal wird geprüft…';
+  $('#liveTitle').textContent='Messung läuft'; $('#btnStop').textContent='Messung beenden';
+  show('vReady');
+});
+</script>
+</html>

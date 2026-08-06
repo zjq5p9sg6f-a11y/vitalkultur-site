@@ -1922,7 +1922,7 @@ const Triage = {
     let forced=null;
     // ---- 1) App-eigene klinische Indikatoren (echte Exporte) ----
     const c=n.clinical||{};
-    if(c.afib && (c.afib.triggered||c.afib.exceedsCutoff)){forced='crit';flags.push('Rhythmus prüfen');reasons.push('Auffällig unregelmäßige Kurzzeit-Variabilität — 12-Kanal-EKG zur Rhythmus-Abklärung erwägen (Broux 2018: RMSSD trennt AF/Sinus, AUC>0,9)');}
+    if(c.afib && (c.afib.triggered||c.afib.exceedsCutoff)){forced='crit';flags.push('Rhythmus prüfen');reasons.push('Auffällig unregelmäßige Kurzzeit-Variabilität — Screening-Hinweis, keine Diagnose; bitte tierärztlich einordnen lassen (RMSSD trennt AF/Sinus, Broux 2018)');}
     if(c.colic && c.colic.triggered){
       const sev=(c.colic.severity||'').toLowerCase();
       flags.push('Kolik-Indikator');
@@ -2140,16 +2140,16 @@ const Importer = {
     const relayReady=P2P.RELAY&&!/example\.workers\.dev/.test(P2P.RELAY);
     const room=P2P.roomCode();
     const base=location.href.replace(/[^/]*(\?.*)?$/,'');
-    const link=base+'senden.html?room='+room;
+    const link=base+'messen.html?room='+room;   // Mess-Station: direkt messen ODER Datei senden
     $('#impBody').innerHTML=`
       <div style="text-align:center;padding:6px 4px">
         <div style="width:52px;height:52px;border-radius:14px;background:var(--cyan-faint);border:1px solid var(--cyan-g2);color:var(--cyan);display:flex;align-items:center;justify-content:center;margin:0 auto 14px"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 12v6a2 2 0 002 2h12a2 2 0 002-2v-6M8 12l4 4 4-4M12 16V4"/></svg></div>
         <h3 style="font-family:var(--font-brand);font-size:20px;font-weight:600;margin-bottom:6px">Aufnahme empfangen</h3>
-        <p style="font-size:13px;color:var(--text-secondary);max-width:380px;margin:0 auto 18px">Sende dem Pferdebesitzer diesen Link (z. B. per WhatsApp). Sobald er die Datei wählt, kommt sie direkt bei dir an — Ende-zu-Ende, ohne Server.</p>
+        <p style="font-size:13px;color:var(--text-secondary);max-width:380px;margin:0 auto 18px">Sende dem Pferdebesitzer diesen Link (z.&nbsp;B. per WhatsApp). Er kann damit <b>direkt mit dem Polar H10 messen</b> — oder eine vorhandene Datei aus der App senden. Beides kommt Ende-zu-Ende bei dir an, ohne Server.</p>
         <div style="background:var(--bg-deep);border:1px solid var(--border-subtle);border-radius:var(--r-m);padding:12px 14px;font-family:var(--font-mono);font-size:12px;word-break:break-all;color:var(--cyan-strong);margin-bottom:12px">${esc(link)}</div>
         <div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap">
           <button class="btn ghost" onclick="navigator.clipboard.writeText('${link}').then(()=>Toast.show('Link kopiert','ok'))">Link kopieren</button>
-          <a class="btn ghost" href="https://wa.me/?text=${encodeURIComponent('CARLON — Aufnahme deines Pferds hier senden: '+link)}" target="_blank">Per WhatsApp</a>
+          <a class="btn ghost" href="https://wa.me/?text=${encodeURIComponent('CARLON — hier die Herzraten-Messung deines Pferds aufnehmen und direkt an mich senden: '+link)}" target="_blank">Per WhatsApp</a>
           <a class="btn ghost" href="mailto:?subject=CARLON%20Aufnahme%20senden&body=${encodeURIComponent('Bitte die HRV-Aufnahme hier hochladen: '+link)}">Per E-Mail</a>
         </div>
         <div id="rcvStatus" style="margin-top:20px;font-size:13px;color:var(--text-secondary)"><span class="spin" style="width:16px;height:16px;display:inline-block;vertical-align:middle;margin-right:8px;border:2px solid var(--border-subtle);border-top-color:var(--cyan);border-radius:50%;animation:spin .8s linear infinite"></span>Warte auf den Besitzer…</div>

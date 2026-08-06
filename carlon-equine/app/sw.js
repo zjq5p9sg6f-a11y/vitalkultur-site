@@ -2,7 +2,7 @@
    App-Shell wird precached; Fonts & Leaflet lokal gebündelt (assets/) — keine externen CDNs,
    sodass die App nach dem ersten Online-Start vollständig offline läuft.
    Gesundheitsdaten liegen in IndexedDB — der SW cached nur Programm-Assets. */
-const VERSION = 'carlon-clinic-v6-beta';
+const VERSION = 'carlon-clinic-v7-mess';
 const SHELL = VERSION + '-shell';
 const RUNTIME = VERSION + '-runtime';
 
@@ -10,6 +10,7 @@ const CORE = [
   'index.html',
   'landing.html',
   'senden.html',
+  'messen.html',
   'impressum.html',
   'datenschutz.html',
   'seed-data.js',
