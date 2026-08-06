@@ -168,8 +168,8 @@ const room=new URLSearchParams(location.search).get('room');
    Namen, Farben und Vorlage stehen deshalb NICHT hier, sondern intern in
    carlon-clinic/PARTNER-MODUS.md. Aktivierung = eine Zeile, kein Umbau.
 
-   Attribution: der Schluessel wandert als source.partner in den Export. Ohne
-   diese Kanal-Zuordnung ist spaeter keine Umsatzbeteiligung abrechenbar.     */
+   Der Schluessel wird als source.partner in den Export uebernommen, damit die
+   Herkunft einer Aufnahme nachvollziehbar bleibt.                            */
 const PARTNERS = {};
 const partnerKey = (new URLSearchParams(location.search).get('partner')||'')
                      .toLowerCase().replace(/[^a-z0-9_-]/g,'').slice(0,32);
@@ -398,7 +398,6 @@ function buildExport(name,rr,m,secs){
     source:{ app:'CARLON Mess-Station (Browser)', transport:'web-bluetooth',
              sensor:(S.device&&S.device.name)||'Polar H10',
              beltBatteryPct:S.batt, userAgent:navigator.userAgent,
-             // Kanal-Zuordnung: Grundlage jeder spaeteren Umsatzbeteiligung.
              partner: partnerKey || null },
     subject:{ id:subjectId(name), nameAtTime:name, species:'horse' },
     session:{ id:(crypto.randomUUID?crypto.randomUUID().toUpperCase():String(Date.now())),
