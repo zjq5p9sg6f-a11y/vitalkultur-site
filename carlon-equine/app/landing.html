@@ -5,7 +5,7 @@
 <title>CARLON EQUINE — Telemetrie-Cockpit für Pferde-Praxen</title>
 <meta name="description" content="Verwandelt HRV-Aufnahmen aus der CARLON-App in ein Praxis-Cockpit: biometrische Triage, Langzeit-Verläufe, Routenplanung, Befunde — vollständig lokal.">
 <link rel="manifest" href="manifest.webmanifest">
-<meta name="theme-color" content="#02080d">
+<meta name="theme-color" content="#0A0A0C">
 <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
 <link rel="icon" type="image/png" sizes="512x512" href="assets/icon-512.png">
 <style>
@@ -14,9 +14,14 @@
 </style>
 <style>
 :root{
-  --bg-void:#000308;--bg-deep:#02080d;--bg-surface:#06101a;--bg-elev:#0b1a26;--bg-elev-2:#14293a;
-  --border-faint:#102230;--border-subtle:#1b3548;--border-strong:#2a4d65;
-  --text-primary:#e8f8ff;--text-secondary:#8aa9bd;--text-dim:#4a6478;--text-faint:#2e4458;
+  /* Kanonische Palette — identisch zum Praxis-Cockpit (app/index.html):
+     neutrales OLED-Schwarz, KEIN Blaustich. Die bisherigen Werte (#000308,
+     #02080d, #4a6478 …) waren eine Drift und liessen die Verkaufsseite neben
+     dem Produkt fremd aussehen. --text-dim zusaetzlich auf WCAG-AA angehoben
+     (der alte Wert erreichte nur ~2,6:1). */
+  --bg-void:#0A0A0C;--bg-deep:#101013;--bg-surface:#161619;--bg-elev:#1A1A1E;--bg-elev-2:#232329;
+  --border-faint:#26262C;--border-subtle:#34343B;--border-strong:#45454E;
+  --text-primary:#EDEEF1;--text-secondary:#A4A5AC;--text-dim:#85858F;--text-faint:#5A5A63;
   --cyan:#3ECFB2;--cyan-strong:#6EE6C8;--cyan-deep:#1E8C78;
   --cyan-g1:rgba(62,207,178,.55);--cyan-g2:rgba(62,207,178,.25);--cyan-g3:rgba(62,207,178,.08);--cyan-faint:rgba(62,207,178,.04);
   --good:#3fe0a4;--amber:#ffb547;--red:#ff5263;--equine:#d4a574;
@@ -24,15 +29,17 @@
   --font-ui:"Inter",-apple-system,BlinkMacSystemFont,system-ui,sans-serif;
   --font-mono:ui-monospace,"SF Mono","JetBrains Mono",Menlo,monospace;
   --r-m:14px;--r-l:22px;--shadow:0 30px 80px -30px rgba(0,0,0,.85);
-  --checkout-solo:"https://carlon-equine.lemonsqueezy.com/buy/VET-SOLO";
-  --checkout-clinic:"https://carlon-equine.lemonsqueezy.com/buy/VET-CLINIC";
+  /* Die beiden Lemon-Squeezy-Checkout-Variablen sind entfernt: der Anbieter
+     wurde eingestellt, die Links gingen ins Leere. Sie waren im ausgelieferten
+     Code nirgends referenziert, nannten aber Anbieter und Shop-Kennung nach
+     aussen. Abgerechnet wird über Stripe (siehe carlon-clinic/stripe-setup.md). */
 }
 *{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth}
 body{font-family:var(--font-ui);background:var(--bg-void);color:var(--text-primary);-webkit-font-smoothing:antialiased;line-height:1.6;overflow-x:hidden;
   background-image:radial-gradient(ellipse 120% 70% at 50% -5%,var(--cyan-g3),transparent 55%),radial-gradient(ellipse 90% 50% at 85% 100%,rgba(30,140,120,.05),transparent 55%);}
 .bg-flower{position:fixed;inset:0;pointer-events:none;z-index:0;opacity:.13;background-position:center 60px;background-repeat:no-repeat;background-size:min(120vh,120vw) auto;
-  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='720' height='720' viewBox='0 0 720 720'><g fill='none' stroke='%233ECFB2' stroke-width='0.5'><circle cx='360' cy='360' r='100'/><circle cx='360' cy='260' r='100'/><circle cx='360' cy='460' r='100'/><circle cx='273' cy='310' r='100'/><circle cx='447' cy='310' r='100'/><circle cx='273' cy='410' r='100'/><circle cx='447' cy='410' r='100'/><circle cx='360' cy='160' r='100'/><circle cx='360' cy='560' r='100'/><circle cx='186' cy='360' r='100'/><circle cx='534' cy='360' r='100'/><circle cx='186' cy='260' r='100'/><circle cx='534' cy='260' r='100'/><circle cx='186' cy='460' r='100'/><circle cx='534' cy='460' r='100'/><circle cx='273' cy='210' r='100'/><circle cx='447' cy='210' r='100'/><circle cx='273' cy='510' r='100'/><circle cx='447' cy='510' r='100'/></g></svg>");}
+  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='900' height='900' viewBox='0 0 900 900'><g fill='none' stroke='%233ECFB2' stroke-width='0.9'><circle cx='450.0' cy='450.0' r='129.6'/><circle cx='579.6' cy='450.0' r='129.6'/><circle cx='514.8' cy='562.2' r='129.6'/><circle cx='385.2' cy='562.2' r='129.6'/><circle cx='320.4' cy='450.0' r='129.6'/><circle cx='385.2' cy='337.8' r='129.6'/><circle cx='514.8' cy='337.8' r='129.6'/><circle cx='709.2' cy='450.0' r='129.6'/><circle cx='644.4' cy='562.2' r='129.6'/><circle cx='579.6' cy='674.5' r='129.6'/><circle cx='450.0' cy='674.5' r='129.6'/><circle cx='320.4' cy='674.5' r='129.6'/><circle cx='255.6' cy='562.2' r='129.6'/><circle cx='190.8' cy='450.0' r='129.6'/><circle cx='255.6' cy='337.8' r='129.6'/><circle cx='320.4' cy='225.5' r='129.6'/><circle cx='450.0' cy='225.5' r='129.6'/><circle cx='579.6' cy='225.5' r='129.6'/><circle cx='644.4' cy='337.8' r='129.6'/></g></svg>");}
 .bg-vignette{position:fixed;inset:0;pointer-events:none;z-index:0;background:radial-gradient(ellipse at center,transparent 45%,rgba(0,0,0,.55) 100%);}
 nav,header,section,footer,.sticky{position:relative;z-index:1}
 a{color:inherit;text-decoration:none}
@@ -47,7 +54,7 @@ h1,h2,h3{font-family:var(--font-brand);font-weight:600;letter-spacing:-.01em;lin
 .btn svg{width:18px;height:18px}
 
 /* Nav */
-nav{position:sticky;top:0;z-index:50;background:rgba(2,8,13,.72);backdrop-filter:blur(20px);border-bottom:1px solid var(--border-faint)}
+nav{position:sticky;top:0;z-index:50;background:rgba(10,10,12,.74);backdrop-filter:blur(20px);border-bottom:1px solid var(--border-faint)}
 nav .wrap{display:flex;align-items:center;height:66px;gap:28px}
 .brand{display:flex;align-items:center;gap:12px}
 .brand img{width:34px;height:34px;filter:drop-shadow(0 0 12px var(--cyan-g2))}
@@ -57,6 +64,10 @@ nav .links{display:flex;gap:26px;margin-left:auto;font-size:14px;color:var(--tex
 nav .links a:hover{color:var(--text-primary)}
 nav .navcta{margin-left:24px}
 @media(max-width:820px){nav .links{display:none}nav .navcta{margin-left:auto}}
+/* Unter ~430px passen Wortmarke und Nav-Knopf nicht mehr nebeneinander — der
+   Knopf schob die Seite 4px ueber den Rand und erzeugte waagerechtes Scrollen.
+   Direkt darunter im Hero steht derselbe Aufruf, hier geht also nichts verloren. */
+@media(max-width:430px){nav .navcta{display:none}}
 
 /* Hero */
 .hero{padding:88px 0 64px;position:relative}
@@ -189,7 +200,7 @@ details p{color:var(--text-secondary);font-size:15px;margin-top:12px}
 .final p{color:var(--text-secondary);font-size:18px;margin-bottom:30px}
 
 /* Sticky CTA */
-.sticky{position:fixed;bottom:0;left:0;right:0;z-index:40;background:rgba(2,8,13,.9);backdrop-filter:blur(20px);border-top:1px solid var(--border-subtle);
+.sticky{position:fixed;bottom:0;left:0;right:0;z-index:40;background:rgba(10,10,12,.92);backdrop-filter:blur(20px);border-top:1px solid var(--border-subtle);
   transform:translateY(120%);transition:transform .3s ease;padding:12px 0}
 .sticky.on{transform:none}
 .sticky .wrap{display:flex;align-items:center;gap:16px}
