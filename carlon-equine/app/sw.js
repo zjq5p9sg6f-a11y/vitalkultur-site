@@ -66,8 +66,10 @@ self.addEventListener('fetch', (e) => {
   // Kartenkacheln nie cachen (zu groß, optional) — direkt Netz, still scheitern lassen
   if (/basemaps\.cartocdn\.com|tile\./.test(url.hostname)) return;
 
-  // Lizenz-/API-Requests nie cachen (immer live)
-  if (/api\.lemonsqueezy\.com|nominatim\.openstreetmap\.org/.test(url.hostname)) return;
+  // Live-Requests nie cachen. Die Lizenzpruefung braucht hier keinen Eintrag mehr:
+  // sie laeuft rein offline (ECDSA, kein Netz), und der Stripe-Checkout liegt auf
+  // einem fremden Origin in einem neuen Tab — der geht ohnehin nicht durch diesen SW.
+  if (/nominatim\.openstreetmap\.org/.test(url.hostname)) return;
 
   // Navigationsanfragen: App-Shell zuerst, Fallback auf gecachtes index.html (Offline)
   if (req.mode === 'navigate') {
