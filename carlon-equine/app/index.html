@@ -3200,7 +3200,7 @@ const Views={
     <div class="view">
       ${License.isPaid()?'':`<div class="demo-ribbon compact"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
         <div><b>Demo-Modus</b> — Befund-PDF &amp; Karten-Export in der Vollversion.</div>
-        <button class="btn primary" style="padding:7px 13px;font-size:12.5px;white-space:nowrap" onclick="${License.trialAvailable()?'License.startTrial()':'UI.upgrade()'}">${License.trialAvailable()?'30 Tage testen':'Freischalten'}</button></div>`}
+        <button class="btn primary" style="padding:7px 13px;font-size:12.5px;white-space:nowrap" onclick="UI.upgrade()">Freischalten</button></div>`}
       <div class="view-head">
         <div><span class="eyebrow">Praxis-Übersicht</span>
           <h1>Triage-Board</h1>
@@ -3248,7 +3248,7 @@ const Views={
     const head=`
       ${License.isPaid()?'':`<div class="demo-ribbon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="9" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/><rect x="14" y="12" width="7" height="9" rx="1"/><rect x="3" y="16" width="7" height="5" rx="1"/></svg>
         <div><b>Klinik-Funktion</b> — die Stationswand ist Teil des Klinik-Tarifs. Im Demo-Modus voll sichtbar.</div>
-        <button class="btn primary" style="padding:8px 14px;font-size:13px" onclick="${License.trialAvailable()?'License.startTrial()':'UI.upgrade()'}">${License.trialAvailable()?'30 Tage voll testen':'Freischalten'}</button></div>`}
+        <button class="btn primary" style="padding:8px 14px;font-size:13px" onclick="UI.upgrade()">Freischalten</button></div>`}
       <div class="view-head">
         <div><span class="eyebrow">Klinik · Stationsüberwachung</span>
           <h1>Stationswand</h1>
@@ -5451,8 +5451,8 @@ const Coherence={
 const BUILD='beta-2026-07-11';   // Test-Beta Build-Stamp
 /* ═══ GO-PAID-SCHALTER — nahtloser Übergang Beta → bezahltes SaaS ═══
    Zum Umstellen auf offenen Verkauf:
-   1) BETA_GATED = false setzen  → Preise, 30-Tage-Self-Trial und Lemon-Squeezy-Checkout kommen automatisch zurück.
-   2) In `const License` unten: LS_VARIANTS (Variant-IDs→Tier) + CHECKOUT (Buy-Links) mit den echten Lemon-Squeezy-Store-Daten füllen (siehe lemonsqueezy-setup.md).
+   1) BETA_GATED = false setzen  → Preise und Stripe-Checkout kommen automatisch zurück (KEIN Gratis-Trial, bewusst entfernt).
+   2) In `const License` unten: CHECKOUT.month/.year auf die LIVE-Stripe-Payment-Links umstellen (siehe stripe-setup.md).
    3) Optional: Landing-Beta zurück auf Preis-Variante (landing.html — Gründungs-Partner-Sektion ↔ Preise-Sektion tauschen).
    Bestehende Gründungs-Partner behalten Zugang: ihre signierten Keys laufen weiter; Founder-Flag sichert den Preis-Lock.
    Daten bleiben bei jedem Wechsel unberührt (IndexedDB, lizenz-unabhängig). */
@@ -5593,38 +5593,46 @@ const UI={
   },
   upgrade(feature){
     if(typeof BETA_GATED!=='undefined'&&BETA_GATED){ return this.betaGate(feature); }
-    const paid=[
-      ['vet_solo','Vet-Solo','Einzelpraxis · mobiler Vet',['Unbegrenzt Pferde','Befund-PDF & CSV-Export','Ordner-Batch-Import','Karten-Route → Google Maps','Kohärenz-Modul','Besitzer-Rückmeldung']],
-      ['vet_clinic','Vet-Clinic','Klinik · Multi-Vet',['Alles aus Vet-Solo','Klinik-Branding im Befund','Stationswand-Monitor','Kohorten-Auswertung','Priorisierter Support']],
+    // EIN Angebot, zwei Laufzeiten. Jahr steht vorn: bindet laenger und kostet pro Monat weniger.
+    // Features hier sind gegen PAID_ONLY + maxHorses verifiziert — nichts versprechen, was kein Gate hat.
+    const FEATS=['Unbegrenzt viele Pferde (Demo: 3)','Befund-PDF für Besitzer','CSV-Export der Messdaten','Route an Google Maps übergeben','Besitzer-Rückmeldung einholen','Kohärenz-Auswertung'];
+    const plans=[
+      ['year','Jahresabo','40,83','490 € im Jahr — zwei Monate günstiger','beste Wahl'],
+      ['month','Monatsabo','49','monatlich kündbar',''],
     ];
     // ROI-Pitch aus den eigenen Zahlen des Vets: erfasster Telemetrie-Umsatz vs. Lizenz
     const booked=(State.consults||[]).reduce((s,c)=>s+(c.fee||0),0);
     const mult=booked>0?Math.max(1,Math.round(booked/49)):0;
     const roi=booked>0
-      ? `Du hast in dieser Ansicht bereits <b style="color:var(--good)">${euro(booked)}</b> abrechenbaren Telemetrie-Umsatz erfasst. Vet-Solo kostet <b>49 €/Mo</b> — das ist <b style="color:var(--cyan-strong)">${mult}× drin.</b>`
+      ? `Du hast in dieser Ansicht bereits <b style="color:var(--good)">${euro(booked)}</b> abrechenbaren Telemetrie-Umsatz erfasst. Das Abo kostet <b>49 €/Mo</b> — das ist <b style="color:var(--cyan-strong)">${mult}× drin.</b>`
       : `Schon <b>eine</b> per Ferneinschätzung eingesparte oder abgerechnete Fahrt (50–200 €) refinanziert die Lizenz für den ganzen Monat.`;
     this.modal(`<div class="modal-head"><button class="closex" onclick="UI.closeModal()">${IC.x}</button><h3>Deine neue Einnahmequelle freischalten</h3></div>
     <div class="modal-body">
       ${feature?`<div class="demo-ribbon" style="margin-bottom:14px"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg><div><b>${esc(feature)}</b> ist Teil der Vollversion.</div></div>`:''}
       <div class="upsell-roi">${IC.euro}<div>${roi}</div></div>
-      <div class="tier-table">
-        ${paid.map(([id,name,who,feats],i)=>`<div class="tier-opt ${i===0?'feat':''}">
-          <div style="flex:1"><h4>${name}${i===0?' <span class="chip cyan">meistgewählt</span>':''}</h4><div style="font-size:12px;color:var(--text-dim)">${who}</div>
-            <ul>${feats.map(f=>`<li>${f}</li>`).join('')}</ul></div>
-          <div class="price"><b>${License.PRICES[id].split(' ')[0]}</b><span>€ / Monat</span>
-            <a class="btn primary" style="margin-top:8px;padding:7px 12px;font-size:12px" href="${License.CHECKOUT[id]||'#'}" target="_blank">Abonnieren</a></div>
+      <div class="tier-opt feat" style="align-items:flex-start">
+        <div style="flex:1"><h4>CARLON Equine Visite — Praxis</h4>
+          <div style="font-size:12px;color:var(--text-dim)">Einzelpraxis · mobiler Vet</div>
+          <ul>${FEATS.map(f=>`<li>${f}</li>`).join('')}</ul></div>
+      </div>
+      <div class="tier-table" style="margin-top:10px">
+        ${plans.map(([id,name,price,note,badge],i)=>`<div class="tier-opt ${i===0?'feat':''}">
+          <div style="flex:1"><h4>${name}${badge?` <span class="chip cyan">${badge}</span>`:''}</h4>
+            <div style="font-size:12px;color:var(--text-dim)">${note}</div></div>
+          <div class="price"><b>${price}</b><span>€ / Monat</span>
+            <a class="btn primary" style="margin-top:8px;padding:7px 12px;font-size:12px" href="${License.CHECKOUT[id]||'#'}" target="_blank" rel="noopener">Abonnieren</a></div>
         </div>`).join('')}
       </div>
-      <p style="font-size:12px;color:var(--text-dim);margin-top:16px">Sichere Zahlung &amp; Rechnung über Lemon Squeezy. Nach dem Abschluss erhältst du deinen Lizenz-Schlüssel per E-Mail. Alle Gesundheitsdaten bleiben auch mit Lizenz zu 100 % lokal auf diesem Gerät.</p>
+      <p style="font-size:12px;color:var(--text-dim);margin-top:16px">Preise zzgl. MwSt. — als Praxis ziehst du die Vorsteuer ab. Zahlung und Rechnung laufen über Stripe, für EU-Praxen mit USt-IdNr. greift das Reverse-Charge-Verfahren. Nach dem Abschluss erhältst du deinen Lizenz-Schlüssel per E-Mail. Alle Gesundheitsdaten bleiben auch mit Lizenz zu 100 % lokal auf diesem Gerät.</p>
     </div>
-    <div class="modal-foot"><button class="btn ghost" onclick="UI.activate()">Ich habe einen Schlüssel</button>${License.trialAvailable()?`<button class="btn primary" onclick="License.startTrial()">30 Tage kostenlos testen</button>`:''}</div>`);
+    <div class="modal-foot"><button class="btn ghost" onclick="UI.closeModal()">Später</button><button class="btn primary" onclick="UI.activate()">Ich habe einen Schlüssel</button></div>`);
   },
   activate(){
     this.modal(`<div class="modal-head"><button class="closex" onclick="UI.closeModal()">${IC.x}</button><h3>Lizenz aktivieren</h3></div>
     <div class="modal-body">
       <div class="field"><label>Lizenz-Schlüssel</label>
-        <textarea id="licKey" placeholder="z. B. 38b1460a-5104-4067-a91d-77b872934d51" style="min-height:90px;font-family:var(--font-mono);font-size:11px;word-break:break-all"></textarea>
-        <div class="hint">Den Schlüssel hast du nach dem Kauf per E-Mail (Lemon Squeezy) erhalten. Einmal aktivieren, danach läuft die Prüfung lokal.</div></div>
+        <textarea id="licKey" placeholder="CARLON-eyJ2IjoxLCJ0aWVy… (kompletten Schlüssel aus der E-Mail einfügen)" style="min-height:90px;font-family:var(--font-mono);font-size:11px;word-break:break-all"></textarea>
+        <div class="hint">Den Schlüssel hast du nach dem Kauf per E-Mail erhalten. Einmal einfügen — danach wird er ausschließlich auf diesem Gerät geprüft, auch ohne Netz.</div></div>
     </div>
     <div class="modal-foot"><button class="btn ghost" onclick="UI.closeModal()">Abbrechen</button><button class="btn primary" onclick="License.activate($('#licKey').value)">Aktivieren</button></div>`);
   },
@@ -5650,21 +5658,21 @@ const UI={
 const License={
   PUB:{kty:'EC',crv:'P-256',x:'pqbiPaa-gOiZKjeRsQ7XMRe9am5L7giiV48Qjzp3enY',y:'5lg4Ipa-paTigXd7rxitFKwpee8h1Lu0W5eod1mYOok'},
   TIERS:{demo:{name:'Demo',color:'demo'},vet_solo:{name:'Vet-Solo',color:'paid'},vet_clinic:{name:'Vet-Clinic',color:'paid'},research:{name:'Research',color:'paid'}},
-  PRICES:{vet_solo:'49 €/Mo',vet_clinic:'149 €/Mo',research:'29 €/Mo'},
-  // ── Lemon Squeezy (Merchant of Record + native Lizenz-API) ──
-  // Bei CORS-Problemen LS_BASE auf den eigenen Cloudflare-Worker-Proxy umbiegen (siehe cloudflare-worker.js).
-  LS_BASE:'https://api.lemonsqueezy.com/v1',
-  // Store-Checkout (Jan trägt hier seine Lemon-Squeezy-Store-URL / Produkt-Links ein):
-  CHECKOUT:{vet_solo:'https://carlon-equine.lemonsqueezy.com/buy/VET-SOLO',vet_clinic:'https://carlon-equine.lemonsqueezy.com/buy/VET-CLINIC'},
-  // Jans Variant-IDs aus dem Lemon-Squeezy-Store hier eintragen (siehe lemonsqueezy-setup.md):
-  LS_VARIANTS:{ /* '123456':'vet_solo', '123457':'vet_clinic', '123458':'research' */ },
-  variantToTier(meta){
-    if(!meta)return 'vet_solo';
-    if(meta.variant_id!=null && this.LS_VARIANTS[String(meta.variant_id)]) return this.LS_VARIANTS[String(meta.variant_id)];
-    const n=((meta.variant_name||'')+' '+(meta.product_name||'')).toLowerCase();
-    if(n.includes('clinic')||n.includes('klinik'))return 'vet_clinic';
-    if(n.includes('research')||n.includes('akadem')||n.includes('uni'))return 'research';
-    return 'vet_solo';
+  PRICES:{vet_solo:'49 €/Mo zzgl. MwSt.',vet_clinic:'149 €/Mo zzgl. MwSt.',research:'29 €/Mo zzgl. MwSt.'},
+  /* ── ZAHLUNG (Stripe) ist von BERECHTIGUNG (eigene signierte Keys) ENTKOPPELT ──
+     Bewusste Architektur-Entscheidung 2026-08-06: Lemon Squeezy wurde von Stripe
+     aufgekauft und migriert seine Haendler auf "Stripe Managed Payments" — die
+     LS-Lizenz-API stirbt damit. Genau dieser Fall darf uns nicht mehr treffen.
+     Deshalb: Stripe kassiert (Merchant of Record, Steuer weltweit), aber
+     freigeschaltet wird ausschliesslich ueber unsere eigenen ECDSA-Keys
+     (mint-license.js). Der Zahlungsanbieter ist damit austauschbar, ohne dass
+     die Lizenz-Maschinerie bricht — und die Pruefung bleibt offline-faehig,
+     was zum USP "laeuft lokal, ohne Cloud-Zwang" passt.
+     Umstellung auf Live: nur diese beiden Links gegen die Live-Links tauschen. */
+  CHECKOUT:{
+    // Stripe Payment Links (Managed Payments aktiv, kein Gratis-Trial, Unternehmensname Pflicht)
+    year :'https://buy.stripe.com/test_4gMbJ1eopaGmbdmfjQ1RC02',   // 490 €/Jahr  (= 40,83 €/Mo)
+    month:'https://buy.stripe.com/test_dRmdR99455m25T20oW1RC01',   //  49 €/Monat
   },
   _expTs(lk){if(lk&&lk.expires_at){const t=Date.parse(lk.expires_at);return isNaN(t)?null:Math.floor(t/1000);}return null;},
   _b64(s){s=s.replace(/-/g,'+').replace(/_/g,'/');while(s.length%4)s+='=';const b=atob(s);const u=new Uint8Array(b.length);for(let i=0;i<b.length;i++)u[i]=b.charCodeAt(i);return u;},
@@ -5689,29 +5697,7 @@ const License={
   async activate(rawKey){
     const key=(rawKey||'').trim();
     if(!key){Toast.show('Bitte Schlüssel eingeben','warn');return false;}
-    return key.startsWith('CARLON-')?this._activateOffline(key):this._activateLS(key);
-  },
-  async _activateLS(key){
-    try{
-      const uid=(crypto.randomUUID?crypto.randomUUID().slice(0,8):Math.abs(hashStr(key+performance.now())).toString(36));
-      const inst=(State.settings.clinicName||'CARLON EQUINE')+' · '+uid;
-      const res=await fetch(this.LS_BASE+'/licenses/activate',{method:'POST',headers:{'Accept':'application/json','Content-Type':'application/x-www-form-urlencoded'},body:new URLSearchParams({license_key:key,instance_name:inst})});
-      const d=await res.json();
-      if(!d.activated){Toast.show('Lizenz nicht aktivierbar: '+((d.error)||'ungültig oder Aktivierungslimit erreicht'),'warn');return false;}
-      const tier=this.variantToTier(d.meta);
-      State.license={provider:'ls',tier,lic:(d.meta&&d.meta.customer_name)||'Lizenz',key,instanceId:d.instance&&d.instance.id,exp:this._expTs(d.license_key)};
-      State.settings.license=State.license;await State.saveSettings();
-      UI.closeModal();Toast.show(`Freigeschaltet: ${this.TIERS[tier].name}`,'ok');Nav.render();return true;
-    }catch(e){Toast.show('Aktivierung fehlgeschlagen — Netzwerk/CORS. Bei Bedarf Worker-Proxy nutzen (siehe lemonsqueezy-setup.md).','warn');return false;}
-  },
-  async _validateLS(){
-    const l=State.license;if(!l||l.provider!=='ls'||!l.key)return;
-    try{
-      const res=await fetch(this.LS_BASE+'/licenses/validate',{method:'POST',headers:{'Accept':'application/json','Content-Type':'application/x-www-form-urlencoded'},body:new URLSearchParams({license_key:l.key,instance_id:l.instanceId||''})});
-      const d=await res.json();
-      if(d&&d.valid===false){State.license={tier:'demo',expiredTier:l.tier,founder:l.founder,lic:l.lic};State.settings.license=null;await State.saveSettings();Nav.render();}
-      else if(d&&d.license_key){l.exp=this._expTs(d.license_key);State.settings.license=l;await State.saveSettings();}
-    }catch(e){/* offline → Grace-Period: bestehende Lizenz behalten, kein Downgrade */}
+    return this._activateOffline(key);
   },
   async _activateOffline(key){
     const r=await this.verify(key);
@@ -5721,27 +5707,21 @@ const License={
     UI.closeModal();Toast.show(`Freigeschaltet: ${this.TIERS[r.tier].name} · ${r.lic}`,'ok');Nav.render();return true;
   },
   async deactivate(){
-    const l=State.license;
-    if(l&&l.provider==='ls'&&l.key&&l.instanceId){try{await fetch(this.LS_BASE+'/licenses/deactivate',{method:'POST',headers:{'Accept':'application/json','Content-Type':'application/x-www-form-urlencoded'},body:new URLSearchParams({license_key:l.key,instance_id:l.instanceId})});}catch(e){}}
     State.license={tier:'demo'};State.settings.license=null;await State.saveSettings();Nav.render();
   },
-  async startTrial(){
-    if(State.settings.trialUsed){Toast.show('Testphase wurde bereits genutzt','warn');UI.upgrade();return false;}
-    const exp=Math.floor((Date.now()+30*86400000)/1000);
-    State.license={provider:'trial',tier:'vet_solo',lic:'30-Tage-Test',exp};
-    State.settings.license=State.license;State.settings.trialUsed=true;await State.saveSettings();
-    UI.closeModal();Toast.show('30-Tage-Vollzugang aktiviert — voller Funktionsumfang','ok');Nav.render();return true;
-  },
-  trialAvailable(){return (typeof BETA_GATED!=='undefined'&&BETA_GATED)?false:!State.settings.trialUsed;},
-  isTrial(){return State.license&&State.license.provider==='trial';},
   async loadFromSettings(){
     const l=State.settings.license;
-    if(l&&l.provider==='trial'){State.license=(l.exp*1000>Date.now())?l:{tier:'demo',expiredTier:'vet_solo'};return;}
-    if(l&&l.key){
-      State.license=l;                        // sofort anwenden (Grace, funktioniert offline)
-      if(l.provider==='offline'){const r=await this.verify(l.key);State.license=r.valid?{...l,tier:r.tier,exp:r.exp,founder:r.founder}:{tier:'demo',expiredTier:l.tier,founder:l.founder,lic:l.lic};}
-      else this._validateLS();                // Lemon Squeezy im Hintergrund revalidieren (non-blocking)
-    } else State.license={tier:'demo'};
+    if(!l||!l.key){State.license={tier:'demo'};return;}
+    State.license=l;                          // sofort anwenden (Grace-Period, funktioniert offline)
+    const r=await this.verify(l.key);
+    if(r.valid){
+      State.license={provider:'offline',tier:r.tier,lic:r.lic,exp:r.exp,key:l.key,founder:r.founder};
+      // Alt-Lizenzen (abgeloester Lemon-Squeezy-/Trial-Pfad) einmalig auf 'offline' normalisieren
+      if(l.provider!=='offline'){State.settings.license=State.license;await State.saveSettings();}
+    } else {
+      State.license={tier:'demo',expiredTier:l.tier,founder:!!l.founder,lic:l.lic};
+      if(l.provider!=='offline'){State.settings.license=null;await State.saveSettings();}
+    }
   },
   // Gate: true wenn erlaubt, sonst zeigt Upgrade-Modal und gibt false zurück
   gate(feature,label){
@@ -5755,7 +5735,7 @@ const License={
     const l=State.license; if(!l)return null;
     if(l.expiredTier)return{state:'expired',tier:l.expiredTier,founder:!!l.founder};
     const d=this.daysLeft();
-    if(d!=null&&d<=7&&(this.isPaid()||this.isTrial()))return{state:'expiring',tier:this.tier(),days:d,founder:!!l.founder};
+    if(d!=null&&d<=7&&this.isPaid())return{state:'expiring',tier:this.tier(),days:d,founder:!!l.founder};
     return null;
   },
   // Nahtlose Verlängerung: Beta → Partner-Bewerbung, Paid → Kauf/Schlüssel (UI.upgrade branch-t auf BETA_GATED)
@@ -6453,7 +6433,7 @@ const Nav={
       const fnd=License.isFounder()||(rn&&rn.founder);
       if(rn&&rn.state==='expired'){ tl.textContent=(fnd?'Partner':'Lizenz')+' abgelaufen · verlängern'; tp.className='tier-pill expired'; tp.setAttribute('onclick','License.renew()'); }
       else if(rn&&rn.state==='expiring'){ tl.textContent=(t.name)+' · läuft in '+rn.days+'d ab'; tp.className='tier-pill expiring'; tp.setAttribute('onclick','License.renew()'); }
-      else { tl.textContent=License.isTrial()?('Test · '+License.daysLeft()+' Tage'):(paid?(fnd?'Gründungs-Partner':t.name):'Demo · freischalten'); tp.className='tier-pill '+(paid?'paid':'demo'); tp.setAttribute('onclick','License.isPaid()?UI.licenseInfo():UI.upgrade()'); }}
+      else { tl.textContent=paid?(fnd?'Gründungs-Partner':t.name):'Demo · freischalten'; tp.className='tier-pill '+(paid?'paid':'demo'); tp.setAttribute('onclick','License.isPaid()?UI.licenseInfo():UI.upgrade()'); }}
   }
 };
 
@@ -6603,9 +6583,7 @@ addEventListener('beforeinstallprompt',e=>{e.preventDefault();PWA.deferred=e;});
     $$('#tabs button, #bottomNav button').forEach(b=>b.addEventListener('click',()=>Nav.go(b.dataset.tab)));
     // Splash aus, App an
     setTimeout(()=>{$('#splash').classList.add('gone');$('#app').classList.add('ready');
-      const params=new URLSearchParams(location.search);
-      if(params.get('trial')&&License.trialAvailable()){License.startTrial().then(()=>{if(!State.horses.length)Seed.load();});}
-      else if(!State.settings.onboarded && !State.horses.length) showTour();
+      if(!State.settings.onboarded && !State.horses.length) showTour();
     },700);
   }catch(e){
     console.error(e);
