@@ -6,6 +6,18 @@
 <link rel="manifest" href="manifest.webmanifest">
 <meta name="theme-color" content="#0A0A0C">
 <meta name="robots" content="noindex">
+<!-- Vorschau beim Teilen: ohne diese Angaben zeigen Messenger eine graue
+     Kompassnadel statt der Marke. Das Bild liegt bereits im Repo. -->
+<meta property="og:title" content="Herzraten-Messung beim Pferd — CARLON Equine">
+<meta property="og:description" content="Ruhe-Herzrate deines Pferds mit dem Polar-Gurt direkt im Browser aufnehmen und an die Tierarztpraxis übergeben. Ohne App, ohne Server.">
+<meta property="og:image" content="https://vitalkultur.com/carlon-equine/assets/og-equine.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://vitalkultur.com/carlon-equine/app/messen.html">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://vitalkultur.com/carlon-equine/assets/og-equine.png">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
 <!-- ══════════════════════════════════════════════════════════════════════════
      CARLON EQUINE — Mess-Station (Besitzer-Seite)
      Erfasst RR-Intervalle vom Polar H10 über Web Bluetooth und übergibt sie
@@ -18,179 +30,1879 @@
      metrics.timeDomain (RMSSD/SDNN/Ø-Puls) sind publizierte Lehrbuch-Formeln
      und Pflichtfelder des Importschemas — sie werden berechnet, aber NICHT
      bewertet. Jede Deutung entsteht erst im Cockpit des Tierarztes.
-     Grund: unsere equine Kalibrierung ist das Produkt. Sie gehört nicht in
-     ausgelieferten Browser-Code.
+     Diese Datei wird öffentlich ausgeliefert — Kommentare zählen wie Code.
      ══════════════════════════════════════════════════════════════════════════ -->
 <style>
-:root{--void:#000308;--bg:#02080d;--surface:#06101a;--elev:#0b1a26;--border:#102230;--strong:#2a4d65;--text:#e8f8ff;--sec:#8aa9bd;--dim:#4a6478;--cyan:#3ECFB2;--cyan-light:#6EE6C8;--cyan-deep:#1E8C78;--glow-1:rgba(62,207,178,.55);--glow-2:rgba(62,207,178,.25);--glow-3:rgba(62,207,178,.08);--good:#3fe0a4;--amber:#ffb547;--red:#ff5263;--font-mono:ui-monospace,'SF Mono','JetBrains Mono',Menlo,monospace;--grid:#fff;--grid-op:.16}
+/* Marken-Typografie: Jost (Wortmarke/Überschriften) + Inter (UI).
+   Beide liegen bereits self-hosted im Cockpit-Ordner. Ohne diese Deklaration
+   fiel die ganze Seite auf System-Fonts zurück — die Marke war unsichtbar. */
+@font-face{font-family:'Jost';font-style:normal;font-weight:300 700;font-display:swap;src:url('assets/fonts/jost-variable.woff2') format('woff2')}
+@font-face{font-family:'Inter';font-style:normal;font-weight:400 700;font-display:swap;src:url('assets/fonts/inter-variable.woff2') format('woff2')}
+</style>
+<style>
+/* ============================================================================
+   CARLON EQUINE — Mess-Station · Design-System
+   1:1 aus dem Praxis-Cockpit portiert (app/index.html), NICHT nachempfunden:
+   neutrales Void-Schwarz (KEIN Blaustich), Marken-Cyan #3ECFB2, Jost-Wortmarke,
+   Fibonacci-Spacing, 4-Ebenen-Atmosphäre, EKG-Papier-Grid (weiß, Tufte).
+
+   GESTALTUNGS-PRINZIP DIESER SEITE — „Gestalt zeigen, Urteil verschweigen":
+   Die Rohdaten dürfen so schön sein wie im Cockpit (Tachogramm und Poincaré
+   sind publizierte Lehrbuch-Darstellungen). Aber KEINE Zahl wird je durch ein
+   Urteil eingefärbt — kein good/warn/alert, keine Referenzbereiche, keine
+   Einstufung. Die Deutung ist das Produkt der Praxis und bleibt dort.
+   ========================================================================== */
+:root{
+  /* Kanonische Palette (aus dem Cockpit) — neutral, ohne Blaustich */
+  --void:#0A0A0C; --bg:#101013; --surface:#161619; --elev:#1A1A1E; --elev-2:#232329;
+  --border:#26262C; --border-sub:#34343B; --strong:#45454E;
+  /* --dim von #66666E auf #7E7E88 angehoben: der alte Wert erreichte auf der
+     Kartenfläche nur 3,2:1 und lag damit unter WCAG AA (4,5:1) — im Stall bei
+     Sonnenlicht ist das nicht Kosmetik, sondern unlesbar. Jetzt ~4,6:1.
+     --faint ist ab hier KEIN Text-Token mehr, nur noch Rahmen/Platzhalter. */
+  --text:#EDEEF1; --sec:#A4A5AC; --dim:#7E7E88; --faint:#5A5A63;
+  --cyan:#3ECFB2; --cyan-light:#6EE6C8; --cyan-deep:#1E8C78;
+  --glow-1:rgba(62,207,178,.55); --glow-2:rgba(62,207,178,.25); --glow-3:rgba(62,207,178,.08); --cyan-faint:rgba(62,207,178,.04);
+  --good:#3fe0a4; --amber:#ffb547; --red:#ff5263;
+  /* Fibonacci-Spacing (Marken-CI §2) */
+  --s1:4px; --s2:8px; --s3:13px; --s4:21px; --s5:34px; --s6:55px; --s7:89px;
+  --font-brand:'Jost',-apple-system,BlinkMacSystemFont,system-ui,sans-serif;
+  --font-ui:'Inter',-apple-system,BlinkMacSystemFont,system-ui,sans-serif;
+  --font-mono:ui-monospace,'SF Mono','JetBrains Mono',Menlo,monospace;
+  --r-s:8px; --r-m:14px; --r-l:22px;
+  --lift:inset 0 1px 0 rgba(255,255,255,.05);
+}
 *{box-sizing:border-box;margin:0;padding:0}
-body{background:var(--bg);color:var(--text);font-family:"Inter",-apple-system,system-ui,sans-serif;line-height:1.55;min-height:100svh;
-  display:flex;flex-direction:column;align-items:center;justify-content:center;padding:clamp(0px,2.5vw,28px);
-  background:var(--void);position:relative;overflow-x:hidden}
-body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;background:radial-gradient(ellipse 92% 48% at 50% -8%,var(--glow-2),transparent 62%)}
-.card{width:100%;max-width:clamp(360px,52vw,720px);position:relative;z-index:1;background:linear-gradient(168deg,var(--elev),var(--surface) 62%,var(--bg));border:1px solid var(--border);border-radius:clamp(0px,2vw,26px);padding:clamp(22px,3.4vw,40px) clamp(18px,3vw,38px) clamp(20px,2.6vw,30px);box-shadow:0 40px 110px -30px rgba(0,0,0,.95),0 0 0 1px rgba(62,207,178,.07),0 0 70px -30px var(--glow-2),inset 0 1px 0 rgba(255,255,255,.05);text-align:center;backdrop-filter:blur(2px)}.card::before{content:'';position:absolute;inset:0 0 auto;height:1px;border-radius:24px 24px 0 0;background:linear-gradient(90deg,transparent,color-mix(in srgb,var(--cyan) 38%,transparent),transparent)}
-img.logo{width:clamp(64px,7.5vw,116px);height:auto;filter:drop-shadow(0 0 16px var(--glow-1)) drop-shadow(0 0 46px var(--glow-2));margin-bottom:8px}
-.wordmark{font-family:var(--font-mono);font-size:11.5px;font-weight:600;letter-spacing:.22em;color:var(--cyan);opacity:.92;margin-bottom:18px;text-transform:uppercase}
-.wordmark small{display:block;font-size:8.5px;letter-spacing:.18em;color:var(--dim);font-weight:500;margin-top:3px}
-h1{font-family:'Jost',system-ui,sans-serif;font-weight:600;font-size:clamp(21px,2.6vw,32px);margin-bottom:8px;letter-spacing:-.01em}
-p.sub{color:var(--sec);font-size:clamp(13px,1.15vw,15.5px);margin-bottom:clamp(16px,2vw,26px);max-width:46ch;margin-left:auto;margin-right:auto}
-.room{font-family:ui-monospace,monospace;font-size:13px;color:var(--dim);letter-spacing:.1em;margin-bottom:18px}
+body{background:var(--void);color:var(--text);font-family:var(--font-ui);line-height:1.5;
+  -webkit-font-smoothing:antialiased;min-height:100svh;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  padding:clamp(0px,2.5vw,var(--s5));position:relative;overflow-x:hidden}
+
+/* ── Atmosphäre ────────────────────────────────────────────────────────
+   Drei Ebenen: Farbschein, heilige Geometrie, Vignette. Die frueher hier
+   portierten Scanlines sind ENTFERNT — ein 1-px-Streifenmuster erzeugt auf
+   Bildschirmen mit nicht-ganzzahliger Pixeldichte Moire, das als Stoerung im
+   Hintergrund sichtbar wird. Die App hat sie nicht.                        */
+.bg-atmosphere,.bg-flower,.bg-vignette{position:fixed;inset:0;pointer-events:none;z-index:0}
+.bg-atmosphere{transition:background .6s ease;background:
+  radial-gradient(ellipse 1200px 700px at 50% 130%,rgba(62,207,178,.05) 0%,transparent 60%),
+  radial-gradient(ellipse 900px 640px at 4% 46%,rgba(212,165,116,.025) 0%,transparent 60%),
+  radial-gradient(ellipse 900px 600px at 96% 8%,rgba(0,184,160,.04) 0%,transparent 55%)}
+/* Empfangs-Zustand traegt die Marken-Atmosphaere des App-Startbildschirms:
+   gruener Schein von oben, Geometrie deutlicher. Sobald Messwerte gezeigt
+   werden, faellt beides zurueck — Daten brauchen ruhigen Grund. */
+body.hero .bg-atmosphere{background:
+  radial-gradient(ellipse 1000px 720px at 50% 2%,rgba(62,207,178,.17) 0%,transparent 64%),
+  radial-gradient(ellipse 1200px 800px at 50% 118%,rgba(30,140,120,.10) 0%,transparent 62%),
+  radial-gradient(ellipse 900px 600px at 96% 10%,rgba(0,184,160,.05) 0%,transparent 55%)}
+/* Im Empfangs-Zustand tritt die Karte zurueck, damit Schein und Geometrie
+   durchscheinen — in der App gibt es an dieser Stelle keinen Rahmen. */
+body.hero .card{background:linear-gradient(160deg,rgba(26,26,30,.40),rgba(18,18,22,.26));
+  border-color:rgba(62,207,178,.10);box-shadow:0 40px 120px -40px rgba(0,0,0,.9),0 0 90px -40px var(--glow-2)}
+/* Flower of Life — Geometrie 1:1 aus der iOS-App (FlowerOfLifeView in
+   CarlonEquine/ContentView.swift): Mittelkreis, 6 Kreise auf r, 6 auf 2r und
+   6 auf r*wurzel3 um 30 Grad versetzt. Die vorher hier verwendete Web-Variante
+   war eine ANDERE Figur (8 Kreise auf 2r, nur 4 auf r*wurzel3) — sah aehnlich
+   aus, war aber nicht der Marken-Kanon. */
+.bg-flower{opacity:.10;transition:opacity .6s ease;background-position:center top;background-repeat:no-repeat;
+  background-size:min(92vh,92vw) auto;
+  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='900' height='900' viewBox='0 0 900 900'><g fill='none' stroke='%233ECFB2' stroke-width='0.9'><circle cx='450.0' cy='450.0' r='129.6'/><circle cx='579.6' cy='450.0' r='129.6'/><circle cx='514.8' cy='562.2' r='129.6'/><circle cx='385.2' cy='562.2' r='129.6'/><circle cx='320.4' cy='450.0' r='129.6'/><circle cx='385.2' cy='337.8' r='129.6'/><circle cx='514.8' cy='337.8' r='129.6'/><circle cx='709.2' cy='450.0' r='129.6'/><circle cx='644.4' cy='562.2' r='129.6'/><circle cx='579.6' cy='674.5' r='129.6'/><circle cx='450.0' cy='674.5' r='129.6'/><circle cx='320.4' cy='674.5' r='129.6'/><circle cx='255.6' cy='562.2' r='129.6'/><circle cx='190.8' cy='450.0' r='129.6'/><circle cx='255.6' cy='337.8' r='129.6'/><circle cx='320.4' cy='225.5' r='129.6'/><circle cx='450.0' cy='225.5' r='129.6'/><circle cx='579.6' cy='225.5' r='129.6'/><circle cx='644.4' cy='337.8' r='129.6'/></g></svg>")}
+body.hero .bg-flower{opacity:.18}
+.bg-vignette{background:radial-gradient(ellipse at center,transparent 44%,rgba(0,0,0,.58) 100%);z-index:1}
+
+/* ── Scrollbar: haarfein, in Ruhe unsichtbar (nie Browser-Default) ─────── */
+html{scrollbar-width:thin;scrollbar-color:transparent transparent}
+html:hover{scrollbar-color:rgba(255,255,255,.13) transparent}
+::-webkit-scrollbar{width:6px;height:6px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:transparent;border-radius:6px}
+:hover::-webkit-scrollbar-thumb{background:rgba(255,255,255,.13)}
+::selection{background:var(--glow-2);color:#fff}
+a{color:var(--cyan);text-decoration:none} a:hover{text-decoration:underline}
+button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
+a:focus-visible,button:focus-visible,input:focus-visible{outline:2px solid var(--glow-2);outline-offset:2px;border-radius:6px}
+:focus:not(:focus-visible){outline:none}
+.hidden{display:none!important}
+
+/* ── Karte ─────────────────────────────────────────────────────────────── */
+.card{width:100%;max-width:clamp(360px,52vw,720px);position:relative;z-index:2;
+  background:linear-gradient(160deg,rgba(26,26,30,.72),rgba(22,22,26,.64));
+  border:1px solid var(--border);border-radius:clamp(0px,2vw,var(--r-l));
+  padding:clamp(var(--s4),3.4vw,var(--s5)) clamp(18px,3vw,var(--s5)) clamp(var(--s4),2.6vw,var(--s5));
+  box-shadow:0 40px 110px -30px rgba(0,0,0,.95),0 0 0 1px rgba(62,207,178,.06),0 0 70px -34px var(--glow-2),var(--lift);
+  text-align:center;backdrop-filter:blur(3px);transition:max-width .45s cubic-bezier(.2,.8,.2,1)}
+.card::before{content:'';position:absolute;inset:0 0 auto;height:1px;border-radius:var(--r-l) var(--r-l) 0 0;
+  background:linear-gradient(90deg,transparent,color-mix(in srgb,var(--cyan) 38%,transparent),transparent)}
+/* Der Fertig-Zustand ist das Ergebnis — er darf mehr Raum nehmen als das Formular. */
+.card.beleg{max-width:clamp(360px,80vw,1080px)}
+
+/* ── Marke ─────────────────────────────────────────────────────────────── */
+/* ── MARKEN-LOCKUP ─────────────────────────────────────────────────────
+   Werte 1:1 aus dem Praxis-Cockpit (app/index.html .brand). Meine frueher
+   selbst gesetzten Werte wichen in JEDEM Parameter ab — Zeichen zu gross,
+   Schriftschnitt zu duenn, Laufweite zu weit, Unterzeile in Monospace.
+   Kanon: 34px Zeichen · Jost 500 / 16px / .15em · Tag 8px / .335em / Cyan. */
+.brand{display:flex;flex-direction:row;align-items:center;gap:var(--s3);
+  align-self:flex-start;margin-bottom:var(--s5)}
+img.logo{width:34px;height:34px;display:block;flex:none;
+  filter:drop-shadow(0 0 12px var(--glow-2));transition:width .45s cubic-bezier(.2,.8,.2,1),height .45s cubic-bezier(.2,.8,.2,1)}
+.lockup{text-align:left}
+.wm{font-family:var(--font-brand);font-weight:500;letter-spacing:.15em;font-size:16px;
+  white-space:nowrap;line-height:1.05;color:var(--text)}
+.tag{font-size:8px;letter-spacing:.335em;color:var(--cyan);text-transform:uppercase;
+  margin-top:5px;font-weight:600;white-space:nowrap;line-height:1;padding-left:.02em}
+
+/* HERO im Empfangs-Zustand: gestapelt und gross, wie der App-Startbildschirm.
+   Dort ist die Wortmarke bewusst duenner und weiter gelaufen als im Briefkopf. */
+body.hero .brand{flex-direction:column;align-self:center;gap:0;margin-bottom:var(--s5)}
+body.hero img.logo{width:clamp(148px,26vw,272px);height:auto;
+  filter:drop-shadow(0 0 26px var(--glow-1)) drop-shadow(0 0 72px var(--glow-2))}
+body.hero .lockup{text-align:center;margin-top:-2px}
+body.hero .wm{font-weight:300;font-size:clamp(20px,3vw,32px);letter-spacing:.3em;text-indent:.3em}
+body.hero .tag{font-size:clamp(9px,.95vw,10.5px);letter-spacing:.34em;margin-top:12px;text-indent:.34em}
+
+/* ── Typo ──────────────────────────────────────────────────────────────── */
+h1{font-family:var(--font-brand);font-weight:600;font-size:clamp(23px,2.8vw,35px);margin-bottom:var(--s2);letter-spacing:-.02em;line-height:1.1}
+p.sub{color:var(--sec);font-size:clamp(13px,1.15vw,15px);margin:0 auto clamp(var(--s3),2vw,var(--s4));max-width:52ch}
+.eyebrow{display:block;font-family:var(--font-mono);font-size:10px;letter-spacing:.26em;text-transform:uppercase;
+  color:var(--cyan-deep);font-weight:600;margin-bottom:var(--s2)}
+
+.room{font-family:var(--font-mono);font-size:12.5px;color:var(--dim);letter-spacing:.1em;margin-bottom:var(--s4)}
 .room b{color:var(--cyan);letter-spacing:.3em}
-.field{text-align:left;margin-bottom:16px}
-.field label{display:block;font-size:12px;color:var(--sec);margin-bottom:6px;letter-spacing:.02em}
-.field input{width:100%;padding:13px 14px;border-radius:13px;border:1px solid var(--border);background:var(--bg);color:var(--text);font-size:15px;font-family:inherit}
+
+/* ── Eingabe ───────────────────────────────────────────────────────────── */
+.field{text-align:left;margin-bottom:var(--s3)}
+.field label{display:block;font-size:11.5px;color:var(--sec);margin-bottom:6px;letter-spacing:.02em}
+.field input{width:100%;padding:13px 14px;border-radius:var(--r-m);border:1px solid var(--border);
+  background:var(--bg);color:var(--text);font-size:15px;font-family:inherit}
+.field input::placeholder{color:var(--faint)}
 .field input:focus{outline:none;border-color:var(--cyan);box-shadow:0 0 0 3px rgba(62,207,178,.12)}
-.btn{display:inline-flex;align-items:center;justify-content:center;gap:9px;width:100%;padding:clamp(13px,1.5vw,18px);border-radius:clamp(12px,1.1vw,16px);font-size:clamp(14.5px,1.2vw,17px);font-weight:600;border:none;cursor:pointer;font-family:inherit;
-  background:linear-gradient(135deg,var(--cyan-light),var(--cyan-deep));color:var(--bg);box-shadow:0 8px 26px -8px color-mix(in srgb,var(--cyan) 55%,transparent);transition:transform .12s,filter .12s}
-.btn:hover{filter:brightness(1.06)} .btn:active{transform:translateY(1px)}
-.btn:disabled{opacity:.45;cursor:not-allowed;filter:none;box-shadow:none}
-.btn.ghost{background:none;border:1px solid var(--strong);color:var(--text);box-shadow:none;margin-top:10px}
-.btn.stop{background:none;border:1px solid color-mix(in srgb,var(--red) 45%,var(--border));color:color-mix(in srgb,var(--red) 78%,var(--text));box-shadow:none}.btn.stop:hover{border-color:var(--red);background:color-mix(in srgb,var(--red) 8%,transparent)}
+
+/* ── Knöpfe: EIN Primär, alles andere ist Nebenweg ─────────────────────── */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:9px;width:100%;
+  padding:clamp(13px,1.5vw,17px);border-radius:clamp(12px,1.1vw,var(--r-m));
+  font-size:clamp(14.5px,1.2vw,16px);font-weight:600;font-family:inherit;cursor:pointer;border:none;
+  background:linear-gradient(135deg,var(--cyan-light),var(--cyan-deep));color:var(--void);
+  box-shadow:0 8px 26px -8px color-mix(in srgb,var(--cyan) 55%,transparent);
+  transition:transform .14s cubic-bezier(.2,.8,.2,1),filter .14s,border-color .14s}
+.btn:hover{filter:brightness(1.06)}
+.btn:active{transform:translateY(1px)}
+.btn:disabled{opacity:.4;cursor:not-allowed;filter:none;box-shadow:none}
 .btn svg{width:18px;height:18px}
-/* Live-Messung */
-.pulse{font-family:var(--font-mono);font-size:clamp(52px,7.5vw,104px);font-weight:600;line-height:.95;letter-spacing:-.035em;margin:clamp(6px,1.4vw,16px) 0 2px;font-variant-numeric:tabular-nums;font-feature-settings:'tnum' 1;text-shadow:0 0 34px var(--glow-2)}
-.pulse small{font-size:clamp(14px,1.3vw,20px);color:var(--sec);font-weight:400;margin-left:6px;letter-spacing:0}
-.heart{width:15px;height:15px;color:var(--cyan);display:inline-block;vertical-align:middle;margin-right:7px}
+.btn.ghost{background:none;border:1px solid var(--border-sub);color:var(--sec);box-shadow:none;font-weight:500}
+.btn.ghost:hover{border-color:var(--strong);color:var(--text)}
+.btn.stop{background:none;border:1px solid color-mix(in srgb,var(--red) 45%,var(--border));
+  color:color-mix(in srgb,var(--red) 78%,var(--text));box-shadow:none}
+.btn.stop:hover{border-color:var(--red);background:color-mix(in srgb,var(--red) 8%,transparent)}
+/* Nebenwege stehen nebeneinander und kleiner — nie als gleichwertige Klötze untereinander */
+/* auto-fit, damit ein einzelner sichtbarer Nebenweg die volle Breite nimmt
+   statt als halber Klotz stehen zu bleiben (btnAgain ist anfangs versteckt) */
+.subactions{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:var(--s2);margin-top:var(--s2)}
+.subactions .btn{padding:14px;min-height:46px;font-size:13.5px}
+
+/* ── Live: Puls ────────────────────────────────────────────────────────── */
+.pulse{font-family:var(--font-brand);font-size:clamp(56px,8vw,108px);font-weight:600;line-height:.95;
+  letter-spacing:-.04em;margin:clamp(6px,1.4vw,var(--s3)) 0 2px;font-variant-numeric:tabular-nums;
+  font-feature-settings:'tnum' 1;text-shadow:0 0 40px var(--glow-2)}
+.pulse small{font-family:var(--font-ui);font-size:clamp(14px,1.3vw,19px);color:var(--sec);font-weight:400;margin-left:7px;letter-spacing:0}
+.heart{width:clamp(17px,1.7vw,24px);height:clamp(17px,1.7vw,24px);color:var(--cyan);display:inline-block;vertical-align:middle;margin-right:10px;
+  filter:drop-shadow(0 0 10px var(--glow-1))}
+.pulsemeta{font-family:var(--font-mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--dim);margin-bottom:var(--s4)}
+.pulsemeta b{color:var(--sec);font-weight:700;font-variant-numeric:tabular-nums}
+.livepanel{margin-top:var(--s3);text-align:left}
+.livepanel .qual{margin:0;justify-content:flex-start}
 .heart.beat{animation:b .8s ease-out}
 @keyframes b{0%{transform:scale(1)}22%{transform:scale(1.32)}100%{transform:scale(1)}}
-.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(7px,.9vw,14px);margin:clamp(14px,1.8vw,22px) 0 clamp(12px,1.4vw,18px)}
-.tile{background:var(--bg);border:1px solid var(--border);border-radius:12px;padding:12px 8px 10px;position:relative;overflow:hidden}.tile::before{content:'';position:absolute;inset:0 0 auto;height:1px;background:linear-gradient(90deg,transparent,color-mix(in srgb,var(--cyan) 45%,transparent),transparent)}
-.tile b{display:block;font-family:var(--font-mono);font-size:clamp(16px,1.7vw,26px);font-weight:600;font-variant-numeric:tabular-nums;font-feature-settings:'tnum' 1;letter-spacing:-.02em}
-.tile span{font-size:8.5px;color:var(--dim);letter-spacing:.18em;font-weight:500;font-family:var(--font-mono)}
-.spark{width:100%;height:clamp(96px,13vw,190px);display:block;margin:clamp(10px,1.6vw,20px) 0 clamp(14px,1.8vw,22px);overflow:visible;}.spark .grid-major{stroke:var(--grid);stroke-opacity:var(--grid-op);stroke-width:.8}
-.spark .grid-minor{stroke:var(--grid);stroke-opacity:.055;stroke-width:.4}
-.spark .frame{stroke:var(--grid);stroke-opacity:.13;stroke-width:.8;fill:none}.spark .axis{fill:var(--dim);font-family:var(--font-mono);font-size:7.5px;font-variant-numeric:tabular-nums}
-.qual{display:flex;align-items:center;gap:9px;font-size:10.5px;color:var(--sec);justify-content:center;margin-bottom:4px;font-family:var(--font-mono);letter-spacing:.14em;text-transform:uppercase}
+
+/* ── Messwert-Kacheln (Cockpit .stat) ──────────────────────────────────── */
+/* auto-fit: 5 Kacheln ergeben am Handy 3+2 statt 2+2+1 (eine einzelne
+   Halb-Kachel am Ende wirkt wie ein Fehler). */
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(102px,1fr));gap:var(--s2);margin:clamp(var(--s3),1.8vw,var(--s4)) 0}
+/* Kachel im App-Duktus: farbige Marken-Beschriftung oben, grosse Zahl,
+   darunter eine kurze Erklaerung im Klartext. Anklickbar fuer die lange. */
+.tile{background:var(--bg);border:1px solid var(--border);border-radius:var(--r-m);padding:13px 14px 12px;
+  position:relative;overflow:hidden;text-align:left;box-shadow:var(--lift);font:inherit;color:inherit;
+  display:flex;flex-direction:column;cursor:pointer;
+  transition:border-color .15s,transform .15s cubic-bezier(.2,.8,.2,1),background .15s}
+.tile:hover{border-color:var(--border-sub);transform:translateY(-2px);background:var(--surface)}
+.tile:active{transform:translateY(0) scale(.99)}
+.tile b{display:block;font-family:var(--font-mono);font-size:clamp(20px,2vw,27px);font-weight:700;
+  font-variant-numeric:tabular-nums;font-feature-settings:'tnum' 1;letter-spacing:-.02em;line-height:1.05;margin-top:7px}
+.tile b u{text-decoration:none;font-size:.48em;color:var(--sec);font-weight:400;margin-left:3px;letter-spacing:0}
+.tile span{font-family:var(--font-mono);font-size:9.5px;color:var(--cyan);letter-spacing:.16em;
+  font-weight:700;text-transform:uppercase}
+.tile.gold span{color:var(--amber)}
+.tile.neutral span{color:var(--sec)}
+.tile em{font-style:normal;display:block;font-size:10.5px;color:var(--dim);line-height:1.35;margin-top:6px}
+/* Anklickbare Protokollzeile */
+.proto-row{width:100%;font:inherit;color:inherit;text-align:left;cursor:pointer;transition:background .14s}
+.proto-row:hover{background:rgba(255,255,255,.028)}
+
+/* ── Diagramme (Cockpit .chart-wrap + EKG-Papier-Grid) ─────────────────── */
+.chart-wrap{background:var(--bg);border:1px solid var(--border);border-radius:var(--r-m);
+  padding:var(--s3) var(--s3) var(--s2);text-align:left;box-shadow:var(--lift);position:relative;overflow:hidden}
+/* Sektions-Kopf im Duktus der iOS-App: farbiges Zeichen, getrackte
+   Versalien, rechts die Kennzahl. Rechts Platz fuer den Vollbild-Knopf. */
+.ct{display:flex;align-items:center;gap:9px;margin-bottom:var(--s3);padding-right:38px}
+.ct .ic{width:17px;height:17px;flex:none;color:var(--amber)}
+.ct b{font-family:var(--font-mono);font-size:10.5px;font-weight:700;letter-spacing:.2em;
+  text-transform:uppercase;color:var(--text);display:inline-flex;align-items:center}
+.ct i{margin-left:auto;font-style:normal;font-family:var(--font-mono);font-size:10px;color:var(--dim);
+  letter-spacing:.1em;white-space:nowrap;display:flex;align-items:center;gap:6px}
+.ct i .lg{width:7px;height:7px;border-radius:50%;display:inline-block;margin-left:6px}
+.ct i .lg.amber{background:var(--amber)} .ct i .lg.cyan{background:var(--cyan)}
+
+/* Serien-Pillen: Name, Mittelwert und Spannweite auf einen Blick — die
+   Legende traegt damit Information statt nur Farbe zu erklaeren. */
+.series{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:var(--s2);margin-bottom:var(--s3)}
+.pill{display:flex;align-items:center;gap:8px;padding:13px;min-height:46px;border-radius:13px;border:1px solid var(--border-sub);cursor:pointer;font:inherit;color:inherit;text-align:left}
+.pill .pd{width:8px;height:8px;border-radius:50%;flex:none}
+.pill .nm{font-weight:700;font-size:13px;letter-spacing:.02em}
+.pill .av{margin-left:auto;font-family:var(--font-mono);font-size:14px;font-weight:700;font-variant-numeric:tabular-nums}
+.pill .av u{text-decoration:none;font-size:.72em;color:var(--sec);font-weight:400;margin-left:2px}
+/* --sec statt --dim: die Pille hat eine getoente Flaeche, dadurch faellt der
+   Kontrast von --dim auf 4,1 und damit unter AA. */
+.pill .rg{font-family:var(--font-mono);font-size:10.5px;color:var(--sec);font-variant-numeric:tabular-nums}
+.pill.gold{border-color:color-mix(in srgb,var(--amber) 32%,transparent);background:color-mix(in srgb,var(--amber) 8%,transparent)}
+.pill.gold .pd{background:var(--amber)} .pill.gold .nm,.pill.gold .av{color:var(--amber)}
+.pill.cyan{border-color:color-mix(in srgb,var(--cyan) 32%,transparent);background:color-mix(in srgb,var(--cyan) 8%,transparent)}
+.pill.cyan .pd{background:var(--cyan)} .pill.cyan .nm,.pill.cyan .av{color:var(--cyan)}
+.capt{font-size:11px;color:var(--dim);margin-top:9px;line-height:1.5}
+svg.viz{width:100%;display:block;overflow:visible}
+/* Grid-CI = iOS-App (EquineChartCI): dezent WEISS (Tufte), NICHT cyan, NICHT laut */
+svg.viz .grid-major{stroke:#fff;stroke-opacity:.16;stroke-width:.9}
+svg.viz .grid-minor{stroke:#fff;stroke-opacity:.08;stroke-width:.6}
+svg.viz .axis{stroke:#fff;stroke-opacity:.18;stroke-width:1;fill:none}
+svg.viz .tick{stroke:#fff;stroke-opacity:.5;stroke-width:.9}
+svg.viz text{fill:var(--sec);font-size:9px;font-family:var(--font-mono)}
+svg.viz .label-axis{fill:var(--sec);font-size:9.5px;letter-spacing:.1em;font-family:var(--font-ui);font-weight:600}
+svg.viz .label-unit{fill:var(--dim);font-weight:400}
+/* Interaktion — 1:1 aus dem Cockpit: Fadenkreuz + Fokuspunkt + Tooltip.
+   touch-action:pan-y laesst die Seite vertikal weiterscrollen, waehrend ein
+   waagerechtes Wischen ueber dem Diagramm die Werte abtastet. */
+.viz-hov{position:relative;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none;touch-action:pan-y}
+/* Fadenkreuz und Fokuspunkte gleiten, statt zu springen. cx/cy/x1/x2 sind in
+   SVG2 animierbare CSS-Eigenschaften; wo nicht unterstuetzt, schnappt es
+   einfach — kein Schaden. */
+.viz-hov .hov-cross{stroke:var(--cyan);stroke-width:1;stroke-dasharray:3 3;opacity:0;pointer-events:none;
+  transition:opacity .12s ease,x1 .07s linear,x2 .07s linear,y1 .07s linear,y2 .07s linear}
+.viz-hov .hov-cross.on{opacity:.5}
+.viz-hov .hov-focus{fill:var(--cyan);stroke:var(--void);stroke-width:2.5;opacity:0;pointer-events:none;
+  filter:drop-shadow(0 0 5px var(--cyan));transition:opacity .12s ease,cx .07s linear,cy .07s linear}
+.viz-hov .hov-focus2{fill:var(--amber);filter:drop-shadow(0 0 5px var(--amber))}
+/* Im Puls+HRV-Bild liegt der erste Punkt auf der GOLDENEN Kurve und der
+   zweite auf der cyanen — die Standardfarben waeren hier vertauscht. */
+.viz-hov[data-mode="vitals"] .hov-focus{fill:var(--amber);filter:drop-shadow(0 0 5px var(--amber))}
+.viz-hov[data-mode="vitals"] .hov-focus2{fill:var(--cyan);filter:drop-shadow(0 0 5px var(--cyan))}
+.viz-hov .hov-focus.on{opacity:1}
+/* Der Ablesekasten haengt NICHT am Datenpunkt: er sitzt fest oben und folgt
+   nur waagerecht. Sonst tanzt er bei jedem Schlag mit der Kurve auf und ab.
+   Feste Mindestbreite + Tabellenziffern, damit die Breite nicht flackert. */
+.viz-hov .hov-tip{position:absolute;left:0;top:0;pointer-events:none;
+  background:var(--elev-2);border:1px solid var(--strong);border-radius:9px;padding:7px 11px;text-align:left;
+  opacity:0;white-space:nowrap;z-index:4;box-shadow:0 8px 24px -8px rgba(0,0,0,.7);
+  min-width:150px;font-variant-numeric:tabular-nums;font-feature-settings:'tnum' 1;
+  will-change:transform;transition:opacity .12s ease,transform .07s linear}
+.viz-hov .hov-tip.on{opacity:1}
+/* festgesteckt: sichtbar anderer Zustand, damit klar ist warum er stehen bleibt */
+.viz-hov .hov-tip.pin{border-color:var(--cyan-deep);box-shadow:0 8px 24px -8px rgba(0,0,0,.7),0 0 0 1px var(--glow-3)}
+.viz-hov .hov-tip.pin::after{content:'ANGEHEFTET · NOCHMAL TIPPEN';display:block;margin-top:5px;
+  font-family:var(--font-mono);font-size:8px;letter-spacing:.14em;color:var(--cyan-deep)}
+.viz-hov .hov-tip .tt-h{font-size:10px;color:var(--dim);letter-spacing:.04em;margin-bottom:3px}
+.viz-hov .hov-tip .tt-v{font-family:var(--font-mono);font-size:15px;font-weight:600;letter-spacing:-.02em}
+.viz-hov .hov-tip .tt-s{font-family:var(--font-mono);font-size:12px;font-weight:600;margin-top:1px}
+@media (prefers-reduced-motion:reduce){
+  .viz-hov .hov-cross,.viz-hov .hov-focus,.viz-hov .hov-tip{transition:opacity .12s ease}
+}
+/* Sprachumschalter: klein, oben rechts, nie im Weg */
+.langsw{position:fixed;top:calc(10px + env(safe-area-inset-top,0));right:12px;z-index:40;display:flex;
+  border:1px solid var(--border);border-radius:999px;overflow:hidden;background:rgba(16,16,19,.72);backdrop-filter:blur(8px)}
+.langsw button{font-family:var(--font-mono);font-size:10.5px;letter-spacing:.12em;padding:8px 11px;min-height:34px;
+  color:var(--dim);border:0;background:none;cursor:pointer;transition:color .15s,background .15s}
+.langsw button:hover{color:var(--text)}
+.langsw b{color:var(--void);background:var(--cyan);font-weight:700}
+.langsw b,.langsw span{display:inline-block;padding:8px 11px;font-family:var(--font-mono);font-size:10.5px;letter-spacing:.12em}
+.langsw span{color:var(--dim)}
+.hovhint{font-family:var(--font-mono);font-size:9.5px;color:var(--dim);letter-spacing:.12em;text-transform:uppercase;margin-top:5px;text-align:right}
+
+/* ── Einzeichnen: die Kurve schreibt sich, wie ein Schreiber sie zieht.
+   Kritisch gedaempft, kein Overshoot (Marken-CI Motion). ───────────────── */
+@keyframes drawin{to{stroke-dashoffset:0}}
+svg.viz path.draw{stroke-dasharray:1;stroke-dashoffset:1;animation:drawin 1.15s cubic-bezier(.22,.61,.36,1) forwards}
+svg.viz path.draw.d2{animation-delay:.16s}
+@media (prefers-reduced-motion:reduce){ svg.viz path.draw{animation:none;stroke-dashoffset:0} }
+/* Eckmarken am Plotrahmen — die Blende eines Messgeraets, nicht Deko */
+svg.viz .bezel{stroke:var(--cyan);stroke-opacity:.55;stroke-width:1.1;stroke-linecap:square}
+
+/* ── Instrument-Leiste: harte technische Fakten der Erfassung ─────────── */
+.instr{display:flex;flex-wrap:wrap;gap:0 var(--s4);align-items:baseline;
+  font-family:var(--font-mono);font-size:9.5px;letter-spacing:.13em;text-transform:uppercase;
+  color:var(--faint);border-top:1px solid var(--border);border-bottom:1px solid var(--border);
+  padding:9px 2px;margin-top:var(--s3)}
+.instr span{white-space:nowrap}
+.instr b{color:var(--sec);font-weight:600;letter-spacing:.08em}
+
+/* ── Vollbild ─────────────────────────────────────────────────────────── */
+.chart-wrap{position:relative}
+.chart-zoombtn::after{content:'';position:absolute;inset:-7px}
+.chart-zoombtn{position:absolute;top:9px;right:9px;z-index:3;width:30px;height:30px;border-radius:var(--r-s);
+  display:flex;align-items:center;justify-content:center;background:rgba(22,22,26,.72);
+  border:1px solid var(--border-sub);color:var(--sec);cursor:zoom-in;backdrop-filter:blur(6px);
+  transition:color .15s,border-color .15s,background .15s}
+.chart-zoombtn:hover{color:var(--cyan-light);border-color:var(--cyan-deep);background:var(--glow-3)}
+.chart-zoombtn svg{width:15px;height:15px}
+#chartZoom{position:fixed;inset:0;z-index:300;background:rgba(9,9,11,.985);backdrop-filter:blur(14px);
+  display:none;flex-direction:column;
+  padding:calc(12px + env(safe-area-inset-top,0)) 14px calc(14px + env(safe-area-inset-bottom,0))}
+#chartZoom.on{display:flex;animation:zfade .25s ease}
+@keyframes zfade{from{opacity:0}to{opacity:1}}
+#chartZoom .zhead{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px;flex-shrink:0}
+#chartZoom .ztitle{font-family:var(--font-brand);font-weight:600;font-size:17px;color:var(--text)}
+#chartZoom .zhint{font-family:var(--font-mono);font-size:10px;color:var(--dim);margin-top:3px;letter-spacing:.1em;text-transform:uppercase}
+#chartZoom .zclose{width:42px;height:42px;border-radius:12px;background:var(--elev);border:1px solid var(--border-sub);
+  color:var(--sec);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+#chartZoom .zclose:hover{color:var(--text);border-color:var(--strong)}
+#chartZoom .zclose svg{width:20px;height:20px}
+#chartZoom .zbody{flex:1;overflow:auto;-webkit-overflow-scrolling:touch;border:1px solid var(--border);
+  border-radius:var(--r-m);background:linear-gradient(160deg,rgba(23,23,27,.6),rgba(11,11,13,.5));
+  display:flex;align-items:center;justify-content:center;padding:10px}
+#chartZoom .zbody .viz-hov{width:100%}
+#chartZoom .zbody.square .viz-hov{max-width:min(94vw,78vh)}
+#chartZoom .zbody svg{width:100%;height:auto;display:block}
+/* Gezoomter Zustand: die Zeichnung wird BREITER als der Rahmen und laesst sich
+   waagerecht schieben. touch-action:pan-x gibt das Schieben dem Browser, die
+   Zwei-Finger-Geste behalten wir. */
+#chartZoom .zbody.zoomed{display:block;align-items:stretch;justify-content:flex-start;touch-action:pan-x;overflow-y:hidden}
+#chartZoom .zbody.zoomed .viz-hov{width:auto}
+#chartZoom .zbody.zoomed svg{width:auto;max-width:none}
+/* Klebende Achsenleisten: liegen ueber dem Scrollbereich und wandern nicht
+   mit. Ohne sie waere gezoomt kein Wert mehr ablesbar. */
+#chartZoom .zwrap{position:relative;flex:1;min-height:0;display:flex}
+.zaxis{position:absolute;top:0;bottom:0;pointer-events:none;z-index:3;display:none}
+#chartZoom .zbody.zoomed ~ .zaxis{display:block}
+.zaxis.l{left:11px} .zaxis.r{right:11px}
+.zaxis svg{height:100%;width:auto;display:block}
+.zbar{display:flex;align-items:center;gap:var(--s2);margin-bottom:var(--s2);flex-shrink:0;flex-wrap:wrap}
+.zbar button{min-width:44px;min-height:38px;padding:0 13px;border-radius:var(--r-s);
+  border:1px solid var(--border-sub);background:var(--elev);color:var(--sec);
+  font-family:var(--font-mono);font-size:13px;font-weight:700;transition:border-color .15s,color .15s}
+.zbar button:hover{border-color:var(--cyan-deep);color:var(--cyan-light)}
+.zbar button:disabled{opacity:.35;cursor:not-allowed}
+.zbar .zlvl{font-family:var(--font-mono);font-size:11px;letter-spacing:.12em;color:var(--dim);
+  text-transform:uppercase;margin-left:var(--s2)}
+
+/* ── ⓘ — erklaert WAS gezeigt wird (nie, was es bedeutet) ─────────────── */
+.info-i{position:relative;width:20px;height:20px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;
+  color:var(--dim);border:1px solid var(--border-sub);background:var(--bg);flex-shrink:0;cursor:pointer;padding:0;margin-left:7px}
+/* Trefferflaeche auf 44px erweitern, ohne das Zeichen groesser zu machen —
+   ein 20px-Ziel ist am Daumen im Stall nicht sicher zu treffen. */
+.info-i::after{content:'';position:absolute;inset:-12px}
+.info-i svg{width:12px;height:12px}
+.info-i:hover{color:var(--cyan-light);border-color:var(--cyan-deep);background:var(--cyan-faint)}
+#infoPop{position:fixed;inset:0;z-index:320;background:rgba(9,9,11,.72);backdrop-filter:blur(8px);
+  display:none;align-items:center;justify-content:center;padding:var(--s4)}
+#infoPop.on{display:flex;animation:zfade .2s ease}
+#infoPop .ip{max-width:460px;width:100%;background:var(--elev);border:1px solid var(--border-sub);
+  border-radius:var(--r-l);box-shadow:0 40px 110px -30px rgba(0,0,0,.95);text-align:left;overflow:hidden}
+#infoPop .ip-h{display:flex;align-items:center;gap:10px;padding:18px 20px 12px;border-bottom:1px solid var(--border)}
+#infoPop .ip-h h3{font-family:var(--font-brand);font-size:18px;font-weight:600;color:var(--text)}
+#infoPop .ip-b{padding:16px 20px;display:flex;flex-direction:column;gap:12px}
+#infoPop .ip-r{display:grid;grid-template-columns:92px 1fr;gap:12px;font-size:13.5px;line-height:1.55}
+#infoPop .ip-r>b{font-family:var(--font-mono);font-size:9.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--dim);font-weight:700;padding-top:3px}
+#infoPop .ip-r>span{color:var(--sec)}
+#infoPop .ip-f{padding:0 20px 18px;display:flex;justify-content:flex-end}
+#infoPop .ip-f .btn{width:auto;padding:9px 18px;font-size:13px}
+/* Beleg-Reihe: Poincaré neben dem Messprotokoll.
+   φ-Split 1.618 : 1 — das BILD bekommt den goldenen Anteil, nicht die Liste.
+   Die Punktwolke ist das eindrucksvollste Stueck der Seite; sie klein zu
+   halten waere die Verschwendung der besten Flaeche. */
+.belegrow{display:grid;grid-template-columns:1fr;gap:var(--s2);margin-top:var(--s2)}
+@media (min-width:900px){ .belegrow{grid-template-columns:minmax(0,1.618fr) minmax(0,1fr);align-items:start} }
+/* Das Protokoll bleibt oben stehen statt sich auf Plothoehe zu strecken */
+.belegrow .next{position:sticky;top:var(--s3)}
+.belegrow .next{margin-top:0}
+
+/* ── Beleg-Kopf ────────────────────────────────────────────────────────── */
+.beleg-head{text-align:left;border-bottom:1px solid var(--border);padding-bottom:var(--s3);margin-bottom:var(--s3);
+  display:flex;justify-content:space-between;align-items:flex-end;gap:var(--s3);flex-wrap:wrap}
+.beleg-head h1{margin-bottom:2px}
+.beleg-head .meta{font-family:var(--font-mono);font-size:11px;color:var(--dim);letter-spacing:.06em;text-align:right}
+.beleg-head .meta b{display:block;color:var(--sec);font-weight:600}
+
+/* ── Was die Praxis daraus liest (die IP-Grenze als Verkaufsfläche) ────── */
+.next{margin-top:var(--s3);border:1px solid var(--border);border-radius:var(--r-m);
+  background:linear-gradient(160deg,rgba(62,207,178,.05),rgba(22,22,26,.35));text-align:left;overflow:hidden}
+.next-h{padding:var(--s3) var(--s3) var(--s2)}
+.next-h p{font-size:12.5px;color:var(--sec);line-height:1.55;max-width:62ch}
+/* Messprotokoll-Zeilen: Begriff links, Wert rechts in Monospace — die
+   Lesart eines Geraeteprotokolls, nicht die einer Verkaufsliste. */
+.proto-row{display:flex;align-items:baseline;justify-content:space-between;gap:var(--s3);
+  padding:13px var(--s3);min-height:46px;border-top:1px solid var(--border)}
+.proto-row span{font-size:12.5px;color:var(--sec)}
+.proto-row b{font-family:var(--font-mono);font-size:13px;font-weight:600;color:var(--text);
+  font-variant-numeric:tabular-nums;letter-spacing:-.01em;white-space:nowrap}
+.qbar{height:5px;background:var(--bg);border-top:1px solid var(--border);border-bottom:1px solid var(--border);overflow:hidden}
+.qbar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--cyan-deep),var(--cyan));
+  transition:width .8s cubic-bezier(.22,.61,.36,1)}
+.qbar i.mid{background:linear-gradient(90deg,#a8762a,var(--amber))}
+.qbar i.bad{background:linear-gradient(90deg,#8c2f39,var(--red))}
+
+/* ── Signal / Status ───────────────────────────────────────────────────── */
+.qual{display:flex;align-items:center;gap:9px;font-size:10px;color:var(--sec);justify-content:center;
+  font-family:var(--font-mono);letter-spacing:.14em;text-transform:uppercase}
 .dot{width:8px;height:8px;border-radius:50%;background:var(--dim);flex:none}
 .dot.ok{background:var(--good);box-shadow:0 0 9px rgba(63,224,164,.6)}
 .dot.mid{background:var(--amber)} .dot.bad{background:var(--red)}
-.bar{height:8px;background:var(--bg);border:1px solid var(--border);border-radius:5px;overflow:hidden;margin-top:14px}
+.bar{height:6px;background:var(--bg);border:1px solid var(--border);border-radius:5px;overflow:hidden;margin:var(--s3) 0 0}
 .bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--cyan-deep),var(--cyan));transition:width .15s}
-.status{margin-top:16px;font-size:14px;color:var(--sec);min-height:22px}
+.status{margin-top:var(--s3);font-size:13.5px;color:var(--sec);min-height:20px}
 .done{color:var(--good);font-weight:600}
-.err{color:var(--red);font-size:13px;margin-top:12px;min-height:0}
-.hint{font-size:11.5px;color:var(--dim);margin-top:14px;line-height:1.5}
-.privacy{margin-top:20px;font-size:11px;color:var(--dim);display:flex;align-items:center;justify-content:center;gap:8px}
-.privacy svg{width:14px;height:14px;color:var(--good);flex:none}
-.hidden{display:none}
-.ios{text-align:left;font-size:13.5px;color:var(--sec)}
-.ios b{color:var(--text)}
-.ios ul{margin:12px 0 0 18px} .ios li{margin-bottom:7px}
-a{color:var(--cyan);text-decoration:none} a:hover{text-decoration:underline}
+.err{color:var(--red);font-size:12.5px;margin-top:var(--s3)}
+.hint{font-size:11.5px;color:var(--dim);margin-top:var(--s3);line-height:1.55}
+.privacy{margin-top:var(--s4);font-size:10.5px;color:var(--dim);display:flex;align-items:center;justify-content:center;gap:8px;
+  font-family:var(--font-mono);letter-spacing:.08em}
+.privacy svg{width:13px;height:13px;color:var(--cyan-deep);flex:none}
+/* Drei Wege statt einer Fehlermeldung */
+.ways{display:flex;flex-direction:column;gap:var(--s2);text-align:left;margin-bottom:var(--s4)}
+.way{display:flex;align-items:center;gap:var(--s3);padding:13px 15px;border-radius:var(--r-m);
+  background:var(--bg);border:1px solid var(--border);box-shadow:var(--lift)}
+.way .wi{width:38px;height:38px;flex:none;border-radius:11px;display:flex;align-items:center;justify-content:center;
+  background:color-mix(in srgb,var(--cyan) 9%,transparent);border:1px solid color-mix(in srgb,var(--cyan) 26%,transparent);color:var(--cyan)}
+.way .wi.gold{background:color-mix(in srgb,var(--amber) 9%,transparent);
+  border-color:color-mix(in srgb,var(--amber) 26%,transparent);color:var(--amber)}
+.way .wi svg{width:19px;height:19px}
+.way .wt{min-width:0}
+.way .wt b{display:block;font-size:14px;font-weight:600;color:var(--text)}
+.way .wt span{font-size:12px;color:var(--dim);line-height:1.45}
+.subactions a.btn{text-decoration:none}
+
+/* ── Weiterempfehlen (nur im Fertig-Moment) ────────────────────────────── */
+.share{margin-top:var(--s4);padding-top:var(--s3);border-top:1px solid var(--border)}
+/* Weiterempfehlen ist der einzige Wachstums-Hebel auf dieser Seite — er darf
+   nicht wie eine Fussnote aussehen. Gold, weil es die einzige Stelle ist, die
+   NICHT Messtechnik ist: sie hebt sich bewusst vom Cyan der Daten ab. */
+.share-h{display:flex;align-items:center;justify-content:center;gap:8px;font-family:var(--font-mono);font-size:10.5px;
+  letter-spacing:.2em;color:var(--amber);text-transform:uppercase;margin-bottom:var(--s3);opacity:.85}
+.share-h svg{width:15px;height:15px;color:var(--amber);flex:none}
+.share-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:var(--s3)}
+.share-row .btn{margin-top:0;min-height:56px;font-size:14.5px;font-weight:600;padding:17px 18px;gap:13px;border-radius:var(--r-m);
+  color:var(--text);border:1px solid color-mix(in srgb,var(--amber) 34%,transparent);
+  background:color-mix(in srgb,var(--amber) 7%,transparent);
+  transition:border-color .16s,background .16s,transform .16s cubic-bezier(.2,.8,.2,1)}
+.share-row .btn:hover{border-color:var(--amber);background:color-mix(in srgb,var(--amber) 14%,transparent);
+  color:#fff;transform:translateY(-2px)}
+.share-row .btn:active{transform:translateY(0) scale(.99)}
+.share-row .btn svg{width:27px;height:27px;color:var(--amber);flex:none;
+  filter:drop-shadow(0 0 11px color-mix(in srgb,var(--amber) 45%,transparent))}
+.share-note{font-size:11.5px;color:var(--amber);min-height:16px;margin-top:11px;font-family:var(--font-mono);letter-spacing:.06em}
+
 @media (max-width:560px){
   body{padding:0}
-  .card{max-width:100%;min-height:100svh;border-radius:0;border-left:0;border-right:0;display:flex;flex-direction:column;justify-content:center}
+  .card{max-width:100%;min-height:100svh;border-radius:0;border-left:0;border-right:0;
+    display:flex;flex-direction:column;justify-content:center;
+    padding-top:calc(var(--s4) + env(safe-area-inset-top,0));
+    padding-bottom:calc(var(--s4) + env(safe-area-inset-bottom,0))}
+  .card.beleg{justify-content:flex-start}
   .card::before{border-radius:0}
+  .beleg-head{flex-direction:column;align-items:flex-start}
+  .beleg-head .meta{text-align:left}
 }
-@media (min-width:1100px){ .grid{gap:16px} }
-@media (prefers-reduced-motion:reduce){ .heart.beat{animation:none} }
-.share{margin-top:clamp(18px,2.2vw,28px);padding-top:clamp(14px,1.8vw,22px);border-top:1px solid var(--border)}
-.share-h{display:flex;align-items:center;justify-content:center;gap:7px;font-family:var(--font-mono);font-size:9.5px;letter-spacing:.2em;color:var(--sec);text-transform:uppercase;margin-bottom:12px}
-.share-h svg{width:12px;height:12px;color:var(--cyan);flex:none}
-.share-row .btn svg{width:17px;height:17px;color:var(--cyan);flex:none}
-.share-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:9px}
-.share-row .btn{margin-top:0;font-size:clamp(12.5px,1vw,14px);padding:clamp(11px,1.2vw,14px)}
-.share-note{font-size:11.5px;color:var(--cyan);min-height:16px;margin-top:9px;font-family:var(--font-mono);letter-spacing:.06em}
+@media (max-width:640px){
+  /* Kopfzeile darf umbrechen statt Woerter zu zerlegen */
+  .ct{flex-wrap:wrap}
+  .ct b{letter-spacing:.1em;font-size:10px}
+  .ct i{font-size:9.5px}
+  .tile span{letter-spacing:.1em}
+}
+@media (prefers-reduced-motion:reduce){ .heart.beat{animation:none} .card{transition:none} }
+
+/* ── DRUCK ─────────────────────────────────────────────────────────────
+   Der Beleg soll sich als Blatt in die Stallmappe legen oder in der Praxis
+   auf den Tisch legen lassen. Statt eines zweiten Druck-DOMs wird die
+   bestehende Seite auf hell umgeschaltet: Farbtokens kippen, Bedien-
+   elemente verschwinden, die Kurven behalten ihre Marken-Farben.        */
+@media print{
+  @page{margin:14mm}
+  :root{
+    --void:#fff; --bg:#fff; --surface:#fff; --elev:#fff; --elev-2:#fff;
+    --border:#D5DBDE; --border-sub:#C3CBD0; --strong:#9AA5AB;
+    --text:#15181A; --sec:#41494E; --dim:#5C666C; --faint:#8A9399;
+    --cyan-deep:#0F6E5C;
+  }
+  html,body{background:#fff!important;color:#15181A!important;min-height:0}
+  *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .bg-atmosphere,.bg-flower,.bg-vignette{display:none!important}
+  .card{max-width:100%!important;border:0!important;box-shadow:none!important;
+    background:#fff!important;padding:0!important;backdrop-filter:none!important}
+  .card::before{display:none}
+  /* Bedienelemente tragen auf Papier nichts bei */
+  .chart-zoombtn,.info-i,.hovhint,.share,.subactions,.btn,.bar,.privacy,
+  #chartZoom,#infoPop,.viz-hov .hov-tip,.viz-hov .hov-cross,.viz-hov .hov-focus{display:none!important}
+  img.logo{filter:none}
+  .wm{color:#15181A} .tag{color:#0F6E5C}
+  .tile,.chart-wrap,.next{background:#fff!important;box-shadow:none!important;border:1px solid #D5DBDE!important}
+  .tile:hover{transform:none}
+  /* Diagramme auf hellem Grund lesbar: Substrat weiss, Raster dunkel,
+     Kurven behalten Cyan und Gold. */
+  svg.viz .plotbg{fill:#FBFCFC}
+  svg.viz .grid-major{stroke:#8A9399;stroke-opacity:.55}
+  svg.viz .grid-minor{stroke:#C3CBD0;stroke-opacity:.55}
+  svg.viz .axis{stroke:#5C666C;stroke-opacity:.8}
+  svg.viz .tick{stroke:#41494E;stroke-opacity:.9}
+  svg.viz text{fill:#41494E}
+  svg.viz .label-axis{fill:#15181A} svg.viz .label-unit{fill:#5C666C}
+  svg.viz .bezel{stroke:#0F6E5C;stroke-opacity:.8}
+  svg.viz path.draw{stroke-dashoffset:0!important;animation:none!important}
+  .qbar{border-color:#C3CBD0} .qbar i{background:#0F6E5C}
+  /* Umbrüche: kein Diagramm mitten durchschneiden */
+  .chart-wrap,.next,.belegrow{break-inside:avoid;page-break-inside:avoid}
+  .beleg-head{break-after:avoid}
+  .belegrow{grid-template-columns:minmax(0,1.618fr) minmax(0,1fr)!important}
+  .hint{color:#5C666C}
+}
 </style>
+<div class="langsw"><button id="langBtn" aria-label="Sprache wechseln / Switch language"><b>DE</b><span>EN</span></button></div>
+<div class="bg-atmosphere"></div>
+<div class="bg-flower"></div>
+<div class="bg-vignette"></div>
 <div class="card">
-  <img class="logo" src="assets/carlon-logo-soft-512.png" alt="CARLON">
-  <div class="wordmark">CARLON<small>Equine Heart Science</small></div>
+  <!-- Marken-Lockup wie der App-Startbildschirm: der leuchtende Pferdekopf
+       gross, darunter die weit getrackte Wortmarke. Im Beleg-Zustand faellt
+       er auf ein Briefkopf-Format zurueck — dort ist die Messung die Marke. -->
+  <!-- Marken-Lockup 1:1 aus dem Praxis-Cockpit (app/index.html .brand):
+       Wortmarke und Unterzeile stehen als eigener Block neben dem Zeichen,
+       damit beide Zeilen gemeinsam gegen das Logo zentriert sind. -->
+  <div class="brand">
+    <img class="logo" src="assets/carlon-logo-soft-512.png" alt="">
+    <div class="lockup">
+      <div class="wm">CARLON EQUINE</div>
+      <div class="tag" data-i18n="brandTag">Equine Heart Science</div>
+    </div>
+  </div>
 
   <!-- ── 0) Gerät kann kein Web Bluetooth (iPhone/iPad) ── -->
+  <!-- Kein Web-Bluetooth (iPhone/iPad). Kein Mangel, sondern eine Weiche:
+       drei benannte Wege statt einer Fehlermeldung. Der wichtigste Knopf
+       schickt dem Nutzer seinen EIGENEN Sitzungslink auf ein Geraet, das
+       messen kann — sonst muss er ihn abtippen. -->
   <div id="vUnsupported" class="hidden">
-    <h1>Messung per Browser</h1>
-    <p class="sub">Dieses Gerät kann keine Bluetooth-Verbindung im Browser aufbauen.</p>
-    <div class="ios">
-      <p>Auf <b>iPhone und iPad</b> lässt Apple Bluetooth im Browser grundsätzlich nicht zu — das gilt für Safari und ebenso für Chrome auf iOS.</p>
-      <ul>
-        <li><b>Android-Handy oder Tablet mit Chrome:</b> öffne diesen Link dort, dann funktioniert die Messung sofort.</li>
-        <li><b>Computer mit Chrome oder Edge:</b> funktioniert ebenfalls.</li>
-        <li><b>iPhone-Nutzer:</b> für iOS gibt es die CARLON-App — sie misst nativ und kann deutlich mehr als diese Seite.</li>
-      </ul>
+    <span class="eyebrow" data-i18n="unsupEyebrow">Dieses Gerät misst nicht direkt</span>
+    <h1 data-i18n="unsupH1">So misst du trotzdem</h1>
+    <p class="sub" data-i18n="unsupSub">Apple lässt Bluetooth im Browser grundsätzlich nicht zu — auf iPhone und iPad gilt das für Safari genauso wie für Chrome. Drei Wege führen trotzdem zum Ziel.</p>
+
+    <div class="ways">
+      <div class="way">
+        <div class="wi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="2" width="12" height="20" rx="2.5"/><path d="M10.5 18.5h3"/></svg></div>
+        <div class="wt"><b data-i18n="wayAndroidT">Android-Handy oder Tablet</b><span data-i18n="wayAndroidS">Diesen Link dort in Chrome öffnen — die Messung startet sofort.</span></div>
+      </div>
+      <div class="way">
+        <div class="wi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="12" rx="2"/><path d="M2 20h20"/></svg></div>
+        <div class="wt"><b data-i18n="wayDesktopT">Computer mit Chrome oder Edge</b><span data-i18n="wayDesktopS">Funktioniert genauso, solange der Gurt in Reichweite ist.</span></div>
+      </div>
+      <div class="way">
+        <div class="wi gold"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M16.4 12.7c0-2.2 1.8-3.3 1.9-3.4-1-1.5-2.6-1.7-3.2-1.7-1.4-.1-2.7.8-3.3.8-.7 0-1.7-.8-2.8-.8-1.5 0-2.8.8-3.6 2.1-1.5 2.6-.4 6.5 1.1 8.6.7 1 1.6 2.2 2.7 2.1 1.1 0 1.5-.7 2.8-.7s1.7.7 2.8.7c1.2 0 1.9-1 2.6-2.1.8-1.2 1.2-2.4 1.2-2.4s-2.2-.9-2.2-3.2zM14.3 5.9c.6-.7 1-1.7.9-2.7-.9 0-2 .6-2.6 1.3-.6.6-1.1 1.7-.9 2.6 1 .1 2-.5 2.6-1.2z"/></svg></div>
+        <div class="wt"><b data-i18n="wayIosT">iPhone: die CARLON-App</b><span data-i18n="wayIosS">Misst nativ und kann deutlich mehr als diese Seite.</span></div>
+      </div>
     </div>
-    <div class="hint">Du hast bereits eine Aufnahme als Datei? Dann kannst du sie direkt
-      <a href="senden.html">an deinen Tierarzt senden</a>.</div>
+
+    <button class="btn" id="btnSendLink">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 007.5.5l3-3a5 5 0 00-7-7l-1.7 1.7"/><path d="M14 11a5 5 0 00-7.5-.5l-3 3a5 5 0 007 7l1.7-1.7"/></svg>
+      <span id="btnSendLinkTxt">Link an ein messendes Gerät senden</span>
+    </button>
+    <div class="subactions"><a class="btn ghost" href="senden.html" data-i18n="sendFile">Aufnahme als Datei senden</a></div>
+    <div class="share-note" id="linkNote" style="color:var(--cyan)"></div>
+    <div class="hint" data-i18n="unsupHint">Du hast schon eine Aufnahme als Datei? Dann kannst du sie direkt an deine Praxis übergeben — dafür brauchst du kein Bluetooth.</div>
   </div>
 
   <!-- ── 1) Bereit ── -->
   <div id="vReady" class="hidden">
-    <h1>Messung für den Tierarzt</h1>
-    <p class="sub">Verbinde den Polar-H10-Gurt deines Pferds. Die Aufnahme geht direkt an deine Tierärztin oder deinen Tierarzt — ohne Umweg über einen Server.</p>
+    <h1 data-i18n="readyH1">Messung für den Tierarzt</h1>
+    <p class="sub" data-i18n="readySub">Verbinde den Polar-H10-Gurt deines Pferds. Die Aufnahme geht direkt an deine Tierärztin oder deinen Tierarzt — ohne Umweg über einen Server.</p>
     <div class="room" id="roomLine"></div>
     <div class="field">
-      <label for="horse">Name des Pferds</label>
-      <input id="horse" type="text" placeholder="z. B. Mistral" autocomplete="off" spellcheck="false">
+      <label for="horse" data-i18n="horseLabel">Name des Pferds</label>
+      <input id="horse" type="text" placeholder="z. B. Mistral" data-i18n-ph="horsePh" autocomplete="off" spellcheck="false">
     </div>
     <button class="btn" id="btnConnect">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 7l10 10M17 7L7 17M12 2v20"/></svg>
-      Polar H10 verbinden
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"><path d="M6.5 8.5L17.5 15.5L12 20V4l5.5 4.5L6.5 15.5"/></svg>
+      <span id="btnConnectTxt">Polar H10 verbinden</span>
     </button>
-    <div class="hint">Der Gurt muss angelegt und die Elektrodenfläche <b>gut angefeuchtet</b> sein — sonst bricht das Signal ab. Halte das Gerät während der Messung in der Nähe und lass den Bildschirm an.</div>
+    <div class="hint" data-i18n="readyHint">Der Gurt muss angelegt und die Elektrodenfläche <b>gut angefeuchtet</b> sein — sonst bricht das Signal ab. Halte das Gerät während der Messung in der Nähe und lass den Bildschirm an.</div>
   </div>
 
   <!-- ── 2) Messung läuft ── -->
   <div id="vLive" class="hidden">
-    <h1 id="liveTitle">Messung läuft</h1>
-    <p class="sub" id="liveSub">Ruhig stehen lassen. Je ruhiger das Pferd, desto aussagekräftiger die Aufnahme.</p>
-    <div class="pulse"><svg class="heart" id="heart" viewBox="0 0 24 24" fill="currentColor"><path d="M12 21s-8-4.6-8-10.4A4.6 4.6 0 0112 7a4.6 4.6 0 018 3.6C20 16.4 12 21 12 21z"/></svg><span id="hr">–</span><small>bpm</small></div>
-    <svg class="spark" id="spark" viewBox="0 0 320 104" aria-hidden="true"></svg>
-    <div class="grid">
-      <div class="tile"><b id="beats">0</b><span>HERZSCHLÄGE</span></div>
-      <div class="tile"><b id="dur">0:00</b><span>DAUER</span></div>
-      <div class="tile"><b id="batt">–</b><span>GURT-AKKU</span></div>
+    <span class="eyebrow" data-i18n="liveEyebrow">Aufnahme läuft</span>
+    <h1 id="liveTitle" data-i18n="liveH1">Messung läuft</h1>
+    <p class="sub" id="liveSub" data-i18n="liveSub">Ruhig stehen lassen. Je ruhiger das Pferd, desto aussagekräftiger die Aufnahme.</p>
+
+    <div class="pulse"><svg class="heart" id="heart" viewBox="0 0 24 24" fill="currentColor"><path d="M12 21s-8-4.6-8-10.4A4.6 4.6 0 0112 7a4.6 4.6 0 018 3.6C20 16.4 12 21 12 21z"/></svg><span id="hr" aria-live="off">–</span><small>bpm</small></div>
+    <div class="pulsemeta"><span id="hrRangeLbl">Bisher</span> <b id="hrRange">–</b> <span id="hrRangeUnit">bpm</span></div>
+
+    <div class="chart-wrap">
+      <div class="ct">
+        <svg class="ic" style="color:var(--cyan)" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><path d="M3 12h2l1.5-5 2 10 2-8 1.5 6 1.5-3 1.5 4 1.5-6L18 12h3"/></svg>
+        <b id="ctLive" data-i18n-skip>Letzte Schläge<button class="info-i" data-info="rr" aria-label="Was zeigt dieses Diagramm?"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 16v-5M12 8h.01"/><circle cx="12" cy="12" r="9"/></svg></button></b><i id="liveN"></i>
+      </div>
+      <div id="spark" aria-hidden="true"></div>
     </div>
-    <div class="qual"><span class="dot" id="qdot"></span><span id="qtxt">Signal wird geprüft…</span></div>
-    <button class="btn stop" id="btnStop" style="margin-top:14px">Messung beenden</button>
-    <button class="btn ghost" id="btnRestart">Verwerfen und neu starten</button>
-    <div class="hint" id="liveHint">Empfehlung: mindestens <b>5 Minuten</b> ruhige Messung — kürzere Aufnahmen sind für den Verlauf oft zu wenig.</div>
+
+    <div class="grid">
+      <button class="tile" data-info="beats" aria-label="Herzschläge — erklären"><span data-i18n="tBeats">Herzschläge</span><b id="beats">0</b><em data-i18n="tBeatsSub">bisher erfasst</em></button>
+      <button class="tile neutral" data-info="dur" aria-label="Dauer — erklären"><span data-i18n="tDur">Dauer</span><b id="dur">0:00</b><em data-i18n="tDurSub">seit dem Start</em></button>
+      <button class="tile gold" data-info="batt"><span data-i18n="tBatt">Gurt-Akku</span><b id="batt">–</b><em data-i18n="tBattSub">Ladestand des Senders</em></button>
+    </div>
+
+    <!-- Beantwortet die Frage, die im Stall wirklich zaehlt: wann darf ich
+         aufhoeren? Ohne diese Anzeige raet der Besitzer — und bricht meistens
+         zu frueh ab. Die Empfehlung ist eine Aufnahme-Laenge, keine Aussage
+         ueber das Pferd. -->
+    <div class="next livepanel">
+      <div class="next-h">
+        <span class="eyebrow" style="margin-bottom:6px" data-i18n="progressH">Aufnahme-Fortschritt</span>
+        <p id="recTxt" aria-live="polite">Empfohlen sind mindestens fünf Minuten ruhige Messung.</p>
+      </div>
+      <div class="qbar"><i id="recFill"></i></div>
+      <div class="proto-row" style="cursor:default">
+        <span class="qual"><span class="dot" id="qdot"></span><span id="qtxt" aria-live="polite">Signal wird geprüft…</span></span>
+      </div>
+    </div>
+
+    <button class="btn stop" id="btnStop" data-i18n="stop">Messung beenden</button>
+    <div class="subactions"><button class="btn ghost" id="btnRestart" data-i18n="restart">Verwerfen und neu starten</button></div>
+    <div class="hint" id="liveHint" data-i18n="liveHint">Halte das Gerät in der Nähe und lass den Bildschirm an — schläft er ein, bricht die Bluetooth-Verbindung ab.</div>
   </div>
 
   <!-- ── 3) Fertig / Übergabe ── -->
+  <!-- ── 3) Fertig — der BELEG ───────────────────────────────────────────
+       Der wichtigste Bildschirm der Seite. Nach Minuten Messen muss hier das
+       Ergebnis stehen, nicht ein Formular. Gezeigt wird ausschliesslich die
+       Gestalt der Rohdaten (Tachogramm + Poincare = publizierte Lehrbuch-
+       Darstellungen). KEINE Einstufung, KEINE Referenz, KEINE Einfaerbung
+       nach Urteil — das ist die Leistung der Praxis und bleibt dort.        -->
   <div id="vDone" class="hidden">
-    <h1>Aufnahme fertig</h1>
-    <p class="sub" id="doneSub"></p>
-    <div class="grid">
-      <div class="tile"><b id="dBeats">0</b><span>HERZSCHLÄGE</span></div>
-      <div class="tile"><b id="dDur">0:00</b><span>DAUER</span></div>
-      <div class="tile"><b id="dHR">–</b><span>Ø PULS</span></div>
+    <div class="beleg-head">
+      <div>
+        <span class="eyebrow" data-i18n="doneEyebrow">Aufnahme abgeschlossen</span>
+        <h1 id="dName">Aufnahme</h1>
+      </div>
+      <div class="meta"><b id="dStamp">—</b><span id="dSensor">Polar H10</span></div>
     </div>
-    <div class="bar"><i id="pb"></i></div>
-    <div class="status" id="status"></div>
+
+    <!-- Die drei HRV-Pflichtfelder des Exports (Lehrbuch-Formeln, Task Force
+         1996) stehen sichtbar auf dem Beleg — als Zahl, nie als Urteil. -->
+    <div class="grid">
+      <button class="tile" data-info="beats" aria-label="Herzschläge — erklären"><span data-i18n="tBeatsDone">Herzschläge</span><b id="dBeats">0</b><em data-i18n="tBeatsDoneSub">erfasste Einzelschläge</em></button>
+      <button class="tile neutral" data-info="dur" aria-label="Dauer — erklären"><span data-i18n="tDurDone">Dauer</span><b id="dDur">0:00</b><em data-i18n="tDurDoneSub">Länge der Aufnahme</em></button>
+      <button class="tile gold" data-info="hr" aria-label="Durchschnittlicher Puls — erklären"><span data-i18n="tHr">Ø Puls</span><b id="dHR">–</b><em data-i18n="tHrSub">zeitgewichtetes Mittel</em></button>
+      <button class="tile" data-info="rmssd" aria-label="HRV RMSSD — erklären"><span data-i18n="tRmssd">RMSSD</span><b id="dRmssd">–</b><em data-i18n="tRmssdSub">Streuung von Schlag zu Schlag</em></button>
+      <button class="tile" data-info="sdnn" aria-label="HRV SDNN — erklären"><span data-i18n="tSdnn">SDNN</span><b id="dSdnn">–</b><em data-i18n="tSdnnSub">Streuung aller Abstände</em></button>
+    </div>
+
+    <!-- Bei zu wenigen Schlaegen gibt es nichts zu zeigen — dann bleibt dieser
+         ganze Block weg statt leere Rahmen zu praesentieren. -->
+    <div id="belegBody">
+    <!-- Die Kurve ist das Beweisstueck — sie bekommt die volle Breite. -->
+    <div class="chart-wrap">
+      <div class="ct">
+        <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"><path d="M2 12h3l2-7 4 14 3-9 2 2h6"/></svg>
+        <b id="ctVitals">Puls + HRV · Verlauf<button class="info-i" data-info="vitals" aria-label="Was zeigt dieses Diagramm?"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 16v-5M12 8h.01"/><circle cx="12" cy="12" r="9"/></svg></button></b>
+        <i id="vMeta"></i>
+      </div>
+      <button class="chart-zoombtn" data-zoom="vitals" aria-label="Vollbild"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg></button>
+      <div class="series">
+        <button class="pill gold" data-info="hr" aria-label="Puls-Reihe — erklären"><span class="pd"></span><span class="nm" id="pillPulseNm">Puls</span><span class="rg" id="pillHrRg"></span><span class="av" id="pillHr"></span></button>
+        <button class="pill cyan" data-info="rmssd" aria-label="HRV-Reihe — erklären"><span class="pd"></span><span class="nm" id="pillHrvNm">HRV</span><span class="rg" id="pillHvRg"></span><span class="av" id="pillHv"></span></button>
+      </div>
+      <div id="dVitals"></div>
+      <div class="capt" id="vitalsCap">Puls (Gold) und HRV (Cyan) über die gesamte Aufnahme. Die HRV ist ein gleitendes Fenster und reagiert auf Puls-Übergänge — sie zeigt die kurzfristige Dynamik, keinen ruhenden Einzelwert. <b style="color:var(--sec);font-weight:600">Tippen heftet den Wert an, Doppeltippen öffnet das Vollbild.</b></div>
+    </div>
+
+    <div class="chart-wrap" style="margin-top:var(--s2)">
+      <div class="ct">
+        <svg class="ic" style="color:var(--cyan)" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><path d="M3 12h2l1.5-5 2 10 2-8 1.5 6 1.5-3 1.5 4 1.5-6L18 12h3"/></svg>
+        <b id="ctRr">RR-Tachogramm<button class="info-i" data-info="rr" aria-label="Was zeigt dieses Diagramm?"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 16v-5M12 8h.01"/><circle cx="12" cy="12" r="9"/></svg></button></b><i id="dTachoN"></i></div>
+      <button class="chart-zoombtn" data-zoom="rr" aria-label="Vollbild"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg></button>
+      <div id="dTacho"></div>
+    </div>
+
+    <div class="chart-wrap" style="margin-top:var(--s2)">
+      <div class="ct">
+        <svg class="ic" style="color:#4DA6F2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><path d="M3 14c2.5 0 2.5-6 5-6s2.5 6 5 6 2.5-6 5-6 2.5 6 5 6"/></svg>
+        <b id="ctBreath">Atemkurve<button class="info-i" data-info="breath" aria-label="Was zeigt dieses Diagramm?"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 16v-5M12 8h.01"/><circle cx="12" cy="12" r="9"/></svg></button></b><i id="dBreathN"></i>
+      </div>
+      <button class="chart-zoombtn" data-zoom="breath" aria-label="Vollbild"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg></button>
+      <div id="dBreath"></div>
+      <div class="capt" id="breathCap"></div>
+    </div>
+
+    <!-- Rohform links, verschlossene Deutung rechts: die beiden gehoeren
+         nebeneinander, weil genau dazwischen die Praxis steht.             -->
+    <div class="belegrow">
+      <div class="chart-wrap">
+        <div class="ct">
+          <svg class="ic" style="color:var(--cyan)" viewBox="0 0 24 24" fill="currentColor"><circle cx="7" cy="17" r="1.5"/><circle cx="11" cy="13" r="1.5"/><circle cx="15" cy="10" r="1.5"/><circle cx="18" cy="6" r="1.5"/><circle cx="9" cy="12" r="1.5" opacity=".5"/><circle cx="14" cy="15" r="1.5" opacity=".5"/></svg>
+          <b id="ctPoin">Poincaré<button class="info-i" data-info="poin" aria-label="Was zeigt dieses Diagramm?"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 16v-5M12 8h.01"/><circle cx="12" cy="12" r="9"/></svg></button></b></div>
+        <button class="chart-zoombtn" data-zoom="poin" aria-label="Vollbild"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg></button>
+        <div id="dPoin"></div>
+      </div>
+
+    <!-- MESSPROTOKOLL statt Verkaufs-Teaser.
+         Der Besitzer kann hier nichts kaufen und nichts freischalten — ein
+         Schloss-Kasten waere also reine Reibung. Was er wirklich entscheiden
+         muss: reicht diese Aufnahme, oder nochmal messen? Genau das steht hier.
+         Alle Angaben betreffen die MESSUNG (Signal, Geraet, Dauer), nie das
+         Pferd — die Guardrail bleibt damit unberuehrt.                       -->
+    <div class="next">
+      <div class="next-h">
+        <span class="eyebrow" style="margin-bottom:6px" data-i18n="protoH">Messprotokoll</span>
+        <p id="protoVerdict"></p>
+      </div>
+      <div class="qbar"><i id="qfill"></i></div>
+      <button class="proto-row" data-info="qual"><span data-i18n="pQual">Signalgüte</span><b id="pQual">–</b></button>
+      <button class="proto-row" data-info="pairs"><span data-i18n="pPairs">Auswertbare Schlagpaare</span><b id="pPairs">–</b></button>
+      <button class="proto-row" data-info="dur"><span data-i18n="pDur">Aufnahmedauer</span><b id="pDur">–</b></button>
+      <button class="proto-row" data-info="sensor"><span data-i18n="pSensor">Sensor</span><b id="pSensor">–</b></button>
+      <button class="proto-row" data-info="res"><span data-i18n="pRes">Zeitauflösung</span><b data-i18n="pResV">1/1024 s · ≈1 ms</b></button>
+    </div>
+    </div>
+    </div>
+
+    <div class="bar hidden" id="barWrap"><i id="pb"></i></div>
+    <div class="status" id="status" role="status" aria-live="polite"></div>
+    <p class="sub" id="doneSub" style="margin-top:var(--s3)"></p>
     <button class="btn" id="btnSend">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/></svg>
-      An den Tierarzt senden
+      <span id="btnSendTxt">An die Praxis senden</span>
     </button>
-    <button class="btn ghost" id="btnSave">Als Datei speichern</button>
-    <button class="btn ghost" id="btnAgain">Neue Messung</button>
+    <div class="subactions">
+      <button class="btn ghost" id="btnSave" data-i18n="save">Als Datei speichern</button>
+      <button class="btn ghost hidden" id="btnAgain" data-i18n="again">Neue Messung</button>
+    </div>
+    <div class="err" id="err" role="alert"></div>
+
     <div class="share">
       <div class="share-h">
         <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 21s-8-4.6-8-10.4A4.6 4.6 0 0112 7a4.6 4.6 0 018 3.6C20 16.4 12 21 12 21z"/></svg>
-        Wenn es dir geholfen hat
+        <span id="shareHtxt">Wenn es dir geholfen hat</span>
       </div>
       <div class="share-row">
         <button class="btn ghost sh" id="shOwner">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M12 20.5s-7.2-4.2-7.2-9.4a4.2 4.2 0 017.2-2.9 4.2 4.2 0 017.2 2.9c0 5.2-7.2 9.4-7.2 9.4z"/><path d="M8.6 11.3h1.7l1 2.2 1.4-4 1 1.8h1.7"/></svg>
-          Pferdefreunden zeigen
+          <span id="shOwnerTxt">Pferdefreunden zeigen</span>
         </button>
         <button class="btn ghost sh" id="shVet">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M6 3v6a4 4 0 008 0V3"/><path d="M10 13v2a5 5 0 0010 0v-2"/><circle cx="20" cy="10.5" r="2.2"/></svg>
-          Deiner Praxis empfehlen
+          <span id="shVetTxt">Deiner Praxis empfehlen</span>
         </button>
       </div>
-      <div class="share-note" id="shNote"></div>
+      <div class="share-note" id="shNote" role="status" aria-live="polite"></div>
     </div>
-    </div>
-    <div class="err" id="err"></div>
-    <div class="hint">Die Deutung gehört in fachkundige Hände: diese Seite erfasst nur, was das Herz deines Pferds tut — beurteilen wird es deine Tierärztin oder dein Tierarzt.</div>
   </div>
 
+  <div class="hint" style="max-width:60ch;margin-left:auto;margin-right:auto;font-weight:600;color:var(--sec)" data-i18n="disclaimer">Kein Medizinprodukt, keine Diagnose.</div>
+  <div class="hint" style="max-width:60ch;margin-left:auto;margin-right:auto" data-i18n="footerNote">Diese Seite erfasst, was das Herz deines Pferds tut — beurteilen wird es deine Tierärztin oder dein Tierarzt.</div>
   <div class="privacy"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>Direkt-Übertragung · kein Server sieht die Messwerte</div>
+</div>
+
+<!-- Vollbild: das Diagramm wird in hoher Aufloesung NEU gezeichnet, nicht
+     hochskaliert — sonst waere der Zoom nur groesser, nicht praeziser. -->
+<div id="chartZoom" role="dialog" aria-modal="true" aria-labelledby="zoomTitle">
+  <div class="zhead">
+    <div><div class="ztitle" id="zoomTitle"></div><div class="zhint" id="zoomHint"></div></div>
+    <button class="zclose" id="zoomClose" aria-label="Schließen"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg></button>
+  </div>
+  <div class="zbar hidden" id="zoomBar">
+    <button id="zOut" aria-label="Herauszoomen">−</button>
+    <button id="zFit" data-i18n="zFit">Anpassen</button>
+    <button id="zIn" aria-label="Hineinzoomen">+</button>
+    <span class="zlvl" id="zLvl"></span>
+  </div>
+  <div class="zwrap">
+    <div class="zbody" id="zoomBody"></div>
+    <div class="zaxis l" id="zAxL"></div>
+    <div class="zaxis r" id="zAxR"></div>
+  </div>
+</div>
+
+<!-- ⓘ erklaert, WAS gezeigt wird — nie, was ein Wert bedeutet. -->
+<div id="infoPop" role="dialog" aria-modal="true" aria-labelledby="ipTitle">
+  <div class="ip">
+    <div class="ip-h"><h3 id="ipTitle"></h3></div>
+    <div class="ip-b" id="ipBody"></div>
+    <div class="ip-f"><button class="btn" id="ipClose" data-i18n="infoClose">Verstanden</button></div>
+  </div>
 </div>
 
 <script src="p2p.js"></script>
 <script>
 'use strict';
 const $=s=>document.querySelector(s);
+/* Katalog. Reihenfolge = Reihenfolge auf der Seite, damit Luecken auffallen. */
+const L={
+de:{
+ title:'Messung für den Tierarzt — CARLON',
+ beatsUnit:'Schläge',
+ afterStart:'nach Beginn',
+ inhale:'Ein', exhale:'Aus', pause:'Pause', perMin:'/min', axisTime:'ZEIT',
+ chartBreath:'Atemkurve',
+ chartBreathCap:'Die Atmung moduliert den Herzschlag. Aus dieser Modulation lässt sich die Atemkurve ableiten — Koralle nach oben ist Einatmen, Blau nach unten Ausatmen.',
+ lastBeatsLbl:'Letzte Schläge',
+ recRemaining:'Noch {x} bis zu den empfohlenen fünf Minuten.',
+ recReached:'Die empfohlenen fünf Minuten sind erreicht. Länger messen schadet nicht — der Verlauf wird ruhiger.',
+ sigChecking:'Signal wird geprüft…', sigStable:'Signal stabil', sigNoisy:'Signal unruhig — Gurtsitz und Feuchtigkeit prüfen',
+ sigBad:'Signal stark gestört — Gurt neu anfeuchten und nachsetzen',
+ verdictClean:'Sauberes Signal über die gesamte Aufnahme. Diese Messung kann so weitergegeben werden.',
+ verdictCleanShort:'Das Signal ist sauber. Die Aufnahme ist kürzer als fünf Minuten — für einen belastbaren Ruhe-Verlauf darf sie gern länger sein.',
+ verdictNoisy:'Das Signal war stellenweise unruhig. Weitergeben ist möglich — eine zweite Messung mit gut angefeuchtetem Gurt wird aber deutlich besser.',
+ verdictBad:'Das Signal war stark gestört. Wir empfehlen, den Gurt neu anzufeuchten, nachzusetzen und noch einmal zu messen.',
+ doneSubRoom:'Die Aufnahme kann jetzt direkt an die Praxis übertragen werden.',
+ doneSubFile:'Speichere die Datei und schicke sie deiner Praxis — oder öffne den Link, den du von ihr bekommst.',
+ tooFew:'Es sind zu wenige Herzschläge erfasst worden, um die Aufnahme sinnvoll weiterzugeben.',
+ dropTitle:'Verbindung unterbrochen',
+ dropSub:'Der Gurt ist nicht mehr erreichbar. Sitz und Feuchtigkeit prüfen, dann erneut verbinden — die bisher erfassten Schläge bleiben erhalten.',
+ dropStop:'Aufnahme abschließen',
+ pairsOf:'von',
+
+ brandTag:'Equine Heart Science',
+ /* Empfang */
+ readyH1:'Messung für den Tierarzt',
+ readySub:'Verbinde den Polar-H10-Gurt deines Pferds. Die Aufnahme geht direkt an deine Tierärztin oder deinen Tierarzt — ohne Umweg über einen Server.',
+ roomLabel:'Verbindungscode:',
+ horseLabel:'Name des Pferds',
+ horsePh:'z. B. Mistral',
+ connect:'Polar H10 verbinden',
+ readyHint:'Der Gurt muss angelegt und die Elektrodenfläche <b>gut angefeuchtet</b> sein — sonst bricht das Signal ab. Halte das Gerät während der Messung in der Nähe und lass den Bildschirm an.',
+ /* Kein Web-Bluetooth */
+ unsupEyebrow:'Dieses Gerät misst nicht direkt',
+ unsupH1:'So misst du trotzdem',
+ unsupSub:'Apple lässt Bluetooth im Browser grundsätzlich nicht zu — auf iPhone und iPad gilt das für Safari genauso wie für Chrome. Drei Wege führen trotzdem zum Ziel.',
+ wayAndroidT:'Android-Handy oder Tablet', wayAndroidS:'Diesen Link dort in Chrome öffnen — die Messung startet sofort.',
+ wayDesktopT:'Computer mit Chrome oder Edge', wayDesktopS:'Funktioniert genauso, solange der Gurt in Reichweite ist.',
+ wayIosT:'iPhone: die CARLON-App', wayIosS:'Misst nativ und kann deutlich mehr als diese Seite.',
+ sendLink:'Link an ein messendes Gerät senden',
+ sendFile:'Aufnahme als Datei senden',
+ unsupHint:'Du hast schon eine Aufnahme als Datei? Dann kannst du sie direkt an deine Praxis übergeben — dafür brauchst du kein Bluetooth.',
+ /* Live */
+ liveEyebrow:'Aufnahme läuft', liveH1:'Messung läuft',
+ liveSub:'Ruhig stehen lassen. Je ruhiger das Pferd, desto aussagekräftiger die Aufnahme.',
+ liveRange:'Bisher', liveRangeUnit:'bpm',
+ lastBeats:'Letzte Schläge',
+ tBeats:'Herzschläge', tBeatsSub:'bisher erfasst',
+ tDur:'Dauer', tDurSub:'seit dem Start',
+ tBatt:'Gurt-Akku', tBattSub:'Ladestand des Senders',
+ progressH:'Aufnahme-Fortschritt',
+ progressStart:'Empfohlen sind mindestens fünf Minuten ruhige Messung.',
+ stop:'Messung beenden', restart:'Verwerfen und neu starten',
+ liveHint:'Halte das Gerät in der Nähe und lass den Bildschirm an — schläft er ein, bricht die Bluetooth-Verbindung ab.',
+ /* Beleg */
+ doneEyebrow:'Aufnahme abgeschlossen',
+ tBeatsDone:'Herzschläge', tBeatsDoneSub:'erfasste Einzelschläge',
+ tDurDone:'Dauer', tDurDoneSub:'Länge der Aufnahme',
+ tHr:'Ø Puls', tHrSub:'zeitgewichtetes Mittel',
+ tRmssd:'RMSSD', tRmssdSub:'Streuung von Schlag zu Schlag',
+ tSdnn:'SDNN', tSdnnSub:'Streuung aller Abstände',
+ chartVitals:'Puls + HRV · Verlauf',
+ chartVitalsCap:'Puls (Gold) und HRV (Cyan) über die gesamte Aufnahme. Die HRV ist ein gleitendes Fenster und reagiert auf Puls-Übergänge — sie zeigt die kurzfristige Dynamik, keinen ruhenden Einzelwert.',
+ chartVitalsCapB:'Tippen heftet den Wert an, Doppeltippen öffnet das Vollbild.',
+ chartRr:'RR-Tachogramm', chartPoin:'Poincaré',
+ seriesPulse:'Puls', seriesHrv:'HRV',
+ protoH:'Messprotokoll',
+ pQual:'Signalgüte', pPairs:'Auswertbare Schlagpaare', pDur:'Aufnahmedauer',
+ pSensor:'Sensor', pRes:'Zeitauflösung', pResV:'1/1024 s · ≈1 ms',
+ send:'An die Praxis senden', save:'Als Datei speichern', again:'Neue Messung',
+ shareH:'Wenn es dir geholfen hat',
+ shareOwner:'Pferdefreunden zeigen', shareVet:'Deiner Praxis empfehlen',
+ /*MDR — extern geprüft 06.08., Perplexity/Recherche: „was das Herz tut" ist umgangssprachlich zu breit;
+    Formulierung auf reine Datenerfassung verengt. Nicht ohne erneute Prüfung ändern. */
+ footerNote:'Diese Seite zeichnet Herzschlag-Daten deines Pferds auf — die medizinische Beurteilung erfolgt ausschließlich durch deine Tierärztin oder deinen Tierarzt.',
+ disclaimer:'Kein Medizinprodukt, keine Diagnose.',
+ privacy:'Direkt-Übertragung · kein Server sieht die Messwerte',
+ /* Vollbild */
+ zFit:'Anpassen', zWhole:'Ganze Aufnahme',
+ zHintV:'Zwei Finger spreizen zum Zoomen, wischen zum Schieben',
+ zHintP:'Tippen heftet den Wert an',
+ infoClose:'Verstanden'
+},
+en:{
+ title:'Recording for your vet — CARLON',
+ beatsUnit:'beats',
+ afterStart:'after start',
+ inhale:'In', exhale:'Out', pause:'Pause', perMin:'/min', axisTime:'TIME',
+ chartBreath:'Breathing curve',
+ chartBreathCap:'Breathing modulates the heartbeat. From that modulation the breathing curve can be derived — coral upwards is breathing in, blue downwards breathing out.',
+ lastBeatsLbl:'Recent beats',
+ recRemaining:'Another {x} to reach the recommended five minutes.',
+ recReached:'The recommended five minutes are reached. Recording longer does no harm — the trend becomes steadier.',
+ sigChecking:'Checking signal…', sigStable:'Signal stable', sigNoisy:'Signal unsteady — check belt fit and moisture',
+ sigBad:'Signal badly disturbed — re-moisten the belt and reseat it',
+ verdictClean:'Clean signal throughout the recording. This measurement can be passed on as it is.',
+ verdictCleanShort:'The signal is clean. The recording is shorter than five minutes — for a dependable resting trend it may well run longer.',
+ verdictNoisy:'The signal was unsteady in places. Passing it on is possible — but a second recording with a well-moistened belt will be considerably better.',
+ verdictBad:'The signal was badly disturbed. We recommend re-moistening the belt, reseating it and recording again.',
+ doneSubRoom:'The recording can now be transferred straight to the practice.',
+ doneSubFile:'Save the file and send it to your practice — or open the link you received from them.',
+ tooFew:'Too few heartbeats were captured to pass this recording on meaningfully.',
+ dropTitle:'Connection lost',
+ dropSub:'The belt is no longer reachable. Check the fit and moisture, then reconnect — the beats captured so far are kept.',
+ dropStop:'Finish recording',
+ pairsOf:'of',
+
+ brandTag:'Equine Heart Science',
+ readyH1:'Recording for your vet',
+ readySub:'Connect your horse’s Polar H10 belt. The recording goes straight to your veterinarian — no server in between.',
+ roomLabel:'Connection code:',
+ horseLabel:'Horse’s name',
+ horsePh:'e.g. Mistral',
+ connect:'Connect Polar H10',
+ readyHint:'The belt must be fitted and the electrode area <b>well moistened</b> — otherwise the signal drops out. Keep the device nearby during the recording and leave the screen on.',
+ unsupEyebrow:'This device can’t record directly',
+ unsupH1:'How to record anyway',
+ unsupSub:'Apple does not allow Bluetooth in the browser at all — on iPhone and iPad this applies to Safari just as much as to Chrome. Three routes still get you there.',
+ wayAndroidT:'Android phone or tablet', wayAndroidS:'Open this link there in Chrome — recording starts right away.',
+ wayDesktopT:'Computer with Chrome or Edge', wayDesktopS:'Works the same, as long as the belt is in range.',
+ wayIosT:'iPhone: the CARLON app', wayIosS:'Records natively and does considerably more than this page.',
+ sendLink:'Send the link to a device that can record',
+ sendFile:'Send a recording as a file',
+ unsupHint:'Already have a recording as a file? You can hand it to your practice directly — no Bluetooth needed for that.',
+ liveEyebrow:'Recording in progress', liveH1:'Recording',
+ liveSub:'Let the horse stand quietly. The calmer the horse, the more meaningful the recording.',
+ liveRange:'So far', liveRangeUnit:'bpm',
+ lastBeats:'Recent beats',
+ tBeats:'Heartbeats', tBeatsSub:'captured so far',
+ tDur:'Duration', tDurSub:'since the start',
+ tBatt:'Belt battery', tBattSub:'charge level of the sensor',
+ progressH:'Recording progress',
+ progressStart:'At least five minutes of quiet recording is recommended.',
+ stop:'Finish recording', restart:'Discard and start over',
+ liveHint:'Keep the device nearby and leave the screen on — if it sleeps, the Bluetooth connection drops.',
+ doneEyebrow:'Recording complete',
+ tBeatsDone:'Heartbeats', tBeatsDoneSub:'individual beats captured',
+ tDurDone:'Duration', tDurDoneSub:'length of the recording',
+ tHr:'Avg. pulse', tHrSub:'time-weighted mean',
+ tRmssd:'RMSSD', tRmssdSub:'beat-to-beat variation',
+ tSdnn:'SDNN', tSdnnSub:'variation across all intervals',
+ chartVitals:'Pulse + HRV · over time',
+ chartVitalsCap:'Pulse (gold) and HRV (cyan) across the whole recording. HRV is computed over a rolling window and responds to changes in pulse — it shows short-term dynamics, not a resting value.',
+ chartVitalsCapB:'Tap to pin a reading, double-tap for full screen.',
+ chartRr:'RR tachogram', chartPoin:'Poincaré',
+ seriesPulse:'Pulse', seriesHrv:'HRV',
+ protoH:'Recording log',
+ pQual:'Signal quality', pPairs:'Usable beat pairs', pDur:'Recording length',
+ pSensor:'Sensor', pRes:'Time resolution', pResV:'1/1024 s · ≈1 ms',
+ send:'Send to the practice', save:'Save as a file', again:'New recording',
+ shareH:'If this helped you',
+ shareOwner:'Show fellow horse people', shareVet:'Recommend to your practice',
+ /*MDR — extern geprüft: im anglo-amerikanischen Raum ist die etablierte Formel
+    „not intended to diagnose, treat, cure, or prevent any disease" belastbarer als eine
+    woertliche Uebersetzung. Nicht ohne erneute Pruefung aendern. */
+ footerNote:'This page records heart rate and rhythm data from your horse — any medical assessment is made exclusively by your veterinarian.',
+ disclaimer:'For informational purposes only. Not a medical device. Not intended to diagnose, treat, cure, or prevent any disease.',
+ privacy:'Direct transfer · no server sees the readings',
+ zFit:'Fit', zWhole:'Whole recording',
+ zHintV:'Pinch to zoom, swipe to pan',
+ zHintP:'Tap to pin a reading',
+ infoClose:'Got it'
+}};
+
+/* ════════════════════════════════════════════════════════════════════════
+   SPRACHEN — wiederverwendbarer Kern
+   ────────────────────────────────────────────────────────────────────────
+   Auswahl liegt in localStorage 'vk.lang' und wird damit ueber ALLE
+   Vitalkultur-Seiten geteilt (die Produktseite nutzt denselben Schluessel).
+   Ohne gespeicherte Wahl entscheidet die Browsersprache — ein englisch-
+   sprachiger Tierarzt landet ohne Klick auf Englisch.
+
+   ⚖️ RECHTSHINWEIS ZU DEN MDR-SAETZEN: Die mit `/*MDR*` markierten Eintraege
+   sind regulatorisch relevant („kein Medizinprodukt", „keine Diagnose",
+   „beurteilen wird die Tieraerztin"). Sie duerfen NICHT maschinell oder frei
+   uebersetzt werden — eine ungenaue Formulierung kann eine Aussage erzeugen,
+   die wir bewusst nicht treffen. Bei jeder neuen Sprache pruefen lassen.
+   ══════════════════════════════════════════════════════════════════════ */
+const LANGS={de:'Deutsch',en:'English'};
+let LANG=(()=>{
+  try{ const s=localStorage.getItem('vk.lang'); if(s&&LANGS[s]) return s; }catch(e){}
+  return (navigator.language||'de').toLowerCase().startsWith('de')?'de':'en';
+})();
+function t(k,fb){ const d=L[LANG]||L.de; return (d&&d[k])!=null?d[k]:((L.de&&L.de[k])!=null?L.de[k]:(fb!=null?fb:k)); }
+function setLang(l){
+  if(!LANGS[l]) return; LANG=l;
+  try{ localStorage.setItem('vk.lang',l); }catch(e){}
+  document.documentElement.lang=l;
+  applyLang();
+}
+function applyLang(){
+  document.querySelectorAll('[data-i18n]').forEach(el=>{
+    const v=t(el.getAttribute('data-i18n'),null);
+    if(v!=null) el.innerHTML=v;
+  });
+  document.querySelectorAll('[data-i18n-ph]').forEach(el=>{
+    const v=t(el.getAttribute('data-i18n-ph'),null);
+    if(v!=null) el.setAttribute('placeholder',v);
+  });
+  document.querySelectorAll('[data-i18n-al]').forEach(el=>{
+    const v=t(el.getAttribute('data-i18n-al'),null);
+    if(v!=null) el.setAttribute('aria-label',v);
+  });
+  document.title=t('title');
+  const b=document.getElementById('langBtn');
+  if(b) b.innerHTML = LANG==='de'
+    ? '<b>DE</b><span>EN</span>' : '<span>DE</span><b>EN</b>';
+  // Ansichtsabhaengige Texte, die zur Laufzeit gesetzt werden, neu schreiben
+  if(typeof relabel==='function') relabel();
+}
+
+
+/* ══ DIAGRAMME — 1:1 aus dem Praxis-Cockpit portiert (app/index.html, Chart.*)
+   Portiert, nicht nachempfunden: gleiches EKG-Papier-Grid (weiss/Tufte, major
+   0.16 / minor 0.08), gleiches Plot-Substrat #0E0E0E, gleiche Achsen-Typografie.
+   So sieht der Besitzer dieselbe Handschrift wie die Praxis.
+
+   BEWUSST NICHT mitportiert: die Artefakt-Marker und die Poincare-Form-
+   klassifikation des Cockpits. Das sind Urteile — sie gehoeren der Praxis.
+   Diese Seite zeichnet die Gestalt der Rohdaten, sie bewertet sie nicht.
+
+   SD1/SD2 sind exakte algebraische Umformungen von RMSSD und SDNN
+   (Brennan 2001: SD1=RMSSD/sqrt2, SD2=sqrt(2*SDNN^2-SD1^2)). Beide Groessen
+   stehen ohnehin als Pflichtfelder im Export — die Ellipse gibt also nichts
+   preis, was die Datei nicht schon enthaelt.                                */
+/* Auf schmalen Geraeten braucht die Kurve ein anderes Seitenverhaeltnis:
+   eine 720x250-Zeichnung schrumpft auf dem Handy auf ~115 px Hoehe, die
+   Achsenschrift wird sub-pixel und der Plot wirkt leer. Nicht die Schrift
+   kleiner rechnen — die Box aendern. */
+const narrow=()=>window.innerWidth<760;
+const fmt0=v=>Math.round(v).toLocaleString('de-DE');
+const fmt1=v=>v.toFixed(1).replace('.',',');
+const Chart={
+  /* Interaktiver Wrapper — portiert aus dem Cockpit (Chart._hov/initVizHover).
+     Fadenkreuz + Fokuspunkt + Tooltip mit den echten Werten unter Zeiger bzw.
+     Finger. Zeigt ausschliesslich Rohwerte (Schlag-Nr., RR in ms, HF in bpm) —
+     keine Einordnung, keine Faerbung nach Urteil.                            */
+  _hov(inner,w,h,pts,mode,extraStyle='',alt=''){
+    const cross = mode==='scatter'
+      ? `<line class="hov-cross" x1="0" x2="${w}" y1="0" y2="0"/><line class="hov-cross" x1="0" x2="0" y1="0" y2="${h}"/>`
+      : `<line class="hov-cross" x1="0" x2="0" y1="0" y2="${h}"/>`;
+    /* Nur die Punktwolke bekommt einen Fokuspunkt — dort IST der Punkt das
+       Datum. Auf Linien-Diagrammen wurde er entfernt: durch die Ausduennung
+       liegen Minimum und Maximum einer Pixelspalte uebereinander, der Punkt
+       sprang zwischen beiden hin und her. Das Fadenkreuz ist praeziser. */
+    const foc = mode==='scatter' ? `<circle class="hov-focus" r="6"/>` : '';
+    const mj=JSON.stringify(pts).replace(/'/g,'&#39;').replace(/</g,'&lt;');
+    /* role=img + Beschreibung: ohne sie ist die Grafik fuer Screenreader
+       stumm. Der Text fasst zusammen, was die Kurve zeigt. */
+    const a=alt?` role="img" aria-label="${alt.replace(/"/g,'')}"`:' role="img"';
+    return `<div class="viz-hov" data-hov='${mj}' data-mode="${mode}" data-w="${w}" data-h="${h}">`
+      +`<svg class="viz" viewBox="0 0 ${w} ${h}" preserveAspectRatio="xMidYMid meet"${a}${extraStyle?` style="${extraStyle}"`:''}>`
+      +`${inner}${cross}${foc}</svg><div class="hov-tip"></div></div>`;
+  },
+  initHover(){
+    if(Chart._init) return; Chart._init=true;
+    const clear=w=>{ if(!w)return; w._pin=false;
+      w.querySelectorAll('.hov-cross,.hov-focus').forEach(e=>e.classList.remove('on'));
+      const t=w.querySelector('.hov-tip'); if(t){ t.classList.remove('on','pin'); } };
+
+    /* Ein Zeichen-Durchlauf pro Bild. Ohne diese Drossel rechnet der Zeiger
+       bei 420 Punkten mehrfach je Frame — das ist die Ursache fuer Flimmern. */
+    let queued=null, raf=0;
+    const flush=()=>{ raf=0; const q=queued; queued=null; if(q) paint(q); };
+    const schedule=q=>{ queued=q; if(!raf) raf=requestAnimationFrame(flush); };
+
+    const nearest=(wrap,cx,cy)=>{
+      if(!wrap._pts){ try{ wrap._pts=JSON.parse(wrap.dataset.hov.replace(/&#39;/g,"'").replace(/&lt;/g,'<')); }catch(_){ wrap._pts=[]; } }
+      const pts=wrap._pts; if(!pts.length) return null;
+      const mode=wrap.dataset.mode, W=+wrap.dataset.w, H=+wrap.dataset.h;
+      const svg=wrap.querySelector('svg'), rect=svg.getBoundingClientRect();
+      const vx=(cx-rect.left)/rect.width*W, vy=(cy-rect.top)/rect.height*H;
+      let best=pts[0], bd=Infinity;
+      if(mode==='scatter') pts.forEach(m=>{const d=(m.x-vx)**2+(m.y-vy)**2; if(d<bd){bd=d;best=m;}});
+      else pts.forEach(m=>{const d=Math.abs(m.x-vx); if(d<bd){bd=d;best=m;}});
+      return {best,mode,W,H,rect,svg};
+    };
+
+    const paint=({wrap,cx,cy,touch})=>{
+      const r=nearest(wrap,cx,cy); if(!r) return;
+      const {best,mode,W,H,rect,svg}=r;
+      const crosses=svg.querySelectorAll('.hov-cross'), focs=svg.querySelectorAll('.hov-focus'), tip=wrap.querySelector('.hov-tip');
+      if(mode==='scatter'){
+        if(crosses[0]){crosses[0].setAttribute('y1',best.y);crosses[0].setAttribute('y2',best.y);crosses[0].classList.add('on');}
+        if(crosses[1]){crosses[1].setAttribute('x1',best.x);crosses[1].setAttribute('x2',best.x);crosses[1].classList.add('on');}
+      } else if(crosses[0]){ crosses[0].setAttribute('x1',best.x);crosses[0].setAttribute('x2',best.x);crosses[0].classList.add('on'); }
+      if(focs[0]){ focs[0].setAttribute('cx',best.x); focs[0].setAttribute('cy',best.y); focs[0].classList.add('on'); }
+
+      let html;
+      if(mode==='scatter'){
+        const d=best.rn1-best.rn;
+        html=`<div class="tt-h">Schlag \u2192 n\u00e4chster Schlag</div>`
+            +`<div class="tt-v" style="color:var(--cyan)">${best.rn} \u2192 ${best.rn1} ms</div>`
+            +`<div class="tt-s" style="color:var(--sec)">\u0394 ${d>0?'+':''}${d} ms \u00b7 ${Math.round(60000/best.rn)} bpm</div>`;
+      } else if(mode==='breath'){
+        html=`<div class="tt-h">${best.tt} ${t('afterStart')}</div>`
+            +`<div class="tt-v" style="color:var(--cyan)">${best.ph}</div>`
+            +`<div class="tt-s" style="color:var(--sec)">${t('chartBreath')}</div>`;
+      } else if(mode==='vitals'){
+        html=`<div class="tt-h">${best.tt} ${t('afterStart')}</div>`
+            +`<div class="tt-v" style="color:var(--amber)">${best.hr} bpm</div>`
+            +`<div class="tt-s" style="color:var(--cyan)">${best.hv!=null?fmt1(best.hv)+' ms HRV':'HRV \u2014'}</div>`;
+      } else {
+        html=`<div class="tt-h">Schlag ${best.i+1}</div>`
+            +`<div class="tt-v" style="color:var(--cyan)">${best.rr} ms</div>`
+            +`<div class="tt-s" style="color:var(--amber)">${best.hr} bpm</div>`;
+      }
+      if(tip.innerHTML!==html) tip.innerHTML=html;
+      /* Der Kasten sitzt FEST (oben, bei Punktwolken unten) und folgt nur
+         waagerecht — sonst tanzt er mit jedem Schlag auf und ab. Zusaetzlich
+         am Rand eingefangen, damit er nie aus dem Diagramm laeuft. */
+      const tw=tip.offsetWidth, th=tip.offsetHeight;
+      if(touch){
+        /* Am Finger, aber IMMER oberhalb und links davon — die Hand verdeckt
+           sonst genau den Wert, den man ablesen will. Am Rand kippt der
+           Kasten auf die andere Seite statt aus dem Bild zu laufen. */
+        const rx=cx-rect.left, ry=cy-rect.top;
+        let px=rx-tw-18, py=ry-th-24;
+        if(px<4) px=rx+20;
+        if(py<4) py=ry+28;
+        px=Math.max(4,Math.min(rect.width-tw-4,px));
+        py=Math.max(4,Math.min(rect.height-th-4,py));
+        tip.style.transform=`translate3d(${px.toFixed(1)}px, ${py.toFixed(1)}px, 0)`;
+      } else {
+        // Zeiger: fester Sitz, folgt nur waagerecht — ruhiger zu lesen.
+        const rawX=best.x/W*rect.width;
+        const px=Math.max(tw/2+4, Math.min(rect.width-tw/2-4, rawX));
+        const py=(mode==='scatter') ? (rect.height-th-8) : 8;
+        tip.style.transform=`translate3d(${px.toFixed(1)}px, ${py.toFixed(1)}px, 0) translate(-50%, 0)`;
+      }
+      tip.classList.add('on');
+      tip.classList.toggle('pin', !!wrap._pin);
+    };
+
+    const wrapOf=t=>(t&&t.closest)?t.closest('.viz-hov'):null;
+
+    document.addEventListener('mousemove',e=>{
+      const wrap=wrapOf(e.target);
+      if(!wrap){ if(Chart._act&&!Chart._act._pin){clear(Chart._act);Chart._act=null;} return; }
+      if(Chart._act&&Chart._act!==wrap&&!Chart._act._pin) clear(Chart._act);
+      Chart._act=wrap;
+      if(wrap._pin) return;                       // festgesteckt: nicht mitwandern
+      schedule({wrap,cx:e.clientX,cy:e.clientY,touch:false});
+    },{passive:true});
+
+    /* Tippen/Klicken steckt den Ablesewert fest — er bleibt stehen, bis
+       erneut getippt wird. Genau das erwartet man von einem Messgeraet. */
+    /* Auf Beruehrung feuert nach pointerup zusaetzlich ein click. Ohne diese
+       Sperre wuerde er den soeben gesetzten Pin sofort wieder loeschen — das
+       Antippen haette dann gar keine Wirkung. */
+    document.addEventListener('click',e=>{
+      if(Chart._touchEcho) return;
+      const wrap=wrapOf(e.target); if(!wrap) return;
+      if(wrap._pin){ clear(wrap); return; }
+      wrap._pin=true; paint({wrap,cx:e.clientX,cy:e.clientY,touch:false});
+    });
+
+    document.addEventListener('pointerdown',e=>{
+      if(e.pointerType==='mouse') return;
+      const wrap=wrapOf(e.target); if(!wrap) return;
+      if(wrap._pin){ clear(wrap); Chart._scrub=null;
+        Chart._touchEcho=true; setTimeout(()=>{Chart._touchEcho=false;},600); return; }  // zweites Tippen schliesst
+      if(Chart._act&&Chart._act!==wrap) clear(Chart._act);
+      Chart._act=wrap; Chart._scrub=wrap;
+      schedule({wrap,cx:e.clientX,cy:e.clientY,touch:true});
+    },{passive:true});
+    document.addEventListener('pointermove',e=>{
+      if(e.pointerType==='mouse'||!Chart._scrub) return;
+      schedule({wrap:Chart._scrub,cx:e.clientX,cy:e.clientY,touch:true});
+    },{passive:true});
+    const end=e=>{ if(e.pointerType==='mouse') return;
+      Chart._touchEcho=true; setTimeout(()=>{Chart._touchEcho=false;},600);
+      if(Chart._scrub){ Chart._scrub._pin=true;                  // bleibt stehen
+        const t=Chart._scrub.querySelector('.hov-tip'); if(t)t.classList.add('pin'); }
+      Chart._scrub=null; };
+    document.addEventListener('pointerup',end); document.addEventListener('pointercancel',end);
+  },
+
+  /* Eckmarken am Plotrahmen — die Blende eines Messgeraets. Vier Winkel,
+     je 11 Einheiten lang, im Marken-Cyan. Kostet nichts, traegt viel. */
+  _bezel(x,y,w,h,L=11){
+    const c=(px,py,dx,dy)=>`<line class="bezel" x1="${px}" y1="${py}" x2="${px+dx}" y2="${py}"/>`
+                          +`<line class="bezel" x1="${px}" y1="${py}" x2="${px}" y2="${py+dy}"/>`;
+    return c(x,y,L,L)+c(x+w,y,-L,L)+c(x,y+h,L,-L)+c(x+w,y+h,-L,-L);
+  },
+  /* Flaeche unter der Kurve + weicher Glow auf der Linie. Einmal definiert,
+     von allen Diagrammen genutzt — kein Chart erfindet eigene Werte. */
+  /* Nur Flaechenverlaeufe, KEIN Linien-Glow: eine weichgezeichnete Linie
+     wirkt wattig. Praezision entsteht durch eine harte Kante — die Tiefe
+     kommt aus dem Verlauf unter der Kurve. */
+  _defs(id){
+    return `<defs>
+      <linearGradient id="ar-${id}" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="var(--cyan)" stop-opacity=".26"/>
+        <stop offset="1" stop-color="var(--cyan)" stop-opacity="0"/>
+      </linearGradient>
+    </defs>`;
+  },
+
+  /* ZEICHEN-AUSDUENNUNG (min/max je Pixelspalte).
+     Ohne sie entsteht pro Schlag ein Pfadpunkt: eine 64-Minuten-Aufnahme
+     (~4.400 Schlaege) erzeugt ~2 MB DOM, das erlaubte Maximum von 50.000
+     Schlaegen ~23 MB — auf einem aelteren Handy im Stall unbenutzbar.
+
+     Je Spalte werden Minimum UND Maximum behalten und in ihrer zeitlichen
+     Reihenfolge ausgegeben. Dadurch bleibt die Huellkurve exakt erhalten:
+     es verschwindet KEIN Ausschlag, auch kein einzelner Ausreisser.
+     Gerechnet wird unveraendert auf ALLEN Schlaegen — ausgeduennt wird
+     ausschliesslich das Zeichnen.                                          */
+  _decimate(vals,cols){
+    const n=vals.length;
+    if(n<=cols*2) return vals.map((v,i)=>[i,v]);
+    const out=[], per=n/cols;
+    for(let c=0;c<cols;c++){
+      const a=Math.floor(c*per), b=Math.min(n,Math.floor((c+1)*per));
+      if(b<=a) continue;
+      let mn=a,mx=a;
+      for(let i=a;i<b;i++){ if(vals[i]<vals[mn])mn=i; if(vals[i]>vals[mx])mx=i; }
+      if(mn===mx) out.push([mn,vals[mn]]);
+      else if(mn<mx) out.push([mn,vals[mn]],[mx,vals[mx]]);
+      else out.push([mx,vals[mx]],[mn,vals[mn]]);
+    }
+    return out;
+  },
+
+  niceTicks(min,max,n){const span=(max-min)||1;const raw=span/n;const mag=Math.pow(10,Math.floor(Math.log10(raw)));const nrm=raw/mag;
+    const step=(nrm<1.5?1:nrm<3?2:nrm<7?5:10)*mag;const start=Math.ceil(min/step)*step;const t=[];
+    for(let v=start;v<=max+step*1e-6;v+=step)t.push(+v.toFixed(6));return t;},
+
+  tachogram(rr,{w=720,h=230,xlabel='SCHLAG-NR.'}={}){
+    if(!rr||rr.length<2) return '';
+    const pad={l:52,r:16,t:14,b:32}, n=rr.length;
+    let mn=Math.min(...rr), mx=Math.max(...rr); const pd=(mx-mn)*0.08||10; mn-=pd; mx+=pd;
+    const X=i=>pad.l+i/(n-1)*(w-pad.l-pad.r), Y=v=>pad.t+(1-(v-mn)/(mx-mn))*(h-pad.t-pad.b);
+    let g=`<rect x="${pad.l}" y="${pad.t}" width="${(w-pad.l-pad.r).toFixed(1)}" height="${(h-pad.t-pad.b).toFixed(1)}" rx="8" class="plotbg" fill="#0E0E0E"/>`;
+    const yt=Chart.niceTicks(mn,mx,5), ys=yt.length>1?yt[1]-yt[0]:100;
+    for(let v=yt[0]-ys;v<=mx+ys;v+=ys/5){ if(v<mn||v>mx)continue;
+      const maj=yt.some(t=>Math.abs(t-v)<ys*0.05);
+      g+=`<line class="grid-${maj?'major':'minor'}" x1="${pad.l}" x2="${w-pad.r}" y1="${Y(v).toFixed(1)}" y2="${Y(v).toFixed(1)}"/>`;}
+    yt.forEach(t=>{ if(t<mn||t>mx)return;
+      g+=`<line class="tick" x1="${pad.l-4}" x2="${pad.l}" y1="${Y(t).toFixed(1)}" y2="${Y(t).toFixed(1)}"/>`
+       +`<text x="${pad.l-7}" y="${(Y(t)+3).toFixed(1)}" text-anchor="end">${fmt0(t)}</text>`;});
+    const xt=Chart.niceTicks(0,n-1,Math.max(5,Math.round((w-pad.l-pad.r)/130))), xs=xt.length>1?xt[1]-xt[0]:50;
+    for(let v=0;v<=n-1;v+=Math.max(1,xs/5)){ const maj=xt.some(t=>Math.abs(t-v)<0.5);
+      g+=`<line class="grid-${maj?'major':'minor'}" x1="${X(v).toFixed(1)}" x2="${X(v).toFixed(1)}" y1="${pad.t}" y2="${h-pad.b}"/>`;}
+    xt.forEach(t=>{ if(t>n-1)return;
+      g+=`<text x="${X(t).toFixed(1)}" y="${h-pad.b+13}" text-anchor="middle">${fmt0(t)}</text>`;});
+    const mv=rr.reduce((a,b)=>a+b,0)/n;
+    g+=`<line x1="${pad.l}" x2="${w-pad.r}" y1="${Y(mv).toFixed(1)}" y2="${Y(mv).toFixed(1)}" stroke="var(--sec)" stroke-width="1" stroke-dasharray="4 4" opacity=".45"/>`;
+    const dec=Chart._decimate(rr,Math.round(w-pad.l-pad.r));
+    g+=`<path d="${dec.map(([i,v],k)=>`${k?'L':'M'}${X(i).toFixed(1)},${Y(v).toFixed(1)}`).join(' ')}" fill="none" stroke="var(--cyan)" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round"/>`;
+    g+=`<rect x="${pad.l}" y="${pad.t}" width="${(w-pad.l-pad.r).toFixed(1)}" height="${(h-pad.t-pad.b).toFixed(1)}" class="axis"/>`;
+    const my=pad.t+(h-pad.t-pad.b)/2;
+    g+=`<text x="12" y="${my.toFixed(0)}" transform="rotate(-90 12 ${my.toFixed(0)})" text-anchor="middle" class="label-axis">RR-INTERVALL<tspan class="label-unit"> (ms)</tspan></text>`;
+    g+=`<text x="${(pad.l+(w-pad.l-pad.r)/2).toFixed(0)}" y="${h-2}" text-anchor="middle" class="label-axis">${xlabel}</text>`;
+    Chart._axis={h, padL:pad.l, padR:pad.r, unitL:'MS', unitR:null,
+      left: yt.filter(q=>q>=mn&&q<=mx).map(q=>({y:+Y(q).toFixed(1),txt:fmt0(q),col:'var(--cyan)'})), right:[]};
+    const pts=dec.map(([i,v])=>({x:+X(i).toFixed(1),y:+Y(v).toFixed(1),i,rr:Math.round(v),hr:Math.round(60000/v)}));
+    const alt=`Verlauf der Herzschlag-Abstände über ${fmt0(n)} Schläge, `
+      +`von ${fmt0(Math.min(...rr))} bis ${fmt0(Math.max(...rr))} Millisekunden.`;
+    return Chart._hov(g,w,h,pts,'seq','',alt);
+  },
+
+  /* PULS + HRV IN EINEM BILD — die Darstellung, die im Trainings-Bericht
+     ueberzeugt hat. Zwei Groessen ueber EINER Zeitachse: Puls (Gold, linke
+     Achse) und die kurzfristige Variabilitaet als gleitendes RMSSD (Cyan,
+     rechte Achse). Nebeneinander gelegt wird ein Zusammenspiel sichtbar, das
+     zwei getrennte Diagramme verstecken.
+     HR-Gold ist Marken-CI (Rot bleibt dem Alarm vorbehalten). Ausgewiesen
+     wird die Fenstergroesse — ohne sie ist eine HRV-Kurve nicht lesbar.
+     Bewertet wird nichts: keine Zonen, keine Referenz, keine Einstufung. */
+  vitals(rr,{w=720,h=320}={}){
+    if(!rr||rr.length<10) return '';
+    const n=rr.length, uid=Math.round(w*11+h+3);
+    const hf=rr.map(v=>60000/v);
+    const Wb=Math.min(30,Math.max(5,Math.floor(n/3)));
+    const all=rr.map((_,i)=>{ const lo=Math.max(1,i-Wb+1); let s=0,c=0;
+      for(let j=lo;j<=i;j++){ const d=rr[j]-rr[j-1]; s+=d*d; c++; }
+      return c?Math.sqrt(s/c):0; });
+    const tAll=[]; let acc=0; for(let i=0;i<n;i++){ acc+=rr[i]/1000; tAll.push(acc); }
+    const i0=Math.min(Wb,n-2);                 // erst ab vollem Fenster zeichnen
+    const T=tAll[n-1]||1;
+    const pad={l:54,r:54,t:16,b:46};
+    const plotW=w-pad.l-pad.r, plotH=h-pad.t-pad.b, pB=h-pad.b;
+    const X=tt=>pad.l+(tt/T)*plotW;
+    const rng=a=>{ let mn=Math.min(...a),mx=Math.max(...a); const pd=(mx-mn)*0.14||1; return [mn-pd,mx+pd]; };
+    const [hLo,hHi]=rng(hf), [vLo,vHi]=rng(all.slice(i0));
+    const YH=v=>pad.t+(1-(v-hLo)/(hHi-hLo))*plotH;
+    const YV=v=>pad.t+(1-(v-vLo)/(vHi-vLo))*plotH;
+
+    let g=Chart._defs(uid)
+      +`<rect x="${pad.l}" y="${pad.t}" width="${plotW.toFixed(1)}" height="${plotH.toFixed(1)}" rx="8" class="plotbg" fill="#0E0E0E"/>`;
+    // Waagerechtes Raster nach der Puls-Achse, damit nur EIN Raster entsteht
+    const ht=Chart.niceTicks(hLo,hHi,5), hs=ht.length>1?ht[1]-ht[0]:10;
+    for(let v=ht[0]-hs;v<=hHi+hs;v+=hs/5){ if(v<hLo||v>hHi)continue;
+      const maj=ht.some(q=>Math.abs(q-v)<hs*0.05);
+      g+=`<line class="grid-${maj?'major':'minor'}" x1="${pad.l}" x2="${w-pad.r}" y1="${YH(v).toFixed(1)}" y2="${YH(v).toFixed(1)}"/>`;}
+    ht.forEach(q=>{ if(q<hLo||q>hHi)return;
+      g+=`<line class="tick" x1="${pad.l-4}" x2="${pad.l}" y1="${YH(q).toFixed(1)}" y2="${YH(q).toFixed(1)}"/>`
+       +`<text x="${pad.l-7}" y="${(YH(q)+3).toFixed(1)}" text-anchor="end" style="fill:var(--amber)">${fmt0(q)}</text>`;});
+    Chart.niceTicks(vLo,vHi,5).forEach(q=>{ if(q<vLo||q>vHi)return;
+      g+=`<line class="tick" x1="${w-pad.r}" x2="${w-pad.r+4}" y1="${YV(q).toFixed(1)}" y2="${YV(q).toFixed(1)}"/>`
+       +`<text x="${(w-pad.r+7).toFixed(1)}" y="${(YV(q)+3).toFixed(1)}" text-anchor="start" style="fill:var(--cyan)">${fmt0(q)}</text>`;});
+    /* Zeit-Beschriftung: bei langen Aufnahmen ueber eine Stunde mit Stunden,
+       sonst mm:ss. Sekundengenau, damit auch stark gezoomt exakt ablesbar. */
+    const ms=v=>{ const x=Math.floor(v), h2=Math.floor(x/3600), m=Math.floor((x%3600)/60), sec=x%60;
+      return h2 ? h2+':'+String(m).padStart(2,'0')+':'+String(sec).padStart(2,'0')
+                : m+':'+String(sec).padStart(2,'0'); };
+    /* Tick-Dichte richtet sich nach der GEZEICHNETEN Breite, nicht nach einer
+       festen Zahl: gezoomt entstehen dadurch entsprechend mehr Marken statt
+       zweier Beschriftungen ueber den ganzen Bildschirm. */
+    const xt=Chart.niceTicks(0,T,Math.max(5,Math.round(plotW/140))), xs=xt.length>1?xt[1]-xt[0]:30;
+    for(let v=0;v<=T+1e-6;v+=xs/5){ const maj=xt.some(q=>Math.abs(q-v)<xs*0.05);
+      g+=`<line class="grid-${maj?'major':'minor'}" x1="${X(v).toFixed(1)}" x2="${X(v).toFixed(1)}" y1="${pad.t}" y2="${pB.toFixed(1)}"/>`;}
+    xt.forEach(q=>{ if(q>T)return; const xx=X(q).toFixed(1);
+      g+=`<line class="tick" x1="${xx}" x2="${xx}" y1="${pB.toFixed(1)}" y2="${(pB+4).toFixed(1)}"/>`
+       +`<text x="${xx}" y="${(pB+16).toFixed(1)}" text-anchor="middle">${ms(q)}</text>`;});
+
+    /* Wie in der App: die HRV traegt den Flaechenverlauf, der Puls bleibt eine
+       reine Linie. Zwei gefuellte Flaechen uebereinander wuerden sich gegen-
+       seitig truebe machen — die Fuellung gehoert der Groesse, die man als
+       Verlauf liest, nicht der, die man als Kurve verfolgt.
+       Reihenfolge: Flaeche zuerst, dann Puls, HRV zuletzt obenauf.          */
+    const cols=Math.round(plotW);
+    const hvSlice=all.slice(i0);
+    const decHV=Chart._decimate(hvSlice,cols);
+    const decHF=Chart._decimate(hf,cols);
+    const dHV=decHV.map(([i,v],k)=>`${k?'L':'M'}${X(tAll[i0+i]).toFixed(1)},${YV(v).toFixed(1)}`).join(' ');
+    g+=`<path d="${dHV} L${X(T).toFixed(1)},${pB.toFixed(1)} L${X(tAll[i0]).toFixed(1)},${pB.toFixed(1)} Z" fill="url(#ar-${uid})" stroke="none"/>`;
+    const dHF=decHF.map(([i,v],k)=>`${k?'L':'M'}${X(tAll[i]).toFixed(1)},${YH(v).toFixed(1)}`).join(' ');
+    g+=`<path class="draw" pathLength="1" d="${dHF}" fill="none" stroke="var(--amber)" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round"/>`;
+    g+=`<path class="draw d2" pathLength="1" d="${dHV}" fill="none" stroke="var(--cyan)" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round"/>`;
+
+    g+=`<rect x="${pad.l}" y="${pad.t}" width="${plotW.toFixed(1)}" height="${plotH.toFixed(1)}" class="axis"/>`;
+    g+=Chart._bezel(pad.l,pad.t,plotW,plotH);
+    /* Achsenwerte fuer die klebende Leiste im Vollbild merken: gezoomt
+       scrollt die gezeichnete Achse aus dem Bild, ohne sie waere nichts
+       mehr ablesbar. */
+    Chart._axis={h, padL:pad.l, padR:pad.r, unitL:'BPM', unitR:'MS',
+      left: ht.filter(q=>q>=hLo&&q<=hHi).map(q=>({y:+YH(q).toFixed(1),txt:fmt0(q),col:'var(--amber)'})),
+      right: Chart.niceTicks(vLo,vHi,5).filter(q=>q>=vLo&&q<=vHi).map(q=>({y:+YV(q).toFixed(1),txt:fmt0(q),col:'var(--cyan)'}))};
+    // Einheiten stehen oben an ihrer Achse — kurz, waagerecht, sofort lesbar
+    g+=`<text x="${pad.l-7}" y="${(pad.t-5).toFixed(0)}" text-anchor="end" class="label-axis" style="fill:var(--amber)">BPM</text>`;
+    g+=`<text x="${(w-pad.r+7).toFixed(0)}" y="${(pad.t-5).toFixed(0)}" text-anchor="start" class="label-axis" style="fill:var(--cyan)">MS</text>`;
+    g+=`<text x="${pad.l}" y="${h-4}" text-anchor="start" class="label-axis">ZEIT<tspan class="label-unit"> (MM:SS) · HRV IM GLEITENDEN FENSTER VON ${Wb} SCHLÄGEN</tspan></text>`;
+
+    /* Endwert-Marken wie in der App: der letzte Wert steht als Plakette am
+       rechten Rand direkt auf seiner Kurve. Man sieht sofort, wo man steht. */
+    /* Enden beide Kurven auf aehnlicher Hoehe, verdecken sich die Plaketten.
+       Dann werden sie symmetrisch auseinandergeschoben — der Ankerpunkt auf
+       der Kurve bleibt an seiner echten Stelle. */
+    const badge=(yy,txt,col,ly)=>{
+      const bw=txt.length*7.4+14, bx=w-pad.r-bw-9;
+      const by=ly!=null?ly:Math.max(pad.t+3,Math.min(pB-21,yy-9.5));
+      return `<rect x="${bx.toFixed(1)}" y="${by.toFixed(1)}" width="${bw.toFixed(1)}" height="19" rx="9.5" class="plotbg" fill="#0E0E0E" stroke="${col}" stroke-opacity=".55"/>`
+           +`<text x="${(bx+bw/2).toFixed(1)}" y="${(by+13).toFixed(1)}" text-anchor="middle" style="fill:${col};font-family:var(--font-mono);font-size:11px;font-weight:700">${txt}</text>`
+           +`<circle cx="${(w-pad.r).toFixed(1)}" cy="${yy.toFixed(1)}" r="3.4" fill="${col}"/>`;
+    };
+    const bItems=[{y:YH(hf[n-1]),txt:String(Math.round(hf[n-1])),col:'var(--amber)'},
+                  {y:YV(all[n-1]),txt:String(Math.round(all[n-1])),col:'var(--cyan)'}]
+                 .sort((p,q)=>p.y-q.y);
+    if(Math.abs(bItems[0].y-bItems[1].y)<21){
+      const mid=(bItems[0].y+bItems[1].y)/2;
+      bItems[0].ly=Math.max(pad.t+3, mid-12.5);
+      bItems[1].ly=Math.min(pB-24, mid+1.5);
+    }
+    bItems.forEach(it=>{ g+=badge(it.y,it.txt,it.col,it.ly); });
+
+    // Trefferpunkte aus der ausgeduennten Puls-Reihe — ein Punkt je Pixel
+    // genuegt, ein Punkt je Schlag blaeht das data-Attribut auf (3,6 MB bei
+    // 50.000 Schlaegen).
+    const pts=decHF.map(([i,v])=>({x:+X(tAll[i]).toFixed(1),y:+YH(v).toFixed(1),
+      y2:(i>=i0?+YV(all[i]).toFixed(1):null), i, tt:ms(tAll[i]),
+      hr:Math.round(v), hv:(i>=i0?Math.round(all[i]*10)/10:null)}));
+    const alt=`Puls und Herzratenvariabilität über ${ms(T)} Aufnahmedauer. `
+      +`Puls ${fmt0(Math.min(...hf))} bis ${fmt0(Math.max(...hf))} Schläge pro Minute, `
+      +`HRV ${fmt0(Math.min(...hvSlice))} bis ${fmt0(Math.max(...hvSlice))} Millisekunden.`;
+    return Chart._hov(g,w,h,pts,'vitals','',alt);
+  },
+
+  /* ATEMKURVE aus der Herzrate (RSA) — 1:1 aus dem Praxis-Cockpit portiert.
+     Die Atmung moduliert den Herzschlag; zieht man vom RR-Intervall den
+     lokalen Mittelwert ab, bleibt genau diese Atem-Komponente uebrig.
+     Fuer Besitzer die zugaenglichste Groesse ueberhaupt — Atemzuege versteht
+     jeder ohne Erklaerung.
+
+     BEWUSSTE ABWEICHUNG vom Cockpit: dort wird die Atemfrequenz nach
+     Schwellen eingefaerbt (cyan/orange/koralle). Hier NICHT — auf dieser
+     Seite wird keine Zahl durch ein Urteil eingefaerbt. Die Einordnung
+     gehoert der Praxis. */
+  breath(rr,{w=720,h=230}={}){
+    if(!rr||rr.length<16) return '';
+    const pad={l:54,r:16,t:22,b:36}, plotW=w-pad.l-pad.r, plotH=h-pad.t-pad.b;
+    const raw=[]; let cum=0;
+    for(let i=0;i<rr.length;i++){ cum+=rr[i];
+      const lo=Math.max(0,i-5), hi=Math.min(rr.length-1,i+5);
+      let sm=0; for(let j=lo;j<=hi;j++) sm+=rr[j];
+      raw.push({t:cum/1000, v:rr[i]-sm/(hi-lo+1)}); }
+    const abs=raw.map(r=>Math.abs(r.v)).sort((a,b)=>a-b);
+    const scale=Math.max(0.001, abs[Math.max(0,Math.min(abs.length-1,Math.floor(abs.length*0.98)))])/0.92;
+    const sm=raw.map((r,i)=>{ const nv=Math.max(-1,Math.min(1,r.v/scale)); let ph='unknown';
+      if(i>0){ const pv=Math.max(-1,Math.min(1,raw[i-1].v/scale)); const sl=nv-pv;
+        ph=Math.abs(sl)<0.06?'pause':(sl>0?'inhale':'exhale'); }
+      return {t:r.t,v:nv,ph}; });
+    const T=sm[sm.length-1].t||1;
+    const X=t=>pad.l+(t/T)*plotW, Y=v=>pad.t+(1-(v+1)/2)*plotH;
+    const COL={inhale:'#F27359',exhale:'#4DA6F2',pause:'rgba(150,150,150,.85)',unknown:'rgba(77,166,242,.7)'};
+    const midY=Y(0), pB=h-pad.b;
+    let g=`<rect x="${pad.l}" y="${pad.t}" width="${plotW.toFixed(1)}" height="${plotH.toFixed(1)}" rx="8" class="plotbg" fill="#0E0E0E"/>`;
+    [1,.5,-.5,-1].forEach(v=>{ const yy=Y(v);
+      g+=`<line class="grid-minor" x1="${pad.l}" x2="${w-pad.r}" y1="${yy.toFixed(1)}" y2="${yy.toFixed(1)}"/>`; });
+    const ms=v=>{const x=Math.floor(v),m=Math.floor(x/60),sec=x%60;return m+':'+String(sec).padStart(2,'0');};
+    const xt=Chart.niceTicks(0,T,Math.max(5,Math.round(plotW/140)));
+    xt.forEach(v=>{ if(v>T)return; const xx=X(v).toFixed(1);
+      g+=`<line class="grid-minor" x1="${xx}" x2="${xx}" y1="${pad.t}" y2="${pB.toFixed(1)}"/>`
+       +`<line class="tick" x1="${xx}" x2="${xx}" y1="${pB.toFixed(1)}" y2="${(pB+4).toFixed(1)}"/>`
+       +`<text x="${xx}" y="${(pB+16).toFixed(1)}" text-anchor="middle">${ms(v)}</text>`; });
+    g+=`<line x1="${pad.l}" x2="${w-pad.r}" y1="${midY.toFixed(1)}" y2="${midY.toFixed(1)}" stroke="#fff" stroke-opacity=".28" stroke-width=".8" stroke-dasharray="4 4"/>`;
+    let above=`M${X(sm[0].t).toFixed(1)},${midY.toFixed(1)}`, below=above;
+    sm.forEach(p2=>{ const x=X(p2.t).toFixed(1);
+      above+=` L${x},${(p2.v>0?Y(p2.v):midY).toFixed(1)}`;
+      below+=` L${x},${(p2.v<0?Y(p2.v):midY).toFixed(1)}`; });
+    const lastX=X(sm[sm.length-1].t).toFixed(1);
+    g+=`<path d="${above} L${lastX},${midY.toFixed(1)} Z" fill="${COL.inhale}" fill-opacity="0.10"/>`
+     +`<path d="${below} L${lastX},${midY.toFixed(1)} Z" fill="${COL.exhale}" fill-opacity="0.10"/>`;
+    let seg=`M${X(sm[0].t).toFixed(1)},${Y(sm[0].v).toFixed(1)}`, cur=sm[0].ph;
+    for(let i=1;i<sm.length;i++){
+      if(sm[i].ph!==cur){ g+=`<path d="${seg}" fill="none" stroke="${COL[cur]}" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>`;
+        seg=`M${X(sm[i-1].t).toFixed(1)},${Y(sm[i-1].v).toFixed(1)}`; cur=sm[i].ph; }
+      seg+=` L${X(sm[i].t).toFixed(1)},${Y(sm[i].v).toFixed(1)}`; }
+    g+=`<path d="${seg}" fill="none" stroke="${COL[cur]}" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>`;
+    g+=Chart._bezel(pad.l,pad.t,plotW,plotH);
+    g+=`<text x="${pad.l-8}" y="${(Y(1)+3).toFixed(1)}" text-anchor="end" style="fill:${COL.inhale};font-size:9px;font-weight:600">${t('inhale')}</text>`;
+    g+=`<text x="${pad.l-8}" y="${(Y(-1)+3).toFixed(1)}" text-anchor="end" style="fill:${COL.exhale};font-size:9px;font-weight:600">${t('exhale')}</text>`;
+    g+=`<text x="${pad.l}" y="${h-4}" text-anchor="start" class="label-axis">${t('axisTime')}<tspan class="label-unit"> (MM:SS)</tspan></text>`;
+    // Atemfrequenz aus Abwaerts-Nulldurchgaengen. NEUTRAL eingefaerbt.
+    let cross=0; for(let i=1;i<sm.length;i++){ if(sm[i-1].v>0&&sm[i].v<=0) cross++; }
+    const brpm=T>0?cross/(T/60):0;
+    if(brpm>=3&&brpm<=60){
+      g+=`<g transform="translate(${pad.l+8},${pad.t+6})"><rect x="0" y="0" width="72" height="19" rx="9.5" class="plotbg" fill="#0E0E0E" stroke="var(--cyan)" stroke-opacity=".5"/>`
+       +`<text x="36" y="13.5" text-anchor="middle" style="fill:var(--cyan);font-size:11px;font-weight:700;font-family:var(--font-mono)">${Math.round(brpm)} ${t('perMin')}</text></g>`; }
+    const pts=sm.map((p2,i)=>({x:+X(p2.t).toFixed(1),y:+Y(p2.v).toFixed(1),i,tt:ms(p2.t),
+      ph:p2.ph==='inhale'?t('inhale'):p2.ph==='exhale'?t('exhale'):t('pause')}));
+    const alt=`${t('chartBreath')}: ${Math.round(brpm)} ${t('perMin')}`;
+    return Chart._hov(g,w,h,pts,'breath','',alt);
+  },
+
+  poincare(rr,{size=360,sd1=null,sd2=null}={}){
+    if(!rr||rr.length<4) return '';
+    const xs=rr.slice(0,-1), ys=rr.slice(1), pad=52;
+    const mn=Math.min(...rr), mx=Math.max(...rr), rg=(mx-mn)||1;
+    const lo=mn-rg*0.08, hi=mx+rg*0.08;
+    const pL=pad, pT=pad-18, pB=size-pad, plotR=size-16;
+    const W=plotR-pL, H=pB-pT;
+    const PX=v=>pL+(v-lo)/(hi-lo)*W, PY=v=>pB-(v-lo)/(hi-lo)*H;
+    let g=`<rect x="${pL}" y="${pT}" width="${W}" height="${H}" rx="8" class="plotbg" fill="#0E0E0E"/>`;
+    const t=Chart.niceTicks(lo,hi,6), step=t.length>1?t[1]-t[0]:50, mstep=step/5;
+    for(let v=t[0]-step;v<=hi+step;v+=mstep){ if(v<lo-1e-6||v>hi+1e-6)continue;
+      const maj=t.some(q=>Math.abs(q-v)<mstep*0.1);
+      g+=`<line class="grid-${maj?'major':'minor'}" x1="${PX(v).toFixed(1)}" y1="${pT}" x2="${PX(v).toFixed(1)}" y2="${pB}"/>`
+       +`<line class="grid-${maj?'major':'minor'}" x1="${pL}" y1="${PY(v).toFixed(1)}" x2="${plotR}" y2="${PY(v).toFixed(1)}"/>`;}
+    t.forEach(tv=>{ if(tv<lo||tv>hi)return;
+      g+=`<text x="${PX(tv).toFixed(1)}" y="${(pB+13).toFixed(1)}" text-anchor="middle">${fmt0(tv)}</text>`
+       +`<text x="${(pL-8).toFixed(1)}" y="${(PY(tv)+3).toFixed(1)}" text-anchor="end">${fmt0(tv)}</text>`;});
+    g+=`<line x1="${PX(lo).toFixed(1)}" y1="${PY(lo).toFixed(1)}" x2="${PX(hi).toFixed(1)}" y2="${PY(hi).toFixed(1)}" stroke="#fff" stroke-opacity="0.5" stroke-width="0.8" stroke-dasharray="4 3"/>`;
+    g+=`<text x="${(plotR-4).toFixed(1)}" y="${(pT+11).toFixed(1)}" text-anchor="end" style="fill:var(--dim);font-size:9px">y = x</text>`;
+    /* Punktwolke gedeckelt: ein SVG-Kreis je Schlagpaar ergibt bei langen
+       Aufnahmen zehntausende Knoten. Gezeichnet wird jedes k-te Paar in
+       gleichmaessigem Abstand — Form und Dichteverhaeltnis der Wolke bleiben
+       erhalten. SD1/SD2 und die Ellipse stammen unveraendert aus ALLEN
+       Schlaegen, die Zahlen aendern sich also nicht. */
+    const MAXPT=6000, pstep=Math.max(1,Math.ceil(xs.length/MAXPT));
+    for(let i=0;i<xs.length;i+=pstep)
+      g+=`<circle cx="${PX(xs[i]).toFixed(1)}" cy="${PY(ys[i]).toFixed(1)}" r="1.9" fill="var(--cyan)" fill-opacity="0.55"/>`;
+    g+=`<rect x="${pL}" y="${pT}" width="${W}" height="${H}" class="axis"/>`;
+    const mean=rr.reduce((a,b)=>a+b,0)/rr.length, cx=PX(mean), cy=PY(mean), sc=W/(hi-lo);
+    if(sd1&&sd2){ const a=-Math.PI/4;
+      g+=`<ellipse cx="${cx.toFixed(1)}" cy="${cy.toFixed(1)}" rx="${(sd2*sc).toFixed(1)}" ry="${(sd1*sc).toFixed(1)}" transform="rotate(-45 ${cx.toFixed(1)} ${cy.toFixed(1)})" fill="none" stroke="var(--cyan)" stroke-width="1.5"/>`
+       +`<line x1="${cx.toFixed(1)}" y1="${cy.toFixed(1)}" x2="${(cx+Math.cos(a)*sd2*sc).toFixed(1)}" y2="${(cy+Math.sin(a)*sd2*sc).toFixed(1)}" stroke="var(--cyan)" stroke-opacity="0.7" stroke-width="1.1"/>`
+       +`<line x1="${cx.toFixed(1)}" y1="${cy.toFixed(1)}" x2="${(cx+Math.cos(a+Math.PI/2)*sd1*sc).toFixed(1)}" y2="${(cy+Math.sin(a+Math.PI/2)*sd1*sc).toFixed(1)}" stroke="var(--cyan)" stroke-opacity="0.7" stroke-width="1.1"/>`
+       +`<circle cx="${cx.toFixed(1)}" cy="${cy.toFixed(1)}" r="3.4" fill="var(--cyan)" style="filter:drop-shadow(0 0 5px var(--cyan))"/>`;
+      g+=`<g transform="translate(${(pL+12).toFixed(0)},${(pT+20).toFixed(0)})">`
+       +`<text y="0" style="fill:var(--cyan);font-family:var(--font-ui);font-size:13px;font-weight:700">SD1 · ${fmt1(sd1)} ms</text>`
+       +`<text y="19" style="fill:var(--cyan);font-family:var(--font-ui);font-size:13px;font-weight:700">SD2 · ${fmt1(sd2)} ms</text>`
+       +`<text y="35" style="fill:var(--dim);font-size:10px">${fmt0(xs.length)} Schlagpaare${pstep>1?' · jedes '+pstep+'. gezeigt':''}</text></g>`;}
+    g+=`<text x="${(pL+W/2).toFixed(0)}" y="${size-2}" text-anchor="middle" class="label-axis" style="fill:var(--cyan)">RR<tspan style="fill:var(--cyan-deep)"> (ms)</tspan></text>`;
+    g+=`<text x="12" y="${(pT+H/2).toFixed(0)}" transform="rotate(-90 12 ${(pT+H/2).toFixed(0)})" text-anchor="middle" class="label-axis" style="fill:var(--cyan)">RR danach<tspan style="fill:var(--cyan-deep)"> (ms)</tspan></text>`;
+    const pts=[];
+    for(let i=0;i<xs.length;i+=pstep)
+      pts.push({x:+PX(xs[i]).toFixed(1),y:+PY(ys[i]).toFixed(1),rn:Math.round(xs[i]),rn1:Math.round(ys[i])});
+    const alt=`Poincaré-Darstellung: ${fmt0(xs.length)} Schlagpaare, `
+      +`jeder Punkt ein Herzschlag gegen den folgenden.`;
+    return Chart._hov(g,size,size,pts,'scatter','',alt);
+  }
+};
+Chart.initHover();
+
+/* ── VOLLBILD ───────────────────────────────────────────────────────────
+   Neu zeichnen statt hochskalieren: im Vollbild bekommt dasselbe Diagramm
+   deutlich mehr Zeichenflaeche, dadurch mehr Rasterlinien, mehr Achsen-
+   beschriftung und feinere Kurven. Ein hochgezoomtes SVG waere nur groesser,
+   nicht praeziser.                                                        */
+/* Fokus-Verwaltung fuer die beiden Overlays: beim Oeffnen wandert der Fokus
+   hinein, Tab bleibt darin gefangen, beim Schliessen kehrt er auf das
+   ausloesende Element zurueck. Ohne das laesst sich das Vollbild per Tastatur
+   betreten, aber nicht mehr verlassen. */
+const Focus={
+  stack:[],
+  trap(el){
+    const prev=document.activeElement;
+    const sel='button:not([disabled]),a[href],input,[tabindex]:not([tabindex="-1"])';
+    const onKey=e=>{
+      if(e.key!=='Tab') return;
+      const f=[...el.querySelectorAll(sel)].filter(n=>n.offsetParent!==null);
+      if(!f.length) return;
+      const first=f[0], last=f[f.length-1];
+      if(e.shiftKey && document.activeElement===first){ e.preventDefault(); last.focus(); }
+      else if(!e.shiftKey && document.activeElement===last){ e.preventDefault(); first.focus(); }
+    };
+    el.addEventListener('keydown',onKey);
+    this.stack.push({el,prev,onKey});
+    requestAnimationFrame(()=>{ const f=el.querySelector(sel); if(f) f.focus(); });
+  },
+  release(el){
+    const i=this.stack.findIndex(x=>x.el===el); if(i<0) return;
+    const {prev,onKey}=this.stack[i]; this.stack.splice(i,1);
+    el.removeEventListener('keydown',onKey);
+    if(prev && document.contains(prev)) prev.focus();
+  }
+};
+
+const ChartZoom={
+  kind:null, zoom:1, baseW:0, baseH:0,
+  MAX:14,                       // 14x reicht, um einzelne Schlaege zu trennen
+
+  open(kind){
+    const rr=S.rr; if(!rr||rr.length<4) return;
+    this.kind=kind; this.zoom=1;
+    const vw=Math.max(document.documentElement.clientWidth,320);
+    const vh=Math.max(document.documentElement.clientHeight,400);
+    if(kind==='poin'){
+      this.baseW=Math.round(Math.min(vw*0.9,vh*0.74,1000));
+      $('#zoomTitle').textContent='Schlag zu Schlag · Poincaré';
+      $('#zoomHint').textContent=`${fmt0(rr.length-1)} Schlagpaare · Tippen heftet den Wert an`;
+      $('#zoomBar').classList.add('hidden');      // eine Punktwolke zoomt man nicht in X
+    } else {
+      this.baseW=Math.round(Math.min(Math.max(vw-40,700),1800));
+      this.baseH=Math.round(Math.min(Math.max(vh-186,320), kind==='rr'?560:700));
+      $('#zoomTitle').textContent = kind==='rr'?t('chartRr'):kind==='breath'?t('chartBreath'):t('chartVitals');
+      $('#zoomHint').textContent=`${fmt0(rr.length)} Schläge · Zwei Finger spreizen zum Zoomen, wischen zum Schieben`;
+      $('#zoomBar').classList.remove('hidden');
+    }
+    /* Erst einblenden, dann messen: die verfuegbare Hoehe aus dem Viewport zu
+       schaetzen ging daneben (Kopfzeile und Leiste variieren). Der Rahmen wird
+       gemessen, danach gezeichnet — dann passt das Diagramm exakt hinein und es
+       entsteht ausschliesslich WAAGERECHTES Scrollen. */
+    $('#chartZoom').classList.add('on');
+    document.body.style.overflow='hidden';
+    Focus.trap($('#chartZoom'));
+    requestAnimationFrame(()=>{
+      const body=$('#zoomBody');
+      /* BEIDE Dimensionen messen. Vorher war die Basisbreite aus dem Viewport
+         geschaetzt (mind. 700) — am Handy wurde die Zeichnung dadurch auf die
+         Rahmenbreite herunterskaliert und nutzte nur die halbe Hoehe. */
+      const bw=Math.max(280, body.clientWidth-22);
+      const bh=Math.max(260, body.clientHeight-22);
+      if(kind==='poin') this.baseW=Math.round(Math.min(bw,bh));
+      else { this.baseW=Math.round(bw); this.baseH=Math.round(Math.min(bh,760)); }
+      this.render();
+    });
+  },
+
+  /* Beim Zoomen wird NEU gezeichnet, nicht vergroessert: dadurch wachsen
+     Rasterdichte und Achsenbeschriftung mit, statt zu verpixeln. Die
+     Ausduennung greift automatisch weniger, je breiter gezeichnet wird —
+     bei hohem Zoom sieht man am Ende die einzelnen Schlaege. */
+  render(anchor){
+    const rr=S.rr, body=$('#zoomBody');
+    if(this.kind==='poin'){
+      const m=metrics(rr);
+      const sd1=m.rmssdMs/Math.SQRT2;
+      const sd2=Math.sqrt(Math.max(0,2*m.sdnnMs*m.sdnnMs-sd1*sd1));
+      body.className='zbody square';
+      body.innerHTML=Chart.poincare(rr,{size:this.baseW,sd1,sd2});
+      return;
+    }
+    const W=Math.round(this.baseW*this.zoom);
+    const prevFrac = anchor!=null ? anchor
+      : (body.scrollWidth>body.clientWidth
+          ? (body.scrollLeft+body.clientWidth/2)/body.scrollWidth : 0.5);
+    body.className='zbody'+(this.zoom>1?' zoomed':'');
+    body.innerHTML = this.kind==='rr'
+      ? Chart.tachogram(rr,{w:W,h:this.baseH})
+      : Chart.vitals(rr,{w:W,h:this.baseH});
+    const hov=body.querySelector('.viz-hov');
+    if(hov && this.zoom>1){ hov.style.width=W+'px'; hov.querySelector('svg').style.width=W+'px'; }
+    this.axisRails();
+    $('#zLvl').textContent = this.zoom<=1 ? 'Ganze Aufnahme' : this.zoom.toFixed(1).replace('.',',')+'×';
+    $('#zOut').disabled = this.zoom<=1;
+    $('#zIn').disabled  = this.zoom>=this.MAX;
+    if(this.zoom>1){
+      requestAnimationFrame(()=>{ body.scrollLeft=Math.max(0, prevFrac*body.scrollWidth - body.clientWidth/2); });
+    }
+  },
+
+  /* Zeichnet die beiden Achsenleisten aus den zuletzt gemerkten Tick-Werten
+     im selben Koordinatensystem wie das Diagramm (gleiche viewBox-Hoehe),
+     damit die Beschriftung exakt auf den Rasterlinien sitzt. */
+  axisRails(){
+    const ax=Chart._axis, L=$('#zAxL'), R=$('#zAxR');
+    if(!ax || this.zoom<=1 || this.kind==='poin'){ L.innerHTML=''; R.innerHTML=''; return; }
+    /* Die Leiste ist nur so breit wie die Beschriftung und blendet zur
+       Zeichnung hin aus. Als deckender Block verdeckte sie am Handy knapp
+       40 Prozent der Kurve. */
+    const rail=(ticks,unit,side,wpx)=>{
+      if(!ticks||!ticks.length) return '';
+      const anchor = side==='l' ? 'end' : 'start';
+      const tx = side==='l' ? wpx-6 : 6;
+      const gid='rg'+side;
+      const stops = side==='l'
+        ? `<stop offset="0" stop-color="#0A0A0C" stop-opacity=".96"/><stop offset=".72" stop-color="#0A0A0C" stop-opacity=".96"/><stop offset="1" stop-color="#0A0A0C" stop-opacity="0"/>`
+        : `<stop offset="0" stop-color="#0A0A0C" stop-opacity="0"/><stop offset=".28" stop-color="#0A0A0C" stop-opacity=".96"/><stop offset="1" stop-color="#0A0A0C" stop-opacity=".96"/>`;
+      return `<svg viewBox="0 0 ${wpx} ${ax.h}" preserveAspectRatio="none" style="width:${wpx}px">`
+        +`<defs><linearGradient id="${gid}" x1="0" y1="0" x2="1" y2="0">${stops}</linearGradient></defs>`
+        +`<rect x="0" y="0" width="${wpx}" height="${ax.h}" fill="url(#${gid})"/>`
+        +ticks.map(t=>`<text x="${tx}" y="${(t.y+3).toFixed(1)}" text-anchor="${anchor}" `
+          +`style="fill:${t.col};font-family:var(--font-mono);font-size:9px">${t.txt}</text>`).join('')
+        +`<text x="${tx}" y="12" text-anchor="${anchor}" style="fill:${ticks[0].col};`
+        +`font-family:var(--font-ui);font-size:9.5px;font-weight:600;letter-spacing:.1em">${unit}</text>`
+        +`</svg>`;
+    };
+    L.innerHTML=rail(ax.left, ax.unitL, 'l', ax.padL);
+    R.innerHTML=ax.right&&ax.right.length ? rail(ax.right, ax.unitR, 'r', ax.padR) : '';
+    /* Leiste exakt auf Lage und Hoehe der gezeichneten Flaeche legen. Ohne das
+       streckt sie sich auf den ganzen Rahmen und die Werte stehen neben den
+       Rasterlinien statt darauf. */
+    requestAnimationFrame(()=>{
+      const svg=$('#zoomBody').querySelector('svg'); if(!svg) return;
+      const wr=$('#zoomBody').parentElement.getBoundingClientRect();
+      const sr=svg.getBoundingClientRect();
+      [L,R].forEach(el=>{ el.style.top=(sr.top-wr.top)+'px'; el.style.bottom='auto'; el.style.height=sr.height+'px'; });
+    });
+  },
+
+  setZoom(z,anchor){
+    const nz=Math.max(1,Math.min(this.MAX,z));
+    if(Math.abs(nz-this.zoom)<0.01) return;
+    this.zoom=nz; this.render(anchor);
+  },
+  close(){ if(!$('#chartZoom').classList.contains('on')) return;
+    Focus.release($('#chartZoom'));
+    $('#chartZoom').classList.remove('on'); $('#zoomBody').innerHTML='';
+    $('#zAxL').innerHTML=''; $('#zAxR').innerHTML='';
+    $('#zoomBar').classList.add('hidden'); document.body.style.overflow=''; }
+};
+
+/* Bedienung des Vollbilds: Knoepfe, Zwei-Finger-Geste, Strg/⌘+Mausrad.
+   Der Punkt unter Fingern bzw. Zeiger bleibt beim Zoomen stehen. */
+(function(){
+  const body=$('#zoomBody');
+  const frac=clientX=>{ const r=body.getBoundingClientRect();
+    return (body.scrollLeft + (clientX-r.left)) / Math.max(1,body.scrollWidth); };
+  $('#zIn').addEventListener('click',()=>ChartZoom.setZoom(ChartZoom.zoom*1.6));
+  $('#zOut').addEventListener('click',()=>ChartZoom.setZoom(ChartZoom.zoom/1.6));
+  $('#zFit').addEventListener('click',()=>ChartZoom.setZoom(1));
+
+  let pinch=null;
+  body.addEventListener('touchstart',e=>{
+    if(e.touches.length===2){
+      const d=Math.hypot(e.touches[0].clientX-e.touches[1].clientX, e.touches[0].clientY-e.touches[1].clientY);
+      pinch={d, z:ChartZoom.zoom, a:frac((e.touches[0].clientX+e.touches[1].clientX)/2)};
+    }
+  },{passive:true});
+  body.addEventListener('touchmove',e=>{
+    if(e.touches.length===2 && pinch){
+      e.preventDefault();     // sonst zoomt der Browser die ganze Seite
+      const d=Math.hypot(e.touches[0].clientX-e.touches[1].clientX, e.touches[0].clientY-e.touches[1].clientY);
+      ChartZoom.setZoom(pinch.z*(d/pinch.d), pinch.a);
+    }
+  },{passive:false});
+  const end=()=>{ pinch=null; };
+  body.addEventListener('touchend',end,{passive:true});
+  body.addEventListener('touchcancel',end,{passive:true});
+
+  body.addEventListener('wheel',e=>{
+    if(!(e.ctrlKey||e.metaKey)) return;    // ohne Modifikator bleibt es normales Scrollen
+    e.preventDefault();
+    ChartZoom.setZoom(ChartZoom.zoom*(e.deltaY<0?1.18:1/1.18), frac(e.clientX));
+  },{passive:false});
+})();
+
+$('#zoomClose').addEventListener('click',()=>ChartZoom.close());
+$('#chartZoom').addEventListener('click',e=>{ if(e.target.id==='chartZoom') ChartZoom.close(); });
+document.addEventListener('keydown',e=>{ if(e.key!=='Escape') return;
+  // oberster Dialog zuerst — sonst schliesst Escape beide auf einmal
+  if($('#infoPop').classList.contains('on')) InfoPop.close();
+  else ChartZoom.close(); });
+document.addEventListener('click',e=>{
+  const b=e.target.closest&&e.target.closest('.chart-zoombtn');
+  if(b){ e.stopPropagation(); ChartZoom.open(b.dataset.zoom); }
+},true);
+// Doppeltipp auf das Diagramm oeffnet ebenfalls (Chart-CI: Doppeltipp -> Vollbild)
+document.addEventListener('dblclick',e=>{
+  const w=e.target.closest&&e.target.closest('.chart-wrap'); if(!w)return;
+  const b=w.querySelector('.chart-zoombtn'); if(b) ChartZoom.open(b.dataset.zoom);
+});
+
+/* ── ⓘ — erklaert WAS zu sehen ist. Bewusst keine Deutung von Werten:
+   die Seite lehrt das Lesen der Grafik, sie beurteilt nicht das Tier. ── */
+/* Erklaer-Texte je Sprache. Bewusst NICHT im Haupt-Katalog: es sind
+   Absaetze, keine Beschriftungen — getrennt gehalten bleibt beides lesbar. */
+const INFO_ALL={
+de:{
+  vitals:{t:'Puls + HRV · Verlauf',r:[
+    ['Gold','Der Puls in Schlägen pro Minute, über die gesamte Aufnahme. Linke Achse.'],
+    ['Cyan','Die Herzratenvariabilität als gleitendes RMSSD. Rechte Achse, eigene Skala.'],
+    ['Warum zusammen','Nebeneinander gelegt wird sichtbar, wie beide sich zueinander verhalten — zwei getrennte Bilder verstecken genau das.'],
+    ['Fenster','Die HRV wird über ein gleitendes Fenster gerechnet und reagiert deshalb auf Puls-Übergänge. Sie ist ein Verlaufsmaß, kein ruhender Einzelwert.'],
+    ['Einordnung','Was der Verlauf für dein Pferd bedeutet, sagt dir deine Tierärztin — dafür braucht es den Vergleich mit früheren Aufnahmen desselben Pferds.']]},
+  rr:{t:'Herzschlag-Abstände',r:[
+    ['Was','Der Abstand zwischen zwei aufeinanderfolgenden Herzschlägen, in Millisekunden. Jeder Punkt der Kurve ist ein einzelner Schlag.'],
+    ['Zickzack','Ein gesundes Herz schlägt nicht wie ein Metronom. Die Abstände schwanken — unter anderem im Takt der Atmung.'],
+    ['Rohsignal','Das hier ist die unbearbeitete Messung. Alle anderen Zahlen dieser Seite werden daraus gerechnet.'],
+    ['Achse','Unten steht die Schlag-Nummer, die gestrichelte Linie ist der Mittelwert der Aufnahme.']]},
+  breath:{t:'Atemkurve',r:[
+    ['Idee','Die Atmung verändert den Herzschlag: beim Einatmen wird er kürzer, beim Ausatmen länger. Diese Schwankung lässt sich aus den Herzschlag-Abständen herausrechnen.'],
+    ['Farben','Koralle nach oben ist die Einatmungs-Phase, Blau nach unten die Ausatmung. Grau sind Pausen ohne klare Richtung.'],
+    ['Zahl','Oben links steht die daraus geschätzte Atemfrequenz in Atemzügen pro Minute.'],
+    ['Grenze','Das ist eine Ableitung aus dem Herzschlag, keine direkte Atemmessung. Bei unruhigem Pferd oder gestörtem Signal wird sie ungenau.']]},
+  poin:{t:'Schlag zu Schlag · Poincaré',r:[
+    ['Idee','Jeder Punkt trägt zwei Werte: waagerecht ein Herzschlag-Abstand, senkrecht der unmittelbar darauffolgende.'],
+    ['Diagonale','Läge jeder Schlag exakt wie der vorige, lägen alle Punkte auf der gestrichelten Linie. Die Streuung darum herum ist die Variabilität.'],
+    ['Ellipse','Fasst die Wolke zusammen: SD1 quer zur Diagonale (kurzfristig), SD2 entlang (längerfristig).'],
+    ['Herkunft','Eine seit Jahrzehnten etablierte Standard-Darstellung der Herzratenanalyse.']]},
+  beats:{t:'Herzschläge',r:[
+    ['Was','Die Anzahl einzeln erfasster Herzschläge in dieser Aufnahme.'],
+    ['Warum wichtig','Je mehr Schläge, desto ruhiger stehen die abgeleiteten Werte. Sehr kurze Aufnahmen schwanken stark.'],
+    ['Erfassung','Der Gurt meldet jeden Schlag einzeln — gezählt wird nicht geschätzt.']]},
+  dur:{t:'Aufnahmedauer',r:[
+    ['Was','Die Zeit zwischen erstem und letztem erfassten Schlag.'],
+    ['Empfehlung','Für einen ruhigen Verlauf sind mindestens fünf Minuten sinnvoll. Kürzere Aufnahmen sind möglich, tragen aber weniger.'],
+    ['Hinweis','Die Dauer sagt nichts über die Qualität — dafür steht die Signalgüte im Messprotokoll.']]},
+  hr:{t:'Ø Herzfrequenz',r:[
+    ['Was','Der durchschnittliche Puls über die Aufnahme, in Schlägen pro Minute.'],
+    ['Rechenweg','Zeitgewichtet gerechnet: 60000 geteilt durch den mittleren Schlagabstand. Der Mittelwert der Momentan-Pulse wäre systematisch zu hoch (Jensen-Ungleichung).'],
+    ['Spannweite','Die Pille über der Grafik zeigt zusätzlich den niedrigsten und höchsten Wert der Aufnahme.'],
+    ['Einordnung','Ob ein Wert für dein Pferd üblich ist, hängt von Alter, Rasse, Training und Situation ab — das beurteilt deine Tierärztin.']]},
+  rmssd:{t:'HRV · RMSSD',r:[
+    ['Was','Ein Maß für die Streuung von einem Schlag zum nächsten, in Millisekunden.'],
+    ['Rechenweg','Wurzel aus dem Mittel der quadrierten Differenzen aufeinanderfolgender Schlagabstände (Task Force 1996).'],
+    ['Lesart','Große Werte heißen: die Abstände ändern sich von Schlag zu Schlag deutlich. Kleine Werte: das Herz läuft gleichmäßiger.'],
+    ['Achtung','Ein einzelner Wert sagt wenig. Aussagekräftig wird er im Vergleich mit früheren Messungen desselben Pferds unter ähnlichen Bedingungen.']]},
+  sdnn:{t:'HRV · SDNN',r:[
+    ['Was','Die Standardabweichung aller Schlagabstände der Aufnahme, in Millisekunden.'],
+    ['Unterschied','RMSSD schaut auf benachbarte Schläge, SDNN auf die gesamte Aufnahme. SDNN wächst deshalb mit der Länge und mit jedem Wechsel der Belastung.'],
+    ['Lesart','SDNN beschreibt die Gesamt-Spannweite — es ist kein Fitnessmaß.'],
+    ['Achtung','Nur zwischen vergleichbaren Aufnahmen sinnvoll zu vergleichen.']]},
+  qual:{t:'Signalgüte',r:[
+    ['Was','Der Anteil aufeinanderfolgender Schläge ohne unplausiblen Sprung.'],
+    ['Wofür','Eine rein technische Aussage über die MESSUNG — sitzt der Gurt, ist die Elektrodenfläche feucht genug. Über das Pferd sagt sie nichts.'],
+    ['Konsequenz','Bei niedriger Güte lohnt eine zweite Aufnahme mehr als jede Auswertung der ersten.']]},
+  pairs:{t:'Auswertbare Schlagpaare',r:[
+    ['Was','Wie viele benachbarte Schlag-Paare sauber aufeinanderfolgen — die Grundlage der Schlag-zu-Schlag-Rechnung.'],
+    ['Warum Paare','RMSSD und die Poincaré-Wolke entstehen aus Paaren, nicht aus einzelnen Schlägen.']]},
+  sensor:{t:'Sensor',r:[
+    ['Was','Das Gerät, das die Aufnahme geliefert hat.'],
+    ['Warum notiert','Messwerte sind ohne Angabe des Geräts nicht nachvollziehbar. Der Sensor geht deshalb mit in die Datei an die Praxis.']]},
+  batt:{t:'Gurt-Akku',r:[
+    ['Was','Der Ladestand der Knopfzelle im Polar-Gurt.'],
+    ['Warum sichtbar','Ein leerer Gurt ist die haeufigste Ursache fuer abgebrochene Aufnahmen. Bei unter etwa 15 Prozent lohnt der Wechsel vor der Messung, nicht danach.'],
+    ['Hinweis','Der Wert kommt vom Gurt selbst und wird waehrend der Messung aktualisiert.']]},
+  res:{t:'Zeitauflösung',r:[
+    ['Was','Der Gurt meldet Schlagabstände in Schritten von 1/1024 Sekunde, also knapp einer Millisekunde.'],
+    ['Warum wichtig','Die Herzratenvariabilität lebt von Unterschieden im Millisekundenbereich. Eine gröbere Auflösung würde genau das Signal verschlucken, um das es geht.']]}
+},
+en:{
+  vitals:{t:'Pulse + HRV · over time',r:[
+    ['Gold','The pulse in beats per minute, across the whole recording. Left axis.'],
+    ['Cyan','Heart rate variability as a rolling RMSSD. Right axis, its own scale.'],
+    ['Why together','Placed side by side, you can see how the two relate to each other — two separate pictures hide exactly that.'],
+    ['Window','HRV is computed over a rolling window and therefore responds to changes in pulse. It is a measure of the course over time, not a resting single value.'],
+    ['Interpretation','What the course means for your horse is something your veterinarian will tell you — that requires comparison with earlier recordings of the same horse.']]},
+  rr:{t:'Beat-to-beat intervals',r:[
+    ['What','The interval between two consecutive heartbeats, in milliseconds. Every point on the curve is a single beat.'],
+    ['Zigzag','A healthy heart does not beat like a metronome. The intervals fluctuate — among other things in time with the breathing.'],
+    ['Raw signal','This is the unprocessed measurement. Every other number on this page is calculated from it.'],
+    ['Axis','Below is the beat number; the dashed line is the mean of the recording.']]},
+  breath:{t:'Breathing curve',r:[
+    ['Idea','Breathing changes the heartbeat: on breathing in it shortens, on breathing out it lengthens. This fluctuation can be extracted from the beat intervals.'],
+    ['Colours','Coral upwards is the inhalation phase, blue downwards the exhalation. Grey marks pauses without a clear direction.'],
+    ['Number','Top left shows the breathing rate estimated from this, in breaths per minute.'],
+    ['Limit','This is derived from the heartbeat, not a direct measurement of breathing. With a restless horse or a disturbed signal it becomes imprecise.']]},
+  poin:{t:'Beat to beat · Poincaré',r:[
+    ['Idea','Every point carries two values: horizontally one beat interval, vertically the one immediately following it.'],
+    ['Diagonal','If every beat were exactly like the one before, all points would lie on the dashed line. The scatter around it is the variability.'],
+    ['Ellipse','Summarises the cloud: SD1 across the diagonal (short-term), SD2 along it (longer-term).'],
+    ['Origin','A standard representation in heart rate analysis, established for decades.']]},
+  beats:{t:'Heartbeats',r:[
+    ['What','The number of individually captured heartbeats in this recording.'],
+    ['Why it matters','The more beats, the steadier the derived values. Very short recordings fluctuate strongly.'],
+    ['Capture','The belt reports every beat individually — counted, not estimated.']]},
+  dur:{t:'Recording length',r:[
+    ['What','The time between the first and the last captured beat.'],
+    ['Recommendation','For a steady course, at least five minutes makes sense. Shorter recordings are possible but carry less.'],
+    ['Note','Length says nothing about quality — signal quality in the recording log covers that.']]},
+  hr:{t:'Average pulse',r:[
+    ['What','The average pulse across the recording, in beats per minute.'],
+    ['How it is calculated','Time-weighted: 60000 divided by the mean beat interval. Averaging the instantaneous pulses would be systematically too high (Jensen’s inequality).'],
+    ['Range','The pill above the chart additionally shows the lowest and highest value of the recording.'],
+    ['Interpretation','Whether a value is usual for your horse depends on age, breed, training and situation — your veterinarian assesses that.']]},
+  rmssd:{t:'HRV · RMSSD',r:[
+    ['What','A measure of the variation from one beat to the next, in milliseconds.'],
+    ['How it is calculated','Root of the mean squared differences between consecutive beat intervals (Task Force 1996).'],
+    ['Reading it','Large values mean the intervals change noticeably from beat to beat. Small values: the heart runs more evenly.'],
+    ['Caution','A single value says little. It becomes meaningful in comparison with earlier recordings of the same horse under similar conditions.']]},
+  sdnn:{t:'HRV · SDNN',r:[
+    ['What','The standard deviation of all beat intervals in the recording, in milliseconds.'],
+    ['Difference','RMSSD looks at neighbouring beats, SDNN at the whole recording. SDNN therefore grows with length and with every change in load.'],
+    ['Reading it','SDNN describes the overall spread — it is not a fitness measure.'],
+    ['Caution','Only meaningful to compare between comparable recordings.']]},
+  qual:{t:'Signal quality',r:[
+    ['What','The share of consecutive beats without an implausible jump.'],
+    ['What it is for','A purely technical statement about the MEASUREMENT — whether the belt sits well and the electrode area is moist enough. It says nothing about the horse.'],
+    ['Consequence','At low quality, a second recording is worth more than any analysis of the first.']]},
+  pairs:{t:'Usable beat pairs',r:[
+    ['What','How many neighbouring beat pairs follow one another cleanly — the basis of the beat-to-beat calculation.'],
+    ['Why pairs','RMSSD and the Poincaré cloud arise from pairs, not from individual beats.']]},
+  sensor:{t:'Sensor',r:[
+    ['What','The device that produced the recording.'],
+    ['Why recorded','Readings are not traceable without stating the device. The sensor therefore travels with the file to the practice.']]},
+  batt:{t:'Belt battery',r:[
+    ['What','The charge level of the coin cell in the Polar belt.'],
+    ['Why visible','An empty belt is the most common cause of aborted recordings. Below roughly 15 percent it pays to change it before the recording, not after.'],
+    ['Note','The value comes from the belt itself and is updated during the recording.']]},
+  res:{t:'Time resolution',r:[
+    ['What','The belt reports beat intervals in steps of 1/1024 second, that is just under one millisecond.'],
+    ['Why it matters','Heart rate variability lives on differences in the millisecond range. A coarser resolution would swallow exactly the signal that matters.']]}
+}
+};
+function infoFor(k){ const d=INFO_ALL[LANG]||INFO_ALL.de; return d[k]||INFO_ALL.de[k]; }
+
+const InfoPop={
+  open(k){ const d=infoFor(k); if(!d)return;
+    $('#ipTitle').textContent=d.t;
+    $('#ipBody').innerHTML=d.r.map(([a,b])=>`<div class="ip-r"><b>${a}</b><span>${b}</span></div>`).join('');
+    $('#infoPop').classList.add('on'); document.body.style.overflow='hidden';
+    Focus.trap($('#infoPop')); },
+  close(){ if(!$('#infoPop').classList.contains('on')) return;
+    Focus.release($('#infoPop'));
+    $('#infoPop').classList.remove('on');
+    if(!$('#chartZoom').classList.contains('on')) document.body.style.overflow=''; }
+};
+$('#ipClose').addEventListener('click',()=>InfoPop.close());
+$('#infoPop').addEventListener('click',e=>{ if(e.target.id==='infoPop') InfoPop.close(); });
+/* Alles Erklaerbare ist anklickbar: das ⓘ am Diagramm, jede Messwert-Kachel,
+   jede Zeile im Messprotokoll und die Serien-Pillen. Ein Zugriffspunkt, eine
+   Textquelle (INFO) — keine Erklaerung driftet gegen eine andere. */
+document.addEventListener('click',e=>{
+  const b=e.target.closest&&e.target.closest('[data-info]');
+  if(b){ e.stopPropagation(); e.preventDefault(); InfoPop.open(b.dataset.info); }
+},true);
 const room=new URLSearchParams(location.search).get('room');
 
 /* ══ EINBETTBARER MODUS (weisslabel-faehig) ═══════════════════════════════
@@ -233,9 +1945,58 @@ if(partner){
   });
 }
 
+/* Laufzeit-Texte, die nicht als data-i18n im Markup stehen koennen
+   (Werte darin aendern sich) — werden bei jedem Sprachwechsel neu gesetzt. */
+function relabel(){
+  const q=$('#roomLine'); if(q && room){ q.textContent='';
+    q.append(t('roomLabel')+' '); const b=document.createElement('b'); b.textContent=room; q.append(b); }
+  const cap=$('#vitalsCap'); if(cap) cap.innerHTML=t('chartVitalsCap')+' <b style="color:var(--sec);font-weight:600">'+t('chartVitalsCapB')+'</b>';
+  const rl=$('#hrRangeLbl'); if(rl) rl.textContent=t('liveRange');
+  const ru=$('#hrRangeUnit'); if(ru) ru.textContent=t('liveRangeUnit');
+  const cl=$('#ctLive'); if(cl) cl.childNodes[0].nodeValue=t('lastBeatsLbl');
+  const cv=$('#ctVitals'); if(cv) cv.childNodes[0].nodeValue=t('chartVitals');
+  const cr=$('#ctRr'); if(cr) cr.childNodes[0].nodeValue=t('chartRr');
+  const cb=$('#ctBreath'); if(cb) cb.childNodes[0].nodeValue=t('chartBreath');
+  const bc2=$('#breathCap'); if(bc2) bc2.textContent=t('chartBreathCap');
+  const cp=$('#ctPoin'); if(cp) cp.childNodes[0].nodeValue=t('chartPoin');
+  const sp=$('#pillPulseNm'); if(sp) sp.textContent=t('seriesPulse');
+  const sh=$('#pillHrvNm'); if(sh) sh.textContent=t('seriesHrv');
+  document.querySelectorAll('.privacy').forEach(el=>{ const n=[...el.childNodes].find(x=>x.nodeType===3&&x.textContent.trim());
+    if(n) n.nodeValue=t('privacy'); });
+  const sH=$('#shareHtxt'); if(sH) sH.textContent=t('shareH');
+  const so=$('#shOwnerTxt'); if(so) so.textContent=t('shareOwner');
+  const sv=$('#shVetTxt'); if(sv) sv.textContent=t('shareVet');
+  const bs=$('#btnSendTxt'); if(bs) bs.textContent=t('send');
+  const bc=$('#btnConnectTxt'); if(bc) bc.textContent=t('connect');
+  const bl=$('#btnSendLinkTxt'); if(bl) bl.textContent=t('sendLink');
+  if(!S.startedAt){ const rt=$('#recTxt'); if(rt) rt.textContent=t('progressStart'); }
+  else if(typeof tick==='function') tick();
+  /* Die Beleg-Texte werden in finish() gesetzt und wandern beim Sprachwechsel
+     sonst nicht mit — hier neu schreiben, ohne die Diagramme neu zu zeichnen. */
+  if(S.rr && S.rr.length>=12 && !$('#vDone').classList.contains('hidden')){
+    const secs=S.startedAt?(Date.now()-S.startedAt.getTime())/1000:0;
+    $('#dTachoN').textContent=fmt0(S.rr.length)+' '+t('beatsUnit');
+    $('#vMeta').textContent=fmt0(S.rr.length)+' '+t('beatsUnit')+' · '+mmss(secs);
+    $('#doneSub').textContent = room ? t('doneSubRoom') : t('doneSubFile');
+    let clean=0,pairs=0;
+    for(let i=1;i<S.rr.length;i++){ pairs++; if(Math.abs(S.rr[i]-S.rr[i-1])<=0.20*S.rr[i-1]) clean++; }
+    const q=pairs?clean/pairs:0, kurz=secs<REC_SEC;
+    $('#pPairs').textContent=fmt0(clean)+' '+t('pairsOf')+' '+fmt0(pairs);
+    $('#protoVerdict').textContent = q>=0.90 ? (kurz?t('verdictCleanShort'):t('verdictClean'))
+      : q>=0.75 ? t('verdictNoisy') : t('verdictBad');
+    if(typeof updateQuality==='function') updateQuality();
+  }
+}
+$('#langBtn').addEventListener('click',()=>setLang(LANG==='de'?'en':'de'));
+document.documentElement.lang=LANG;
+
 /* ── Ansichten ─────────────────────────────────────────────────────────── */
 const VIEWS=['vUnsupported','vReady','vLive','vDone'];
-function show(id){ VIEWS.forEach(v=>$('#'+v).classList.toggle('hidden', v!==id)); }
+function show(id){
+  VIEWS.forEach(v=>$('#'+v).classList.toggle('hidden', v!==id));
+  // Hero-Atmosphaere nur dort, wo noch keine Messwerte stehen.
+  document.body.classList.toggle('hero', id==='vReady'||id==='vUnsupported');
+}
 
 /* ── Zustand ───────────────────────────────────────────────────────────── */
 const S={ device:null, hrChar:null, battChar:null, rr:[], hr:0, batt:null,
@@ -258,11 +2019,32 @@ function subjectId(name){
   return id;
 }
 
+/* Eigenen Sitzungslink weiterreichen. Anders als beim Weiterempfehlen gehoert
+   HIER der Verbindungscode mit hinein — es ist der private Link des Nutzers
+   auf sein eigenes zweites Geraet, ohne ihn muesste er ihn abtippen. */
+$('#btnSendLink').addEventListener('click', async ()=>{
+  const url=location.href;
+  const cfg={ title:'CARLON Equine — Messung', text:'Mein Link zur Herzraten-Messung — auf einem Android-Gerät oder Computer in Chrome öffnen:', url };
+  const n=$('#linkNote');
+  const say=m=>{ n.textContent=m; setTimeout(()=>{ if(n.textContent===m) n.textContent=''; },5000); };
+  try{
+    if(navigator.share){ await navigator.share(cfg); return; }
+    await navigator.clipboard.writeText(url); say('Link kopiert — jetzt an dein Gerät schicken');
+  }catch(e){
+    if(e && e.name==='AbortError') return;
+    try{ await navigator.clipboard.writeText(url); say('Link kopiert'); }catch(_){ say(url); }
+  }
+});
+
 /* ── Start ─────────────────────────────────────────────────────────────── */
+applyLang();
 if(!('bluetooth' in navigator)){ show('vUnsupported'); }
 else {
   show('vReady');
-  $('#roomLine').innerHTML = room ? `Verbindungscode: <b>${room.replace(/[<>&]/g,'')}</b>` : '';
+  /* Der Code kommt aus der URL, also von aussen. Als TEXT setzen statt
+     Zeichen herauszufiltern — eine Positivliste schlaegt jede Sperrliste. */
+  if(room){ $('#roomLine').append('Verbindungscode: ');
+    const b=document.createElement('b'); b.textContent=room; $('#roomLine').append(b); }
   try{ const last=localStorage.getItem('carlon.lastHorse'); if(last) $('#horse').value=last; }catch(e){}
 }
 
@@ -306,9 +2088,9 @@ async function connect(dev){
 
 function onDrop(){
   if(S.stopped) return;
-  $('#liveTitle').textContent='Verbindung unterbrochen';
-  $('#liveSub').innerHTML='Der Gurt ist nicht mehr erreichbar. Sitz und Feuchtigkeit prüfen, dann erneut verbinden — die bisher erfassten Schläge bleiben erhalten.';
-  $('#btnStop').textContent='Aufnahme abschließen';
+  $('#liveTitle').textContent=t('dropTitle');
+  $('#liveSub').textContent=t('dropSub');
+  $('#btnStop').textContent=t('dropStop');
 }
 
 /* ── Messung ───────────────────────────────────────────────────────────── */
@@ -345,15 +2127,26 @@ function onBeat(ev){
     }
   }
   $('#hr').textContent=hr||'–';
-  $('#beats').textContent=S.rr.length;
+  if(hr){ S.hrMin=Math.min(S.hrMin??hr,hr); S.hrMax=Math.max(S.hrMax??hr,hr);
+    $('#hrRange').textContent = S.hrMin===S.hrMax ? String(S.hrMin) : S.hrMin+'–'+S.hrMax; }
+  $('#beats').textContent=fmt0(S.rr.length);
   const h=$('#heart'); h.classList.remove('beat'); void h.offsetWidth; h.classList.add('beat');
   if(S.rr.length%2===0) drawSpark();
   if(S.rr.length%5===0) updateQuality();
 }
 
+/* Empfohlene Mindestdauer einer Ruhe-Aufnahme. Eine Aussage ueber die
+   AUFNAHME, nicht ueber das Pferd — deshalb hier zulaessig. */
+const REC_SEC=300;
 function tick(){
   if(!S.startedAt) return;
-  $('#dur').textContent=mmss((Date.now()-S.startedAt.getTime())/1000);
+  const secs=(Date.now()-S.startedAt.getTime())/1000;
+  $('#dur').textContent=mmss(secs);
+  const p=Math.min(1,secs/REC_SEC);
+  $('#recFill').style.width=(p*100).toFixed(1)+'%';
+  $('#recTxt').textContent = p>=1
+    ? t('recReached')
+    : t('recRemaining').replace('{x}', mmss(REC_SEC-secs));
 }
 function mmss(sec){ sec=Math.max(0,Math.floor(sec)); return Math.floor(sec/60)+':'+String(sec%60).padStart(2,'0'); }
 
@@ -366,69 +2159,18 @@ function updateQuality(){
   let clean=0, n=0;
   for(let i=1;i<rr.length;i++){ n++; if(Math.abs(rr[i]-rr[i-1]) <= 0.20*rr[i-1]) clean++; }
   const pct = n? clean/n : 0;
-  const d=$('#qdot'), t=$('#qtxt');
+  const d=$('#qdot'), t2=$('#qtxt');
   d.className='dot '+(pct>=0.90?'ok':pct>=0.75?'mid':'bad');
-  t.textContent = pct>=0.90 ? 'Signal stabil'
-    : pct>=0.75 ? 'Signal unruhig — Gurtsitz und Feuchtigkeit prüfen'
-    : 'Signal stark gestört — Gurt neu anfeuchten und nachsetzen';
+  t2.textContent = pct>=0.90 ? t('sigStable')+' · '+(pct*100).toFixed(1).replace('.',',')+' %'
+    : pct>=0.75 ? t('sigNoisy') : t('sigBad');
 }
 
 function drawSpark(){
-  const rr=S.rr.slice(-90); if(rr.length<3) return;
-  const W=320,H=104,L=4,R=30,T=9,B=13;
-  const iw=W-L-R, ih=H-T-B;
-  const lo=Math.min(...rr), hi=Math.max(...rr), span=(hi-lo)||1;
-  const X=i=>L+(i/(rr.length-1))*iw;
-  const Y=v=>T+(1-(v-lo)/span)*ih;
-  // Praezisionsraster nach dem Vorbild von EKG-Papier: feines Raster, jede
-  // fuenfte Linie kraeftiger. Das Raster ist der Grund, warum eine Kurve als
-  // Messung gelesen wird und nicht als Dekoration.
-  const step=iw/30;               // 30 feine Spalten
-  const rows=6;                   // 6 feine Zeilen
-  let minor='', major='';
-  for(let i=0;i<=30;i++){
-    const x=(L+i*step).toFixed(2);
-    (i%5===0?major:minor)!==undefined && (i%5===0
-      ? major+=`<line class="grid-major" x1="${x}" x2="${x}" y1="${T}" y2="${T+ih}"/>`
-      : minor+=`<line class="grid-minor" x1="${x}" x2="${x}" y1="${T}" y2="${T+ih}"/>`);
-  }
-  for(let j=0;j<=rows;j++){
-    const y=(T+j*ih/rows).toFixed(2);
-    (j%3===0
-      ? major+=`<line class="grid-major" x1="${L}" x2="${L+iw}" y1="${y}" y2="${y}"/>`
-      : minor+=`<line class="grid-minor" x1="${L}" x2="${L+iw}" y1="${y}" y2="${y}"/>`);
-  }
-  // Skala rechts: ohne Zahlen bleibt das Raster Ornament
-  const labels=[hi, lo+span/2, lo].map((v,k)=>
-    `<text class="axis" x="${L+iw+5}" y="${(Y(v)+2.6).toFixed(1)}">${Math.round(v)}</text>`).join('');
-  const pts=rr.map((v,i)=>`${X(i).toFixed(1)},${Y(v).toFixed(1)}`).join(' ');
-  const area=`${L},${(T+ih).toFixed(1)} ${pts} ${(L+iw).toFixed(1)},${(T+ih).toFixed(1)}`;
-  const lx=X(rr.length-1).toFixed(1), ly=Y(rr[rr.length-1]).toFixed(1);
-  $('#spark').innerHTML =
-    `<defs>
-       <linearGradient id="sg" x1="0" y1="0" x2="0" y2="1">
-         <stop offset="0" stop-color="var(--cyan)" stop-opacity=".26"/>
-         <stop offset="1" stop-color="var(--cyan)" stop-opacity="0"/>
-       </linearGradient>
-       <filter id="sgl" x="-20%" y="-40%" width="140%" height="180%">
-         <feGaussianBlur stdDeviation="1.6" result="b"/>
-         <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
-       </filter>
-     </defs>
-     <rect x="${L}" y="${T}" width="${iw}" height="${ih}" rx="3"
-       fill="color-mix(in srgb, var(--bg) 78%, black)"/>
-     ${minor}${major}
-     <rect class="frame" x="${L}" y="${T}" width="${iw}" height="${ih}" rx="3"/>
-     <polygon points="${area}" fill="url(#sg)"/>
-     <polyline points="${pts}" fill="none" stroke="var(--cyan)" stroke-width="1.9"
-       stroke-linejoin="round" stroke-linecap="round" filter="url(#sgl)"/>
-     <circle cx="${lx}" cy="${ly}" r="3.4" fill="var(--cyan)" opacity=".28"/>
-     <circle cx="${lx}" cy="${ly}" r="1.9" fill="var(--cyan)"/>
-     ${labels}
-     <text class="axis" x="${L}" y="${H-3}">RR-INTERVALL &#183; ms</text>
-     <text class="axis" x="${L+iw}" y="${H-3}" text-anchor="end">${rr.length} SCHL\u00c4GE</text>`;
+  const rr=S.rr.slice(-120); if(rr.length<3) return;
+  $('#liveN').textContent=fmt0(rr.length)+' '+t('beatsUnit');
+  $('#spark').innerHTML = Chart.tachogram(rr,
+    narrow()?{w:380,h:250,xlabel:'LETZTE SCHLÄGE'}:{w:640,h:190,xlabel:'LETZTE SCHLÄGE'});
 }
-
 
 /* ── Beenden ───────────────────────────────────────────────────────────── */
 $('#btnStop').addEventListener('click', async ()=>{
@@ -443,23 +2185,85 @@ $('#btnStop').addEventListener('click', async ()=>{
 function finish(){
   const rr=S.rr;
   const secs=(Date.now()-S.startedAt.getTime())/1000;
+  const name=$('#horse').value.trim()||'Pferd';
   $('#dBeats').textContent=rr.length;
   $('#dDur').textContent=mmss(secs);
+  $('#dName').textContent=name;
+  $('#dStamp').textContent=S.startedAt.toLocaleString('de-DE',
+    {day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit'});
+  $('#dSensor').textContent=(S.device&&S.device.name)||'Polar H10';
   if(rr.length<12){
-    $('#doneSub').textContent='Es sind zu wenige Herzschläge erfasst worden, um die Aufnahme sinnvoll weiterzugeben.';
+    $('#belegBody').classList.add('hidden');
+    $('.card').classList.remove('beleg');
+    // Nach einer misslungenen Aufnahme wird nicht um Weiterempfehlung gebeten.
+    $('.share').classList.add('hidden');
+    $('#doneSub').textContent=t('tooFew');
     $('#dHR').textContent='–';
     $('#btnSend').disabled=true; $('#btnSave').disabled=true;
     $('#btnAgain').classList.remove('hidden');
     show('vDone'); return;
   }
   const m=metrics(rr);
-  $('#dHR').textContent=Math.round(m.meanHRBpm);
-  $('#doneSub').textContent = room
-    ? 'Die Aufnahme kann jetzt direkt an die Praxis übertragen werden.'
-    : 'Speichere die Datei und schicke sie deiner Praxis — oder öffne den Link, den du von ihr bekommst.';
+  $('#dHR').innerHTML=Math.round(m.meanHRBpm)+'<u>bpm</u>';
+  $('#dRmssd').innerHTML=fmt1(m.rmssdMs)+'<u>ms</u>';
+  $('#dSdnn').innerHTML=fmt1(m.sdnnMs)+'<u>ms</u>';
+
+  /* ── Der Beleg ────────────────────────────────────────────────────────
+     Das Beweisstueck. Nach Minuten Messen muss das Ergebnis sichtbar sein,
+     sonst war der Aufwand fuer den Besitzer unsichtbar — und ein unsichtbares
+     Ergebnis wird weder uebergeben noch weitergezeigt.                     */
+  $('#belegBody').classList.remove('hidden');
+  $('.share').classList.remove('hidden');
+  // Zustand aus einem vorherigen Fehlversuch zuruecknehmen: sonst bleibt
+  // "Senden" gesperrt, obwohl diese Aufnahme in Ordnung ist.
+  $('#btnSend').disabled=false; $('#btnSave').disabled=false;
+  $('#btnSend').classList.remove('hidden');
+  $('#dTachoN').textContent=fmt0(rr.length)+' '+t('beatsUnit');
+  $('#dVitals').innerHTML=Chart.vitals(rr, narrow()?{w:380,h:300}:{w:720,h:320});
+  $('#dTacho').innerHTML=Chart.tachogram(rr, narrow()?{w:380,h:250}:{w:720,h:230});
+
+  /* Serien-Pillen: Mittelwert und Spannweite je Kurve — dieselbe Auskunft,
+     die die iOS-App ueber der Grafik gibt. Reine Beschreibung der Serie. */
+  const hfArr=rr.map(v=>60000/v);
+  const Wb=Math.min(30,Math.max(5,Math.floor(rr.length/3)));
+  const hvArr=rr.map((_,i)=>{ const lo=Math.max(1,i-Wb+1); let s=0,c=0;
+    for(let j=lo;j<=i;j++){ const d=rr[j]-rr[j-1]; s+=d*d; c++; } return c?Math.sqrt(s/c):0; })
+    .slice(Math.min(Wb,rr.length-2));
+  const avg=a=>a.reduce((x,y)=>x+y,0)/a.length;
+  $('#pillHr').innerHTML=Math.round(m.meanHRBpm)+'<u>bpm</u>';
+  $('#pillHrRg').textContent=Math.round(Math.min(...hfArr))+'–'+Math.round(Math.max(...hfArr));
+  $('#pillHv').innerHTML=Math.round(avg(hvArr))+'<u>ms</u>';
+  $('#pillHvRg').textContent=Math.round(Math.min(...hvArr))+'–'+Math.round(Math.max(...hvArr));
+  $('#vMeta').textContent=fmt0(rr.length)+' '+t('beatsUnit')+' · '+mmss(secs);
+  // SD1/SD2 nach Brennan 2001 — reine Umformung der beiden Pflichtfelder.
+  const sd1=m.rmssdMs/Math.SQRT2;
+  const sd2=Math.sqrt(Math.max(0, 2*m.sdnnMs*m.sdnnMs - sd1*sd1));
+  // groessere Zeichenflaeche = mehr Rasterlinien, mehr Achsenwerte, feinere
+  // Punkte. Der Plot wird nicht skaliert, er wird groesser gerechnet.
+  $('#dBreath').innerHTML=Chart.breath(rr, narrow()?{w:380,h:250}:{w:720,h:230});
+  $('#dPoin').innerHTML=Chart.poincare(rr,{size:narrow()?420:640,sd1:sd1,sd2:sd2});
+  $('.card').classList.add('beleg');
+
+  /* Messprotokoll — Angaben ueber die MESSUNG, nicht ueber das Pferd.
+     Der Besitzer soll genau eine Frage beantworten koennen: reicht das,
+     oder nochmal messen? */
+  let clean=0,pairs=0;
+  for(let i=1;i<rr.length;i++){ pairs++; if(Math.abs(rr[i]-rr[i-1])<=0.20*rr[i-1]) clean++; }
+  const q=pairs?clean/pairs:0, qp=Math.round(q*1000)/10;
+  $('#pQual').textContent=fmt1(qp)+' %';
+  $('#pPairs').textContent=fmt0(clean)+' '+t('pairsOf')+' '+fmt0(pairs);
+  $('#pDur').textContent=mmss(secs);
+  $('#pSensor').textContent=(S.device&&S.device.name)||'Polar H10';
+  const fill=$('#qfill');
+  fill.className = q>=0.90?'':(q>=0.75?'mid':'bad');
+  requestAnimationFrame(()=>{ fill.style.width=(q*100).toFixed(1)+'%'; });
+  const kurz = secs < 300;
+  $('#protoVerdict').textContent = q>=0.90 ? (kurz?t('verdictCleanShort'):t('verdictClean'))
+    : q>=0.75 ? t('verdictNoisy') : t('verdictBad');
+
+  $('#doneSub').textContent = room ? t('doneSubRoom') : t('doneSubFile');
   if(!room) $('#btnSend').disabled=true;
 
-  const name=$('#horse').value.trim()||'Pferd';
   const payload=buildExport(name,rr,m,secs);
   S.blob=new Blob([JSON.stringify(payload)],{type:'application/json'});
   S.fname=`${name.replace(/[^\p{L}\p{N}_-]+/gu,'-')}_HRV-Session_${S.startedAt.toISOString().slice(0,10)}.json`;
@@ -502,6 +2306,7 @@ function buildExport(name,rr,m,secs){
 $('#btnSend').addEventListener('click', async ()=>{
   if(!S.blob||!room) return;
   $('#err').textContent=''; $('#btnSend').disabled=true; $('#btnSave').disabled=true;
+  $('#barWrap').classList.remove('hidden');
   $('#status').textContent='Verbinde mit der Praxis…';
   try{
     const file=new File([S.blob],S.fname,{type:'application/json'});
@@ -533,7 +2338,8 @@ $('#btnSave').addEventListener('click',()=>{
 // "Signal war Mist" — ohne erneutes Koppeln, das im Stall am meisten kostet.
 $('#btnRestart').addEventListener('click',()=>{
   if(S.rr.length>=12 && !confirmDiscard()) return;
-  S.rr=[]; S.hr=0; S.startedAt=new Date();
+  S.rr=[]; S.hr=0; S.startedAt=new Date(); S.hrMin=null; S.hrMax=null;
+  $('#hrRange').textContent='–'; $('#recFill').style.width='0';
   $('#hr').textContent='–'; $('#beats').textContent='0'; $('#dur').textContent='0:00';
   $('#spark').innerHTML=''; $('#qdot').className='dot';
   $('#qtxt').textContent='Signal wird geprüft…';
@@ -564,26 +2370,186 @@ function Toast_ok(msg){
    Besitzer werben Besitzer (Reichweite), Besitzer werben Praxen (zahlende Kunden).
    WICHTIG: der geteilte Link enthaelt NIE den room-Code — das ist die private
    Verbindung zu genau einer Praxis und gehoert niemandem sonst. */
-const SHARE_BASE = location.origin + location.pathname.replace(/messen\.html$/,'');
+/* Zielseiten bewusst getrennt: das Verzeichnis .../app/ ist das PRAXIS-
+   Cockpit — dorthin einen Pferdebesitzer zu schicken war schlicht falsch. */
+const SHARE_STATION = location.origin + location.pathname;                 // die Mess-Station selbst
+const SHARE_PRODUCT = location.origin + location.pathname.replace(/app\/messen\.html$/,''); // Produktseite
+
+/* ── BELEG-GRAFIK ───────────────────────────────────────────────────────
+   Ein nackter Link erzeugt beim Empfaenger eine graue Vorschau. Geteilt wird
+   deshalb ein fertiges, gebrandetes Bild der eigenen Messung: Name des Pferds,
+   die Kurve, drei Zahlen, Wortmarke. Das ist der Unterschied zwischen einer
+   Nachricht, die weggewischt wird, und einer, die in Pferdegruppen landet.
+
+   Bewusst auf Canvas gezeichnet, nicht per SVG-Serialisierung: die Diagramme
+   der Seite arbeiten mit CSS-Variablen, die in einem als Bild geladenen SVG
+   nicht aufgeloest werden — das Ergebnis waere schwarz auf schwarz.        */
+async function shareCardBlob(){
+  const rr=S.rr||[]; if(rr.length<12) return null;
+  try{ await document.fonts.ready; }catch(_){}          // sonst faellt Jost auf System-Font zurueck
+
+  const W=1200,H=630,K=2;                                // 2x fuer scharfe Kanten
+  const c=document.createElement('canvas'); c.width=W*K; c.height=H*K;
+  const x=c.getContext('2d'); x.scale(K,K);
+  const CY='#3ECFB2', GOLD='#ffb547', TXT='#EDEEF1', SEC='#A4A5AC', DIM='#66666E', DEEP='#1E8C78';
+  const mono='ui-monospace, "SF Mono", Menlo, monospace';
+  const brand='Jost, system-ui, sans-serif';
+  const ui='Inter, system-ui, sans-serif';
+
+  /* Grund + Marken-Schein */
+  x.fillStyle='#0A0A0C'; x.fillRect(0,0,W,H);
+  const gl=x.createRadialGradient(W*0.5,-40,0,W*0.5,-40,700);
+  gl.addColorStop(0,'rgba(62,207,178,0.17)'); gl.addColorStop(1,'rgba(62,207,178,0)');
+  x.fillStyle=gl; x.fillRect(0,0,W,H);
+
+  /* Flower of Life — dieselbe Konstruktion wie im Seiten-Hintergrund
+     (FlowerOfLifeView der iOS-App): Mitte, 6 auf r, 6 auf 2r, 6 auf r*wurzel3. */
+  (function(){
+    const cx=W/2, cy=300, r=150;
+    const pts=[[cx,cy]];
+    for(let i=0;i<6;i++){ const a=i*Math.PI/3;
+      pts.push([cx+r*Math.cos(a), cy+r*Math.sin(a)]);
+      pts.push([cx+2*r*Math.cos(a), cy+2*r*Math.sin(a)]);
+      const ao=a+Math.PI/6, d=r*Math.SQRT2*Math.sqrt(1.5);   // r*sqrt(3)
+      pts.push([cx+d*Math.cos(ao), cy+d*Math.sin(ao)]);
+    }
+    x.save(); x.strokeStyle='rgba(62,207,178,0.075)'; x.lineWidth=1;
+    pts.forEach(([px,py])=>{ x.beginPath(); x.arc(px,py,r,0,Math.PI*2); x.stroke(); });
+    x.restore();
+  })();
+
+  /* Kopfzeile */
+  const name=($('#horse').value||'Mein Pferd').trim();
+  const m=metrics(rr);
+  const secs=Math.round(rr.reduce((a,b)=>a+b,0)/1000);
+  x.fillStyle=DEEP; x.font=`600 14px ${mono}`;
+  x.fillText('H E R Z R A T E N - A U F N A H M E', 64, 84);
+  x.fillStyle=TXT; x.font=`600 60px ${brand}`;
+  x.fillText(name, 64, 146);
+  x.fillStyle=DIM; x.font=`400 15px ${mono}`;
+  x.fillText(S.startedAt.toLocaleDateString('de-DE',{day:'2-digit',month:'long',year:'numeric'}), 64, 176);
+
+  /* Kennzahlen rechts — von rechts nach links gesetzt, damit nichts kollidiert */
+  const stats=[['DAUER',Math.floor(secs/60)+':'+String(secs%60).padStart(2,'0')],
+               ['HRV · RMSSD',fmt1(m.rmssdMs)+' ms'],
+               ['Ø PULS',Math.round(m.meanHRBpm)+' bpm']];
+  let sx=W-64;
+  x.textAlign='right';
+  stats.forEach(([k,v])=>{
+    // Breiten JE MIT IHRER EIGENEN Schrift messen — sonst rechnet man mit der
+    // zuletzt gesetzten Groesse und die Spalten laufen ineinander.
+    x.font=`700 29px ${mono}`; const vw=x.measureText(v).width;
+    x.fillStyle=TXT; x.fillText(v,sx,146);
+    x.font=`600 11px ${mono}`; const kw=x.measureText(k).width;
+    x.fillStyle=DIM; x.fillText(k,sx,172);
+    sx-=Math.max(vw,kw)+46;
+  });
+  x.textAlign='left';
+
+  /* Plotfläche */
+  const PL=64, PR=64, pT=225, pB=470, pw=W-PL-PR, ph=pB-pT;
+  x.fillStyle='#0E0E0E';
+  x.beginPath(); x.roundRect ? x.roundRect(PL,pT,pw,ph,8) : x.rect(PL,pT,pw,ph); x.fill();
+  x.strokeStyle='rgba(255,255,255,0.06)'; x.lineWidth=1;
+  for(let i=1;i<12;i++){ const gx=PL+i*pw/12; x.beginPath(); x.moveTo(gx,pT); x.lineTo(gx,pB); x.stroke(); }
+  for(let j=1;j<4;j++){ const gy=pT+j*ph/4; x.beginPath(); x.moveTo(PL,gy); x.lineTo(PL+pw,gy); x.stroke(); }
+
+  /* Puls (Gold, reine Linie) + HRV (Cyan, mit Flächenverlauf) — dieselbe
+     Aufteilung wie auf der Seite: die Fläche gehört der HRV. */
+  const n=rr.length;
+  const hf=rr.map(v=>60000/v);
+  const Wb=Math.min(30,Math.max(5,Math.floor(n/3)));
+  const hv=rr.map((_,i)=>{ const lo=Math.max(1,i-Wb+1); let s=0,q=0;
+    for(let j=lo;j<=i;j++){ const d=rr[j]-rr[j-1]; s+=d*d; q++; } return q?Math.sqrt(s/q):0; });
+  const i0=Math.min(Wb,n-2);
+  const PXi=i=>PL+i/(n-1)*pw;
+  const scale=a=>{ let mn=Math.min(...a),mx=Math.max(...a); const pd=(mx-mn)*0.14||1; mn-=pd; mx+=pd;
+    return v=>pT+(1-(v-mn)/(mx-mn))*ph; };
+  const YH=scale(hf), YV=scale(hv.slice(i0));
+
+  const area=x.createLinearGradient(0,pT,0,pB);
+  area.addColorStop(0,'rgba(62,207,178,0.30)'); area.addColorStop(1,'rgba(62,207,178,0)');
+  x.beginPath(); x.moveTo(PXi(i0),pB);
+  for(let i=i0;i<n;i++) x.lineTo(PXi(i),YV(hv[i]));
+  x.lineTo(PXi(n-1),pB); x.closePath(); x.fillStyle=area; x.fill();
+
+  x.lineJoin='round'; x.lineCap='round';
+  x.beginPath(); hf.forEach((v,i)=>i?x.lineTo(PXi(i),YH(v)):x.moveTo(PXi(i),YH(v)));
+  x.strokeStyle=GOLD; x.lineWidth=1.9; x.stroke();
+  x.beginPath();
+  for(let i=i0;i<n;i++){ const px=PXi(i), py=YV(hv[i]); i===i0?x.moveTo(px,py):x.lineTo(px,py); }
+  x.strokeStyle=CY; x.lineWidth=2.1; x.stroke();
+
+  /* Eckmarken — Geräte-Blende, wie auf der Seite */
+  x.strokeStyle=CY; x.globalAlpha=.55; x.lineWidth=1.6;
+  [[PL,pT,1,1],[PL+pw,pT,-1,1],[PL,pB,1,-1],[PL+pw,pB,-1,-1]].forEach(([px,py,dx,dy])=>{
+    x.beginPath(); x.moveTo(px+dx*20,py); x.lineTo(px,py); x.lineTo(px,py+dy*20); x.stroke(); });
+  x.globalAlpha=1;
+
+  /* Legende + Bildunterschrift */
+  const dot=(px,py,col)=>{ x.beginPath(); x.arc(px,py,5,0,Math.PI*2); x.fillStyle=col; x.fill(); };
+  dot(70,500,GOLD); x.fillStyle=SEC; x.font=`600 15px ${ui}`; x.fillText('Puls (bpm)',84,505);
+  const w1=x.measureText('Puls (bpm)').width;
+  dot(84+w1+26,500,CY); x.fillStyle=SEC; x.fillText('HRV (ms)',84+w1+40,505);
+  x.fillStyle=DIM; x.font=`400 14px ${ui}`;
+  x.fillText('Jeder Ausschlag ist ein einzelner Herzschlag.',64,536);
+
+  /* Fußzeile: Briefkopf links, Adresse rechts */
+  x.strokeStyle='rgba(255,255,255,0.08)'; x.lineWidth=1;
+  x.beginPath(); x.moveTo(64,558); x.lineTo(W-64,558); x.stroke();
+  try{
+    const logo=await new Promise((res,rej)=>{ const im=new Image();
+      im.onload=()=>res(im); im.onerror=rej; im.src='assets/carlon-logo-soft-512.png'; });
+    x.drawImage(logo,64,566,48,48);
+  }catch(_){}
+  x.fillStyle=TXT; x.font=`300 21px ${brand}`;
+  x.fillText('C A R L O N   E Q U I N E',124,588);
+  x.fillStyle=DEEP; x.font=`600 10px ${mono}`;
+  x.fillText('E Q U I N E   H E A R T   S C I E N C E',124,606);
+  x.textAlign='right'; x.fillStyle=DIM; x.font=`500 14px ${mono}`;
+  x.fillText('vitalkultur.com/carlon-equine',W-64,598);
+  x.textAlign='left';
+
+  // JPEG statt PNG: eine 2x-PNG dieser Fläche wiegt ~2 MB und blockiert das
+  // Teilen im Mobilfunk. Bei 0,94 ist der Unterschied nicht zu sehen.
+  return new Promise(res=>c.toBlob(res,'image/jpeg',0.94));
+}
+
 async function share(kind){
   const horse=($('#horse').value||'mein Pferd').trim();
   const cfg = kind==='vet' ? {
-    title:'CARLON Equine Visite',
-    text:`Ich habe das Herz meines Pferds gemessen und die Aufnahme an meine Praxis geschickt \u2014 direkt aus dem Browser, mit dem Polar-Gurt. Vielleicht ist das auch etwas fuer Ihre Patienten:`,
-    url: SHARE_BASE
+    title:'CARLON Equine',
+    text:'Ich habe die Ruhe-Herzrate meines Pferds gemessen und die Aufnahme direkt an meine Praxis geschickt — aus dem Browser, mit dem Polar-Gurt. Vielleicht ist das auch etwas für Ihre Patienten:',
+    url: SHARE_PRODUCT
   } : {
     title:'Herzraten-Messung beim Pferd',
-    text:`Ich habe gerade eine Ruhe-Herzraten-Aufnahme von ${horse} gemacht — direkt im Browser mit dem Polar-H10-Gurt, ohne App. Die Auswertung macht der Tierarzt:`,
-    url: SHARE_BASE
+    text:`So sieht der Herzschlag von ${horse} aus — direkt im Browser mit dem Polar-Gurt gemessen, ohne App. Die Auswertung macht der Tierarzt:`,
+    url: SHARE_STATION
   };
   try{
-    if(navigator.share){ await navigator.share(cfg); note('Danke \u2014 das bedeutet uns viel'); return; }
+    // Bild mitgeben, wenn das Geraet es kann — sonst Text und Link.
+    let file=null;
+    try{
+      const blob=await shareCardBlob();
+      if(blob) file=new File([blob],`${horse.replace(/[^\p{L}\p{N}_-]+/gu,'-')}-Herzrate.png`,{type:'image/png'});
+    }catch(_){}
+    if(navigator.share && file && navigator.canShare && navigator.canShare({files:[file]})){
+      await navigator.share({...cfg, files:[file]}); note('Danke — das bedeutet uns viel'); return;
+    }
+    if(navigator.share){ await navigator.share(cfg); note('Danke — das bedeutet uns viel'); return; }
+    if(file){                                   // Desktop: Bild sichern + Text kopieren
+      const a=document.createElement('a'); a.href=URL.createObjectURL(file); a.download=file.name;
+      document.body.appendChild(a); a.click(); a.remove();
+      setTimeout(()=>URL.revokeObjectURL(a.href),4000);
+      try{ await navigator.clipboard.writeText(cfg.text+' '+cfg.url); }catch(_){}
+      note('Bild gespeichert — Text ist kopiert'); return;
+    }
     await navigator.clipboard.writeText(cfg.text+' '+cfg.url);
-    note('Text kopiert — jetzt einfuegen und senden');
+    note('Text kopiert — jetzt einfügen und senden');
   }catch(e){
-    if(e && e.name==='AbortError') return;   // Nutzer hat abgebrochen
+    if(e && e.name==='AbortError') return;
     try{ await navigator.clipboard.writeText(cfg.url); note('Link kopiert'); }
-    catch(_){ note(SHARE_BASE); }
+    catch(_){ note(cfg.url); }
   }
 }
 function note(m){ const n=$('#shNote'); n.textContent=m; setTimeout(()=>{ if(n.textContent===m) n.textContent=''; },4000); }
@@ -591,13 +2557,16 @@ $('#shOwner').addEventListener('click',()=>share('owner'));
 $('#shVet').addEventListener('click',()=>share('vet'));
 
 $('#btnAgain').addEventListener('click',()=>{
-  S.rr=[]; S.hr=0; S.blob=null; S.startedAt=null; S.stopped=false;
+  S.rr=[]; S.hr=0; S.blob=null; S.startedAt=null; S.stopped=false; S.hrMin=null; S.hrMax=null;
+  $('#hrRange').textContent='–'; $('#recFill').style.width='0';
   $('#pb').style.width='0'; $('#status').textContent=''; $('#err').textContent='';
+  $('#barWrap').classList.add('hidden');
   $('#btnSend').disabled=false; $('#btnSend').classList.remove('hidden');
   $('#btnSave').disabled=false; $('#btnAgain').classList.add('hidden');
   $('#spark').innerHTML=''; $('#beats').textContent='0'; $('#dur').textContent='0:00';
   $('#qdot').className='dot'; $('#qtxt').textContent='Signal wird geprüft…';
   $('#liveTitle').textContent='Messung läuft'; $('#btnStop').textContent='Messung beenden';
+  $('.card').classList.remove('beleg');
   show('vReady');
 });
 </script>
