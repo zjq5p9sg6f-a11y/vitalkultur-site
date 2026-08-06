@@ -27,7 +27,7 @@
 body{background:var(--bg);color:var(--text);font-family:"Inter",-apple-system,system-ui,sans-serif;line-height:1.6;min-height:100vh;
   display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px;
   background:var(--void);position:relative;overflow-x:hidden}
-body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;background:radial-gradient(circle at 50% 34%,transparent 27%,var(--glow-3) 27.4%,transparent 27.9%),radial-gradient(circle at 50% 34%,transparent 40%,var(--glow-3) 40.3%,transparent 40.8%),radial-gradient(circle at 50% 34%,transparent 55%,rgba(62,207,178,.05) 55.3%,transparent 55.8%),radial-gradient(ellipse 90% 46% at 50% -6%,var(--glow-2),transparent 62%)}
+body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;background:radial-gradient(ellipse 92% 48% at 50% -8%,var(--glow-2),transparent 62%)}
 .card{width:100%;max-width:440px;position:relative;z-index:1;background:linear-gradient(168deg,var(--elev),var(--surface) 62%,var(--bg));border:1px solid var(--border);border-radius:24px;padding:34px 28px 28px;box-shadow:0 40px 110px -30px rgba(0,0,0,.95),0 0 0 1px rgba(62,207,178,.07),0 0 70px -30px var(--glow-2),inset 0 1px 0 rgba(255,255,255,.05);text-align:center;backdrop-filter:blur(2px)}.card::before{content:'';position:absolute;inset:0 0 auto;height:1px;border-radius:24px 24px 0 0;background:linear-gradient(90deg,transparent,color-mix(in srgb,var(--cyan) 38%,transparent),transparent)}
 img.logo{width:92px;height:92px;filter:drop-shadow(0 0 16px var(--glow-1)) drop-shadow(0 0 46px var(--glow-2));margin-bottom:8px}
 .wordmark{font-family:var(--font-mono);font-size:11.5px;font-weight:600;letter-spacing:.22em;color:var(--cyan);opacity:.92;margin-bottom:18px;text-transform:uppercase}
@@ -127,6 +127,7 @@ a{color:var(--cyan);text-decoration:none} a:hover{text-decoration:underline}
     </div>
     <div class="qual"><span class="dot" id="qdot"></span><span id="qtxt">Signal wird geprüft…</span></div>
     <button class="btn stop" id="btnStop" style="margin-top:14px">Messung beenden</button>
+    <button class="btn ghost" id="btnRestart">Verwerfen und neu starten</button>
     <div class="hint" id="liveHint">Empfehlung: mindestens <b>5 Minuten</b> ruhige Messung — kürzere Aufnahmen sind für den Verlauf oft zu wenig.</div>
   </div>
 
@@ -146,7 +147,7 @@ a{color:var(--cyan);text-decoration:none} a:hover{text-decoration:underline}
       An den Tierarzt senden
     </button>
     <button class="btn ghost" id="btnSave">Als Datei speichern</button>
-    <button class="btn ghost hidden" id="btnAgain">Neue Messung</button>
+    <button class="btn ghost" id="btnAgain">Neue Messung</button>
     <div class="err" id="err"></div>
     <div class="hint">Die Auswertung nimmt deine Tierärztin oder dein Tierarzt vor. Diese Seite erfasst nur die Messwerte und liefert keine Beurteilung.</div>
   </div>
@@ -495,6 +496,36 @@ $('#btnSave').addEventListener('click',()=>{
   setTimeout(()=>URL.revokeObjectURL(a.href),4000);
   $('#btnAgain').classList.remove('hidden');
 });
+
+// Verwerfen und neu starten: Daten weg, Gurt bleibt verbunden. Genau der Fall
+// "Signal war Mist" — ohne erneutes Koppeln, das im Stall am meisten kostet.
+$('#btnRestart').addEventListener('click',()=>{
+  if(S.rr.length>=12 && !confirmDiscard()) return;
+  S.rr=[]; S.hr=0; S.startedAt=new Date();
+  $('#hr').textContent='–'; $('#beats').textContent='0'; $('#dur').textContent='0:00';
+  $('#spark').innerHTML=''; $('#qdot').className='dot';
+  $('#qtxt').textContent='Signal wird geprüft…';
+  $('#liveTitle').textContent='Messung läuft';
+  $('#liveSub').textContent='Ruhig stehen lassen. Je ruhiger das Pferd, desto aussagekräftiger die Aufnahme.';
+  $('#btnStop').textContent='Messung beenden';
+  Toast_ok('Neu gestartet — der Gurt bleibt verbunden');
+});
+// Bewusst kein window.confirm: ein Browser-Dialog kann die Bluetooth-Sitzung
+// blockieren. Rueckfrage nur, wenn wirklich Daten verloren gehen.
+let _armed=false, _armTimer=null;
+function confirmDiscard(){
+  if(_armed){ _armed=false; clearTimeout(_armTimer); return true; }
+  _armed=true;
+  const b=$('#btnRestart'); const t=b.textContent;
+  b.textContent='Wirklich verwerfen? Nochmal tippen';
+  b.style.borderColor='var(--amber)'; b.style.color='var(--amber)';
+  _armTimer=setTimeout(()=>{ _armed=false; b.textContent=t; b.style.borderColor=''; b.style.color=''; },4000);
+  return false;
+}
+function Toast_ok(msg){
+  const q=$('#qtxt'); const old=q.textContent;
+  q.textContent=msg; setTimeout(()=>{ if(q.textContent===msg) q.textContent=old; },2600);
+}
 
 $('#btnAgain').addEventListener('click',()=>{
   S.rr=[]; S.hr=0; S.blob=null; S.startedAt=null; S.stopped=false;
