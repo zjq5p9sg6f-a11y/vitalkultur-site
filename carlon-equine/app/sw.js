@@ -2,7 +2,7 @@
    App-Shell wird precached; Fonts & Leaflet lokal gebündelt (assets/) — keine externen CDNs,
    sodass die App nach dem ersten Online-Start vollständig offline läuft.
    Gesundheitsdaten liegen in IndexedDB — der SW cached nur Programm-Assets. */
-const VERSION = 'carlon-clinic-v19-schalter';
+const VERSION = 'carlon-clinic-v20-hintergrund';
 const SHELL = VERSION + '-shell';
 const RUNTIME = VERSION + '-runtime';
 
@@ -124,4 +124,80 @@ self.addEventListener('fetch', (e) => {
       }).catch(() => cached)
     )
   );
+});
+
+
+/* ════════════════════════════════════════════════════════════════════════
+   LIZENZ IM HINTERGRUND ERNEUERN
+   ════════════════════════════════════════════════════════════════════════
+   Die Erneuerung in der Seite deckt ab, solange die App offen ist. Diese
+   Ergaenzung deckt den Fall, in dem sie NICHT offen ist: das Geraet kommt
+   nachts wieder ins Netz, der Browser weckt den Service Worker, die Lizenz
+   ist morgens frisch — ohne dass jemand etwas geoeffnet hat.
+
+   Ehrliche Einordnung: Background Sync gibt es in Chromium, NICHT in Safari.
+   Auf iPad und iPhone bleibt es bei den Ausloesern in der Seite (Start,
+   Tab-Fokus, online). Deshalb ist das hier eine Zugabe und keine Zusage —
+   die Reichweite von 14 Tagen plus 14 Tagen Kulanz traegt auch ohne sie.
+
+   Der Service Worker liest den Abo-Token direkt aus derselben Datenbank, in
+   der die App ihn ablegt (carlon_clinic → settings → id 'app'), und schreibt
+   die neue Lizenz dorthin zurueck. Die Seite liest sie beim naechsten Start.
+   Gesundheitsdaten fasst dieser Weg nicht an. */
+
+const LIZENZ_DIENST = 'https://lizenz.vitalkultur.com/erneuern';
+
+function dbOeffnen() {
+  return new Promise((res, rej) => {
+    const r = indexedDB.open('carlon_clinic', 2);
+    r.onsuccess = () => res(r.result);
+    r.onerror = () => rej(r.error);
+  });
+}
+
+function einstellungen(db, schreiben) {
+  return new Promise((res, rej) => {
+    const tx = db.transaction('settings', schreiben ? 'readwrite' : 'readonly');
+    const st = tx.objectStore('settings');
+    if (schreiben) { const q = st.put(schreiben); q.onsuccess = () => res(true); q.onerror = () => rej(q.error); }
+    else { const q = st.get('app'); q.onsuccess = () => res(q.result); q.onerror = () => rej(q.error); }
+  });
+}
+
+async function lizenzImHintergrundErneuern() {
+  let db;
+  try { db = await dbOeffnen(); } catch { return; }
+  let satz;
+  try { satz = await einstellungen(db); } catch { return; }
+  const daten = satz && satz.data;
+  const liz = daten && daten.license;
+  if (!liz || !liz.sub) return;                      // kein Abo hinterlegt
+
+  try {
+    const r = await fetch(LIZENZ_DIENST, {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ token: liz.sub }),
+    });
+    const d = await r.json().catch(() => ({}));
+    const jetzt = Math.floor(Date.now() / 1000);
+    if (d && d.ok && d.lizenz) {
+      liz.key = d.lizenz; liz.letztePruefung = jetzt; liz.abgelehntSeit = null;
+    } else if (r.status === 402) {
+      /* Definitive Absage auch hier merken — sonst haette die Seite spaeter
+         wieder nur "konnte nicht fragen" gesehen und Kulanz gewaehrt. */
+      liz.abgelehntSeit = jetzt; liz.letztePruefung = jetzt;
+    } else {
+      return;                                        // Netz-/Dienstproblem: nichts anfassen
+    }
+    daten.license = liz;
+    await einstellungen(db, { id: 'app', data: daten });
+  } catch { /* still scheitern — die Seite versucht es beim naechsten Start */ }
+}
+
+self.addEventListener('sync', (e) => {
+  if (e.tag === 'carlon-lizenz') e.waitUntil(lizenzImHintergrundErneuern());
+});
+
+self.addEventListener('periodicsync', (e) => {
+  if (e.tag === 'carlon-lizenz') e.waitUntil(lizenzImHintergrundErneuern());
 });

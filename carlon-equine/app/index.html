@@ -896,6 +896,14 @@ h2 svg.ic{width:20px;height:20px}
 .pill.open{background:rgba(255,181,71,.14);color:var(--amber)}
 
 /* ---- Map ---- */
+.tour-bereit{display:flex;align-items:center;gap:9px;margin:0 0 14px;padding:10px 13px;
+  border:1px solid var(--border-subtle);border-radius:var(--r-m);cursor:pointer;
+  font-size:12.5px;color:var(--text-secondary);background:var(--bg-surface);
+  transition:border-color .16s,color .16s}
+.tour-bereit:hover{border-color:var(--cyan-deep);color:var(--text-primary)}
+.tour-bereit svg{width:16px;height:16px;flex:0 0 auto;opacity:.75}
+.tour-bereit.gut{border-color:var(--good);color:var(--good)}
+.tour-bereit.warn{border-color:var(--amber);color:var(--amber)}
 .dispatch{display:grid;grid-template-columns:1fr 380px;gap:var(--s4);height:calc(100vh - 220px);min-height:520px}
 #map{border-radius:var(--r-l);overflow:hidden;border:1px solid var(--border-subtle);background:var(--bg-deep);height:100%;position:relative}
 .map-controls{position:absolute;top:12px;right:12px;z-index:500;display:flex;gap:8px}
@@ -4759,6 +4767,14 @@ const Views={
         <div><span class="eyebrow">Einsatzplanung</span><h1>Karte &amp; Abfahrroute</h1>
           <div class="sub">Optimierte Route nach Dringlichkeit: kritische Pferde zuerst, innerhalb jeder Stufe der kürzeste Weg. Direkt in Google Maps übertragbar.</div></div>
       </div>
+      <!-- Bereitschaft fuer die Tour. Steht hier und nicht in den
+           Einstellungen, weil hier der Tag geplant wird — der einzige Moment,
+           in dem die Frage "traegt das heute ohne Netz?" ueberhaupt auftaucht. -->
+      <div id="tourBereit" class="tour-bereit" onclick="UI.tourPruefen()" role="button" tabindex="0"
+           title="Prüfen, ob alles für einen Tag ohne Netz bereit ist">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 2"/></svg>
+        <span id="tourBereitText">Bereit für die Tour prüfen</span>
+      </div>
       <div class="dispatch">
         <div id="map"><div class="mapfallback" id="mapFallback"><div>Karte wird geladen…</div></div>
           <div class="map-controls"><button id="showAllBtn" class="map-ctrl ${Dispatch._showAll?'on':''}" onclick="Dispatch.toggleShowAll()" title="Alle betreuten Kunden auf der Karte — für Terminakquise auf dem Weg">${IC.owner}<span>Alle Kunden</span></button></div>
@@ -6495,6 +6511,29 @@ const UI={
     </div>
     <div class="modal-foot"><button class="btn ghost" onclick="UI.closeModal()">Abbrechen</button><button class="btn primary" onclick="License.activate($('#licKey').value)">Aktivieren</button></div>`);
   },
+  async tourPruefen(){
+    const el=$('#tourBereitText'), box=$('#tourBereit');
+    if(el) el.textContent='Prüfe…';
+    const r=await License.tourBereitschaft();
+    if(!box||!el) return;
+    box.classList.remove('gut','warn');
+    if(!r.bezahlt){
+      box.classList.add('warn');
+      el.textContent='Demo-Modus — Befunde und Exporte stehen unterwegs nicht zur Verfügung';
+      return;
+    }
+    if(r.tage==null){ el.textContent='Bereitschaft nicht ermittelbar'; return; }
+    const tage=`${r.tage} ${r.tage===1?'Tag':'Tage'}`;
+    if(r.tage<=2){
+      box.classList.add('warn');
+      el.textContent=`Nur noch ${tage} ohne Internet — jetzt kurz online gehen, dann wieder volle 14 Tage`;
+    }else{
+      box.classList.add('gut');
+      el.textContent = r.grund==='kein Netz'
+        ? `Kein Netz gerade — trägt noch ${tage} ohne Internet`
+        : `Bereit — ${tage} ohne Internet nutzbar`;
+    }
+  },
   licenseInfo(){
     const l=State.license||{tier:'demo'};const d=License.daysLeft();
     this.modal(`<div class="modal-head"><button class="closex" onclick="UI.closeModal()">${IC.x}</button><h3>Lizenz</h3></div>
@@ -6905,6 +6944,30 @@ const License={
     if(this.can(feature))return true;
     UI.upgrade(label);return false;
   },
+  /* TOUR-BEREITSCHAFT — der Unterschied zwischen "wird schon gehen" und
+     "ich weiss, dass es geht".
+     Ein mobiler Tierarzt faehrt morgens los und ist danach vielleicht acht
+     Stunden ohne brauchbares Netz. Statt ihn hoffen zu lassen, holt diese eine
+     Handlung alles nach, was Netz braucht, und nennt danach eine Zahl: so
+     viele Tage traegt es. Das verwandelt eine unsichtbare Sorge in eine
+     kontrollierte Ansage.
+     Bewusst KEINE Sperre: wer trotzdem losfahren will, faehrt los. Die Ansage
+     informiert, sie bevormundet nicht. */
+  async tourBereitschaft(){
+    const vorher=this.laufzeit();
+    const s=State.settings.license||{};
+    let erneuert=false, grund=null;
+    if(s.sub && navigator.onLine){
+      this._letzterVersuch=0;             // gewollte Handlung, nicht drosseln
+      const e=await this.lizenzHolen('tour');
+      erneuert=!!e.ok; if(!e.ok) grund=e.grund;
+    } else if(!navigator.onLine){ grund='kein Netz'; }
+    const nachher=this.laufzeit();
+    return { erneuert, grund, bezahlt:this.isPaid(),
+             tage: nachher?nachher.tage:(vorher?vorher.tage:null),
+             kulanz: !!(nachher&&nachher.kulanz) };
+  },
+
   /* Wie lange laesst sich noch ohne Internet arbeiten? Die Zahl, die ein
      mobiler Tierarzt vor der Tour sehen will. */
   laufzeit(){
@@ -7800,6 +7863,19 @@ addEventListener('beforeinstallprompt',e=>{e.preventDefault();PWA.deferred=e;});
        'online' ist der wichtigste: der Moment, in dem der Wagen aus dem
        Funkloch faehrt, ist genau der Moment, in dem nachgeholt werden soll. */
     window.addEventListener('online', ()=>License.lizenzHolenWennFaellig());
+    /* Zugabe fuer Chromium: der Browser darf die Erneuerung auch nachholen,
+       wenn die App gar nicht offen ist. Safari kennt das nicht — dort bleibt
+       es bei den Ausloesern oben, was die 14+14 Tage Reichweite ohnehin
+       tragen. Scheitert die Registrierung, faellt nichts aus. */
+    try{
+      const reg=await navigator.serviceWorker?.ready;
+      if(reg&&'sync' in reg) await reg.sync.register('carlon-lizenz');
+      if(reg&&reg.periodicSync){
+        const p=await navigator.permissions?.query({name:'periodic-background-sync'}).catch(()=>null);
+        if(p&&p.state==='granted')
+          await reg.periodicSync.register('carlon-lizenz',{minInterval:24*60*60*1000});
+      }
+    }catch(e){}
     document.addEventListener('visibilitychange', ()=>{
       if(document.visibilityState==='visible') License.lizenzHolenWennFaellig();
     });
