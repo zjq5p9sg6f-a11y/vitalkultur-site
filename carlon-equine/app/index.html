@@ -1734,6 +1734,7 @@ nav.tabs button.on{text-shadow:none}
   <div class="zbody" id="zoomBody"></div>
 </div>
 
+<script src="live.js"></script>
 <script src="seed-data.js"></script>
 <script src="p2p.js"></script>
 <script src="assets/leaflet/leaflet.js"></script>
@@ -6238,7 +6239,11 @@ const BUILD='beta-2026-07-11';   // Test-Beta Build-Stamp
    3) Optional: Landing-Beta zurück auf Preis-Variante (landing.html — Gründungs-Partner-Sektion ↔ Preise-Sektion tauschen).
    Bestehende Gründungs-Partner behalten Zugang: ihre signierten Keys laufen weiter; Founder-Flag sichert den Preis-Lock.
    Daten bleiben bei jedem Wechsel unberührt (IndexedDB, lizenz-unabhängig). */
-const BETA_GATED=true;           // Beta: kein offener Selbst-Trial/Kauf — Zugang nur per Lizenzschlüssel (Gründungs-Partner)
+/* Kommt aus live.js — der EINEN Stelle, die auch das Impressum liest.
+   Faellt die Datei aus (alter Cache, Ladefehler), gilt bewusst Beta: lieber
+   nicht verkaufen als versehentlich verkaufen. */
+const LIVE = (typeof window!=='undefined' && window.CARLON_LIVE===true);
+const BETA_GATED = !LIVE;
 const FEEDBACK_TO='jan@vitalkultur.com';
 const UI={
   betaApply(){
@@ -6534,11 +6539,24 @@ const License={
      die Lizenz-Maschinerie bricht — und die Pruefung bleibt offline-faehig,
      was zum USP "laeuft lokal, ohne Cloud-Zwang" passt.
      Umstellung auf Live: nur diese beiden Links gegen die Live-Links tauschen. */
-  CHECKOUT:{
-    // Stripe Payment Links (Managed Payments aktiv, kein Gratis-Trial, Unternehmensname Pflicht)
-    year :'https://buy.stripe.com/test_cNi6oH5RT4hY81ac7E1RC04',
-    month:'https://buy.stripe.com/test_14A7sL5RTg0GftCgnU1RC03',
+  /* Zwei Saetze Zahlungs-Links. Welcher gilt, entscheidet der Schalter in
+     live.js — nicht ein zweiter Handgriff, den jemand vergessen kann.
+     Managed Payments, kein Gratis-Trial, Unternehmensname Pflicht, Steuer-ID
+     fuer Geschaeftskunden (Reverse Charge). */
+  CHECKOUT_ALL:{
+    test:{
+      year :'https://buy.stripe.com/test_cNi6oH5RT4hY81ac7E1RC04',   // 790 €/Jahr
+      month:'https://buy.stripe.com/test_14A7sL5RTg0GftCgnU1RC03',   //  79 €/Monat
+    },
+    live:{
+      /* NACH der Unternehmens-Verifizierung im LIVE-Konto anlegen und hier
+         eintragen. Solange leer, sperrt checkoutLink() die Kasse — der
+         Schalter allein kann also niemanden ins Leere schicken. */
+      year :'',
+      month:'',
+    }
   },
+  get CHECKOUT(){ return this.CHECKOUT_ALL[LIVE?'live':'test']; },
   /* WOFUER DIE LINKS BEI STRIPE ANGELEGT SIND.
      Der Betrag steckt im Payment Link bei Stripe, nicht in diesem Code. Wer
      hier den Preis aendert, aendert die Anzeige — nicht die Kasse. Die Seite
@@ -6558,19 +6576,35 @@ const License={
      Kasse, die kein Geld einzieht — und wir merken es an nichts ausser einer
      ausbleibenden Zahlung. Deshalb hier eine harte Sperre statt einer Notiz
      in einem Kommentar. */
+  /* Drei Gruende, die Kasse NICHT herauszugeben. Jeder einzelne davon waere
+     im Betrieb ein stiller Schaden, den erst die Buchhaltung findet. */
   checkoutLink(art){
-    const url=this.CHECKOUT[art]||'';
-    if(!url) return null;
-    // Angezeigter Preis gegen den Betrag, fuer den der Link angelegt wurde
+    const url=(this.CHECKOUT||{})[art]||'';
+    if(!url){
+      if(LIVE) console.warn(`[CARLON] Kasse gesperrt: kein Live-Zahlungslink fuer "${art}" hinterlegt.`);
+      return null;
+    }
+    // 1) Angezeigter Preis gegen den Betrag, fuer den der Link angelegt wurde
     const soll=art==='year'?this.PREIS.soloJahr:this.PREIS.soloMonat;
     const ist=(this.CHECKOUT_BETRAG||{})[art];
     if(ist!==soll){
-      console.warn(`[CARLON] Kasse gesperrt: angezeigt ${soll} €, Stripe-Link gilt fuer ${ist} €. Payment Link neu anlegen.`);
+      console.warn(`[CARLON] Kasse gesperrt: angezeigt ${soll} €, Zahlungslink gilt fuer ${ist} €.`);
       return null;
     }
+    // 2) Ein Testlink im Echtbetrieb zieht kein Geld ein und faellt niemandem auf
     const test=/\/test_/.test(url);
+    if(test && LIVE){
+      console.warn('[CARLON] Kasse gesperrt: Testlink im Live-Betrieb.');
+      return null;
+    }
+    // 3) Testlinks nur lokal oder in der Beta
     if(test && !BETA_GATED && !/^(localhost|127\.0\.0\.1)$/.test(location.hostname)) return null;
     return url;
+  },
+  /* Selbstauskunft fuer den Umschalt-Tag: was fehlt noch? */
+  liveBereit(){
+    const m=this.checkoutLink('month'), y=this.checkoutLink('year');
+    return { live:LIVE, monat:!!m, jahr:!!y, bereit:!!(m&&y) };
   },
   _expTs(lk){if(lk&&lk.expires_at){const t=Date.parse(lk.expires_at);return isNaN(t)?null:Math.floor(t/1000);}return null;},
   _b64(s){s=s.replace(/-/g,'+').replace(/_/g,'/');while(s.length%4)s+='=';const b=atob(s);const u=new Uint8Array(b.length);for(let i=0;i<b.length;i++)u[i]=b.charCodeAt(i);return u;},

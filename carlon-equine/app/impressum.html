@@ -46,7 +46,22 @@ p strong{color:var(--text)}
   <p>gemäß § 18 Abs. 2 MStV: Jan Rohwedder, Kapellenstraße 9, 76473 Iffezheim.</p>
 
   <h2>Zahlungsabwicklung</h2>
-  <p>Der Lizenzverkauf erfolgt über <strong>Stripe</strong> als Merchant of Record („Stripe Managed Payments“). Stripe tritt dabei als Verkäufer auf und stellt die Rechnung inklusive der jeweils geltenden Umsatzsteuer im eigenen Namen aus; für Geschäftskunden mit Umsatzsteuer-Identifikationsnummer aus dem EU-Ausland kann das Reverse-Charge-Verfahren greifen. Aktuell befindet sich CARLON Equine in der <strong>Beta-Phase</strong> — ein offener Verkauf über diesen Kanal findet noch nicht statt.</p>
+  <p>Der Lizenzverkauf erfolgt über <strong>Stripe</strong> als Merchant of Record („Stripe Managed Payments“). Stripe tritt dabei als Verkäufer auf und stellt die Rechnung inklusive der jeweils geltenden Umsatzsteuer im eigenen Namen aus; für Geschäftskunden mit Umsatzsteuer-Identifikationsnummer aus dem EU-Ausland kann das Reverse-Charge-Verfahren greifen. <span id="verkaufStand">Aktuell befindet sich CARLON Equine in der <strong>Beta-Phase</strong> — ein offener Verkauf über diesen Kanal findet noch nicht statt.</span></p>
+
+<!-- Diese Aussage MUSS mit dem tatsaechlichen Zustand der Anwendung
+     uebereinstimmen. Sie kommt deshalb aus derselben Datei wie der Schalter
+     der App (live.js) und nicht aus einer zweiten, handgepflegten Zeile —
+     ein Impressum, das "kein offener Verkauf" behauptet, waehrend die Kasse
+     laeuft, faellt zuerst jemandem auf, der Aerger sucht.
+     Faellt live.js aus, bleibt die Beta-Aussage stehen: dasselbe sichere
+     Verhalten wie in der App. -->
+<script src="live.js"></script>
+<script>
+  if (window.CARLON_LIVE === true) {
+    var el = document.getElementById('verkaufStand');
+    if (el) el.innerHTML = 'Der Verkauf von Lizenzen über diesen Kanal ist eröffnet.';
+  }
+</script>
 
   <h2>EU-Streitschlichtung</h2>
   <p>Die Europäische Kommission stellt eine Plattform zur Online-Streitbeilegung (OS) bereit:

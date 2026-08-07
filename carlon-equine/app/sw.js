@@ -2,7 +2,7 @@
    App-Shell wird precached; Fonts & Leaflet lokal gebündelt (assets/) — keine externen CDNs,
    sodass die App nach dem ersten Online-Start vollständig offline läuft.
    Gesundheitsdaten liegen in IndexedDB — der SW cached nur Programm-Assets. */
-const VERSION = 'carlon-clinic-v17-praezision';
+const VERSION = 'carlon-clinic-v19-schalter';
 const SHELL = VERSION + '-shell';
 const RUNTIME = VERSION + '-runtime';
 
@@ -71,6 +71,21 @@ self.addEventListener('fetch', (e) => {
   // sie laeuft rein offline (ECDSA, kein Netz), und der Stripe-Checkout liegt auf
   // einem fremden Origin in einem neuen Tab — der geht ohnehin nicht durch diesen SW.
   if (/nominatim\.openstreetmap\.org/.test(url.hostname)) return;
+
+  /* DER SCHALTER KOMMT IMMER AUS DEM NETZ.
+     An echten Aufnahmen dieses Fehlers: die Datei im Netz sagte bereits
+     "true", ueber den Service Worker kam weiterhin "false" — der alte
+     Shell-Cache lieferte die veraltete Fassung aus. Ein Livegang waere bei
+     jedem, der die App schon installiert hat, wirkungslos geblieben, ohne
+     dass irgendwo ein Fehler auftaucht. Ein Schalter, der erst nach einer
+     Cache-Erneuerung greift, ist kein Schalter.
+     Ohne Netz schlaegt der Abruf fehl, window.CARLON_LIVE bleibt undefiniert
+     und es gilt Beta — die sichere Richtung, und offline kann ohnehin niemand
+     bezahlen. */
+  if (/\/live\.js$/.test(url.pathname)) {
+    e.respondWith(fetch(req, { cache: 'no-store' }));
+    return;
+  }
 
   // Navigationsanfragen: App-Shell zuerst, Fallback auf gecachtes index.html (Offline)
   if (req.mode === 'navigate') {

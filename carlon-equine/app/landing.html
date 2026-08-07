@@ -334,7 +334,7 @@ footer a:hover{color:var(--text-secondary)}
     </div>
     <div class="roi-card">
       <div class="roi-hook">Schon <b>eine</b> per Ferneinschätzung eingesparte oder abgerechnete Fahrt (50–200 €) refinanziert das Abo — für den ganzen Monat.</div>
-      <div class="roi-math"><div class="roi-num"><b>49&nbsp;€</b><span>Vet-Solo / Monat</span></div><div class="roi-arrow">refinanziert sich mit</div><div class="roi-num"><b>1&nbsp;Fahrt</b><span>oder Ferneinschätzung</span></div></div>
+      <div class="roi-math"><div class="roi-num"><b id="lpPreis">79&nbsp;€</b><span>Vet-Solo / Monat</span></div><div class="roi-arrow">refinanziert sich mit</div><div class="roi-num"><b>1&nbsp;Fahrt</b><span>oder Ferneinschätzung</span></div></div>
       <a class="btn primary apply-cta" href="#partner" style="width:100%;justify-content:center;margin-top:4px">Gründungs-Partner werden</a>
     </div>
   </div>
@@ -371,7 +371,7 @@ footer a:hover{color:var(--text-secondary)}
     <details><summary>Ist das eine medizinische Diagnose?</summary><p>Nein. CARLON EQUINE ist eine telemetrische Priorisierungs- und Verlaufshilfe auf Basis der Herzratenvariabilität. Die klinische Beurteilung und Diagnose trifft die behandelnde Tierärztin / der Tierarzt.</p></details>
     <details><summary>Wo liegen die Daten?</summary><p>Ausschließlich lokal in deinem Browser (IndexedDB). Es werden keine Gesundheitsdaten an einen Server übertragen. Deine Praxis-Sicherung exportierst du als Datei, wann immer du willst.</p></details>
     <details><summary>Funktioniert es offline?</summary><p>Ja. Nach der einmaligen Lizenz-Aktivierung läuft die Auswertung vollständig lokal — auch ohne Internet.</p></details>
-    <details><summary>Was kostet es?</summary><p>Während der Beta ist CARLON EQUINE für Gründungs-Partner <b>kostenlos</b>. Wenn wir live gehen, sichert dir dein Partner-Status dauerhaft einen frühen Preis. Es gibt keine automatische Abbuchung — den Zugang schalten wir persönlich frei.</p></details>
+    <details><summary>Was kostet es?</summary><p id="lpKosten">79 € im Monat oder 790 € im Jahr, jeweils netto. Während der Beta ist der Zugang Gründungs-Partnern vorbehalten und für sie beitragsfrei; der Partner-Status sichert dauerhaft den frühen Preis. Es gibt keine automatische Abbuchung — den Zugang schalten wir persönlich frei.</p></details>
     <details><summary>Wie werde ich Partner?</summary><p>Kurz über „Gründungs-Partner werden" deine Praxis + Kontakt schicken. Wir melden uns persönlich, machen ein kurzes Onboarding mit deinen echten Aufnahmen und richten deinen Zugang ein. Kein offener Selbstzugang — jeder Partner wird einzeln freigeschaltet.</p></details>
   </div>
 </div></section>
@@ -395,6 +395,16 @@ footer a:hover{color:var(--text-secondary)}
   <div class="btns"><a class="btn ghost" href="index.html" style="padding:10px 18px">Demo</a><a class="btn primary apply-cta" href="#partner" style="padding:10px 18px">Partner werden</a></div>
 </div></div>
 
+<!-- Preis und Verkaufsstand kommen aus live.js, damit die Verkaufsseite nicht
+     eigene Zahlen pflegt. Faellt die Datei aus, bleibt der hier stehende
+     Beta-Text — dasselbe sichere Verhalten wie in App und Impressum. -->
+<script src="live.js"></script>
+<script>
+  if (window.CARLON_LIVE === true) {
+    var k = document.getElementById('lpKosten');
+    if (k) k.textContent = '79 € im Monat oder 790 € im Jahr, jeweils netto zzgl. USt. Monatlich kündbar; im Jahresabo sind zwei Monate enthalten.';
+  }
+</script>
 <script>
 const sticky=document.getElementById('sticky');
 addEventListener('scroll',()=>{sticky.classList.toggle('on',scrollY>700);},{passive:true});
