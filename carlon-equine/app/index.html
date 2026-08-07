@@ -6942,7 +6942,7 @@ const UI={
         <div class="ein-rechts">
           <h4>Ein Aushang.<br>Der ganze Stall.</h4>
           <p>Ihre Kundinnen messen selbst — die Beurteilung bleibt bei Ihnen.
-             Der Link läuft nicht ab, ein Blatt genügt für alle.</p>
+             Und im Stall stehen auch Pferde, die noch nicht Ihre sind.</p>
           ${(()=>{
             /* NUTZEN NACH KANO, nicht nach Preis — ein Preis ist gar keine
                Nutzenkomponente.
@@ -6957,15 +6957,22 @@ const UI={
             const satz=Number(State.settings.tariff||State.settings.tariffRemote||0)||0;
             const abo=Number(License.PREIS&&License.PREIS.soloMonat||79);
             const n=satz?Math.max(1,Math.ceil(abo/satz)):0;
+            /* WOFUER DER TIERARZT ZAHLT: Bindung und Gewinnung, nicht
+               Zeitersparnis. Zeitersparnis verkauft kein Abo — ein Werkzeug,
+               das Kunden haelt und neue bringt, schon.
+               Kano-Reihenfolge bleibt: Begeisterung (Bindung), Leistung
+               (Gewinnung im fremden Stall), Basis (keine Huerde). */
             return `<div class="ein-nutzen">
-              <div class="zeile"><span class="pkt"></span><div><b>Zwischen den Terminen</b>
-                Sie sehen Ihre Patienten auch dann, wenn Sie nicht da sind.</div></div>
-              <div class="zeile"><span class="pkt"></span><div><b>Ohne Anfahrt</b>
-                Jede Beurteilung, die keine Fahrt braucht, ist ein halber Vormittag.</div></div>
+              <div class="zeile"><span class="pkt"></span><div><b>Sie sind die Praxis, die vorangeht</b>
+                Betreuung zwischen den Terminen — das erlebt sonst niemand im Umkreis.
+                Ihre Kundinnen erzählen davon, und wer das einmal hatte, wechselt nicht.</div></div>
+              <div class="zeile"><span class="pkt"></span><div><b>Im Stall stehen auch fremde Pferde</b>
+                An der Wand hängt Ihr Name. Wer misst, sendet an Sie — auch wer heute noch
+                woanders ist.</div></div>
               <div class="zeile"><span class="pkt"></span><div><b>Ohne Konto, ohne Umweg</b>
-                Verschlüsselt zu Ihnen — Ihre Kundin muss sich nirgends anmelden.</div></div>
+                Verschlüsselt zu Ihnen. Ihre Kundin muss sich nirgends anmelden, Sie nichts erklären.</div></div>
             </div>
-            ${satz?`<div class="ein-fuss">${n===1?'Eine Ferneinschätzung im Monat trägt es':n+' Ferneinschätzungen im Monat tragen es'}, jede weitere rechnet sich — bei Ihrem Satz von ${euro(satz)}.</div>`
+            ${satz?`<div class="ein-fuss">${n===1?'Eine Ferneinschätzung im Monat trägt es':n+' Ferneinschätzungen im Monat tragen es'}, jede weitere rechnet sich — und keine davon braucht eine Anfahrt. Bei Ihrem Satz von ${euro(satz)}.</div>`
                  :`<div class="ein-fuss">Hinterlegen Sie Ihren Honorarsatz in den Einstellungen, dann steht hier, ab wann es sich trägt.</div>`}`;})()}
         </div>
       </div>
