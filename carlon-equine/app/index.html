@@ -7789,7 +7789,30 @@ const License={
   },
   tier(){return (State.license&&State.license.tier)||'demo';},
   lic(){return (State.license&&State.license.lic)||'';},
-  isPaid(){return this.tier()!=='demo';},
+  /* Bezahlt-Pruefung ZUR AUFRUFZEIT, nicht nur beim Start.
+     ═══════════════════════════════════════════════════════════════════
+     loadFromSettings() stuft korrekt ab — aber nur beim Laden. Ein Cockpit
+     bleibt bei einem mobilen Tierarzt tagelang offen; wer in dieser Zeit
+     kuendigt und dessen Lizenz ablaeuft, behielt bisher vollen Zugang bis
+     zum naechsten Neuladen. Bei zehn Kunden faellt das nicht auf, bei
+     zehntausend schon.
+
+     Die KULANZ bleibt unangetastet, und das ist der heikle Teil: abgelaufen
+     ohne Absage heisst "wir konnten nicht fragen" — dann laeuft alles
+     weiter. Erst eine definitive Absage (abgelehntSeit) oder aufgebrauchte
+     Kulanz sperrt. Ein Tierarzt im Funkloch darf davon nichts merken. */
+  abgelaufen(){
+    const l=State.license||{};
+    if(!l.exp) return false;                       // kein Ablauf hinterlegt
+    const jetzt=Math.floor(Date.now()/1000);
+    if(jetzt<=l.exp) return false;                 // laeuft noch
+    const abgelehnt=!!(State.settings.license||{}).abgelehntSeit;
+    if(abgelehnt) return true;                     // Absage → sofort Schluss
+    if(!l.hatAbo) return true;                     // ohne Abo keine Kulanz
+    const kulanzBis=l.kulanzBis||(l.exp+this.KULANZ_TAGE*86400);
+    return jetzt>kulanzBis;                        // Kulanz aufgebraucht?
+  },
+  isPaid(){ return this.tier()!=='demo' && !this.abgelaufen(); },
   maxHorses(){return this.isPaid()?Infinity:3;},
   PAID_ONLY:['pdf','csv','routeHandoff','coherence','ownerFeedback'],
   /* WAS DIE STUFEN UNTERSCHEIDET — vorher: nichts.
@@ -7829,6 +7852,11 @@ const License={
      keine, die beim Aufraeumen der Lizenz-Logik nebenbei faellt. */
   can(f){
     if(!this.PAID_ONLY.includes(f) && !this.CLINIC_ONLY.includes(f)) return true;
+    /* Abgelaufen zaehlt wie unbezahlt — sonst blieben alle Tore in einer
+       laufenden Sitzung offen, obwohl die Lizenz laengst abgelaufen und das
+       Abo gekuendigt ist. Die Kulanz steckt in abgelaufen(): wer nur nicht
+       fragen KONNTE, behaelt alles. */
+    if(this.abgelaufen()) return false;
     return (this.FEATURES[this.tier()]||[]).includes(f);
   },
   CLINIC_ONLY:['clinicBranding','multiSeat'],
@@ -8074,6 +8102,9 @@ const License={
   needsRenewal(){
     const l=State.license; if(!l)return null;
     if(l.expiredTier)return{state:'expired',tier:l.expiredTier,founder:!!l.founder};
+    /* Abgelaufen ist abgelaufen — vorher meldete es 'expiring' mit 0 Tagen,
+       und der Kopf zeigte weiter die bezahlte Stufe. */
+    if(this.abgelaufen())return{state:'expired',tier:l.tier,founder:!!l.founder};
     const d=this.daysLeft();
     if(d!=null&&d<=7&&this.isPaid())return{state:'expiring',tier:this.tier(),days:d,founder:!!l.founder};
     return null;
