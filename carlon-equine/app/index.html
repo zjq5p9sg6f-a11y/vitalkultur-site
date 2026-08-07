@@ -6886,7 +6886,16 @@ const Backup={
     for(const c of d.consults||[])await DB.put('consults',c);
     for(const c of d.coherence||[])await DB.put('coherence',c);
     if(d.settings){State.settings={...State.settings,...d.settings};await State.saveSettings();}
-    await State.load();UI.closeModal();Nav.go('board');Toast.show('Backup wiederhergestellt','ok');
+    await State.load();
+    /* Die Sicherung traegt den Abo-Token mit — ohne diesen Aufruf bliebe die
+       Stufe nach dem Einspielen auf "Demo", bis jemand die Seite neu laedt.
+       Genau daraus wird ein Anruf: "ich hab mein Backup eingespielt und meine
+       Lizenz ist weg". An einem Geraetewechsel nachgestellt und bestaetigt. */
+    await License.loadFromSettings();
+    if(License.isPaid()&&(State.settings.license||{}).sub) License.lizenzHolenWennFaellig();
+    UI.closeModal();Nav.go('board');
+    Toast.show(License.isPaid()?`Backup wiederhergestellt · ${License.TIERS[License.tier()].name} aktiv`
+                               :'Backup wiederhergestellt','ok');
   }
 };
 
