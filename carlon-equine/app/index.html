@@ -6544,9 +6544,14 @@ const License={
      Managed Payments, kein Gratis-Trial, Unternehmensname Pflicht, Steuer-ID
      fuer Geschaeftskunden (Reverse Charge). */
   CHECKOUT_ALL:{
+    /* Testmodus des VITALKULTUR-Kontos (acct_1U1RtGFYqQiMtCiD) — nicht der
+       Sandbox. Die erste Fassung lag in einer Sandbox, und die geht nie live:
+       die Probe muss auf demselben Konto stattfinden, auf dem spaeter auch
+       die Live-Fassung entsteht, sonst probt man eine Umgebung, die es zum
+       Ernstfall nicht mehr gibt. */
     test:{
-      year :'https://buy.stripe.com/test_cNi6oH5RT4hY81ac7E1RC04',   // 790 €/Jahr
-      month:'https://buy.stripe.com/test_14A7sL5RTg0GftCgnU1RC03',   //  79 €/Monat
+      year :'https://buy.stripe.com/test_5kQ5kD1Dh8tDfcG8pZgbm01',   // 790 €/Jahr
+      month:'https://buy.stripe.com/test_8x28wP95JbFP1lQ6hRgbm00',   //  79 €/Monat
     },
     live:{
       /* NACH der Unternehmens-Verifizierung im LIVE-Konto anlegen und hier
