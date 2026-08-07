@@ -2367,29 +2367,29 @@ async function uebergabeErzeugen(){
   return ziel.toString();
 }
 
-/* WEITERSAGEN — die zwei Kanten der Kettenreaktion.
-   Sie sind streng getrennt, und das ist keine Formsache:
-   • einer weiteren Tierärztin → enthält DIE MESSUNG, gezielte Übergabe
-   • einem Stallfreund        → enthält NUR DIE STATION, keine Daten
-   Wer die beiden vermischt, verschickt irgendwann Gesundheitsdaten an eine
-   Reitstall-Gruppe. Deshalb zwei Knöpfe mit zwei Sätzen, nie einer. */
+/* WEITERSAGEN — bewusst nur EINE Kante.
+   ═══════════════════════════════════════════════════════════════════════
+   HIER STAND EINMAL "Auch einer anderen Tierärztin zeigen". Das war ein
+   Fehler, und zwar ein teurer: unser zahlender Kunde ist die PRAXIS. Wer
+   ihrer Kundin einen Knopf für die Zweitmeinung hinlegt, benutzt das
+   Werkzeug, für das sie bezahlt, um ihr Kunden abzuwerben. Kein Tierarzt
+   haengt einen Aushang auf, der so etwas anbietet — und er haette recht.
+
+   Was bleibt, waechst OHNE jemandem etwas wegzunehmen: die Besitzerin zeigt
+   die Station einer anderen Besitzerin. Die bringt sie ihrer EIGENEN Praxis.
+   So entstehen neue Praxen, ohne dass eine bestehende Kundschaft verliert.
+
+   Der Übergabe-Weg (uebergabeErzeugen) bleibt bestehen — aber nur dort, wo
+   die Besitzerin GAR KEINE Praxis hinterlegt hat. Das saet neue Vets, statt
+   vorhandene zu bestehlen. */
 function weitersagenZeigen(){
   const k=$('#weiterKarte'); if(!k) return;
   k.innerHTML=
      `<h3>Weitersagen</h3>`
-    +`<div class="ws-zeile"><div><b>Auch einer anderen Tierärztin zeigen</b>`
-    +`<span>Zweitmeinung oder anderer Schwerpunkt. Der Link enthält diese Messung.</span></div>`
-    +`<button class="btn ghost" id="wsVet">Link erzeugen</button></div>`
-    +`<div class="ws-zeile"><div><b>Einem Stallfreund zeigen</b>`
-    +`<span>Ohne deine Daten — er misst dann sein eigenes Pferd.</span></div>`
+    +`<div class="ws-zeile"><div><b>Einer Stallnachbarin zeigen</b>`
+    +`<span>Nur die Messstation, ohne deine Daten — sie misst dann ihr eigenes Pferd.</span></div>`
     +`<button class="btn ghost" id="wsFreund">Karte teilen</button></div>`;
   k.classList.remove('hidden');
-  $('#wsVet').addEventListener('click', async (ev)=>{
-    const b=ev.currentTarget; b.disabled=true; b.textContent='Einen Moment…';
-    try{ uebergabeZeigen(await uebergabeErzeugen()); }
-    catch(e){ b.disabled=false; b.textContent='Link erzeugen';
-              $('#err').textContent=e.message||'Hat nicht geklappt'; }
-  });
   /* NICHT selbst nachbauen: share('owner') erzeugt eine gerenderte Karte mit
      den eigenen Werten — ein sehr viel besseres Teilstueck als ein nackter
      Link. Zwei konkurrierende Teilen-Wege waeren ausserdem verwirrend. */
