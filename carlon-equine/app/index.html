@@ -6501,10 +6501,26 @@ const UI={
     <div class="modal-body">
       <div class="tier-opt feat"><div style="flex:1"><h4>${License.TIERS[l.tier].name}${License.isFounder()?' <span class="chip cyan">Gründungs-Partner</span>':''}</h4>
         <div style="font-size:13px;color:var(--text-secondary);margin-top:4px">${esc(l.lic||'')}</div>
-        ${d!=null?`<div style="font-size:12px;color:${d<14?'var(--amber)':'var(--text-dim)'};margin-top:6px">Gültig noch ${d} Tage (bis ${fmtDate(new Date(l.exp*1000).toISOString())})</div>`:''}</div>
+        ${(()=>{const lz=License.laufzeit(); if(!lz) return '';
+          /* Die Zahl, die ein mobiler Tierarzt VOR der Tour sehen will:
+             wie lange laesst sich ohne Internet arbeiten. Alles andere
+             (Ablaufdatum der technischen Lizenz) interessiert ihn nicht. */
+          const farbe = lz.tage<=3?'var(--amber)':'var(--text-dim)';
+          return `<div style="font-size:12px;color:${farbe};margin-top:6px">
+            Ohne Internet nutzbar: noch <b>${lz.tage} ${lz.tage===1?'Tag':'Tage'}</b>
+            ${lz.kulanz?' · verlängert, weil die Abo-Prüfung zuletzt nicht erreichbar war':''}
+          </div>`;})()}</div>
         <div class="price"><b>✓</b><span>aktiv</span></div></div>
       ${License.isFounder()?'<div style="font-size:11.5px;color:var(--text-dim);margin-top:10px">Als Gründungs-Partner bleibt dir dein früher Preis dauerhaft gesichert.</div>':''}
-      ${d!=null&&d<21?'<div class="demo-ribbon" style="margin-top:14px"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 8v4M12 16h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/></svg><div>Läuft bald ab — rechtzeitig verlängern. Deine <b>Daten bleiben erhalten</b>, das Cockpit wechselt sonst nur in den Demo-Modus.</div></div>':''}
+      ${(()=>{const lz=License.laufzeit();
+        if(!lz||!lz.kulanz) return '';
+        return `<div class="demo-ribbon" style="margin-top:14px"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 8v4M12 16h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/></svg><div>Die Abo-Prüfung war zuletzt nicht erreichbar — <b>du arbeitest normal weiter</b>. Sobald das Gerät wieder online ist, verlängert sich das im Hintergrund von selbst. Nichts zu tun.</div></div>`;})()}
+      ${/* NUR bei einer Lizenz OHNE Abo (alter, von Hand ausgestellter
+            Schluessel). Mit Abo laeuft die Lizenz immer hoechstens 14 Tage und
+            erneuert sich taeglich von selbst — "laeuft bald ab" stuende dann
+            dauerhaft da und wuerde zu genau dem Dauerstress, den niemand
+            gebrauchen kann. Eine Warnung, die immer leuchtet, wird ignoriert. */
+        !(State.settings.license||{}).sub && d!=null && d<21 ?'<div class="demo-ribbon" style="margin-top:14px"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 8v4M12 16h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/></svg><div>Läuft bald ab — rechtzeitig verlängern. Deine <b>Daten bleiben erhalten</b>, das Cockpit wechselt sonst nur in den Demo-Modus.</div></div>':''}
     </div>
     ${(State.settings.license||{}).sub?`<div style="margin-top:14px;padding:12px 14px;border:1px solid var(--border-subtle);border-radius:var(--r-m)">
       <div style="font-size:12px;color:var(--text-secondary);margin-bottom:9px">Karte wechseln, Rechnungen herunterladen oder kündigen — alles direkt bei Stripe, ohne uns zu schreiben.</div>
@@ -6707,7 +6723,14 @@ const License={
      offline geprueften Schluesseln unmoeglich. */
   DIENST:'https://lizenz.vitalkultur.com',
   get RENEW_URL(){ return this.DIENST+'/erneuern'; },
-  RENEW_AB_TAGEN:7,
+  /* TAEGLICH erneuern, nicht erst bei 7 Tagen Rest. Wer mit 7 Tagen Rest ins
+     Funkloch faehrt, hat nur 7 Tage Reichweite; wer taeglich erneuert, geht
+     praktisch immer mit vollen 14 Tagen los. Kostet ein paar hundert Byte am
+     Tag — bei 10 000 Kundinnen rund 10 000 Anfragen taeglich und damit immer
+     noch ein Zehntel dessen, was die kleinste Ausfuehrungsumgebung frei hat. */
+  RENEW_AB_TAGEN:13,
+  /* Kulanz nach Ablauf, wenn wir NICHT fragen konnten. Siehe laufzeit(). */
+  KULANZ_TAGE:14,
 
   /* ── Rueckkehr aus der Kasse ─────────────────────────────────────────
      Stripe leitet nach der Zahlung hierher zurueck und haengt die
@@ -6776,26 +6799,41 @@ const License={
         body:JSON.stringify({token:s.sub})});
       const d=await r.json().catch(()=>({}));
       if(!d.ok){
-        // 402 = gekuendigt. 503 = Dienst gerade nicht erreichbar, KEIN Grund
-        // zum Aussperren — die vorhandene Lizenz laeuft ja noch.
+        /* 402 heisst: wir HABEN gefragt und die Antwort war nein. Das ist
+           etwas voellig anderes als "wir konnten nicht fragen" (503, kein
+           Netz) — und nur der erste Fall darf spaeter zum Aussperren fuehren.
+           Genau diese Unterscheidung fehlte und war der Grund, warum ein
+           Funkloch dieselbe Wirkung hatte wie eine Kuendigung. */
         console.warn('[CARLON] Erneuerung abgelehnt:', r.status, d.grund);
+        if(r.status===402){
+          s.abgelehntSeit=Math.floor(Date.now()/1000); s.letztePruefung=s.abgelehntSeit;
+          State.settings.license=s; await State.saveSettings();
+        }
         return {ok:false,grund:d.grund||('HTTP '+r.status),endgueltig:r.status===402};
       }
       const v=await this.verify(d.lizenz);
       if(!v.valid||v.typ!=='lic') return {ok:false,grund:'Antwort nicht verwertbar'};
-      s.key=d.lizenz; State.settings.license=s; await State.saveSettings();
+      s.key=d.lizenz; s.letztePruefung=Math.floor(Date.now()/1000); s.abgelehntSeit=null;
+      State.settings.license=s; await State.saveSettings();
       await this.loadFromSettings(); Nav.render();
       return {ok:true,bis:v.exp};
     }catch(e){ return {ok:false,grund:e.message||'Netzfehler'}; }
   },
   /* Beim Start und bei Sichtbarkeit pruefen — still, ohne die Arbeit zu stoeren. */
+  _letzterVersuch:0,
   async lizenzHolenWennFaellig(){
     const s=State.settings.license||{};
     if(!s.sub||!s.key) return;
+    // Nicht oefter als alle 30 Minuten anklopfen, egal wie oft der Tab wechselt
+    if(Date.now()-this._letzterVersuch < 30*60000) return;
     const v=await this.verify(s.key);
     const restTage=v.exp?((v.exp*1000-Date.now())/86400000):-1;
+    /* Auch bei ABGELAUFENER Lizenz versuchen: wer aus dem Funkloch zurueck
+       ist, soll beim ersten Netzkontakt wieder eine gueltige bekommen, ohne
+       etwas zu tun. Genau dann ist der Versuch am wichtigsten. */
     if(restTage>this.RENEW_AB_TAGEN) return;
     if(!navigator.onLine) return;
+    this._letzterVersuch=Date.now();
     const e=await this.lizenzHolen('faellig');
     /* VORWARNEN STATT AUSSPERREN. Wer erst beim Sperrbildschirm erfaehrt, dass
        die Karte abgelaufen ist, ruft an — und zwar veraergert. Wer es drei
@@ -6840,6 +6878,23 @@ const License={
       State.license={provider:'offline',tier:r.tier,lic:r.lic,exp:r.exp,key:l.key,founder:r.founder,seats:r.seats,hatAbo:!!l.sub};
       // Alt-Lizenzen (abgeloester Lemon-Squeezy-/Trial-Pfad) einmalig auf 'offline' normalisieren
       if(l.provider!=='offline'){State.settings.license=State.license;await State.saveSettings();}
+    } else if(r.expired && l.sub && !l.abgelehntSeit){
+      /* KULANZ. Die Lizenz ist abgelaufen, ABER wir haben nie eine Absage
+         bekommen — wir konnten schlicht nicht fragen. Ein Tierarzt im
+         Funkloch darf davon nichts merken ausser einem ruhigen Hinweis; ihn
+         mitten in der Visite auf drei Pferde und kein Befund-PDF
+         herunterzustufen waere der schlimmste Moment, den wir waehlen
+         koennten. Erst wenn der Dienst tatsaechlich "kein Abo" gesagt hat
+         (abgelehntSeit), oder die Kulanz aufgebraucht ist, wird gesperrt. */
+      const kulanzBis=r.exp+this.KULANZ_TAGE*86400;
+      if(Math.floor(Date.now()/1000)<kulanzBis){
+        State.license={provider:'offline',tier:r.tier,lic:r.lic,exp:r.exp,key:l.key,
+          founder:r.founder,seats:r.seats,hatAbo:true,
+          kulanzBis, kulanz:true};
+      }else{
+        State.license={tier:'demo',expiredTier:r.tier,founder:!!r.founder,lic:r.lic,
+          hatAbo:true, kulanzErschoepft:true};
+      }
     } else {
       State.license={tier:'demo',expiredTier:l.tier,founder:!!l.founder,lic:l.lic};
       if(l.provider!=='offline'){State.settings.license=null;await State.saveSettings();}
@@ -6849,6 +6904,16 @@ const License={
   gate(feature,label){
     if(this.can(feature))return true;
     UI.upgrade(label);return false;
+  },
+  /* Wie lange laesst sich noch ohne Internet arbeiten? Die Zahl, die ein
+     mobiler Tierarzt vor der Tour sehen will. */
+  laufzeit(){
+    const l=State.license||{}; if(!l.exp) return null;
+    const jetzt=Math.floor(Date.now()/1000);
+    const bis=l.kulanz?l.kulanzBis:l.exp;
+    const tage=Math.max(0,Math.ceil((bis-jetzt)/86400));
+    return {tage, kulanz:!!l.kulanz, erschoepft:!!l.kulanzErschoepft,
+            abgelehnt:!!(State.settings.license||{}).abgelehntSeit};
   },
   daysLeft(){const l=State.license;if(!l||!l.exp)return null;return Math.max(0,Math.round((l.exp*1000-Date.now())/86400000));},
   isFounder(){const l=State.license;return !!(l&&l.founder);},
@@ -7729,6 +7794,15 @@ addEventListener('beforeinstallprompt',e=>{e.preventDefault();PWA.deferred=e;});
        Beides still — wer die App oeffnet, will arbeiten, nicht verwalten. */
     await License.freischaltenAusRueckleitung();
     License.lizenzHolenWennFaellig();
+    /* DREI AUSLOESER statt nur beim Start. Eine Praxis-App bleibt tagelang im
+       Hintergrund offen; ohne diese beiden wuerde nie erneuert und die
+       Reichweite liefe im Stillen ab.
+       'online' ist der wichtigste: der Moment, in dem der Wagen aus dem
+       Funkloch faehrt, ist genau der Moment, in dem nachgeholt werden soll. */
+    window.addEventListener('online', ()=>License.lizenzHolenWennFaellig());
+    document.addEventListener('visibilitychange', ()=>{
+      if(document.visibilityState==='visible') License.lizenzHolenWennFaellig();
+    });
     if(State.settings.fieldMode){document.body.classList.add('field-mode');const b=$('#fieldBtn');if(b)b.classList.add('on');}
     Chart.initHover();
     Nav.go(Nav.cur);
