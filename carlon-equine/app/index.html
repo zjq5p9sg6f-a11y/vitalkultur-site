@@ -6766,7 +6766,7 @@ const UI={
                       :`<button class="btn ghost" style="margin-top:8px;padding:7px 12px;font-size:12px" onclick="UI.activate()">Schlüssel eingeben</button>`;})()}</div>
         </div>`).join('')}
       </div>
-      <p style="font-size:12px;color:var(--text-dim);margin-top:16px">Preise zzgl. MwSt. — als Praxis ziehst du die Vorsteuer ab. Zahlung und Rechnung laufen über Stripe, für EU-Praxen mit USt-IdNr. greift das Reverse-Charge-Verfahren. Nach dem Abschluss erhältst du deinen Lizenz-Schlüssel per E-Mail. Alle Gesundheitsdaten bleiben auch mit Lizenz zu 100 % lokal auf diesem Gerät.</p>
+      <p style="font-size:12px;color:var(--text-dim);margin-top:16px">Preise zzgl. MwSt. — als Praxis ziehst du die Vorsteuer ab. Zahlung und Rechnung laufen über Stripe, für EU-Praxen mit USt-IdNr. greift das Reverse-Charge-Verfahren. Nach der Zahlung wirst du hierher zurückgeleitet und die Praxis ist sofort freigeschaltet — kein Schlüssel, keine E-Mail, kein Warten. Alle Gesundheitsdaten bleiben auch mit Lizenz zu 100 % lokal auf diesem Gerät.</p>
     </div>
     <div class="modal-foot"><button class="btn ghost" onclick="UI.closeModal()">Später</button><button class="btn primary" onclick="UI.activate()">Ich habe einen Schlüssel</button></div>`);
   },
@@ -6774,8 +6774,8 @@ const UI={
     this.modal(`<div class="modal-head"><button class="closex" onclick="UI.closeModal()">${IC.x}</button><h3>Lizenz aktivieren</h3></div>
     <div class="modal-body">
       <div class="field"><label>Lizenz-Schlüssel</label>
-        <textarea id="licKey" placeholder="CARLON-eyJ2IjoxLCJ0aWVy… (kompletten Schlüssel aus der E-Mail einfügen)" style="min-height:90px;font-family:var(--font-mono);font-size:11px;word-break:break-all"></textarea>
-        <div class="hint">Den Schlüssel hast du nach dem Kauf per E-Mail erhalten. Einmal einfügen — danach wird er ausschließlich auf diesem Gerät geprüft, auch ohne Netz.</div></div>
+        <textarea id="licKey" placeholder="CARLON-eyJ2IjoxLCJ0aWVy… (kompletten Schlüssel einfügen)" style="min-height:90px;font-family:var(--font-mono);font-size:11px;word-break:break-all"></textarea>
+        <div class="hint">Dieser Weg ist für Pilot- und Gründungs-Praxen, die einen Schlüssel direkt von uns bekommen haben. Wer über die Kasse abschließt, braucht ihn nicht — dort schaltet sich die Praxis nach der Zahlung von selbst frei. Einmal einfügen, danach wird der Schlüssel ausschließlich auf diesem Gerät geprüft, auch ohne Netz.</div></div>
     </div>
     <div class="modal-foot"><button class="btn ghost" onclick="UI.closeModal()">Abbrechen</button><button class="btn primary" onclick="License.activate($('#licKey').value)">Aktivieren</button></div>`);
   },

@@ -109,6 +109,22 @@ h2{font-family:var(--font-brand);font-weight:300;font-size:clamp(27px,3.6vw,40px
 .shots.two .frame{aspect-ratio:auto}
 .shots.two .frame img{height:auto}
 /* USP-Band: konkrete Faehigkeiten, je nach Kano-Ebene */
+.tarife{margin-top:46px;display:grid;grid-template-columns:repeat(2,1fr);gap:18px}
+.tarif{background:var(--bg-deep);border:1px solid var(--border-subtle);border-radius:18px;padding:30px 30px 28px;position:relative}
+.tarif.gewaehlt{border-color:var(--cyan);box-shadow:0 0 40px rgba(62,207,178,0.10)}
+.tarif .t-k{font-family:var(--font-mono);font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--cyan);margin-bottom:14px}
+.tarif .t-preis{font-family:var(--font-display);font-size:44px;font-weight:200;letter-spacing:-0.02em;color:var(--text-primary);line-height:1}
+.tarif .t-takt{font-size:14px;color:var(--text-secondary);margin-left:5px;font-weight:300}
+.tarif .t-netto{font-family:var(--font-mono);font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:var(--text-dim);margin-top:11px}
+.tarif .t-note{font-size:13.5px;color:var(--text-secondary);line-height:1.65;font-weight:300;margin-top:16px;border-top:1px solid var(--border-faint);padding-top:15px}
+.tarif .t-spar{position:absolute;top:24px;right:26px;font-family:var(--font-mono);font-size:9.5px;letter-spacing:0.16em;text-transform:uppercase;color:#052018;background:var(--cyan);border-radius:999px;padding:5px 11px}
+.enthalten{margin-top:22px;display:grid;grid-template-columns:repeat(2,1fr);gap:9px 26px}
+.enthalten li{list-style:none;position:relative;padding-left:20px;font-size:14px;color:var(--text-secondary);font-weight:300;line-height:1.6}
+.enthalten li::before{content:"";position:absolute;left:0;top:8px;width:7px;height:7px;border-radius:2px;background:var(--cyan);transform:rotate(45deg)}
+.tarif-fuss{margin-top:26px;font-size:12.5px;color:var(--text-dim);line-height:1.75;font-weight:300;text-align:center}
+.tarif-fuss a{color:var(--text-secondary);text-decoration:underline;text-underline-offset:3px}
+.tarif-fuss a:hover{color:var(--cyan)}
+@media(max-width:720px){.tarife{grid-template-columns:1fr}.enthalten{grid-template-columns:1fr}}
 .usps{margin-top:52px;display:grid;grid-template-columns:repeat(2,1fr);gap:2px;border:1px solid var(--border-subtle);border-radius:18px;overflow:hidden;background:var(--border-subtle)}
 .usp{background:var(--bg-deep,#02080d);padding:26px 28px}
 .usp .u-k{font-family:var(--font-mono);font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--cyan);margin-bottom:9px}
@@ -466,6 +482,43 @@ footer{border-top:1px solid var(--border-faint);padding:56px 24px 66px;text-alig
     <p class="trust" data-en="Grounded, not claimed · An assessment, not a diagnosis · Not a medical device (MDR/FDA) · Data stays local — you are the controller · No server, no cloud." data-de="Belegt, nicht behauptet · Einschätzung, keine Diagnose · Kein Medizinprodukt (MDR/FDA) · Daten bleiben lokal — du bist Verantwortlicher · kein Server, keine Cloud.">Belegt, nicht behauptet · Einschätzung, keine Diagnose · Kein Medizinprodukt (MDR/FDA) · Daten bleiben lokal — du bist Verantwortlicher · kein Server, keine Cloud.</p>
   </section>
 
+  <!-- PREISE — Stripe verlangt veroeffentlichte Preise; ehrlicher ist es ohnehin.
+       BEWUSST OHNE Kaufknopf: die Kasse schaltet erst frei, wenn Jan sie
+       freigibt (CARLON_LIVE). Ein Knopf, der ins Leere fuehrt, kostet mehr
+       Vertrauen als ein fehlender Knopf. -->
+  <section class="wrap rev" id="preise">
+    <div class="sec-eyebrow" data-en="What it costs" data-de="Was es kostet">Was es kostet</div>
+    <h2 data-en="One practice, <em>one price.</em>" data-de="Eine Praxis, <em>ein Preis.</em>">Eine Praxis, <em>ein Preis.</em></h2>
+    <p class="sec-lead" data-en="No per-horse fee, no per-seat fee, no setup cost. The whole practice — every vet, every device." data-de="Kein Preis pro Pferd, keiner pro Platz, keine Einrichtungsgebühr. Die ganze Praxis — jede Tierärztin, jedes Gerät.">Kein Preis pro Pferd, keiner pro Platz, keine Einrichtungsgebühr. Die ganze Praxis — jede Tierärztin, jedes Gerät.</p>
+
+    <div class="tarife">
+      <div class="tarif">
+        <div class="t-k" data-en="Monthly" data-de="Monatlich">Monatlich</div>
+        <div><span class="t-preis">79 €</span><span class="t-takt" data-en="/ month" data-de="/ Monat">/ Monat</span></div>
+        <div class="t-netto" data-en="net · plus VAT" data-de="netto · zzgl. USt.">netto · zzgl. USt.</div>
+        <div class="t-note" data-en="Cancellable at any time, effective at the end of the current billing period." data-de="Jederzeit kündbar, zum Ende der laufenden Abrechnungsperiode.">Jederzeit kündbar, zum Ende der laufenden Abrechnungsperiode.</div>
+      </div>
+      <div class="tarif gewaehlt">
+        <div class="t-spar" data-en="2 months free" data-de="2 Monate geschenkt">2 Monate geschenkt</div>
+        <div class="t-k" data-en="Yearly" data-de="Jährlich">Jährlich</div>
+        <div><span class="t-preis">790 €</span><span class="t-takt" data-en="/ year" data-de="/ Jahr">/ Jahr</span></div>
+        <div class="t-netto" data-en="net · plus VAT · 65.83 € per month" data-de="netto · zzgl. USt. · 65,83 € im Monat">netto · zzgl. USt. · 65,83 € im Monat</div>
+        <div class="t-note" data-en="Twelve months, cancellable with one month's notice to the end of the term." data-de="Zwölf Monate, kündbar mit einem Monat Frist zum Ende der Laufzeit.">Zwölf Monate, kündbar mit einem Monat Frist zum Ende der Laufzeit.</div>
+      </div>
+    </div>
+
+    <ul class="enthalten">
+      <li data-en="One practice or site — every vet, every device" data-de="Ein Betrieb oder Standort — jede Tierärztin, jedes Gerät">Ein Betrieb oder Standort — jede Tierärztin, jedes Gerät</li>
+      <li data-en="Unlimited horses, recordings and findings" data-de="Unbegrenzt Pferde, Aufnahmen und Befunde">Unbegrenzt Pferde, Aufnahmen und Befunde</li>
+      <li data-en="Active right after payment — no key, no waiting for an email" data-de="Sofort nach der Zahlung aktiv — kein Schlüssel, kein Warten auf eine E-Mail">Sofort nach der Zahlung aktiv — kein Schlüssel, kein Warten auf eine E-Mail</li>
+      <li data-en="Every update included, no upgrade fee" data-de="Jede Weiterentwicklung enthalten, keine Upgrade-Gebühr">Jede Weiterentwicklung enthalten, keine Upgrade-Gebühr</li>
+      <li data-en="Your data stays on your device — also after the subscription ends" data-de="Deine Daten bleiben auf deinem Gerät — auch nach dem Abo">Deine Daten bleiben auf deinem Gerät — auch nach dem Abo</li>
+      <li data-en="Beta co-creators keep their price as founding partners" data-de="Beta-Mitgestalter behalten ihren Preis als Gründungs-Partner">Beta-Mitgestalter behalten ihren Preis als Gründungs-Partner</li>
+    </ul>
+
+    <p class="tarif-fuss" data-en="Business customers only (§ 14 BGB) — no contracts with consumers. Payment, invoice and VAT are handled by Stripe as merchant of record; with an EU VAT ID the reverse-charge procedure applies. Terms in <a href=&quot;/agb.html#visite&quot;>§ 12a of our T&amp;Cs</a> · <a href=&quot;/privacy.html&quot;>Privacy</a>" data-de="Nur an Unternehmer im Sinne des § 14 BGB — keine Verträge mit Verbrauchern. Zahlung, Rechnung und Umsatzsteuer wickelt Stripe als Merchant of Record ab; mit EU-USt-IdNr. greift das Reverse-Charge-Verfahren. Bedingungen in <a href=&quot;/agb.html#visite&quot;>§ 12a unserer AGB</a> · <a href=&quot;/privacy.html&quot;>Datenschutz</a>">Nur an Unternehmer im Sinne des § 14 BGB — keine Verträge mit Verbrauchern. Zahlung, Rechnung und Umsatzsteuer wickelt Stripe als Merchant of Record ab; mit EU-USt-IdNr. greift das Reverse-Charge-Verfahren. Bedingungen in <a href="/agb.html#visite">§ 12a unserer AGB</a> · <a href="/privacy.html">Datenschutz</a></p>
+  </section>
+
   <!-- FINAL CTA -->
   <section class="final wrap rev">
     <div class="sec-eyebrow" data-en="Beta · co-creators welcome" data-de="Beta · Mitgestalter willkommen">Beta · Mitgestalter willkommen</div>
@@ -493,6 +546,7 @@ footer{border-top:1px solid var(--border-faint);padding:56px 24px 66px;text-alig
     <a href="/carlon-equine/" data-en="CARLON Equine (the app)" data-de="CARLON Equine (die App)">CARLON Equine (die App)</a>
     <a href="/carlon-equine/coherence.html" data-en="Therapy &amp; research" data-de="Therapie &amp; Forschung">Therapie &amp; Forschung</a>
     <a href="/privacy.html" data-en="Privacy" data-de="Datenschutz">Datenschutz</a>
+    <a href="/agb.html#visite">AGB</a>
     <a href="/impressum.html">Impressum</a>
   </div>
   <div class="footer-family">
