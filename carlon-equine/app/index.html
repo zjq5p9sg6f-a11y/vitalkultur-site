@@ -9114,6 +9114,639 @@ const PWA={
 };
 addEventListener('beforeinstallprompt',e=>{e.preventDefault();PWA.deferred=e;});
 
+/* ═══════════════════════════════════════════════════════════════════════
+   SPRACHE — Englisch fuer das Cockpit, ohne 970 Eingriffe im Code
+   ═══════════════════════════════════════════════════════════════════════
+   Das Cockpit erzeugt praktisch alles zur Laufzeit in Vorlagen-
+   Zeichenketten; im statischen HTML stehen nur 17 Textstellen. Ein
+   t('schluessel')-Umbau waere daher rund 970 Eingriffe in einer
+   9000-Zeilen-Datei — jeder davon eine Gelegenheit, etwas zu zerbrechen.
+
+   Stattdessen: ein Woerterbuch und ein Durchgang nach jedem Zeichnen.
+   DER DEUTSCHE SATZ IST DER SCHLUESSEL.
+
+     t('key')-Umbau            Woerterbuch-Durchgang
+     ~970 Eingriffe            0 Eingriffe
+     Unbekanntes -> Schluessel Unbekanntes -> bleibt deutsch (LESBAR)
+     Abdeckung nicht messbar   Abdeckung messbar (t-sprachdecke)
+
+   DREI GRENZEN, bewusst gezogen:
+
+   1) NUR vollstaendige Uebereinstimmungen. Ein Pferd namens „Station"
+      bleibt „Station"; nur die Navigation darf Einzelwoerter ersetzen.
+   2) REGULATORISCHER WORTLAUT WIRD AUSGELASSEN. „Keine Diagnose",
+      „kein Medizinprodukt", „tieraerztlich einordnen" sind kein
+      Uebersetzungsposten, sondern ein Pruefvorgang: eine ungenaue
+      englische Formulierung erzeugt eine Aussage, die wir bewusst nicht
+      treffen. Diese Saetze bleiben deutsch, bis der englische Wortlaut
+      extern geprueft ist. Sie stehen unten in RECHT — und genau diese
+      Liste ist das Dossier fuer die Pruefung.
+   3) DER SCHALTER BLEIBT VERBORGEN, solange die Abdeckung nicht stimmt.
+      Ein halb uebersetztes Cockpit ist schlechter als ein sauber
+      deutsches: der englische Tierarzt stoesst mitten im Arbeitsablauf
+      auf Deutsch, und zwar dort, wo es teuer wird — im Befund.
+      Zum Messen und Ansehen: ?lang=en                                   */
+const Sprache={
+  cur:'de',
+  _am:false, _obs:null,
+
+  /* ── Regulatorischer Wortlaut ────────────────────────────────────────
+     Diese Saetze bleiben deutsch. Fragmente zaehlen mit: das Cockpit
+     zerlegt Saetze an <b>-Tags in mehrere Textknoten, und ein zur
+     Haelfte uebersetzter Hinweis ist schlimmer als ein deutscher. */
+  RECHT:[
+    'Trend-Übersicht zur Priorisierung — kein Alarm- oder Diagnosesystem. Hinweise beruhen auf der Abweichung von der individuellen Baseline; die klinische Beurteilung bleibt ärztlich.',
+    'Priorisierungshilfe, keine Diagnose. Klinische Beurteilung durch Tierarzt/Tierärztin.',
+    'Kein Medizinprodukt, keine Diagnose.',
+    'Nicht dazu bestimmt, Krankheiten zu erkennen, zu behandeln, zu heilen oder zu verhüten — die medizinische Beurteilung trifft ausschließlich die behandelnde Tierärztin oder der behandelnde Tierarzt.',
+    'Diese Einschätzung basiert auf der Herzratenvariabilität und ersetzt keine tierärztliche Diagnose.',
+    'deutlich unter der eigenen Baseline, tierärztlich einordnen',
+    'Auffällig unregelmäßige Kurzzeit-Variabilität — Screening-Hinweis, keine Diagnose; bitte tierärztlich einordnen lassen',
+    'Screening-Hinweis, keine Diagnose — klinische Abklärung (BAL) bleibt tierärztlich.',
+    'Trainings-Domäne, keine tierärztliche Beurteilung.',
+    'Orientierung für die Periodisierung — keine Leistungsdiagnostik.',
+    'Orientierung, keine Leistungsdiagnostik.',
+    'Die Form ist ein beschreibendes Label der gemessenen Variabilität — keine medizinische Diagnose.',
+    'Forschungs-Feature, keine medizinische Diagnose.',
+    'Deskriptive Musterzuordnung, keine Diagnose — Beurteilung ausschliesslich im EKG durch die Tierarztpraxis.',
+    'Beurteilung und Bestätigung ausschließlich im EKG durch die Tierarztpraxis. Keine Diagnose.',
+    'Bitte tierärztlich abklären',
+    'zeigt in dieser Messung auffällige Werte, die zeitnah tierärztlich abgeklärt werden sollten',
+    'Tierärztliche Einschätzung / Befund',
+    'Einschätzung der Praxis',
+    'Priorisierungshilfe, keine Diagnose.',
+    'Orientierung, keine Trainingsvorschrift.',
+    'Adaptiert vom Humansport-Goldstandard (Plews & Buchheit). Beim Pferd experimentell, an die eigene Baseline angelegt —',
+    'Aerobe Trainingsanpassung aus wiederholten Ruhe-Messungen (lineare Regression). Orientierung für die Periodisierung —',
+    'Ein validiertes Screening liefert CARLON EQUINE als Random-Forest-Score. Hier siehst du den atemwegs-relevanten Marker im Verlauf.',
+    'Atemwegs-Screening (HRV)',
+    'Im individuellen Normbereich — die geplante Einheit inkl. höherer Intensität ist vertretbar.',
+    'Alle Kernwerte im erwarteten Bereich — stabile Kontrolle, kein akuter Handlungsbedarf.'
+  ],
+
+  /* ── Woerterbuch ─────────────────────────────────────────────────────
+     Der deutsche Satz ist der Schluessel. Sortiert wie die Oberflaeche:
+     Navigation, Board, Akte, Station, Karte, Verwaltung, Kauf. */
+  WB:{
+    // Navigation und Rahmen
+    'Heute':'Today', 'Board':'Board', 'Station':'Ward', 'Karte':'Map',
+    'Pferde':'Horses', 'Verwaltung':'Admin', 'Navi':'Nav', 'Akte':'Record',
+    'Chart':'Chart', 'Route':'Route', 'JETZT':'NOW', 'BETA':'BETA', 'Beta':'Beta',
+    'CARLON EQUINE VISITE':'CARLON EQUINE VISITE',
+    'Equine Heart Science':'Equine Heart Science',
+    'Praxis-Übersicht':'Practice overview',
+    'Schnellaktionen':'Quick actions',
+    'Kompakt':'Compact',
+    'Alle Karten minimieren — Überblick & Verschieben':'Collapse all cards — overview & reordering',
+
+    // Heute / Einsatzplan
+    'Einsatzplan':'Day plan',
+    'Zuletzt gemessene Pferde':'Recently measured horses',
+    'Kritisch offen':'Critical open',
+    'Besuche fällig':'Visits due',
+    'Besuch fällig':'Visit due',
+    'Kritische Pferde anzeigen':'Show critical horses',
+    'Sofortige Aufmerksamkeit':'Needs attention now',
+    'Bitte ansehen':'Please review',
+    'Bitte ansehen — oben gereiht':'Please review — moved to the top',
+    'Beobachten':'Watch',
+    'Trend stabil':'Trend stable',
+    'Stabil':'Stable',
+    'Erhöht':'Elevated',
+    'Kritisch':'Critical',
+    'kritisch':'critical',
+    'Tag → Kalender':'Day → calendar',
+    'Ganzer Tag → Maps':'Whole day → Maps',
+    'Nicht heute · verschieben':'Not today · postpone',
+    '+ Termin':'+ Appointment',
+    '+ Zu Route':'+ Add to route',
+    '+ Analog-Patient einschieben':'+ Insert offline patient',
+    'Angekommen':'Arrived',
+    'Anrufen':'Call',
+    'Auf Karte':'On map',
+    'In Navigation öffnen':'Open in navigation',
+    'Akte öffnen':'Open record',
+    'Fern-Check':'Remote check',
+    'Fern-Check öffnen':'Open remote check',
+    'Fern-Check möglich':'Remote check possible',
+    'Beratung':'Consultation',
+    'Abfahrt':'Departure',
+    'Fertig ca.':'Done approx.',
+    'Tagesdauer':'Day length',
+    'Fahrstrecke':'Distance',
+    'Stopps':'Stops',
+    'ab Praxis':'from practice',
+    'gleicher Stall':'same stable',
+    '· Sammelstall':'· shared stable',
+    'Ziehen zum Umsortieren':'Drag to reorder',
+    'Für Routenplanung markiert':'Marked for route planning',
+    'Abfahrroute planen':'Plan route',
+    'Optimierter Tagesablauf — 1-Tipp Anruf, Navigation, Verschieben':'Optimised day — one-tap call, navigation, reordering',
+    'Karte & Route':'Map & route',
+    'Karte & optimierte Abfahrroute nach Dringlichkeit — Übergabe an Google Maps':'Map and route optimised by urgency — handed over to Google Maps',
+    'gespart ggü. unsortierter Fahrt durch Triage-Priorisierung':'saved versus an unsorted round, through triage prioritisation',
+
+    // Board / Triage
+    'Triage-Board':'Triage board',
+    'Priorisierte Übersicht aller Pferde nach biometrischer Dringlichkeit':'All horses ranked by biometric urgency',
+    'Alle betreuten Pferde nach biometrischer Dringlichkeit — die kritischsten zuerst. Ein Klick öffnet den vollständigen Verlauf.':'Every horse in your care ranked by biometric urgency — the most critical first. One click opens the full history.',
+    'vs Baseline':'vs baseline',
+    'RMSSD ms':'RMSSD ms',
+    'HF bpm':'HR bpm',
+    'bpm · Ruhe-HF':'bpm · resting HR',
+    'RMSSD-Trend vs. Vor-Aufnahme':'RMSSD trend vs. previous recording',
+    'Beobachtungshinweise':'Observations',
+    'Klinische Domäne: Autonom':'Clinical domain: autonomic',
+    'Autonom':'Autonomic',
+
+    // Station / Stationswand
+    'Stationswand':'Ward wall',
+    'Pferde auf Station':'Horses on the ward',
+    'Klinik · Stationsüberwachung':'Clinic · ward monitoring',
+    'Klinik-Funktion':'Clinic feature',
+    'Stationswand — Wand-Monitor aller überwachten Pferde (Klinik-Funktion)':'Ward wall — wall monitor for every horse under observation (clinic feature)',
+    'Aufgenommene Pferde als Kachelwand — nach biometrischem Trend priorisiert. Für den Monitor im Stationszimmer: was Aufmerksamkeit braucht, steht oben.':'Admitted horses as a tile wall, ranked by biometric trend. For the monitor in the ward office: whatever needs attention sits at the top.',
+    'Box / Entlassen':'Box / discharge',
+    'Pferd aufnehmen':'Admit horse',
+    'aktiv überwacht':'under active observation',
+    'alle aufgenommen':'all admitted',
+    '— die Stationswand ist Teil des Klinik-Tarifs. Im Demo-Modus voll sichtbar.':'— the ward wall is part of the clinic plan. Fully visible in demo mode.',
+
+    // Pferde / Akte
+    'Alle Pferde':'All horses',
+    'Betreute Pferde':'Horses in your care',
+    'Alle betreuten Pferde — Stammdaten, Besitzer, Verlauf':'Every horse in your care — details, owner, history',
+    'Aufnahmen':'Recordings',
+    'Suchen':'Search',
+    'Ziehen zum Verschieben · Pinch zum Zoomen':'Drag to pan · pinch to zoom',
+    'Telemetrie-Sessions gesamt':'Telemetry sessions in total',
+
+    // Einfuhr
+    'Aufnahmen importieren':'Import recordings',
+    'CARLON-Exporte hierher ziehen':'Drop CARLON exports here',
+    'Einzelne Datei, viele Dateien oder':'A single file, many files or',
+    'ganze Ordner':'whole folders',
+    'auf einmal.':'at once.',
+    'Dateien wählen…':'Choose files…',
+    'Ganzen Ordner wählen…':'Choose a whole folder…',
+    'Akzeptiert:':'Accepted:',
+    'Ordner werden durchsucht':'folders are searched',
+    'Dubletten erkannt':'duplicates detected',
+    'Alles wird zuerst geprüft — du bestätigst, bevor etwas gespeichert wird.':'Everything is checked first — you confirm before anything is saved.',
+    'In dieser Ansicht sind bereits':'This view already contains',
+    'Aufnahme direkt vom Besitzer empfangen':'Recording received straight from the owner',
+    'Peer-to-Peer · der Besitzer sendet direkt an dich, kein Server dazwischen':'Peer-to-peer · the owner sends straight to you, no server in between',
+    'Posteingang und Postausgang':'Inbox and outbox',
+
+    // Verwaltung / Einstellungen
+    'Praxis-Einstellungen':'Practice settings',
+    'Praxisname':'Practice name',
+    'Tierarzt / Tierärztin':'Veterinarian',
+    'Anschrift für den Aushang':'Address for the stable notice',
+    'Telefon (erscheint auf dem Aushang)':'Phone (appears on the stable notice)',
+    'Website (optional)':'Website (optional)',
+    'Praxis-Logo':'Practice logo',
+    'Logo hochladen':'Upload logo',
+    'kein Logo':'no logo',
+    '— erscheint auf deinen Befund-PDFs (dein Branding, nicht unseres)':'— appears on your findings PDFs (your branding, not ours)',
+    'PNG/JPG, quer oder quadratisch — wird auf 320 px skaliert und lokal gespeichert.':'PNG/JPG, landscape or square — scaled to 320 px and stored locally.',
+    'Startort der Route (Adresse oder Ort)':'Starting point of the route (address or place)',
+    'Adresse eingeben und „Suchen" — Koordinaten werden automatisch ermittelt.':'Enter an address and press “Search” — the coordinates are found automatically.',
+    'Breitengrad':'Latitude',
+    'Längengrad':'Longitude',
+    'Standard-Honorar pro Beratung (€)':'Default fee per consultation (€)',
+    'Vorbelegung beim Erfassen einer Beratung':'Pre-filled when a consultation is recorded',
+    'Feldmodus (Stall/Sonnenlicht): großer Kontrast, große Touch-Ziele':'Field mode (stable/sunlight): high contrast, large touch targets',
+    'App & Speicher':'App & storage',
+    'Als App installieren':'Install as an app',
+    'Dauerhaften Speicher anfordern':'Request persistent storage',
+    'Offline-fähig · lokal gesichert':'Works offline · stored locally',
+    'Speicher nicht dauerhaft':'Storage is not persistent',
+    '● Speicher nicht dauerhaft':'● Storage is not persistent',
+    '100 % lokal, keine Cloud, keine Kreditkarte.':'100 % local, no cloud, no credit card.',
+    '·\u00a0 Ordner werden durchsucht \u00a0·\u00a0 Dubletten erkannt':'·\u00a0 folders are searched \u00a0·\u00a0 duplicates detected',
+    'Datensicherung':'Backup',
+    'Datensicherheit:':'Data safety:',
+    'Ihre Praxis-Kennung ist noch nicht gesichert.':'Your practice key is not backed up yet.',
+    'Sie liegt nur in diesem Browser — geht sie verloren, zeigen alle gedruckten Aushänge dauerhaft ins Leere.':'It lives only in this browser — if it is lost, every printed stable notice points nowhere, permanently.',
+    'Speicher noch nicht dauerhaft — als App installieren schützt vor Löschen nach ~7 Tagen.':'Storage is not persistent yet — installing as an app protects against deletion after ~7 days.',
+    'Dein Browser garantiert keinen dauerhaften Speicher — sichere regelmäßig per Backup.':'Your browser does not guarantee persistent storage — back up regularly.',
+    'Speichern ist zuletzt fehlgeschlagen — bitte jetzt ein Backup sichern.':'The last save failed — please back up now.',
+    'Noch kein Backup erstellt.':'No backup made yet.',
+    'Als App sichern':'Install as an app',
+    'Dauerhafter Speicher schützt lokale Daten davor, vom Browser (z. B. iOS nach 7 Tagen) gelöscht zu werden. Manche Browser (z. B. DuckDuckGo) gewähren ihn nicht — dann ist':'Persistent storage protects local data from being deleted by the browser (e.g. iOS after 7 days). Some browsers (e.g. DuckDuckGo) do not grant it — then',
+    'Datenschutz by Design: Alle Gesundheitsdaten liegen ausschließlich lokal in diesem Browser (IndexedDB) — keine Cloud, keine Server-Übertragung. Als Praxis/Klinik bleibst du datenschutzrechtlich Verantwortlicher für die verarbeiteten Daten.':'Privacy by design: all health data stays exclusively local in this browser (IndexedDB) — no cloud, no server transfer. As a practice or clinic you remain the controller for the data processed.',
+    'Backup jetzt':'Back up now',
+    'Backup exportieren':'Export backup',
+    'Backup einspielen':'Restore backup',
+    'regelmäßiges Backup exportieren':'export a backup regularly',
+    'dein sicherster Schutz.':'is your safest protection.',
+    'Alle lokalen Daten löschen':'Delete all local data',
+    'Impressum':'Legal notice',
+    'Datenschutz':'Privacy',
+    'Lizenz-Status':'Licence status',
+    'Verfügbar':'Available',
+    'Speichern':'Save',
+    'Abbrechen':'Cancel',
+    'Schließen':'Close',
+    'Feedback senden':'Send feedback',
+    'Fehler melden oder Verbesserung vorschlagen — Korrektur ist am nächsten Tag bei allen da':'Report a problem or suggest an improvement — the fix reaches everyone the next day',
+    'Danke fürs Testen! Was gut läuft, was hakt, was fehlt — jede Rückmeldung hilft.':'Thanks for testing. What works, what gets in the way, what is missing — every note helps.',
+    'Test-Beta':'Test beta',
+    'Test-Beta — Feedback willkommen':'Test beta — feedback welcome',
+    'E-Mail':'Email',
+
+    // Kauf / Lizenz
+    'Demo-Modus':'Demo mode',
+    'Demo · freischalten':'Demo · unlock',
+    'Freischalten':'Unlock',
+    'Ich habe einen Schlüssel':'I have a key',
+    'Gründungs-Partner':'Founding partner',
+    'Gründungs-Partner werden':'Become a founding partner',
+    'Als Gründungs-Partner bewerben':'Apply as a founding partner',
+    'Kein offener Zugang — jeder Partner wird persönlich freigeschaltet.':'No open sign-up — every partner is enabled personally.',
+    'kostenlos während der Beta':'free during the beta',
+    'CARLON EQUINE ist gerade in der':'CARLON EQUINE is currently in',
+    '. Wir nehmen eine begrenzte Zahl Praxen, Kliniken und Trainer als':'. We are taking on a limited number of practices, clinics and trainers as',
+    ', persönliches Onboarding mit deinen echten Aufnahmen, dein früher Preis bleibt dauerhaft gesichert.':', personal onboarding with your own recordings, and your early price stays locked in for good.',
+    'auf — volles Cockpit':'— the full cockpit',
+    'Telemetrie-Beratungen abrechnen — Ihr neues Geschäftsmodell':'Bill telemetry consultations — your new line of business',
+    'abrechenbarer Telemetrie-Umsatz erfasst — genau die Einnahmequelle, die du als Partner freischaltest.':'in billable telemetry revenue recorded — exactly the income stream you unlock as a partner.',
+    '— Befund-PDF & Karten-Export in der Vollversion.':'— findings PDF and map export in the full version.',
+
+
+    /* ── AKTE UND BEFUND ─────────────────────────────────────────────
+       Die Flaeche, auf der ein Tierarzt seine Zeit verbringt — und die
+       mein Pruefwerkzeug nie geoeffnet hatte (`Views.open` gibt es nicht,
+       es heisst `Views.openHorse`). Deshalb stand in der Planung 270
+       statt 476 Zeichenketten. Fachsprache wird uebersetzt, Disclaimer
+       nicht — die stehen in RECHT. */
+    'Halter':'Owner',
+    'Stammdaten':'Details',
+    'Stall & Standort':'Stable & location',
+    'Stall':'Stable',
+    'Adresse':'Address',
+    'Besitzer-Modus':'Owner mode',
+    'Weitere Pferde dieses Besitzers':'Other horses of this owner',
+    'Für Abfahrroute markieren':'Mark for the route',
+    'Termin':'Appointment',
+    'Termin in Google/Apple Kalender':'Appointment in Google/Apple Calendar',
+    'Rückmeldung':'Feedback',
+    'Rückmeldung für Halter':'Feedback for the owner',
+    'Ferneinschätzung & abrechnen':'Remote assessment & billing',
+    'Ferneinschätzung':'Remote assessment',
+    'Beratung erfassen':'Record consultation',
+    '+ Beratung erfassen':'+ Record consultation',
+    'Beratung ohne PDF erfassen':'Record a consultation without a PDF',
+    'Beratungen':'Consultations',
+    'abgerechnet':'billed',
+    'Zweitmeinung':'Second opinion',
+    'Telemetrie-Ferneinschätzung':'Telemetry remote assessment',
+    'Notizen':'Notes',
+    'Klinische Notizen, Verlauf, Absprachen…':'Clinical notes, history, agreements…',
+    'Foto hinzufügen/ändern':'Add/change photo',
+    'Vergrößern':'Enlarge',
+    'Vollbild.':'Full screen.',
+    'Vollbild zum Zeigen für den Besitzer — iPad umdrehen':'Full screen to show the owner — turn the iPad around',
+    'Aufnahme löschen':'Delete recording',
+    'Alle':'All',
+    'heute':'today',
+    'Kernwerte & Begründung':'Key values & reasoning',
+    'HRV-Kennwerte':'HRV metrics',
+    'im Referenzbereich (indiv.)':'within the reference range (individual)',
+    'Ruhe-HF':'Resting HR',
+    'Ruhe-Herzfrequenz':'Resting heart rate',
+    'Ruhe-Herzfrequenz-Verlauf':'Resting heart rate over time',
+    'Ruhe-Tiefe':'Resting low',
+    'Belastungs-Spitze':'Exertion peak',
+    'Min-HF':'Min HR',
+    'Max-HF':'Max HR',
+    'bpm':'bpm',
+    'physiologisch':'physiological',
+    'physiol.':'physiol.',
+    'normal':'normal',
+    'balanciert':'balanced',
+    'Mittleres RR':'Mean RR',
+    'Kurzzeit · vagal':'Short-term · vagal',
+    'Langzeit':'Long-term',
+    'Vagal · 25–120':'Vagal · 25–120',
+    'Vagal · 5–40':'Vagal · 5–40',
+    'Overall · 50–200':'Overall · 50–200',
+    'Sympatho/Parasym':'Sympatho/parasym',
+    'Geometrisch':'Geometric',
+    'Verteilungsbreite':'Distribution width',
+    'Komplexität · Richman 2000':'Complexity · Richman 2000',
+    'Artefakt':'Artefact',
+    'Signalqualität':'Signal quality',
+    'AV-Block':'AV block',
+    'benigne bei Sport':'benign in athletes',
+    '≈1,0 gesund · Peng 1995':'≈1.0 healthy · Peng 1995',
+    '1 Wert ausserhalb':'1 value outside',
+    'typ. Bereich':'typical range',
+    'z-Wert':'z-score',
+    'Normband ms':'Normal band ms',
+    '7-Tage-Mittel':'7-day mean',
+    'Veränderung zur Vor-Aufnahme':'Change from the previous recording',
+    'Historische Werte & Monitoring':'History & monitoring',
+    'RMSSD-Verlauf':'RMSSD over time',
+    'SDNN-Verlauf':'SDNN over time',
+    'RMSSD-Trend':'RMSSD trend',
+    'Ruhe-HF-Trend':'Resting HR trend',
+    'Aufnahmen':'Recordings',
+    'Dual-Vitals · Belastung vs. Erholung':'Dual vitals · exertion vs. recovery',
+    '━ HF bpm':'━ HR bpm',
+    '━ HRV ms':'━ HRV ms',
+
+    'ZEIT':'TIME',
+    'Atemkurve · RSA-derived':'Respiration curve · RSA-derived',
+    '● Inspiration':'● Inspiration',
+    '● Expiration':'● Expiration',
+    'Insp':'Insp',
+    'Exsp':'Exp',
+    'EDR — respiratorische Sinusarrhythmie aus der HRV-HF-Modulation. Einatmen verkürzt RR (Sympathikus), Ausatmen verlängert RR (Vagus).':'EDR — respiratory sinus arrhythmia derived from HF modulation of HRV. Inhaling shortens RR (sympathetic), exhaling lengthens RR (vagal).',
+    'Poincaré-Plot':'Poincaré plot',
+    'Jeder Punkt = ein Herzschlag (RRₙ) gegen den nächsten (RRₙ₊₁).':'Each point is one heartbeat (RRₙ) against the next (RRₙ₊₁).',
+    '(quer zur Diagonale) = Kurzzeit-/Vagus-Variabilität,':'(across the diagonal) = short-term / vagal variability,',
+    '(entlang) = Langzeit-Variabilität. Kompakte Wolke = geringe HRV, breite Wolke = flexibles autonomes Nervensystem. ·':'(along it) = long-term variability. A compact cloud means low HRV, a wide cloud a flexible autonomic nervous system. ·',
+    'SD2/SD1-Ratio · sympatho-vagale Balance':'SD2/SD1 ratio · sympatho-vagal balance',
+    'Frequenz-Spektrum':'Frequency spectrum',
+    'FREQUENZ':'FREQUENCY',
+    '(Hz · log)':'(Hz · log)',
+    '0,003–0,01 Hz · Thermoreg. + Hormone':'0.003–0.01 Hz · thermoreg. + hormones',
+    '0,01–0,07 Hz · Baroreflex (equine)':'0.01–0.07 Hz · baroreflex (equine)',
+    '0,07–0,6 Hz · Atmung · RSA · vagal':'0.07–0.6 Hz · respiration · RSA · vagal',
+    'GESAMT · LF/HF':'TOTAL · LF/HF',
+    'Total Power · sympatho-vagale Balance':'Total power · sympatho-vagal balance',
+    'Baevsky-Stress-Index':'Baevsky stress index',
+    'RUHIG':'CALM',
+    'AKTIV':'ACTIVE',
+    'STRESS':'STRAIN',
+    'ALARM':'ALERT',
+    '√SI · Baevsky 1979 · equine-skaliert (Stucke 2015)':'√SI · Baevsky 1979 · equine-scaled (Stucke 2015)',
+    'orientierend · individuelle Baseline maßgeblich':'indicative · the individual baseline governs',
+    'RR-Verteilung · TINN':'RR distribution · TINN',
+    'RR-INTERVALL':'RR INTERVAL',
+    'Random':'Random',
+    'Vagal-Hyper':'Vagal hyper',
+    'Physiologisch':'Physiological',
+    'Sympathisch':'Sympathetic',
+    'Hochkorr.':'Highly corr.',
+    'Physiologisch — 1/f-Skalierung, gesunde Balance':'Physiological — 1/f scaling, healthy balance',
+
+    'Trainer · HRV-geführt':'Trainer · HRV-guided',
+    'Trainer · Langzeit-Adaptation':'Trainer · long-term adaptation',
+    'Trainings-Readiness':'Training readiness',
+    'Bereit':'Ready',
+    'Bereit ▸':'Ready ▸',
+    'Moderat':'Moderate',
+    'Erholung':'Recovery',
+    'Belastung & Erholung':'Load & recovery',
+    'Erholt · belastbar':'Recovered · ready for work',
+    'HRV stabil oder steigend auf Baseline-Niveau — gute parasympathische Erholung, belastbar.':'HRV stable or rising at baseline level — good parasympathetic recovery, ready for work.',
+    'Konditions-Verlauf':'Conditioning over time',
+    'Kondition verbessert sich':'Conditioning is improving',
+    'Ruhe-HF sinkt und/oder HRV steigt über den Zeitraum — Zeichen zunehmender aerober Anpassung.':'Resting HR falls and/or HRV rises over the period — a sign of growing aerobic adaptation.',
+    'HRV-Baseline (RMSSD)':'HRV baseline (RMSSD)',
+    '(↓ = fitter)':'(↓ = fitter)',
+    '(↑ = fitter)':'(↑ = fitter)',
+    'Sprachnotizen':'Voice notes',
+    'Aufnehmen':'Record',
+    'Offline aufgenommen, lokal gespeichert — Hände am Pferd, Doku später.':'Recorded offline, stored locally — hands on the horse now, paperwork later.',
+    'Noch keine Sprachnotiz aufgenommen.':'No voice note recorded yet.',
+    'Befund-PDF':'Findings PDF',
+    'Befundtext für den Besitzer erzeugen':'Generate findings text for the owner',
+    'Gebrandeter PDF-Befund + Umsatz in einem Schritt':'Branded PDF findings and revenue in one step',
+    'Befund als eigenständige Datei weitergeben — Besitzer, Überweisungsklinik, Studie':'Pass the findings on as a standalone file — owner, referral clinic, study',
+    'Rohdaten (JSON) für CARLON Viewer exportieren':'Export raw data (JSON) for the CARLON viewer',
+    'FHIR-R5-Bundle für Klinik-Software / ERP exportieren (offener Standard)':'Export a FHIR R5 bundle for clinic software / ERP (open standard)',
+    'Fachliche Erklärung':'Technical explanation',
+    'ist im vollen Cockpit enthalten.':'is included in the full cockpit.',
+    'Als Leistung abrechnen':'Bill as a service',
+    'RMSSD':'RMSSD',
+    'SDNN':'SDNN',
+    'pNN50':'pNN50',
+    'meanRR':'meanRR',
+    'DFA α1':'DFA α1',
+    'DFA-α₁':'DFA-α₁',
+    'TINN':'TINN',
+    'SampEn':'SampEn',
+    'VLF':'VLF',
+    'LF':'LF',
+    'HF':'HF',
+    'POWER':'POWER',
+    'BPM':'BPM',
+    'FHIR':'FHIR',
+    'SDNN ms':'SDNN ms',
+    'RMSSD ms':'RMSSD ms',
+    'Tri-Index':'Tri-index',
+    'Herzfrequenz (Belastung) gegen rollendes RMSSD (Erholungsreserve) über die Zeit. Gesund: HF↑ und HRV↓ synchron · Stress: HF hoch bei niedrigem, starrem HRV. Tippen zeigt beide Werte ·':'Heart rate (exertion) against rolling RMSSD (recovery reserve) over time. Healthy: HR↑ and HRV↓ in step · strain: high HR with low, rigid HRV. Tap to see both values ·',
+    'Detrended Fluctuation Analysis: fraktale Korrelation der Herzschlag-Folge. α1 ≈ 1,0 = gesunde 1/f-Dynamik · <0,75 = zu zufällig · >1,5 = zu starr. Vollbild öffnet die Zonen-Einordnung.':'Detrended fluctuation analysis: fractal correlation of the heartbeat sequence. α1 ≈ 1.0 = healthy 1/f dynamics · <0.75 = too random · >1.5 = too rigid. Full screen opens the zone classification.',
+    /* Notation, keine Sprache: in beiden Faellen gleich — aber
+       ausdruecklich ENTSCHIEDEN, damit die Messung sie nicht als Loch
+       zaehlt und niemand spaeter meint, hier fehle etwas. */
+    'Dauerhafter Speicher aktiv':'Persistent storage active',
+    '● Dauerhafter Speicher aktiv':'● Persistent storage active',
+    'y = x':'y = x','RRₙ':'RRₙ','RRₙ₊₁':'RRₙ₊₁','SD2/SD1':'SD2/SD1',
+    '(ms²/Hz)':'(ms²/Hz)','ms²':'ms²','√SI':'√SI',
+    // Sicherheitsband
+    'Ihre Praxis-Kennung ist noch nicht gesichert. Sie liegt nur in diesem Browser — geht sie verloren, zeigen alle gedruckten Aushänge dauerhaft ins Leere.':'Your practice key is not backed up yet. It lives only in this browser — if it is lost, every printed stable notice points nowhere, permanently.'
+  },
+
+  /* Einzelwoerter — NUR in der Navigation. Ausserhalb waere „Station"
+     womoeglich der Name eines Pferdes. */
+  NAV:{'Heute':'Today','Board':'Board','Station':'Ward','Karte':'Map','Pferde':'Horses','Verwaltung':'Admin'},
+
+  /* ── Erzeugte Muster ─────────────────────────────────────────────────
+     Zeichenketten, die aus Daten UND festem Text zusammengesetzt werden.
+     Ein Woerterbuch kann sie nicht treffen, weil die Datenhaelfte bei
+     jeder Praxis anders lautet. Reihenfolge zaehlt: die erste passende
+     Regel gewinnt. */
+  REGELN:[
+    [/^(.+) — Akte öffnen$/,'$1 — open record'],
+    [/^(.+) anrufen$/,'Call $1'],
+    [/^Stress-Index (\d[\d.,]*)$/,'Stress index $1'],
+    [/^Trend stabil · vor (\d+) Mon$/,'Trend stable · $1 mo ago'],
+    [/^vor (\d+) Mon$/,'$1 mo ago'],
+    [/^vor (\d+) Tag(en)?$/,'$1 d ago'],
+    [/^(\d+) km gespart$/,'$1 km saved'],
+    [/^(\d+)\/(\d+) erledigt$/,'$1/$2 done'],
+    [/^(\d+) gesamt im System$/,'$1 in the system'],
+    [/^Abfahrroute planen · (\d+)$/,'Plan route · $1'],
+    [/^Zuerst: (.+) · (\d+) km$/,'First: $1 · $2 km'],
+    [/^Einsatzplan · (.+)$/,'Day plan · $1'],
+    [/^Field-Ops · (\d+) Stopps · (\d+) kritisch$/,'Field ops · $1 stops · $2 critical'],
+    [/^(\d+) Fahrten vermeidbar · Fern-Check$/,'$1 trips avoidable · remote check'],
+    [/^(\d+) Demo-Pferde geladen · inkl\. synthetischem Verlauf$/,'$1 demo horses loaded · incl. synthetic history'],
+    [/^— stabile Kontrolle, Telemetrie statt Anfahrt\. Spart die Fahrt zu (.+)\.$/,'— stable check-up, telemetry instead of driving out. Saves the trip to $1.'],
+    [/^— Browser könnte Daten bei langer Nichtnutzung löschen · ([\d.,]+) MB belegt$/,'— the browser may delete data after long inactivity · $1 MB in use'],
+    [/^Stabile Kontrollen per Telemetrie statt Anfahrt — spart ~([\d.,]+) km · ([\d.,]+) min$/,'Stable check-ups by telemetry instead of driving — saves ~$1 km · $2 min'],
+    [/^Letztes Backup vor ([\d.,]+) Tagen\.$/,'Last backup $1 days ago.'],
+    [/^Lokaler Speicher zu ([\d.,]+)% voll\.$/,'Local storage $1% full.'],
+    /* Die Reihenfolge-Zeile traegt Adressen aus den Daten — nur der feste
+       Teil wird ersetzt, die Adressen bleiben so, wie die Praxis sie fuehrt. */
+    [/^Reihenfolge: (\d+) kritische Fälle zuerst · (.+)$/,(m,a,b)=>'Order: '+a+' critical cases first · '+b.replace(/Sammelbesuch/g,'Group visit')],
+    [/^(\d+) Paare$/,'$1 pairs'],
+    [/^(\d+) am Rand gehalten$/,'$1 kept at the edge'],
+    [/^Diese Aufnahme: (.+) · auffächernd · flexibles Herzmuster$/,'This recording: $1 · fanning out · flexible heart pattern'],
+    [/^Aufnahmen \((\d+)\)$/,'Recordings ($1)'],
+    [/^Summe \((\d+)\)$/,'Total ($1)'],
+    [/^(\d+) Min · (\d+) Schläge · (.+)$/,'$1 min · $2 beats · $3'],
+    [/^über (\d+) Wochen · (\d+) Messungen$/,'over $1 weeks · $2 measurements'],
+    [/^RMSSD-Trend · (\d+) Einheiten$/,'RMSSD trend · $1 sessions'],
+    [/^(.+) · ([\d.,]+) J$/,'$1 · $2 y'],
+    [/^Telemetrie-Ferneinschätzung · (\d+) Min$/,'Telemetry remote assessment · $1 min'],
+    [/^Zweitmeinung · (\d+) Min$/,'Second opinion · $1 min'],
+    /* Mehrzahl ist im Englischen anders gebaut als im Deutschen — deshalb
+       eine Funktion und keine Ersetzungs-Zeichenkette. */
+    [/^(\d+) Messung(en)? angefordert$/,(m,a)=>a+' measurement'+(a==='1'?'':'s')+' requested'],
+    [/^Baseline ([\d.,]+)$/,'Baseline $1'],
+    [/^TINN ([\d.,]+)$/,'TINN $1'],
+    [/^([-+]?[\d.,]+) bpm$/,'$1 bpm'],
+    [/^([\d.,]+) \/min$/,'$1 /min'],
+    [/^Diese Aufnahme: (.+) — auffächernd · flexibles Herzmuster$/,'This recording: $1 — fanning out · flexible heart pattern']
+  ],
+
+  /* Wochentage und Monate. „Freitag, 7. August" kann kein Woerterbuch
+     tragen — es waechst jeden Tag nach. Ersetzt wird nur, wenn auch eine
+     Ziffer im Satz steht: ein Pferd namens „August" bleibt August. */
+  DATUM:{'Montag':'Monday','Dienstag':'Tuesday','Mittwoch':'Wednesday','Donnerstag':'Thursday',
+    'Freitag':'Friday','Samstag':'Saturday','Sonntag':'Sunday',
+    'Januar':'January','Februar':'February','März':'March','April':'April','Mai':'May','Juni':'June',
+    'Juli':'July','August':'August','September':'September','Oktober':'October','November':'November','Dezember':'December',
+    'Jan.':'Jan','Feb.':'Feb','Mär.':'Mar','Apr.':'Apr','Jun.':'Jun','Jul.':'Jul','Aug.':'Aug','Sep.':'Sep','Okt.':'Oct','Nov.':'Nov','Dez.':'Dec',
+    'Gestern':'Yesterday','Heute':'Today','Morgen':'Tomorrow'},
+
+  /* Ein Satz bleibt deutsch, wenn er regulatorischen Wortlaut traegt —
+     auch als Bruchstueck. Das Cockpit zerlegt Saetze an <b>-Tags, und ein
+     halb uebersetzter Hinweis ist schlimmer als ein deutscher. */
+  istRecht(t){
+    if(t.length<8) return false;
+    return this.RECHT.some(r=>r.includes(t)||t.includes(r));
+  },
+
+  /* Der eigentliche Uebersetzer: erst das Woerterbuch, dann die Muster.
+     Trifft nichts, bleibt der deutsche Satz stehen — lesbar, nicht kaputt. */
+  ueber(t,imNavi){
+    const k=t.trim();
+    if(!k||this.istRecht(k)) return null;
+    if(imNavi&&this.NAV[k]) return t.replace(k,this.NAV[k]);
+    const w=this.WB[k];
+    if(w) return t.replace(k,w);
+    /* Kalendernamen ziehen NACH — auch hinter einem Muster. Sonst bleibt
+       „Day plan · Freitag, 7. August" auf halbem Weg stehen: die Regel hat
+       schon getroffen und war damit fertig. */
+    const dat=(x)=>!/\d/.test(x)?x:x.replace(
+      /\b(Montag|Dienstag|Mittwoch|Donnerstag|Freitag|Samstag|Sonntag|Januar|Februar|März|April|Mai|Juni|Juli|August|September|Oktober|November|Dezember|Gestern|Morgen|Jan\.|Feb\.|Mär\.|Apr\.|Jun\.|Jul\.|Aug\.|Sep\.|Okt\.|Nov\.|Dez\.)/g,
+      y=>this.DATUM[y]||y)
+      /* „7. August" ist deutsche Ordnungszahl; im Englischen steht der
+         Punkt nicht. Ohne diesen Schritt liest es sich uebersetzt-aber-falsch. */
+      .replace(/(\d{1,2})\.\s+(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)/g,'$1 $2');
+    for(const [re,er] of this.REGELN){ if(re.test(k)) return t.replace(k,dat(k.replace(re,er))); }
+    { const d=dat(k); if(d!==k) return t.replace(k,d); }
+    /* Letzter Versuch: zusammengesetzte Meldungen. Das Sicherheitsband
+       verkettet mehrere Risiko-Saetze zu EINEM Textknoten. Ein Woerterbuch
+       kann die Kette nicht treffen, ihre Glieder aber schon.
+       Nur wenn JEDES Glied uebersetzbar ist, wird ersetzt — sonst bleibt
+       die ganze Meldung deutsch statt halb.
+       Die Trennstelle verlangt zwei Zeichen vor dem Punkt, sonst zerlegt
+       sie „z. B." mitten im Wort. */
+    /* Zahlenschreibweise. „SD1 60,9" und „Mo 1.275 ms" sind sprachneutral
+       — bis auf die Trennzeichen. Ein englischer Leser liest „1.275 ms" als
+       1,275 Millisekunden, also ein Tausendstel des gemeinten Werts. Das ist
+       kein Schoenheitsfehler, das ist eine falsche Zahl im Befund.
+       Angewandt NUR auf durchgereichte deutsche Zeichenketten: was aus dem
+       Woerterbuch kommt, ist bereits englisch geschrieben. */
+    const zahlen=(x)=>x.replace(/\d[\d.,]*\d/g,m=>{
+      if(!/[.,]/.test(m)) return m;
+      const roh=m.replace(/\./g,'').replace(',','.');
+      if(isNaN(Number(roh))) return m;
+      const [g,d]=roh.split('.');
+      const gg=g.replace(/\B(?=(\d{3})+(?!\d))/g,',');
+      return d!==undefined?gg+'.'+d:gg;
+    });
+    const teile=k.split(/(?<=[a-zäöüß0-9]{2}\.) (?=[A-ZÄÖÜ])/);
+    if(teile.length>1&&!teile.some(p=>this.istRecht(p))){
+      const ue=teile.map(p=>{
+        if(this.WB[p]) return this.WB[p];
+        for(const [re,er] of this.REGELN){ if(re.test(p)) return p.replace(re,er); }
+        return null;
+      });
+      if(ue.every(Boolean)) return t.replace(k,dat(ue.join(' ')));
+    }
+    { const z=zahlen(k); if(z!==k) return t.replace(k,z); }
+    return null;
+  },
+
+  durchgang(){
+    if(this.cur!=='en') return;
+    this._am=true;
+    try{
+      const lauf=document.createTreeWalker(document.body,NodeFilter.SHOW_TEXT);
+      let n;
+      while((n=lauf.nextNode())){
+        const el=n.parentElement;
+        if(!el||el.closest('script,style,[data-nolang]')) continue;
+        if(n.__de!==undefined) continue;                 // schon uebersetzt
+        const imNavi=!!el.closest('#tabs,#bottomNav');
+        const neu=this.ueber(n.nodeValue||'',imNavi);
+        if(neu!==null&&neu!==n.nodeValue){ n.__de=n.nodeValue; n.nodeValue=neu; }
+      }
+      document.querySelectorAll('[title],[placeholder],[aria-label]').forEach(el=>{
+        if(el.closest('[data-nolang]')) return;
+        for(const a of ['title','placeholder','aria-label']){
+          const v=el.getAttribute(a); if(!v) continue;
+          const merk='__de_'+a;
+          if(el[merk]!==undefined) continue;
+          const neu=this.ueber(v,false);
+          if(neu!==null&&neu!==v){ el[merk]=v; el.setAttribute(a,neu); }
+        }
+      });
+    } finally {
+      /* Unsere eigenen Aenderungen aus der Warteschlange nehmen, sonst
+         ruft der Beobachter uns wegen unserer eigenen Arbeit erneut auf. */
+      this._obs&&this._obs.takeRecords();
+      this._am=false;
+    }
+  },
+
+  /* Zurueck auf Deutsch: der Originaltext haengt am Knoten, es braucht
+     kein Neuzeichnen — und damit geht auch kein offener Dialog verloren. */
+  zurueck(){
+    const lauf=document.createTreeWalker(document.body,NodeFilter.SHOW_TEXT);
+    let n; this._am=true;
+    while((n=lauf.nextNode())){ if(n.__de!==undefined){ n.nodeValue=n.__de; delete n.__de; } }
+    document.querySelectorAll('[title],[placeholder],[aria-label]').forEach(el=>{
+      for(const a of ['title','placeholder','aria-label']){
+        const merk='__de_'+a;
+        if(el[merk]!==undefined){ el.setAttribute(a,el[merk]); delete el[merk]; }
+      }
+    });
+    this._obs&&this._obs.takeRecords(); this._am=false;
+  },
+
+  setzen(l){
+    if(l===this.cur) return;
+    this.cur=l;
+    document.documentElement.lang=l;
+    try{ localStorage.setItem('carlon.cockpit.lang',l); }catch(e){}
+    if(l==='en') this.durchgang(); else this.zurueck();
+  },
+
+  start(){
+    let l=null;
+    try{ l=new URLSearchParams(location.search).get('lang')||localStorage.getItem('carlon.cockpit.lang'); }catch(e){}
+    this._obs=new MutationObserver(()=>{ if(!this._am) this.durchgang(); });
+    this._obs.observe(document.body,{childList:true,subtree:true,characterData:true});
+    if(l==='en'){ this.cur='en'; document.documentElement.lang='en'; this.durchgang(); }
+  },
+
+  /* Fuer die Pruefstrecke: was traegt das Woerterbuch, was fehlt noch?
+     Eine Abdeckung, die man nicht messen kann, ist eine Behauptung. */
+  abdeckung(){
+    return {eintraege:Object.keys(this.WB).length, regeln:this.REGELN.length, recht:this.RECHT.length};
+  }
+};
+
 (async function boot(){
   try{
     await DB.open();
@@ -9163,6 +9796,7 @@ addEventListener('beforeinstallprompt',e=>{e.preventDefault();PWA.deferred=e;});
     if(State.settings.fieldMode){document.body.classList.add('field-mode');const b=$('#fieldBtn');if(b)b.classList.add('on');}
     Chart.initHover();
     Nav.go(Nav.cur);
+    Sprache.start();
     Safe.renderBanner();
     Saat.render();
     // Nahtlose Verlängerung: kein stiller Cliff — bei Ablauf/baldigem Ablauf freundlich erinnern (Daten bleiben erhalten)
