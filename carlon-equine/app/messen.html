@@ -509,6 +509,14 @@ svg.viz .bezel{stroke:var(--cyan);stroke-opacity:.55;stroke-width:1.1;stroke-lin
 .status{margin-top:var(--s3);font-size:13.5px;color:var(--sec);min-height:20px}
 .done{color:var(--good);font-weight:600}
 .err{color:var(--red);font-size:12.5px;margin-top:var(--s3)}
+/* Der Hinweis muss WAEHREND der Messung stehen, nicht danach. Wer zehn
+   Minuten misst und erst am Ende erfaehrt, dass sein Gurt keine RR sendet,
+   hat zehn Minuten verloren und kommt nicht wieder. */
+.rrwarn{max-width:640px;margin:0 auto var(--s4);padding:13px 16px;border-radius:12px;
+  border:1px solid rgba(255,181,71,.42);background:rgba(255,181,71,.09);
+  color:var(--txt);font-size:13px;line-height:1.55;text-align:left}
+.rrwarn.hidden{display:none}
+.rrwarn b{color:var(--amber)}
 .hint{font-size:11.5px;color:var(--dim);margin-top:var(--s3);line-height:1.55}
 .privacy{margin-top:var(--s4);font-size:10.5px;color:var(--dim);display:flex;align-items:center;justify-content:center;gap:8px;
   font-family:var(--font-mono);letter-spacing:.08em}
@@ -695,6 +703,7 @@ svg.viz .bezel{stroke:var(--cyan);stroke-opacity:.55;stroke-width:1.1;stroke-lin
   <div id="vLive" class="hidden">
     <span class="eyebrow" data-i18n="liveEyebrow">Aufnahme läuft</span>
     <h1 id="liveTitle" data-i18n="liveH1">Messung läuft</h1>
+    <div class="rrwarn hidden" id="rrWarn" role="alert"></div>
     <p class="sub" id="liveSub" data-i18n="liveSub">Ruhig stehen lassen. Je ruhiger das Pferd, desto aussagekräftiger die Aufnahme.</p>
 
     <div class="pulse"><svg class="heart" id="heart" viewBox="0 0 24 24" fill="currentColor"><path d="M12 21s-8-4.6-8-10.4A4.6 4.6 0 0112 7a4.6 4.6 0 018 3.6C20 16.4 12 21 12 21z"/></svg><span id="hr" aria-live="off">–</span><small>bpm</small></div>
@@ -2444,12 +2453,20 @@ function onBeat(ev){
   S.hr=hr;
   if(flags&0x08) off+=2;
   if(flags&0x10){
+    S.rrGesehen=true;
     while(off+2<=v.byteLength){
       const rrMs=Math.round(v.getUint16(off,true)*1000/1024);
       if(S.rr.length<50000) S.rr.push(rrMs);
       off+=2;
     }
   }
+  /* NICHT JEDER GURT LIEFERT RR. Viele Fitnessbaender senden nur den Puls.
+     Ohne Schlag-zu-Schlag-Abstaende ist HRV nicht berechenbar — die Messung
+     saehe trotzdem aus, als liefe sie. Das faellt sonst erst dem Tierarzt
+     auf, wenn die Aufnahme schon abgeschickt ist. Nach zwoelf Schlaegen
+     ohne RR ist der Fall eindeutig. */
+  S.hrSchlaege=(S.hrSchlaege||0)+1;
+  if(!S.rrGesehen && S.hrSchlaege===12) rrFehltMelden();
   $('#hr').textContent=hr||'–';
   if(hr){ S.hrMin=Math.min(S.hrMin??hr,hr); S.hrMax=Math.max(S.hrMax??hr,hr);
     $('#hrRange').textContent = S.hrMin===S.hrMax ? String(S.hrMin) : S.hrMin+'–'+S.hrMax; }
@@ -2457,6 +2474,19 @@ function onBeat(ev){
   const h=$('#heart'); h.classList.remove('beat'); void h.offsetWidth; h.classList.add('beat');
   if(S.rr.length%2===0) drawSpark();
   if(S.rr.length%5===0) updateQuality();
+}
+
+/* Ein Geraet ohne RR ist kein Fehler des Nutzers — er soll wissen, woran es
+   liegt und was hilft. Kein Abbruch: der Puls stimmt ja, nur HRV geht nicht. */
+function rrFehltMelden(){
+  const e=$('#rrWarn'); if(!e || S._rrGemeldet) return;
+  S._rrGemeldet=true;
+  const nm=(S.device&&S.device.name)?esc(S.device.name):'Dieses Gerät';
+  e.innerHTML=`<b>${nm} sendet nur den Puls, keine Schlag-zu-Schlag-Abstände.</b><br>`
+    +`Die Herzratenvariabilität lässt sich daraus nicht berechnen. `
+    +`Für eine auswertbare Messung braucht es einen Brustgurt, der RR-Intervalle überträgt — `
+    +`getestet und empfohlen ist der <b>Polar H10 Equine</b> mit Ultraschallgel unter den Elektroden.`;
+  e.classList.remove('hidden');
 }
 
 /* Empfohlene Mindestdauer einer Ruhe-Aufnahme. Eine Aussage ueber die
@@ -2630,7 +2660,11 @@ function buildExport(name,rr,m,secs){
   return {
     schema:{ name:'carlon_equine_v1', version:'1.0' },
     source:{ app:'CARLON Mess-Station (Browser)', transport:'web-bluetooth',
-             sensor:(S.device&&S.device.name)||'Polar H10',
+             /* NIE 'Polar H10' erfinden, wenn der Name fehlt. Ein Datensatz,
+                der ein Geraet behauptet, das er nicht kennt, ist im
+                Zweifelsfall wertlos — und in einer Studie schaedlich. */
+             sensor:(S.device&&S.device.name)||null,
+             sensorGeprueft:/H10/i.test(String(S.device&&S.device.name||'')),
              beltBatteryPct:S.batt, userAgent:navigator.userAgent,
              partner: partnerKey || null },
     subject:{ id:subjectId(name), nameAtTime:name, species:'horse' },
