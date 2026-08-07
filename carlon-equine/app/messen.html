@@ -239,6 +239,22 @@ p.sub{color:var(--sec);font-size:clamp(13px,1.15vw,15px);margin:0 auto clamp(var
 .tile em i b{font-family:var(--font-mono);font-weight:600;color:var(--text)}
 /* ── Befund-Karte ── ruhig, hochwertig, ohne Ampel-Geschrei. Sie soll aussehen
    wie etwas, das man jemandem zeigt. */
+.uebergabe{max-width:720px;margin:0 auto var(--s5);padding:var(--s5);border-radius:18px;
+  border:1px solid var(--cyan-g2,rgba(62,207,178,.34));
+  background:linear-gradient(150deg,rgba(62,207,178,.11),rgba(62,207,178,.02))}
+.uebergabe.hidden{display:none}
+.uebergabe h3{font-size:19px;margin:0 0 7px;color:var(--txt)}
+.uebergabe p{font-size:14px;color:var(--sec);line-height:1.55;margin:0 0 var(--s4)}
+.ub-knoepfe{display:flex;gap:10px;flex-wrap:wrap}
+.ub-knoepfe .btn{flex:1 1 auto;min-width:180px}
+.ub-fuss{font-size:11.5px;color:var(--dim);line-height:1.55;margin-top:14px}
+.uebergabe.weiter{background:none;border-color:var(--line,rgba(255,255,255,.1))}
+.ws-zeile{display:flex;gap:14px;align-items:center;padding:13px 0;border-bottom:1px solid var(--line,rgba(255,255,255,.08))}
+.ws-zeile:last-child{border-bottom:0}
+.ws-zeile>div{flex:1;min-width:0}
+.ws-zeile b{display:block;font-size:14px;color:var(--txt);margin-bottom:3px}
+.ws-zeile span{font-size:12px;color:var(--sec);line-height:1.5}
+.ws-zeile .btn{flex:none;white-space:nowrap}
 /* Die Lage-Karte schliesst den Kreis: sie sagt dem Besitzer, dass etwas
    laeuft, ohne ihm eine Handlung abzuverlangen. Sie verschwindet, sobald der
    Befund da ist — dann spricht der Befund. */
@@ -606,6 +622,8 @@ svg.viz .bezel{stroke:var(--cyan);stroke-opacity:.55;stroke-width:1.1;stroke-lin
      Die Praxis steht darueber, nicht wir: der Stallnachbar, dem das gezeigt
      wird, soll seine eigene Tieraerztin fragen — nicht uns. -->
 <div id="lageKarte" class="lage hidden"></div>
+<div id="uebergabeKarte" class="uebergabe hidden"></div>
+<div id="weiterKarte" class="uebergabe weiter hidden"></div>
 <div id="befundKarte" class="befund hidden"></div>
 
 <div class="card">
@@ -901,7 +919,7 @@ de:{
  verdictNoisy:'Das Signal war stellenweise unruhig. Weitergeben ist möglich — eine zweite Messung mit gut angefeuchtetem Gurt wird aber deutlich besser.',
  verdictBad:'Das Signal war stark gestört. Wir empfehlen, den Gurt neu anzufeuchten, nachzusetzen und noch einmal zu messen.',
  doneSubRoom:'Die Aufnahme kann jetzt direkt an die Praxis übertragen werden.',
- doneSubFile:'Speichere die Datei und schicke sie deiner Praxis — oder öffne den Link, den du von ihr bekommst.',
+ doneSubFile:'Schick die Messung deiner Tierärztin — sie kann sie sofort öffnen, auch ohne Konto.',
  tooFew:'Es sind zu wenige Herzschläge erfasst worden, um die Aufnahme sinnvoll weiterzugeben.',
  dropTitle:'Verbindung unterbrochen',
  dropSub:'Der Gurt ist nicht mehr erreichbar. Sitz und Feuchtigkeit prüfen, dann erneut verbinden — die bisher erfassten Schläge bleiben erhalten.',
@@ -985,7 +1003,7 @@ en:{
  verdictNoisy:'The signal was unsteady in places. Passing it on is possible — but a second recording with a well-moistened belt will be considerably better.',
  verdictBad:'The signal was badly disturbed. We recommend re-moistening the belt, reseating it and recording again.',
  doneSubRoom:'The recording can now be transferred straight to the practice.',
- doneSubFile:'Save the file and send it to your practice — or open the link you received from them.',
+ doneSubFile:'Send the recording to your vet — they can open it right away, no account needed.',
  tooFew:'Too few heartbeats were captured to pass this recording on meaningfully.',
  dropTitle:'Connection lost',
  dropSub:'The belt is no longer reachable. Check the fit and moisture, then reconnect — the beats captured so far are kept.',
@@ -1991,7 +2009,12 @@ async function meineIdentitaet(){
   }
   return _ich;
 }
-const kannSenden=!!(fach&&praxisKey)||!!room;
+const hatPraxis=!!(fach&&praxisKey);
+/* Frueher galt: ohne Link von der Praxis kein Senden. Damit war die
+   Richtung, die uns Kunden bringt, gar nicht gebaut — ein Besitzer, der
+   uns selbst findet und seiner Tierärztin etwas schicken WILL, stand vor
+   einem toten Knopf. Jetzt gibt es immer einen Weg. */
+const kannSenden=true;
 
 /* ══ EINBETTBARER MODUS (weisslabel-faehig) ═══════════════════════════════
    Die Station kann unter fremder Marke ausgeliefert werden; die Messtechnik
@@ -2121,6 +2144,95 @@ const Verlauf={
     let letzter=-1; l.forEach((x,i)=>{ if(x.art==='befund') letzter=i; });
     return l.filter((x,i)=>x.art==='gesendet' && i>letzter).length; },
 };
+
+/* ÜBERGABE-KARTE. Der Moment, in dem der Besitzer für uns wirbt — ohne dass
+   wir ihn darum bitten müssen. Er hat gerade selbst gemessen, findet es gut
+   und will es zeigen. Ein Knopf, kein Formular, kein Konto.
+   Das Teilen-Blatt des Systems statt eines eigenen Versands: wir sehen nie,
+   an wen es geht, und müssen keine fremde Adresse speichern. */
+function uebergabeZeigen(link){
+  const k=$('#uebergabeKarte'); if(!k) return;
+  k.innerHTML=
+     `<h3>Für deine Tierärztin</h3>`
+    +`<p>Sie öffnet den Link und sieht deine Messung sofort ausgewertet — ohne Konto, ohne Anmeldung, ohne etwas zu installieren.</p>`
+    +`<div class="ub-knoepfe">`
+      +`<button class="btn" id="ubTeilen">Link an meine Tierärztin schicken</button>`
+      +`<button class="btn ghost" id="ubKopieren">Kopieren</button>`
+    +`</div>`
+    +`<div class="ub-fuss">Wer diesen Link hat, kann die Messung lesen — gib ihn nur deiner Tierärztin. `
+    +`Er ist 30 Tage gültig; danach löscht sich die Ablage von selbst.</div>`;
+  k.classList.remove('hidden');
+  const text='Hier ist die Herzfrequenz-Messung von meinem Pferd:';
+  $('#ubTeilen').addEventListener('click', async ()=>{
+    if(navigator.share){
+      try{ await navigator.share({title:'Messung für die Praxis', text, url:link}); return; }catch(_){ /* abgebrochen */ }
+    }
+    ubKopieren(link);
+  });
+  $('#ubKopieren').addEventListener('click', ()=>ubKopieren(link));
+  k.scrollIntoView({behavior:'smooth', block:'center'});
+}
+/* Erzeugt einen Übergabe-Link aus der aktuellen Messung. Bewusst eigene
+   Funktion: derselbe Weg dient dem Besitzer OHNE Praxis (Erstkontakt) und
+   dem Besitzer MIT Praxis, der die Messung noch einer zweiten Tierärztin
+   zeigen will — Zweitmeinung, Turnier, anderer Schwerpunkt.
+   Genau diese zweite Nutzung macht aus einem Kundenstamm eine Aussaat:
+   jede Kundin einer Praxis kann die nächste Praxis anstecken. */
+async function uebergabeErzeugen(){
+  const u=await Krypto.uebergabeAnlegen();
+  const klar=await S.blob.text();
+  const umschlag=await Krypto.versiegeln(u.fach.boxPub, klar, u.fach.fach);
+  const r=await fetch(POSTFACH+'/postfach/'+encodeURIComponent(u.fach.fach),{
+    method:'POST', headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({art:'aufnahme',umschlag})});
+  const d=await r.json().catch(()=>({}));
+  if(!d.ok) throw new Error(d.grund||('Übertragung fehlgeschlagen ('+r.status+')'));
+  Verlauf.hinzu({art:'gesendet', id:d.id||undefined}); lageZeigen();
+  const ziel=new URL('index.html', location.href);
+  ziel.hash='uebergabe='+u.schluessel;
+  return ziel.toString();
+}
+
+/* WEITERSAGEN — die zwei Kanten der Kettenreaktion.
+   Sie sind streng getrennt, und das ist keine Formsache:
+   • einer weiteren Tierärztin → enthält DIE MESSUNG, gezielte Übergabe
+   • einem Stallfreund        → enthält NUR DIE STATION, keine Daten
+   Wer die beiden vermischt, verschickt irgendwann Gesundheitsdaten an eine
+   Reitstall-Gruppe. Deshalb zwei Knöpfe mit zwei Sätzen, nie einer. */
+function weitersagenZeigen(){
+  const k=$('#weiterKarte'); if(!k) return;
+  k.innerHTML=
+     `<h3>Weitersagen</h3>`
+    +`<div class="ws-zeile"><div><b>Auch einer anderen Tierärztin zeigen</b>`
+    +`<span>Zweitmeinung oder anderer Schwerpunkt. Der Link enthält diese Messung.</span></div>`
+    +`<button class="btn ghost" id="wsVet">Link erzeugen</button></div>`
+    +`<div class="ws-zeile"><div><b>Einem Stallfreund zeigen</b>`
+    +`<span>Nur die Messstation, ohne deine Daten. Er misst dann sein eigenes Pferd.</span></div>`
+    +`<button class="btn ghost" id="wsFreund">Station teilen</button></div>`;
+  k.classList.remove('hidden');
+  $('#wsVet').addEventListener('click', async (ev)=>{
+    const b=ev.currentTarget; b.disabled=true; b.textContent='Einen Moment…';
+    try{ uebergabeZeigen(await uebergabeErzeugen()); }
+    catch(e){ b.disabled=false; b.textContent='Link erzeugen';
+              $('#err').textContent=e.message||'Hat nicht geklappt'; }
+  });
+  $('#wsFreund').addEventListener('click', async ()=>{
+    /* Die blanke Station — ohne fach, ohne Schlüssel, ohne Anker. */
+    const st=new URL('messen.html', location.href).toString();
+    const text='Damit kann man die Herzfrequenz vom Pferd selbst messen — geht direkt im Browser:';
+    if(navigator.share){ try{ await navigator.share({title:'CARLON Messstation', text, url:st}); return; }catch(_){ } }
+    try{ await navigator.clipboard.writeText(st); }catch(_){ }
+    const b=$('#wsFreund'); if(b){ b.textContent='Kopiert ✓'; setTimeout(()=>{b.textContent='Station teilen';},2200); }
+  });
+}
+
+async function ubKopieren(link){
+  const b=$('#ubKopieren');
+  try{ await navigator.clipboard.writeText(link); }
+  catch(_){ const t=document.createElement('textarea'); t.value=link; document.body.appendChild(t);
+            t.select(); try{document.execCommand('copy');}catch(__){} t.remove(); }
+  if(b){ const alt=b.textContent; b.textContent='Kopiert ✓'; setTimeout(()=>{b.textContent=alt;},2200); }
+}
 
 /* Die Lage in einem Satz — nur wenn es etwas zu sagen gibt. */
 function lageZeigen(){
@@ -2579,6 +2691,21 @@ $('#btnSend').addEventListener('click', async ()=>{
       $('#status').innerHTML='<span class="done">✓ Aufnahme sicher zugestellt</span>'
         +'<div style="font-size:12px;color:var(--sec);margin-top:6px">Verschlüsselt abgelegt — deine Tierärztin sieht sie, sobald sie das nächste Mal online ist. Du musst nichts weiter tun.</div>';
       Verlauf.hinzu({art:'gesendet', id:d.id||undefined}); lageZeigen();
+      weitersagenZeigen();
+      $('#btnSend').classList.add('hidden'); $('#btnSave').disabled=false;
+      $('#btnAgain').classList.remove('hidden');
+      return;
+    }
+    if(!room){
+      /* ÜBERGABE — der Besitzer hat uns selbst gefunden und will seiner
+         Tierärztin etwas schicken, die noch kein Fach hat. Er erzeugt eines
+         auf Zeit; der Schlüssel reist im Anker des Links und erreicht
+         niemals einen Server. */
+      $('#status').textContent='Bereite die Übergabe vor…'; $('#pb').style.width='30%';
+      const link=await uebergabeErzeugen();
+      $('#pb').style.width='100%';
+      uebergabeZeigen(link);
+      $('#status').innerHTML='<span class="done">✓ Bereit zum Weitergeben</span>';
       $('#btnSend').classList.add('hidden'); $('#btnSave').disabled=false;
       $('#btnAgain').classList.remove('hidden');
       return;

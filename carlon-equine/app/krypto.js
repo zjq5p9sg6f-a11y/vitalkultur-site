@@ -184,6 +184,33 @@
       };
     },
 
+    /* ── ÜBERGABE ──────────────────────────────────────────────────────
+       Der Fall, den es vorher nicht gab: ein Pferdebesitzer findet uns
+       SELBST und will seiner Tierärztin eine Messung schicken — die aber
+       noch gar kein Fach hat. Gegen einen Schlüssel, der nicht existiert,
+       lässt sich nicht verschlüsseln.
+
+       Lösung: der Besitzer erzeugt ein Fach auf Zeit und legt dessen
+       Schlüssel in den ANKER des Links (`#`). Ein Anker wird von Browsern
+       nie mitgesendet — er steht in keinem Server-Log, in keinem Zugriffs-
+       protokoll, auch nicht bei uns.
+
+       EHRLICH GESAGT: wer den Link hat, kann die Messung lesen. Das ist
+       kein Mangel, sondern genau die Absicht — der Besitzer übergibt ihn
+       bewusst an eine bestimmte Person, wie einen Brief. Es muss nur
+       dort stehen, wo er ihn weitergibt. */
+    async uebergabeAnlegen() {
+      const fach = await this.praxisAnlegen();
+      const s = await this.praxisSichern(fach);
+      return { fach, schluessel: b64u(new TextEncoder().encode(JSON.stringify(s))) };
+    },
+    async uebergabeLaden(schluessel) {
+      try {
+        const roh = new TextDecoder().decode(unb64u(schluessel));
+        return await this.praxisLaden(JSON.parse(roh));
+      } catch (_) { return null; }
+    },
+
     /* ── Abholen beweisen ──────────────────────────────────────────────
        Die Praxis signiert Fachnummer + Zeitstempel. Der Zwischenspeicher
        prüft die Signatur gegen den mitgesendeten öffentlichen Schlüssel UND

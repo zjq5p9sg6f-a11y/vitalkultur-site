@@ -5287,6 +5287,12 @@ const Views={
      nicht wir sehen gut aus, sondern die Tieraerztin. Der Stallnachbar, dem
      das gezeigt wird, fragt seine eigene. */
   async befundZurueck(hid){
+    /* TOR. Die Merkmalstabelle allein reicht nicht — sie beschreibt nur, was
+       die Oberfläche zeigt. Wer diesen Weg auf anderem Wege erreicht, käme
+       ohne Tor durch. Gates gehören an die Funktion, nicht an den Knopf.
+       Der Rückweg ist bewusst DAS bezahlte Merkmal: eine Messung anschauen
+       darf jeder, dem Kunden etwas zurückzugeben ist die Arbeit. */
+    if(!License.gate('ownerFeedback','Befund an die Besitzerin senden')) return;
     const h=State.horses.find(x=>x.id===hid);
     const recs=State.recsFor(hid); const rec=recs[recs.length-1];
     const txt=$('#ownerTxt')?$('#ownerTxt').value:'';
@@ -6712,6 +6718,10 @@ const Praxis={
      oeffentlichen Schluessel — mehr braucht der Besitzer nicht, um zu senden:
      kein Konto, keine Anmeldung, keine Verabredung. */
   async einladung(){
+    /* TOR. Ein eigenes Fach heisst: Kundinnen senden DIREKT in die Praxis,
+       jederzeit, ohne Link-Weitergabe. Das ist der Arbeitsablauf, für den
+       bezahlt wird. Die einzelne Übergabe bleibt frei — sie ist die Probe. */
+    if(!License.gate('ownerFeedback','Messungen direkt in Ihre Praxis empfangen')) return null;
     const ich=await this.ich();
     const basis=location.href.replace(/[^/]*(\?.*)?$/,'');
     return basis+'messen.html?fach='+encodeURIComponent(ich.fach)+'&k='+encodeURIComponent(ich.boxPub);
@@ -6801,6 +6811,52 @@ const Postfach={
       headers:{'Content-Type':'application/json'}, body:JSON.stringify(leib)});
     return r.json().catch(()=>({ok:false,grund:'HTTP '+r.status}));
   },
+  /* ── ÜBERGABE EMPFANGEN ────────────────────────────────────────────
+     Die Richtung, die uns Kunden bringt: ein Pferdebesitzer hat SELBST
+     gemessen und schickt seiner Tierärztin einen Link. Sie klickt — und
+     steht nicht vor einer Anmeldemaske, sondern im Cockpit, mit der
+     Messung ihrer eigenen Kundin darin. Kein Konto, keine Installation,
+     nichts zu erklären. Der Beweis liegt schon auf dem Tisch.
+
+     Der Schlüssel steht im Anker der Adresse und erreicht keinen Server.
+     Er wird sofort aus der Adresszeile entfernt, damit er nicht im
+     Verlauf des Browsers stehen bleibt. */
+  async uebergabeEmpfangen(){
+    const h=String(location.hash||'');
+    const m=h.match(/(?:^#|&)uebergabe=([A-Za-z0-9_-]+)/);
+    if(!m) return false;
+    history.replaceState(null,'',location.pathname+location.search);
+    const ich=await Krypto.uebergabeLaden(m[1]);
+    if(!ich){ Toast.show('Dieser Link lässt sich nicht öffnen','warn'); return false; }
+    let dateien=[];
+    try{
+      const l=await this._ruf('/postfach/'+ich.fach+'?was=liste', await Krypto.abholNachweis(ich));
+      if(!l.ok||!(l.sendungen||[]).length){
+        Toast.show('Diese Messung ist nicht mehr abrufbar — Übergaben verfallen nach 30 Tagen','warn');
+        return false;
+      }
+      for(const kopf of l.sendungen){
+        const e=await this._ruf('/postfach/'+ich.fach+'/'+kopf.id, await Krypto.abholNachweis(ich));
+        if(!e.ok) continue;
+        let klar;
+        try{ klar=await Krypto.oeffnen(ich.box.privateKey, e.umschlag, ich.fach); }catch(_){ continue; }
+        dateien.push(new File([klar],'uebergabe-'+String(kopf.eingegangen||'').slice(0,10)+'.json',
+                              {type:'application/json'}));
+        /* NICHT fern löschen. Ein Übergabe-Link darf ein zweites Mal
+           geöffnet werden — die Tierärztin klickt ihn vielleicht erst im
+           Auto an und dann noch einmal in der Praxis. Die Ablage räumt
+           nach 30 Tagen selbst auf. */
+      }
+    }catch(_){ Toast.show('Die Messung liess sich nicht laden — später nochmal versuchen','warn'); return false; }
+    if(!dateien.length) return false;
+    Importer.open();
+    Importer.startScan(dateien);
+    Toast.show('Messung Ihrer Kundin geöffnet — verschlüsselt übertragen','ok');
+    State.settings.uebergabeGesehen=(State.settings.uebergabeGesehen||0)+1;
+    await State.saveSettings();
+    return true;
+  },
+
   /* Der Rueckweg. Der Befund wird gegen den Schluessel des BESITZERS
      verschluesselt und in dessen Fach gelegt — dieselbe Mechanik wie
      hinwaerts, nur andersherum. Der Zwischenspeicher sieht wieder nur
@@ -6884,7 +6940,7 @@ const Postfach={
         Toast.show(`${offen.length} Aufnahme${offen.length!==1?'n':''} eingegangen`,'ok');
         const dateien=offen.map(x=>new File([x.inhalt],
           'aufnahme-'+String(x.eingegangen||'').slice(0,10)+'.json',{type:'application/json'}));
-        UI.importModal&&UI.importModal();
+        Importer.open();
         Importer.startScan(dateien);
         /* Erst als importiert markieren, wenn der Import wirklich lief.
            Bricht der Tierarzt ab, liegt die Aufnahme beim naechsten Oeffnen
@@ -8194,6 +8250,9 @@ addEventListener('beforeinstallprompt',e=>{e.preventDefault();PWA.deferred=e;});
        Funkloch faehrt, ist genau der Moment, in dem nachgeholt werden soll. */
     window.addEventListener('online', ()=>{
       License.lizenzHolenWennFaellig(); Postfach.abholen(); Postausgang.senden({laut:true}); });
+    /* Eine Übergabe hat Vorrang vor allem anderen: sie ist der Grund,
+       warum diese Person die Seite ueberhaupt geoeffnet hat. */
+    await Postfach.uebergabeEmpfangen();
     Postfach.abholen(); Postausgang.senden();
     /* Zugabe fuer Chromium: der Browser darf die Erneuerung auch nachholen,
        wenn die App gar nicht offen ist. Safari kennt das nicht — dort bleibt
