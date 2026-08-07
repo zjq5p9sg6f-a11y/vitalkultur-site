@@ -2204,7 +2204,7 @@ const Importer = {
         <p>Einzelne Datei, viele Dateien oder <b>ganze Ordner</b> auf einmal.<br>Alles wird zuerst geprüft — du bestätigst, bevor etwas gespeichert wird.</p>
         <div class="formats">Akzeptiert: <b>.json</b> · <b>.ndjson</b> &nbsp;·&nbsp; Ordner werden durchsucht &nbsp;·&nbsp; Dubletten erkannt</div>
       </div>
-      <input type="file" id="fileInput" multiple accept=".json,.ndjson,.txt,.html,.htm,application/json,text/plain,text/html" style="display:none">
+      <input type="file" id="fileInput" multiple accept=".json,.ndjson,.txt,.html,.htm,.vcf,.csv,application/json,text/plain,text/html,text/vcard,text/csv" style="display:none">
       <input type="file" id="dirInput" webkitdirectory directory multiple style="display:none">
       <div style="display:flex;gap:10px;margin-top:14px;justify-content:center;flex-wrap:wrap">
         <button class="btn ghost" onclick="$('#fileInput').click()">Dateien wählen…</button>
@@ -2266,6 +2266,19 @@ const Importer = {
       .catch(()=>{const e2=$('#rcvStatus');if(e2)e2.innerHTML='<span style="color:var(--red)">Empfang fehlgeschlagen — Relay erreichbar? Erneut versuchen.</span>';});
   },
   async startScan(files){
+    /* Kontakte zuerst abzweigen. Der Tierarzt soll nicht wissen muessen,
+       welches Format sein Programm ausspuckt — er zieht die Datei ins
+       Fenster, und wir erkennen, was es ist. */
+    const kontakte=[...files].filter(f=>/\.(vcf|csv)$/i.test(f.name||''));
+    if(kontakte.length){
+      const r=await Kunden.ausDateien(kontakte);
+      Toast.show(r.neu
+        ? `${r.neu} Kundin${r.neu!==1?'nen':''} übernommen${r.gelesen>r.neu?` · ${r.gelesen-r.neu} schon bekannt`:''}`
+        : (r.gelesen?'Alle Kontakte waren schon bekannt':'Keine Kontakte erkannt'),
+        r.neu?'ok':'info');
+      files=[...files].filter(f=>!/\.(vcf|csv)$/i.test(f.name||''));
+      if(!files.length){ UI.closeModal(); Nav.refresh(); return; }
+    }
     $('#impBody').innerHTML=`<div class="imp-scan"><div class="spin"></div><div>${files.length} Datei${files.length!==1?'en':''} werden geprüft…</div></div>`;
     $('#impFoot').innerHTML='';
     const res=await this.scan(files);
@@ -4479,7 +4492,9 @@ const Views={
     <div class="modal-body">
       <p style="font-size:12.5px;color:var(--text-secondary);margin:0 0 14px">Kunde ohne H10 — schnell in die heutige Route aufnehmen. Ort wird geocodiert, die Route sofort neu optimiert.</p>
       <div class="field"><label>Pferd / Patient</label><input id="anName" placeholder="z. B. Bella" autocomplete="off"></div>
-      <div class="field-row"><div class="field"><label>Besitzer (optional)</label><input id="anOwner" placeholder="Familie Weber"></div>
+      <div class="field-row"><div class="field"><label>Besitzer (optional)</label>
+        <input id="anOwner" placeholder="Familie Weber" list="kundenListe" autocomplete="off" oninput="Views.kundeUebernehmen()">
+        <datalist id="kundenListe">${Kunden.liste().map(k=>`<option value="${esc(k.name)}">${esc([k.ort,k.tel].filter(Boolean).join(' · '))}</option>`).join('')}</datalist></div>
         <div class="field"><label>Telefon (optional)</label><input id="anPhone" placeholder="+49 …"></div></div>
       <div class="field-row"><div class="field"><label>Ort / Adresse</label><input id="anPlace" placeholder="Ort, PLZ"></div>
         <div class="field" style="max-width:120px"><label>&nbsp;</label><button class="btn ghost" style="width:100%" onclick="geoLookup('anPlace','anLat','anLng',this)">${IC.pin} Suchen</button></div></div>
@@ -4487,6 +4502,16 @@ const Views={
       <div class="field"><label>Dringlichkeit</label><select id="anLevel"><option value="crit">Kritisch — zuerst</option><option value="elev" selected>Erhöht</option><option value="watch">Beobachten</option></select></div>
     </div>
     <div class="modal-foot"><button class="btn ghost" onclick="UI.closeModal()">Abbrechen</button><button class="btn primary" onclick="Views.saveAnalog()">Einschieben & Route optimieren</button></div>`);
+  },
+  /* Wer eine bekannte Kundin waehlt, hat Telefon und Ort schon gegeben —
+     zweimal tippen ist genau die Reibung, an der ein Werkzeug liegen bleibt.
+     Nur FREIE Felder werden gefuellt: nie eine Eingabe ueberschreiben. */
+  kundeUebernehmen(){
+    const n=($('#anOwner')&&$('#anOwner').value||'').trim().toLowerCase(); if(!n) return;
+    const k=Kunden.liste().find(x=>String(x.name).trim().toLowerCase()===n); if(!k) return;
+    const tel=$('#anPhone'), ort=$('#anPlace');
+    if(tel&&!tel.value&&k.tel) tel.value=k.tel;
+    if(ort&&!ort.value&&k.ort) ort.value=k.ort;
   },
   async saveAnalog(){
     const name=($('#anName').value||'').trim(); if(!name){Toast.show('Bitte Name eingeben','warn');return;}
@@ -6903,6 +6928,117 @@ const Praxis={
    Der Inhalt liegt hier BEREITS VERSCHLUESSELT: verschluesselt wird beim
    Einreihen, nicht beim Senden. Selbst wenn das Geraet in fremde Haende
    geraet, steht im Ausgang kein Klartext. */
+/* ════════════════════════════════════════════════════════════════════════
+   KUNDENLISTE — Reibung beim Anlegen wegnehmen
+   ════════════════════════════════════════════════════════════════════════
+   Die Kundinnen stehen laengst irgendwo: in den Kontakten des Telefons, im
+   Praxisprogramm, in einer Tabelle. Sie ein zweites Mal abzutippen ist der
+   Punkt, an dem ein Werkzeug liegen bleibt.
+
+   Zwei Formate, die JEDES System herausgibt:
+   • vCard (.vcf) — was das Telefon beim Teilen von Kontakten erzeugt
+   • CSV — was jedes Praxisprogramm und jede Tabelle exportiert
+
+   Alles bleibt auf dem Geraet. Keine Anmeldung, kein Abgleich, kein Server.
+   Die Liste ist bewusst KEIN zweites Datenmodell: sie fuellt nur die Felder,
+   die ohnehin am Pferd haengen (Besitzerin, Telefon, Ort). */
+const Kunden={
+  liste(){ return State.settings.kunden||[]; },
+  _schluessel(k){ return String(k.name||'').trim().toLowerCase()+'|'+String(k.tel||'').replace(/\D/g,''); },
+  async hinzufuegen(neue){
+    const l=this.liste(), bekannt=new Set(l.map(k=>this._schluessel(k)));
+    let n=0;
+    for(const k of neue){
+      if(!k.name) continue;
+      const s=this._schluessel(k);
+      if(bekannt.has(s)) continue;                       // nie doppelt
+      bekannt.add(s); l.push(k); n++;
+    }
+    State.settings.kunden=l; await State.saveSettings();
+    return n;
+  },
+
+  /* vCard 2.1/3.0/4.0. Gefaltete Zeilen (Fortsetzung beginnt mit Leerzeichen
+     oder Tabulator) muessen ZUERST zusammengefuegt werden — sonst reisst
+     jede laengere Adresse mittendrin ab. */
+  ausVCard(text){
+    const zeilen=String(text).replace(/\r\n/g,'\n').split('\n');
+    const ganz=[];
+    for(const z of zeilen){
+      if(/^[ \t]/.test(z) && ganz.length) ganz[ganz.length-1]+=z.slice(1);
+      else ganz.push(z);
+    }
+    const raus=[]; let k=null;
+    const wert=(z)=>z.slice(z.indexOf(':')+1).replace(/\\,/g,',').replace(/\\n/gi,' ').trim();
+    for(const z of ganz){
+      const oben=z.toUpperCase();
+      if(oben.startsWith('BEGIN:VCARD')){ k={name:'',tel:'',mail:'',ort:''}; continue; }
+      if(oben.startsWith('END:VCARD')){ if(k&&k.name) raus.push(k); k=null; continue; }
+      if(!k) continue;
+      if(oben.startsWith('FN')) k.name=wert(z);
+      else if(oben.startsWith('N;')||oben.startsWith('N:')){
+        if(!k.name){ const t=wert(z).split(';'); k.name=[t[1],t[0]].filter(Boolean).join(' ').trim(); }
+      }
+      else if(oben.startsWith('TEL')&&!k.tel) k.tel=wert(z);
+      else if(oben.startsWith('EMAIL')&&!k.mail) k.mail=wert(z);
+      else if(oben.startsWith('ADR')&&!k.ort){
+        /* ADR: Postfach;Zusatz;Strasse;Ort;Region;PLZ;Land */
+        const t=wert(z).split(';');
+        k.ort=[t[2],(t[5]||'')+' '+(t[3]||'')].map(x=>String(x).trim()).filter(Boolean).join(', ');
+      }
+    }
+    return raus;
+  },
+
+  /* CSV mit Kopfzeile. Trennzeichen wird erkannt (Semikolon ist in
+     deutschen Exporten der Regelfall), Anfuehrungszeichen werden geachtet. */
+  ausCSV(text){
+    const roh=String(text).replace(/\r\n/g,'\n').trim(); if(!roh) return [];
+    const erste=roh.split('\n')[0];
+    const trenn=(erste.split(';').length>erste.split(',').length)?';':',';
+    const zerlege=(z)=>{
+      const f=[]; let a='', inQ=false;
+      for(let i=0;i<z.length;i++){
+        const c=z[i];
+        if(c==='"'){ if(inQ&&z[i+1]==='"'){ a+='"'; i++; } else inQ=!inQ; }
+        else if(c===trenn&&!inQ){ f.push(a); a=''; }
+        else a+=c;
+      }
+      f.push(a); return f.map(x=>x.trim());
+    };
+    const zeilen=roh.split('\n').filter(z=>z.trim());
+    const kopf=zerlege(zeilen[0]).map(x=>x.toLowerCase());
+    const finde=(...muster)=>kopf.findIndex(h=>muster.some(m=>h.includes(m)));
+    const iName=finde('name','kunde','besitzer','halter','owner','client');
+    const iTel =finde('tel','phone','mobil','handy');
+    const iMail=finde('mail','e-mail');
+    const iOrt =finde('adress','ort','stra','city','stall','plz');
+    if(iName<0) return [];
+    const raus=[];
+    for(const z of zeilen.slice(1)){
+      const f=zerlege(z);
+      const name=(f[iName]||'').trim(); if(!name) continue;
+      raus.push({name, tel:iTel>=0?(f[iTel]||''):'', mail:iMail>=0?(f[iMail]||''):'',
+                 ort:iOrt>=0?(f[iOrt]||''):''});
+    }
+    return raus;
+  },
+
+  /* Nimmt Dateien entgegen und entscheidet selbst, was sie sind. Der
+     Tierarzt soll nicht wissen muessen, welches Format sein Programm
+     ausspuckt — er zieht die Datei ins Fenster. */
+  async ausDateien(dateien){
+    let neue=[];
+    for(const f of dateien){
+      let t=''; try{ t=await f.text(); }catch(_){ continue; }
+      const istVCard=/^\s*BEGIN:VCARD/i.test(t) || /\.vcf$/i.test(f.name||'');
+      neue=neue.concat(istVCard?this.ausVCard(t):this.ausCSV(t));
+    }
+    const n=await this.hinzufuegen(neue);
+    return {gelesen:neue.length, neu:n};
+  },
+};
+
 const Postausgang={
   async _alle(){ return (State.settings.postausgang||[]); },
   async _setzen(l){ State.settings.postausgang=l; await State.saveSettings(); },
