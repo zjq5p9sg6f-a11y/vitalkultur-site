@@ -527,6 +527,15 @@ svg.viz .bezel{stroke:var(--cyan);stroke-opacity:.55;stroke-width:1.1;stroke-lin
   color:var(--txt);font-size:13px;line-height:1.55;text-align:left}
 .rrwarn.hidden{display:none}
 .rrwarn b{color:var(--amber)}
+.jetzt-teilen{max-width:640px;margin:0 auto var(--s4);padding:13px 16px;display:flex;
+  gap:14px;align-items:center;border-radius:13px;
+  border:1px solid var(--cyan-g2,rgba(62,207,178,.28));
+  background:linear-gradient(140deg,rgba(62,207,178,.10),rgba(62,207,178,.02))}
+.jetzt-teilen[hidden]{display:none}
+.jt-txt{flex:1;min-width:0;text-align:left}
+.jt-txt b{display:block;font-size:13.5px;color:var(--txt);margin-bottom:2px}
+.jt-txt span{font-size:12px;color:var(--sec);line-height:1.5}
+.jetzt-teilen .btn{flex:none;white-space:nowrap}
 .hint{font-size:11.5px;color:var(--dim);margin-top:var(--s3);line-height:1.55}
 .privacy{margin-top:var(--s4);font-size:10.5px;color:var(--dim);display:flex;align-items:center;justify-content:center;gap:8px;
   font-family:var(--font-mono);letter-spacing:.08em}
@@ -746,6 +755,58 @@ const HAUS={ appImStore:false, appUrl:'https://carlon.app' };
         <b id="ctLive" data-i18n-skip>Letzte Schläge<button class="info-i" data-info="rr" aria-label="Was zeigt dieses Diagramm?"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 16v-5M12 8h.01"/><circle cx="12" cy="12" r="9"/></svg></button></b><i id="liveN"></i>
       </div>
       <div id="spark" aria-hidden="true"></div>
+    </div>
+
+    <!-- Die Wolke entsteht Schlag fuer Schlag. Reine Geometrie: jeder Punkt
+         ist ein Schlag gegen seinen Vorgaenger. Sie BEURTEILT nichts — das
+         bleibt der Tieraerztin — aber sie zeigt sofort, dass hier etwas
+         Echtes gemessen wird, und sie ist das schoenste Bild, das die
+         Herzratenvariabilitaet hat. -->
+    <!-- DUALGRAF: Puls und Herzratenvariabilitaet im Verlauf, dieselbe
+         Darstellung wie auf dem Abschluss-Bildschirm. Der Live-Schirm soll
+         nicht der aermere Bruder des Ergebnisses sein — was am Ende
+         beeindruckt, muss WAEHREND der Messung beeindrucken, sonst haelt
+         niemand die fuenf Minuten durch. -->
+    <!-- WEITERSAGEN WAEHREND DER MESSUNG.
+         Der Hoehepunkt der Begeisterung liegt HIER, nicht am Ende: die
+         Wolke fuellt sich, die Atemwelle setzt ein, und man steht ohnehin
+         fuenf Minuten daneben und hat nichts zu tun. Danach ist der Moment
+         vorbei — man packt zusammen und geht.
+         Erscheint bewusst erst mit der Atemkurve, also dann, wenn es
+         wirklich etwas zu zeigen gibt. Geteilt wird NUR die Station, nie
+         die laufende Messung. -->
+    <div class="jetzt-teilen" id="jetztTeilen" hidden>
+      <div class="jt-txt"><b>Das sollte deine Stallnachbarin sehen</b>
+        <span>Der Link zur Messstation — ohne deine Daten.</span></div>
+      <button class="btn ghost" id="jtBtn">Weitersagen</button>
+    </div>
+
+    <div class="chart-wrap" id="vitalsWrap" hidden>
+      <div class="ct">
+        <svg class="ic" style="color:var(--cyan)" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><path d="M3 17l4-9 3 12 3-15 3 9 2-4h3"/></svg>
+        <b data-i18n-skip>Puls und Variabilität im Verlauf</b><i id="vitalsN"></i>
+      </div>
+      <div id="vitalsLive" aria-hidden="true"></div>
+    </div>
+
+    <!-- ATEMKURVE. Der Moment, der wirkt: man sieht das Pferd atmen — im
+         eigenen Herzschlag. Rein beschreibend, kein Urteil.
+         Braucht am meisten Schlaege, weil eine Atemwelle mehrere Zyklen
+         zeigen muss, um als Welle erkennbar zu sein. -->
+    <div class="chart-wrap" id="breathWrap" hidden>
+      <div class="ct">
+        <svg class="ic" style="color:var(--cyan)" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><path d="M3 14c3-6 6-6 9 0s6 6 9 0"/></svg>
+        <b data-i18n-skip>Atmung im Herzschlag</b><i id="breathN"></i>
+      </div>
+      <div id="breathLive" aria-hidden="true"></div>
+    </div>
+
+    <div class="chart-wrap" id="poinWrap" hidden>
+      <div class="ct">
+        <svg class="ic" style="color:var(--cyan)" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><circle cx="9" cy="15" r="1.4"/><circle cx="13" cy="11" r="1.4"/><circle cx="16" cy="14" r="1.4"/><circle cx="11" cy="8" r="1.4"/><path d="M3 21L21 3"/></svg>
+        <b data-i18n-skip>Jeder Schlag gegen den vorherigen</b><i id="poinN"></i>
+      </div>
+      <div id="poinLive" aria-hidden="true"></div>
     </div>
 
     <div class="grid">
@@ -1626,8 +1687,24 @@ const Chart={
   poincare(rr,{size=360,sd1=null,sd2=null}={}){
     if(!rr||rr.length<4) return '';
     const xs=rr.slice(0,-1), ys=rr.slice(1), pad=52;
-    const mn=Math.min(...rr), mx=Math.max(...rr), rg=(mx-mn)||1;
-    const lo=mn-rg*0.08, hi=mx+rg*0.08;
+    /* ROBUSTE SPANNE statt Minimum/Maximum.
+       Ein einziger Artefakt-Schlag — ein Ruck am Gurt, ein Schritt — reisst
+       die Achsen sonst von 300 bis 1000 ms auf, waehrend die Wolke zwischen
+       600 und 800 liegt. Vier Fuenftel der Flaeche bleiben leer und die
+       Wolke schrumpft zum Fleck. Gerechnet wird deshalb ueber das 1.- bis
+       99.-Perzentil; was draussen liegt, wird NICHT verschwiegen, sondern
+       gezaehlt und angeschrieben.
+       Beide Achsen teilen sich dieselbe Spanne — bei Poincaré muss das
+       Bild quadratisch bleiben, sonst luegen die Ellipse und die
+       y=x-Diagonale. */
+    const sortiert=[...rr].sort((a,b)=>a-b);
+    const q=(t)=>sortiert[Math.min(sortiert.length-1,Math.max(0,Math.round(t*(sortiert.length-1))))];
+    let mn=q(0.01), mx=q(0.99);
+    if(mx-mn < 12){ const m=(mn+mx)/2; mn=m-6; mx=m+6; }   // sehr ruhiges Herz
+    const rg=(mx-mn)||1;
+    const lo=mn-rg*0.10, hi=mx+rg*0.10;
+    let draussen=0;
+    for(let i=0;i<xs.length;i++) if(xs[i]<lo||xs[i]>hi||ys[i]<lo||ys[i]>hi) draussen++;
     const pL=pad, pT=pad-18, pB=size-pad, plotR=size-16;
     const W=plotR-pL, H=pB-pT;
     const PX=v=>pL+(v-lo)/(hi-lo)*W, PY=v=>pB-(v-lo)/(hi-lo)*H;
@@ -1642,6 +1719,7 @@ const Chart={
        +`<text x="${(pL-8).toFixed(1)}" y="${(PY(tv)+3).toFixed(1)}" text-anchor="end">${fmt0(tv)}</text>`;});
     g+=`<line x1="${PX(lo).toFixed(1)}" y1="${PY(lo).toFixed(1)}" x2="${PX(hi).toFixed(1)}" y2="${PY(hi).toFixed(1)}" stroke="#fff" stroke-opacity="0.5" stroke-width="0.8" stroke-dasharray="4 3"/>`;
     g+=`<text x="${(plotR-4).toFixed(1)}" y="${(pT+11).toFixed(1)}" text-anchor="end" style="fill:var(--dim);font-size:9px">y = x</text>`;
+    if(draussen) g+=`<text x="${(plotR-4).toFixed(1)}" y="${(pB-6).toFixed(1)}" text-anchor="end" style="fill:var(--dim);font-size:9px">${fmt0(draussen)} Paar${draussen!==1?'e':''} ausserhalb</text>`;
     /* Punktwolke gedeckelt: ein SVG-Kreis je Schlagpaar ergibt bei langen
        Aufnahmen zehntausende Knoten. Gezeichnet wird jedes k-te Paar in
        gleichmaessigem Abstand — Form und Dichteverhaeltnis der Wolke bleiben
@@ -2578,6 +2656,10 @@ function onBeat(ev){
     $('#hrRange').textContent = S.hrMin===S.hrMax ? String(S.hrMin) : S.hrMin+'–'+S.hrMax; }
   $('#beats').textContent=fmt0(S.rr.length);
   const h=$('#heart'); h.classList.remove('beat'); void h.offsetWidth; h.classList.add('beat');
+  /* Nicht bei jedem Schlag ALLES neu zeichnen: vier Diagramme aus
+     hunderten Punkten kosten sonst mehr, als ein Telefon im Stall uebrig
+     hat — und ein ruckelnder Bildschirm zerstoert genau die Wirkung, um
+     die es hier geht. */
   if(S.rr.length%2===0) drawSpark();
   if(S.rr.length%5===0) updateQuality();
 }
@@ -2630,7 +2712,90 @@ function drawSpark(){
   $('#liveN').textContent=fmt0(rr.length)+' '+t('beatsUnit');
   $('#spark').innerHTML = Chart.tachogram(rr,
     narrow()?{w:380,h:250,xlabel:'LETZTE SCHLÄGE'}:{w:640,h:190,xlabel:'LETZTE SCHLÄGE'});
+
+  /* Die Wolke braucht Punkte, um eine Wolke zu sein — unter 12 Schlaegen
+     sieht sie nach Zufall aus und verspricht mehr, als sie zeigt. Deshalb
+     erscheint sie erst dann, dafuer aus ALLEN Schlaegen, nicht nur den
+     letzten 120: dass sie mit jeder Minute dichter wird, ist der Punkt. */
+  const w=$('#poinWrap'); if(!w) return;
+  if(S.rr.length<12){ w.hidden=true; return; }
+  w.hidden=false;
+  $('#poinN').textContent=fmt0(S.rr.length)+' '+t('beatsUnit');
+  $('#poinLive').innerHTML = Chart.poincare(S.rr,
+    narrow()?{w:380,h:300}:{w:640,h:330});
+
+  /* Die Atemwelle braucht mehrere Zyklen, sonst ist sie eine Zacke und
+     keine Welle. Ab 60 Schlaegen traegt sie — und ab da ist sie das
+     Staerkste, was der Bildschirm zu bieten hat. */
+  const b=$('#breathWrap'); if(!b) return;
+  if(S.rr.length<60){ b.hidden=true; return; }
+  b.hidden=false;
+  $('#breathN').textContent=fmt0(S.rr.length)+' '+t('beatsUnit');
+  $('#breathLive').innerHTML = Chart.breath(S.rr.slice(-400),
+    narrow()?{w:380,h:250}:{w:640,h:250});
+
+  /* Der Dualgraf braucht ein Fenster, ueber das sich Variabilitaet
+     ueberhaupt bilden kann — darunter zeigt er eine Gerade und wirkt
+     kaputt statt ruhig. */
+  const jt=$('#jetztTeilen');
+  if(jt && !S._teilenWeg) jt.hidden = S.rr.length<60;
+
+  const v=$('#vitalsWrap'); if(!v) return;
+  if(S.rr.length<90){ v.hidden=true; return; }
+  v.hidden=false;
+  $('#vitalsN').textContent=fmt0(S.rr.length)+' '+t('beatsUnit');
+  $('#vitalsLive').innerHTML = Chart.vitals(S.rr,
+    narrow()?{w:380,h:300}:{w:640,h:300});
 }
+
+/* WEITERSAGEN, ohne die Messung zu gefaehrden.
+   Ein Teilen-Blatt schiebt die Seite in den Hintergrund. Bluetooth-
+   Benachrichtigungen koennen dabei ausbleiben — und die fehlenden Schlaege
+   faenden sich spaeter NIRGENDS wieder, weil eine RR-Reihe keine Luecken
+   kennt. Deshalb wird jede Zeit im Hintergrund gemessen und ab drei
+   Sekunden ehrlich vermerkt. Lieber ein sichtbarer Hinweis als eine still
+   verfaelschte Aufnahme. */
+(function(){
+  const jt=$('#jtBtn'); if(!jt) return;
+  jt.addEventListener('click', async ()=>{
+    const st=new URL('messen.html', location.href).toString();   // nur die Station
+    const text='Damit kann man den Herzrhythmus vom Pferd selbst messen:';
+    /* Mit Bild teilen, wenn das Geraet es kann — ein nackter Link traegt
+       keine Begeisterung, die Wolke schon. Faellt sauber auf Text zurueck. */
+    let datei=null;
+    try{
+      const blob=await momentKarteBlob();
+      if(blob){
+        const f=new File([blob],'carlon-herzschlag.jpg',{type:'image/jpeg'});
+        if(navigator.canShare && navigator.canShare({files:[f]})) datei=f;
+      }
+    }catch(_){ }
+    if(navigator.share){
+      try{ await navigator.share(datei?{title:'CARLON EQUINE',text,url:st,files:[datei]}
+                                      :{title:'CARLON EQUINE Messstation',text,url:st}); }
+      catch(_){ /* abgebrochen */ }
+    } else {
+      try{ await navigator.clipboard.writeText(st); }catch(_){ }
+      jt.textContent='Kopiert ✓'; setTimeout(()=>{ jt.textContent='Weitersagen'; },2200);
+    }
+    S._teilenWeg=true; const box=$('#jetztTeilen'); if(box) box.hidden=true;
+  });
+})();
+
+let _wegSeit=null;
+document.addEventListener('visibilitychange', ()=>{
+  if(S.stopped || !S.startedAt) return;
+  if(document.hidden){ _wegSeit=Date.now(); return; }
+  if(_wegSeit==null) return;
+  const weg=Math.round((Date.now()-_wegSeit)/1000); _wegSeit=null;
+  if(weg<3) return;
+  S.luecken=(S.luecken||0)+weg;
+  const e=$('#rrWarn'); if(!e) return;
+  e.innerHTML=`<b>${S.luecken} Sekunden im Hintergrund.</b><br>`
+    +`In dieser Zeit können Herzschläge gefehlt haben. Die Aufnahme ist weiter `
+    +`brauchbar — deine Tierärztin sieht den Hinweis mit.`;
+  e.classList.remove('hidden');
+});
 
 /* ── Beenden ───────────────────────────────────────────────────────────── */
 $('#btnStop').addEventListener('click', async ()=>{
@@ -2769,6 +2934,10 @@ function buildExport(name,rr,m,secs){
              /* NIE 'Polar H10' erfinden, wenn der Name fehlt. Ein Datensatz,
                 der ein Geraet behauptet, das er nicht kennt, ist im
                 Zweifelsfall wertlos — und in einer Studie schaedlich. */
+             /* Zeit im Hintergrund: dort koennen Schlaege fehlen. Steht im
+                Datensatz, damit die Beurteilung es beruecksichtigen kann —
+                eine stille Luecke waere schlimmer als eine gemeldete. */
+             hintergrundSek:S.luecken||0,
              sensor:(S.device&&S.device.name)||null,
              sensorGeprueft:/H10/i.test(String(S.device&&S.device.name||'')),
              beltBatteryPct:S.batt, userAgent:navigator.userAgent,
@@ -2927,6 +3096,72 @@ const SHARE_PRODUCT = location.origin + location.pathname.replace(/app\/messen\.
    Bewusst auf Canvas gezeichnet, nicht per SVG-Serialisierung: die Diagramme
    der Seite arbeiten mit CSS-Variablen, die in einem als Bild geladenen SVG
    nicht aufgeloest werden — das Ergebnis waere schwarz auf schwarz.        */
+/* KARTE FUER DEN MOMENT — bewusst OHNE Werte.
+   Die grosse Teilen-Karte traegt RMSSD, Puls und den Pferdenamen; das ist
+   richtig fuer eine fertige Aufnahme, die jemand bewusst herausgibt. Mitten
+   in der Messung an die Stallnachbarin waeren es Gesundheitsdaten ohne
+   Anlass — und eine halbe Messung sagt ohnehin nichts.
+   Also nur das, was begeistert: die Wolke, wie sie gerade entsteht. Das
+   Bild ist die Botschaft. */
+async function momentKarteBlob(){
+  const rr=(S.rr||[]).slice(-600); if(rr.length<12) return null;
+  try{ await document.fonts.ready; }catch(_){}
+  const W=1080,H=1080,K=2;
+  const c=document.createElement('canvas'); c.width=W*K; c.height=H*K;
+  const x=c.getContext('2d'); x.scale(K,K);
+  const CY='#3ECFB2', TXT='#EDEEF1', DIM='#7A7A86';
+  const brand='Jost, system-ui, sans-serif', ui='Inter, system-ui, sans-serif';
+
+  x.fillStyle='#0A0A0C'; x.fillRect(0,0,W,H);
+  const gl=x.createRadialGradient(W/2,H*0.42,0,W/2,H*0.42,620);
+  gl.addColorStop(0,'rgba(62,207,178,0.16)'); gl.addColorStop(1,'rgba(62,207,178,0)');
+  x.fillStyle=gl; x.fillRect(0,0,W,H);
+
+  /* Blume des Lebens — dieselbe Konstruktion wie ueberall sonst */
+  x.save(); x.globalAlpha=.16; x.strokeStyle=CY; x.lineWidth=1;
+  (function(){ const cx=W/2, cy=H*0.44, r=132;
+    const pts=[[cx,cy]];
+    for(let i=0;i<6;i++){const a=Math.PI/3*i; pts.push([cx+r*Math.cos(a),cy+r*Math.sin(a)]);}
+    for(let i=0;i<6;i++){const a=Math.PI/3*i; pts.push([cx+2*r*Math.cos(a),cy+2*r*Math.sin(a)]);}
+    for(let i=0;i<6;i++){const a=Math.PI/3*i+Math.PI/6,d=r*Math.sqrt(3);
+      pts.push([cx+d*Math.cos(a),cy+d*Math.sin(a)]);}
+    pts.forEach(([px,py])=>{ x.beginPath(); x.arc(px,py,r,0,Math.PI*2); x.stroke(); });
+  })(); x.restore();
+
+  /* Die Wolke: jeder Schlag gegen seinen Vorgaenger */
+  const paare=[]; for(let i=1;i<rr.length;i++) paare.push([rr[i-1],rr[i]]);
+  const alle=paare.flat().sort((a,b)=>a-b);
+  const lo=alle[Math.floor(alle.length*0.02)], hi=alle[Math.floor(alle.length*0.98)];
+  const spanne=Math.max(1,hi-lo), pad=spanne*0.12;
+  const S0=520, ox=(W-S0)/2, oy=H*0.44-S0/2;
+  const abb=(v)=>((v-(lo-pad))/(spanne+2*pad));
+  x.save(); x.globalAlpha=.85;
+  paare.forEach(([a,b])=>{
+    const px=ox+abb(a)*S0, py=oy+S0-abb(b)*S0;
+    if(px<ox-20||px>ox+S0+20||py<oy-20||py>oy+S0+20) return;
+    x.beginPath(); x.arc(px,py,3.4,0,Math.PI*2); x.fillStyle=CY; x.fill();
+  });
+  x.restore();
+
+  x.fillStyle=TXT; x.font=`500 46px ${brand}`; x.textAlign='center';
+  x.fillText('Das ist ein Herzschlag.', W/2, 148);
+  x.fillStyle=DIM; x.font=`400 25px ${ui}`;
+  x.fillText('Jeder Punkt: ein Schlag gegen den vorherigen.', W/2, 192);
+
+  x.fillStyle=TXT; x.font=`400 27px ${ui}`;
+  x.fillText('Gerade gemessen — am eigenen Pferd,', W/2, H-186);
+  x.fillText('mit dem Handy, ohne App.', W/2, H-148);
+  x.fillStyle=CY; x.font=`600 22px ${brand}`;
+  x.letterSpacing='7px';
+  x.fillText('CARLON EQUINE', W/2, H-78);
+  x.letterSpacing='0px';
+
+  /* JPEG statt PNG: die Karte ist fast durchgehend Verlauf, da bringt PNG
+     nichts ausser Gewicht — 3,6 MB gegen rund 400 kB. Ueber Mobilfunk im
+     Stall ist das der Unterschied zwischen "sofort weg" und "laedt noch". */
+  return await new Promise(r=>c.toBlob(r,'image/jpeg',0.92));
+}
+
 async function shareCardBlob(){
   const rr=S.rr||[]; if(rr.length<12) return null;
   try{ await document.fonts.ready; }catch(_){}          // sonst faellt Jost auf System-Font zurueck

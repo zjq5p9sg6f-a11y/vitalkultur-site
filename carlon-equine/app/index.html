@@ -1486,6 +1486,93 @@ svg.viz .sd-lbl{fill:var(--cyan-strong);font-size:10px;font-weight:600;font-fami
 .post-zeile .wer{flex:1;min-width:0}
 .post-zeile .wer b{display:block;font-size:13.5px;color:var(--text-primary)}
 .post-zeile .wer span{font-size:11.5px;color:var(--text-dim)}
+/* QR-BUEHNE. Der Code selbst bleibt schwarz auf weiss — daran ruettelt
+   keine Gestaltung, sonst finden Kameras ihn nicht mehr. Die Marke wirkt
+   DRUMHERUM: Blume des Lebens als Schein, ein Sucherrahmen in CI-Cyan
+   (semantisch richtig — es ist ein Code zum Anvisieren), und die Wortmarke
+   auf der Karte. */
+/* Die Blume lag als Gekrakel hinter dem Code und las sich wie Schmutz.
+   Raus — die Marke traegt der Schriftzug, nicht ein Ornament, das man
+   erst suchen muss. */
+/* Weiss nur so viel wie noetig: knappe Ruhezone um den Code, Papierton
+   statt Reinweiss, damit die Karte nicht wie ausgeschnitten wirkt. */
+.qr-karte{display:inline-block;padding:12px;border-radius:12px;
+  background:linear-gradient(180deg,#FFFFFF,#F4F7F6);
+  box-shadow:0 0 0 1.5px var(--cyan),0 10px 26px rgba(0,0,0,.55)}
+.qr-karte svg{width:172px;height:172px;display:block;border-radius:2px}
+/* Die Marke steht UNTER der Karte auf Dunkel — dort gehoert sie hin, statt
+   im weissen Feld mit dem Code um Aufmerksamkeit zu ringen. */
+.qr-marke{display:flex;align-items:center;justify-content:center;gap:8px;margin-top:12px}
+.qr-marke img{width:19px;height:19px;object-fit:contain;filter:drop-shadow(0 0 8px var(--cyan-g1))}
+.qr-marke span{font-family:var(--font-brand);font-size:10.5px;font-weight:600;letter-spacing:.22em;
+  color:var(--text-secondary)}
+.qr-hint{font-size:11px;color:var(--text-faint,var(--text-dim));margin-top:7px;line-height:1.5}
+/* WAS ES EINBRINGT. Diese Flaeche sieht ausschliesslich die Praxis — hier
+   ist das Geld-Argument richtig, waehrend es beim Pferdebesitzer giftig
+   waere. Gerechnet wird mit IHREM hinterlegten Satz, nicht mit einem
+   erfundenen: eine fremde Zahl glaubt niemand, die eigene schon.
+   Ausdruecklich als Rechenbeispiel gekennzeichnet — ein Versprechen waere
+   es nicht, und ein durchschautes Versprechen kostet mehr als es bringt. */
+.rechnung{margin:12px 0 2px;padding:13px 15px;border-radius:12px;
+  background:linear-gradient(140deg,rgba(62,207,178,.09),rgba(62,207,178,.02));
+  border:1px solid var(--cyan-g2)}
+.rechnung .rk{display:flex;align-items:center;gap:7px;font-size:9.5px;font-weight:700;
+  letter-spacing:.2em;text-transform:uppercase;color:var(--cyan);margin-bottom:9px}
+/* Symbolgroesse war global nur fuer .btn gesetzt — ohne das hier waechst
+   das Euro-Zeichen auf die volle Kartenbreite. */
+.rechnung .rk svg{width:14px;height:14px;flex:none}
+.rechnung .rw{font-size:12px;color:var(--text-secondary);line-height:1.6;margin-top:0}
+.rechnung .rw em{font-style:normal;color:var(--text-secondary)}
+/* Auftakt im Markenton statt eines nackten Absatzes */
+/* ZWEISPALTIG statt gestapelt. Ein weisses Quadrat, das mittig in
+   schwarzer Leere schwebt, wird durch mehr Schein nicht wertiger — es
+   braucht eine Achse. Links das Objekt, rechts das Argument. */
+.kanon-warn{display:flex;gap:11px;align-items:flex-start;margin:0 0 16px;padding:12px 14px;
+  border-radius:11px;border:1px solid rgba(255,181,71,.34);background:rgba(255,181,71,.08);
+  font-size:12px;line-height:1.55;color:var(--text-secondary)}
+.kanon-warn svg{width:16px;height:16px;flex:none;color:var(--amber);margin-top:1px}
+.kanon-warn b{display:block;color:var(--text-primary);margin-bottom:2px}
+.kanon-warn code{font-size:11px;color:var(--cyan);word-break:break-all}
+.ein-raster{display:grid;grid-template-columns:270px 1fr;gap:30px;align-items:start;padding:2px 0}
+.ein-links{text-align:center}
+/* DAS BLATT, nicht der Code. Vorher schwebte ein weisses Quadrat in
+   schwarzer Leere und die halbe Spalte blieb leer — und der Tierarzt
+   druckte, ohne je gesehen zu haben, was herauskommt. Jetzt steht dort das
+   Blatt selbst, massstabsgetreu: es fuellt die Spalte, traegt die ganze
+   Gestaltung und beantwortet die Frage "was haenge ich da auf?". */
+.blatt-rahmen{width:270px;height:382px;border-radius:6px;overflow:hidden;position:relative;
+  background:#fff;box-shadow:0 0 0 1px var(--border-strong),0 18px 40px rgba(0,0,0,.6),
+             0 0 34px rgba(62,207,178,.10)}
+.blatt{position:absolute;top:0;left:0;width:794px;height:1123px;border:0;
+  transform:scale(.34);transform-origin:0 0;pointer-events:none;background:#fff}
+.blatt-bu{font-size:10.5px;letter-spacing:.06em;color:var(--text-faint,var(--text-dim));margin-top:10px}
+.ein-rechts{padding-top:6px}
+.ein-rechts h4{font-family:var(--font-brand);font-weight:500;font-size:25px;line-height:1.16;
+  letter-spacing:-.015em;color:var(--text-primary);margin:0 0 11px}
+.ein-rechts p{font-size:13px;line-height:1.62;color:var(--text-secondary);margin:0 0 18px;
+  padding-bottom:16px;border-bottom:1px solid var(--border-faint)}
+.ein-nutzen{display:flex;flex-direction:column;gap:14px}
+.ein-nutzen .zeile{display:flex;gap:11px;font-size:12.5px;line-height:1.55;color:var(--text-dim)}
+.ein-nutzen .pkt{width:6px;height:6px;border-radius:50%;background:var(--cyan);
+  margin-top:6px;flex:none;box-shadow:0 0 9px var(--cyan)}
+.ein-nutzen b{display:block;font-size:13px;font-weight:600;color:var(--text-primary);margin-bottom:2px}
+/* Das Geld: ganz unten, klein, ohne eigene Flaeche. Wer damit argumentieren
+   muss, hat die Nutzenkomponenten nicht. */
+.ein-fuss{margin-top:16px;padding-top:12px;border-top:1px solid var(--border-faint);
+  font-size:11.5px;line-height:1.55;color:var(--text-faint,var(--text-dim))}
+@media (max-width:640px){.ein-raster{grid-template-columns:1fr}.ein-rechts{padding-top:0}}
+/* Nur in diesem Dialog mittig — global waere es ein Eingriff in jeden
+   anderen Modal-Fuss der App. */
+.modal.aushang .modal-foot{justify-content:center}
+.link-roh{margin-top:2px}
+.link-roh summary{font-size:11.5px;color:var(--text-dim);cursor:pointer;list-style:none;
+  padding:7px 0;user-select:none}
+.link-roh summary::-webkit-details-marker{display:none}
+.link-roh summary::before{content:'▸ ';color:var(--cyan)}
+.link-roh[open] summary::before{content:'▾ '}
+.link-roh div{background:var(--bg-deep);border:1px solid var(--border-subtle);border-radius:var(--r-s);
+  padding:10px;font-size:11px;font-family:var(--font-mono,ui-monospace,monospace);
+  word-break:break-all;color:var(--text-secondary);line-height:1.5}
 .lock-overlay{position:relative}
 .lock-overlay::after{content:"";position:absolute;inset:0;background:rgba(12,12,14,.55);backdrop-filter:blur(2px);border-radius:inherit;z-index:5}
 .lock-cta{position:absolute;inset:0;z-index:6;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;text-align:center;padding:24px}
@@ -2520,6 +2607,13 @@ const Importer = {
 
 /* ---------- SVG Icons ---------- */
 const IC={
+  /* Nachgetragen fuer Postfach, Einladung und Aushang — vorher trugen diese
+     Knoepfe als einzige im Cockpit kein Symbol und fielen dadurch auf. */
+  drucker:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M6 9V3h12v6"/><path d="M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2"/><rect x="6" y="14" width="12" height="7" rx="1"/></svg>',
+  qr:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><path d="M14 14h3v3h-3zM20 14v3M14 20h3M20 20h1"/></svg>',
+  kette:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M10 13a5 5 0 007.5.5l3-3a5 5 0 00-7-7l-1.7 1.7"/><path d="M14 11a5 5 0 00-7.5-.5l-3 3a5 5 0 007 7l1.7-1.7"/></svg>',
+  senden:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/></svg>',
+  postfach:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M4 9h16v10a2 2 0 01-2 2H6a2 2 0 01-2-2z"/><path d="M4 9l3-6h10l3 6"/><path d="M9 13h6"/></svg>',
   check:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 6L9 17l-5-5"/></svg>',
   arrow:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M5 12h14M13 6l6 6-6 6"/></svg>',
   expand:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg>',
@@ -6696,7 +6790,7 @@ const UI={
       ${ein.length?ein.map(x=>`<div class="post-zeile"><span class="dot" style="width:7px;height:7px;border-radius:50%;margin-top:6px;background:${x.unlesbar?'var(--red)':'var(--cyan-strong)'}"></span>
         <div class="wer"><b>${x.unlesbar?'Sendung nicht lesbar':'Aufnahme wartet auf Import'}</b>
         <span>${esc(wann(x.eingegangen))}${x.unlesbar?' · bleibt liegen, nichts geht verloren':''}</span></div>
-        ${x.unlesbar?'':`<button class="btn sm" onclick="UI.closeModal();Postfach.abholen({laut:true})">Importieren</button>`}</div>`).join('')
+        ${x.unlesbar?'':`<button class="btn sm" onclick="UI.closeModal();Postfach.abholen({laut:true})">${IC.download} Importieren</button>`}</div>`).join('')
         :'<div style="font-size:13px;color:var(--text-dim);padding:8px 0">Nichts offen.</div>'}
 
       <h4 style="font-size:12px;letter-spacing:.4px;text-transform:uppercase;color:var(--text-dim);margin:18px 0 6px">Ausgang</h4>
@@ -6712,11 +6806,11 @@ const UI={
           return `<div class="post-zeile"><span style="width:7px;height:7px;border-radius:50%;margin-top:6px;background:var(--amber)"></span>
             <div class="wer"><b>Angefordert${h?' · '+esc(h.name):''}</b>
             <span>${tage<=0?'heute':tage===1?'gestern':'vor '+tage+' Tagen'} gebeten · noch nicht eingegangen</span></div>
-            <button class="btn sm ghost" onclick="Praxis.anfrageAbbrechen('${x.id}')">Erledigt</button></div>`;}).join('')
+            <button class="btn sm ghost" onclick="Praxis.anfrageAbbrechen('${x.id}')">${IC.check} Erledigt</button></div>`;}).join('')
         :'<div style="font-size:13px;color:var(--text-dim);padding:8px 0">Keine offene Anforderung.</div>')})()}
       <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:12px">
-        <button class="btn ghost" onclick="UI.messungAnfordern()">Messung anfordern</button>
-        <button class="btn ghost" onclick="UI.dauerEinladung()">Dauer-Einladung für alle</button>
+        <button class="btn ghost" onclick="UI.messungAnfordern()">${IC.owner} Messung anfordern</button>
+        <button class="btn ghost" onclick="UI.dauerEinladung()">${IC.qr} Dauer-Einladung für alle</button>
       </div>
 
       <div style="font-size:11.5px;color:var(--text-dim);margin-top:16px;line-height:1.5">
@@ -6725,8 +6819,8 @@ const UI={
       </div>
     </div>
     <div class="modal-foot">
-      ${aus.length?`<button class="btn ghost" onclick="Postausgang.senden({laut:true}).then(()=>{UI.closeModal();UI.postStatus()})">Jetzt senden</button>`:''}
-      <button class="btn" onclick="Postfach.abholen({laut:true}).then(()=>UI.closeModal())">Posteingang prüfen</button>
+      ${aus.length?`<button class="btn ghost" onclick="Postausgang.senden({laut:true}).then(()=>{UI.closeModal();UI.postStatus()})">${IC.senden} Jetzt senden</button>`:''}
+      <button class="btn" onclick="Postfach.abholen({laut:true}).then(()=>UI.closeModal())">${IC.refresh} Posteingang prüfen</button>
     </div>`);
   },
   /* Der Anlass, aus dem eine Kundin überhaupt misst. Ohne ihn wartet die
@@ -6747,7 +6841,7 @@ const UI={
     </div>
     <div class="modal-foot">
       <button class="btn ghost" onclick="UI.closeModal()">Schließen</button>
-      <button class="btn primary" onclick="UI.anfordernErzeugen()">Link erzeugen</button>
+      <button class="btn primary" onclick="UI.anfordernErzeugen()">${IC.kette} Link erzeugen</button>
     </div>`);
   },
   async anfordernErzeugen(){
@@ -6757,8 +6851,8 @@ const UI={
     const z=$('#anfErgebnis'); if(!z) return;
     z.innerHTML=`<div style="background:var(--bg-deep);border:1px solid var(--border-subtle);border-radius:var(--r-s);padding:11px;font-size:11.5px;word-break:break-all;color:var(--text-secondary)">${esc(link)}</div>
       <div style="display:flex;gap:8px;margin-top:10px">
-        <button class="btn primary" id="anfTeilen">An die Besitzerin schicken</button>
-        <button class="btn ghost" id="anfKopieren">Kopieren</button>
+        <button class="btn primary" id="anfTeilen">${IC.senden} An die Besitzerin schicken</button>
+        <button class="btn ghost" id="anfKopieren">${IC.kette} Kopieren</button>
       </div>`;
     const text='Bitte messen Sie einmal in Ruhe — der Link führt Sie durch:';
     $('#anfTeilen').onclick=async()=>{
@@ -6778,62 +6872,230 @@ const UI={
        offline im Stall genauso wie in der Praxis. */
     let qr='';
     try{ qr=QR.svg(link,{hell:'#ffffff',dunkel:'#000000'}); }catch(e){ qr=''; }
-    this.modal(`<div class="modal-head"><button class="closex" onclick="UI.closeModal()">${IC.x}</button><h3>Dauer-Einladung</h3></div>
+    this.modal(`<div class="modal-head"><button class="closex" onclick="UI.closeModal()">${IC.x}</button><h3>Stall-Aushang</h3></div>
     <div class="modal-body">
-      <p style="font-size:13px;color:var(--text-secondary);margin-bottom:14px">
-        Ein Link für alle Kundinnen — er läuft nicht ab. Messungen daraus landen
-        direkt in Ihrer Praxis. Als Aushang im Stall erreicht er alle auf einmal.</p>
-      ${qr?`<div style="background:#fff;border-radius:12px;padding:16px;max-width:260px;margin:0 auto 14px">${qr}</div>`:''}
-      <div style="background:var(--bg-deep);border:1px solid var(--border-subtle);border-radius:var(--r-s);padding:11px;font-size:11.5px;word-break:break-all;color:var(--text-secondary)">${esc(link)}</div>
+      ${(()=>{
+        /* Wer aus einer Vorschau heraus druckt, verteilt Altpapier — und
+           merkt es erst, wenn eine Kundin vor einer toten Seite steht.
+           Deshalb hier und nicht im Nachhinein. */
+        const k=window.CARLON_KANON||'';
+        const hier=location.href.replace(/[^/]*(\?.*)?$/,'');
+        if(!k || hier===k) return '';
+        return `<div class="kanon-warn">${IC.warn||''}<div>
+          <b>Dieser Aushang zeigt auf die Live-Adresse, nicht auf diese Vorschau.</b>
+          Zum Ausprobieren in Ordnung. Aufhängen erst, wenn die Station unter
+          <code>${esc(k)}</code> erreichbar ist — sonst führt der Code ins Leere.</div></div>`;})()}
+      <div class="ein-raster">
+        <div class="ein-links">
+          <div class="blatt-rahmen">
+            <iframe class="blatt" title="Vorschau des Aushangs" sandbox=""></iframe>
+          </div>
+          <div class="blatt-bu">So kommt es aus dem Drucker · A4</div>
+        </div>
+        <div class="ein-rechts">
+          <h4>Ein Aushang.<br>Der ganze Stall.</h4>
+          <p>Ihre Kundinnen messen selbst — die Beurteilung bleibt bei Ihnen.
+             Der Link läuft nicht ab, ein Blatt genügt für alle.</p>
+          ${(()=>{
+            /* NUTZEN NACH KANO, nicht nach Preis — ein Preis ist gar keine
+               Nutzenkomponente.
+               Reihenfolge ist die Botschaft:
+               1 BEGEISTERUNG — was er ohne uns NICHT kann. Ueberproportionale
+                 Wirkung, weil unerwartet. Gehoert nach vorn.
+               2 LEISTUNG — je mehr, desto besser, linear: gesparte Fahrten.
+               3 BASIS — erwartet, faellt nur auf, wenn es FEHLT. Muss da sein,
+                 darf aber nicht die Buehne nehmen: eine Zeile, leise.
+               Das Geld steht ganz unten und klein. Wer mit dem Preis
+               argumentiert, hat die Nutzenkomponenten nicht. */
+            const satz=Number(State.settings.tariff||State.settings.tariffRemote||0)||0;
+            const abo=Number(License.PREIS&&License.PREIS.soloMonat||79);
+            const n=satz?Math.max(1,Math.ceil(abo/satz)):0;
+            return `<div class="ein-nutzen">
+              <div class="zeile"><span class="pkt"></span><div><b>Zwischen den Terminen</b>
+                Sie sehen Ihre Patienten auch dann, wenn Sie nicht da sind.</div></div>
+              <div class="zeile"><span class="pkt"></span><div><b>Ohne Anfahrt</b>
+                Jede Beurteilung, die keine Fahrt braucht, ist ein halber Vormittag.</div></div>
+              <div class="zeile"><span class="pkt"></span><div><b>Ohne Konto, ohne Umweg</b>
+                Verschlüsselt zu Ihnen — Ihre Kundin muss sich nirgends anmelden.</div></div>
+            </div>
+            ${satz?`<div class="ein-fuss">${n===1?'Eine Ferneinschätzung im Monat trägt es':n+' Ferneinschätzungen im Monat tragen es'}, jede weitere rechnet sich — bei Ihrem Satz von ${euro(satz)}.</div>`
+                 :`<div class="ein-fuss">Hinterlegen Sie Ihren Honorarsatz in den Einstellungen, dann steht hier, ab wann es sich trägt.</div>`}`;})()}
+        </div>
+      </div>
+      <details class="link-roh"><summary>Link im Klartext</summary>
+        <div>${esc(link)}</div></details>
     </div>
     <div class="modal-foot">
       <button class="btn ghost" onclick="UI.closeModal()">Schließen</button>
-      ${qr?`<button class="btn ghost" onclick="UI.aushangDrucken()">Aushang drucken</button>`:''}
-      <button class="btn primary" onclick="navigator.clipboard.writeText('${link.replace(/'/g,"\\'")}').then(()=>Toast.show('Link kopiert','ok'))">Kopieren</button>
+      ${qr?`<button class="btn ghost" onclick="UI.aushangDrucken()">${IC.drucker} Aushang drucken</button>`:''}
+      <button class="btn primary" onclick="navigator.clipboard.writeText('${link.replace(/'/g,"\\'")}').then(()=>Toast.show('Link kopiert','ok'))">${IC.kette} Kopieren</button>
     </div>`);
     UI._einladung=link;
+    const m=$('.modal'); if(m) m.classList.add('aushang');
+    /* Erst jetzt befuellen — UI._einladung muss stehen, sonst zeigt die
+       Vorschau einen Aushang ohne Code. */
+    const rahmen=$('.blatt'); if(rahmen){ const h=this.aushangHTML(); if(h) rahmen.srcdoc=h; }
   },
 
   /* Ein fertiges Blatt fuer die Stalltuer. Bewusst eigenes Fenster mit
      eigenem, hellem Stil: das Cockpit ist dunkel, ein dunkler Ausdruck
      verbraucht Toner und scannt schlechter. */
+  /* Ein Blatt für die Stalltür — kein Browser-Ausdruck.
+     ═══════════════════════════════════════════════════════════════════
+     CO-BRANDING, und die Reihenfolge ist der Punkt: OBEN die Praxis. Sie
+     ist der Vertrauensträger — die Besitzerin scannt nicht, weil CARLON
+     sie darum bittet, sondern weil IHRE Tierärztin es tut. Wir stehen
+     unten als das, was wir sind: das Instrument.
+
+     DIE ANSPRACHE trägt beide Seiten. Vermeiden: dass etwas übersehen
+     wird, solange es klein ist. Erreichen: die Gewissheit, dass alles
+     stimmt. Beides ohne Krankheitsversprechen — der Herzrhythmus ist ein
+     Signal, beurteilt wird es von der Tierärztin.
+
+     @page margin 0 unterdrückt Kopf- und Fußzeile des Browsers
+     ("about:blank", Datum, "1/1"), die den alten Ausdruck billig
+     aussehen liessen. Der Rand kommt stattdessen aus dem Layout. */
+  /* EIN Blatt, ZWEI Verwendungen: Vorschau und Druck teilen sich diese
+     Vorlage. Vorher druckte der Tierarzt blind — er sah nie, was auf dem
+     Papier landet. Zwei getrennte Fassungen waeren ausserdem sofort
+     auseinandergelaufen. */
+  aushangHTML(){
+    let qr=''; try{ qr=QR.svg(UI._einladung||'',{hell:'#ffffff',dunkel:'#0A0A0C'}); }catch(e){ return null; }
+    const s=State.settings;
+    const praxis=esc(s.clinicName||'Ihre Tierarztpraxis');
+    const vet=esc(s.vetName||'');
+    const logo=s.logo||'';
+    const marke=new URL('assets/carlon-logo-soft-512.png', location.href).href;
+    return `<!doctype html><html lang="de"><head><meta charset="utf-8">
+      <title>${praxis} — Herzmessung</title>
+      <link rel="preconnect" href="https://fonts.googleapis.com">
+      <link href="https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+      <style>
+      @page{ size:A4; margin:0 }
+      *{box-sizing:border-box;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+      body{margin:0;font-family:Inter,-apple-system,system-ui,sans-serif;color:#14141A;background:#fff}
+      .blatt{width:210mm;min-height:297mm;padding:16mm 18mm 13mm;display:flex;flex-direction:column;position:relative;overflow:hidden}
+      /* Blume des Lebens, sehr leise — dieselbe Konstruktion wie in der App */
+      .flower{position:absolute;top:-38mm;right:-40mm;width:150mm;height:150mm;opacity:.07;z-index:0}
+      .inhalt{position:relative;z-index:1;display:flex;flex-direction:column;flex:1}
+
+      /* ── Kopf: die Praxis ── */
+      .praxis{display:flex;align-items:center;gap:6mm;padding-bottom:5mm;border-bottom:1.6pt solid #3ECFB2}
+      .praxis img{max-height:17mm;max-width:52mm;object-fit:contain}
+      .praxis .pn{font-family:Jost,sans-serif;font-size:17pt;font-weight:500;letter-spacing:.01em;line-height:1.15}
+      .praxis .pv{font-size:9.5pt;color:#5A5A66;margin-top:1mm}
+      .praxis .ang{margin-left:auto;text-align:right;font-size:7.5pt;letter-spacing:.16em;
+        text-transform:uppercase;color:#1E8C78;font-weight:600}
+
+      /* ── Ansprache ── */
+      h1{font-family:Jost,sans-serif;font-weight:500;font-size:33pt;line-height:1.08;
+        letter-spacing:-.015em;margin:13mm 0 5mm;max-width:150mm}
+      h1 em{font-style:normal;color:#1E8C78}
+      .sub{font-size:12.5pt;line-height:1.55;color:#3A3A46;max-width:142mm}
+      .paar{display:flex;gap:7mm;margin:8mm 0 0;max-width:158mm}
+      .paar div{flex:1;font-size:10pt;line-height:1.5;color:#4A4A57;padding-left:4mm;border-left:2pt solid #C9EFE6}
+      .paar b{display:block;font-weight:600;color:#14141A;margin-bottom:1mm}
+
+      /* ── QR ── */
+      .mitte{display:flex;align-items:center;gap:11mm;margin:11mm 0 0}
+      .qrbox{width:64mm;height:64mm;padding:4mm;border:1.4pt solid #E3E6EA;border-radius:5mm;flex:none;
+        box-shadow:0 2mm 7mm rgba(30,140,120,.10)}
+      .qrbox svg{width:100%;height:100%;display:block}
+      .cta{flex:1}
+      .cta .gross{font-family:Jost,sans-serif;font-size:19pt;font-weight:500;line-height:1.22;margin-bottom:2.5mm}
+.cta .klein{font-size:10.5pt;color:#4A4A57;line-height:1.5;margin-bottom:3.5mm}
+.schluss{margin:9mm 0 0;padding:5mm 6mm;border-left:2.5pt solid #3ECFB2;background:#F4F8F7;
+  border-radius:0 3mm 3mm 0;font-family:Jost,sans-serif;font-size:13pt;font-weight:400;
+  line-height:1.4;color:#14141A}
+.schluss b{font-weight:600}
+      .cta .zeit{display:inline-block;background:#3ECFB2;color:#08221D;font-weight:700;font-size:9pt;
+        letter-spacing:.05em;padding:1.6mm 3.4mm;border-radius:2.4mm;margin-bottom:4mm}
+      .schritte{margin-top:2mm}
+      .schritt{display:flex;gap:3.5mm;align-items:baseline;margin-bottom:2.6mm;font-size:10pt;color:#3A3A46}
+      .schritt i{font-style:normal;font-family:Jost,sans-serif;font-weight:600;color:#1E8C78;
+        font-size:11pt;min-width:5mm}
+      .schritt b{font-weight:600;color:#14141A}
+
+      /* ── Geräte ── */
+      .geraete{margin-top:6mm;padding:4mm 5mm;background:#F4F8F7;border-radius:3mm;font-size:9pt;
+        color:#4A4A57;line-height:1.5}
+      .geraete b{color:#14141A}
+
+      /* ── Fuß: wir ── */
+      .fuss{margin-top:auto;padding-top:6mm;border-top:1pt solid #E3E6EA;display:flex;align-items:center;gap:4mm}
+      .fuss img{width:12mm;height:12mm;object-fit:contain;opacity:.92}
+      .fuss .wm{font-family:Jost,sans-serif;font-size:11pt;font-weight:600;letter-spacing:.2em;line-height:1.2}
+      .fuss .cl{font-size:7pt;letter-spacing:.22em;color:#7A7A86;text-transform:uppercase;margin-top:.6mm}
+      .fuss .dis{margin-left:auto;text-align:right;font-size:7.5pt;color:#8A8A96;line-height:1.45;max-width:78mm}
+      </style></head><body><div class="blatt">
+      <svg class="flower" viewBox="0 0 200 200" fill="none" stroke="#3ECFB2" stroke-width=".7">
+        ${(()=>{const c=[[100,100]];const r=34;
+          for(let i=0;i<6;i++){const a=Math.PI/3*i;c.push([100+r*Math.cos(a),100+r*Math.sin(a)]);}
+          for(let i=0;i<6;i++){const a=Math.PI/3*i;c.push([100+2*r*Math.cos(a),100+2*r*Math.sin(a)]);}
+          for(let i=0;i<6;i++){const a=Math.PI/3*i+Math.PI/6;const d=r*Math.sqrt(3);
+            c.push([100+d*Math.cos(a),100+d*Math.sin(a)]);}
+          return c.map(([x,y])=>`<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="${r}"/>`).join('');})()}
+      </svg>
+      <div class="inhalt">
+
+        <div class="praxis">
+          ${logo?`<img src="${logo}" alt="">`:''}
+          <div><div class="pn">${praxis}</div>${vet?`<div class="pv">${vet}</div>`:''}</div>
+          <div class="ang">Ein Angebot<br>Ihrer Praxis</div>
+        </div>
+
+        <h1>Was Ihr Pferd Ihnen <em>nicht sagen kann</em></h1>
+        <div class="sub">Sein Herzrhythmus zeigt, wie gut es sich erholt. Fünf Minuten Ruhe genügen —
+          beurteilt wird die Messung von jemandem, der Ihr Pferd kennt.</div>
+
+        <div class="paar">
+          <div><b>Damit nichts klein bleibt und groß wird</b>Veränderungen fallen auf, solange sie noch klein sind.</div>
+          <div><b>Und damit Sie es schwarz auf weiß haben</b>Auch die Gewissheit, dass alles stimmt, ist etwas wert.</div>
+        </div>
+
+        <div class="mitte">
+          <div class="qrbox">${qr}</div>
+          <div class="cta">
+            <div class="gross">Fünf Minuten Ruhe —<br>und Ihre Tierärztin schaut mit.</div>
+            <div class="klein">Kamera auf den Code. Kein Konto, keine App, kein Termin.</div>
+            <span class="zeit">5 MINUTEN · OHNE ANMELDUNG</span>
+            <div class="schritte">
+              <div class="schritt"><i>1</i><span><b>Scannen</b> — die Messstation öffnet sich von selbst.</span></div>
+              <div class="schritt"><i>2</i><span><b>Gurt anlegen</b> — Polar H10 Equine, Ultraschallgel unter die Elektroden.</span></div>
+              <div class="schritt"><i>3</i><span><b>Ruhig stehen lassen</b> — die Station sagt, wann es reicht.</span></div>
+              <div class="schritt"><i>4</i><span><b>Senden</b> — verschlüsselt an ${praxis}.</span></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="schluss">Was dabei herauskommt, sagt Ihnen jemand,
+          der Ihr Pferd kennt — <b>${praxis}</b>.</div>
+
+        <div class="geraete">
+          <b>Womit es geht:</b> Android-Handy oder Computer mit Chrome oder Edge.
+          <b>Apple-Geräte</b> lassen Bluetooth im Browser nicht zu — dafür kommt CARLON EQUINE als App;
+          bis dahin schickt Ihnen die Seite den Link auf ein passendes Gerät.
+        </div>
+
+        <div class="fuss">
+          <img src="${marke}" alt="">
+          <div><div class="wm">CARLON EQUINE</div><div class="cl">Equine Heart Science</div></div>
+          <div class="dis">Die Messung ersetzt keine tierärztliche Untersuchung und stellt keine Diagnose.
+            Ihre Daten werden verschlüsselt übertragen und nur von Ihrer Praxis gelesen.</div>
+        </div>
+
+      </div></div></body></html>`;
+  },
+
   aushangDrucken(){
-    const link=UI._einladung; if(!link) return;
-    let qr=''; try{ qr=QR.svg(link); }catch(e){ Toast.show('QR konnte nicht erzeugt werden','warn'); return; }
-    const praxis=esc(State.settings.clinicName||'Ihre Tierarztpraxis');
-    const w=window.open('','_blank','width=820,height=1100');
+    const html=this.aushangHTML();
+    if(!html){ Toast.show('QR konnte nicht erzeugt werden','warn'); return; }
+    const w=window.open('','_blank','width=880,height=1180');
     if(!w){ Toast.show('Bitte Pop-ups für den Ausdruck erlauben','info'); return; }
-    w.document.write(`<!doctype html><html lang="de"><head><meta charset="utf-8">
-      <title>Herzmessung — Aushang</title><style>
-      @page{size:A4;margin:18mm}
-      *{box-sizing:border-box} body{margin:0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;
-        color:#111;text-align:center;padding:10mm 8mm}
-      h1{font-size:30pt;margin:0 0 6mm;letter-spacing:-.5pt;line-height:1.15}
-      .sub{font-size:13.5pt;color:#444;line-height:1.55;max-width:150mm;margin:0 auto 10mm}
-      .qr{width:88mm;height:88mm;margin:0 auto 8mm}
-      .qr svg{width:100%;height:100%;display:block}
-      .schritte{display:flex;gap:8mm;justify-content:center;margin:0 auto 10mm;max-width:160mm;text-align:left}
-      .schritt{flex:1} .schritt b{display:block;font-size:11pt;margin-bottom:1.5mm}
-      .schritt span{font-size:10pt;color:#555;line-height:1.5}
-      .praxis{font-size:12pt;color:#222;margin-bottom:2mm}
-      .marke{font-size:9.5pt;letter-spacing:2.4pt;color:#666;text-transform:uppercase}
-      .fuss{font-size:8.5pt;color:#888;margin-top:4mm;line-height:1.5}
-      </style></head><body>
-      <h1>Herzmessung für Ihr Pferd</h1>
-      <div class="sub">Mit dem Handy scannen und in Ruhe messen — direkt im Browser,
-        ohne App und ohne Anmeldung. Das Ergebnis geht verschlüsselt an Ihre Praxis.</div>
-      <div class="qr">${qr}</div>
-      <div class="schritte">
-        <div class="schritt"><b>1 · Scannen</b><span>Kamera auf den Code halten.</span></div>
-        <div class="schritt"><b>2 · Gurt anlegen</b><span>Polar H10 Equine mit Ultraschallgel unter den Elektroden.</span></div>
-        <div class="schritt"><b>3 · Ruhig stehen lassen</b><span>Die Station sagt, wann es reicht.</span></div>
-      </div>
-      <div class="praxis">${praxis}</div>
-      <div class="marke">CARLON EQUINE</div>
-      <div class="fuss">Die Messung ersetzt keine tierärztliche Untersuchung und stellt keine Diagnose.</div>
-      </body></html>`);
-    w.document.close();
-    setTimeout(()=>{ try{ w.focus(); w.print(); }catch(_){ } }, 350);
+    w.document.write(html); w.document.close();
+    /* Schriften und Bilder erst laden lassen — sonst druckt Chrome in der
+       Ersatzschrift und ohne Logo. */
+    setTimeout(()=>{ try{ w.focus(); w.print(); }catch(_){ } }, 1200);
   },
   licenseInfo(){
     const l=State.license||{tier:'demo'};const d=License.daysLeft();
@@ -6906,7 +7168,10 @@ const Praxis={
        bezahlt wird. Die einzelne Übergabe bleibt frei — sie ist die Probe. */
     if(!License.gate('ownerFeedback','Messungen direkt in Ihre Praxis empfangen')) return null;
     const ich=await this.ich();
-    const basis=location.href.replace(/[^/]*(\?.*)?$/,'');
+    /* KANONISCHE Adresse, nicht die aktuelle. Ein Aushang haengt Jahre in
+       der Stallgasse; zeigt er auf einen Tunnel oder localhost, ist er tot,
+       sobald das Fenster zu ist. Siehe live.js. */
+    const basis=(window.CARLON_KANON||location.href.replace(/[^/]*(\?.*)?$/,''));
     return basis+'messen.html?fach='+encodeURIComponent(ich.fach)+'&k='+encodeURIComponent(ich.boxPub);
   },
 

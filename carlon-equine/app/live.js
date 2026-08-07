@@ -29,3 +29,17 @@
    tote oder falsche Kasse schicken.                                        */
 
 window.CARLON_LIVE = false;
+
+/* KANONISCHE ADRESSE — die eine Stelle, unter der die Messstation dauerhaft
+   erreichbar ist.
+   ═══════════════════════════════════════════════════════════════════════
+   WARUM DAS HIER STEHT UND NICHT AUS location.href KOMMT:
+   Eine Einladung und ein QR-Aushang merken sich die Adresse, unter der sie
+   erzeugt wurden. Wird das Cockpit gerade lokal, ueber einen Tunnel oder
+   unter einer Vorschau-Adresse betrieben, zeigt das gedruckte Blatt genau
+   dorthin — und ist tot, sobald die Adresse verschwindet.
+   Ein Aushang in einer Stallgasse haengt Jahre. Er MUSS auf eine Adresse
+   zeigen, die es in Jahren noch gibt.
+   Beim Umzug (etwa auf carlon.app) wird hier EINE Zeile geaendert; alte
+   Blaetter bleiben nur gueltig, wenn die alte Adresse weiterleitet. */
+window.CARLON_KANON = 'https://vitalkultur.com/carlon-equine/app/';
