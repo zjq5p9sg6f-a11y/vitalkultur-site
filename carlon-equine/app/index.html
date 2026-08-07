@@ -7688,7 +7688,14 @@ const License={
      Equimetre Vet 130–184 €/Monat PRO GERÄT plus 1 200 € Startgebühr für
      dieselbe Aufgabe. Bei 79 € deckt weiterhin eine einzige vermiedene Fahrt
      (50–200 €) den Monat. */
-  PREIS:{ soloMonat:79, soloJahr:790, klinikMonat:149, forschungMonat:29 },
+  /* NUR was tatsaechlich verkauft wird. klinikMonat:149 und
+     forschungMonat:29 standen hier, wurden aber nirgends verwendet — tote
+     Preise, die jemand irgendwann verdrahtet und damit genau den Fehler
+     baut, vor dem der Hinweis bei FEATURES warnt: eine teurere Stufe fuer
+     ein identisches Produkt. Eine Zahl, die es im Code nicht gibt, kann
+     niemand versehentlich anbieten.
+     Die Klinik-Antwort bleibt bis zum Mehrbenutzer-Betrieb: N Solo-Plaetze. */
+  PREIS:{ soloMonat:79, soloJahr:790 },
   PRICES:{vet_solo:'79 €/Mo zzgl. MwSt.',vet_clinic:'149 €/Mo zzgl. MwSt.',research:'29 €/Mo zzgl. MwSt.'},
   /* ── ZAHLUNG (Stripe) ist von BERECHTIGUNG (eigene signierte Keys) ENTKOPPELT ──
      Bewusste Architektur-Entscheidung 2026-08-06: Lemon Squeezy wurde von Stripe
