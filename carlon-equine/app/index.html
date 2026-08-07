@@ -7178,9 +7178,22 @@ const Postfach={
     if(!ich){ Toast.show('Dieser Link lässt sich nicht öffnen','warn'); return false; }
     let dateien=[];
     try{
-      const l=await this._ruf('/postfach/'+ich.fach+'?was=liste', await Krypto.abholNachweis(ich));
-      if(!l.ok||!(l.sendungen||[]).length){
-        Toast.show('Diese Messung ist nicht mehr abrufbar — Übergaben verfallen nach 30 Tagen','warn');
+      /* KV-LISTEN SIND VERZOEGERT KONSISTENT. Eine gerade eingeworfene Sendung
+         taucht nicht zwingend sofort in der Liste auf — gemessen am laufenden
+         Dienst bis zu rund 30 Sekunden Versatz.
+         Genau der haeufigste Fall trifft das: Besitzerin und Tieraerztin
+         stehen nebeneinander im Stall, der Link wird in Sekunden uebergeben.
+         Ohne Wiederholung stuende dann 'nicht mehr abrufbar' — falsch und
+         gerade im ersten Eindruck verheerend. */
+      let l=null;
+      for(const warten of [0,2000,4000,8000]){
+        if(warten) await new Promise(r=>setTimeout(r,warten));
+        l=await this._ruf('/postfach/'+ich.fach+'?was=liste', await Krypto.abholNachweis(ich));
+        if(l.ok && (l.sendungen||[]).length) break;
+        if(l.ok) Toast.show('Messung wird geladen…','info');
+      }
+      if(!l||!l.ok||!(l.sendungen||[]).length){
+        Toast.show('Diese Messung ist gerade nicht abrufbar — nochmal öffnen, oder sie ist nach 30 Tagen verfallen','warn');
         return false;
       }
       for(const kopf of l.sendungen){
