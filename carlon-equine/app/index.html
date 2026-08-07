@@ -2436,6 +2436,9 @@ const Importer = {
     </div>`;
     $('#impFoot').innerHTML=`<button class="btn ghost" onclick="Importer.renderDrop()">Weitere importieren</button><button class="btn primary" onclick="UI.closeModal()">Fertig</button>`;
     Toast.show(`${added} Aufnahme${added!==1?'n':''} importiert`,'ok');
+    /* Jetzt — und erst jetzt — darf die Zwischenablage des Posteingangs weg.
+       Bis hierher existierte immer mindestens eine Kopie. */
+    if(added>0 && typeof Postfach!=='undefined') Postfach.importBestaetigt();
   },
   async ingest(n){
     // Echter Import (kein Seed) → Demo-Flag löschen, damit echte Daten wieder die Backup-Erinnerung bekommen
@@ -5269,9 +5272,9 @@ const Views={
     const recs=State.recsFor(hid); const rec=recs[recs.length-1];
     const txt=$('#ownerTxt')?$('#ownerTxt').value:'';
     if(!rec||!txt) return;
-    Toast.show('Verschlüssele und sende…','info');
+    if(!rec.rueckadresse){ Toast.show('Diese Aufnahme kam über den alten Weg — bitte kopieren','warn'); return; }
     const s=State.settings;
-    const r=await Postfach.befundSenden(rec.rueckadresse, {
+    const r=await Postfach.befundEinreihen(rec.rueckadresse, {
       v:1, art:'befund',
       pferd:h.name,
       praxis:s.clinicName||'', tierarzt:s.vetName||'',
@@ -5281,8 +5284,15 @@ const Views={
       text:txt,
       kennwerte:{rmssd:rec.metrics.rmssd, meanHR:rec.metrics.meanHR, sdnn:rec.metrics.sdnn},
     });
-    if(r.ok){ UI.closeModal(); Toast.show(`Befund an ${h.owner||'den Halter'} zugestellt — verschlüsselt`,'ok'); }
-    else Toast.show('Zustellung fehlgeschlagen: '+r.grund,'warn');
+    if(!r.ok){ Toast.show('Verschlüsselung fehlgeschlagen: '+r.grund,'warn'); return; }
+    UI.closeModal();
+    /* Ehrlich unterscheiden: draussen ist etwas anderes als eingereiht. Wer
+       "zugestellt" liest, obwohl es noch im Ausgang liegt, verliert das
+       Vertrauen genau einmal. */
+    Toast.show(r.sofort
+      ? `Befund an ${h.owner||'den Halter'} zugestellt — verschlüsselt`
+      : `Befund verschlüsselt im Postausgang — geht raus, sobald du Netz hast`,
+      r.sofort?'ok':'info');
   },
   mailOwner(hid){const h=State.horses.find(x=>x.id===hid);const body=encodeURIComponent($('#ownerTxt').value);
     const subj=encodeURIComponent(`HRV-Befund ${h.name} · ${State.settings.clinicName||'CARLON EQUINE'}`);
@@ -6639,6 +6649,80 @@ const Praxis={
   },
 };
 
+/* ════════════════════════════════════════════════════════════════════════
+   POSTAUSGANG
+   ════════════════════════════════════════════════════════════════════════
+   Was der Tierarzt im Stall schreibt, darf nicht an einer Fehlermeldung
+   haengenbleiben. Ohne Warteschlange hiesse "kein Netz" = "Befund weg", und
+   zwar genau dort, wo am wenigsten Netz ist und am meisten gearbeitet wird.
+
+   Alles, was hinaus soll, wird ERST eingereiht und DANN versucht. Klappt es
+   sofort, merkt niemand etwas. Klappt es nicht, liegt es bereit und geht beim
+   naechsten Netzkontakt von selbst raus — beim Start, bei Tab-Fokus, bei
+   'online'. Der Tierarzt muss nichts wiederholen und nichts im Kopf behalten.
+
+   Der Inhalt liegt hier BEREITS VERSCHLUESSELT: verschluesselt wird beim
+   Einreihen, nicht beim Senden. Selbst wenn das Geraet in fremde Haende
+   geraet, steht im Ausgang kein Klartext. */
+const Postausgang={
+  async _alle(){ return (State.settings.postausgang||[]); },
+  async _setzen(l){ State.settings.postausgang=l; await State.saveSettings(); },
+  anzahl(){ return (State.settings.postausgang||[]).length; },
+  haengende(){ return (State.settings.postausgang||[]).filter(e=>e.haengt).length; },
+  /* Bewusstes Verwerfen — nur auf ausdrueckliche Ansage eines Menschen. */
+  async verwerfen(id){
+    await this._setzen((await this._alle()).filter(e=>e.id!==id));
+  },
+
+  async einreihen(eintrag){
+    const l=await this._alle();
+    l.push({...eintrag, id:(crypto.randomUUID?crypto.randomUUID():String(Date.now())),
+            erstellt:new Date().toISOString(), versuche:0});
+    await this._setzen(l);
+    return l.length;
+  },
+
+  _laeuft:false,
+  async senden({laut=false}={}){
+    if(this._laeuft) return {raus:0,offen:this.anzahl()};
+    const l=await this._alle();
+    if(!l.length) return {raus:0,offen:0};
+    if(!navigator.onLine){
+      if(laut) Toast.show(`${l.length} Sendung${l.length!==1?'en':''} wartet auf Netz`,'info');
+      return {raus:0,offen:l.length};
+    }
+    this._laeuft=true;
+    let raus=0;
+    try{
+      const bleibt=[];
+      for(const e of l){
+        try{
+          const d=await Postfach._ruf('/postfach/'+e.fach, {art:e.art, umschlag:e.umschlag});
+          if(d.ok){ raus++; continue; }
+          /* NICHTS WEGWERFEN. Meine erste Fassung gab nach zehn Versuchen auf
+             und loeschte den Eintrag — genau das ist "aus Versehen verloren".
+             Ein Befund, den der Tierarzt geschrieben hat, verschwindet nicht,
+             weil ein Dienst eine Woche gestoert war.
+             Stattdessen: haengende Sendungen bleiben liegen, werden als
+             haengend markiert und sichtbar gemacht. Aufgeben darf nur ein
+             Mensch, der weiss, was er aufgibt. */
+          e.versuche=(e.versuche||0)+1;
+          e.haengt=e.versuche>=5; e.letzterGrund=d.grund||'unbekannt';
+          bleibt.push(e);
+        }catch(err){
+          e.versuche=(e.versuche||0)+1;
+          e.haengt=e.versuche>=5; e.letzterGrund=err.message||'Netzfehler';
+          bleibt.push(e);
+        }
+      }
+      await this._setzen(bleibt);
+      if(raus&&laut) Toast.show(`${raus} Sendung${raus!==1?'en':''} zugestellt`,'ok');
+      if(raus) Nav.render&&Nav.render();
+      return {raus, offen:bleibt.length};
+    } finally { this._laeuft=false; }
+  },
+};
+
 const Postfach={
   DIENST:'https://postfach.vitalkultur.com',
   _laeuft:false, _letzter:0,
@@ -6653,21 +6737,37 @@ const Postfach={
      Chiffrat und erfaehrt nicht, dass die beiden Faecher zusammengehoeren.
      Erst damit wird aus einer Einbahnstrasse ein Kreis: der Besitzer erlebt
      ein Ergebnis, und nur wer etwas erlebt hat, erzaehlt davon weiter. */
-  async befundSenden(rueckadresse, befund){
+  /* Verschluesseln und EINREIHEN. Der Versuch folgt sofort, aber der Befund
+     ist ab hier sicher — er kann nicht mehr verloren gehen, auch wenn das
+     Netz fehlt, der Browser abstuerzt oder der Wagen weiterfaehrt. */
+  async befundEinreihen(rueckadresse, befund){
     if(!rueckadresse||!rueckadresse.fach||!rueckadresse.boxPub)
-      return {ok:false,grund:'Keine Rückadresse — diese Aufnahme kam über den alten Weg'};
+      return {ok:false,grund:'Keine Rückadresse'};
+    let umschlag;
     try{
-      const umschlag=await Krypto.versiegeln(rueckadresse.boxPub,
+      umschlag=await Krypto.versiegeln(rueckadresse.boxPub,
         JSON.stringify(befund), rueckadresse.fach);
-      const d=await this._ruf('/postfach/'+rueckadresse.fach, {art:'befund',umschlag});
-      return d.ok?{ok:true}:{ok:false,grund:d.grund||'Zustellung fehlgeschlagen'};
     }catch(e){ return {ok:false,grund:e.message||'Verschlüsselung fehlgeschlagen'}; }
+    await Postausgang.einreihen({art:'befund', fach:rueckadresse.fach, umschlag});
+    const r=await Postausgang.senden();
+    return {ok:true, sofort:r.raus>0};
   },
   /* Holt alles ab, was da ist, entschluesselt lokal und uebergibt es dem
      bestehenden Import. Danach wird die Sendung im Zwischenspeicher geloescht
      — er soll nichts behalten, was er nicht mehr braucht.
      Still: wer die App oeffnet, will arbeiten, nicht verwalten. Gemeldet wird
      nur, wenn tatsaechlich etwas angekommen ist. */
+  _offen:[],
+  /* Wird vom Import gerufen, wenn er wirklich gespeichert hat. Erst dann
+     verschwindet die lokale Zwischenablage. */
+  async importBestaetigt(){
+    const e=(State.settings.eingang||[]).map(x=>
+      this._offen.includes(x.id)?{...x,importiert:true,inhalt:null}:x);
+    State.settings.eingang=e.filter(x=>!x.importiert||x.unlesbar);
+    this._offen=[]; await State.saveSettings();
+  },
+  offene(){ return (State.settings.eingang||[]).filter(x=>x.inhalt&&!x.importiert).length; },
+  unlesbare(){ return (State.settings.eingang||[]).filter(x=>x.unlesbar).length; },
   async abholen({laut=false}={}){
     if(this._laeuft) return {neu:0};
     if(!navigator.onLine){ if(laut) Toast.show('Kein Netz — der Posteingang wird beim nächsten Mal geholt','info'); return {neu:0}; }
@@ -6677,28 +6777,49 @@ const Postfach={
       const ich=await Praxis.ich();
       let d=await this._ruf('/postfach/'+ich.fach+'?was=liste', await Krypto.abholNachweis(ich));
       if(!d.ok){ if(laut) Toast.show('Posteingang gerade nicht erreichbar','warn'); return {neu:0}; }
-      const dateien=[];
+      /* REIHENFOLGE IST HIER ALLES. Meine erste Fassung loeschte die Sendung
+         im Fach, BEVOR der Import geglueckt war — brach der ab oder schlug
+         fehl, war die Aufnahme unwiederbringlich weg. Es gab dann keine
+         einzige Kopie mehr.
+         Jetzt: entschluesseln → LOKAL ABLEGEN → erst dann fern loeschen. Die
+         lokale Ablage verschwindet erst, wenn der Import bestaetigt hat. Zu
+         jedem Zeitpunkt existiert mindestens eine Kopie. */
+      const eingang=State.settings.eingang||[];
+      let neu=0;
       for(const kopf of (d.sendungen||[])){
+        if(eingang.some(x=>x.id===kopf.id)) continue;          // schon geholt
         const e=await this._ruf('/postfach/'+ich.fach+'/'+kopf.id, await Krypto.abholNachweis(ich));
         if(!e.ok) continue;
         let klar;
         try{ klar=await Krypto.oeffnen(ich.box.privateKey, e.umschlag, ich.fach); }
         catch(err){
-          /* Nicht zu entschluesseln heisst: nicht fuer uns oder Unsinn. Weg
-             damit, sonst verstopft es das Fach dauerhaft. */
-          await this._ruf('/postfach/'+ich.fach+'/'+kopf.id+'?was=weg', await Krypto.abholNachweis(ich));
+          /* NICHT loeschen. Nicht entschluesselbar kann auch ein Fehler
+             unsererseits sein — dann waere Loeschen der Verlust einer echten
+             Aufnahme. Wir merken es uns und lassen sie liegen; der
+             Zwischenspeicher raeumt nach Ablauf selbst auf. */
+          if(!eingang.some(x=>x.id===kopf.id))
+            eingang.push({id:kopf.id, unlesbar:true, eingegangen:kopf.eingegangen});
           continue;
         }
-        dateien.push(new File([klar], 'aufnahme-'+(kopf.eingegangen||'').slice(0,10)+'.json',
-          {type:'application/json'}));
-        await this._ruf('/postfach/'+ich.fach+'/'+kopf.id+'?was=weg', await Krypto.abholNachweis(ich));
+        eingang.push({id:kopf.id, inhalt:klar, eingegangen:kopf.eingegangen, importiert:false});
+        State.settings.eingang=eingang; await State.saveSettings();   // erst sichern …
+        await this._ruf('/postfach/'+ich.fach+'/'+kopf.id+'?was=weg', await Krypto.abholNachweis(ich));  // … dann fern loeschen
+        neu++;
       }
-      if(dateien.length){
-        Toast.show(`${dateien.length} neue Aufnahme${dateien.length!==1?'n':''} eingegangen`,'ok');
+      State.settings.eingang=eingang; await State.saveSettings();
+      const offen=eingang.filter(x=>x.inhalt&&!x.importiert);
+      if(offen.length){
+        Toast.show(`${offen.length} Aufnahme${offen.length!==1?'n':''} eingegangen`,'ok');
+        const dateien=offen.map(x=>new File([x.inhalt],
+          'aufnahme-'+String(x.eingegangen||'').slice(0,10)+'.json',{type:'application/json'}));
         UI.importModal&&UI.importModal();
         Importer.startScan(dateien);
+        /* Erst als importiert markieren, wenn der Import wirklich lief.
+           Bricht der Tierarzt ab, liegt die Aufnahme beim naechsten Oeffnen
+           wieder bereit statt verloren zu sein. */
+        Postfach._offen=offen.map(x=>x.id);
       } else if(laut){ Toast.show('Nichts Neues im Posteingang','info'); }
-      return {neu:dateien.length};
+      return {neu};
     }catch(e){ if(laut) Toast.show('Posteingang: '+(e.message||'Fehler'),'warn'); return {neu:0}; }
     finally{ this._laeuft=false; }
   },
@@ -7998,8 +8119,9 @@ addEventListener('beforeinstallprompt',e=>{e.preventDefault();PWA.deferred=e;});
        Reichweite liefe im Stillen ab.
        'online' ist der wichtigste: der Moment, in dem der Wagen aus dem
        Funkloch faehrt, ist genau der Moment, in dem nachgeholt werden soll. */
-    window.addEventListener('online', ()=>{ License.lizenzHolenWennFaellig(); Postfach.abholen(); });
-    Postfach.abholen();
+    window.addEventListener('online', ()=>{
+      License.lizenzHolenWennFaellig(); Postfach.abholen(); Postausgang.senden({laut:true}); });
+    Postfach.abholen(); Postausgang.senden();
     /* Zugabe fuer Chromium: der Browser darf die Erneuerung auch nachholen,
        wenn die App gar nicht offen ist. Safari kennt das nicht — dort bleibt
        es bei den Ausloesern oben, was die 14+14 Tage Reichweite ohnehin
@@ -8014,7 +8136,8 @@ addEventListener('beforeinstallprompt',e=>{e.preventDefault();PWA.deferred=e;});
       }
     }catch(e){}
     document.addEventListener('visibilitychange', ()=>{
-      if(document.visibilityState==='visible'){ License.lizenzHolenWennFaellig(); Postfach.abholen(); }
+      if(document.visibilityState==='visible'){
+        License.lizenzHolenWennFaellig(); Postfach.abholen(); Postausgang.senden(); }
     });
     if(State.settings.fieldMode){document.body.classList.add('field-mode');const b=$('#fieldBtn');if(b)b.classList.add('on');}
     Chart.initHover();
