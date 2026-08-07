@@ -6630,11 +6630,17 @@ const License={
         return{valid:false,reason:'Kein Ablaufdatum im Schlüssel'};
       if(!this.TIERS[p.tier]) return{valid:false,reason:'Unbekannte Stufe'};
       const expired=p.exp*1000<Date.now();
+      /* typ trennt AUSWEIS von ERLAUBNIS. Ein Abo-Token ("sub") weist nur nach,
+         dass ein Abo existiert — er schaltet NICHTS frei. Nur eine
+         Laufzeit-Lizenz ("lic", 14 Tage) gewaehrt Zugang. Alte Schluessel ohne
+         typ zaehlen als Lizenz, damit Bestandskunden nicht ausgesperrt werden. */
       return{valid:!expired,expired,tier:p.tier,lic:p.lic,exp:p.exp,founder:!!p.founder,
+             typ:p.typ||'lic', cus:p.cus||null,
              seats:(typeof p.seats==='number'&&p.seats>0)?p.seats:1};
     }catch(e){return{valid:false,reason:e.message||'Fehler'};}
   },
   tier(){return (State.license&&State.license.tier)||'demo';},
+  lic(){return (State.license&&State.license.lic)||'';},
   isPaid(){return this.tier()!=='demo';},
   maxHorses(){return this.isPaid()?Infinity:3;},
   PAID_ONLY:['pdf','csv','routeHandoff','coherence','ownerFeedback'],
@@ -6688,9 +6694,69 @@ const License={
     if(!key){Toast.show('Bitte Schlüssel eingeben','warn');return false;}
     return this._activateOffline(key);
   },
+  /* ── Erneuerung ────────────────────────────────────────────────────────
+     Der Abo-Token liegt dauerhaft lokal, die Laufzeit-Lizenz laeuft nach
+     14 Tagen ab. Sind weniger als 7 Tage uebrig und Netz da, holt die App im
+     Hintergrund eine neue — ohne Meldung, ohne Klick. Ohne Netz arbeitet sie
+     bis zum Ablauf weiter; zwei Wochen im Stall sind damit abgedeckt.
+     Kuendigt jemand, schlaegt die Erneuerung fehl und der Zugang endet von
+     selbst. Genau deshalb muss die Lizenz kurz sein: ein Rueckruf ist bei
+     offline geprueften Schluesseln unmoeglich. */
+  RENEW_URL:'https://lizenz.vitalkultur.com/erneuern',
+  RENEW_AB_TAGEN:7,
+  /* NICHT "renew" nennen: License.renew() gibt es bereits (oeffnet das
+     Kaufmodal). In einem Objektliteral gewinnt die spaetere Eigenschaft — die
+     erste Fassung dieser Methode wurde davon lautlos ueberschrieben und gab
+     undefined zurueck, was erst der Aktivierungs-Test zeigte. */
+  async lizenzHolen(grund){
+    const s=State.settings.license||{};
+    if(!s.sub) return {ok:false,grund:'kein Abo-Token'};
+    try{
+      const r=await fetch(this.RENEW_URL,{method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({token:s.sub})});
+      const d=await r.json().catch(()=>({}));
+      if(!d.ok){
+        // 402 = gekuendigt. 503 = Dienst gerade nicht erreichbar, KEIN Grund
+        // zum Aussperren — die vorhandene Lizenz laeuft ja noch.
+        console.warn('[CARLON] Erneuerung abgelehnt:', r.status, d.grund);
+        return {ok:false,grund:d.grund||('HTTP '+r.status),endgueltig:r.status===402};
+      }
+      const v=await this.verify(d.lizenz);
+      if(!v.valid||v.typ!=='lic') return {ok:false,grund:'Antwort nicht verwertbar'};
+      s.key=d.lizenz; State.settings.license=s; await State.saveSettings();
+      await this.loadFromSettings(); Nav.render();
+      return {ok:true,bis:v.exp};
+    }catch(e){ return {ok:false,grund:e.message||'Netzfehler'}; }
+  },
+  /* Beim Start und bei Sichtbarkeit pruefen — still, ohne die Arbeit zu stoeren. */
+  async lizenzHolenWennFaellig(){
+    const s=State.settings.license||{};
+    if(!s.sub||!s.key) return;
+    const v=await this.verify(s.key);
+    const restTage=v.exp?((v.exp*1000-Date.now())/86400000):-1;
+    if(restTage>this.RENEW_AB_TAGEN) return;
+    if(!navigator.onLine) return;
+    await this.lizenzHolen('faellig');
+  },
   async _activateOffline(key){
     const r=await this.verify(key);
     if(!r.valid){Toast.show(r.expired?'Lizenz abgelaufen — bitte verlängern':('Lizenz ungültig'+(r.reason?' ('+r.reason+')':'')),'warn');return false;}
+    /* Abo-Token: merken und SOFORT eine Laufzeit-Lizenz holen. Der Token
+       selbst schaltet nichts frei. */
+    if(r.typ==='sub'){
+      State.settings.license={...(State.settings.license||{}),sub:key,provider:'offline'};
+      await State.saveSettings();
+      const e=await this.lizenzHolen('aktivierung');
+      if(!e.ok){
+        Toast.show(e.endgueltig?'Zu diesem Abo-Token läuft kein Abo'
+                               :'Freischaltung braucht einmal Internet — bitte kurz verbinden','warn');
+        return false;
+      }
+      UI.closeModal();
+      Toast.show(`Freigeschaltet: ${this.TIERS[this.tier()].name} · ${this.lic()||''}`,'ok');
+      return true;
+    }
     State.license={provider:'offline',tier:r.tier,lic:r.lic,exp:r.exp,key,founder:r.founder,seats:r.seats};
     State.settings.license=State.license;await State.saveSettings();
     UI.closeModal();Toast.show(`Freigeschaltet: ${this.TIERS[r.tier].name} · ${r.lic}`,'ok');Nav.render();return true;
@@ -6704,7 +6770,7 @@ const License={
     State.license=l;                          // sofort anwenden (Grace-Period, funktioniert offline)
     const r=await this.verify(l.key);
     if(r.valid){
-      State.license={provider:'offline',tier:r.tier,lic:r.lic,exp:r.exp,key:l.key,founder:r.founder,seats:r.seats};
+      State.license={provider:'offline',tier:r.tier,lic:r.lic,exp:r.exp,key:l.key,founder:r.founder,seats:r.seats,hatAbo:!!l.sub};
       // Alt-Lizenzen (abgeloester Lemon-Squeezy-/Trial-Pfad) einmalig auf 'offline' normalisieren
       if(l.provider!=='offline'){State.settings.license=State.license;await State.saveSettings();}
     } else {
