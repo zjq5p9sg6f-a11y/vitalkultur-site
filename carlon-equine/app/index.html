@@ -6536,8 +6536,8 @@ const License={
      Umstellung auf Live: nur diese beiden Links gegen die Live-Links tauschen. */
   CHECKOUT:{
     // Stripe Payment Links (Managed Payments aktiv, kein Gratis-Trial, Unternehmensname Pflicht)
-    year :'https://buy.stripe.com/test_4gMbJ1eopaGmbdmfjQ1RC02',
-    month:'https://buy.stripe.com/test_dRmdR99455m25T20oW1RC01',
+    year :'https://buy.stripe.com/test_cNi6oH5RT4hY81ac7E1RC04',
+    month:'https://buy.stripe.com/test_14A7sL5RTg0GftCgnU1RC03',
   },
   /* WOFUER DIE LINKS BEI STRIPE ANGELEGT SIND.
      Der Betrag steckt im Payment Link bei Stripe, nicht in diesem Code. Wer
@@ -6546,9 +6546,13 @@ const License={
      der Buchhaltung. Deshalb stehen die Betraege, fuer die die Links
      tatsaechlich gelten, hier daneben, und checkoutLink() gibt den Link nicht
      heraus, solange beides auseinanderlaeuft.
-     ZUM UMSTELLEN: bei Stripe neue Payment Links ueber 79 € bzw. 790 €
-     anlegen, hier eintragen UND diese Betraege mitziehen. */
-  CHECKOUT_BETRAG:{ month:49, year:490 },
+     Am 07.08.2026 in der Sandbox auf 79/790 umgestellt: neue PREISE am
+     bestehenden Produkt angelegt (die alten 49/490 blieben unangetastet —
+     Stripe-Preise sind ohnehin unveraenderlich), dann neue Links darauf.
+     NOCH OFFEN: dieselben zwei Links im LIVE-Konto. Diese hier tragen
+     test_ im Pfad und werden von checkoutLink() ausserhalb von Beta und
+     localhost zusaetzlich gesperrt. */
+  CHECKOUT_BETRAG:{ month:79, year:790 },
   /* Die Zahlungs-Links zeigen noch auf Stripes Testumgebung. Wird die
      Beta-Sperre geloest, ohne sie zu tauschen, laeuft der Kunde durch eine
      Kasse, die kein Geld einzieht — und wir merken es an nichts ausser einer
