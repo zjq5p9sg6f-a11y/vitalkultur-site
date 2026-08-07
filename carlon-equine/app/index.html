@@ -2441,7 +2441,12 @@ const Importer = {
       }catch(e){}
       done++;const pb=$('#impPb');if(pb)pb.style.width=Math.round(done/todo.length*100)+'%';
     }
-    await State.load();Nav.refresh();
+    await State.load();
+    /* Was eingetroffen ist, ist beantwortet — die offene Bitte verschwindet
+       von selbst. Eine Anforderung, die nach der Antwort stehen bleibt,
+       erzieht dazu, die Anzeige zu ignorieren. */
+    if(added>0 && typeof Praxis!=='undefined') await Praxis.anfrageErledigen(horsesTouched);
+    Nav.refresh();
     Persist.request();  // nach echtem Import: guter Moment, dauerhaften Speicher anzufordern
     this.renderDone(added,horsesTouched);
   },
@@ -6643,6 +6648,8 @@ const UI={
     if(haengt)   return {art:'stockt', text:`${haengt} Befund${haengt!==1?'e':''} kommt nicht raus`};
     if(offen)    return {art:'neu',    text:`${offen} Aufnahme${offen!==1?'n':''} neu`};
     if(ausgang)  return {art:'wartet', text:`${ausgang} wartet auf Netz`};
+    const anf=(typeof Praxis!=='undefined')?Praxis.offeneAnfragen().length:0;
+    if(anf)      return {art:'wartet', text:`${anf} Messung${anf!==1?'en':''} angefordert`};
     return null;
   },
   postStatus(){
@@ -6672,6 +6679,20 @@ const UI={
         <span>${esc(wann(e.erstellt))} · ${e.haengt?`${e.versuche} Versuche ohne Erfolg — bleibt gespeichert`:'geht raus, sobald Netz da ist'}</span></div></div>`).join('')
         :'<div style="font-size:13px;color:var(--text-dim);padding:8px 0">Alles zugestellt.</div>'}
 
+      <h4 style="font-size:12px;letter-spacing:.4px;text-transform:uppercase;color:var(--text-dim);margin:18px 0 6px">Messungen empfangen</h4>
+      ${(()=>{const offen=(typeof Praxis!=='undefined')?Praxis.offeneAnfragen():[];
+        return (offen.length?offen.map(x=>{const h=State.horses.find(y=>y.id===x.pferdId);
+          const tage=Math.floor((Date.now()-new Date(x.erstellt))/86400000);
+          return `<div class="post-zeile"><span style="width:7px;height:7px;border-radius:50%;margin-top:6px;background:var(--amber)"></span>
+            <div class="wer"><b>Angefordert${h?' · '+esc(h.name):''}</b>
+            <span>${tage<=0?'heute':tage===1?'gestern':'vor '+tage+' Tagen'} gebeten · noch nicht eingegangen</span></div>
+            <button class="btn sm ghost" onclick="Praxis.anfrageAbbrechen('${x.id}')">Erledigt</button></div>`;}).join('')
+        :'<div style="font-size:13px;color:var(--text-dim);padding:8px 0">Keine offene Anforderung.</div>')})()}
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:12px">
+        <button class="btn ghost" onclick="UI.messungAnfordern()">Messung anfordern</button>
+        <button class="btn ghost" onclick="UI.dauerEinladung()">Dauer-Einladung für alle</button>
+      </div>
+
       <div style="font-size:11.5px;color:var(--text-dim);margin-top:16px;line-height:1.5">
         Alles hier ist Ende-zu-Ende verschlüsselt — auch auf diesem Gerät.
         Nichts wird verworfen, solange es nicht zugestellt oder importiert ist.
@@ -6680,6 +6701,61 @@ const UI={
     <div class="modal-foot">
       ${aus.length?`<button class="btn ghost" onclick="Postausgang.senden({laut:true}).then(()=>{UI.closeModal();UI.postStatus()})">Jetzt senden</button>`:''}
       <button class="btn" onclick="Postfach.abholen({laut:true}).then(()=>UI.closeModal())">Posteingang prüfen</button>
+    </div>`);
+  },
+  /* Der Anlass, aus dem eine Kundin überhaupt misst. Ohne ihn wartet die
+     Praxis darauf, dass jemand von selbst auf die Idee kommt. */
+  messungAnfordern(){
+    const hs=State.horses.slice().sort((a,b)=>String(a.name).localeCompare(String(b.name)));
+    if(!hs.length){ Toast.show('Noch kein Pferd angelegt','info'); return; }
+    this.modal(`<div class="modal-head"><button class="closex" onclick="UI.closeModal()">${IC.x}</button><h3>Messung anfordern</h3></div>
+    <div class="modal-body">
+      <p style="font-size:13px;color:var(--text-secondary);margin-bottom:12px">
+        Die Besitzerin bekommt einen Link, in dem Pferd und Akte schon hinterlegt sind.
+        Sie muss nichts eintippen — und die Messung landet auf der richtigen Akte,
+        egal von welchem Gerät sie misst.</p>
+      <select id="anfPferd" style="width:100%;background:var(--bg-deep);border:1px solid var(--border-subtle);border-radius:var(--r-s);color:var(--text-primary);padding:12px;font-size:14px">
+        ${hs.map(h=>`<option value="${esc(h.id)}">${esc(h.name)}${h.owner?' · '+esc(h.owner):''}</option>`).join('')}
+      </select>
+      <div id="anfErgebnis" style="margin-top:14px"></div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn ghost" onclick="UI.closeModal()">Schließen</button>
+      <button class="btn primary" onclick="UI.anfordernErzeugen()">Link erzeugen</button>
+    </div>`);
+  },
+  async anfordernErzeugen(){
+    const hid=$('#anfPferd')&&$('#anfPferd').value; if(!hid) return;
+    const link=await Praxis.anfordern(hid);
+    if(!link) return;                                   // Tor hat schon gesprochen
+    const z=$('#anfErgebnis'); if(!z) return;
+    z.innerHTML=`<div style="background:var(--bg-deep);border:1px solid var(--border-subtle);border-radius:var(--r-s);padding:11px;font-size:11.5px;word-break:break-all;color:var(--text-secondary)">${esc(link)}</div>
+      <div style="display:flex;gap:8px;margin-top:10px">
+        <button class="btn primary" id="anfTeilen">An die Besitzerin schicken</button>
+        <button class="btn ghost" id="anfKopieren">Kopieren</button>
+      </div>`;
+    const text='Bitte messen Sie einmal in Ruhe — der Link führt Sie durch:';
+    $('#anfTeilen').onclick=async()=>{
+      if(navigator.share){ try{ await navigator.share({title:'Messung',text,url:link}); return; }catch(_){ } }
+      $('#anfKopieren').click();
+    };
+    $('#anfKopieren').onclick=async()=>{
+      try{ await navigator.clipboard.writeText(link); }catch(_){ }
+      $('#anfKopieren').textContent='Kopiert ✓';
+    };
+  },
+  async dauerEinladung(){
+    const link=await Praxis.einladung(); if(!link) return;
+    this.modal(`<div class="modal-head"><button class="closex" onclick="UI.closeModal()">${IC.x}</button><h3>Dauer-Einladung</h3></div>
+    <div class="modal-body">
+      <p style="font-size:13px;color:var(--text-secondary);margin-bottom:12px">
+        Ein Link für alle Kundinnen — er läuft nicht ab. Aushang im Stall, Signatur,
+        Website. Messungen daraus landen direkt in Ihrer Praxis.</p>
+      <div style="background:var(--bg-deep);border:1px solid var(--border-subtle);border-radius:var(--r-s);padding:11px;font-size:11.5px;word-break:break-all;color:var(--text-secondary)">${esc(link)}</div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn ghost" onclick="UI.closeModal()">Schließen</button>
+      <button class="btn primary" onclick="navigator.clipboard.writeText('${link.replace(/'/g,"\\'")}').then(()=>Toast.show('Link kopiert','ok'))">Kopieren</button>
     </div>`);
   },
   licenseInfo(){
@@ -6755,6 +6831,60 @@ const Praxis={
     const ich=await this.ich();
     const basis=location.href.replace(/[^/]*(\?.*)?$/,'');
     return basis+'messen.html?fach='+encodeURIComponent(ich.fach)+'&k='+encodeURIComponent(ich.boxPub);
+  },
+
+  /* ── MESSUNG ANFORDERN ───────────────────────────────────────────────
+     Die Dauereinladung oben gilt für alle. Das hier ist die gezielte Bitte
+     an eine bestimmte Besitzerin für ein bestimmtes Pferd — der Anlass, aus
+     dem die Kundin überhaupt misst. Ohne ihn wartet die Praxis darauf, dass
+     jemand von selbst auf die Idee kommt.
+
+     Sie löst nebenbei einen echten Fehler: subjectId() erzeugt auf JEDEM
+     Gerät eine neue Kennung für denselben Namen. Misst die Besitzerin vom
+     Telefon ihres Mannes, entsteht im Cockpit ein ZWEITES Pferd. Die
+     Anforderung trägt die Kennung der Praxis mit — dann landet die Messung
+     auf der richtigen Akte, egal von welchem Gerät und egal, wie der Name
+     geschrieben wird.
+
+     Pferdename und Kennung stehen im ANKER, nicht in der Abfrage: ein Anker
+     wird nie an einen Server gesendet und steht in keinem Zugriffsprotokoll.
+     Ein Pferdename gehört niemandem sonst. */
+  async anfordern(hid){
+    const h=State.horses.find(x=>x.id===hid); if(!h) return null;
+    const basis=await this.einladung(); if(!basis) return null;      // Tor greift dort
+    const paket=btoa(unescape(encodeURIComponent(JSON.stringify(
+      {sid:h.subjectId||null, n:h.name||''}))))
+      .replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');
+    const link=basis+'#a='+paket;
+    const a=State.settings.anfragen||[];
+    if(!a.some(x=>x.pferdId===hid && !x.eingegangen))
+      a.push({id:(crypto.randomUUID?crypto.randomUUID():String(Date.now())),
+              pferdId:hid, subjectId:h.subjectId||null,
+              erstellt:new Date().toISOString(), eingegangen:null});
+    State.settings.anfragen=a; await State.saveSettings();
+    UI.postStatus&&UI.postStatus();
+    return link;
+  },
+  offeneAnfragen(){ return (State.settings.anfragen||[]).filter(x=>!x.eingegangen); },
+  /* Von Hand als erledigt markieren — die Kundin hat vielleicht angerufen
+     statt zu messen. Nie stillschweigend verfallen lassen. */
+  async anfrageAbbrechen(id){
+    const a=State.settings.anfragen||[];
+    const x=a.find(y=>y.id===id); if(!x) return;
+    x.eingegangen=new Date().toISOString();
+    State.settings.anfragen=a; await State.saveSettings();
+    UI.postStatus&&UI.postStatus(); UI.closeModal(); UI.postfach();
+  },
+  /* Wird beim Import gerufen: was eingetroffen ist, ist beantwortet. */
+  async anfrageErledigen(pferdIds){
+    const a=State.settings.anfragen||[]; let n=0;
+    const ids=[...(pferdIds||[])];
+    for(const x of a){
+      if(x.eingegangen) continue;
+      if(ids.includes(x.pferdId)){ x.eingegangen=new Date().toISOString(); n++; }
+    }
+    if(n){ State.settings.anfragen=a; await State.saveSettings(); UI.postStatus&&UI.postStatus(); }
+    return n;
   },
 };
 

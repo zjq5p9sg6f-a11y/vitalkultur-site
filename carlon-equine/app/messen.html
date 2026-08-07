@@ -2382,7 +2382,53 @@ const S={ device:null, hrChar:null, battChar:null, rr:[], hr:0, batt:null,
    Der Importer des Cockpits ordnet Aufnahmen über subject.id demselben Pferd
    zu — nur so entsteht ein Verlauf über Wochen statt lauter Einzelbilder.
    Deshalb wird die ID lokal gemerkt und wiederverwendet.                  */
+/* ANFORDERUNG DER PRAXIS.
+   Die Tierärztin bittet um eine Messung für ein bestimmtes Pferd. Name und
+   die in der Praxis geführte Kennung reisen im ANKER — der wird nie an einen
+   Server gesendet und steht in keinem Zugriffsprotokoll. Ein Pferdename geht
+   niemanden sonst etwas an.
+
+   Warum die Kennung mitreist: subjectId() vergibt auf JEDEM Gerät eine neue
+   UUID für denselben Namen. Misst die Besitzerin vom Telefon ihres Mannes,
+   entstünde in der Praxis ein zweites Pferd mit derselben Historie-Lücke. */
+const ANFRAGE=(function(){
+  const m=String(location.hash||'').match(/(?:^#|&)a=([A-Za-z0-9_-]+)/);
+  if(!m) return null;
+  try{
+    let b=m[1].replace(/-/g,'+').replace(/_/g,'/'); while(b.length%4) b+='=';
+    const o=JSON.parse(decodeURIComponent(escape(atob(b))));
+    return (o && typeof o==='object') ? o : null;
+  }catch(_){ return null; }
+})();
+
+/* Direkt nach der Definition von ANFRAGE — der Dach-Block weiter unten
+   ist ein EIGENER <script>-Block und laeuft frueher; dort war ANFRAGE
+   noch nicht deklariert. */
+(function(){
+  /* Vorbelegen, nicht sperren: die Praxis hat um DIESES Pferd gebeten, aber
+     die Besitzerin bleibt Herrin über das Feld. */
+  if(ANFRAGE && ANFRAGE.n){
+    const f=document.getElementById('horse');
+    if(f && !f.value){ f.value=ANFRAGE.n; }
+    const t=document.querySelector('#vReady h1');
+    /* data-i18n abnehmen, sonst setzt der Uebersetzer den Standardtext
+       gleich wieder darueber — der Anlass ginge still verloren. */
+    if(t){ t.removeAttribute('data-i18n');
+           t.textContent='Deine Tierärztin bittet um eine Messung'; }
+    const u=document.querySelector('#vReady p.sub');
+    if(u){ u.removeAttribute('data-i18n');
+           u.textContent='Sie hat gezielt um eine Messung für '+ANFRAGE.n
+             +' gebeten. Gurt anlegen, Rest macht die Station.'; }
+  }
+})();
+
 function subjectId(name){
+  /* Die Kennung der Praxis gilt — aber NUR, solange derselbe Name dasteht.
+     Ändert die Besitzerin ihn, misst sie ein anderes Pferd; dann wäre es
+     falsch, die Messung auf die angeforderte Akte zu buchen. */
+  if(ANFRAGE && ANFRAGE.sid && ANFRAGE.n &&
+     String(ANFRAGE.n).trim().toLowerCase()===String(name).trim().toLowerCase())
+    return ANFRAGE.sid;
   const key='carlon.subject.'+name.trim().toLowerCase();
   let id=null;
   try{ id=localStorage.getItem(key); }catch(e){}
