@@ -777,6 +777,13 @@ const HAUS={ appImStore:false, appUrl:'https://carlon.app' };
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"><path d="M6.5 8.5L17.5 15.5L12 20V4l5.5 4.5L6.5 15.5"/></svg>
       <span id="btnConnectTxt">Polar H10 verbinden</span>
     </button>
+    <!-- Ohne Gurt endete die Seite hier. Wer sie findet, hat in aller Regel
+         keinen Polar H10 zur Hand — und stand damit vor einem Knopf, den er
+         nicht drücken kann. Diese Zeile gibt ihm den Weg: eine ECHTE
+         Aufnahme, durch dieselbe Anzeige gespielt. -->
+    <div class="subactions">
+      <button class="btn ghost" id="btnBeispiel" data-i18n="beispielBtn">Keinen Gurt zur Hand? Eine echte Messung ansehen</button>
+    </div>
     <div class="hint" data-i18n="readyHint">Der Gurt muss angelegt und die Elektrodenfläche <b>gut angefeuchtet</b> sein — sonst bricht das Signal ab. Halte das Gerät während der Messung in der Nähe und lass den Bildschirm an.</div>
   </div>
 
@@ -784,6 +791,10 @@ const HAUS={ appImStore:false, appUrl:'https://carlon.app' };
   <div id="vLive" class="hidden">
     <span class="eyebrow" data-i18n="liveEyebrow">Aufnahme läuft</span>
     <h1 id="liveTitle" data-i18n="liveH1">Messung läuft</h1>
+    <!-- Steht während der ganzen Beispielmessung sichtbar oben. Eine Demo,
+         die man für eine echte Messung halten kann, ist kein Beweis mehr,
+         sondern eine Täuschung. -->
+    <div class="rrwarn hidden" id="beispielBand"></div>
     <div class="rrwarn hidden" id="rrWarn" role="alert"></div>
     <p class="sub" id="liveSub" data-i18n="liveSub">Ruhig stehen lassen. Je ruhiger das Pferd, desto aussagekräftiger die Aufnahme.</p>
 
@@ -1124,6 +1135,17 @@ de:{
  horseLabel:'Name des Pferds',
  horsePh:'z. B. Mistral',
  connect:'Polar H10 verbinden',
+ /* ── Beispielmessung ────────────────────────────────────────────────────
+    Eine ECHTE Aufnahme, keine erfundenen Zahlen — Testpferd 2, Polar H10,
+    24.06.2026. Sie laeuft durch dieselbe Anzeige wie eine laufende Messung,
+    weil ein nachgebauter Demo-Bildschirm zeigen wuerde, was wir behaupten,
+    statt was das Werkzeug tut. */
+ beispielBtn:'Keinen Gurt zur Hand? Eine echte Messung ansehen',
+ beispielBand:'<b>Beispielmessung.</b> Eine echte Aufnahme vom 24.06.2026 (Polar H10, Ruhe im Stall), im Zeitraffer abgespielt. Es wird gerade nichts gemessen.',
+ beispielTitel:'Beispielmessung läuft',
+ beispielSub:'So sieht eine Aufnahme aus, während sie entsteht. Die Werte stammen aus einer echten Messung.',
+ beispielName:'Beispiel',
+ beispielFertig:'Das war eine Beispielmessung — sie wird nicht verschickt. Für eine eigene Aufnahme brauchst du einen Brustgurt, der Schlag-zu-Schlag-Abstände überträgt: getestet und empfohlen ist der <b>Polar H10</b> mit Pferdegurt und Ultraschallgel unter den Elektroden.',
  readyHint:'Der Gurt muss angelegt und die Elektrodenfläche <b>gut angefeuchtet</b> sein — sonst bricht das Signal ab. Halte das Gerät während der Messung in der Nähe und lass den Bildschirm an.',
  /* Kein Web-Bluetooth */
  unsupEyebrow:'Dieses Gerät misst nicht direkt',
@@ -1210,6 +1232,12 @@ en:{
  horseLabel:'Horse’s name',
  horsePh:'e.g. Mistral',
  connect:'Connect Polar H10',
+ beispielBtn:'No belt at hand? Watch a real recording',
+ beispielBand:'<b>Example recording.</b> A real recording from 24 June 2026 (Polar H10, at rest in the barn), played back at speed. Nothing is being measured right now.',
+ beispielTitel:'Example recording running',
+ beispielSub:'This is what a recording looks like while it is being made. The values come from a real measurement.',
+ beispielName:'Example',
+ beispielFertig:'That was an example recording — it will not be sent. For a recording of your own you need a chest belt that transmits beat-to-beat intervals: tested and recommended is the <b>Polar H10</b> with an equine belt and ultrasound gel under the electrodes.',
  readyHint:'The belt must be fitted and the electrode area <b>well moistened</b> — otherwise the signal drops out. Keep the device nearby during the recording and leave the screen on.',
  unsupEyebrow:'This device can’t record directly',
  unsupH1:'How to record anyway',
@@ -2313,6 +2341,19 @@ function relabel(){
   const bs=$('#btnSendTxt'); if(bs) bs.textContent=t('send');
   const bc=$('#btnConnectTxt'); if(bc) bc.textContent=t('connect');
   const bl=$('#btnSendLinkTxt'); if(bl) bl.textContent=t('sendLink');
+  const bb=document.getElementById('btnBeispiel'); if(bb) bb.textContent=t('beispielBtn');
+  /* Auch die Beispiel-Hinweise wandern beim Sprachwechsel mit — ein Band,
+     das nach dem Umschalten deutsch bleibt, sagt dem englischen Besucher
+     nicht mehr, dass gerade nichts gemessen wird. */
+  if(S.demo){
+    const bd=document.getElementById('beispielBand');
+    if(bd && !bd.classList.contains('hidden')) bd.innerHTML=t('beispielBand');
+    const lt=$('#liveTitle'), ls=$('#liveSub');
+    if(lt && !$('#vLive').classList.contains('hidden')){
+      lt.textContent=t('beispielTitel'); if(ls) ls.textContent=t('beispielSub');
+    }
+    if(!$('#vDone').classList.contains('hidden')) $('#doneSub').innerHTML=t('beispielFertig');
+  }
   if(!S.startedAt){ const rt=$('#recTxt'); if(rt) rt.textContent=t('progressStart'); }
   else if(typeof tick==='function') tick();
   /* Die Beleg-Texte werden in finish() gesetzt und wandern beim Sprachwechsel
@@ -2648,6 +2689,9 @@ else {
 }
 
 /* ── Verbinden ─────────────────────────────────────────────────────────── */
+const _bb=document.getElementById('btnBeispiel');
+if(_bb) _bb.addEventListener('click', beispielStarten);
+
 $('#btnConnect').addEventListener('click', async ()=>{
   const name=$('#horse').value.trim();
   if(!name){ $('#horse').focus(); $('#horse').style.borderColor='var(--amber)'; return; }
@@ -2663,6 +2707,94 @@ $('#btnConnect').addEventListener('click', async ()=>{
     alert('Bluetooth-Fehler: '+(e && e.message ? e.message : e));
   }
 });
+
+/* ══ BEISPIELMESSUNG ═══════════════════════════════════════════════════════
+   Wer diese Seite findet, hat fast nie einen Polar H10 in der Hand. Bis
+   hierher endete sein Besuch an einem Knopf, den er nicht druecken kann —
+   und die Seite hatte ihre eine Gelegenheit vertan.
+
+   ZWEI ENTSCHEIDUNGEN, beide bewusst:
+
+   1. Die Daten sind ECHT. Testpferd 2, Polar H10, 24.06.2026, 325 Schlaege.
+      Erfundene Zahlen haetten eine glattere Kurve ergeben — und genau damit
+      ein Bild gezeigt, das die Wirklichkeit nicht liefert. Wer die
+      Beispielmessung sieht, sieht auch die Artefakte.
+
+   2. Sie laeuft durch DIESELBE Anzeige, ueber onBeat(), mit einem
+      Bluetooth-Paket, wie der Gurt es schicken wuerde. Ein nachgebauter
+      Demo-Bildschirm zeigt, was wir behaupten; dieser hier zeigt, was das
+      Werkzeug tut. Faellt die Anzeige kaputt, faellt die Demo mit — und das
+      ist richtig so.
+
+   Sie ist an jeder Stelle als Beispiel benannt und kann NICHT an eine Praxis
+   geschickt werden: Demo-Daten in einem echten Postfach waeren ein Schaden
+   fuer die Tieraerztin und fuer uns.                                       */
+/* Raffer: 9 Minuten Aufnahme in rund 30 Sekunden. Ein Besucher, der nur
+   schauen will, wartet keine Minute — und die untere Schranke von 25 ms
+   haelt die Anzeige auch dann fluessig, wenn ein langer Schlag kommt.
+   Im HINTERGRUND-Tab drosselt der Browser jeden Zeitgeber auf etwa einen
+   Aufruf je Sekunde — dann dauert das Abspielen entsprechend laenger. Das
+   laesst sich nicht umgehen und ist richtig so; wer zuschaut, hat die Seite
+   ohnehin vorn.
+
+   Ich habe deswegen zuerst das Neuzeichnen verdaechtigt und gedrosselt. Am
+   laufenden Bildschirm nachgemessen kostet ein Schlag samt aller Diagramme
+   0,12 ms — die Drosselung haette nichts gebracht ausser einer ruckeligeren
+   Kurve. Wieder entfernt. */
+const BEISPIEL_RAFFER = 18;
+let _beispielUhr = null;
+
+function beispielPaket(rrMs, hr){
+  /* Standard-Heart-Rate-Measurement, wie der Gurt es sendet:
+     Flags 0x10 = RR vorhanden, HF als 8-Bit. RR in 1/1024-Sekunden. */
+  const b = new DataView(new ArrayBuffer(4));
+  b.setUint8(0, 0x10);
+  b.setUint8(1, Math.max(0, Math.min(255, Math.round(hr))));
+  b.setUint16(2, Math.round(rrMs * 1024 / 1000), true);
+  return { target: { value: b } };
+}
+
+async function beispielStarten(){
+  let rr;
+  try{
+    const r = await fetch('og-rr.json');
+    rr = await r.json();
+  }catch(e){
+    alert(LANG==='en' ? 'The example recording could not be loaded.'
+                      : 'Die Beispielmessung liess sich nicht laden.');
+    return;
+  }
+  if(!Array.isArray(rr) || rr.length < 30) return;
+
+  S.demo = true;
+  /* Der Name wird gesetzt, nicht abgefragt — und traegt das Wort Beispiel,
+     damit es auch auf dem Beleg steht. Ein vorhandener Name des Nutzers
+     wird nicht ueberschrieben, sondern ergaenzt. */
+  const eingegeben = $('#horse').value.trim();
+  $('#horse').value = eingegeben ? eingegeben + ' (' + t('beispielName') + ')'
+                                 : t('beispielName');
+  S.device = { name: 'Polar H10 · ' + t('beispielName') };
+
+  startSession();
+  $('#liveTitle').textContent = t('beispielTitel');
+  $('#liveSub').textContent   = t('beispielSub');
+  const band = $('#beispielBand');
+  if(band){ band.innerHTML = t('beispielBand'); band.classList.remove('hidden'); }
+
+  let i = 1;
+  S.demoZeitMs = 0;
+  const naechster = ()=>{
+    if(S.stopped || i >= rr.length){ _beispielUhr = null;
+      if(!S.stopped) $('#btnStop').click();
+      return; }
+    const ms = rr[i];
+    S.demoZeitMs += ms;
+    onBeat(beispielPaket(ms, 60000 / ms));
+    i++;
+    _beispielUhr = setTimeout(naechster, Math.max(25, ms / BEISPIEL_RAFFER));
+  };
+  naechster();
+}
 
 async function connect(dev){
   S.device=dev;
@@ -2762,9 +2894,17 @@ function rrFehltMelden(){
 /* Empfohlene Mindestdauer einer Ruhe-Aufnahme. Eine Aussage ueber die
    AUFNAHME, nicht ueber das Pferd — deshalb hier zulaessig. */
 const REC_SEC=300;
+/* Wie lange die Aufnahme dauert — bei der Beispielmessung die Zeit der
+   AUFNAHME, nicht die des Abspielens. Sonst zeigte der Fortschritt nach
+   neun aufgenommenen Minuten fünfzig Sekunden, und die Anzeige, die dem
+   Nutzer sagt „du darfst aufhoeren", waere im Beispiel schlicht falsch. */
+function laufzeitSek(){
+  if(S.demo) return (S.demoZeitMs||0)/1000;
+  return (Date.now()-S.startedAt.getTime())/1000;
+}
 function tick(){
   if(!S.startedAt) return;
-  const secs=(Date.now()-S.startedAt.getTime())/1000;
+  const secs=laufzeitSek();
   $('#dur').textContent=mmss(secs);
   const p=Math.min(1,secs/REC_SEC);
   $('#recFill').style.width=(p*100).toFixed(1)+'%';
@@ -2895,6 +3035,7 @@ document.addEventListener('visibilitychange', ()=>{
 $('#btnStop').addEventListener('click', async ()=>{
   S.stopped=true;
   clearInterval(S.timer);
+  if(_beispielUhr){ clearTimeout(_beispielUhr); _beispielUhr=null; }
   try{ if(S.hrChar) await S.hrChar.stopNotifications(); }catch(e){}
   try{ if(S.device && S.device.gatt.connected) S.device.gatt.disconnect(); }catch(e){}
   try{ if(S.wake){ S.wake.release(); S.wake=null; } }catch(e){}
@@ -2903,7 +3044,7 @@ $('#btnStop').addEventListener('click', async ()=>{
 
 function finish(){
   const rr=S.rr;
-  const secs=(Date.now()-S.startedAt.getTime())/1000;
+  const secs=laufzeitSek();
   const name=$('#horse').value.trim()||'Pferd';
   $('#dBeats').textContent=rr.length;
   $('#dDur').textContent=mmss(secs);
@@ -2988,6 +3129,18 @@ function finish(){
   $('#doneSub').textContent = kannSenden ? t('doneSubRoom') : t('doneSubFile');
   if(!kannSenden) $('#btnSend').disabled=true;
 
+  /* Die Beispielmessung wird NICHT verschickt. Demo-Daten in einem echten
+     Postfach kosten eine Tierärztin Zeit, die sie einer Kundin schuldet —
+     und uns das Vertrauen, das dieses ganze Werkzeug traegt.
+     Das Tor sitzt hier UND im Sende-Knopf selbst (siehe dort): ein
+     ausgegrauter Knopf ist eine Bitte, kein Riegel. */
+  if(S.demo){
+    $('#btnSend').disabled=true;
+    $('#doneSub').innerHTML = t('beispielFertig');
+    const band=$('#beispielBand');
+    if(band){ band.innerHTML=t('beispielBand'); band.classList.remove('hidden'); }
+  }
+
   const payload=buildExport(name,rr,m,secs);
   S.blob=new Blob([JSON.stringify(payload)],{type:'application/json'});
   S.fname=`${name.replace(/[^\p{L}\p{N}_-]+/gu,'-')}_HRV-Session_${S.startedAt.toISOString().slice(0,10)}.json`;
@@ -3060,6 +3213,10 @@ function buildExport(name,rr,m,secs){
 
 /* ── Übergabe ──────────────────────────────────────────────────────────── */
 $('#btnSend').addEventListener('click', async ()=>{
+  /* Das eigentliche Tor. Ein deaktivierter Knopf haelt niemanden auf, der
+     die Seite kennt — und eine Beispielmessung im Postfach einer Praxis
+     waere ein Schaden, den niemand mehr einsammelt. */
+  if(S.demo) return;
   if(!S.blob||!kannSenden) return;
   $('#err').textContent=''; $('#btnSend').disabled=true; $('#btnSave').disabled=true;
   $('#barWrap').classList.remove('hidden');
@@ -3243,8 +3400,16 @@ async function momentKarteBlob(){
   x.fillText('Jeder Punkt: ein Schlag gegen den vorherigen.', W/2, 192);
 
   x.fillStyle=TXT; x.font=`400 27px ${ui}`;
-  x.fillText('Gerade gemessen — am eigenen Pferd,', W/2, H-186);
-  x.fillText('mit dem Handy, ohne App.', W/2, H-148);
+  if(S.demo){
+    /* Auch die Teilkarte sagt, was sie ist. Sie wird als Bild
+       weitergereicht und loest sich damit vom Zusammenhang — wer sie in
+       einer Stallgruppe sieht, hat unseren Bildschirm nie gesehen. */
+    x.fillText('Beispielmessung — eine echte Aufnahme,', W/2, H-186);
+    x.fillText('abgespielt auf vitalkultur.com/messen.', W/2, H-148);
+  } else {
+    x.fillText('Gerade gemessen — am eigenen Pferd,', W/2, H-186);
+    x.fillText('mit dem Handy, ohne App.', W/2, H-148);
+  }
   x.fillStyle=CY; x.font=`600 22px ${brand}`;
   x.letterSpacing='7px';
   x.fillText('CARLON EQUINE', W/2, H-78);
