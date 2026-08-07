@@ -8986,7 +8986,19 @@ const Safe={
     const hasData=(State.horses&&State.horses.length>0)||(State.recordings&&State.recordings.length>0);
     const quotaPct=(est&&est.quota)?Math.round(est.usage/est.quota*100):0;
     const standalone=(typeof PWA!=='undefined'&&PWA.standalone&&PWA.standalone());
-    return {persisted,quotaPct,age,hasData,standalone};
+    /* ── Der teuerste Verlust hat noch gar keine Daten ────────────────────
+       Eine Praxis erzeugt ihr Fach, druckt Aushaenge, haengt sie in die
+       Stallgasse — und hat noch keine einzige Messung. In diesem Fenster
+       schwieg das Band, weil es an hasData haengt. Geht der Browser jetzt
+       verloren, zeigt JEDER Aushang dauerhaft ins Leere, und niemand kann
+       das wiederherstellen, wir eingeschlossen.
+       Der Schluessel ist damit ein eigenes Risiko, unabhaengig von Daten.
+       Eine Sicherung von VOR der Fach-Erzeugung zaehlt nicht: sie sieht aus
+       wie ein Backup und enthaelt den Schluessel nicht. */
+    const seit=State.settings&&State.settings.praxisSeit;
+    const letzte=State.settings&&State.settings.lastBackupAt;
+    const schluesselUngesichert = !!seit && (!letzte || new Date(letzte)<new Date(seit));
+    return {persisted,quotaPct,age,hasData,standalone,schluesselUngesichert};
   },
   async renderBanner(){
     const el=$('#safeBanner'); if(!el)return;
@@ -8994,6 +9006,12 @@ const Safe={
     const hardFail=document.body.classList.contains('data-risk');
     let urgent=hardFail;
     if(hardFail){ risks.push('Speichern ist zuletzt fehlgeschlagen — bitte jetzt ein Backup sichern.'); wants.add('backup'); }
+    /* Dringend, und bewusst NICHT wegklickbar: hier haengt jeder gedruckte
+       Aushang dran, nicht nur die eigenen Daten. */
+    if(c.schluesselUngesichert){
+      risks.push('Ihre Praxis-Kennung ist noch nicht gesichert. Sie liegt nur in diesem Browser — geht sie verloren, zeigen alle gedruckten Aushänge dauerhaft ins Leere.');
+      wants.add('backup'); urgent=true;
+    }
     if(c.hasData&&!c.persisted){
       if(c.standalone){ risks.push('Dein Browser garantiert keinen dauerhaften Speicher — sichere regelmäßig per Backup.'); wants.add('backup'); }
       else { risks.push('Speicher noch nicht dauerhaft — als App installieren schützt vor Löschen nach ~7 Tagen.'); wants.add('install'); wants.add('backup'); }
