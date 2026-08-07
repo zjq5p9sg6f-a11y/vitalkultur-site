@@ -6506,6 +6506,9 @@ const UI={
       ${License.isFounder()?'<div style="font-size:11.5px;color:var(--text-dim);margin-top:10px">Als Gründungs-Partner bleibt dir dein früher Preis dauerhaft gesichert.</div>':''}
       ${d!=null&&d<21?'<div class="demo-ribbon" style="margin-top:14px"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 8v4M12 16h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/></svg><div>Läuft bald ab — rechtzeitig verlängern. Deine <b>Daten bleiben erhalten</b>, das Cockpit wechselt sonst nur in den Demo-Modus.</div></div>':''}
     </div>
+    ${(State.settings.license||{}).sub?`<div style="margin-top:14px;padding:12px 14px;border:1px solid var(--border-subtle);border-radius:var(--r-m)">
+      <div style="font-size:12px;color:var(--text-secondary);margin-bottom:9px">Karte wechseln, Rechnungen herunterladen oder kündigen — alles direkt bei Stripe, ohne uns zu schreiben.</div>
+      <button class="btn ghost" style="width:100%;justify-content:center" onclick="License.portalOeffnen()">Abo verwalten</button></div>`:''}
     <div class="modal-foot"><button class="btn ghost" style="color:var(--red);margin-right:auto" onclick="License.deactivate();UI.closeModal()">Lizenz entfernen</button><button class="btn ghost" onclick="UI.activate()">Anderen Schlüssel</button>${d!=null&&d<21?`<button class="btn primary" onclick="UI.closeModal();License.renew()">Verlängern</button>`:`<button class="btn primary" onclick="UI.closeModal()">Schließen</button>`}</div>`);
   },
 };
@@ -6702,8 +6705,64 @@ const License={
      Kuendigt jemand, schlaegt die Erneuerung fehl und der Zugang endet von
      selbst. Genau deshalb muss die Lizenz kurz sein: ein Rueckruf ist bei
      offline geprueften Schluesseln unmoeglich. */
-  RENEW_URL:'https://lizenz.vitalkultur.com/erneuern',
+  DIENST:'https://lizenz.vitalkultur.com',
+  get RENEW_URL(){ return this.DIENST+'/erneuern'; },
   RENEW_AB_TAGEN:7,
+
+  /* ── Rueckkehr aus der Kasse ─────────────────────────────────────────
+     Stripe leitet nach der Zahlung hierher zurueck und haengt die
+     Sitzungsnummer an. Wir reichen sie beim Dienst ein und bekommen Ausweis
+     und Lizenz — die Kundin sieht NIE einen Schluessel, tippt nichts ab und
+     wartet auf keine E-Mail. Das ist der Unterschied zwischen "funktioniert"
+     und "kostet uns jeden Tag Support".
+     Der Link wird danach bereinigt, damit ein Neuladen nicht erneut
+     freischaltet und die Sitzungsnummer nicht im Verlauf stehen bleibt. */
+  async freischaltenAusRueckleitung(){
+    const u=new URL(location.href);
+    const sid=u.searchParams.get('session_id');
+    if(!sid) return null;
+    const saeubern=()=>{ u.searchParams.delete('session_id');
+      history.replaceState(null,'',u.pathname+(u.search||'')+u.hash); };
+    try{
+      const r=await fetch(this.DIENST+'/aktivieren',{method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({session_id:sid})});
+      const d=await r.json().catch(()=>({}));
+      if(!d.ok){
+        // Nicht saeubern: ein spaeterer Versuch soll noch moeglich sein.
+        Toast.show(d.nochmal?'Freischaltung gleich nochmal versuchen — Verbindung war kurz weg'
+                            :'Freischaltung nicht möglich: '+(d.grund||'unbekannt'),'warn');
+        return false;
+      }
+      const vl=await this.verify(d.lizenz);
+      if(!vl.valid||vl.typ!=='lic'){ Toast.show('Antwort nicht verwertbar','warn'); return false; }
+      State.settings.license={provider:'offline',sub:d.abo,key:d.lizenz};
+      await State.saveSettings();
+      await this.loadFromSettings(); Nav.render();
+      saeubern();
+      Toast.show(`Freigeschaltet: ${this.TIERS[this.tier()].name}`,'ok');
+      return true;
+    }catch(e){
+      Toast.show('Freischaltung braucht kurz Internet — bitte gleich nochmal','warn');
+      return false;
+    }
+  },
+
+  /* Karte wechseln, Rechnungen holen, kuendigen — alles bei Stripe.
+     Jede dieser drei Sachen waere sonst eine E-Mail an Jan. */
+  async portalOeffnen(){
+    const s=State.settings.license||{};
+    if(!s.sub){ Toast.show('Kein Abo hinterlegt','warn'); return; }
+    Toast.show('Öffne die Abo-Verwaltung…','info');
+    try{
+      const r=await fetch(this.DIENST+'/portal',{method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({token:s.sub,zurueck:location.href})});
+      const d=await r.json().catch(()=>({}));
+      if(!d.ok||!d.url){ Toast.show('Abo-Verwaltung gerade nicht erreichbar','warn'); return; }
+      window.open(d.url,'_blank','noopener');
+    }catch(e){ Toast.show('Abo-Verwaltung braucht Internet','warn'); }
+  },
   /* NICHT "renew" nennen: License.renew() gibt es bereits (oeffnet das
      Kaufmodal). In einem Objektliteral gewinnt die spaetere Eigenschaft — die
      erste Fassung dieser Methode wurde davon lautlos ueberschrieben und gab
@@ -6737,7 +6796,15 @@ const License={
     const restTage=v.exp?((v.exp*1000-Date.now())/86400000):-1;
     if(restTage>this.RENEW_AB_TAGEN) return;
     if(!navigator.onLine) return;
-    await this.lizenzHolen('faellig');
+    const e=await this.lizenzHolen('faellig');
+    /* VORWARNEN STATT AUSSPERREN. Wer erst beim Sperrbildschirm erfaehrt, dass
+       die Karte abgelaufen ist, ruft an — und zwar veraergert. Wer es drei
+       Tage vorher ruhig erfaehrt und den Knopf zum Richten daneben hat, ruft
+       nicht an. Nur bei endgueltiger Ablehnung (gekuendigt/Karte tot), nicht
+       bei einer Netzstoerung. */
+    if(!e.ok && e.endgueltig && restTage>0){
+      Toast.show(`Abo-Verlängerung fehlgeschlagen — Zugang endet in ${Math.max(1,Math.round(restTage))} Tagen. Unter „Lizenz“ → „Abo verwalten“ lässt sich das in einer Minute richten.`,'warn');
+    }
   },
   async _activateOffline(key){
     const r=await this.verify(key);
@@ -7649,6 +7716,10 @@ addEventListener('beforeinstallprompt',e=>{e.preventDefault();PWA.deferred=e;});
       State.settings.seedNamesCleaned=true; await State.saveSettings();
     }
     await License.loadFromSettings();
+    /* Erst die Rueckkehr aus der Kasse abfangen, dann faellige Erneuerung.
+       Beides still — wer die App oeffnet, will arbeiten, nicht verwalten. */
+    await License.freischaltenAusRueckleitung();
+    License.lizenzHolenWennFaellig();
     if(State.settings.fieldMode){document.body.classList.add('field-mode');const b=$('#fieldBtn');if(b)b.classList.add('on');}
     Chart.initHover();
     Nav.go(Nav.cur);
