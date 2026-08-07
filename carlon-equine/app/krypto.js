@@ -145,6 +145,15 @@
       return new TextDecoder().decode(klar);
     },
 
+    /* Dasselbe Verfahren fuer den PFERDEBESITZER. Er bekommt eine eigene
+       Identitaet auf seinem Geraet, damit die Tieraerztin ihm den Befund
+       zurueckschicken kann — verschluesselt, asynchron, ohne Konto.
+       Der Name ist nur ein Verweis: die Rechenvorschrift ist identisch, und
+       genau das ist der Punkt. Beide Seiten sind Briefkaesten. */
+    besitzerAnlegen() { return this.praxisAnlegen(); },
+    besitzerSichern(b) { return this.praxisSichern(b); },
+    besitzerLaden(x) { return this.praxisLaden(x); },
+
     /* ── Sichern und wiederherstellen ────────────────────────────────
        Damit die Praxis-Sicherung den Postfach-Zugang mittraegt. Ohne das
        waere ein Geraetewechsel gleichbedeutend mit einem neuen Postfach und

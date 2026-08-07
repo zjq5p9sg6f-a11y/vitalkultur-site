@@ -2,7 +2,12 @@
    App-Shell wird precached; Fonts & Leaflet lokal gebündelt (assets/) — keine externen CDNs,
    sodass die App nach dem ersten Online-Start vollständig offline läuft.
    Gesundheitsdaten liegen in IndexedDB — der SW cached nur Programm-Assets. */
-const VERSION = 'carlon-clinic-v21-postfach';
+const VERSION = 'carlon-clinic-v22-kreis';
+/* ACHTUNG: JEDE Datei in CORE wird ausgeliefert, bis VERSION sich aendert.
+   Zweimal in dieser Nacht passiert — einmal beim Livegang-Schalter, einmal bei
+   krypto.js: Datei geaendert, Version vergessen, und der Browser lieferte
+   stundenlang den alten Stand aus, ohne dass irgendwo ein Fehler auftauchte.
+   Wer hier eine Datei anfasst, zaehlt VERSION hoch. Ohne Ausnahme. */
 const SHELL = VERSION + '-shell';
 const RUNTIME = VERSION + '-runtime';
 

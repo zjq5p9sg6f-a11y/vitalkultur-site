@@ -1962,6 +1962,12 @@ const Normalizer = {
         asthma:ci.asthmaScreen||null,
       },
       device: (raw.device||{}).model||null,
+      /* Die Rueckadresse des Besitzers reiste verschluesselt in der Sendung
+         mit — nur wir konnten sie lesen, der Zwischenspeicher nie. Sie ist
+         der Unterschied zwischen "wir haben etwas bekommen" und "wir koennen
+         antworten". */
+      rueckadresse: (raw.rueckadresse && raw.rueckadresse.fach && raw.rueckadresse.boxPub)
+        ? {fach:raw.rueckadresse.fach, boxPub:raw.rueckadresse.boxPub} : null,
       raw,
     };
   }
@@ -5249,8 +5255,34 @@ const Views={
     <div class="modal-foot">
       <button class="btn ghost" onclick="UI.closeModal()">Schließen</button>
       <button class="btn ghost" onclick="Views.mailOwner('${hid}')">Per E-Mail</button>
-      <button class="btn primary" onclick="navigator.clipboard.writeText($('#ownerTxt').value).then(()=>Toast.show('Text kopiert','ok'))">Kopieren</button>
+      ${rec.rueckadresse
+        ? `<button class="btn primary" onclick="Views.befundZurueck('${hid}')">Verschlüsselt zurücksenden</button>`
+        : `<button class="btn primary" onclick="navigator.clipboard.writeText($('#ownerTxt').value).then(()=>Toast.show('Text kopiert','ok'))">Kopieren</button>`}
     </div>`);
+  },
+  /* Ein Klick. Der Besitzer sieht den Befund beim naechsten Oeffnen seines
+     Links — mit dem Namen der Praxis darueber. Genau das ist der virale Punkt:
+     nicht wir sehen gut aus, sondern die Tieraerztin. Der Stallnachbar, dem
+     das gezeigt wird, fragt seine eigene. */
+  async befundZurueck(hid){
+    const h=State.horses.find(x=>x.id===hid);
+    const recs=State.recsFor(hid); const rec=recs[recs.length-1];
+    const txt=$('#ownerTxt')?$('#ownerTxt').value:'';
+    if(!rec||!txt) return;
+    Toast.show('Verschlüssele und sende…','info');
+    const s=State.settings;
+    const r=await Postfach.befundSenden(rec.rueckadresse, {
+      v:1, art:'befund',
+      pferd:h.name,
+      praxis:s.clinicName||'', tierarzt:s.vetName||'',
+      stufe:rec.triage?rec.triage.level:null,
+      erstellt:new Date().toISOString(),
+      gemessenAm:rec.startedAt||null,
+      text:txt,
+      kennwerte:{rmssd:rec.metrics.rmssd, meanHR:rec.metrics.meanHR, sdnn:rec.metrics.sdnn},
+    });
+    if(r.ok){ UI.closeModal(); Toast.show(`Befund an ${h.owner||'den Halter'} zugestellt — verschlüsselt`,'ok'); }
+    else Toast.show('Zustellung fehlgeschlagen: '+r.grund,'warn');
   },
   mailOwner(hid){const h=State.horses.find(x=>x.id===hid);const body=encodeURIComponent($('#ownerTxt').value);
     const subj=encodeURIComponent(`HRV-Befund ${h.name} · ${State.settings.clinicName||'CARLON EQUINE'}`);
@@ -6614,6 +6646,22 @@ const Postfach={
     const r=await fetch(this.DIENST+pfad,{method:'POST',
       headers:{'Content-Type':'application/json'}, body:JSON.stringify(leib)});
     return r.json().catch(()=>({ok:false,grund:'HTTP '+r.status}));
+  },
+  /* Der Rueckweg. Der Befund wird gegen den Schluessel des BESITZERS
+     verschluesselt und in dessen Fach gelegt — dieselbe Mechanik wie
+     hinwaerts, nur andersherum. Der Zwischenspeicher sieht wieder nur
+     Chiffrat und erfaehrt nicht, dass die beiden Faecher zusammengehoeren.
+     Erst damit wird aus einer Einbahnstrasse ein Kreis: der Besitzer erlebt
+     ein Ergebnis, und nur wer etwas erlebt hat, erzaehlt davon weiter. */
+  async befundSenden(rueckadresse, befund){
+    if(!rueckadresse||!rueckadresse.fach||!rueckadresse.boxPub)
+      return {ok:false,grund:'Keine Rückadresse — diese Aufnahme kam über den alten Weg'};
+    try{
+      const umschlag=await Krypto.versiegeln(rueckadresse.boxPub,
+        JSON.stringify(befund), rueckadresse.fach);
+      const d=await this._ruf('/postfach/'+rueckadresse.fach, {art:'befund',umschlag});
+      return d.ok?{ok:true}:{ok:false,grund:d.grund||'Zustellung fehlgeschlagen'};
+    }catch(e){ return {ok:false,grund:e.message||'Verschlüsselung fehlgeschlagen'}; }
   },
   /* Holt alles ab, was da ist, entschluesselt lokal und uebergibt es dem
      bestehenden Import. Danach wird die Sendung im Zwischenspeicher geloescht

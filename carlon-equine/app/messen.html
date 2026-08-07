@@ -237,6 +237,25 @@ p.sub{color:var(--sec);font-size:clamp(13px,1.15vw,15px);margin:0 auto clamp(var
 .tile em{font-style:normal;display:block;font-size:10.5px;color:var(--dim);line-height:1.35;margin-top:6px}
 .tile em i{font-style:normal;display:block;margin-top:4px;color:var(--sec)}
 .tile em i b{font-family:var(--font-mono);font-weight:600;color:var(--text)}
+/* ── Befund-Karte ── ruhig, hochwertig, ohne Ampel-Geschrei. Sie soll aussehen
+   wie etwas, das man jemandem zeigt. */
+.befund{max-width:720px;margin:0 auto var(--s5);padding:var(--s5) var(--s5) var(--s4);
+  background:var(--surface);border:1px solid var(--border);border-radius:var(--r-l);
+  border-top:2px solid var(--bf,var(--cyan))}
+.befund .bf-praxis{font-family:var(--font-mono);font-size:9.5px;letter-spacing:.18em;
+  text-transform:uppercase;color:var(--bf,var(--cyan));margin-bottom:var(--s2)}
+.befund h2{font-family:var(--font-brand);font-weight:500;font-size:clamp(19px,2.4vw,25px);
+  letter-spacing:.01em;color:var(--text);margin-bottom:var(--s2)}
+.befund .bf-datum{font-size:11.5px;color:var(--dim);margin-bottom:var(--s4)}
+.befund .bf-text{font-size:14px;line-height:1.62;color:var(--sec);white-space:pre-wrap;
+  border-left:2px solid var(--border-sub);padding-left:var(--s4);margin-bottom:var(--s4)}
+.befund .bf-werte{display:flex;gap:var(--s5);flex-wrap:wrap;padding-top:var(--s3);
+  border-top:1px solid var(--border)}
+.befund .bf-w{display:flex;flex-direction:column;gap:2px}
+.befund .bf-w span{font-family:var(--font-mono);font-size:9px;letter-spacing:.15em;
+  text-transform:uppercase;color:var(--dim)}
+.befund .bf-w b{font-family:var(--font-mono);font-size:17px;font-weight:700;color:var(--text)}
+.befund .bf-fuss{margin-top:var(--s4);font-size:11px;color:var(--faint);line-height:1.5}
 /* Anklickbare Protokollzeile */
 .proto-row{width:100%;font:inherit;color:inherit;text-align:left;cursor:pointer;transition:background .14s}
 .proto-row:hover{background:rgba(255,255,255,.028)}
@@ -568,6 +587,13 @@ svg.viz .bezel{stroke:var(--cyan);stroke-opacity:.55;stroke-width:1.1;stroke-lin
 <div class="bg-atmosphere"></div>
 <div class="bg-flower"></div>
 <div class="bg-vignette"></div>
+<!-- ── BEFUND DER TIERAERZTIN ──────────────────────────────────────────
+     Erscheint nur, wenn tatsaechlich einer da ist. Steht GANZ OBEN, weil er
+     der Grund ist, warum jemand diese Seite ein zweites Mal oeffnet.
+     Die Praxis steht darueber, nicht wir: der Stallnachbar, dem das gezeigt
+     wird, soll seine eigene Tieraerztin fragen — nicht uns. -->
+<div id="befundKarte" class="befund hidden"></div>
+
 <div class="card">
   <!-- Marken-Lockup wie der App-Startbildschirm: der leuchtende Pferdekopf
        gross, darunter die weit getrackte Wortmarke. Im Beleg-Zustand faellt
@@ -1922,6 +1948,35 @@ const room=new URLSearchParams(location.search).get('room');
 const _q=new URLSearchParams(location.search);
 const fach=_q.get('fach'), praxisKey=_q.get('k');
 const POSTFACH='https://postfach.vitalkultur.com';
+
+/* ── EIGENE IDENTITAET DES BESITZERS ────────────────────────────────────
+   Damit die Tieraerztin antworten kann. Ohne sie endet das Produkt fuer den
+   Besitzer in dem Moment, in dem er auf Senden drueckt — er erfaehrt nie, was
+   herauskam. Genau dort bricht die Weiterempfehlung, bevor sie entsteht.
+
+   Die Rueckadresse reist INNERHALB des Chiffrats mit. Der Zwischenspeicher
+   erfaehrt dadurch nie, welcher Besitzer zu welcher Praxis gehoert — er sieht
+   nur zwei unabhaengige Faecher. Diese Trennung ist der Grund, das so und
+   nicht einfacher zu bauen.
+
+   Der Schluessel liegt lokal auf dem Geraet des Besitzers. Loescht er die
+   Browserdaten, ist der alte Befund nicht mehr lesbar — das steht so auch auf
+   der Seite, statt es zu verschweigen. */
+const ICH_SPEICHER='carlon.besitzer.v1';
+let _ich=null;
+async function meineIdentitaet(){
+  if(_ich) return _ich;
+  try{
+    const roh=localStorage.getItem(ICH_SPEICHER);
+    if(roh) _ich=await Krypto.besitzerLaden(JSON.parse(roh));
+  }catch(e){ _ich=null; }
+  if(!_ich){
+    _ich=await Krypto.besitzerAnlegen();
+    try{ localStorage.setItem(ICH_SPEICHER, JSON.stringify(await Krypto.besitzerSichern(_ich))); }
+    catch(e){ /* Privater Modus: dann eben ohne Rueckweg, Senden geht trotzdem */ }
+  }
+  return _ich;
+}
 const kannSenden=!!(fach&&praxisKey)||!!room;
 
 /* ══ EINBETTBARER MODUS (weisslabel-faehig) ═══════════════════════════════
@@ -2011,6 +2066,70 @@ document.documentElement.lang=LANG;
 
 /* ── Ansichten ─────────────────────────────────────────────────────────── */
 const VIEWS=['vUnsupported','vReady','vLive','vDone'];
+/* ── BEFUND ABHOLEN ────────────────────────────────────────────────────
+   Beim Oeffnen der Seite still nachsehen, ob die Praxis geantwortet hat.
+   Ohne Konto, ohne Anmeldung — der Schluessel liegt auf diesem Geraet.
+   Faellt es aus, faellt nichts aus: die Seite bleibt eine Mess-Station. */
+/* Der Befund kommt zwar verschluesselt und nur von der eigenen Praxis — aber
+   er wird hier als HTML eingesetzt, und Praxisname wie Befundtext sind freie
+   Eingaben. Was in eine Seite geschrieben wird, wird maskiert. Punkt. */
+const esc=(x)=>String(x==null?'':x)
+  .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+  .replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+
+const STUFE_FARBE={crit:'var(--red,#ff5263)',elev:'var(--amber)',
+                   watch:'var(--cyan)',stable:'var(--good,#3fe0a4)'};
+async function befundHolen(){
+  let ich;
+  try{ ich=await meineIdentitaet(); }catch(e){ return; }
+  if(!ich||!navigator.onLine) return;
+  const ruf=async(pfad,leib)=>{
+    const r=await fetch(POSTFACH+pfad,{method:'POST',
+      headers:{'Content-Type':'application/json'},body:JSON.stringify(leib)});
+    return r.json().catch(()=>({ok:false}));
+  };
+  try{
+    const l=await ruf('/postfach/'+ich.fach+'?was=liste', await Krypto.abholNachweis(ich));
+    if(!l.ok||!(l.sendungen||[]).length) return;
+    const neueste=l.sendungen[l.sendungen.length-1];
+    const e=await ruf('/postfach/'+ich.fach+'/'+neueste.id, await Krypto.abholNachweis(ich));
+    if(!e.ok) return;
+    const b=JSON.parse(await Krypto.oeffnen(ich.box.privateKey, e.umschlag, ich.fach));
+    befundZeigen(b);
+    /* Erst NACH dem Anzeigen aus dem Fach nehmen und lokal behalten, damit er
+       auch ohne Netz wieder da ist. */
+    try{ localStorage.setItem('carlon.befund.v1', JSON.stringify(b)); }catch(_){}
+    await ruf('/postfach/'+ich.fach+'/'+neueste.id+'?was=weg', await Krypto.abholNachweis(ich));
+  }catch(e){ /* still */ }
+}
+
+function befundZeigen(b){
+  if(!b||!b.text) return;
+  const k=$('#befundKarte'); if(!k) return;
+  const w=b.kennwerte||{};
+  k.style.setProperty('--bf', STUFE_FARBE[b.stufe]||'var(--cyan)');
+  k.innerHTML=
+     `<div class="bf-praxis">${esc(b.praxis||'Deine Tierarztpraxis')}</div>`
+    +`<h2>Befund für ${esc(b.pferd||'dein Pferd')}</h2>`
+    +`<div class="bf-datum">${b.gemessenAm?'Messung vom '+new Date(b.gemessenAm).toLocaleDateString('de-DE'):''}`
+      +`${b.erstellt?' · beurteilt am '+new Date(b.erstellt).toLocaleDateString('de-DE'):''}`
+      +`${b.tierarzt?' · '+esc(b.tierarzt):''}</div>`
+    +`<div class="bf-text">${esc(b.text)}</div>`
+    +(w.rmssd!=null||w.meanHR!=null
+      ? `<div class="bf-werte">`
+        +(w.rmssd!=null?`<div class="bf-w"><span>HRV · RMSSD</span><b>${Math.round(w.rmssd)} ms</b></div>`:'')
+        +(w.meanHR!=null?`<div class="bf-w"><span>Ø Puls</span><b>${Math.round(w.meanHR)} bpm</b></div>`:'')
+        +(w.sdnn!=null?`<div class="bf-w"><span>SDNN</span><b>${Math.round(w.sdnn)} ms</b></div>`:'')
+        +`</div>` : '')
+    +`<div class="bf-fuss">Verschlüsselt zugestellt — außer dir und deiner Praxis konnte niemand diesen Befund lesen. Er liegt nur auf diesem Gerät; wer die Browserdaten löscht, verliert ihn.</div>`;
+  k.classList.remove('hidden');
+}
+
+/* Zuletzt gelesenen Befund sofort zeigen, auch ohne Netz. */
+try{ const alt=localStorage.getItem('carlon.befund.v1'); if(alt) befundZeigen(JSON.parse(alt)); }catch(e){}
+befundHolen();
+window.addEventListener('online', befundHolen);
+
 function show(id){
   VIEWS.forEach(v=>$('#'+v).classList.toggle('hidden', v!==id));
   // Hero-Atmosphaere nur dort, wo noch keine Messwerte stehen.
@@ -2363,7 +2482,14 @@ $('#btnSend').addEventListener('click', async ()=>{
          oeffnen. */
       $('#status').textContent='Verschlüssele die Aufnahme…';
       $('#pb').style.width='35%';
-      const klar=await S.blob.text();
+      /* Rueckadresse in die Sendung legen — verschluesselt, also nur fuer die
+         Praxis sichtbar. */
+      const nutzlast=JSON.parse(await S.blob.text());
+      try{
+        const ich=await meineIdentitaet();
+        nutzlast.rueckadresse={fach:ich.fach, boxPub:ich.boxPub, v:1};
+      }catch(e){ /* ohne Rueckadresse senden ist besser als gar nicht senden */ }
+      const klar=JSON.stringify(nutzlast);
       const umschlag=await Krypto.versiegeln(praxisKey, klar, fach);
       $('#status').textContent='Sende an die Praxis…';
       $('#pb').style.width='70%';
