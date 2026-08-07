@@ -644,6 +644,14 @@ svg.viz .bezel{stroke:var(--cyan);stroke-opacity:.55;stroke-width:1.1;stroke-lin
 <div id="weiterKarte" class="uebergabe weiter hidden"></div>
 <div id="befundKarte" class="befund hidden"></div>
 
+<script>
+/* EIN SCHALTER, EINE WAHRHEIT. Frueh definiert, weil sowohl die
+   iPhone-Kachel oben als auch die Marke unten davon abhaengen.
+   Steht die App im Store: auf true. Sonst verspricht die Seite etwas, das
+   niemand finden kann — und zwar an der teuersten Stelle: dort, wo ein
+   iPhone-Nutzer gerade erfaehrt, dass er hier nicht messen kann. */
+const HAUS={ appImStore:false, appUrl:'https://carlon.app' };
+</script>
 <div class="card">
   <!-- Marken-Lockup wie der App-Startbildschirm: der leuchtende Pferdekopf
        gross, darunter die weit getrackte Wortmarke. Im Beleg-Zustand faellt
@@ -680,8 +688,21 @@ svg.viz .bezel{stroke:var(--cyan);stroke-opacity:.55;stroke-width:1.1;stroke-lin
       </div>
       <div class="way">
         <div class="wi gold"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M16.4 12.7c0-2.2 1.8-3.3 1.9-3.4-1-1.5-2.6-1.7-3.2-1.7-1.4-.1-2.7.8-3.3.8-.7 0-1.7-.8-2.8-.8-1.5 0-2.8.8-3.6 2.1-1.5 2.6-.4 6.5 1.1 8.6.7 1 1.6 2.2 2.7 2.1 1.1 0 1.5-.7 2.8-.7s1.7.7 2.8.7c1.2 0 1.9-1 2.6-2.1.8-1.2 1.2-2.4 1.2-2.4s-2.2-.9-2.2-3.2zM14.3 5.9c.6-.7 1-1.7.9-2.7-.9 0-2 .6-2.6 1.3-.6.6-1.1 1.7-.9 2.6 1 .1 2-.5 2.6-1.2z"/></svg></div>
-        <div class="wt"><b data-i18n="wayIosT">iPhone: die CARLON-App</b><span data-i18n="wayIosS">Misst nativ und kann deutlich mehr als diese Seite.</span></div>
+        <div class="wt"><b id="wayIosT" data-i18n="wayIosT">Apple-Geräte: CARLON EQUINE</b><span id="wayIosS" data-i18n="wayIosS">Die App misst nativ und kann deutlich mehr als diese Seite.</span></div>
       </div>
+      <script>
+      /* Solange die App nicht im Store steht, ist sie kein Weg — dann darf
+         sie auch nicht wie einer aussehen. data-i18n abnehmen, sonst setzt
+         der Uebersetzer den Werbetext gleich wieder darueber. */
+      if(!HAUS.appImStore){
+        const t=document.getElementById('wayIosT'), u=document.getElementById('wayIosS');
+        const k=t&&t.closest('.way');
+        if(t){ t.removeAttribute('data-i18n'); t.textContent='Apple-Geräte: CARLON EQUINE kommt'; }
+        if(u){ u.removeAttribute('data-i18n');
+               u.textContent='Die App ist noch nicht erschienen. Bis dahin führt der Knopf unten zum Ziel.'; }
+        if(k) k.style.opacity='.55';
+      }
+      </script>
     </div>
 
     <button class="btn" id="btnSendLink">
@@ -937,10 +958,6 @@ svg.viz .bezel{stroke:var(--cyan);stroke-opacity:.55;stroke-width:1.1;stroke-lin
 <div class="dach" id="dach"></div>
 
 <script>
-const HAUS={
-  appImStore:false,                     // ← der eine Schalter
-  appUrl:'https://carlon.app',
-};
 (function(){
   const d=document.getElementById('dach'); if(!d) return;
   d.innerHTML='<a href="https://carlon.app" target="_blank" rel="noopener">CARLON</a>'
@@ -997,7 +1014,7 @@ de:{
  unsupSub:'Apple lässt Bluetooth im Browser grundsätzlich nicht zu — auf iPhone und iPad gilt das für Safari genauso wie für Chrome. Drei Wege führen trotzdem zum Ziel.',
  wayAndroidT:'Android-Handy oder Tablet', wayAndroidS:'Diesen Link dort in Chrome öffnen — die Messung startet sofort.',
  wayDesktopT:'Computer mit Chrome oder Edge', wayDesktopS:'Funktioniert genauso, solange der Gurt in Reichweite ist.',
- wayIosT:'iPhone: die CARLON-App', wayIosS:'Misst nativ und kann deutlich mehr als diese Seite.',
+ wayIosT:'Apple-Geräte: CARLON EQUINE', wayIosS:'Die App misst nativ und kann deutlich mehr als diese Seite.',
  sendLink:'Link an ein messendes Gerät senden',
  sendFile:'Aufnahme als Datei senden',
  unsupHint:'Du hast schon eine Aufnahme als Datei? Dann kannst du sie direkt an deine Praxis übergeben — dafür brauchst du kein Bluetooth.',
@@ -1079,7 +1096,7 @@ en:{
  unsupSub:'Apple does not allow Bluetooth in the browser at all — on iPhone and iPad this applies to Safari just as much as to Chrome. Three routes still get you there.',
  wayAndroidT:'Android phone or tablet', wayAndroidS:'Open this link there in Chrome — recording starts right away.',
  wayDesktopT:'Computer with Chrome or Edge', wayDesktopS:'Works the same, as long as the belt is in range.',
- wayIosT:'iPhone: the CARLON app', wayIosS:'Records natively and does considerably more than this page.',
+ wayIosT:'Apple devices: CARLON EQUINE', wayIosS:'The app records natively and does considerably more than this page.',
  sendLink:'Send the link to a device that can record',
  sendFile:'Send a recording as a file',
  unsupHint:'Already have a recording as a file? You can hand it to your practice directly — no Bluetooth needed for that.',

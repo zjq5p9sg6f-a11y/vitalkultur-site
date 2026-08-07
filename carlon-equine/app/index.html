@@ -3243,7 +3243,7 @@ const Chart={
 /* ════════════════════════════════════════════════════════════════════════
    HRV — Rechenmodul + Grafiken (aus RR-Intervallen, equine-konform)
    Bänder: VLF 0–0,01 · LF 0,01–0,07 · HF 0,07–0,6 Hz (Kuwahara 1996, equine)
-   Deckungsgleich mit CARLON-App/Website. Werte aus Export bevorzugt, sonst berechnet.
+   Deckungsgleich mit CARLON EQUINE/Website. Werte aus Export bevorzugt, sonst berechnet.
    ════════════════════════════════════════════════════════════════════════ */
 const HRV={
   BANDS:{vlf:[0,0.01],lf:[0.01,0.07],hf:[0.07,0.6]},   // equine (Hz)
@@ -4712,7 +4712,7 @@ const Views={
           <span class="tri-badge ${a.triggered?(sev&&sev.c==='alert'?'tri-crit':'tri-elev'):'tri-stable'}"><span class="dot"></span>${a.triggered?(sev?sev.t:'Signal vorhanden'):'unauffällig'}</span>
           ${a.met!=null?`<span style="font-size:12px;color:var(--text-dim)">${a.met}/${a.tot} Kriterien erfüllt</span>`:''}</div>
         ${inds.length?`<div class="chips" style="margin-bottom:12px">${inds.map(i=>`<span class="chip amber">${esc(i)}</span>`).join('')}</div>`:''}`
-      :`<p style="font-size:12px;color:var(--text-dim);margin-bottom:10px">Ein validiertes Screening liefert die CARLON-App als Random-Forest-Score. Hier siehst du den atemwegs-relevanten Marker im Verlauf.</p>`}
+      :`<p style="font-size:12px;color:var(--text-dim);margin-bottom:10px">Ein validiertes Screening liefert CARLON EQUINE als Random-Forest-Score. Hier siehst du den atemwegs-relevanten Marker im Verlauf.</p>`}
       ${a.sd2sd1Series.length>1?`<div class="chart-wrap" style="margin:0"><div class="ct"><span>SD2/SD1-Ratio · sympatho-vagale Balance</span></div>${Chart.ts(a.sd2sd1Series,{color:'var(--equine)',h:120,unit:''})}</div>`:''}
       <div style="font-size:11px;color:var(--text-faint);margin-top:10px;font-style:italic">Equine-spezifisches HRV-Atemwegs-Screening (Nyerges-Bohák 2025 · Random-Forest · n=40 · BAL-validiert). Screening-Hinweis, keine Diagnose — klinische Abklärung (BAL) bleibt tierärztlich.</div>
     </div>`;
@@ -8485,7 +8485,7 @@ function showTour(){
   t.innerHTML=`<div class="tour-card">
     <img src="assets/carlon-logo-soft-512.png" alt="">
     <h2>CARLON EQUINE — Praxis-Cockpit</h2>
-    <div class="lead">Pferdebesitzer senden dir HRV-Aufnahmen aus der CARLON-App. Hier betreust du hunderte Pferde, erkennst kritische Fälle sofort und dokumentierst telemetrische Ferneinschätzungen als eigene Leistung.</div>
+    <div class="lead">Pferdebesitzer senden dir HRV-Aufnahmen aus CARLON EQUINE. Hier betreust du hunderte Pferde, erkennst kritische Fälle sofort und dokumentierst telemetrische Ferneinschätzungen als eigene Leistung.</div>
     <div class="tour-steps">
       <div class="tstep"><div class="ti"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg></div><div><b>1 · Importieren</b><span>Ganze Ordner voller CARLON-Exporte auf einmal — automatisch dem Pferd zugeordnet.</span></div></div>
       <div class="tstep"><div class="ti"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="9" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/></svg></div><div><b>2 · Triagieren</b><span>Das Board sortiert alle Pferde nach Dringlichkeit — kritische zuerst.</span></div></div>
