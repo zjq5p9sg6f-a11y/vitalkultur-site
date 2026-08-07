@@ -7152,7 +7152,7 @@ const Postausgang={
 };
 
 const Postfach={
-  DIENST:'https://postfach.vitalkultur.com',
+  DIENST:'https://postfach.carlon.app',
   _laeuft:false, _letzter:0,
   async _ruf(pfad, leib){
     const r=await fetch(this.DIENST+pfad,{method:'POST',
@@ -7493,7 +7493,7 @@ const License={
      Kuendigt jemand, schlaegt die Erneuerung fehl und der Zugang endet von
      selbst. Genau deshalb muss die Lizenz kurz sein: ein Rueckruf ist bei
      offline geprueften Schluesseln unmoeglich. */
-  DIENST:'https://lizenz.vitalkultur.com',
+  DIENST:'https://lizenz.carlon.app',
   get RENEW_URL(){ return this.DIENST+'/erneuern'; },
   /* TAEGLICH erneuern, nicht erst bei 7 Tagen Rest. Wer mit 7 Tagen Rest ins
      Funkloch faehrt, hat nur 7 Tage Reichweite; wer taeglich erneuert, geht
