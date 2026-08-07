@@ -1533,6 +1533,10 @@ svg.viz .sd-lbl{fill:var(--cyan-strong);font-size:10px;font-weight:600;font-fami
 .kanon-warn svg{width:16px;height:16px;flex:none;color:var(--amber);margin-top:1px}
 .kanon-warn b{display:block;color:var(--text-primary);margin-bottom:2px}
 .kanon-warn code{font-size:11px;color:var(--cyan);word-break:break-all}
+/* Der Schluessel-Hinweis wiegt schwerer als der Adress-Hinweis: dort geht
+   ein Blatt verloren, hier die Praxis-Identitaet. */
+.kanon-warn.schluessel{border-color:rgba(255,82,99,.42);background:rgba(255,82,99,.09)}
+.kanon-warn.schluessel svg{color:var(--red)}
 .ein-raster{display:grid;grid-template-columns:270px 1fr;gap:30px;align-items:start;padding:2px 0}
 .ein-links{text-align:center}
 /* DAS BLATT, nicht der Code. Vorher schwebte ein weisses Quadrat in
@@ -6891,6 +6895,26 @@ const UI={
     this.modal(`<div class="modal-head"><button class="closex" onclick="UI.closeModal()">${IC.x}</button><h3>Stall-Aushang</h3></div>
     <div class="modal-body">
       ${(()=>{
+        /* 🔴 DER SCHLUESSEL EXISTIERT NUR IN DIESEM BROWSER.
+           Geht das Profil verloren — geloeschte Browserdaten, neues Geraet,
+           neu aufgesetzter Rechner — ist die Fachnummer weg. Dann zeigt
+           JEDER gedruckte Aushang ins Leere, dauerhaft, und eingegangene
+           Aufnahmen sind nicht mehr zu entschluesseln. Wiederherstellen
+           laesst sich davon nichts.
+           Deshalb genau hier: an der Stelle, an der jemand im Begriff ist,
+           etwas zu drucken, das seinen Browser ueberleben soll. Eine
+           Sicherung von VOR der Fach-Erzeugung zaehlt nicht. */
+        const seit=State.settings.praxisSeit, letzte=State.settings.lastBackupAt;
+        const ungesichert = !letzte || (seit && new Date(letzte) < new Date(seit));
+        if(!ungesichert) return '';
+        return `<div class="kanon-warn schluessel">${IC.warn||''}<div>
+          <b>Sichern Sie zuerst Ihre Praxis-Kennung.</b>
+          Sie liegt ausschließlich in diesem Browser. Geht sie verloren, zeigt jeder
+          gedruckte Aushang dauerhaft ins Leere und eingegangene Messungen lassen sich
+          nicht mehr öffnen — das kann niemand wiederherstellen, auch wir nicht.
+          <button class="btn sm" style="margin-top:9px" onclick="Backup.doExport()">${IC.download} Jetzt sichern</button>
+        </div></div>`;})()}
+      ${(()=>{
         /* Wer aus einer Vorschau heraus druckt, verteilt Altpapier — und
            merkt es erst, wenn eine Kundin vor einer toten Seite steht.
            Deshalb hier und nicht im Nachhinein. */
@@ -7200,6 +7224,9 @@ const Praxis={
     if(!this._ich){
       this._ich=await Krypto.praxisAnlegen();
       State.settings.praxisIdentitaet=await Krypto.praxisSichern(this._ich);
+      /* Wann das Fach entstand. Eine Sicherung von DAVOR enthaelt den
+         Schluessel nicht — sie sieht aus wie ein Backup und ist keins. */
+      State.settings.praxisSeit=State.settings.praxisSeit||new Date().toISOString();
       await State.saveSettings();
     }
     return this._ich;
