@@ -77,36 +77,62 @@
        Der Absender braucht KEIN Konto und KEINEN eigenen dauerhaften
        Schlüssel — nur den öffentlichen aus dem Link. Genau deshalb kann ein
        Pferdebesitzer ohne Anmeldung senden. */
-    async versiegeln(boxPubB64, klartext) {
+    /* SCHLUESSELABLEITUNG MIT HKDF — nachgeruestet, nachdem eine Messung es
+       belegt hat: WebCrypto gibt bei ECDH-`deriveKey` die rohe x-Koordinate
+       des gemeinsamen Punkts UNVERAENDERT als AES-Schluessel heraus. Nachgeprueft,
+       nicht geglaubt: rohes Geheimnis und abgeleiteter Schluessel waren Byte fuer
+       Byte identisch.
+       Das war kein bekannter Angriff auf ein einzelnes Chiffrat, aber es
+       widerspricht NIST SP 800-56A/56C und RFC 9180 und laesst zwei Dinge
+       fehlen, die spaeter teuer werden: Bereichstrennung (derselbe Schluessel
+       waere in einem anderen Zusammenhang nicht getrennt) und die Bindung an
+       den Empfaenger.
+       Jetzt: deriveBits -> HKDF-SHA-256 mit kontextgebundenem `info`, plus
+       AES-GCM mit zusaetzlichen authentifizierten Daten. Damit gehoert ein
+       Umschlag genau zu EINEM Postfach — an ein anderes weitergereicht laesst
+       er sich nicht mehr oeffnen. */
+    async _aesSchluessel(privKey, pubKey, fach, wegPubB64, zweck) {
+      const bits = await crypto.subtle.deriveBits(
+        { name: 'ECDH', public: pubKey }, privKey, 256);
+      const hk = await crypto.subtle.importKey('raw', bits, 'HKDF', false, ['deriveKey']);
+      return crypto.subtle.deriveKey(
+        { name: 'HKDF', hash: 'SHA-256', salt: new Uint8Array(0),
+          info: new TextEncoder().encode('CARLON-postfach-v2|' + fach) },
+        hk, { name: 'AES-GCM', length: 256 }, false, [zweck]);
+    },
+    _aad(fach, wegPubB64) {
+      return new TextEncoder().encode(fach + '|' + wegPubB64);
+    },
+
+    async versiegeln(boxPubB64, klartext, fach) {
+      if (!fach) throw new Error('Fachnummer fehlt — sie bindet den Umschlag an das Postfach');
       const empfaenger = await crypto.subtle.importKey('raw', unb64u(boxPubB64),
         { name: 'ECDH', namedCurve: 'P-256' }, false, []);
       const weg = await crypto.subtle.generateKey(
-        { name: 'ECDH', namedCurve: 'P-256' }, false, ['deriveKey']);
-      const schluessel = await crypto.subtle.deriveKey(
-        { name: 'ECDH', public: empfaenger }, weg.privateKey,
-        { name: 'AES-GCM', length: 256 }, false, ['encrypt']);
+        { name: 'ECDH', namedCurve: 'P-256' }, false, ['deriveKey', 'deriveBits']);
+      const wegPub = b64u(await crypto.subtle.exportKey('raw', weg.publicKey));
+      const schluessel = await this._aesSchluessel(
+        weg.privateKey, empfaenger, fach, wegPub, 'encrypt');
       const iv = crypto.getRandomValues(new Uint8Array(12));
       const daten = typeof klartext === 'string'
         ? new TextEncoder().encode(klartext) : klartext;
       const chiffrat = await crypto.subtle.encrypt(
-        { name: 'AES-GCM', iv }, schluessel, daten);
-      return {
-        v: 1,
-        weg: b64u(await crypto.subtle.exportKey('raw', weg.publicKey)),
-        iv: b64u(iv),
-        c: b64u(chiffrat),
-      };
+        { name: 'AES-GCM', iv, additionalData: this._aad(fach, wegPub) },
+        schluessel, daten);
+      return { v: 2, weg: wegPub, iv: b64u(iv), c: b64u(chiffrat) };
     },
 
     /* ── Empfangen: nur mit dem privaten Schlüssel der Praxis ── */
-    async oeffnen(boxPrivKey, umschlag) {
+    async oeffnen(boxPrivKey, umschlag, fach) {
+      if (!fach) throw new Error('Fachnummer fehlt');
       const weg = await crypto.subtle.importKey('raw', unb64u(umschlag.weg),
         { name: 'ECDH', namedCurve: 'P-256' }, false, []);
-      const schluessel = await crypto.subtle.deriveKey(
-        { name: 'ECDH', public: weg }, boxPrivKey,
-        { name: 'AES-GCM', length: 256 }, false, ['decrypt']);
+      const schluessel = await this._aesSchluessel(
+        boxPrivKey, weg, fach, umschlag.weg, 'decrypt');
       const klar = await crypto.subtle.decrypt(
-        { name: 'AES-GCM', iv: unb64u(umschlag.iv) }, schluessel, unb64u(umschlag.c));
+        { name: 'AES-GCM', iv: unb64u(umschlag.iv),
+          additionalData: this._aad(fach, umschlag.weg) },
+        schluessel, unb64u(umschlag.c));
       return new TextDecoder().decode(klar);
     },
 
