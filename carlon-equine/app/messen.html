@@ -1096,6 +1096,17 @@ de:{
  /* Empfang */
  readyH1:'Messung für den Tierarzt',
  readySub:'Verbinde den Polar-H10-Gurt deines Pferds. Die Aufnahme geht direkt an deine Tierärztin oder deinen Tierarzt — ohne Umweg über einen Server.',
+ /* ── Wer OHNE Aushang hier landet ───────────────────────────────────────
+    Der Text darüber ist für den Aushang geschrieben: dort steht das Fach
+    der Praxis im Link, „geht direkt an deine Tierärztin" ist dann wahr.
+    Wer die Seite selbst findet, hat kein Fach — für den wäre derselbe Satz
+    ein Versprechen, das die Seite nicht halten kann. Er bekommt einen Link
+    und verschickt ihn selbst. Genau dieser Besucher ist die Richtung, die
+    uns NEUE Praxen bringt; ihn mit einem falschen Satz zu empfangen wäre
+    der teuerste Fehler auf dieser Seite. */
+ freiH1:'Herzrhythmus deines Pferdes messen',
+ freiSub:'Verbinde den Polar-H10-Gurt — die Aufnahme entsteht auf deinem Gerät. Am Ende bekommst du einen Link für deine Tierärztin oder deinen Tierarzt: nur wer ihn hat, kann die Messung öffnen. Ohne App, ohne Konto.',
+ freiTitle:'Herzrhythmus beim Pferd messen — CARLON Equine',
  roomLabel:'Verbindungscode:',
  horseLabel:'Name des Pferds',
  horsePh:'z. B. Mistral',
@@ -1179,6 +1190,9 @@ en:{
  brandTag:'Equine Heart Science',
  readyH1:'Recording for your vet',
  readySub:'Connect your horse’s Polar H10 belt. The recording goes straight to your veterinarian — no server in between.',
+ freiH1:'Measure your horse’s heart rhythm',
+ freiSub:'Connect the Polar H10 belt — the recording is made on your device. At the end you get a link for your vet: only whoever holds it can open the recording. No app, no account.',
+ freiTitle:'Measure equine heart rhythm — CARLON Equine',
  roomLabel:'Connection code:',
  horseLabel:'Horse’s name',
  horsePh:'e.g. Mistral',
@@ -1259,6 +1273,28 @@ function setLang(l){
   document.documentElement.lang=l;
   applyLang();
 }
+/* Ohne Fach im Link ist der Empfangstext eine Zusage, die diese Seite nicht
+   halten kann — siehe freiH1/freiSub im Katalog.
+
+   Die Abfrage liest die Adresse SELBST statt die weiter unten definierte
+   Konstante `hatPraxis` zu benutzen: applyLang() laeuft auch aus setLang(),
+   und dieser Block steht frueher in der Datei. Eine Konstante von weiter
+   unten waere beim ersten Aufruf undefined — und der Fehler waere still,
+   weil undefined sich wie „kein Fach" verhaelt und zufaellig meistens
+   richtig laege. */
+function freienBesuchAnpassen(){
+  try{
+    const q=new URLSearchParams(location.search);
+    if(q.get('fach') && q.get('k')) return;      // vom Aushang: Text stimmt
+    if(location.hash.indexOf('anfrage=')>=0) return;  // gezielte Anforderung
+    const h1=document.querySelector('[data-i18n="readyH1"]');
+    const sub=document.querySelector('[data-i18n="readySub"]');
+    const a=t('freiH1',null), b=t('freiSub',null), c=t('freiTitle',null);
+    if(h1&&a) h1.textContent=a;
+    if(sub&&b) sub.textContent=b;
+    if(c) document.title=c;
+  }catch(e){ /* Im Zweifel bleibt der Aushang-Text stehen — nie ein leerer Kopf. */ }
+}
 function applyLang(){
   document.querySelectorAll('[data-i18n]').forEach(el=>{
     const v=t(el.getAttribute('data-i18n'),null);
@@ -1273,6 +1309,7 @@ function applyLang(){
     if(v!=null) el.setAttribute('aria-label',v);
   });
   document.title=t('title');
+  freienBesuchAnpassen();
   const b=document.getElementById('langBtn');
   if(b) b.innerHTML = LANG==='de'
     ? '<b>DE</b><span>EN</span>' : '<span>DE</span><b>EN</b>';

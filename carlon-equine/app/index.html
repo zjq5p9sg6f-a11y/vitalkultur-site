@@ -108,6 +108,17 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
 .safe-banner .sb-x:hover{background:color-mix(in srgb,var(--amber) 18%,transparent);color:var(--text-primary)}
 .safe-banner.urgent{background:linear-gradient(180deg,rgba(255,82,99,.18),rgba(255,82,99,.10));border-bottom-color:color-mix(in srgb,var(--red) 45%,transparent)}
 .safe-banner.urgent .sb-ic,.safe-banner.urgent .sb-txt b{color:var(--red)}
+/* ── Saat-Band ──────────────────────────────────────────────────────────
+   Dasselbe Gerüst wie das Sicherheitsband, bewusst in der Markenfarbe statt
+   in Warnbernstein: hier droht nichts, hier steht eine Möglichkeit. Ein
+   Hinweis, der wie eine Warnung aussieht, wird wie eine Warnung
+   weggeklickt. Es sitzt UNTER dem Sicherheitsband — eine echte Gefahr geht
+   immer vor einer Gelegenheit. */
+.safe-banner.saat{background:linear-gradient(180deg,color-mix(in srgb,var(--cyan) 15%,transparent),color-mix(in srgb,var(--cyan) 8%,transparent));border-bottom-color:color-mix(in srgb,var(--cyan) 38%,transparent);z-index:59}
+.safe-banner.saat .sb-ic{color:var(--cyan)}
+.safe-banner.saat .sb-txt b{color:var(--cyan)}
+.safe-banner.saat .sb-btn.primary{background:var(--cyan);border-color:var(--cyan);color:var(--bg-void)}
+.safe-banner.saat .sb-x:hover{background:color-mix(in srgb,var(--cyan) 18%,transparent)}
 button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
 input,select,textarea{font-family:inherit;font-size:14px}
 a{color:var(--cyan);text-decoration:none}
@@ -1826,6 +1837,7 @@ nav.tabs button.on{text-shadow:none}
     </button>
   </header>
   <div id="safeBanner" class="safe-banner" style="display:none"></div>
+  <div id="saatBanner" class="safe-banner saat" style="display:none"></div>
   <main id="main"></main>
   <nav class="bottom-nav" id="bottomNav">
     <button data-tab="today" class="on"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M3 9h18M8 2v4M16 2v4M8 14l2.5 2.5L16 12"/></svg><span>Heute</span></button>
@@ -7572,6 +7584,10 @@ const Postfach={
     Toast.show('Messung Ihrer Kundin geöffnet — verschlüsselt übertragen','ok');
     State.settings.uebergabeGesehen=(State.settings.uebergabeGesehen||0)+1;
     await State.saveSettings();
+    /* Sofort, nicht erst beim nächsten Start: der Beweis liegt JETZT auf dem
+       Tisch. Diese Zeile ist der Grund, warum der Zähler überhaupt existiert
+       — vorher wurde er geführt und von nichts gelesen. */
+    if(typeof Saat!=='undefined') Saat.render();
     return true;
   },
 
@@ -7696,7 +7712,16 @@ const License={
      niemand versehentlich anbieten.
      Die Klinik-Antwort bleibt bis zum Mehrbenutzer-Betrieb: N Solo-Plaetze. */
   PREIS:{ soloMonat:79, soloJahr:790 },
-  PRICES:{vet_solo:'79 €/Mo zzgl. MwSt.',vet_clinic:'149 €/Mo zzgl. MwSt.',research:'29 €/Mo zzgl. MwSt.'},
+  /* ABGELEITET, nicht abgeschrieben. Hier stand '79 €/Mo' als Text — direkt
+     unter dem Kommentar, der „EINE Quelle für jede Preisangabe" verspricht.
+     Zwei Quellen für dieselbe Zahl sind keine Quelle, sondern eine Wette
+     darauf, dass beim nächsten Ändern niemand die zweite übersieht.
+     vet_clinic und research werden NICHT verkauft (kein Kaufweg, keine Zahl
+     in PREIS) — sie sind ausschliesslich per signiertem Schlüssel
+     vergebbar, deshalb steht ihr Satz hier ausgeschrieben. */
+  get PRICES(){ return {
+    vet_solo: this.PREIS.soloMonat+' €/Mo zzgl. MwSt.',
+    vet_clinic:'auf Anfrage', research:'auf Anfrage' }; },
   /* ── ZAHLUNG (Stripe) ist von BERECHTIGUNG (eigene signierte Keys) ENTKOPPELT ──
      Bewusste Architektur-Entscheidung 2026-08-06: Lemon Squeezy wurde von Stripe
      aufgekauft und migriert seine Haendler auf "Stripe Managed Payments" — die
@@ -7939,6 +7964,7 @@ const License={
       State.settings.license={provider:'offline',sub:d.abo,key:d.lizenz};
       await State.saveSettings();
       await this.loadFromSettings(); Nav.render();
+      if(typeof Saat!=='undefined') Saat.render();   // zahlt jetzt → Hinweis verschwindet sofort
       saeubern();
       Toast.show(`Freigeschaltet: ${this.TIERS[this.tier()].name}`,'ok');
       return true;
@@ -7993,6 +8019,7 @@ const License={
       s.key=d.lizenz; s.letztePruefung=Math.floor(Date.now()/1000); s.abgelehntSeit=null;
       State.settings.license=s; await State.saveSettings();
       await this.loadFromSettings(); Nav.render();
+      if(typeof Saat!=='undefined') Saat.render();   // zahlt jetzt → Hinweis verschwindet sofort
       return {ok:true,bis:v.exp};
     }catch(e){ return {ok:false,grund:e.message||'Netzfehler'}; }
   },
@@ -8973,6 +9000,57 @@ const Safe={
     Toast.show('Hinweis für 7 Tage ausgeblendet — Datensicherheit bleibt in den Einstellungen','info');
   }
 };
+/* ── Saat · der Moment, in dem der Beweis schon auf dem Tisch liegt ───────
+   ═══════════════════════════════════════════════════════════════════════
+   Eine Pferdebesitzerin hat von sich aus gemessen und ihrer Tierärztin den
+   Link geschickt. Die Tierärztin sitzt jetzt im Cockpit, mit der Aufnahme
+   ihrer eigenen Kundin darin — der stärkste Augenblick, den dieses Produkt
+   hat. Er stand bis hierher ungenutzt: `uebergabeGesehen` wurde
+   HOCHGEZÄHLT UND VON NICHTS GELESEN. Eine Messung ohne Entscheidung ist
+   keine Messung, sie ist Buchhaltung.
+
+   Was fehlte, ist nicht ein Verkaufsargument, sondern eine Auskunft: dass
+   aus diesem Einzelfall ein Kanal werden kann. Der Aushang ist der
+   Multiplikator — eine Kundin schickt einen Link, ein Aushang erreicht den
+   ganzen Stall.
+
+   DREI REGELN, absichtlich eng:
+   1. Erst NACH einer echten Übergabe. Ohne Erlebnis kein Angebot.
+   2. NIE, wenn die Praxis bezahlt — sie hat den Aushang längst.
+   3. Wegklickbar, und dann 30 Tage still. Ein Hinweis, der wiederkommt,
+      bevor sich etwas geändert hat, ist Werbung.
+   Der Knopf führt auf den Aushang; das Tor sitzt in Praxis.einladung() und
+   stellt dort die Frage nach dem Abo. Hier wird nichts verkauft, hier wird
+   gezeigt, was möglich ist.                                              */
+const Saat={
+  STILL_TAGE:30,
+  render(){
+    const el=$('#saatBanner'); if(!el) return;
+    const s=(State&&State.settings)||{};
+    const aus=()=>{ el.style.display='none'; };
+    if(!(s.uebergabeGesehen>0)) return aus();                 // 1. kein Erlebnis
+    if(s.isDemo) return aus();                                // Demo ist kein Beweis
+    try{ if(License.can('ownerFeedback')) return aus(); }catch(e){ return aus(); } // 2. zahlt
+    if(s.saatStillBis && Date.now()<s.saatStillBis) return aus();                  // 3. still
+    const mehrfach=s.uebergabeGesehen>1;
+    el.style.display='';
+    el.innerHTML=`<div class="sb-in">
+      <svg class="sb-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v6M12 22v-6M2 12h6M22 12h-6"/><circle cx="12" cy="12" r="3.4"/></svg>
+      <div class="sb-txt"><b>${mehrfach?'Schon die '+s.uebergabeGesehen+'. Messung von Ihren Kundinnen.':'Ihre Kundin hat selbst gemessen.'}</b>
+        Ein Aushang in der Stallgasse macht daraus den Regelfall: Aufnahmen kommen
+        verschlüsselt in Ihre Praxis, Sie antworten mit einem Befund — und
+        rechnen ihn ab.</div>
+      <button class="sb-btn primary" onclick="Saat.aushang()">Aushang ansehen</button>
+      <button class="sb-x" onclick="Saat.still()" title="Ausblenden — der Aushang bleibt in der Verwaltung"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M18 6L6 18M6 6l12 12"/></svg></button>
+    </div>`;
+  },
+  aushang(){ UI.dauerEinladung&&UI.dauerEinladung(); },
+  still(){
+    if(State.settings){ State.settings.saatStillBis=Date.now()+this.STILL_TAGE*86400000; State.saveSettings(); }
+    const el=$('#saatBanner'); if(el) el.style.display='none';
+    Toast.show('Ausgeblendet — der Aushang steht in der Verwaltung','info');
+  },
+};
 const PWA={
   deferred:null,
   iOS(){return /iphone|ipad|ipod/i.test(navigator.userAgent)&&!window.MSStream;},
@@ -9038,6 +9116,7 @@ addEventListener('beforeinstallprompt',e=>{e.preventDefault();PWA.deferred=e;});
     Chart.initHover();
     Nav.go(Nav.cur);
     Safe.renderBanner();
+    Saat.render();
     // Nahtlose Verlängerung: kein stiller Cliff — bei Ablauf/baldigem Ablauf freundlich erinnern (Daten bleiben erhalten)
     {const rn=License.needsRenewal(); if(rn){ const founder=rn.founder||License.isFounder();
       const msg=rn.state==='expired'
