@@ -1,0 +1,164 @@
+<!doctype html>
+<html lang="de">
+<meta charset="utf-8">
+<title>OG-Bild bauen — CARLON Equine Messstation</title>
+<!-- Werkzeug, kein Ziel: gehoert nicht in den Index. Die Seite wird mit dem
+     Repo ausgeliefert, unverlinkt ist nicht dasselbe wie unerreichbar. -->
+<meta name="robots" content="noindex">
+<!-- ═══════════════════════════════════════════════════════════════════════
+     WERKZEUG, kein Produkt. Zeichnet das Vorschaubild, das beim Teilen der
+     Messstation erscheint (WhatsApp, Instagram, LinkedIn, Signal).
+
+     Warum als Seite und nicht von Hand in einem Grafikprogramm:
+     die Wolke ist ECHT. Sie stammt aus einer realen Aufnahme (Testpferd 2,
+     Polar H10, 24.06.2026, 325 Schläge, Ø 34 bpm) und wird mit derselben
+     Konstruktion gezeichnet wie die Teilkarte in der Messstation. Ein
+     nachgemalter Punktehaufen wäre eine Behauptung; das hier ist ein Bild
+     von einem Herzen.
+
+     Erzeugen:
+       node cdp.mjs "http://127.0.0.1:8765/carlon-equine/app/og-bauen.html" t-og.js > /tmp/og.txt
+     und die Datenadresse aus /tmp/og.txt in eine Datei schreiben.
+     Aufruf über ./og-bauen.sh in scripts/carlon-closed-loop.
+     ═══════════════════════════════════════════════════════════════════════ -->
+<style>
+@font-face{font-family:'Jost';font-style:normal;font-weight:300 700;font-display:block;src:url('assets/fonts/jost-variable.woff2') format('woff2')}
+@font-face{font-family:'Inter';font-style:normal;font-weight:400 700;font-display:block;src:url('assets/fonts/inter-variable.woff2') format('woff2')}
+html,body{margin:0;background:#111;color:#ddd;font-family:Inter,system-ui,sans-serif}
+canvas{display:block;margin:20px auto;max-width:96vw;box-shadow:0 10px 60px rgba(0,0,0,.6)}
+p{text-align:center;font-size:13px;color:#888}
+</style>
+<canvas id="c" width="2400" height="1260"></canvas>
+<p>1200 × 630 · Vorschaubild der Messstation · Wolke aus einer echten Aufnahme</p>
+<script>
+/* Die Aufnahme. Bewusst eingebettet und nicht nachgeladen: dieses Werkzeug
+   soll in fünf Jahren noch dasselbe Bild erzeugen, auch wenn die
+   Labordateien längst woanders liegen. Quelle:
+   carlon-h10-lab/sessions/CARLON_Testpferd2_HRV-Session_2026-06-24T18-46-12Z_9m_n325 */
+const RR_QUELLE = 'Testpferd 2 · Polar H10 · 24.06.2026 · 325 Schläge · Ø 34 bpm';
+let RR = [];
+
+async function laden(){
+  const r = await fetch('og-rr.json');
+  RR = await r.json();
+}
+
+/* ── Die Zeichnung ──────────────────────────────────────────────────────
+   Querformat, deshalb NICHT die quadratische Teilkarte beschnitten,
+   sondern neu gesetzt: Wolke links, Wort rechts. Ein zugeschnittenes
+   Quadrat verliert genau das, was die Karte trägt — die Ruhe um die Wolke. */
+function zeichne(sprache){
+  const c=document.getElementById('c'), x=c.getContext('2d');
+  const W=1200,H=630,K=2;
+  c.width=W*K; c.height=H*K;
+  x.setTransform(K,0,0,K,0,0);
+  const CY='#3ECFB2', TXT='#EDEEF1', DIM='#7A7A86';
+  const brand='Jost, system-ui, sans-serif', ui='Inter, system-ui, sans-serif';
+
+  x.fillStyle='#0A0A0C'; x.fillRect(0,0,W,H);
+
+  const MX=336, MY=H/2;                       // Mitte der Wolke
+  const gl=x.createRadialGradient(MX,MY,0,MX,MY,430);
+  gl.addColorStop(0,'rgba(62,207,178,0.17)'); gl.addColorStop(1,'rgba(62,207,178,0)');
+  x.fillStyle=gl; x.fillRect(0,0,W,H);
+
+  /* Blume des Lebens — dieselbe Konstruktion wie überall sonst in CARLON */
+  x.save(); x.globalAlpha=.15; x.strokeStyle=CY; x.lineWidth=1;
+  /* Der Radius ist GERECHNET, nicht geraten: die aeussersten Kreise liegen
+     2r vom Mittelpunkt und reichen nochmals r darueber hinaus — die Blume
+     braucht also 3r Platz nach jeder Seite. Bei r=104 blieben unten drei
+     Pixel, und genau so sah es auch aus. */
+  (function(){ const r=Math.floor(Math.min(MX, W-MX, MY, H-MY)/3) - 12;
+    const pts=[[MX,MY]];
+    for(let i=0;i<6;i++){const a=Math.PI/3*i; pts.push([MX+r*Math.cos(a),MY+r*Math.sin(a)]);}
+    for(let i=0;i<6;i++){const a=Math.PI/3*i; pts.push([MX+2*r*Math.cos(a),MY+2*r*Math.sin(a)]);}
+    for(let i=0;i<6;i++){const a=Math.PI/3*i+Math.PI/6,d=r*Math.sqrt(3);
+      pts.push([MX+d*Math.cos(a),MY+d*Math.sin(a)]);}
+    pts.forEach(([px,py])=>{ x.beginPath(); x.arc(px,py,r,0,Math.PI*2); x.stroke(); });
+  })(); x.restore();
+
+  /* Die Wolke: jeder Schlag gegen seinen Vorgänger.
+     Der Ausschnitt läuft vom 1. bis zum 99. Perzentil — ein einzelner
+     Artefakt-Schlag (hier 338 ms gegen einen Median von 1764 ms) würde die
+     Achsen sonst so weit aufziehen, dass die Wolke zu einem Punkt
+     zusammenfällt. Ausserhalb liegende Paare werden nicht versteckt,
+     sondern gezählt und unten genannt. */
+  const paare=[]; for(let i=1;i<RR.length;i++) paare.push([RR[i-1],RR[i]]);
+  const alle=paare.flat().slice().sort((a,b)=>a-b);
+  const lo=alle[Math.floor(alle.length*0.01)], hi=alle[Math.floor(alle.length*0.99)];
+  const spanne=Math.max(1,hi-lo), pad=spanne*0.14;
+  const S0=352, ox=MX-S0/2, oy=MY-S0/2;
+  const abb=(v)=>((v-(lo-pad))/(spanne+2*pad));
+  let draussen=0;
+  x.save();
+  paare.forEach(([a,b])=>{
+    const px=ox+abb(a)*S0, py=oy+S0-abb(b)*S0;
+    if(px<ox-6||px>ox+S0+6||py<oy-6||py>oy+S0+6){ draussen++; return; }
+    x.beginPath(); x.arc(px,py,4.2,0,Math.PI*2);
+    x.fillStyle='rgba(62,207,178,0.90)'; x.fill();
+  });
+  x.restore();
+
+  /* ── Wort ──────────────────────────────────────────────────────────── */
+  const T = sprache==='en' ? {
+    kopf:'That is a heartbeat.',
+    unter:'Every dot: one beat against the one before it.',
+    zeile:'Measured on your own horse — in the browser, no app.',
+  } : {
+    kopf:'Das ist ein Herzschlag.',
+    unter:'Jeder Punkt: ein Schlag gegen den vorherigen.',
+    zeile:'Gemessen am eigenen Pferd — im Browser, ohne App.',
+  };
+  const LX=636, SPALTE=W-LX-56;               // rechte Spalte, mit Rand
+  x.textAlign='left';
+
+  /* Schreibt eine Zeile und verkleinert sie, BIS sie in die Spalte passt.
+     Der erste Entwurf setzte feste Groessen — im deutschen Satz lief
+     „Das ist ein Herzschlag." rechts aus dem Bild, und ein abgeschnittenes
+     Wort ist in einer Vorschau schlimmer als eine kleinere Schrift.
+     Gibt die tatsaechliche Groesse zurueck, damit nichts geraten wird. */
+  const gesetzt=[];
+  function zeile(text, groesse, familie, gewicht, y, farbe, mindest){
+    let g=groesse;
+    do{ x.font=`${gewicht} ${g}px ${familie}`;
+        if(x.measureText(text).width<=SPALTE) break;
+        g-=1;
+    } while(g>(mindest||12));
+    x.fillStyle=farbe; x.fillText(text,LX,y);
+    gesetzt.push({text, groesse:g, breite:Math.round(x.measureText(text).width)});
+    return g;
+  }
+
+  x.fillStyle=CY; x.font=`600 16px ${brand}`; x.letterSpacing='7px';
+  x.fillText('CARLON EQUINE', LX, 208);
+  x.letterSpacing='0px';
+
+  zeile(T.kopf, 54, brand, 500, 286, TXT, 34);
+  zeile(T.unter, 20, ui, 400, 330, DIM, 15);
+  zeile(T.zeile, 21, ui, 400, 394, TXT, 15);
+
+  /* Trennlinie: gibt der Adresse ein Fundament, ohne einen Kasten zu bauen */
+  x.strokeStyle='rgba(62,207,178,0.28)'; x.lineWidth=1;
+  x.beginPath(); x.moveTo(LX,432); x.lineTo(LX+276,432); x.stroke();
+
+  zeile('vitalkultur.com/messen', 25, ui, 500, 474, CY, 16);
+
+  /* Der Beweis, dass nichts abgeschnitten ist — steht in der Ausgabe des
+     Erzeugers, nicht im Bild. Ein Vorschaubild mit abgeschnittenem Wort
+     faellt sonst erst auf, wenn es geteilt ist. */
+  const zuBreit=gesetzt.filter(z=>z.breite>SPALTE);
+  return {draussen, paare:paare.length, lo:Math.round(lo), hi:Math.round(hi),
+          spalte:SPALTE, zeilen:gesetzt, zuBreit:zuBreit.length};
+}
+
+window.__og = async function(sprache){
+  if(!RR.length) await laden();
+  try{ await document.fonts.load('500 54px Jost'); await document.fonts.load('400 22px Inter'); }catch(e){}
+  try{ await document.fonts.ready; }catch(e){}
+  const info = zeichne(sprache||'de');
+  const c=document.getElementById('c');
+  return { info, quelle:RR_QUELLE, bild:c.toDataURL('image/jpeg',0.92) };
+};
+(async()=>{ await laden(); zeichne('de'); })();
+</script>
+</html>
