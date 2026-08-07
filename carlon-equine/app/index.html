@@ -5200,6 +5200,29 @@ const Views={
       </div>
     </div>`,{sheet:true});
   },
+  /* Ein Befund, den die Tierärztin auf eine eingesandte Messung schreibt,
+     IST eine abrechenbare Fernleistung — und zwar die, die es ohne uns gar
+     nicht gäbe. Bisher entstand daraus kein Posten: die Arbeit wurde durch
+     unser Werkzeug erbracht und im eigenen Umsatzbuch nicht sichtbar.
+     Vergessene Abrechnung ist bares Geld, jedes Mal.
+
+     Bewusst OHNE Rückfrage angelegt und bewusst als OFFEN, nicht als
+     abgerechnet. Wir behaupten nicht, dass sie es berechnet hat; wir sorgen
+     nur dafür, dass sie es nicht übersieht. Ein Klick löscht es wieder.
+     Fahrtenbuch und Pferdestatus bleiben unberührt — hier wurde keine Fahrt
+     ersetzt, hier kam die Messung von selbst. */
+  async befundBuchen(hid){
+    const h=State.horses.find(x=>x.id===hid); if(!h) return null;
+    const fee=Number(State.settings.tariff||State.settings.tariffRemote||0)||0;
+    const c={id:'c_'+Math.abs(hashStr(hid+'befund'+performance.now())).toString(36),
+      horseId:hid, date:new Date().toISOString(),
+      type:'Telemetrie-Befund (eingesandte Messung)', durationMin:15, fee,
+      savedKm:0, notes:'Befund auf eine von der Besitzerin eingesandte Messung',
+      billed:false, remote:true};
+    await DB.put('consults',c); State.consults.push(c);
+    return c;
+  },
+
   async completeRemote(hid){
     const h=State.horses.find(x=>x.id===hid); if(!h)return;
     const now=new Date();
@@ -5314,9 +5337,16 @@ const Views={
     /* Ehrlich unterscheiden: draussen ist etwas anderes als eingereiht. Wer
        "zugestellt" liest, obwohl es noch im Ausgang liegt, verliert das
        Vertrauen genau einmal. */
-    Toast.show(r.sofort
+    const gebucht=await Views.befundBuchen(hid);
+    /* Die Buchung wird MITGESAGT. Posten, die still im Umsatzbuch
+       auftauchen, sind ein Vertrauensbruch — auch wenn sie stimmen. */
+    const zusatz = gebucht
+      ? (gebucht.fee>0 ? ` · als Fern-Leistung offen gebucht (${euro(gebucht.fee)})`
+                       : ' · als Fern-Leistung offen gebucht — Honorarsatz noch nicht hinterlegt')
+      : '';
+    Toast.show((r.sofort
       ? `Befund an ${h.owner||'den Halter'} zugestellt — verschlüsselt`
-      : `Befund verschlüsselt im Postausgang — geht raus, sobald du Netz hast`,
+      : `Befund verschlüsselt im Postausgang — geht raus, sobald du Netz hast`)+zusatz,
       r.sofort?'ok':'info');
   },
   mailOwner(hid){const h=State.horses.find(x=>x.id===hid);const body=encodeURIComponent($('#ownerTxt').value);
