@@ -255,6 +255,14 @@ p.sub{color:var(--sec);font-size:clamp(13px,1.15vw,15px);margin:0 auto clamp(var
 .ws-zeile b{display:block;font-size:14px;color:var(--txt);margin-bottom:3px}
 .ws-zeile span{font-size:12px;color:var(--sec);line-height:1.5}
 .ws-zeile .btn{flex:none;white-space:nowrap}
+.dach{max-width:720px;margin:var(--s5) auto var(--s4);padding:var(--s4) var(--s4) 0;
+  border-top:1px solid var(--line,rgba(255,255,255,.08));
+  display:flex;gap:14px;align-items:flex-start}
+.dach a{font-family:var(--font-brand);font-weight:500;letter-spacing:.14em;
+  font-size:13px;color:var(--txt);text-decoration:none;white-space:nowrap;flex:none;
+  text-transform:uppercase;opacity:.85}
+.dach a:hover{opacity:1;color:var(--cyan)}
+.dach span{font-size:11.5px;color:var(--dim);line-height:1.6}
 /* Die Lage-Karte schliesst den Kreis: sie sagt dem Besitzer, dass etwas
    laeuft, ohne ihm eine Handlung abzuverlangen. Sie verschwindet, sobald der
    Befund da ist — dann spricht der Befund. */
@@ -851,6 +859,7 @@ svg.viz .bezel{stroke:var(--cyan);stroke-opacity:.55;stroke-width:1.1;stroke-lin
     </div>
     <div class="err" id="err" role="alert"></div>
 
+
     <div class="share">
       <div class="share-h">
         <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 21s-8-4.6-8-10.4A4.6 4.6 0 0112 7a4.6 4.6 0 018 3.6C20 16.4 12 21 12 21z"/></svg>
@@ -906,6 +915,35 @@ svg.viz .bezel{stroke:var(--cyan);stroke-opacity:.55;stroke-width:1.1;stroke-lin
 
 <script src="krypto.js"></script>
 <script src="p2p.js"></script>
+<!-- DAS DACH — auf JEDER Seite, nicht nur nach getaner Messung.
+     Das SaaS ist die Vorhut: es erreicht den Markt vor den iOS-Apps. Also
+     saet es den Hausnamen bei genau der Zielgruppe, die spaeter die Apps
+     kauft — und die Station ist der wiederkehrende Anlaufpunkt, weil hier
+     regelmaessig gemessen wird. Wir brauchen keine Warteliste; wir haben
+     einen Grund, dass sie wiederkommen.
+     Steht die App im Store, wird HAUS.appImStore auf true gesetzt — eine
+     Zeile, und aus dem Hinweis wird ein Weg. Bis dahin KEIN Link auf eine
+     geschlossene Beta: wer im Moment groesster Neugier vor einer
+     Mailto-Anmeldung landet, kommt nicht wieder. -->
+<div class="dach" id="dach"></div>
+
+<script>
+const HAUS={
+  appImStore:false,                     // ← der eine Schalter
+  appUrl:'https://vitalkultur.com/breathwork',
+};
+(function(){
+  const d=document.getElementById('dach'); if(!d) return;
+  d.innerHTML='<a href="https://vitalkultur.com" target="_blank" rel="noopener">Vitalkultur</a>'
+    +'<span>CARLON EQUINE ist ein Werkzeug aus diesem Haus. Wir messen Herzrhythmen — '
+    +'beim Pferd und beim Menschen. Zwischen beiden ist eine gerichtete Kopplung beschrieben '
+    +'worden (Callara et al., iScience 2024; kleine, explorative Studie).'
+    +(HAUS.appImStore
+      ? ' <a href="'+HAUS.appUrl+'" target="_blank" rel="noopener">Für dich selbst messen &rsaquo;</a>'
+      : '')
+    +'</span>';
+})();
+</script>
 <script>
 'use strict';
 const $=s=>document.querySelector(s);
@@ -2216,8 +2254,8 @@ function weitersagenZeigen(){
     +`<span>Zweitmeinung oder anderer Schwerpunkt. Der Link enthält diese Messung.</span></div>`
     +`<button class="btn ghost" id="wsVet">Link erzeugen</button></div>`
     +`<div class="ws-zeile"><div><b>Einem Stallfreund zeigen</b>`
-    +`<span>Nur die Messstation, ohne deine Daten. Er misst dann sein eigenes Pferd.</span></div>`
-    +`<button class="btn ghost" id="wsFreund">Station teilen</button></div>`;
+    +`<span>Ohne deine Daten — er misst dann sein eigenes Pferd.</span></div>`
+    +`<button class="btn ghost" id="wsFreund">Karte teilen</button></div>`;
   k.classList.remove('hidden');
   $('#wsVet').addEventListener('click', async (ev)=>{
     const b=ev.currentTarget; b.disabled=true; b.textContent='Einen Moment…';
@@ -2225,14 +2263,10 @@ function weitersagenZeigen(){
     catch(e){ b.disabled=false; b.textContent='Link erzeugen';
               $('#err').textContent=e.message||'Hat nicht geklappt'; }
   });
-  $('#wsFreund').addEventListener('click', async ()=>{
-    /* Die blanke Station — ohne fach, ohne Schlüssel, ohne Anker. */
-    const st=new URL('messen.html', location.href).toString();
-    const text='Damit kann man die Herzfrequenz vom Pferd selbst messen — geht direkt im Browser:';
-    if(navigator.share){ try{ await navigator.share({title:'CARLON Messstation', text, url:st}); return; }catch(_){ } }
-    try{ await navigator.clipboard.writeText(st); }catch(_){ }
-    const b=$('#wsFreund'); if(b){ b.textContent='Kopiert ✓'; setTimeout(()=>{b.textContent='Station teilen';},2200); }
-  });
+  /* NICHT selbst nachbauen: share('owner') erzeugt eine gerenderte Karte mit
+     den eigenen Werten — ein sehr viel besseres Teilstueck als ein nackter
+     Link. Zwei konkurrierende Teilen-Wege waeren ausserdem verwirrend. */
+  $('#wsFreund').addEventListener('click', ()=>share('owner'));
 }
 
 async function ubKopieren(link){
