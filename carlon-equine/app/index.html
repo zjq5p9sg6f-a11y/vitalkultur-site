@@ -6684,7 +6684,20 @@ const UI={
     s.clinicPhone=nimm('sPhone'); s.clinicMail=nimm('sMail');
     s.clinicAddr =nimm('sAddr');  s.clinicWeb =nimm('sWeb');
     s.originLat=num($('#sLat').value)||s.originLat;s.originLng=num($('#sLng').value)||s.originLng;s.tariff=num($('#sTariff').value)||75;
-    await State.saveSettings();this.closeModal();Toast.show('Einstellungen gespeichert','ok');Nav.refresh();
+    await State.saveSettings();this.closeModal();Nav.refresh();
+    /* Nach dem ersten Einrichten sofort zum Blatt fuehren. Wer die Angaben
+       gerade eingetippt hat, will sie wirken sehen — und der Aushang ist der
+       Gegenstand, wegen dem alles andere passiert. Beim zweiten Mal nicht
+       mehr: eine Aufforderung, die jedes Mal kommt, wird zur Belaestigung. */
+    const bereit = !!(s.clinicName && s.clinicName!=='Meine Pferdepraxis')
+                && !!(s.clinicPhone || s.clinicMail || s.clinicAddr);
+    if(bereit && !s.aushangAngeboten && License.isPaid()){
+      s.aushangAngeboten=true; await State.saveSettings();
+      Toast.show('Gespeichert — Ihr Stall-Aushang ist fertig','ok');
+      setTimeout(()=>UI.dauerEinladung(), 600);
+    } else {
+      Toast.show('Einstellungen gespeichert','ok');
+    }
   },
   async wipe(){if(!confirm('Wirklich ALLE Pferde, Aufnahmen und Beratungen unwiderruflich löschen?'))return;
     for(const s of ['horses','recordings','consults']){const all=await DB.all(s);for(const o of all)await DB.del(s,o.id);}
@@ -8860,26 +8873,33 @@ function showTour(){
   t.innerHTML=`<div class="tour-card">
     <img src="assets/carlon-logo-soft-512.png" alt="">
     <h2>CARLON EQUINE — Praxis-Cockpit</h2>
-    <div class="lead">Pferdebesitzer senden dir HRV-Aufnahmen aus CARLON EQUINE. Hier betreust du hunderte Pferde, erkennst kritische Fälle sofort und dokumentierst telemetrische Ferneinschätzungen als eigene Leistung.</div>
+    <div class="lead">Ein Aushang im Stall, und Ihre Kundinnen messen selbst. Die Aufnahmen kommen verschlüsselt zu Ihnen, Sie beurteilen ohne Anfahrt — und Ihre Patienten bleiben zwischen den Terminen sichtbar.</div>
     <div class="tour-steps">
-      <div class="tstep"><div class="ti"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg></div><div><b>1 · Importieren</b><span>Ganze Ordner voller CARLON-Exporte auf einmal — automatisch dem Pferd zugeordnet.</span></div></div>
-      <div class="tstep"><div class="ti"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="9" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/></svg></div><div><b>2 · Triagieren</b><span>Das Board sortiert alle Pferde nach Dringlichkeit — kritische zuerst.</span></div></div>
-      <div class="tstep"><div class="ti"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 20l-6 2V6l6-2m0 16l6 2m-6-2V4"/></svg></div><div><b>3 · Route planen</b><span>Optimale Abfahrt nach Biometrie — ein Klick nach Google Maps.</span></div></div>
-      <div class="tstep"><div class="ti"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1v22M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg></div><div><b>4 · Dokumentieren</b><span>Ferneinschätzungen &amp; Coaching-Einheiten sauber erfasst — die Abrechnung machst du.</span></div></div>
+      <div class="tstep"><div class="ti">${IC.qr}</div><div><b>1 · Aushang aufhängen</b><span>Ein Blatt mit QR-Code für den ganzen Stall. Ihre Kundinnen brauchen kein Konto.</span></div></div>
+      <div class="tstep"><div class="ti">${IC.postfach}</div><div><b>2 · Aufnahmen kommen an</b><span>Verschlüsselt in Ihr Postfach. Das Board sortiert nach Dringlichkeit, kritische zuerst.</span></div></div>
+      <div class="tstep"><div class="ti">${IC.senden}</div><div><b>3 · Befund zurückschicken</b><span>Ohne Anfahrt. Wer rausfahren muss, bekommt die Route nach Dringlichkeit.</span></div></div>
+      <div class="tstep"><div class="ti"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1v22M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg></div><div><b>4 · Abrechnen</b><span>Jeder Befund wird als offene Fern-Leistung erfasst. Satz und Ziffer bestimmen Sie.</span></div></div>
     </div>
     <div class="tour-cta">
-      <button class="btn primary" onclick="startWith(true)">Mit Demo-Daten starten</button>
-      <button class="btn ghost" onclick="startWith(false)">Leer starten</button>
+      <button class="btn primary" onclick="startWith(false,true)">${IC.qr} Praxis einrichten</button>
+      <button class="btn ghost" onclick="startWith(true)">Erst umsehen (Demo-Daten)</button>
     </div>
     <div class="privacy-note"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-      Datenschutz by Design · Gesundheitsdaten bleiben lokal auf deinem Gerät — keine Cloud, kein Server. Als Praxis/Klinik bleibst du Verantwortlicher (Art. 4 DSGVO).</div>
+      Datenschutz by Design · Ihre Praxisdaten liegen auf Ihrem Gerät. Eingesandte Messungen sind Ende-zu-Ende verschlüsselt und für uns nicht lesbar. Als Praxis bleiben Sie Verantwortlicher (Art. 4 DSGVO).</div>
   </div>`;
   document.body.appendChild(t);
 }
-async function startWith(demo){
+/* Der Weg von "erstmals geoeffnet" zu "erstes Blatt in der Hand".
+   Vorher endete die Tour im Nichts: der Aushang braucht Praxisname, Kontakt
+   und Honorarsatz, und ohne die druckt jemand "Ihre Tierarztpraxis" ohne
+   Telefonnummer. Ein Werkzeug, dessen erster Gegenstand peinlich ist,
+   bekommt keinen zweiten Versuch. */
+async function startWith(demo, einrichten){
   $('#tour')?.remove();
   State.settings.onboarded=true;await State.saveSettings();
-  if(demo){await Seed.load();}else{Nav.refresh();}
+  if(demo){ await Seed.load(); return; }
+  Nav.refresh();
+  if(einrichten){ UI.openSettings(); }
 }
 
 /* ════════════════════════════════════════════════════════════════════════
