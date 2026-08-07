@@ -9544,6 +9544,15 @@ const Sprache={
     /* Notation, keine Sprache: in beiden Faellen gleich — aber
        ausdruecklich ENTSCHIEDEN, damit die Messung sie nicht als Loch
        zaehlt und niemand spaeter meint, hier fehle etwas. */
+    /* Zeiterfassung und Fahrtenbuch — erscheinen erst, wenn eine Praxis
+       tatsaechlich Zeiten erfasst hat. Die Sprachstrecke hat sie gefunden,
+       sobald der Pruefstand Daten dafuer hatte: genau der Zweck des Tors. */
+    'Tagebuch heute':'Log today',
+    'Logbuch':'Logbook',
+    'Behandlung':'Treatment',
+    'Fahrzeit':'Driving time',
+    'Ø Besuch':'Ø visit',
+    'min':'min',
     'Dauerhafter Speicher aktiv':'Persistent storage active',
     '● Dauerhafter Speicher aktiv':'● Persistent storage active',
     'y = x':'y = x','RRₙ':'RRₙ','RRₙ₊₁':'RRₙ₊₁','SD2/SD1':'SD2/SD1',
@@ -9599,6 +9608,7 @@ const Sprache={
     /* Mehrzahl ist im Englischen anders gebaut als im Deutschen — deshalb
        eine Funktion und keine Ersetzungs-Zeichenkette. */
     [/^(\d+) Messung(en)? angefordert$/,(m,a)=>a+' measurement'+(a==='1'?'':'s')+' requested'],
+    [/^· (\d+) erledigt$/,'· $1 done'],
     [/^Baseline ([\d.,]+)$/,'Baseline $1'],
     [/^TINN ([\d.,]+)$/,'TINN $1'],
     [/^([-+]?[\d.,]+) bpm$/,'$1 bpm'],
