@@ -18,6 +18,14 @@
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="https://vitalkultur.com/carlon-equine/assets/og-equine.png">
 <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+<!-- Das Reitersymbol fehlte ausgerechnet hier — auf der Seite, die geteilt,
+     gebookmarkt und im Stall auf dem Startbildschirm abgelegt wird. Der
+     Browser zeigte eine graue Weltkugel; das sieht nach irgendeiner Seite
+     aus, nicht nach einem Werkzeug der eigenen Tierarztpraxis.
+     Mehrere Groessen, damit der Reiter scharf bleibt und nicht das
+     512er-Bild heruntergerechnet wird. -->
+<link rel="icon" type="image/png" sizes="192x192" href="assets/icon-192.png">
+<link rel="icon" type="image/png" sizes="512x512" href="assets/icon-512.png">
 <!-- ══════════════════════════════════════════════════════════════════════════
      CARLON EQUINE — Mess-Station (Besitzer-Seite)
      Erfasst RR-Intervalle vom Polar H10 über Web Bluetooth und übergibt sie
@@ -246,15 +254,25 @@ p.sub{color:var(--sec);font-size:clamp(13px,1.15vw,15px);margin:0 auto clamp(var
 .uebergabe h3{font-size:19px;margin:0 0 7px;color:var(--txt)}
 .uebergabe p{font-size:14px;color:var(--sec);line-height:1.55;margin:0 0 var(--s4)}
 .ub-knoepfe{display:flex;gap:10px;flex-wrap:wrap}
-.ub-knoepfe .btn{flex:1 1 auto;min-width:180px}
+.ub-knoepfe .btn{flex:1 1 auto;width:auto;min-width:180px}
 .ub-fuss{font-size:11.5px;color:var(--dim);line-height:1.55;margin-top:14px}
 .uebergabe.weiter{background:none;border-color:var(--line,rgba(255,255,255,.1))}
-.ws-zeile{display:flex;gap:14px;align-items:center;padding:13px 0;border-bottom:1px solid var(--line,rgba(255,255,255,.08))}
+/* Die globale .btn-Regel setzt width:100% — fuer die grossen Aktionen der
+   Station richtig, hier toedlich: der Knopf riss die ganze Breite an sich
+   und der Text brach auf ein Wort je Zeile. Deshalb hier ausdruecklich
+   zurueckgenommen. */
+.ws-zeile{display:flex;gap:16px;align-items:center;padding:14px 0;
+  border-bottom:1px solid var(--line,rgba(255,255,255,.08))}
 .ws-zeile:last-child{border-bottom:0}
-.ws-zeile>div{flex:1;min-width:0}
-.ws-zeile b{display:block;font-size:14px;color:var(--txt);margin-bottom:3px}
+.ws-zeile>div{flex:1 1 auto;min-width:0}
+.ws-zeile b{display:block;font-size:14px;color:var(--txt);margin-bottom:3px;line-height:1.35}
 .ws-zeile span{font-size:12px;color:var(--sec);line-height:1.5}
-.ws-zeile .btn{flex:none;white-space:nowrap}
+.ws-zeile .btn{flex:0 0 auto;width:auto;min-width:0;white-space:nowrap;
+  padding:11px 18px;font-size:13.5px}
+@media (max-width:560px){
+  .ws-zeile{flex-direction:column;align-items:stretch;gap:10px}
+  .ws-zeile .btn{width:100%}
+}
 .dach{max-width:720px;margin:var(--s5) auto var(--s4);padding:var(--s4) var(--s4) 0;
   border-top:1px solid var(--line,rgba(255,255,255,.08));
   display:flex;gap:14px;align-items:flex-start}
@@ -535,7 +553,12 @@ svg.viz .bezel{stroke:var(--cyan);stroke-opacity:.55;stroke-width:1.1;stroke-lin
 .jt-txt{flex:1;min-width:0;text-align:left}
 .jt-txt b{display:block;font-size:13.5px;color:var(--txt);margin-bottom:2px}
 .jt-txt span{font-size:12px;color:var(--sec);line-height:1.5}
-.jetzt-teilen .btn{flex:none;white-space:nowrap}
+.jetzt-teilen .btn{flex:0 0 auto;width:auto;min-width:0;white-space:nowrap;
+  padding:11px 18px;font-size:13.5px}
+@media (max-width:560px){
+  .jetzt-teilen{flex-direction:column;align-items:stretch;gap:10px}
+  .jetzt-teilen .btn{width:100%}
+}
 .hint{font-size:11.5px;color:var(--dim);margin-top:var(--s3);line-height:1.55}
 .privacy{margin-top:var(--s4);font-size:10.5px;color:var(--dim);display:flex;align-items:center;justify-content:center;gap:8px;
   font-family:var(--font-mono);letter-spacing:.08em}

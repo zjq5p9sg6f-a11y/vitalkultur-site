@@ -6604,6 +6604,16 @@ const UI={
           ${s.logo?`<button type="button" class="btn ghost" style="font-size:13px" onclick="UI.removeLogo()">Entfernen</button>`:''}
         </div>
         <div class="hint">PNG/JPG, quer oder quadratisch — wird auf 320 px skaliert und lokal gespeichert.</div></div>
+      <!-- Kontakt der Praxis. Erscheint auf dem Stall-Aushang: ein Blatt
+           ohne Telefonnummer verschenkt genau die Kundin, die lieber anruft
+           als scannt. Alles freiwillig — leere Felder werden weggelassen,
+           nicht als Luecke gedruckt. -->
+      <div class="field-row">
+        <div class="field"><label>Telefon (erscheint auf dem Aushang)</label><input id="sPhone" value="${esc(s.clinicPhone||'')}" placeholder="07229 …"></div>
+        <div class="field"><label>E-Mail</label><input id="sMail" value="${esc(s.clinicMail||'')}" placeholder="praxis@…"></div></div>
+      <div class="field-row">
+        <div class="field"><label>Anschrift für den Aushang</label><input id="sAddr" value="${esc(s.clinicAddr||'')}" placeholder="Musterstr. 1, 76473 Iffezheim"></div>
+        <div class="field"><label>Website (optional)</label><input id="sWeb" value="${esc(s.clinicWeb||'')}" placeholder="www.…"></div></div>
       <div class="field"><label>Startort der Route (Adresse oder Ort)</label>
         <div style="display:flex;gap:8px"><input id="sOrigin" value="${esc(s.originLabel)}" placeholder="z. B. Tierklinik, Musterstr. 1, Rastatt" style="flex:1">
         <button class="btn ghost" style="padding:0 14px;white-space:nowrap" onclick="geoLookup('sOrigin','sLat','sLng',this)">${IC.pin} Suchen</button></div>
@@ -6663,6 +6673,12 @@ const UI={
   },
   async saveSettings(){const s=State.settings;
     s.clinicName=$('#sName').value;s.vetName=$('#sVet').value;s.originLabel=$('#sOrigin').value;
+    /* Kontakt fuer den Aushang — getrimmt, damit ein versehentliches
+       Leerzeichen nicht als "vorhanden" durchgeht und eine leere Zeile
+       aufs Blatt druckt. */
+    const nimm=(id)=>((($('#'+id)||{}).value)||'').trim();
+    s.clinicPhone=nimm('sPhone'); s.clinicMail=nimm('sMail');
+    s.clinicAddr =nimm('sAddr');  s.clinicWeb =nimm('sWeb');
     s.originLat=num($('#sLat').value)||s.originLat;s.originLng=num($('#sLng').value)||s.originLng;s.tariff=num($('#sTariff').value)||75;
     await State.saveSettings();this.closeModal();Toast.show('Einstellungen gespeichert','ok');Nav.refresh();
   },
@@ -6888,7 +6904,14 @@ const UI={
       <div class="ein-raster">
         <div class="ein-links">
           <div class="blatt-rahmen">
-            <iframe class="blatt" title="Vorschau des Aushangs" sandbox=""></iframe>
+            <!-- sandbox OHNE allow-scripts: die Vorschau soll zeigen, nicht
+                 ausfuehren. allow-same-origin ist noetig, weil Chrome ein
+                 srcdoc in einer vollstaendig abgeriegelten Sandbox GAR NICHT
+                 rendert — dann bleibt das Blatt weiss, ohne eine Meldung.
+                 Gefunden, weil die Vorschau nach dem Kontakt-Umbau leer war;
+                 die Ursache lag nicht dort, sondern hier. -->
+            <iframe class="blatt" title="Vorschau des Aushangs"
+                    sandbox="allow-same-origin" referrerpolicy="no-referrer"></iframe>
           </div>
           <div class="blatt-bu">So kommt es aus dem Drucker · A4</div>
         </div>
@@ -6965,6 +6988,10 @@ const UI={
     const praxis=esc(s.clinicName||'Ihre Tierarztpraxis');
     const vet=esc(s.vetName||'');
     const logo=s.logo||'';
+    /* Nur was ausgefuellt ist. Eine leere Zeile auf einem Aushang sieht aus
+       wie ein Fehler, ein fehlendes Feld sieht nach nichts aus. */
+    const kontakt=[s.clinicAddr,s.clinicPhone,s.clinicMail,s.clinicWeb]
+      .map(x=>(x||'').trim()).filter(Boolean).map(esc);
     const marke=new URL('assets/carlon-logo-soft-512.png', location.href).href;
     return `<!doctype html><html lang="de"><head><meta charset="utf-8">
       <title>${praxis} — Herzmessung</title>
@@ -6974,59 +7001,71 @@ const UI={
       @page{ size:A4; margin:0 }
       *{box-sizing:border-box;-webkit-print-color-adjust:exact;print-color-adjust:exact}
       body{margin:0;font-family:Inter,-apple-system,system-ui,sans-serif;color:#14141A;background:#fff}
-      .blatt{width:210mm;min-height:297mm;padding:16mm 18mm 13mm;display:flex;flex-direction:column;position:relative;overflow:hidden}
-      /* Blume des Lebens, sehr leise — dieselbe Konstruktion wie in der App */
-      .flower{position:absolute;top:-38mm;right:-40mm;width:150mm;height:150mm;opacity:.07;z-index:0}
+      .blatt{width:210mm;min-height:297mm;padding:15mm 17mm 11mm;display:flex;flex-direction:column;
+        position:relative;overflow:hidden}
+      /* Blume hinter die MITTE, nicht hinter den Kopf — dort stoerte sie den
+         Kontakt, statt Flaeche zu tragen. */
+      .flower{position:absolute;left:50%;top:47%;width:196mm;height:196mm;
+        transform:translate(-50%,-50%);opacity:.06;z-index:0}
       .inhalt{position:relative;z-index:1;display:flex;flex-direction:column;flex:1}
 
-      /* ── Kopf: die Praxis ── */
-      .praxis{display:flex;align-items:center;gap:6mm;padding-bottom:5mm;border-bottom:1.6pt solid #3ECFB2}
-      .praxis img{max-height:17mm;max-width:52mm;object-fit:contain}
-      .praxis .pn{font-family:Jost,sans-serif;font-size:17pt;font-weight:500;letter-spacing:.01em;line-height:1.15}
-      .praxis .pv{font-size:9.5pt;color:#5A5A66;margin-top:1mm}
-      .praxis .ang{margin-left:auto;text-align:right;font-size:7.5pt;letter-spacing:.16em;
-        text-transform:uppercase;color:#1E8C78;font-weight:600}
+      /* ── Kopf, ausbalanciert: beide Seiten gleich schwer ── */
+      .praxis{display:grid;grid-template-columns:1fr auto;gap:8mm;align-items:end;
+        padding-bottom:4.5mm;border-bottom:1.6pt solid #3ECFB2}
+      .pl{display:flex;align-items:center;gap:5mm}
+      .praxis img{max-height:15mm;max-width:44mm;object-fit:contain}
+      .praxis .pn{font-family:Jost,sans-serif;font-size:16pt;font-weight:500;line-height:1.15}
+      .praxis .pv{font-size:9pt;color:#5A5A66;margin-top:.8mm}
+      .praxis .ang{text-align:right;font-size:8pt;line-height:1.5;color:#4A4A57;max-width:60mm}
+      .praxis .ang span{display:block}
+      .praxis .ang .k1{color:#14141A;font-weight:500}
 
       /* ── Ansprache ── */
-      h1{font-family:Jost,sans-serif;font-weight:500;font-size:33pt;line-height:1.08;
-        letter-spacing:-.015em;margin:13mm 0 5mm;max-width:150mm}
+      h1{font-family:Jost,sans-serif;font-weight:500;font-size:31pt;line-height:1.08;
+        letter-spacing:-.015em;margin:9mm 0 4mm;max-width:150mm}
       h1 em{font-style:normal;color:#1E8C78}
-      .sub{font-size:12.5pt;line-height:1.55;color:#3A3A46;max-width:142mm}
-      .paar{display:flex;gap:7mm;margin:8mm 0 0;max-width:158mm}
-      .paar div{flex:1;font-size:10pt;line-height:1.5;color:#4A4A57;padding-left:4mm;border-left:2pt solid #C9EFE6}
-      .paar b{display:block;font-weight:600;color:#14141A;margin-bottom:1mm}
+      .sub{font-size:12pt;line-height:1.55;color:#3A3A46;max-width:150mm}
+      .paar{display:flex;gap:7mm;margin:6mm 0 0;max-width:165mm}
+      .paar div{flex:1;font-size:9.5pt;line-height:1.5;color:#4A4A57;padding-left:3.5mm;
+        border-left:2pt solid #C9EFE6}
+      .paar b{display:block;font-weight:600;color:#14141A;margin-bottom:.8mm}
 
-      /* ── QR ── */
-      .mitte{display:flex;align-items:center;gap:11mm;margin:11mm 0 0}
-      .qrbox{width:64mm;height:64mm;padding:4mm;border:1.4pt solid #E3E6EA;border-radius:5mm;flex:none;
-        box-shadow:0 2mm 7mm rgba(30,140,120,.10)}
+      /* ── Der Code: gross, mittig, das Herz des Blattes ── */
+      .code{margin:9mm auto 0;text-align:center}
+      .qrbox{width:84mm;height:84mm;padding:5mm;margin:0 auto;border:1.4pt solid #E3E6EA;
+        border-radius:6mm;box-shadow:0 3mm 10mm rgba(30,140,120,.12)}
       .qrbox svg{width:100%;height:100%;display:block}
-      .cta{flex:1}
-      .cta .gross{font-family:Jost,sans-serif;font-size:19pt;font-weight:500;line-height:1.22;margin-bottom:2.5mm}
-.cta .klein{font-size:10.5pt;color:#4A4A57;line-height:1.5;margin-bottom:3.5mm}
-.schluss{margin:9mm 0 0;padding:5mm 6mm;border-left:2.5pt solid #3ECFB2;background:#F4F8F7;
-  border-radius:0 3mm 3mm 0;font-family:Jost,sans-serif;font-size:13pt;font-weight:400;
-  line-height:1.4;color:#14141A}
-.schluss b{font-weight:600}
-      .cta .zeit{display:inline-block;background:#3ECFB2;color:#08221D;font-weight:700;font-size:9pt;
-        letter-spacing:.05em;padding:1.6mm 3.4mm;border-radius:2.4mm;margin-bottom:4mm}
-      .schritte{margin-top:2mm}
-      .schritt{display:flex;gap:3.5mm;align-items:baseline;margin-bottom:2.6mm;font-size:10pt;color:#3A3A46}
-      .schritt i{font-style:normal;font-family:Jost,sans-serif;font-weight:600;color:#1E8C78;
-        font-size:11pt;min-width:5mm}
-      .schritt b{font-weight:600;color:#14141A}
+      .cta{margin-top:6mm}
+      .cta .gross{font-family:Jost,sans-serif;font-size:20pt;font-weight:500;line-height:1.22}
+      .cta .klein{font-size:11pt;color:#4A4A57;line-height:1.5;margin-top:2mm}
+      .cta .zeit{display:inline-block;background:#3ECFB2;color:#08221D;font-weight:700;
+        font-size:9pt;letter-spacing:.05em;padding:1.8mm 4mm;border-radius:2.6mm;margin-top:3.5mm}
 
-      /* ── Geräte ── */
-      .geraete{margin-top:6mm;padding:4mm 5mm;background:#F4F8F7;border-radius:3mm;font-size:9pt;
-        color:#4A4A57;line-height:1.5}
+      /* ── Vier Schritte quer: fuellt die Breite statt einer Spalte ── */
+      .schritte{display:grid;grid-template-columns:repeat(4,1fr);gap:6mm;margin:9mm 0 0}
+      .schritt{border-top:1.4pt solid #3ECFB2;padding-top:2.6mm}
+      .schritt i{font-style:normal;font-family:Jost,sans-serif;font-weight:600;color:#1E8C78;
+        font-size:11pt;display:block;margin-bottom:1mm}
+      .schritt b{display:block;font-size:10pt;font-weight:600;margin-bottom:.8mm}
+      .schritt span{font-size:8.5pt;color:#5A5A66;line-height:1.45}
+
+      .schluss{margin:9mm 0 0;padding:5mm 6mm;border-left:2.5pt solid #3ECFB2;background:#F4F8F7;
+        border-radius:0 3mm 3mm 0;font-family:Jost,sans-serif;font-size:13pt;font-weight:400;
+        line-height:1.4;color:#14141A}
+      .schluss b{font-weight:600}
+      .schluss .ruf{display:block;margin-top:2mm;font-family:Inter,sans-serif;
+        font-size:10pt;color:#1E8C78;font-weight:600}
+
+      .geraete{margin-top:5mm;padding:3.5mm 5mm;background:#F7F8F8;border-radius:3mm;
+        font-size:8.5pt;color:#4A4A57;line-height:1.5}
       .geraete b{color:#14141A}
 
-      /* ── Fuß: wir ── */
-      .fuss{margin-top:auto;padding-top:6mm;border-top:1pt solid #E3E6EA;display:flex;align-items:center;gap:4mm}
-      .fuss img{width:12mm;height:12mm;object-fit:contain;opacity:.92}
-      .fuss .wm{font-family:Jost,sans-serif;font-size:11pt;font-weight:600;letter-spacing:.2em;line-height:1.2}
-      .fuss .cl{font-size:7pt;letter-spacing:.22em;color:#7A7A86;text-transform:uppercase;margin-top:.6mm}
-      .fuss .dis{margin-left:auto;text-align:right;font-size:7.5pt;color:#8A8A96;line-height:1.45;max-width:78mm}
+      .fuss{margin-top:auto;padding-top:5mm;border-top:1pt solid #E3E6EA;display:flex;
+        align-items:center;gap:4mm}
+      .fuss img{width:11mm;height:11mm;object-fit:contain;opacity:.92}
+      .fuss .wm{font-family:Jost,sans-serif;font-size:10.5pt;font-weight:600;letter-spacing:.2em;line-height:1.2}
+      .fuss .cl{font-size:6.5pt;letter-spacing:.22em;color:#7A7A86;text-transform:uppercase;margin-top:.6mm}
+      .fuss .dis{margin-left:auto;text-align:right;font-size:7pt;color:#8A8A96;line-height:1.45;max-width:82mm}
       </style></head><body><div class="blatt">
       <svg class="flower" viewBox="0 0 200 200" fill="none" stroke="#3ECFB2" stroke-width=".7">
         ${(()=>{const c=[[100,100]];const r=34;
@@ -7039,9 +7078,13 @@ const UI={
       <div class="inhalt">
 
         <div class="praxis">
-          ${logo?`<img src="${logo}" alt="">`:''}
-          <div><div class="pn">${praxis}</div>${vet?`<div class="pv">${vet}</div>`:''}</div>
-          <div class="ang">Ein Angebot<br>Ihrer Praxis</div>
+          <div class="pl">
+            ${logo?`<img src="${logo}" alt="">`:''}
+            <div><div class="pn">${praxis}</div>${vet?`<div class="pv">${vet}</div>`:''}</div>
+          </div>
+          <div class="ang">${kontakt.length
+            ? kontakt.map((z,i)=>`<span${i===0?' class="k1"':''}>${z}</span>`).join('')
+            : 'Ein Angebot<br>Ihrer Praxis'}</div>
         </div>
 
         <h1>Was Ihr Pferd Ihnen <em>nicht sagen kann</em></h1>
@@ -7053,23 +7096,25 @@ const UI={
           <div><b>Und damit Sie es schwarz auf weiß haben</b>Auch die Gewissheit, dass alles stimmt, ist etwas wert.</div>
         </div>
 
-        <div class="mitte">
+        <div class="code">
           <div class="qrbox">${qr}</div>
           <div class="cta">
             <div class="gross">Fünf Minuten Ruhe —<br>und Ihre Tierärztin schaut mit.</div>
             <div class="klein">Kamera auf den Code. Kein Konto, keine App, kein Termin.</div>
             <span class="zeit">5 MINUTEN · OHNE ANMELDUNG</span>
-            <div class="schritte">
-              <div class="schritt"><i>1</i><span><b>Scannen</b> — die Messstation öffnet sich von selbst.</span></div>
-              <div class="schritt"><i>2</i><span><b>Gurt anlegen</b> — Polar H10 Equine, Ultraschallgel unter die Elektroden.</span></div>
-              <div class="schritt"><i>3</i><span><b>Ruhig stehen lassen</b> — die Station sagt, wann es reicht.</span></div>
-              <div class="schritt"><i>4</i><span><b>Senden</b> — verschlüsselt an ${praxis}.</span></div>
-            </div>
           </div>
         </div>
 
+        <div class="schritte">
+          <div class="schritt"><i>1</i><b>Scannen</b><span>Die Messstation öffnet sich von selbst.</span></div>
+          <div class="schritt"><i>2</i><b>Gurt anlegen</b><span>Polar H10 Equine, Ultraschallgel unter die Elektroden.</span></div>
+          <div class="schritt"><i>3</i><b>Ruhig stehen lassen</b><span>Die Station sagt, wann es reicht.</span></div>
+          <div class="schritt"><i>4</i><b>Senden</b><span>Verschlüsselt an ${praxis}.</span></div>
+        </div>
+
         <div class="schluss">Was dabei herauskommt, sagt Ihnen jemand,
-          der Ihr Pferd kennt — <b>${praxis}</b>.</div>
+          der Ihr Pferd kennt — <b>${praxis}</b>.${s.clinicPhone
+            ? ` <span class="ruf">Lieber anrufen? ${esc(s.clinicPhone)}</span>` : ''}</div>
 
         <div class="geraete">
           <b>Womit es geht:</b> Android-Handy oder Computer mit Chrome oder Edge.
