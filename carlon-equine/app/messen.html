@@ -239,6 +239,19 @@ p.sub{color:var(--sec);font-size:clamp(13px,1.15vw,15px);margin:0 auto clamp(var
 .tile em i b{font-family:var(--font-mono);font-weight:600;color:var(--text)}
 /* ── Befund-Karte ── ruhig, hochwertig, ohne Ampel-Geschrei. Sie soll aussehen
    wie etwas, das man jemandem zeigt. */
+/* Die Lage-Karte schliesst den Kreis: sie sagt dem Besitzer, dass etwas
+   laeuft, ohne ihm eine Handlung abzuverlangen. Sie verschwindet, sobald der
+   Befund da ist — dann spricht der Befund. */
+.lage{max-width:720px;margin:0 auto var(--s4);padding:14px 18px;display:flex;gap:13px;align-items:flex-start;
+  border:1px solid var(--cyan-g2,rgba(62,207,178,.3));border-radius:14px;
+  background:linear-gradient(135deg,rgba(62,207,178,.09),rgba(62,207,178,.02))}
+.lage.hidden{display:none}
+.lage .lg-punkt{width:8px;height:8px;border-radius:50%;background:var(--cyan);margin-top:6px;flex:none;
+  box-shadow:0 0 10px var(--cyan);animation:lgPuls 2.6s ease-in-out infinite}
+@keyframes lgPuls{0%,100%{opacity:1}50%{opacity:.3}}
+@media (prefers-reduced-motion:reduce){.lage .lg-punkt{animation:none}}
+.lage b{display:block;font-size:14.5px;color:var(--txt);margin-bottom:3px}
+.lage span{font-size:12.5px;color:var(--sec);line-height:1.5}
 .befund{max-width:720px;margin:0 auto var(--s5);padding:var(--s5) var(--s5) var(--s4);
   background:var(--surface);border:1px solid var(--border);border-radius:var(--r-l);
   border-top:2px solid var(--bf,var(--cyan))}
@@ -592,6 +605,7 @@ svg.viz .bezel{stroke:var(--cyan);stroke-opacity:.55;stroke-width:1.1;stroke-lin
      der Grund ist, warum jemand diese Seite ein zweites Mal oeffnet.
      Die Praxis steht darueber, nicht wir: der Stallnachbar, dem das gezeigt
      wird, soll seine eigene Tieraerztin fragen — nicht uns. -->
+<div id="lageKarte" class="lage hidden"></div>
 <div id="befundKarte" class="befund hidden"></div>
 
 <div class="card">
@@ -2079,6 +2093,49 @@ const esc=(x)=>String(x==null?'':x)
 
 const STUFE_FARBE={crit:'var(--red,#ff5263)',elev:'var(--amber)',
                    watch:'var(--cyan)',stable:'var(--good,#3fe0a4)'};
+
+/* VERLAUF — das Gedaechtnis des Pferdebesitzers.
+   ────────────────────────────────────────────────────────────────────
+   Vorher war der Kreis offen: er sendete, sah eine Bestaetigung, schloss
+   die Seite — und wusste am naechsten Tag nicht mehr, ob ueberhaupt etwas
+   unterwegs ist. Das erzeugt keinen Erzaehlstoff, sondern einen Anruf in
+   der Praxis. Ein Kreis, der sich schliesst, erzeugt Vertrauen.
+   Zugleich schliesst der Verlauf zwei Verlustpfade: es wurde nur die
+   NEUESTE Sendung geholt (aeltere verfielen ungesehen) und nur EIN Befund
+   behalten (jeder neue ueberschrieb den vorigen). */
+const VERLAUF_SPEICHER='carlon.verlauf.v1';
+const Verlauf={
+  lesen(){ try{ return JSON.parse(localStorage.getItem(VERLAUF_SPEICHER)||'[]'); }catch(_){ return []; } },
+  schreiben(l){ try{ localStorage.setItem(VERLAUF_SPEICHER, JSON.stringify(l.slice(-50))); }catch(_){} },
+  hinzu(e){ const l=this.lesen();
+    if(e.id && l.some(x=>x.id===e.id)) return l;          // nie doppelt
+    l.push({...e, zeit:e.zeit||new Date().toISOString()});
+    l.sort((a,b)=>String(a.zeit).localeCompare(String(b.zeit)));
+    this.schreiben(l); return l; },
+  /* Offen ist, was NACH dem letzten Befund gesendet wurde. Bewusst ueber die
+     Reihenfolge, nicht ueber den Zeitstempel: zwei Eintraege koennen in
+     dieselbe Millisekunde fallen, dann gilt eine Aufnahme faelschlich als
+     beantwortet. Die Liste ist stabil sortiert, Gleichstand behaelt die
+     Einfuegereihenfolge — und die ist die Wahrheit. */
+  offeneSendungen(){ const l=this.lesen();
+    let letzter=-1; l.forEach((x,i)=>{ if(x.art==='befund') letzter=i; });
+    return l.filter((x,i)=>x.art==='gesendet' && i>letzter).length; },
+};
+
+/* Die Lage in einem Satz — nur wenn es etwas zu sagen gibt. */
+function lageZeigen(){
+  const k=$('#lageKarte'); if(!k) return;
+  const offen=Verlauf.offeneSendungen();
+  const l=Verlauf.lesen();
+  const letzte=[...l].reverse().find(x=>x.art==='gesendet');
+  if(!offen){ k.classList.add('hidden'); return; }
+  const tage=letzte?Math.floor((Date.now()-new Date(letzte.zeit))/86400000):0;
+  const wann=tage<=0?'heute':tage===1?'gestern':`vor ${tage} Tagen`;
+  k.innerHTML=`<span class="lg-punkt"></span><div>`
+    +`<b>${offen===1?'Deine Aufnahme ist bei der Praxis':offen+' Aufnahmen sind bei der Praxis'}</b>`
+    +`<span>${esc(wann)} gesendet · der Befund erscheint hier, sobald deine Tierärztin ihn geschrieben hat. Du musst nichts tun.</span></div>`;
+  k.classList.remove('hidden');
+}
 async function befundHolen(){
   let ich;
   try{ ich=await meineIdentitaet(); }catch(e){ return; }
@@ -2091,15 +2148,22 @@ async function befundHolen(){
   try{
     const l=await ruf('/postfach/'+ich.fach+'?was=liste', await Krypto.abholNachweis(ich));
     if(!l.ok||!(l.sendungen||[]).length) return;
-    const neueste=l.sendungen[l.sendungen.length-1];
-    const e=await ruf('/postfach/'+ich.fach+'/'+neueste.id, await Krypto.abholNachweis(ich));
-    if(!e.ok) return;
-    const b=JSON.parse(await Krypto.oeffnen(ich.box.privateKey, e.umschlag, ich.fach));
-    befundZeigen(b);
-    /* Erst NACH dem Anzeigen aus dem Fach nehmen und lokal behalten, damit er
-       auch ohne Netz wieder da ist. */
-    try{ localStorage.setItem('carlon.befund.v1', JSON.stringify(b)); }catch(_){}
-    await ruf('/postfach/'+ich.fach+'/'+neueste.id+'?was=weg', await Krypto.abholNachweis(ich));
+    /* JEDE Sendung, nicht nur die neueste. Wer zwei Pferde vorstellt,
+       bekommt zwei Befunde — der zweite darf den ersten nicht verdraengen
+       und keiner darf im Fach verfallen. */
+    let letzter=null;
+    for(const kopf of l.sendungen){
+      const e=await ruf('/postfach/'+ich.fach+'/'+kopf.id, await Krypto.abholNachweis(ich));
+      if(!e.ok) continue;
+      let b;
+      try{ b=JSON.parse(await Krypto.oeffnen(ich.box.privateKey, e.umschlag, ich.fach)); }
+      catch(_){ continue; }        // nicht lesbar → liegen lassen, nicht loeschen
+      /* Erst lokal sichern, DANN fern loeschen. Nie umgekehrt. */
+      Verlauf.hinzu({art:'befund', id:kopf.id, zeit:kopf.eingegangen, b});
+      await ruf('/postfach/'+ich.fach+'/'+kopf.id+'?was=weg', await Krypto.abholNachweis(ich));
+      letzter=b;
+    }
+    if(letzter){ befundZeigen(letzter); lageZeigen(); }
   }catch(e){ /* still */ }
 }
 
@@ -2126,9 +2190,19 @@ function befundZeigen(b){
 }
 
 /* Zuletzt gelesenen Befund sofort zeigen, auch ohne Netz. */
-try{ const alt=localStorage.getItem('carlon.befund.v1'); if(alt) befundZeigen(JSON.parse(alt)); }catch(e){}
+(function(){
+  /* Einmalige Uebernahme des alten Einzelspeichers — niemand verliert den
+     Befund, den er vor diesem Stand schon bekommen hat. */
+  try{ const alt=localStorage.getItem('carlon.befund.v1');
+    if(alt && !Verlauf.lesen().some(x=>x.art==='befund')){
+      const b=JSON.parse(alt); Verlauf.hinzu({art:'befund', zeit:b.erstellt||new Date().toISOString(), b}); } }catch(_){}
+  const letzter=[...Verlauf.lesen()].reverse().find(x=>x.art==='befund');
+  if(letzter) befundZeigen(letzter.b);
+  lageZeigen();
+})();
 befundHolen();
 window.addEventListener('online', befundHolen);
+document.addEventListener('visibilitychange', ()=>{ if(!document.hidden) befundHolen(); });
 
 function show(id){
   VIEWS.forEach(v=>$('#'+v).classList.toggle('hidden', v!==id));
@@ -2504,6 +2578,7 @@ $('#btnSend').addEventListener('click', async ()=>{
          online ist. Kein falsches Versprechen ueber den Zeitpunkt. */
       $('#status').innerHTML='<span class="done">✓ Aufnahme sicher zugestellt</span>'
         +'<div style="font-size:12px;color:var(--sec);margin-top:6px">Verschlüsselt abgelegt — deine Tierärztin sieht sie, sobald sie das nächste Mal online ist. Du musst nichts weiter tun.</div>';
+      Verlauf.hinzu({art:'gesendet', id:d.id||undefined}); lageZeigen();
       $('#btnSend').classList.add('hidden'); $('#btnSave').disabled=false;
       $('#btnAgain').classList.remove('hidden');
       return;
