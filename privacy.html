@@ -240,6 +240,53 @@
       </p>
     </div>
 
+    <!-- ===== CARLON Equine Messstation + Visite (Browser, SaaS) ===== -->
+    <div class="legal-product">
+      <h3>3.4 CARLON Equine Messstation &amp; CARLON Equine Visite</h3>
+      <p class="product-meta">Browser · Besitzerin misst → verschlüsselte Übergabe → Praxis beurteilt</p>
+
+      <p><strong>Messstation (Browser der Pferdebesitzerin):</strong></p>
+      <ul>
+        <li>RR-Intervalle vom Polar-H10-Gurt über Web-Bluetooth — <strong>ausschließlich im Browser</strong>, kein Upload im Klartext</li>
+        <li>Pferdename und Zeitstempel, die die Besitzerin selbst einträgt</li>
+        <li>Kein Konto, keine Anmeldung, keine Cookies zu Analysezwecken</li>
+      </ul>
+
+      <p><strong>Übergabe an die Praxis — Ende-zu-Ende verschlüsselt:</strong></p>
+      <p>
+        Die Aufnahme wird <strong>auf dem Gerät der Besitzerin</strong> gegen den
+        öffentlichen Schlüssel der Praxis verschlüsselt (ECIES über P-256,
+        HKDF-SHA-256, AES-GCM-256). Der Zwischenspeicher
+        <code>postfach.carlon.app</code> speichert ausschließlich
+        <strong>Chiffrat</strong> nebst Größe, Zeitstempel und einer Fachnummer.
+        Die Fachnummer ist der Fingerabdruck des öffentlichen Signierschlüssels
+        der Praxis (<code>SHA-256(signPub)[0:16]</code>) — sie enthält keinen
+        Namen. <strong>Vitalkultur kann diese Sendungen nicht entschlüsseln.</strong>
+        Sie werden nach <strong>30 Tagen</strong> automatisch gelöscht.
+      </p>
+
+      <p><strong>Praxis-Cockpit „CARLON Equine Visite":</strong></p>
+      <ul>
+        <li>Alle Praxis- und Patientendaten liegen <strong>lokal im Browser der Praxis</strong> (IndexedDB) — es gibt keine Vitalkultur-Datenbank</li>
+        <li>Der private Schlüssel der Praxis verlässt diesen Browser nicht; er ist auch für uns nicht wiederherstellbar</li>
+        <li>Der Befund an die Besitzerin wird ebenso verschlüsselt und in deren Fach gelegt</li>
+      </ul>
+
+      <p>
+        <strong>Rollen nach Art. 4 DSGVO:</strong> Für die Daten ihrer Kundinnen
+        und Patienten ist die <strong>Tierarztpraxis Verantwortlicher</strong>.
+        Vitalkultur stellt das Werkzeug bereit und hat auf die Inhalte
+        <strong>keinen Zugriff</strong> — der Zwischenspeicher sieht nur Chiffrat.
+      </p>
+
+      <p><strong>Lizenzdienst <code>lizenz.carlon.app</code>:</strong></p>
+      <ul>
+        <li>Erhält den signierten Abo-Ausweis der Praxis und fragt bei Stripe, ob das Abonnement läuft (Art. 6 Abs. 1 lit. b DSGVO)</li>
+        <li>Legt einen <strong>gehashten</strong> Nutzungsstempel ab (<code>n:</code> + gekürzter SHA-256 der Stripe-Kundennummer, ohne Namen) zur Erkennung aktiver Nutzung — Art. 6 Abs. 1 lit. f DSGVO; Löschung nach längstens 400 Tagen</li>
+        <li>Sieht <strong>keine Gesundheits- oder Pferdedaten</strong></li>
+      </ul>
+    </div>
+
     <h2>4. Datenexport — Art. 20 DSGVO (Datenportabilität)</h2>
     <p>
       Alle drei Apps und der Web-Viewer ermöglichen den Export deiner Daten als
@@ -353,6 +400,34 @@
       Gründe nachweisen können.
     </p>
 
+    <h2>8a. Zahlungsabwicklung über Stripe (nur CARLON Equine Visite)</h2>
+    <p>
+      Das kostenpflichtige Abonnement „CARLON Equine Visite" wird über
+      <strong>Stripe</strong> abgewickelt. Stripe tritt dabei als
+      <strong>Merchant of Record</strong> auf: Stripe schließt den Zahlungsvorgang
+      im eigenen Namen ab, stellt die Rechnung und weist die Umsatzsteuer aus.
+      Vitalkultur erhält <strong>keine Zahlungsdaten</strong> — weder Kartennummer
+      noch Bankverbindung.
+    </p>
+    <table>
+      <thead><tr><th>Angabe</th><th>Wert</th></tr></thead>
+      <tbody>
+        <tr><td>Empfänger</td><td>Stripe Payments Europe, Limited, Dublin (Irland); für bestimmte Verarbeitungen Stripe, Inc. (USA)</td></tr>
+        <tr><td>Datenkategorien</td><td>Name, E-Mail-Adresse, Rechnungs- und Unternehmensangaben, ggf. USt-IdNr., Zahlungsmittel, IP-Adresse, Geräte- und Browserdaten</td></tr>
+        <tr><td>Zwecke</td><td>Zahlungsabwicklung, Rechnungsstellung, Steuerberechnung, Betrugsprävention, Erfüllung gesetzlicher Aufbewahrungspflichten</td></tr>
+        <tr><td>Rechtsgrundlage</td><td>Art. 6 Abs. 1 lit. b DSGVO (Vertragserfüllung); Betrugsprävention Art. 6 Abs. 1 lit. f DSGVO; Aufbewahrung Art. 6 Abs. 1 lit. c DSGVO</td></tr>
+        <tr><td>Drittlandübermittlung</td><td>Eine Übermittlung in die USA ist möglich; sie wird auf die Standardvertragsklauseln der EU-Kommission gestützt.</td></tr>
+        <tr><td>Weitere Informationen</td><td><a href="https://stripe.com/de/privacy" target="_blank" rel="noopener">stripe.com/de/privacy</a></td></tr>
+      </tbody>
+    </table>
+    <p>
+      Der Zahlungsvorgang findet auf einer von Stripe gehosteten Seite statt.
+      Die Berechtigung im Cockpit wird davon getrennt erteilt: Vitalkultur stellt
+      einen signierten Ausweis aus und fragt beim Lizenzdienst lediglich, ob das
+      Abonnement läuft (siehe 3.4). <strong>Keine Gesundheits- oder Pferdedaten
+      erreichen Stripe.</strong>
+    </p>
+
     <h2>9. Kontaktaufnahme per E-Mail</h2>
     <p>
       Bei Kontakt per E-Mail (z.&nbsp;B. Beta-Anfragen für CARLON Equine)
@@ -369,9 +444,15 @@
     <h2>10. Keine Weitergabe an Dritte</h2>
     <p>
       Vitalkultur gibt <strong>keine personenbezogenen Daten an Dritte</strong>
-      weiter, außer an Apple Inc. im Rahmen des App-Store-Kauf-Prozesses sowie
-      bei gesetzlicher Verpflichtung zur Offenlegung (Art. 6 Abs. 1 lit. c DSGVO,
-      z.&nbsp;B. auf behördliche Anordnung).
+      weiter, außer an <strong>Apple Inc.</strong> im Rahmen des
+      App-Store-Kauf-Prozesses, an <strong>Stripe</strong> im Rahmen der
+      Zahlungsabwicklung des Abonnements „CARLON Equine Visite" (siehe 8a)
+      sowie bei gesetzlicher Verpflichtung zur Offenlegung
+      (Art. 6 Abs. 1 lit. c DSGVO, z.&nbsp;B. auf behördliche Anordnung).
+      Die über den Zwischenspeicher <code>postfach.carlon.app</code>
+      übertragenen Aufnahmen und Befunde sind Ende-zu-Ende verschlüsselt und
+      für Vitalkultur wie für den Betreiber der Infrastruktur inhaltlich
+      nicht zugänglich.
     </p>
 
     <h2>11. Speicherdauer (Art. 5 Abs. 1 lit. e DSGVO)</h2>

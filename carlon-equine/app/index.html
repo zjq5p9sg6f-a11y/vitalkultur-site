@@ -7751,11 +7751,19 @@ const License={
       month:'https://buy.stripe.com/test_8x28wP95JbFP1lQ6hRgbm00',   //  79 €/Monat
     },
     live:{
-      /* NACH der Unternehmens-Verifizierung im LIVE-Konto anlegen und hier
-         eintragen. Solange leer, sperrt checkoutLink() die Kasse — der
-         Schalter allein kann also niemanden ins Leere schicken. */
-      year :'',
-      month:'',
+      /* Angelegt am 07.08.2026, nachdem Stripe das Unternehmensprofil
+         freigegeben hat. Beide Links haengen am LIVE-Produkt
+         prod_V1xTYl1ssi7USy (CARLON Equine Visite):
+           79 €/Monat  price_1U1tYrFYqQiMtCiDkd4cRpvo · plink_1U1tko…
+          790 €/Jahr   price_1U1thJFYqQiMtCiDbWxL2AsU · plink_1U1tn3…
+         Beide mit Managed Payments (Stripe als Merchant of Record — genau
+         das, was § 12a der AGB zusagt), automatischer Steuer, Steuer-ID-
+         Feld fuer Reverse Charge und Rueckleitung mit der Sitzungsnummer.
+         Der Abo-Deskriptor am Produkt lautet CARLON EQUINE VISITE und
+         ueberschreibt den Konto-Deskriptor — dadurch ist der Geldstrom je
+         Produkt zuzuordnen. */
+      year :'https://buy.stripe.com/5kQ5kD1Dh8tDfcG8pZgbm01',   // 790 €/Jahr
+      month:'https://buy.stripe.com/8x28wP95JbFP1lQ6hRgbm00',   //  79 €/Monat
     }
   },
   get CHECKOUT(){ return this.CHECKOUT_ALL[LIVE?'live':'test']; },
@@ -7769,9 +7777,9 @@ const License={
      Am 07.08.2026 in der Sandbox auf 79/790 umgestellt: neue PREISE am
      bestehenden Produkt angelegt (die alten 49/490 blieben unangetastet —
      Stripe-Preise sind ohnehin unveraenderlich), dann neue Links darauf.
-     NOCH OFFEN: dieselben zwei Links im LIVE-Konto. Diese hier tragen
-     test_ im Pfad und werden von checkoutLink() ausserhalb von Beta und
-     localhost zusaetzlich gesperrt. */
+     Die LIVE-Links stehen seit 07.08.2026 (siehe oben). Die Testlinks
+     hier tragen test_ im Pfad und werden von checkoutLink() ausserhalb von
+     Beta und localhost zusaetzlich gesperrt. */
   CHECKOUT_BETRAG:{ month:79, year:790 },
   /* Die Zahlungs-Links zeigen noch auf Stripes Testumgebung. Wird die
      Beta-Sperre geloest, ohne sie zu tauschen, laeuft der Kunde durch eine
