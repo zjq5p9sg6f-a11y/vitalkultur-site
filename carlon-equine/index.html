@@ -4802,6 +4802,13 @@ html.js-reveal .reveal.in { opacity: 1 !important; transform: none !important; t
     .sys-loop{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:0 16px;gap:5px;white-space:nowrap}
     .sys-loop .sys-arrow{font-size:20px;color:#3ECFB2;line-height:1}
     .sys-loop .sys-loop-lbl{font-family:var(--font-mono);font-size:9.5px;letter-spacing:0.16em;text-transform:uppercase;color:var(--text-faint)}
+    /* Zwei Quellen uebereinander auf EINER Seite des Pfeils: sie sind keine
+       Alternativen, sie muenden in dasselbe Ziel. */
+    .sys-stack{display:flex;flex-direction:column;gap:10px}
+    .sys-stack .sys-path{padding:18px 20px 16px}
+    .sys-path-ziel{border-color:rgba(62,207,178,0.34);background:linear-gradient(200deg,rgba(62,207,178,0.06),rgba(6,16,26,0.5))}
+    .sys-paths-note{margin:14px 0 0;font-size:12.5px;line-height:1.7;color:var(--text-faint);text-align:center}
+    .sys-paths-note a{color:#3ECFB2;text-decoration:none}
     @media(max-width:760px){
       .sys-paths{grid-template-columns:1fr;gap:10px}
       .sys-loop{flex-direction:row;padding:3px 0;gap:8px}
@@ -4811,6 +4818,61 @@ html.js-reveal .reveal.in { opacity: 1 !important; transform: none !important; t
   <div class="sys-router">
     <div class="sys-eyebrow" data-en="Democratised heart biometry" data-de="Demokratisierte Herzbiometrie">Demokratisierte Herzbiometrie</div>
     <div class="sys-headline" data-en="Your biometric knowledge of your horse grows with every measurement. <em>Right at the barn, in your hand — the best basis for you and your vet.</em>" data-de="Das biometrische Wissen über dein Pferd wächst mit jeder Messung. <em>Direkt am Stall, in deiner Hand — die beste Grundlage für dich und deinen Tierarzt.</em>">Das biometrische Wissen über dein Pferd wächst mit jeder Messung. <em>Direkt am Stall, in deiner Hand — die beste Grundlage für dich und deinen Tierarzt.</em></div>
+
+    <!-- ══════════════════════════════════════════════════════════════════
+         DIE ZWEI KACHELN — beide im Browser, beide heute benutzbar.
+         Das Raster `.sys-path` lag seit jeher im Stylesheet und war nie
+         benutzt: 1fr auto 1fr mit einer Schleife in der Mitte. Genau die
+         Form, die hier gebraucht wird — links misst die Besitzerin, rechts
+         beurteilt die Praxis, dazwischen der Kreis.
+
+         UNTERSCHEIDUNG ZUR iOS-APP, ausdrücklich: diese beiden brauchen
+         nichts als einen Browser. Die App ist etwas anderes und steht
+         weiter unten. Wer das verwechselt, wartet auf einen Store-Eintrag,
+         obwohl er sofort messen könnte.
+         ══════════════════════════════════════════════════════════════════ -->
+    <div class="sys-paths" style="margin-top:26px">
+      <!-- ZWEI QUELLEN. Beide nehmen auf, beide münden in dieselbe
+           Vet-Software — deshalb stehen sie übereinander auf EINER Seite
+           des Pfeils und nicht als Alternativen nebeneinander. Der
+           Unterschied zwischen ihnen ist die Tiefe, nicht das Ziel. -->
+      <div class="sys-stack">
+        <a class="sys-path sys-path-pro" href="/messen" data-track="cta:station-tile">
+          <div class="sys-path-role" data-en="Quelle 1 · Browser · today" data-de="Quelle 1 · Browser · sofort">Quelle 1 · Browser · sofort</div>
+          <div class="sys-path-title" data-en="Measurement station" data-de="Messstation">Messstation</div>
+          <div class="sys-path-desc"
+               data-en="Connect the Polar H10 and record your horse’s heart rhythm — right there in the barn. Nothing to install, no account. At the end: an encrypted link for your vet."
+               data-de="Polar H10 verbinden und den Herzrhythmus deines Pferdes aufnehmen — direkt im Stall. Nichts zu installieren, kein Konto. Am Ende: ein verschlüsselter Link für deine Tierärztin.">Polar H10 verbinden und den Herzrhythmus deines Pferdes aufnehmen — direkt im Stall. Nichts zu installieren, kein Konto. Am Ende: ein verschlüsselter Link für deine Tierärztin.</div>
+          <div class="sys-path-cta" data-en="Measure now →" data-de="Jetzt messen →">Jetzt messen →</div>
+        </a>
+        <a class="sys-path" href="#sec-app" data-track="cta:app-tile">
+          <div class="sys-path-role" data-en="Quelle 2 · Apple devices" data-de="Quelle 2 · Apple-Geräte">Quelle 2 · Apple-Geräte</div>
+          <div class="sys-path-title">CARLON Equine App</div>
+          <div class="sys-path-desc"
+               data-en="The full instrument for continuous work: live ECG, ride &amp; interval trainer, multi-H10, stable monitor, long-term trends. Same recordings, same path to your vet."
+               data-de="Das vollständige Instrument für die laufende Arbeit: Live-EKG, Ausritt &amp; Intervall-Trainer, Multi-H10, Stall-Monitor, Langzeit-Verläufe. Dieselben Aufnahmen, derselbe Weg zur Praxis.">Das vollständige Instrument für die laufende Arbeit: Live-EKG, Ausritt &amp; Intervall-Trainer, Multi-H10, Stall-Monitor, Langzeit-Verläufe. Dieselben Aufnahmen, derselbe Weg zur Praxis.</div>
+          <div class="sys-path-cta" data-en="See the app →" data-de="App ansehen →">App ansehen →</div>
+        </a>
+      </div>
+
+      <div class="sys-loop" aria-hidden="true">
+        <span class="sys-arrow">→</span>
+        <span class="sys-loop-lbl" data-en="the circle" data-de="der Kreis">der Kreis</span>
+        <span class="sys-arrow" style="transform:rotate(180deg)">→</span>
+      </div>
+
+      <a class="sys-path sys-path-ziel" href="/carlon-equine-visite/" data-track="cta:visite-tile">
+        <div class="sys-path-role" data-en="Destination · vets &amp; clinics" data-de="Ziel · Tierärzte &amp; Kliniken">Ziel · Tierärzte &amp; Kliniken</div>
+        <div class="sys-path-title">CARLON Equine Visite</div>
+        <div class="sys-path-desc"
+             data-en="Where both sources arrive. Recordings from your clients come in encrypted, pre-sorted by urgency. You assess, write the finding back — and record it as a remote service."
+             data-de="Hier kommen beide Quellen an. Aufnahmen Ihrer Kundinnen treffen verschlüsselt ein, nach Dringlichkeit vorsortiert. Sie beurteilen, schreiben den Befund zurück — und erfassen ihn als Fern-Leistung.">Hier kommen beide Quellen an. Aufnahmen Ihrer Kundinnen treffen verschlüsselt ein, nach Dringlichkeit vorsortiert. Sie beurteilen, schreiben den Befund zurück — und erfassen ihn als Fern-Leistung.</div>
+        <div class="sys-path-cta" data-en="Open the cockpit →" data-de="Cockpit ansehen →">Cockpit ansehen →</div>
+      </a>
+    </div>
+    <p class="sys-paths-note"
+       data-en="The station and the cockpit run in the browser — nothing to install. Chrome on Android or a computer; on iPhone Apple does not permit Bluetooth in the browser, the station says so and shows the way. That is exactly what the app is for."
+       data-de="Station und Cockpit laufen im Browser — nichts zu installieren. Chrome auf Android oder am Computer; auf dem iPhone lässt Apple Bluetooth im Browser nicht zu, die Station sagt es und zeigt den Weg. Genau dafür ist die App da.">Station und Cockpit laufen im Browser — nichts zu installieren. Chrome auf Android oder am Computer; auf dem iPhone lässt Apple Bluetooth im Browser nicht zu, die Station sagt es und zeigt den Weg. Genau dafür ist die App da.</p>
   </div>
 
   <!-- EINSTIEGS-NAV — Nutzenbündel-Chips: Selbst-Segmentierung → Sektion + Analytics (topic_opened).

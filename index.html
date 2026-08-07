@@ -241,6 +241,13 @@ document.head.appendChild(s);})();</script>
       --accent: var(--cyan); --accent-soft: var(--cyan-soft); --accent-glow-color: var(--cyan-glow);
       --accent-glow: radial-gradient(70% 90% at 50% -10%, rgba(62,207,178,0.12), transparent 70%);
     }
+    /* Station teilt den Equine-Akzent ebenfalls — Quelle und Ziel derselben
+       Familie. Sie ist die einzige Karte, die man ohne irgendeine
+       Installation SOFORT benutzen kann; das sagt die Karte auch. */
+    .product-card.station {
+      --accent: var(--cyan); --accent-soft: var(--cyan-soft); --accent-glow-color: var(--cyan-glow);
+      --accent-glow: radial-gradient(70% 90% at 50% -10%, rgba(62,207,178,0.12), transparent 70%);
+    }
     /* Visite teilt den Equine-Akzent — sichtbar dieselbe Familie. */
     .product-card.visite {
       --accent: var(--cyan); --accent-soft: var(--cyan-soft); --accent-glow-color: var(--cyan-glow);
@@ -337,8 +344,15 @@ document.head.appendChild(s);})();</script>
       color: var(--accent);
       background: rgba(255,255,255,0.04);
     }
+    /* Die Zeile trug `space-between` ohne Abstand und ohne Umbruchschutz.
+       Sobald der Status länger wurde, brach der Aufruf mitten im Wort um
+       („Produkt / öffnen") und der Status schob sich darüber — sichtbar
+       schon vor der Messstations-Karte, nur eben unbemerkt.
+       `gap` trennt sie, `nowrap` schützt den Aufruf, und der Status darf
+       umbrechen statt zu drängeln. */
     .product-card .cta-row {
-      display: flex; align-items: center; justify-content: space-between;
+      display: flex; align-items: baseline; justify-content: space-between;
+      gap: 14px; flex-wrap: wrap;
       padding-top: 16px;
       border-top: 1px solid var(--border);
     }
@@ -347,6 +361,7 @@ document.head.appendChild(s);})();</script>
       font-size: 13px; font-weight: 500;
       color: var(--accent);
       letter-spacing: 0.04em;
+      white-space: nowrap;
     }
     .product-card .cta::after {
       content: '→';
@@ -357,6 +372,7 @@ document.head.appendChild(s);})();</script>
     .product-card .status {
       font-size: 10px; letter-spacing: 0.16em; text-transform: uppercase;
       color: var(--text-faint);
+      text-align: right; margin-left: auto;
     }
 
     /* Trust strip */
@@ -582,6 +598,48 @@ document.head.appendChild(s);})();</script>
         </div>
       </a>
 
+      <!-- ══════════════════════════════════════════════════════════════════
+           DIE MESSSTATION — steht bewusst VOR der Visite: sie ist die
+           Quelle, die Visite das Ziel, und in dieser Reihenfolge liest sich
+           das Raster wie der Datenweg selbst.
+
+           Sie war bis zum 07.08.2026 auf `noindex`, in keiner sitemap und
+           von keiner Seite verlinkt — erreichbar ausschliesslich ueber einen
+           gedruckten Aushang im Stall. Damit konnte ausgerechnet die eine
+           Seite, die sich von selbst weitertraegt, von niemandem gefunden
+           werden.
+
+           UNTERSCHIED ZUR APP, sichtbar in der Karte: die App ist das
+           vollstaendige Instrument auf Apple-Geraeten, die Station ist der
+           eine Griff, der ohne alles funktioniert. Beide muenden in die
+           Visite. -->
+      <a class="product-card station" href="/messen">
+        <div class="product-head">
+          <div class="product-mark" aria-hidden="true">
+            <img src="/assets/equine-mark-224.png" alt="" width="56" height="56">
+          </div>
+          <span class="product-accent-dot"></span>
+        </div>
+        <div class="pair-tag" data-en="Source in the CARLON Equine circle" data-de="Quelle im CARLON-Equine-Kreis">Source in the CARLON Equine circle</div>
+        <div class="platform" data-en="Browser · nothing to install" data-de="Browser · ohne Installation">Browser · nothing to install</div>
+        <h3>CARLON Equine <strong>Messstation</strong></h3>
+        <div class="tagline"
+             data-en="For horse owners. Record your horse's heart rhythm yourself — in the barn."
+             data-de="Für Pferdebesitzer. Den Herzrhythmus deines Pferdes selbst aufnehmen — im Stall.">For horse owners. Record your horse's heart rhythm yourself — in the barn.</div>
+        <div class="desc"
+             data-en="Open the page, connect the Polar H10, record. No app, no account, no waiting. At the end you get an encrypted link for your vet — only whoever holds it can open the recording. On the iPhone Apple does not permit Bluetooth in the browser; the station says so and shows the way."
+             data-de="Seite öffnen, Polar H10 verbinden, aufnehmen. Ohne App, ohne Konto, ohne Wartezeit. Am Ende bekommst du einen verschlüsselten Link für deine Tierärztin — nur wer ihn hat, kann die Aufnahme öffnen. Auf dem iPhone lässt Apple Bluetooth im Browser nicht zu; die Station sagt es und zeigt den Weg.">Open the page, connect the Polar H10, record. No app, no account, no waiting. At the end you get an encrypted link for your vet — only whoever holds it can open the recording. On the iPhone Apple does not permit Bluetooth in the browser; the station says so and shows the way.</div>
+        <div class="meta">
+          <span class="meta-pill featured" data-en="Nothing to install" data-de="Nichts zu installieren">Nothing to install</span>
+          <span class="meta-pill" data-en="Encrypted end to end" data-de="Ende zu Ende verschlüsselt">Encrypted end to end</span>
+          <span class="meta-pill" data-en="Chrome · Android or computer" data-de="Chrome · Android oder Computer">Chrome · Android or computer</span>
+        </div>
+        <div class="cta-row">
+          <span class="cta" data-en="Measure now" data-de="Jetzt messen">Measure now</span>
+          <span class="status" data-en="Live" data-de="Live">Live</span>
+        </div>
+      </a>
+
       <a class="product-card visite" href="/carlon-equine-visite/">
         <div class="product-head">
           <div class="product-mark" aria-hidden="true">
@@ -611,12 +669,16 @@ document.head.appendChild(s);})();</script>
 
     </div>
 
-    <!-- Paar-Brücke: erklärt den Datenweg zwischen den beiden Equine-Werkzeugen
-         in einem Satz. Steht bewusst UNTER dem Raster, damit es unabhängig
-         davon funktioniert, wie viele Karten pro Zeile umbrechen. -->
+    <!-- Brücke: erklärt den Datenweg der Equine-Werkzeuge in einem Satz.
+         Steht bewusst UNTER dem Raster, damit es unabhängig davon
+         funktioniert, wie viele Karten pro Zeile umbrechen.
+         Seit dem 07.08.2026 sind es ZWEI Quellen und ein Ziel — die
+         Messstation nimmt genauso auf wie die App, nur ohne Installation.
+         Der Satz nennt beide, sonst sieht die Station aus wie ein Anhängsel
+         statt wie der zweite Weg in dieselbe Praxis. -->
     <div class="pair-bridge"
-         data-en="<strong>CARLON Equine and CARLON Equine Visite are one pair.</strong> <span class='pb-flow'>Owner measures → file → vet reads</span>. The horse is measured where it is at ease; the recording travels as a signed file and opens in the vet's browser. No server sits in between, no account is needed — and nobody but the two of them ever sees the data."
-         data-de="<strong>CARLON Equine und CARLON Equine Visite sind ein Paar.</strong> <span class='pb-flow'>Halter misst → Datei → Tierärztin liest</span>. Gemessen wird, wo das Pferd ruhig ist; die Aufnahme wandert als signierte Datei und öffnet sich im Browser der Tierärztin. Kein Server sitzt dazwischen, kein Konto ist nötig — und niemand außer den beiden sieht die Daten je."><strong>CARLON Equine und CARLON Equine Visite sind ein Paar.</strong> <span class="pb-flow">Halter misst → Datei → Tierärztin liest</span>. Gemessen wird, wo das Pferd ruhig ist; die Aufnahme wandert als signierte Datei und öffnet sich im Browser der Tierärztin. Kein Server sitzt dazwischen, kein Konto ist nötig — und niemand außer den beiden sieht die Daten je.</div>
+         data-en="<strong>Two sources, one destination.</strong> <span class='pb-flow'>Measurement station or app → encrypted → vet reads</span>. The horse is measured where it is at ease — in the browser without installing anything, or with the app on Apple devices. Both recordings take the same path into CARLON Equine Visite. No server sits in between, no account is needed — and nobody but the two of them ever sees the data."
+         data-de="<strong>Zwei Quellen, ein Ziel.</strong> <span class='pb-flow'>Messstation oder App → verschlüsselt → Tierärztin liest</span>. Gemessen wird, wo das Pferd ruhig ist — im Browser ohne jede Installation oder mit der App auf Apple-Geräten. Beide Aufnahmen nehmen denselben Weg in CARLON Equine Visite. Kein Server sitzt dazwischen, kein Konto ist nötig — und niemand außer den beiden sieht die Daten je."><strong>Zwei Quellen, ein Ziel.</strong> <span class="pb-flow">Messstation oder App → verschlüsselt → Tierärztin liest</span>. Gemessen wird, wo das Pferd ruhig ist — im Browser ohne jede Installation oder mit der App auf Apple-Geräten. Beide Aufnahmen nehmen denselben Weg in CARLON Equine Visite. Kein Server sitzt dazwischen, kein Konto ist nötig — und niemand außer den beiden sieht die Daten je.</div>
   </section>
 
   <section class="trust-strip">

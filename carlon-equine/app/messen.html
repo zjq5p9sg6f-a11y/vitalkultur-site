@@ -5,7 +5,12 @@
 <title>Messung für den Tierarzt — CARLON</title>
 <link rel="manifest" href="manifest.webmanifest">
 <meta name="theme-color" content="#0A0A0C">
-<meta name="robots" content="noindex">
+<!-- Die Station war `noindex`, stand in keiner sitemap und wurde von keiner
+     Seite verlinkt: erreichbar ausschliesslich ueber einen gedruckten
+     Aushang. Damit konnte genau die Seite, die sich von selbst verbreitet,
+     von niemandem gefunden werden. Freigegeben am 07.08.2026. -->
+<meta name="description" content="Nimm den Herzrhythmus deines Pferdes mit dem Polar-H10-Gurt direkt im Browser auf — ohne App und ohne Konto. Am Ende bekommst du einen verschlüsselten Link für deine Tierärztin oder deinen Tierarzt.">
+<link rel="canonical" href="https://vitalkultur.com/carlon-equine/app/messen.html">
 <!-- Vorschau beim Teilen: ohne diese Angaben zeigen Messenger eine graue
      Kompassnadel statt der Marke. Das Bild liegt bereits im Repo. -->
 <meta property="og:title" content="Herzraten-Messung beim Pferd — CARLON Equine">
@@ -2827,7 +2832,19 @@ function drawSpark(){
 (function(){
   const jt=$('#jtBtn'); if(!jt) return;
   jt.addEventListener('click', async ()=>{
-    const st=new URL('messen.html', location.href).toString();   // nur die Station
+    /* Die Adresse, die weitergereicht wird — und zwar DIESELBE, die auch auf
+       der Teilkarte steht. Wer das Bild sieht und die Adresse abtippt, muss
+       dort landen, wo der Link hinführt; zwei Adressen für dieselbe Sache
+       sind eine Einladung zum Vertippen.
+       KANON statt location.href: ein Link, der aus einem Tunnel oder von
+       localhost geteilt wird, ist tot, sobald das Fenster zu ist — derselbe
+       Fehler, an dem der Aushang schon einmal gestorben wäre. */
+    const st=(function(){
+      try{
+        const b=new URL('messen.html', window.CARLON_KANON||location.href);
+        return b.origin==='https://vitalkultur.com' ? b.origin+'/messen' : b.toString();
+      }catch(_){ return location.href.split('#')[0]; }
+    })();
     const text='Damit kann man den Herzrhythmus vom Pferd selbst messen:';
     /* Mit Bild teilen, wenn das Geraet es kann — ein nackter Link traegt
        keine Begeisterung, die Wolke schon. Faellt sauber auf Text zurueck. */
@@ -3224,6 +3241,13 @@ async function momentKarteBlob(){
   x.letterSpacing='7px';
   x.fillText('CARLON EQUINE', W/2, H-78);
   x.letterSpacing='0px';
+  /* DIE ADRESSE. Ohne sie war diese Karte eine Sackgasse: sie wird als BILD
+     weitergereicht — in eine Stallgruppe, auf Instagram — und ein Bild
+     traegt keinen Link. Wer sie sieht, muss die Adresse abtippen koennen.
+     Deshalb die kurze Fassung (/messen leitet weiter), nicht die
+     kanonische: `carlon-equine/app/messen.html` tippt niemand ab. */
+  x.fillStyle=DIM; x.font=`400 21px ${ui}`;
+  x.fillText('vitalkultur.com/messen', W/2, H-40);
 
   /* JPEG statt PNG: die Karte ist fast durchgehend Verlauf, da bringt PNG
      nichts ausser Gewicht — 3,6 MB gegen rund 400 kB. Ueber Mobilfunk im
