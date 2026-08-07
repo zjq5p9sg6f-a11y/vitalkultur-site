@@ -1743,6 +1743,7 @@ nav.tabs button.on{text-shadow:none}
 </div>
 
 <script src="live.js"></script>
+<script src="krypto.js"></script>
 <script src="seed-data.js"></script>
 <script src="p2p.js"></script>
 <script src="assets/leaflet/leaflet.js"></script>
@@ -6569,6 +6570,93 @@ const UI={
 };
 
 /* ════════════════════════════════════════════════════════════════════════
+   PRAXIS-IDENTITAET UND POSTFACH
+   ════════════════════════════════════════════════════════════════════════
+   Loest das Rendezvous ab. Bisher musste die Tieraerztin ein Fenster offen
+   halten und warten, waehrend ein Spinner "Warte auf den Besitzer" zeigte —
+   schloss sie es, war die Sendung verloren. Zwei Menschen, die nie
+   gleichzeitig Zeit haben, brauchen aber keinen Treffpunkt, sondern einen
+   Briefkasten.
+   ════════════════════════════════════════════════════════════════════════ */
+const Praxis={
+  _ich:null,
+  /* Identitaet laden oder beim ersten Mal anlegen. Sie liegt in den
+     Einstellungen und wandert damit in die Praxis-Sicherung — ohne das waere
+     ein Geraetewechsel gleichbedeutend mit einem neuen Postfach und toten
+     Links bei allen Besitzern. */
+  async ich(){
+    if(this._ich) return this._ich;
+    const gespeichert=State.settings.praxisIdentitaet;
+    if(gespeichert){
+      try{ this._ich=await Krypto.praxisLaden(gespeichert); }catch(e){ this._ich=null; }
+    }
+    if(!this._ich){
+      this._ich=await Krypto.praxisAnlegen();
+      State.settings.praxisIdentitaet=await Krypto.praxisSichern(this._ich);
+      await State.saveSettings();
+    }
+    return this._ich;
+  },
+  /* Der Link, den der Besitzer bekommt. Er traegt die Fachnummer und den
+     oeffentlichen Schluessel — mehr braucht der Besitzer nicht, um zu senden:
+     kein Konto, keine Anmeldung, keine Verabredung. */
+  async einladung(){
+    const ich=await this.ich();
+    const basis=location.href.replace(/[^/]*(\?.*)?$/,'');
+    return basis+'messen.html?fach='+encodeURIComponent(ich.fach)+'&k='+encodeURIComponent(ich.boxPub);
+  },
+};
+
+const Postfach={
+  DIENST:'https://postfach.vitalkultur.com',
+  _laeuft:false, _letzter:0,
+  async _ruf(pfad, leib){
+    const r=await fetch(this.DIENST+pfad,{method:'POST',
+      headers:{'Content-Type':'application/json'}, body:JSON.stringify(leib)});
+    return r.json().catch(()=>({ok:false,grund:'HTTP '+r.status}));
+  },
+  /* Holt alles ab, was da ist, entschluesselt lokal und uebergibt es dem
+     bestehenden Import. Danach wird die Sendung im Zwischenspeicher geloescht
+     — er soll nichts behalten, was er nicht mehr braucht.
+     Still: wer die App oeffnet, will arbeiten, nicht verwalten. Gemeldet wird
+     nur, wenn tatsaechlich etwas angekommen ist. */
+  async abholen({laut=false}={}){
+    if(this._laeuft) return {neu:0};
+    if(!navigator.onLine){ if(laut) Toast.show('Kein Netz — der Posteingang wird beim nächsten Mal geholt','info'); return {neu:0}; }
+    if(Date.now()-this._letzter<60000 && !laut) return {neu:0};
+    this._laeuft=true; this._letzter=Date.now();
+    try{
+      const ich=await Praxis.ich();
+      let d=await this._ruf('/postfach/'+ich.fach+'?was=liste', await Krypto.abholNachweis(ich));
+      if(!d.ok){ if(laut) Toast.show('Posteingang gerade nicht erreichbar','warn'); return {neu:0}; }
+      const dateien=[];
+      for(const kopf of (d.sendungen||[])){
+        const e=await this._ruf('/postfach/'+ich.fach+'/'+kopf.id, await Krypto.abholNachweis(ich));
+        if(!e.ok) continue;
+        let klar;
+        try{ klar=await Krypto.oeffnen(ich.box.privateKey, e.umschlag, ich.fach); }
+        catch(err){
+          /* Nicht zu entschluesseln heisst: nicht fuer uns oder Unsinn. Weg
+             damit, sonst verstopft es das Fach dauerhaft. */
+          await this._ruf('/postfach/'+ich.fach+'/'+kopf.id+'?was=weg', await Krypto.abholNachweis(ich));
+          continue;
+        }
+        dateien.push(new File([klar], 'aufnahme-'+(kopf.eingegangen||'').slice(0,10)+'.json',
+          {type:'application/json'}));
+        await this._ruf('/postfach/'+ich.fach+'/'+kopf.id+'?was=weg', await Krypto.abholNachweis(ich));
+      }
+      if(dateien.length){
+        Toast.show(`${dateien.length} neue Aufnahme${dateien.length!==1?'n':''} eingegangen`,'ok');
+        UI.importModal&&UI.importModal();
+        Importer.startScan(dateien);
+      } else if(laut){ Toast.show('Nichts Neues im Posteingang','info'); }
+      return {neu:dateien.length};
+    }catch(e){ if(laut) Toast.show('Posteingang: '+(e.message||'Fehler'),'warn'); return {neu:0}; }
+    finally{ this._laeuft=false; }
+  },
+};
+
+/* ════════════════════════════════════════════════════════════════════════
    LICENSE — Tier-Gating (Demo → Vet-Solo / Vet-Clinic), offline verifiziert
    Der monatliche Zahlungs-Mechanismus: signierte Keys mit Ablaufdatum.
    ════════════════════════════════════════════════════════════════════════ */
@@ -7862,7 +7950,8 @@ addEventListener('beforeinstallprompt',e=>{e.preventDefault();PWA.deferred=e;});
        Reichweite liefe im Stillen ab.
        'online' ist der wichtigste: der Moment, in dem der Wagen aus dem
        Funkloch faehrt, ist genau der Moment, in dem nachgeholt werden soll. */
-    window.addEventListener('online', ()=>License.lizenzHolenWennFaellig());
+    window.addEventListener('online', ()=>{ License.lizenzHolenWennFaellig(); Postfach.abholen(); });
+    Postfach.abholen();
     /* Zugabe fuer Chromium: der Browser darf die Erneuerung auch nachholen,
        wenn die App gar nicht offen ist. Safari kennt das nicht — dort bleibt
        es bei den Ausloesern oben, was die 14+14 Tage Reichweite ohnehin
@@ -7877,7 +7966,7 @@ addEventListener('beforeinstallprompt',e=>{e.preventDefault();PWA.deferred=e;});
       }
     }catch(e){}
     document.addEventListener('visibilitychange', ()=>{
-      if(document.visibilityState==='visible') License.lizenzHolenWennFaellig();
+      if(document.visibilityState==='visible'){ License.lizenzHolenWennFaellig(); Postfach.abholen(); }
     });
     if(State.settings.fieldMode){document.body.classList.add('field-mode');const b=$('#fieldBtn');if(b)b.classList.add('on');}
     Chart.initHover();

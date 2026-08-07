@@ -47,14 +47,23 @@
   const Krypto = {
     b64u, unb64u,
 
-    /* Ein frisches Paar Schlüsselpaare für eine Praxis. Der private Teil ist
-       NICHT extrahierbar angelegt — er kann das Gerät technisch nicht
-       verlassen, auch nicht durch einen Fehler unsererseits. */
+    /* Ein frisches Paar Schlüsselpaare für eine Praxis.
+
+       AUSDRUECKLICH EXTRAHIERBAR — und das ist eine Korrektur meiner ersten
+       Fassung. Nicht-extrahierbare Schluessel klingen sicherer, haetten hier
+       aber bedeutet: bei einem Geraetewechsel sind ALLE bereits verschickten
+       Besitzer-Links tot, weil das Postfach nicht mehr zu oeffnen ist.
+       Und das Sicherheitsargument traegt nicht: die Praxis-Sicherung enthaelt
+       ohnehin saemtliche Gesundheitsdaten im Klartext. Den Schluessel haerter
+       zu schuetzen als das, was er schuetzt, waere Theater — es haette nur den
+       Gebrauch verschlechtert, nicht den Schutz verbessert.
+       Der Schluessel gehoert damit in die Praxis-Sicherung, genau wie alles
+       andere, und wird mit ihr geschuetzt. */
     async praxisAnlegen() {
       const box = await crypto.subtle.generateKey(
-        { name: 'ECDH', namedCurve: 'P-256' }, false, ['deriveKey', 'deriveBits']);
+        { name: 'ECDH', namedCurve: 'P-256' }, true, ['deriveKey', 'deriveBits']);
       const sign = await crypto.subtle.generateKey(
-        { name: 'ECDSA', namedCurve: 'P-256' }, false, ['sign', 'verify']);
+        { name: 'ECDSA', namedCurve: 'P-256' }, true, ['sign', 'verify']);
       const boxPub = await crypto.subtle.exportKey('raw', box.publicKey);
       const signPub = await crypto.subtle.exportKey('raw', sign.publicKey);
       return {
@@ -134,6 +143,36 @@
           additionalData: this._aad(fach, umschlag.weg) },
         schluessel, unb64u(umschlag.c));
       return new TextDecoder().decode(klar);
+    },
+
+    /* ── Sichern und wiederherstellen ────────────────────────────────
+       Damit die Praxis-Sicherung den Postfach-Zugang mittraegt. Ohne das
+       waere ein Geraetewechsel gleichbedeutend mit einem neuen Postfach und
+       toten Links bei allen Besitzern. */
+    async praxisSichern(praxis) {
+      return {
+        v: 2,
+        box: await crypto.subtle.exportKey('jwk', praxis.box.privateKey),
+        sign: await crypto.subtle.exportKey('jwk', praxis.sign.privateKey),
+        boxPub: praxis.boxPub, signPub: praxis.signPub, fach: praxis.fach,
+      };
+    },
+    async praxisLaden(sicherung) {
+      if (!sicherung || !sicherung.box || !sicherung.sign) return null;
+      const boxPriv = await crypto.subtle.importKey('jwk', sicherung.box,
+        { name: 'ECDH', namedCurve: 'P-256' }, true, ['deriveKey', 'deriveBits']);
+      const signPriv = await crypto.subtle.importKey('jwk', sicherung.sign,
+        { name: 'ECDSA', namedCurve: 'P-256' }, true, ['sign']);
+      const boxPub = await crypto.subtle.importKey('raw', unb64u(sicherung.boxPub),
+        { name: 'ECDH', namedCurve: 'P-256' }, true, []);
+      /* Fachnummer NEU berechnen statt der Sicherung zu glauben — sonst
+         koennte eine verfaelschte Sicherung auf ein fremdes Fach zeigen. */
+      const fach = await this.fachnummer(unb64u(sicherung.signPub));
+      return {
+        box: { privateKey: boxPriv, publicKey: boxPub },
+        sign: { privateKey: signPriv },
+        boxPub: sicherung.boxPub, signPub: sicherung.signPub, fach,
+      };
     },
 
     /* ── Abholen beweisen ──────────────────────────────────────────────

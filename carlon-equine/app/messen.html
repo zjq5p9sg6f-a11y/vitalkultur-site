@@ -837,6 +837,7 @@ svg.viz .bezel{stroke:var(--cyan);stroke-opacity:.55;stroke-width:1.1;stroke-lin
   </div>
 </div>
 
+<script src="krypto.js"></script>
 <script src="p2p.js"></script>
 <script>
 'use strict';
@@ -1910,6 +1911,18 @@ document.addEventListener('click',e=>{
   if(b){ e.stopPropagation(); e.preventDefault(); InfoPop.open(b.dataset.info); }
 },true);
 const room=new URLSearchParams(location.search).get('room');
+/* POSTFACH statt Verabredung.
+   Frueher trug der Link einen Raumcode, und die Aufnahme kam nur an, solange
+   die Tieraerztin ein Fenster offen hielt und wartete. Jetzt traegt er die
+   Fachnummer der Praxis und ihren oeffentlichen Schluessel: hier wird
+   verschluesselt und eingeworfen — ob die Praxis gerade online ist, spielt
+   keine Rolle mehr.
+   Der alte Raumcode wird weiter erkannt, damit bereits verschickte Links
+   nicht ins Leere laufen. */
+const _q=new URLSearchParams(location.search);
+const fach=_q.get('fach'), praxisKey=_q.get('k');
+const POSTFACH='https://postfach.vitalkultur.com';
+const kannSenden=!!(fach&&praxisKey)||!!room;
 
 /* ══ EINBETTBARER MODUS (weisslabel-faehig) ═══════════════════════════════
    Die Station kann unter fremder Marke ausgeliefert werden; die Messtechnik
@@ -1983,7 +1996,7 @@ function relabel(){
     const secs=S.startedAt?(Date.now()-S.startedAt.getTime())/1000:0;
     $('#dTachoN').textContent=fmt0(S.rr.length)+' '+t('beatsUnit');
     $('#vMeta').textContent=fmt0(S.rr.length)+' '+t('beatsUnit')+' · '+mmss(secs);
-    $('#doneSub').textContent = room ? t('doneSubRoom') : t('doneSubFile');
+    $('#doneSub').textContent = kannSenden ? t('doneSubRoom') : t('doneSubFile');
     let clean=0,pairs=0;
     for(let i=1;i<S.rr.length;i++){ pairs++; if(Math.abs(S.rr[i]-S.rr[i-1])<=0.20*S.rr[i-1]) clean++; }
     const q=pairs?clean/pairs:0, kurz=secs<REC_SEC;
@@ -2272,8 +2285,8 @@ function finish(){
   $('#protoVerdict').textContent = q>=0.90 ? (kurz?t('verdictCleanShort'):t('verdictClean'))
     : q>=0.75 ? t('verdictNoisy') : t('verdictBad');
 
-  $('#doneSub').textContent = room ? t('doneSubRoom') : t('doneSubFile');
-  if(!room) $('#btnSend').disabled=true;
+  $('#doneSub').textContent = kannSenden ? t('doneSubRoom') : t('doneSubFile');
+  if(!kannSenden) $('#btnSend').disabled=true;
 
   const payload=buildExport(name,rr,m,secs);
   S.blob=new Blob([JSON.stringify(payload)],{type:'application/json'});
@@ -2339,11 +2352,38 @@ function buildExport(name,rr,m,secs){
 
 /* ── Übergabe ──────────────────────────────────────────────────────────── */
 $('#btnSend').addEventListener('click', async ()=>{
-  if(!S.blob||!room) return;
+  if(!S.blob||!kannSenden) return;
   $('#err').textContent=''; $('#btnSend').disabled=true; $('#btnSave').disabled=true;
   $('#barWrap').classList.remove('hidden');
-  $('#status').textContent='Verbinde mit der Praxis…';
   try{
+    if(fach&&praxisKey){
+      /* Der neue Weg: verschluesseln und einwerfen. Niemand muss warten.
+         Verschluesselt wird HIER, auf dem Geraet des Besitzers — der
+         Zwischenspeicher bekommt nur Chiffrat zu sehen und kann es nicht
+         oeffnen. */
+      $('#status').textContent='Verschlüssele die Aufnahme…';
+      $('#pb').style.width='35%';
+      const klar=await S.blob.text();
+      const umschlag=await Krypto.versiegeln(praxisKey, klar, fach);
+      $('#status').textContent='Sende an die Praxis…';
+      $('#pb').style.width='70%';
+      const r=await fetch(POSTFACH+'/postfach/'+encodeURIComponent(fach),{
+        method:'POST', headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({art:'aufnahme',umschlag})});
+      const d=await r.json().catch(()=>({}));
+      if(!d.ok) throw new Error(d.grund||('Übertragung fehlgeschlagen ('+r.status+')'));
+      $('#pb').style.width='100%';
+      /* Bewusst nicht "übertragen", sondern was tatsaechlich gilt: die
+         Aufnahme liegt bereit, die Praxis holt sie, wenn sie das naechste Mal
+         online ist. Kein falsches Versprechen ueber den Zeitpunkt. */
+      $('#status').innerHTML='<span class="done">✓ Aufnahme sicher zugestellt</span>'
+        +'<div style="font-size:12px;color:var(--sec);margin-top:6px">Verschlüsselt abgelegt — deine Tierärztin sieht sie, sobald sie das nächste Mal online ist. Du musst nichts weiter tun.</div>';
+      $('#btnSend').classList.add('hidden'); $('#btnSave').disabled=false;
+      $('#btnAgain').classList.remove('hidden');
+      return;
+    }
+    /* Alter Weg fuer bereits verschickte Links mit Raumcode. */
+    $('#status').textContent='Verbinde mit der Praxis…';
     const file=new File([S.blob],S.fname,{type:'application/json'});
     await P2P.send(room,file,{
       onStatus:s=>{ if(s==='connected') $('#status').textContent='Verbunden — übertrage…'; },
