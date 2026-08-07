@@ -258,9 +258,11 @@ p.sub{color:var(--sec);font-size:clamp(13px,1.15vw,15px);margin:0 auto clamp(var
 .dach{max-width:720px;margin:var(--s5) auto var(--s4);padding:var(--s4) var(--s4) 0;
   border-top:1px solid var(--line,rgba(255,255,255,.08));
   display:flex;gap:14px;align-items:flex-start}
-.dach a{font-family:var(--font-brand);font-weight:500;letter-spacing:.14em;
-  font-size:13px;color:var(--txt);text-decoration:none;white-space:nowrap;flex:none;
-  text-transform:uppercase;opacity:.85}
+.dach a{font-family:var(--font-brand);font-weight:600;letter-spacing:.22em;
+  font-size:15px;color:var(--txt);text-decoration:none;white-space:nowrap;flex:none;
+  text-transform:uppercase;opacity:.95}
+.dach em{display:block;margin-top:5px;font-style:normal;font-size:10.5px;
+  letter-spacing:.08em;color:var(--dim);opacity:.7}
 .dach a:hover{opacity:1;color:var(--cyan)}
 .dach span{font-size:11.5px;color:var(--dim);line-height:1.6}
 /* Die Lage-Karte schliesst den Kreis: sie sagt dem Besitzer, dass etwas
@@ -915,7 +917,14 @@ svg.viz .bezel{stroke:var(--cyan);stroke-opacity:.55;stroke-width:1.1;stroke-lin
 
 <script src="krypto.js"></script>
 <script src="p2p.js"></script>
-<!-- DAS DACH — auf JEDER Seite, nicht nur nach getaner Messung.
+<!-- DIE WORTMARKE — auf JEDER Seite, nicht nur nach getaner Messung.
+     KORREKTUR (Jan, 07.08.): Wiedererkennung gehoert auf CARLON, nicht auf
+     Vitalkultur. CARLON ist die eingetragene Wortmarke und der Name, unter
+     dem die Produkte gekauft werden — CARLON EQUINE beim Pferd, CARLON beim
+     Menschen. Vitalkultur ist die Firma und gehoert dorthin, wo jemand
+     wissen muss, WER abrechnet (Kasse, Impressum) — nicht auf eine Flaeche,
+     die Bekanntheit aufbauen soll. Zwei Marken gleich laut heisst: keine
+     wird erinnert.
      Das SaaS ist die Vorhut: es erreicht den Markt vor den iOS-Apps. Also
      saet es den Hausnamen bei genau der Zielgruppe, die spaeter die Apps
      kauft — und die Station ist der wiederkehrende Anlaufpunkt, weil hier
@@ -930,18 +939,18 @@ svg.viz .bezel{stroke:var(--cyan);stroke-opacity:.55;stroke-width:1.1;stroke-lin
 <script>
 const HAUS={
   appImStore:false,                     // ← der eine Schalter
-  appUrl:'https://vitalkultur.com/breathwork',
+  appUrl:'https://carlon.app',
 };
 (function(){
   const d=document.getElementById('dach'); if(!d) return;
-  d.innerHTML='<a href="https://vitalkultur.com" target="_blank" rel="noopener">Vitalkultur</a>'
-    +'<span>CARLON EQUINE ist ein Werkzeug aus diesem Haus. Wir messen Herzrhythmen — '
-    +'beim Pferd und beim Menschen. Zwischen beiden ist eine gerichtete Kopplung beschrieben '
-    +'worden (Callara et al., iScience 2024; kleine, explorative Studie).'
+  d.innerHTML='<a href="https://carlon.app" target="_blank" rel="noopener">CARLON</a>'
+    +'<span>Wir messen Herzrhythmen — beim Pferd mit CARLON EQUINE, beim Menschen mit CARLON. '
+    +'Zwischen beiden ist eine gerichtete Kopplung beschrieben worden '
+    +'(Callara et al., iScience 2024; kleine, explorative Studie).'
     +(HAUS.appImStore
       ? ' <a href="'+HAUS.appUrl+'" target="_blank" rel="noopener">Für dich selbst messen &rsaquo;</a>'
       : '')
-    +'</span>';
+    +'<em>von Vitalkultur</em></span>';
 })();
 </script>
 <script>
