@@ -6449,14 +6449,14 @@ const UI={
     // Features hier sind gegen PAID_ONLY + maxHorses verifiziert — nichts versprechen, was kein Gate hat.
     const FEATS=['Unbegrenzt viele Pferde (Demo: 3)','Befund-PDF für Besitzer','CSV-Export der Messdaten','Route an Google Maps übergeben','Besitzer-Rückmeldung einholen','Kohärenz-Auswertung'];
     const plans=[
-      ['year','Jahresabo','40,83','490 € im Jahr — zwei Monate günstiger','beste Wahl'],
-      ['month','Monatsabo','49','monatlich kündbar',''],
+      ['year','Jahresabo',(License.PREIS.soloJahr/12).toFixed(2).replace('.',','),`${License.PREIS.soloJahr} € im Jahr — zwei Monate günstiger`,'beste Wahl'],
+      ['month','Monatsabo',String(License.PREIS.soloMonat),'monatlich kündbar',''],
     ];
     // ROI-Pitch aus den eigenen Zahlen des Vets: erfasster Telemetrie-Umsatz vs. Lizenz
     const booked=(State.consults||[]).reduce((s,c)=>s+(c.fee||0),0);
-    const mult=booked>0?Math.max(1,Math.round(booked/49)):0;
+    const mult=booked>0?Math.max(1,Math.round(booked/License.PREIS.soloMonat)):0;
     const roi=booked>0
-      ? `Du hast in dieser Ansicht bereits <b style="color:var(--good)">${euro(booked)}</b> abrechenbaren Telemetrie-Umsatz erfasst. Das Abo kostet <b>49 €/Mo</b> — das ist <b style="color:var(--cyan-strong)">${mult}× drin.</b>`
+      ? `Du hast in dieser Ansicht bereits <b style="color:var(--good)">${euro(booked)}</b> abrechenbaren Telemetrie-Umsatz erfasst. Das Abo kostet <b>${License.PREIS.soloMonat} €/Mo</b> — das ist <b style="color:var(--cyan-strong)">${mult}× drin.</b>`
       : `Schon <b>eine</b> per Ferneinschätzung eingesparte oder abgerechnete Fahrt (50–200 €) refinanziert die Lizenz für den ganzen Monat.`;
     this.modal(`<div class="modal-head"><button class="closex" onclick="UI.closeModal()">${IC.x}</button><h3>Deine neue Einnahmequelle freischalten</h3></div>
     <div class="modal-body">
@@ -6512,7 +6512,18 @@ const UI={
 const License={
   PUB:{kty:'EC',crv:'P-256',x:'pqbiPaa-gOiZKjeRsQ7XMRe9am5L7giiV48Qjzp3enY',y:'5lg4Ipa-paTigXd7rxitFKwpee8h1Lu0W5eod1mYOok'},
   TIERS:{demo:{name:'Demo',color:'demo'},vet_solo:{name:'Vet-Solo',color:'paid'},vet_clinic:{name:'Vet-Clinic',color:'paid'},research:{name:'Research',color:'paid'}},
-  PRICES:{vet_solo:'49 €/Mo zzgl. MwSt.',vet_clinic:'149 €/Mo zzgl. MwSt.',research:'29 €/Mo zzgl. MwSt.'},
+  /* EINE Quelle für jede Preisangabe. Vorher standen 49 € an fünf Stellen
+     verstreut — Anzeige, ROI-Rechnung, Preistabelle, Kommentar. Genau so
+     entsteht der Fall, dass eine Stelle beim Ändern übersehen wird und die
+     Oberfläche zwei verschiedene Preise nennt.
+     Angehoben von 49 € auf 79 € am 07.08.2026, gestützt auf an Primärquellen
+     GEPRÜFTE Anker: Kubios HRV Scientific 685 €/Jahr (57 €/Mo) für ein reines
+     Human-Werkzeug ohne Pferdebezug, ohne Befund, ohne FHIR — und Arioneo
+     Equimetre Vet 130–184 €/Monat PRO GERÄT plus 1 200 € Startgebühr für
+     dieselbe Aufgabe. Bei 79 € deckt weiterhin eine einzige vermiedene Fahrt
+     (50–200 €) den Monat. */
+  PREIS:{ soloMonat:79, soloJahr:790, klinikMonat:149, forschungMonat:29 },
+  PRICES:{vet_solo:'79 €/Mo zzgl. MwSt.',vet_clinic:'149 €/Mo zzgl. MwSt.',research:'29 €/Mo zzgl. MwSt.'},
   /* ── ZAHLUNG (Stripe) ist von BERECHTIGUNG (eigene signierte Keys) ENTKOPPELT ──
      Bewusste Architektur-Entscheidung 2026-08-06: Lemon Squeezy wurde von Stripe
      aufgekauft und migriert seine Haendler auf "Stripe Managed Payments" — die
@@ -6525,9 +6536,19 @@ const License={
      Umstellung auf Live: nur diese beiden Links gegen die Live-Links tauschen. */
   CHECKOUT:{
     // Stripe Payment Links (Managed Payments aktiv, kein Gratis-Trial, Unternehmensname Pflicht)
-    year :'https://buy.stripe.com/test_4gMbJ1eopaGmbdmfjQ1RC02',   // 490 €/Jahr  (= 40,83 €/Mo)
-    month:'https://buy.stripe.com/test_dRmdR99455m25T20oW1RC01',   //  49 €/Monat
+    year :'https://buy.stripe.com/test_4gMbJ1eopaGmbdmfjQ1RC02',
+    month:'https://buy.stripe.com/test_dRmdR99455m25T20oW1RC01',
   },
+  /* WOFUER DIE LINKS BEI STRIPE ANGELEGT SIND.
+     Der Betrag steckt im Payment Link bei Stripe, nicht in diesem Code. Wer
+     hier den Preis aendert, aendert die Anzeige — nicht die Kasse. Die Seite
+     wuerde 79 € nennen und 49 € einziehen, und auffallen wuerde es erst in
+     der Buchhaltung. Deshalb stehen die Betraege, fuer die die Links
+     tatsaechlich gelten, hier daneben, und checkoutLink() gibt den Link nicht
+     heraus, solange beides auseinanderlaeuft.
+     ZUM UMSTELLEN: bei Stripe neue Payment Links ueber 79 € bzw. 790 €
+     anlegen, hier eintragen UND diese Betraege mitziehen. */
+  CHECKOUT_BETRAG:{ month:49, year:490 },
   /* Die Zahlungs-Links zeigen noch auf Stripes Testumgebung. Wird die
      Beta-Sperre geloest, ohne sie zu tauschen, laeuft der Kunde durch eine
      Kasse, die kein Geld einzieht — und wir merken es an nichts ausser einer
@@ -6536,6 +6557,13 @@ const License={
   checkoutLink(art){
     const url=this.CHECKOUT[art]||'';
     if(!url) return null;
+    // Angezeigter Preis gegen den Betrag, fuer den der Link angelegt wurde
+    const soll=art==='year'?this.PREIS.soloJahr:this.PREIS.soloMonat;
+    const ist=(this.CHECKOUT_BETRAG||{})[art];
+    if(ist!==soll){
+      console.warn(`[CARLON] Kasse gesperrt: angezeigt ${soll} €, Stripe-Link gilt fuer ${ist} €. Payment Link neu anlegen.`);
+      return null;
+    }
     const test=/\/test_/.test(url);
     if(test && !BETA_GATED && !/^(localhost|127\.0\.0\.1)$/.test(location.hostname)) return null;
     return url;
@@ -6570,7 +6598,8 @@ const License={
   /* WAS DIE STUFEN UNTERSCHEIDET — vorher: nichts.
      can() gab fuer JEDE bezahlte Stufe true zurueck, maxHorses() ebenso.
      "vet_clinic" tauchte im gesamten Code nur in zwei Beschriftungstabellen
-     auf. Damit kostete die Klinik-Stufe das Dreifache der Solo-Stufe fuer ein
+     auf. Damit kostete die Klinik-Stufe (damals 149 gegen 49 €, also das
+     Dreifache; seit der Anhebung auf 79 € das 1,9-Fache) mehr fuer ein
      identisches Produkt — das haelt der erste Kunde nicht aus, der beides
      nebeneinander sieht, und es beschaedigt genau das Vertrauen, auf dem der
      Direktvertrieb beruht. Unterschiede gehoeren in den CODE, nicht in die
@@ -6585,9 +6614,13 @@ const License={
                 'multiSeat']        // Lizenz nennt eine Platzzahl; siehe seats()
   },
   /* OFFENER PUNKT, bewusst hier und nicht in einer Notiz nebenan:
-     Zwischen vet_solo (49 €) und vet_clinic (149 €) steht damit genau EIN
+     Zwischen vet_solo (79 €) und vet_clinic (149 €) steht damit genau EIN
      Merkmal — die im Schluessel genannte Platzzahl, und die ist vertraglich,
-     nicht technisch. Das traegt den dreifachen Preis nicht.
+     nicht technisch. Das traegt den Aufschlag nicht — auch nicht den auf
+     1,9-Fache verringerten. Bis Mehrbenutzer-Betrieb existiert, ist die
+     ehrliche Klinik-Antwort: N Solo-Plaetze. Bei fuenf Tieraerzt:innen sind
+     das 395 € im Monat und damit mehr, als eine pauschale Klinik-Stufe
+     einbraechte — ohne ein Merkmal zu versprechen, das es nicht gibt.
      Geprueft und VERWORFEN: den Praxis-Briefkopf zum Klinik-Merkmal zu machen.
      Er steht heute schon in Befund und Ueberweisung, und ihn dem Solo-Vet
      wegzunehmen waere eine Verschlechterung, die als Bezahlschranke gelesen
