@@ -2317,6 +2317,77 @@ if(partner){
   });
 }
 
+/* ── VERTRIEBSWEG ────────────────────────────────────────────────────────
+   NICHT zu verwechseln mit `?partner=` darueber: das ist White-Label
+   (Farbe, Logo, Claim) fuer eine Praxis, die die Station unter ihrem Namen
+   fuehrt. HIER geht es um die Herkunft eines Besuchs — welcher Haendler die
+   Besitzerin zu uns geschickt hat.
+
+   WARUM DAS DIE KETTE ZUENDET
+   Ein Reitsporthaendler verkauft den H10 Equine an Pferdebesitzer. Ohne
+   Anwendung ist der Sensor ein Nischenartikel, den niemand erklaeren kann.
+   Mit unserer kostenlosen Messung wird er verkaeuflich. Und jede Besitzerin,
+   die misst und ihrer Praxis schickt, zieht eine Praxis ins Cockpit — dort
+   liegt das Geld.
+
+   DIE RUECKRICHTUNG IST DER EIGENTLICHE TRICK
+   Wer mit einem Haendler-Code kommt und noch KEINEN Gurt hat, bekommt erst
+   die Beispielmessung und danach den Weg zurueck in genau diesen Laden.
+   Damit sind wir nicht nur Empfaenger seiner Kunden, sondern auch sein
+   Verkaufswerkzeug. Genau das macht die Sache fuer beide Seiten tragfaehig —
+   und man kann es laut aussagen, was ein Geschaeft belastbar macht.
+
+   WAS WIR NICHT TUN
+   Kein Zaehlpixel, kein stiller Ruf nach Hause. Gezaehlt wird ausschliesslich
+   beim ECHTEN Versand an eine Praxis — also bei einem Netzaufruf, den es
+   ohnehin gibt. Wer nur schaut, hinterlaesst nichts.                        */
+const HAENDLER = {
+  /* Eintragen, sobald ein Vertrag steht. Bis dahin bleibt die Mechanik
+     wirkungslos — ein unbekannter Code aendert nichts und stoert nichts. */
+  // loesdau: { name:'Loesdau', shop:'https://www.loesdau.de/…', gurt:'https://www.loesdau.de/…' },
+};
+const Vertrieb = {
+  code:'', haus:null,
+  start(){
+    let c='';
+    try{
+      c = (new URLSearchParams(location.search).get('p')||'')
+            .toLowerCase().replace(/[^a-z0-9_-]/g,'').slice(0,24);
+      /* Ueber die Sitzung halten: die Besitzerin kommt per QR auf die Seite,
+         misst zehn Minuten spaeter und sendet danach — der Code darf dabei
+         nicht verloren gehen. Sitzung, nicht dauerhaft: eine Herkunft gilt
+         fuer diesen Besuch, nicht fuer alle Zeit. */
+      if(c) sessionStorage.setItem('carlon.vertrieb', c);
+      else  c = sessionStorage.getItem('carlon.vertrieb') || '';
+    }catch(e){}
+    this.code = c;
+    this.haus = HAENDLER[c] || null;
+    this.zeigen();
+  },
+  /* Vertrauensuebertragung, kein Markenwechsel: eine Zeile, die sagt, woher
+     der Besuch kommt. Wer ueber seinen Haendler kommt, soll ihn wiedererkennen
+     — aber die Station bleibt unsere. */
+  zeigen(){
+    if(!this.haus) return;
+    const ziel = document.querySelector('[data-i18n="readySub"]');
+    if(!ziel || document.getElementById('vertriebZeile')) return;
+    const d = document.createElement('div');
+    d.id = 'vertriebZeile';
+    d.style.cssText = 'margin-top:10px;font-size:12px;color:var(--dim);letter-spacing:.03em';
+    d.textContent = 'Du kommst über ' + this.haus.name + '.';
+    ziel.insertAdjacentElement('afterend', d);
+  },
+  /* Der Weg ZURUECK zum Haendler — nur wenn wir einen kennen, und immer mit
+     Kennzeichnung. § 5a Abs. 4 UWG verlangt sie, sobald fuer eine Empfehlung
+     ein Entgelt fliesst oder versprochen ist, und die Norm VERMUTET das
+     Entgelt: nicht der Abmahner muss es beweisen, wir muessten das Gegenteil.
+     Also steht der Hinweis da, sichtbar, auf derselben Flaeche. */
+  gurtWeg(){
+    if(!this.haus || !this.haus.gurt) return null;
+    return { url:this.haus.gurt, name:this.haus.name };
+  }
+};
+
 /* Laufzeit-Texte, die nicht als data-i18n im Markup stehen koennen
    (Werte darin aendern sich) — werden bei jedem Sprachwechsel neu gesetzt. */
 function relabel(){
@@ -2505,6 +2576,32 @@ async function ubKopieren(link){
 }
 
 /* Die Lage in einem Satz — nur wenn es etwas zu sagen gibt. */
+/* ── Stand einer offenen Sendung ────────────────────────────────────────
+   Der Weg endete bisher im Nichts: „sicher zugestellt" — und danach nie
+   wieder etwas. Holte die Praxis nicht ab, verfiel die Sendung nach dreissig
+   Tagen, und beide warteten weiter. Die Besitzerin auf einen Befund, die
+   Praxis auf nichts.
+
+   Der Dienst kann jetzt genau eine Frage zu genau einer Kennung beantworten:
+   liegt sie noch, wurde sie abgeholt, oder ist sie weg. Kein Inhalt, keine
+   Person, kein Zeitpunkt ausser dem der Abholung.
+
+   WARUM DAS MEHR IST ALS EINE ANZEIGE: „Du musst nichts tun" stimmt nur,
+   solange die Praxis abholt. Wer nach zehn Tagen sieht, dass nichts
+   geschehen ist, kann handeln — und genau dort gehoert der Hinweis hin,
+   dass die eigene Praxis CARLON vielleicht noch gar nicht kennt. */
+async function standHolen(id){
+  if(!id || !navigator.onLine) return null;
+  let ich; try{ ich=await meineIdentitaet(); }catch(e){ return null; }
+  const fach=(new URLSearchParams(location.search).get('fach'))||(ich&&ich.fach);
+  if(!fach) return null;
+  try{
+    const r=await fetch(POSTFACH+'/postfach/'+encodeURIComponent(fach)+'/'+encodeURIComponent(id)+'?was=stand');
+    const d=await r.json().catch(()=>null);
+    return d&&d.ok ? d : null;
+  }catch(e){ return null; }
+}
+
 function lageZeigen(){
   const k=$('#lageKarte'); if(!k) return;
   const offen=Verlauf.offeneSendungen();
@@ -2515,8 +2612,31 @@ function lageZeigen(){
   const wann=tage<=0?'heute':tage===1?'gestern':`vor ${tage} Tagen`;
   k.innerHTML=`<span class="lg-punkt"></span><div>`
     +`<b>${offen===1?'Deine Aufnahme ist bei der Praxis':offen+' Aufnahmen sind bei der Praxis'}</b>`
-    +`<span>${esc(wann)} gesendet · der Befund erscheint hier, sobald deine Tierärztin ihn geschrieben hat. Du musst nichts tun.</span></div>`;
+    +`<span id="lageText">${esc(wann)} gesendet · der Befund erscheint hier, sobald deine Tierärztin ihn geschrieben hat.</span></div>`;
   k.classList.remove('hidden');
+
+  /* Der Stand kommt NACH dem ersten Zeichnen. Die Karte darf nie auf ein
+     Netz warten — ohne Verbindung bleibt der ehrliche Grundtext stehen. */
+  if(letzte&&letzte.id) standHolen(letzte.id).then(d=>{
+    const t=document.getElementById('lageText'); if(!t||!d) return;
+    if(d.stand==='abgeholt'){
+      const ab=d.ab?new Date(d.ab):null;
+      const wtag=ab?Math.floor((Date.now()-ab)/86400000):null;
+      const wann2=wtag===null?'':wtag<=0?' — heute':wtag===1?' — gestern':` — vor ${wtag} Tagen`;
+      t.innerHTML='<b style="color:var(--ok,#3ECFB2)">✓ Deine Tierärztin hat die Messung abgeholt</b>'+esc(wann2)
+        +'<br>Der Befund erscheint hier, sobald sie ihn geschrieben hat.';
+      k.classList.add('gut');
+    } else if(d.stand==='unbekannt' && tage>=30){
+      t.innerHTML='Nach dreißig Tagen verfällt eine Sendung im Postfach — diese ist nicht mehr da.'
+        +'<br>Wenn du magst, miss neu und sende noch einmal.';
+    } else if(d.stand==='offen' && tage>=10){
+      /* Der ehrlichste Moment der ganzen Kette: Es liegt nicht an ihr, und
+         es liegt nicht an uns. Die Praxis kennt uns womoeglich noch nicht. */
+      t.innerHTML='Deine Aufnahme liegt bereit, wurde aber noch nicht abgeholt.'
+        +'<br><span style="color:var(--dim)">Vielleicht nutzt deine Praxis CARLON noch nicht. '
+        +'Der Aushang unten ist genau dafür da.</span>';
+    }
+  }).catch(()=>{});
 }
 async function befundHolen(){
   let ich;
@@ -2678,6 +2798,7 @@ $('#btnSendLink').addEventListener('click', async ()=>{
 
 /* ── Start ─────────────────────────────────────────────────────────────── */
 applyLang();
+Vertrieb.start();
 if(!('bluetooth' in navigator)){ show('vUnsupported'); }
 else {
   show('vReady');
@@ -3241,7 +3362,8 @@ $('#btnSend').addEventListener('click', async ()=>{
       $('#pb').style.width='70%';
       const r=await fetch(POSTFACH+'/postfach/'+encodeURIComponent(fach),{
         method:'POST', headers:{'Content-Type':'application/json'},
-        body:JSON.stringify({art:'aufnahme',umschlag})});
+        body:JSON.stringify(Object.assign({art:'aufnahme',umschlag},
+          Vertrieb.code ? {vertrieb:Vertrieb.code} : {}))});
       const d=await r.json().catch(()=>({}));
       if(!d.ok) throw new Error(d.grund||('Übertragung fehlgeschlagen ('+r.status+')'));
       $('#pb').style.width='100%';
