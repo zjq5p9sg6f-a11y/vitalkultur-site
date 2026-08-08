@@ -1,0 +1,174 @@
+<meta charset="utf-8">
+<title>ENTWURF · CARLON für Handelspartner</title>
+<meta name="robots" content="noindex, nofollow">
+<!--
+  ══════════════════════════════════════════════════════════════════════════
+  EIN BLATT FÜRS PARTNERGESPRÄCH — Entwurf
+  ══════════════════════════════════════════════════════════════════════════
+  Für Loesdau, Horze und vergleichbare Händler. Gedacht als PDF, das vor
+  oder nach dem Telefonat kommt.
+
+  DIE HALTUNG, aus der es geschrieben ist:
+  Wir bitten nicht darum, dass jemand unsere Software verkauft. Ein Händler
+  hat keine Vertriebsbeziehung zu Tierarztpraxen — er verkauft an
+  Pferdebesitzer. Wir bieten ihm etwas an, das seinem Artikel hilft: einen
+  Grund, warum jemand den Polar H10 überhaupt kauft.
+
+  Und wir sagen offen, was wir davon haben. Ein Handel, der nur ungesagt
+  funktioniert, bricht beim ersten Partnermanager, der kurz nachdenkt.
+  Dieser hier hält dem Aussprechen stand — das ist seine Stärke.
+
+  NICHT ENTHALTEN: Provisionshöhen. Die gehören ins Gespräch, nicht auf ein
+  Blatt, das weitergereicht wird.
+  ══════════════════════════════════════════════════════════════════════════
+-->
+<style>
+  @page { size: A4; margin: 16mm 15mm; }
+  *{box-sizing:border-box;margin:0;padding:0}
+  :root{--bg:#000308;--fg:#e8f8ff;--dim:#8aa9bd;--faint:#4a6478;
+        --ak:#3ECFB2;--line:#1b3548;--flaeche:#050e15}
+  body{background:#0b1116;color:var(--fg);
+       font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display",system-ui,sans-serif;
+       display:flex;flex-direction:column;align-items:center;padding:26px 14px}
+  .blatt{width:210mm;background:var(--bg);padding:16mm 15mm 14mm;position:relative;overflow:hidden}
+  .blatt+.blatt{margin-top:22px}
+  .blatt::before{content:"";position:absolute;inset:0;
+    background:radial-gradient(110% 70% at 6% 0%, rgba(62,207,178,.13), transparent 56%);pointer-events:none}
+  .marke{font-family:"Jost",-apple-system,system-ui,sans-serif;font-weight:300;letter-spacing:.16em;font-size:13px}
+  .marke span{display:block;font-family:ui-monospace,"SF Mono",Menlo,monospace;font-size:7.5px;
+              letter-spacing:.24em;color:var(--ak);margin-top:3px}
+  .eyebrow{font-family:ui-monospace,"SF Mono",Menlo,monospace;font-size:8.5px;letter-spacing:.26em;
+           text-transform:uppercase;color:var(--ak);margin:11mm 0 3.5mm}
+  h1{font-size:25px;font-weight:300;line-height:1.24;letter-spacing:-.015em}
+  h1 em{font-style:normal;color:var(--ak)}
+  h2{font-size:16px;font-weight:400;line-height:1.3;margin-bottom:3mm}
+  h2 em{font-style:normal;color:var(--ak)}
+  p{font-size:11px;line-height:1.72;color:var(--dim);max-width:150mm}
+  p.gross{font-size:12.5px;color:#c9dfe9;margin-top:4mm}
+  strong{color:var(--fg);font-weight:600}
+  .kette{display:flex;align-items:center;gap:3mm;flex-wrap:wrap;margin:6mm 0}
+  .kn{border:1px solid var(--line);border-radius:999px;padding:2.2mm 4mm;font-size:9.5px;color:#c9dfe9;white-space:nowrap}
+  .kn.stark{border-color:var(--ak);color:var(--ak)}
+  .pf{color:var(--faint);font-size:11px}
+  .karten{display:grid;grid-template-columns:1fr 1fr;gap:4mm;margin-top:6mm}
+  .karte{background:var(--flaeche);border:1px solid var(--line);border-radius:11px;padding:5mm 5.5mm}
+  .karte .k{font-family:ui-monospace,monospace;font-size:8px;letter-spacing:.2em;
+            text-transform:uppercase;color:var(--ak);margin-bottom:2.5mm}
+  .karte h3{font-size:12px;font-weight:600;margin-bottom:2mm;line-height:1.35}
+  .karte p{font-size:10px;line-height:1.62}
+  ul{list-style:none;margin-top:4mm;display:flex;flex-direction:column;gap:2.4mm}
+  ul li{font-size:10.5px;color:var(--dim);padding-left:6mm;position:relative;line-height:1.6;max-width:150mm}
+  ul li::before{content:"";position:absolute;left:0;top:2.1mm;width:2.1mm;height:2.1mm;
+                border-radius:.5mm;background:var(--ak);transform:rotate(45deg)}
+  ul li b{color:var(--fg);font-weight:600}
+  .zitat{border-left:2px solid var(--ak);padding:1mm 0 1mm 5mm;margin:6mm 0;
+         font-size:12.5px;line-height:1.62;color:#c9dfe9;max-width:145mm}
+  .fuss{margin-top:11mm;padding-top:4mm;border-top:1px solid var(--line);
+        display:flex;justify-content:space-between;align-items:flex-end;
+        font-family:ui-monospace,"SF Mono",Menlo,monospace;font-size:7.5px;
+        letter-spacing:.14em;text-transform:uppercase;color:var(--faint)}
+  .hinweis{margin-top:5mm;font-size:9.5px;color:var(--faint);line-height:1.6;max-width:150mm}
+  @media print{ body{background:#fff;padding:0} .blatt+.blatt{margin-top:0;page-break-before:always} }
+</style>
+
+<!-- ════════════════ BLATT 1 ════════════════ -->
+<div class="blatt">
+  <div class="marke">CARLON EQUINE<span>Equine Heart Science · Vitalkultur, Iffezheim</span></div>
+
+  <div class="eyebrow">Für Handelspartner im Pferdesport</div>
+  <h1>Wir machen Ihren Polar&nbsp;H10 <em>erklärbar.</em></h1>
+
+  <p class="gross">Der H10 Equine ist ein guter Artikel mit einem Problem: Ohne Anwendung kann ihn niemand erklären. Er liegt im Regal, und die Kundin weiß nicht, wozu sie ihn braucht.</p>
+  <p class="gross"><strong>CARLON ist die Anwendung.</strong> Kostenlos, im Browser, ohne Konto: Die Pferdebesitzerin misst den Herzrhythmus ihres Pferdes und schickt das Ergebnis verschlüsselt ihrer Tierärztin. Aus einem erklärungsbedürftigen Sensor wird ein Gerät mit einem Zweck.</p>
+
+  <div class="eyebrow">Was Sie davon haben</div>
+  <div class="karten">
+    <div class="karte">
+      <div class="k">Verkäuflichkeit</div>
+      <h3>Ein Grund, den Sensor zu kaufen</h3>
+      <p>Statt technischer Daten steht eine Anwendung dahinter, die eine Pferdebesitzerin sofort versteht — und die nichts kostet.</p>
+    </div>
+    <div class="karte">
+      <div class="k">Zweiter Sensor</div>
+      <h3>Mensch und Pferd zugleich</h3>
+      <p>Für die Kohärenz-Messung braucht es <b>zwei</b> Gurte: einen fürs Pferd, einen für die Reiterin. Unsere Software verdoppelt den Bedarf pro Kundin.</p>
+    </div>
+    <div class="karte">
+      <div class="k">Wiederkehr</div>
+      <h3>Aus einem Einmalkauf wird eine Routine</h3>
+      <p>Wer regelmäßig misst, braucht Kontaktgel, Ersatzgurte, Zubehör. Ein Sensor ist ein Kauf; eine Messroutine ist ein Kundenverhältnis.</p>
+    </div>
+    <div class="karte">
+      <div class="k">Rückrichtung</div>
+      <h3>Wir schicken Ihnen Käufer zurück</h3>
+      <p>Wer unsere Seite ohne Gurt öffnet, sieht zuerst eine echte Beispielmessung — und danach den Weg zu Ihnen. Gekennzeichnet, wie es sich gehört.</p>
+    </div>
+  </div>
+
+  <div class="eyebrow">Und was wir davon haben — offen gesagt</div>
+  <p>Jede Besitzerin, die misst und das Ergebnis ihrer Praxis schickt, bringt eine Tierarztpraxis mit unserem Cockpit in Berührung. Dort liegt unser Geschäft: eine Praxissoftware im Abonnement.</p>
+  <div class="kette">
+    <span class="kn">Sie verkaufen den H10</span><span class="pf">→</span>
+    <span class="kn">Besitzerin misst kostenlos</span><span class="pf">→</span>
+    <span class="kn">schickt es ihrer Praxis</span><span class="pf">→</span>
+    <span class="kn stark">Praxis abonniert</span>
+  </div>
+  <p><strong>Wir sagen das ausdrücklich dazu</strong>, weil ein Handel, der nur ungesagt funktioniert, beim ersten Nachdenken bricht. Dieser hier hält es aus: Sie verkaufen mehr Sensoren, wir gewinnen Praxen. Keine Seite zahlt für die andere drauf.</p>
+
+  <div class="fuss">
+    <span>Vitalkultur · Jan Rohwedder · Iffezheim</span>
+    <span>Entwurf · Blatt 1 von 2</span>
+  </div>
+</div>
+
+<!-- ════════════════ BLATT 2 ════════════════ -->
+<div class="blatt">
+  <div class="marke">CARLON EQUINE<span>Equine Heart Science</span></div>
+
+  <div class="eyebrow">Drei Bahnen, nach Aufwand sortiert</div>
+  <h1>Klein anfangen, <em>messbar</em> ausbauen.</h1>
+
+  <div class="karten" style="grid-template-columns:1fr">
+    <div class="karte">
+      <div class="k">Bahn 1 · geringster Aufwand</div>
+      <h3>Eine Karte im Karton</h3>
+      <p>Dem H10 liegt eine Karte bei: QR-Code, drei Schritte, fertig. Sie kostet Sie eine Beilage. Wir zahlen eine Prämie je <b>aktivierter Messung</b> — nicht je Klick und nicht je verkauftem Sensor, sondern für das, was tatsächlich zählt.</p>
+      <p style="margin-top:2.5mm">Ein Pilot mit kleiner Auflage genügt für den Anfang. Er liefert beiden Seiten eine Zahl, die heute niemand hat: <b>wie viele Käufer tatsächlich messen.</b></p>
+    </div>
+    <div class="karte">
+      <div class="k">Bahn 2 · größter Ertrag</div>
+      <h3>Einführungen zu Kliniken und Profis</h3>
+      <p>Sie haben Kontakt zu Kliniken, Reha-Einrichtungen und Therapeuten — wir nicht. Für eine vermittelte Praxis, die tatsächlich abonniert, zahlen wir eine eigene Prämie. Keine Verkaufsleistung Ihrerseits nötig: eine Vorstellung genügt.</p>
+    </div>
+    <div class="karte">
+      <div class="k">Bahn 3 · kostet nur Zeit</div>
+      <h3>Gemeinsame Inhalte</h3>
+      <p>Eine Vorführung am Messestand, ein Erklärstück für Ihren Blog, ein Fachtext zu Herzrhythmus beim Pferd. Kostet uns Arbeit statt Geld und macht aus einem Lieferanten einen Partner.</p>
+    </div>
+  </div>
+
+  <div class="eyebrow">Wie abgerechnet wird</div>
+  <ul>
+    <li><b>Ein Code je Partner</b> steht auf der Karte und in der Adresse. Mehr braucht es nicht.</li>
+    <li><b>Gezählt wird die Aktivierung</b> — eine Messung, die bei einer Praxis ankommt. Nicht der Aufruf, nicht der Klick.</li>
+    <li><b>Keine Kundendaten wechseln den Besitzer.</b> Wir zählen Anzahlen je Code und Monat, keine Personen. Wir sehen die Messungen selbst nicht — sie sind Ende-zu-Ende verschlüsselt.</li>
+    <li><b>Die Zahlen stehen beiden offen.</b> Eine Adresse, jederzeit abrufbar, keine Abrechnung im Blindflug.</li>
+  </ul>
+
+  <div class="zitat">Wir bitten Sie nicht, unsere Software zu verkaufen. Ihre Kunden sind Pferdebesitzer, unser zahlender Kunde ist die Tierarztpraxis — das passt nicht zusammen, und wir tun nicht so, als ob.<br><br><strong>Wir bitten Sie um eine Karte im Karton.</strong></div>
+
+  <div class="eyebrow">Was wir mitbringen</div>
+  <ul>
+    <li>Eine <b>funktionierende, kostenlose Messung</b> im Browser — kein Prototyp, sondern seit Monaten im Einsatz</li>
+    <li>Eine <b>Praxissoftware</b> für Tierärzte, live und bezahlbar</li>
+    <li><b>Wissenschaftliche Grundlage</b> statt Marketing: Kennwerte aus veröffentlichter Literatur, gegen die individuelle Ausgangslage jedes Pferdes</li>
+    <li>Eine klare Haltung: <b>Einschätzung, keine Diagnose.</b> Die Beurteilung bleibt tierärztlich — das schützt Ihre Kunden und uns beide</li>
+  </ul>
+
+  <p class="hinweis"><strong>Offen gesagt, was noch fehlt:</strong> Auf iPhone und iPad lässt Apple Bluetooth im Browser nicht zu. Dort führt der Weg heute über ein Android-Gerät oder einen Computer; unsere iOS-App ist in Arbeit. Wir schreiben das auf die Karte, statt es zu verschweigen — und ein Pilot zeigt uns beiden, wie stark das ins Gewicht fällt.</p>
+
+  <div class="fuss">
+    <span>jan@vitalkultur.com · +49 151 58895022 · vitalkultur.com</span>
+    <span>Entwurf · Blatt 2 von 2</span>
+  </div>
+</div>
