@@ -211,6 +211,12 @@
       transmission to Vitalkultur occurs</strong> — the viewer is a static HTML
       application running exclusively client-side (zero-upload architecture).</p>
 
+      <p>This statement covers <strong>opening and viewing your own files</strong>
+      in the viewer. It does not cover the measuring station at
+      <code>/carlon-equine/app/messen.html</code>, which lets you hand a recording
+      over to a veterinary practice <strong>in encrypted form</strong> on your own
+      initiative — see section&nbsp;3.4.</p>
+
       <p><strong>SHA-256 integrity hash:</strong> every export carries an
       integrity hash and a W3C-PROV provenance chain for reproducibility and
       audit-grade documentation.</p>
@@ -234,6 +240,53 @@
         Health. There are no Vitalkultur servers. All data and exports stay
         under your control.
       </p>
+    </div>
+
+    <!-- ===== CARLON Equine Measuring Station + Visite (browser, SaaS) ===== -->
+    <div class="legal-product">
+      <h3>3.4 CARLON Equine Measuring Station &amp; CARLON Equine Visite</h3>
+      <p class="product-meta">Browser · owner measures → encrypted handover → practice assesses</p>
+
+      <p><strong>Measuring station (the horse owner's browser):</strong></p>
+      <ul>
+        <li>RR intervals from the Polar H10 chest strap via Web Bluetooth — <strong>inside the browser only</strong>, never uploaded in clear text</li>
+        <li>Horse name and timestamp, entered by the owner</li>
+        <li>No account, no sign-in, no analytics cookies</li>
+      </ul>
+
+      <p><strong>Handover to the practice — end-to-end encrypted:</strong></p>
+      <p>
+        The recording is encrypted <strong>on the owner's device</strong> against
+        the practice's public key (ECIES over P-256, HKDF-SHA-256, AES-GCM-256).
+        The relay <code>postfach.carlon.app</code> stores nothing but
+        <strong>ciphertext</strong> together with its size, a timestamp and a
+        compartment number. That compartment number is the fingerprint of the
+        practice's public signing key (<code>SHA-256(signPub)[0:16]</code>) — it
+        carries no name. <strong>Vitalkultur cannot decrypt these
+        deliveries.</strong> They are deleted automatically after
+        <strong>30 days</strong>.
+      </p>
+
+      <p><strong>Practice cockpit “CARLON Equine Visite”:</strong></p>
+      <ul>
+        <li>All practice and patient data stay <strong>local in the practice's browser</strong> (IndexedDB) — there is no Vitalkultur database</li>
+        <li>The practice's private key never leaves that browser; we cannot restore it either</li>
+        <li>The findings sent back to the owner are encrypted the same way and placed in the owner's compartment</li>
+      </ul>
+
+      <p>
+        <strong>Roles under Art. 4 GDPR:</strong> for the data of its clients and
+        patients the <strong>veterinary practice is the controller</strong>.
+        Vitalkultur provides the tool and has <strong>no access</strong> to the
+        content — the relay sees ciphertext only.
+      </p>
+
+      <p><strong>Licence service <code>lizenz.carlon.app</code>:</strong></p>
+      <ul>
+        <li>Receives the practice's signed subscription certificate and asks Stripe whether the subscription is running (Art. 6(1)(b) GDPR)</li>
+        <li>Stores a <strong>hashed</strong> usage marker (<code>n:</code> + truncated SHA-256 of the Stripe customer number, without any name) to detect active use — Art. 6(1)(f) GDPR; deleted after 400 days at the latest</li>
+        <li>Sees <strong>no health or horse data</strong></li>
+      </ul>
     </div>
 
     <h2>4. Data export — Art. 20 GDPR (portability)</h2>
