@@ -1865,6 +1865,15 @@ nav.tabs button.on{text-shadow:none}
 </div>
 
 <script src="live.js"></script>
+<!-- Die Auswertungs-Kette der iOS-App, nach JS portiert und gegen das
+     KOMPILIERTE Swift-Original geprueft (IEEE-754-Bitmuster):
+       hrv-vorstufe.js  Filterkette + AV-Block + Welch-PSD + die zwei Riegel
+       asthma.js        Screener v2.4 + Trend-Modell v2.5
+     Ohne die Vorstufe rechnete das Cockpit auf ROHEN RR-Intervallen — bei
+     40 AV-Block-Pausen RMSSD 890 statt 112 ms, und 8 von 20 Aufnahmen
+     bekamen eine falsche Atemwegs-Einstufung, alle nach oben. -->
+<script src="hrv-vorstufe.js"></script>
+<script src="asthma.js"></script>
 <script src="krypto.js"></script>
 <script src="qr.js"></script>
 <script src="seed-data.js"></script>
@@ -2270,15 +2279,162 @@ const Triage = {
    ════════════════════════════════════════════════════════════════════════ */
 const Asthma={
   SEV:{low:{t:'niedriges Screening-Signal',c:'warn'},moderate:{t:'moderates Screening-Signal',c:'warn'},high:{t:'hohes Screening-Signal',c:'alert'}},
+
+  /* ── Selbst rechnen, wenn die App nichts mitgeschickt hat ──────────────
+     Eine Aufnahme aus der Messstation traegt KEIN clinicalIndicators — sie
+     kam aus einem Browser, nicht aus der App. Bis hierher blieb das Panel
+     deshalb leer: Die Kette „Besitzerin misst zuhause, Praxis beurteilt"
+     war beim Asthma stumm.
+
+     Gerechnet wird ueber DIESELBE Vorstufe wie in der App. Das ist keine
+     Bequemlichkeit, sondern Bedingung: Ohne Filterung liefert eine Reihe
+     mit AV-Block-Pausen — beim ruhenden Pferd voellig normal — einen
+     „hohen Verdacht", den die App gar nicht erst ausspricht. */
+  lokal(rec){
+    if(typeof HRVVorstufe==='undefined'||typeof EquineAsthmaScreener==='undefined') return null;
+    const rr=rec&&rec.rr; if(!rr||rr.length<30) return null;
+
+    /* 🔴 RIEGEL: Records ueber 2000 Schlaege werden beim Speichern
+       AUSGEDUENNT (jeder n-te, s. Importer). Dann sind aufeinander
+       folgende Werte keine aufeinander folgenden Schlaege mehr — und
+       genau davon leben RMSSD und SD1. Auf so einer Reihe zu rechnen
+       waere nicht ungenau, sondern falsch. Also nicht rechnen. */
+    if(rec.beatCount&&rr.length<rec.beatCount) return {ausgeduennt:true};
+
+    try{
+      const v=HRVVorstufe.analysiere(rr);
+      if(!v) return {abbruch:HRVVorstufe.abbruchGrund?HRVVorstufe.abbruchGrund(rr):'artefakte'};
+      const r=EquineAsthmaScreener.evaluate({
+        meanHrBpm:v.meanHrBpm, sdnnMs:v.sdnnMs, rmssdMs:v.rmssdMs,
+        sd1Ms:v.sd1Ms, sd2Ms:v.sd2Ms, lfHfRatio:v.lfHfRatio,
+        dfaAlpha1:v.dfaAlpha1, tinnMs:v.tinnMs, sampleEntropy:v.sampleEntropy,
+        beatCount:v.beatCount!=null?v.beatCount:rr.length,
+        durationSec:v.durationSec!=null?v.durationSec:rec.durationSec
+      });
+      if(!r) return null;
+      return {roh:r, vorstufe:v};
+    }catch(e){ console.warn('[asthma] lokale Auswertung fehlgeschlagen',e); return null; }
+  },
+
+  /* Die Punkte fuer das Trend-Modell: jede Aufnahme, die einen Score hat —
+     egal ob aus der App uebernommen oder hier gerechnet. */
+  punkte(recs){
+    const p=[];
+    for(const r of recs){
+      const a=(r.clinical&&r.clinical.asthma)||null;
+      if(a&&a.weightedScore!=null&&r.startedAt){
+        p.push({date:r.startedAt,weightedScore:a.weightedScore,suspicion:a.suspicion||'low'}); continue;
+      }
+      const l=this.lokal(r);
+      if(l&&l.roh&&l.roh.suspicion!=='insufficient'&&r.startedAt)
+        p.push({date:r.startedAt,weightedScore:l.roh.weightedScore,suspicion:l.roh.suspicion});
+    }
+    return p;
+  },
+
   assess(recs){
     if(!recs.length) return null;
     const latest=recs[recs.length-1];
     const app=(latest.clinical&&latest.clinical.asthma)||null;
     const sd2sd1Series=recs.map(r=>({x:r.startedAt,y:r.metrics.sd2sd1})).filter(p=>p.y!=null);
-    const hasData=!!app||sd2sd1Series.length>0;
+
+    /* Nur rechnen, wenn die App nichts geliefert hat. Ihre Zahl hat
+       Vorrang — sie stammt aus derselben Engine, aber aus der Quelle. */
+    const eigen=app?null:this.lokal(latest);
+    const r=eigen&&eigen.roh?eigen.roh:null;
+
+    let trend=null;
+    try{
+      if(typeof EquineAsthmaTrendModel!=='undefined'){
+        const p=this.punkte(recs);
+        if(p.length>=2) trend=EquineAsthmaTrendModel.analyze({points:p});
+      }
+    }catch(e){ console.warn('[asthma] Trend fehlgeschlagen',e); }
+
+    const hasData=!!app||!!r||sd2sd1Series.length>0||!!trend;
     if(!hasData) return null;
-    return {app,triggered:app&&app.triggered,severity:app&&app.severity,
-      met:app&&app.criteriaMet,tot:app&&app.criteriaTotal,indicators:app&&app.indicators,sd2sd1Series,latest};
+
+    return {
+      app,
+      /* HERKUNFT — die Praxis muss sehen, woher die Aussage kommt.
+         Eine Einschaetzung ohne Herkunft ist eine Behauptung. */
+      quelle: app?'app':(r?'praxis':null),
+      triggered: app?app.triggered:(r?(r.suspicion==='high'||r.suspicion==='moderate'):null),
+      severity: app?app.severity:(r&&r.suspicion!=='insufficient'?r.suspicion:null),
+      met: app?app.criteriaMet:(r?r.primaryPositiveCount:null),
+      tot: app?app.criteriaTotal:(r?6:null),
+      indicators: app?app.indicators:null,
+      marker: r&&r.markers?r.markers.filter(m=>m.positive):null,
+      score: app?app.weightedScore:(r?r.weightedScore:null),
+      deutung: r?r.interpretation:null,
+      rat: r?r.recommendation:null,
+      unzureichend: r?r.suspicion==='insufficient':false,
+      ausgeduennt: !!(eigen&&eigen.ausgeduennt),
+      guete: eigen&&eigen.vorstufe?eigen.vorstufe.artefaktRatePct:null,
+      avBlock: eigen&&eigen.vorstufe?eigen.vorstufe.avBlockCount:null,
+      trend, sd2sd1Series, latest
+    };
+  },
+
+  /* ── Der Kopf des Panels ───────────────────────────────────────────────
+     Vier ehrliche Zustaende statt eines Urteils um jeden Preis:
+       ausgeduennt  · die gespeicherte Reihe taugt nicht zum Rechnen
+       unzureichend · zu kurz oder zu wenige Schlaege (Screener-Riegel)
+       Urteil       · mit HERKUNFT, denn eine Aussage ohne Quelle ist eine Behauptung
+       nichts       · dann steht nur der Marker-Verlauf da */
+  kopf(a,sev,inds){
+    if(a.ausgeduennt) return `<p style="font-size:12px;color:var(--text-dim);margin-bottom:10px">
+      Die gespeicherte Schlagfolge dieser Aufnahme ist verdichtet — auf ihr laesst sich
+      kein belastbares Atemwegs-Screening rechnen. Die Kennwerte darunter bleiben gueltig.</p>`;
+    if(a.unzureichend) return `<p style="font-size:12px;color:var(--text-dim);margin-bottom:10px">
+      Datengrundlage zu klein fuer das Atemwegs-Screening — es braucht mindestens
+      sieben Minuten Ruhe und 200 Schlaege. Die Schwellen stammen aus laengeren
+      Ruheaufnahmen und wuerden auf kurzen Messungen zu haeufig anschlagen.</p>`;
+    if(!a.severity&&a.triggered==null) return `<p style="font-size:12px;color:var(--text-dim);margin-bottom:10px">
+      Fuer diese Aufnahme liegt kein Atemwegs-Screening vor. Unten der atemwegs-relevante
+      Marker im Verlauf.</p>`;
+
+    const herkunft = a.quelle==='praxis'
+      ? `in dieser Praxis aus der Aufnahme gerechnet`
+      : `aus CARLON EQUINE uebernommen`;
+    const guete = (a.quelle==='praxis'&&a.guete!=null)
+      ? ` · Artefakte ${fmt1(a.guete)} %${a.avBlock?` · ${a.avBlock} AV-Block-Pausen korrigiert`:''}` : '';
+    const chips = (a.marker&&a.marker.length)
+      ? a.marker.map(m=>`<span class="chip amber">${esc(m.name)} ${fmt0(m.value)} (Schwelle ${m.threshold})</span>`).join('')
+      : inds.map(i=>`<span class="chip amber">${esc(i)}</span>`).join('');
+
+    return `<div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;flex-wrap:wrap">
+        <span class="tri-badge ${a.triggered?(sev&&sev.c==='alert'?'tri-crit':'tri-elev'):'tri-stable'}"><span class="dot"></span>${a.triggered?(sev?sev.t:'Signal vorhanden'):'unauffaellig'}</span>
+        ${a.met!=null?`<span style="font-size:12px;color:var(--text-dim)">${a.met}/${a.tot} Marker positiv</span>`:''}
+        ${a.score!=null?`<span style="font-size:12px;color:var(--text-dim)">Score ${fmt1(a.score)}</span>`:''}</div>
+      <div style="font-size:11px;color:var(--text-faint);margin-bottom:12px">${herkunft}${guete}</div>
+      ${chips?`<div class="chips" style="margin-bottom:12px">${chips}</div>`:''}
+      ${a.deutung?`<p style="font-size:12px;color:var(--text-dim);margin-bottom:10px">${esc(a.deutung)}</p>`:''}`;
+  },
+
+  /* ── Der Wochenverlauf ─────────────────────────────────────────────────
+     Das eigentliche Argument gegenueber einer Einzelmessung: Wohin bewegt
+     sich das Pferd? Validiert gegen Gehlen 2020 (n=43) — Verlaufe, die sich
+     erholen, zeigen eine klare Trajektorie, die anderen keine.
+
+     Bewusst als BEOBACHTUNG formuliert, nie als nachgewiesene Wirkung. */
+  TREND:{
+    improving:{t:'Score faellt',d:'Die Marker haben sich ueber das Fenster verbessert.',c:'good'},
+    stable:{t:'Score stabil',d:'Keine gerichtete Veraenderung im Fenster.',c:'cyan'},
+    worsening:{t:'Score steigt',d:'Die Marker haben sich ueber das Fenster verschlechtert.',c:'alert'},
+    insufficientData:{t:'Verlauf noch offen',d:'Zu wenige Messungen oder Zeitraum zu kurz.',c:'dim'}
+  },
+  verlauf(a){
+    const t=a.trend; if(!t||!t.trend) return '';
+    const T=this.TREND[t.trend]; if(!T) return '';
+    const col={good:'var(--good)',cyan:'var(--cyan)',alert:'var(--red)',dim:'var(--text-faint)'}[T.c];
+    const delta=(t.scoreDelta!=null)?`${t.scoreDelta>0?'+':''}${fmt1(t.scoreDelta)}`:'—';
+    return `<div style="border-left:3px solid ${col};padding:8px 0 8px 12px;margin:0 0 14px 0">
+      <div style="font-size:13px;font-weight:600;color:${col}">Verlauf: ${T.t}</div>
+      <div style="font-size:12px;color:var(--text-dim);margin-top:2px">${T.d}</div>
+      ${t.pointCount?`<div style="font-size:11px;color:var(--text-faint);margin-top:4px">
+        ${t.pointCount} Messung${t.pointCount!==1?'en':''} ueber ${t.windowDays||'—'} Tage · Score ${delta}</div>`:''}
+    </div>`;
   }
 };
 
@@ -4847,11 +5003,8 @@ const Views={
     const inds=a.indicators?Object.entries(a.indicators).filter(([k,v])=>v).map(([k])=>labels[k]||k):[];
     return `<div class="panel" style="margin-bottom:var(--s4)">
       <h2 style="font-size:16px"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v7M8.5 9C6 10 5 12.5 5 15a3 3 0 006 0M15.5 9c2.5 1 3.5 3.5 3.5 6a3 3 0 01-6 0"/></svg>Atemwegs-Screening (HRV)</h2>
-      ${a.app?`<div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;flex-wrap:wrap">
-          <span class="tri-badge ${a.triggered?(sev&&sev.c==='alert'?'tri-crit':'tri-elev'):'tri-stable'}"><span class="dot"></span>${a.triggered?(sev?sev.t:'Signal vorhanden'):'unauffällig'}</span>
-          ${a.met!=null?`<span style="font-size:12px;color:var(--text-dim)">${a.met}/${a.tot} Kriterien erfüllt</span>`:''}</div>
-        ${inds.length?`<div class="chips" style="margin-bottom:12px">${inds.map(i=>`<span class="chip amber">${esc(i)}</span>`).join('')}</div>`:''}`
-      :`<p style="font-size:12px;color:var(--text-dim);margin-bottom:10px">Ein validiertes Screening liefert CARLON EQUINE als Random-Forest-Score. Hier siehst du den atemwegs-relevanten Marker im Verlauf.</p>`}
+      ${Asthma.kopf(a,sev,inds)}
+      ${Asthma.verlauf(a)}
       ${a.sd2sd1Series.length>1?`<div class="chart-wrap" style="margin:0"><div class="ct"><span>SD2/SD1-Ratio · sympatho-vagale Balance</span></div>${Chart.ts(a.sd2sd1Series,{color:'var(--equine)',h:120,unit:''})}</div>`:''}
       <div style="font-size:11px;color:var(--text-faint);margin-top:10px;font-style:italic">Equine-spezifisches HRV-Atemwegs-Screening (Nyerges-Bohák 2025 · Random-Forest · n=40 · BAL-validiert). Screening-Hinweis, keine Diagnose — klinische Abklärung (BAL) bleibt tierärztlich.</div>
     </div>`;
