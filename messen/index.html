@@ -51,5 +51,14 @@
   <p>Einen Augenblick — die Messstation wird geöffnet.</p>
   <a href="/carlon-equine/app/messen.html">Direkt zur Messstation</a>
 </main>
-<script>location.replace('/carlon-equine/app/messen.html');</script>
+<script>
+/* 🔴 DIE ANFRAGE MUSS MITREISEN. Diese Weiterleitung warf sie bisher weg —
+   und damit jeden Händler-Code aus einer gedruckten Karte. Ein QR-Code auf
+   Papier lässt sich nicht nachbessern: Wer `?p=loesdau` scannt und hier
+   landet, wäre als Herkunft für immer verloren gewesen, ohne dass irgendwo
+   etwas rot geworden wäre.
+   Der Anker reist ebenfalls mit — dort steckt bei einer Übergabe der
+   Schlüssel, der niemals einen Server erreichen darf. */
+location.replace('/carlon-equine/app/messen.html' + location.search + location.hash);
+</script>
 </html>

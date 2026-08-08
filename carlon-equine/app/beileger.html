@@ -1,0 +1,115 @@
+<meta charset="utf-8">
+<title>ENTWURF · Beileger-Karte für Handelspartner</title>
+<meta name="robots" content="noindex, nofollow">
+<!--
+  ══════════════════════════════════════════════════════════════════════════
+  BEILEGER-KARTE — Entwurf für das Partnergespräch
+  ══════════════════════════════════════════════════════════════════════════
+  WOZU
+  Ein Reitsporthändler verkauft den Polar H10. Ohne Anwendung ist der Sensor
+  ein Nischenartikel, den niemand erklären kann — er liegt im Regal und
+  niemand weiß, warum er ihn braucht. Diese Karte liegt im Karton und macht
+  ihn erklärbar: kostenlos messen, Ergebnis der eigenen Tierärztin schicken.
+
+  WARUM DAS FÜR BEIDE SEITEN AUFGEHT
+  Der Händler bekommt einen Grund, warum jemand den Sensor kauft, und einen
+  Warenkorb, der weitergeht (Gel, zweiter Gurt für die Mensch-Pferd-Messung,
+  Ersatzteile). Wir bekommen die messende Besitzerin — und jede von ihnen
+  zieht eine Tierarztpraxis ins Cockpit, wo unser Geld liegt.
+
+  Man kann das laut aussprechen. Ein Handel, der nur ungesagt funktioniert,
+  bricht beim ersten Partnermanager, der kurz nachdenkt.
+
+  DRUCK
+  A6 quer (148 × 105 mm), randabfallend gedacht. Im Browser über „Drucken"
+  als PDF. Der Code im Feld unten erzeugt die Karte für einen bestimmten
+  Händler: ?p=loesdau ändert QR und Text.
+  ══════════════════════════════════════════════════════════════════════════
+-->
+<style>
+  @page { size: 148mm 105mm; margin: 0; }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:#0b1116;font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display",system-ui,sans-serif;
+       display:flex;flex-direction:column;align-items:center;gap:22px;padding:28px 16px}
+  .steuer{width:148mm;color:#8aa9bd;font-size:12px;line-height:1.7}
+  .steuer input{background:#0f1a22;border:1px solid #1b3548;color:#e8f8ff;border-radius:8px;
+                padding:7px 10px;font:inherit;width:190px;margin-left:8px}
+  .steuer b{color:#e8f8ff;font-weight:600}
+
+  .karte{width:148mm;height:105mm;background:#000308;color:#e8f8ff;position:relative;overflow:hidden;
+         display:grid;grid-template-columns:1fr 40mm;gap:8mm;padding:9mm 11mm 14mm}
+  .karte::before{content:"";position:absolute;inset:0;
+    background:radial-gradient(120% 90% at 8% 0%, rgba(62,207,178,.16), transparent 58%);pointer-events:none}
+  .marke{font-family:"Jost",-apple-system,system-ui,sans-serif;font-weight:300;letter-spacing:.16em;font-size:12.5px}
+  .marke span{display:block;font-family:ui-monospace,"SF Mono",Menlo,monospace;font-size:7px;
+              letter-spacing:.24em;color:#3ECFB2;margin-top:3px}
+  h1{font-size:18.5px;font-weight:300;letter-spacing:-.01em;line-height:1.24;margin-top:5.5mm}
+  h1 em{font-style:normal;color:#3ECFB2}
+  .sub{font-size:10px;line-height:1.6;color:#8aa9bd;margin-top:3mm;max-width:72mm}
+  ol{list-style:none;margin-top:4mm;display:flex;flex-direction:column;gap:1.9mm}
+  ol li{font-size:10px;color:#c9dfe9;padding-left:7mm;position:relative;line-height:1.5}
+  ol li b{color:#e8f8ff;font-weight:600}
+  ol li::before{counter-increment:s;content:counter(s);position:absolute;left:0;top:-.3mm;
+    width:4.6mm;height:4.6mm;border-radius:50%;border:1px solid #2a4d65;color:#3ECFB2;
+    font-family:ui-monospace,monospace;font-size:7.5px;display:flex;align-items:center;justify-content:center}
+  ol{counter-reset:s}
+  .fuss{position:absolute;left:11mm;right:11mm;bottom:5mm;display:flex;justify-content:space-between;
+        align-items:flex-end;font-family:ui-monospace,"SF Mono",Menlo,monospace;font-size:6.6px;
+        letter-spacing:.13em;text-transform:uppercase;color:#4a6478}
+  .rechts{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3mm}
+  .qr{width:34mm;height:34mm;background:#fff;border-radius:2.5mm;padding:1.6mm}
+  .qr svg{width:100%;height:100%;display:block}
+  .qrtxt{font-family:ui-monospace,monospace;font-size:6.6px;letter-spacing:.1em;
+         text-transform:uppercase;color:#4a6478;text-align:center;line-height:1.6}
+  .hinweis{font-size:8px;color:#4a6478;line-height:1.45;margin-top:3.5mm;max-width:72mm}
+  @media print{ body{background:#fff;padding:0;gap:0} .steuer{display:none} .karte{box-shadow:none} }
+</style>
+
+<div class="steuer">
+  <b>Entwurf — Beileger für den Karton.</b> Händler-Code über die Adresse setzen, etwa
+  <code>beileger.html?p=loesdau</code>. Drucken → als PDF sichern.
+  <label style="display:block;margin-top:9px">Code<input id="code" value="partner" spellcheck="false"></label>
+</div>
+
+<div class="karte" id="karte">
+  <div>
+    <div class="marke">CARLON EQUINE<span>Equine Heart Science</span></div>
+    <h1>Ihr Polar H10 kann <em>mehr,</em> als Sie denken.</h1>
+    <p class="sub">Messen Sie den Herzrhythmus Ihres Pferdes — kostenlos, im Browser, ohne Konto und ohne App. Und schicken Sie das Ergebnis verschlüsselt Ihrer Tierärztin.</p>
+    <ol>
+      <li><b>Gurt anlegen</b> und die Elektrodenfläche gut anfeuchten</li>
+      <li><b>QR scannen</b> — die Messung startet sofort im Browser</li>
+      <li><b>An Ihre Praxis senden</b> — nur sie kann die Aufnahme öffnen</li>
+    </ol>
+    <p class="hinweis">Auf iPhone und iPad lässt Apple Bluetooth im Browser nicht zu — dort führt der Weg über ein Android-Gerät oder einen Computer. Die Seite zeigt Ihnen, wie.</p>
+  </div>
+  <div class="rechts">
+    <div class="qr" id="qr"></div>
+    <div class="qrtxt" id="qrtxt">vitalkultur.com<br>/messen</div>
+  </div>
+  <div class="fuss">
+    <span>Kostenlos · kein Konto · Ende-zu-Ende verschlüsselt</span>
+    <span>Einschätzung, keine Diagnose</span>
+  </div>
+</div>
+
+<script src="qr.js"></script>
+<script>
+/* Der Code steht in der Adresse ODER im Feld — beides erzeugt dieselbe
+   Karte. So kann Jan im Gespräch live umschalten, ohne die Datei zu ändern. */
+const feld = document.getElementById('code');
+const ausAdresse = (new URLSearchParams(location.search).get('p') || '')
+                     .toLowerCase().replace(/[^a-z0-9_-]/g, '').slice(0, 24);
+if (ausAdresse) feld.value = ausAdresse;
+
+function zeichnen(){
+  const c = (feld.value || '').toLowerCase().replace(/[^a-z0-9_-]/g, '').slice(0, 24);
+  const url = 'https://vitalkultur.com/messen' + (c ? '?p=' + c : '');
+  /* Der QR-Code trägt die KURZE Adresse. Sie leitet weiter — damit bleibt
+     der Code klein und scannt auch auf schlechtem Papier zuverlässig. */
+  document.getElementById('qr').innerHTML = QR.svg(url, { rand: 0, dunkel: '#000308', hell: '#ffffff' });
+  document.getElementById('qrtxt').innerHTML = 'vitalkultur.com<br>/messen' + (c ? '?p=' + c : '');
+}
+feld.addEventListener('input', zeichnen);
+zeichnen();
+</script>
