@@ -877,7 +877,7 @@ const HAUS={ appImStore:false, appUrl:'https://carlon.app' };
     <div class="next livepanel">
       <div class="next-h">
         <span class="eyebrow" style="margin-bottom:6px" data-i18n="progressH">Aufnahme-Fortschritt</span>
-        <p id="recTxt" aria-live="polite">Empfohlen sind mindestens fünf Minuten ruhige Messung.</p>
+        <p id="recTxt" aria-live="polite">Empfohlen sind mindestens sieben Minuten ruhige Messung — erst dann trägt die Atemwegs-Auswertung.</p>
       </div>
       <div class="qbar"><i id="recFill"></i></div>
       <div class="proto-row" style="cursor:default">
@@ -1113,12 +1113,13 @@ de:{
  chartBreath:'Atemkurve',
  chartBreathCap:'Die Atmung moduliert den Herzschlag. Aus dieser Modulation lässt sich die Atemkurve ableiten — Koralle nach oben ist Einatmen, Blau nach unten Ausatmen.',
  lastBeatsLbl:'Letzte Schläge',
- recRemaining:'Noch {x} bis zu den empfohlenen fünf Minuten.',
- recReached:'Die empfohlenen fünf Minuten sind erreicht. Länger messen schadet nicht — der Verlauf wird ruhiger.',
+ recRemaining:'Noch {x} bis zu den empfohlenen sieben Minuten.',
+ recBeatsMissing:'Die Zeit reicht — es fehlen noch {n} Schläge. Bei einem sehr ruhigen Puls dauert das etwas länger.',
+ recReached:'Sieben Minuten und genug Schläge — die Aufnahme trägt jetzt auch die Atemwegs-Auswertung. Länger messen schadet nicht, der Verlauf wird ruhiger.',
  sigChecking:'Signal wird geprüft…', sigStable:'Signal stabil', sigNoisy:'Signal unruhig — Gurtsitz und Feuchtigkeit prüfen',
  sigBad:'Signal stark gestört — Gurt neu anfeuchten und nachsetzen',
  verdictClean:'Sauberes Signal über die gesamte Aufnahme. Diese Messung kann so weitergegeben werden.',
- verdictCleanShort:'Das Signal ist sauber. Die Aufnahme ist kürzer als fünf Minuten — für einen belastbaren Ruhe-Verlauf darf sie gern länger sein.',
+ verdictCleanShort:'Das Signal ist sauber. Die Aufnahme ist kürzer als sieben Minuten — für einen belastbaren Ruhe-Verlauf und die Atemwegs-Auswertung darf sie gern länger sein.',
  verdictNoisy:'Das Signal war stellenweise unruhig. Weitergeben ist möglich — eine zweite Messung mit gut angefeuchtetem Gurt wird aber deutlich besser.',
  verdictBad:'Das Signal war stark gestört. Wir empfehlen, den Gurt neu anzufeuchten, nachzusetzen und noch einmal zu messen.',
  doneSubRoom:'Die Aufnahme kann jetzt direkt an die Praxis übertragen werden.',
@@ -1179,7 +1180,7 @@ de:{
  tDur:'Dauer', tDurSub:'seit dem Start',
  tBatt:'Gurt-Akku', tBattSub:'Ladestand des Senders',
  progressH:'Aufnahme-Fortschritt',
- progressStart:'Empfohlen sind mindestens fünf Minuten ruhige Messung.',
+ progressStart:'Empfohlen sind mindestens sieben Minuten ruhige Messung — erst dann trägt die Atemwegs-Auswertung.',
  stop:'Messung beenden', restart:'Verwerfen und neu starten',
  liveHint:'Halte das Gerät in der Nähe und lass den Bildschirm an — schläft er ein, bricht die Bluetooth-Verbindung ab.',
  /* Beleg */
@@ -1222,12 +1223,13 @@ en:{
  chartBreath:'Breathing curve',
  chartBreathCap:'Breathing modulates the heartbeat. From that modulation the breathing curve can be derived — coral upwards is breathing in, blue downwards breathing out.',
  lastBeatsLbl:'Recent beats',
- recRemaining:'Another {x} to reach the recommended five minutes.',
- recReached:'The recommended five minutes are reached. Recording longer does no harm — the trend becomes steadier.',
+ recRemaining:'Another {x} to reach the recommended seven minutes.',
+ recBeatsMissing:'Long enough — {n} more beats to go. With a very calm pulse this takes a little longer.',
+ recReached:'Seven minutes and enough beats — the recording now also carries the airway assessment. Recording longer does no harm, the trend becomes steadier.',
  sigChecking:'Checking signal…', sigStable:'Signal stable', sigNoisy:'Signal unsteady — check belt fit and moisture',
  sigBad:'Signal badly disturbed — re-moisten the belt and reseat it',
  verdictClean:'Clean signal throughout the recording. This measurement can be passed on as it is.',
- verdictCleanShort:'The signal is clean. The recording is shorter than five minutes — for a dependable resting trend it may well run longer.',
+ verdictCleanShort:'The signal is clean. The recording is shorter than seven minutes — for a dependable resting trend and the airway assessment it may well run longer.',
  verdictNoisy:'The signal was unsteady in places. Passing it on is possible — but a second recording with a well-moistened belt will be considerably better.',
  verdictBad:'The signal was badly disturbed. We recommend re-moistening the belt, reseating it and recording again.',
  doneSubRoom:'The recording can now be transferred straight to the practice.',
@@ -1272,7 +1274,7 @@ en:{
  tDur:'Duration', tDurSub:'since the start',
  tBatt:'Belt battery', tBattSub:'charge level of the sensor',
  progressH:'Recording progress',
- progressStart:'At least five minutes of quiet recording is recommended.',
+ progressStart:'At least seven minutes of quiet recording is recommended — only then does the airway assessment carry.',
  stop:'Finish recording', restart:'Discard and start over',
  liveHint:'Keep the device nearby and leave the screen on — if it sleeps, the Bluetooth connection drops.',
  doneEyebrow:'Recording complete',
@@ -2123,7 +2125,7 @@ de:{
     ['Erfassung','Der Gurt meldet jeden Schlag einzeln — gezählt wird nicht geschätzt.']]},
   dur:{t:'Aufnahmedauer',r:[
     ['Was','Die Zeit zwischen erstem und letztem erfassten Schlag.'],
-    ['Empfehlung','Für einen ruhigen Verlauf sind mindestens fünf Minuten sinnvoll. Kürzere Aufnahmen sind möglich, tragen aber weniger.'],
+    ['Empfehlung','Sieben Minuten in ruhiger Box, mindestens 200 Schläge. Kürzere Aufnahmen sind möglich, aber die Atemwegs-Auswertung verwirft sie bewusst: Ihre Schwellen stammen aus längeren Ruheaufnahmen und würden auf kurzen Messungen zu häufig anschlagen.'],
     ['Hinweis','Die Dauer sagt nichts über die Qualität — dafür steht die Signalgüte im Messprotokoll.']]},
   hr:{t:'Ø Herzfrequenz',r:[
     ['Was','Der durchschnittliche Puls über die Aufnahme, in Schlägen pro Minute.'],
@@ -2188,7 +2190,7 @@ en:{
     ['Capture','The belt reports every beat individually — counted, not estimated.']]},
   dur:{t:'Recording length',r:[
     ['What','The time between the first and the last captured beat.'],
-    ['Recommendation','For a steady course, at least five minutes makes sense. Shorter recordings are possible but carry less.'],
+    ['Recommendation','Seven minutes in a quiet box, at least 200 beats. Shorter recordings are possible, but the airway assessment deliberately discards them: its thresholds come from longer resting recordings and would trigger too often on short ones.'],
     ['Note','Length says nothing about quality — signal quality in the recording log covers that.']]},
   hr:{t:'Average pulse',r:[
     ['What','The average pulse across the recording, in beats per minute.'],
@@ -3056,8 +3058,31 @@ function rrFehltMelden(){
 }
 
 /* Empfohlene Mindestdauer einer Ruhe-Aufnahme. Eine Aussage ueber die
-   AUFNAHME, nicht ueber das Pferd — deshalb hier zulaessig. */
-const REC_SEC=300;
+   AUFNAHME, nicht ueber das Pferd — deshalb hier zulaessig.
+
+   🔴 DIE ZAHL IST ABGELEITET, NICHT GEWAEHLT (08.08.2026).
+   Sie spiegelt die Eingangsschranke des Asthma-Screeners in
+   EquineAsthmaScreener.swift:161 — `n >= 200, dauer >= 420`.
+
+   Vorher stand hier 300. Damit empfahl die Station fuenf Minuten,
+   waehrend die Auswertung alles unter sieben Minuten als
+   „Datengrundlage zu klein" verwirft: Wer der Station folgte, bekam
+   eine Aufnahme, die der Screener ablehnt.
+
+   Der Grund fuer die Schranke steht im Screener selbst: Die Cutoffs
+   fuer SDNN, SD2 und TINN stammen aus deutlich laengeren Ruhe-
+   aufnahmen. Auf kurzen Messungen fallen sie systematisch kleiner
+   aus — und genau diese Marker zaehlen als positiv, wenn sie KLEIN
+   sind. Die Verzerrung ginge also gerichtet Richtung „auffaellig".
+   Eine zu kurze Messung ist damit nicht bloss schwach, sie ist
+   gefaehrlich falsch.
+
+   Beide Bedingungen gelten, Dauer UND Schlaege. Bei einem ruhenden
+   Pferd (ca. 30–40 Schlaege/min) liefern sieben Minuten rund 210–280
+   Schlaege — die 200 werden also knapp erreicht, nicht komfortabel.
+   Deshalb wird beides angezeigt und nicht nur die Uhr. */
+const REC_SEC=420;
+const REC_BEATS=200;
 /* Wie lange die Aufnahme dauert — bei der Beispielmessung die Zeit der
    AUFNAHME, nicht die des Abspielens. Sonst zeigte der Fortschritt nach
    neun aufgenommenen Minuten fünfzig Sekunden, und die Anzeige, die dem
@@ -3070,11 +3095,24 @@ function tick(){
   if(!S.startedAt) return;
   const secs=laufzeitSek();
   $('#dur').textContent=mmss(secs);
-  const p=Math.min(1,secs/REC_SEC);
+  /* Der Fortschritt ist das MINIMUM aus beiden Bedingungen — sonst zeigt
+     der Balken „fertig", waehrend dem Screener noch Schlaege fehlen.
+     Ein ruhiges Pferd erreicht die 200 Schlaege spaeter als die Uhr. */
+  const schlaege = (S.rr && S.rr.length) || 0;
+  const pZeit = Math.min(1, secs/REC_SEC);
+  const pSchlag = Math.min(1, schlaege/REC_BEATS);
+  const p = Math.min(pZeit, pSchlag);
   $('#recFill').style.width=(p*100).toFixed(1)+'%';
-  $('#recTxt').textContent = p>=1
-    ? t('recReached')
-    : t('recRemaining').replace('{x}', mmss(REC_SEC-secs));
+  if(p>=1){
+    $('#recTxt').textContent = t('recReached');
+  } else if(pZeit>=1){
+    /* Zeit voll, Schlaege fehlen — das passiert bei sehr ruhigem Puls
+       und waere ohne Hinweis unverstaendlich („die Uhr ist doch durch"). */
+    $('#recTxt').textContent = t('recBeatsMissing')
+      .replace('{n}', String(Math.max(0, REC_BEATS - schlaege)));
+  } else {
+    $('#recTxt').textContent = t('recRemaining').replace('{x}', mmss(REC_SEC-secs));
+  }
 }
 function mmss(sec){ sec=Math.max(0,Math.floor(sec)); return Math.floor(sec/60)+':'+String(sec%60).padStart(2,'0'); }
 
@@ -3286,7 +3324,9 @@ function finish(){
   const fill=$('#qfill');
   fill.className = q>=0.90?'':(q>=0.75?'mid':'bad');
   requestAnimationFrame(()=>{ fill.style.width=(q*100).toFixed(1)+'%'; });
-  const kurz = secs < 300;
+  /* Abgeleitet, nicht getippt. Hier stand 300, waehrend die andere
+     Stelle bereits REC_SEC benutzte — zwei Wahrheiten fuer dieselbe Frage. */
+  const kurz = secs < REC_SEC;
   $('#protoVerdict').textContent = q>=0.90 ? (kurz?t('verdictCleanShort'):t('verdictClean'))
     : q>=0.75 ? t('verdictNoisy') : t('verdictBad');
 
