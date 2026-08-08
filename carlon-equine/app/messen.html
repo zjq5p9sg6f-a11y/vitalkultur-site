@@ -992,6 +992,9 @@ const HAUS={ appImStore:false, appUrl:'https://carlon.app' };
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/></svg>
       <span id="btnSendTxt">An die Praxis senden</span>
     </button>
+    <!-- Einbeziehung nach § 305 Abs. 2 BGB: der Hinweis steht dort, wo die
+         Handlung passiert — nicht in einer Fußzeile, die niemand liest. -->
+    <p class="hint" style="max-width:52ch;margin:var(--s2) auto 0" data-i18n="sendRecht">Mit dem Senden gilt die Übergabe nach <a href="/agb.html#postfach">§ 12b der AGB</a>: verschlüsselt, spätestens nach 30 Tagen gelöscht, keine Zusage einer Beurteilung. Was dabei gespeichert wird, steht in der <a href="/privacy.html">Datenschutzerklärung</a>.</p>
     <div class="subactions">
       <button class="btn ghost" id="btnSave" data-i18n="save">Als Datei speichern</button>
       <button class="btn ghost hidden" id="btnAgain" data-i18n="again">Neue Messung</button>
@@ -1019,8 +1022,15 @@ const HAUS={ appImStore:false, appUrl:'https://carlon.app' };
   </div>
 
   <div class="hint" style="max-width:60ch;margin-left:auto;margin-right:auto;font-weight:600;color:var(--sec)" data-i18n="disclaimer">Kein Medizinprodukt, keine Diagnose.</div>
-  <div class="hint" style="max-width:60ch;margin-left:auto;margin-right:auto" data-i18n="footerNote">Diese Seite erfasst, was das Herz deines Pferds tut — beurteilen wird es deine Tierärztin oder dein Tierarzt.</div>
-  <div class="privacy"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>Direkt-Übertragung · kein Server sieht die Messwerte</div>
+  <!-- Der Fallback ohne JavaScript muss DIESELBE, extern geprüfte MDR-Formulierung
+       tragen wie das Wörterbuch — sonst zeigt genau der Ausfall die alte, zu
+       breite Fassung („was das Herz tut"). Beide Stellen zusammen ändern. -->
+  <div class="hint" style="max-width:60ch;margin-left:auto;margin-right:auto" data-i18n="footerNote">Diese Seite zeichnet Herzschlag-Daten deines Pferds auf — die medizinische Beurteilung erfolgt ausschließlich durch deine Tierärztin oder deinen Tierarzt.</div>
+  <div class="privacy"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg><span data-i18n="privacyLine">Ende-zu-Ende verschlüsselt · kein Server kann die Messwerte lesen</span></div>
+  <!-- § 5 DDG und Art. 13 DSGVO: von JEDER Seite erreichbar, nicht nur von der
+       Startseite. Und § 305 Abs. 2 BGB: ohne diesen Weg sind die AGB, die die
+       Übergabe regeln, gar nicht einbezogen. -->
+  <div class="hint rechtsweg" style="max-width:60ch;margin:var(--s3) auto 0" data-i18n="rechtLinks"><a href="/impressum.html">Impressum</a> · <a href="/privacy.html">Datenschutz</a> · <a href="/agb.html">AGB</a></div>
 </div>
 
 <!-- Vollbild: das Diagramm wird in hoher Aufloesung NEU gezeichnet, nicht
@@ -1188,6 +1198,9 @@ de:{
  pQual:'Signalgüte', pPairs:'Auswertbare Schlagpaare', pDur:'Aufnahmedauer',
  pSensor:'Sensor', pRes:'Zeitauflösung', pResV:'1/1024 s · ≈1 ms',
  send:'An die Praxis senden', save:'Als Datei speichern', again:'Neue Messung',
+ privacyLine:'Ende-zu-Ende verschlüsselt · kein Server kann die Messwerte lesen',
+ rechtLinks:'<a href="/impressum.html">Impressum</a> · <a href="/privacy.html">Datenschutz</a> · <a href="/agb.html">AGB</a>',
+ sendRecht:'Mit dem Senden gilt die Übergabe nach <a href="/agb.html#postfach">§ 12b der AGB</a>: verschlüsselt, spätestens nach 30 Tagen gelöscht, keine Zusage einer Beurteilung. Was dabei gespeichert wird, steht in der <a href="/privacy.html">Datenschutzerklärung</a>.',
  shareH:'Wenn es dir geholfen hat',
  shareOwner:'Pferdefreunden zeigen', shareVet:'Deiner Praxis empfehlen',
  /*MDR — extern geprüft 06.08., Perplexity/Recherche: „was das Herz tut" ist umgangssprachlich zu breit;
@@ -1277,6 +1290,9 @@ en:{
  pQual:'Signal quality', pPairs:'Usable beat pairs', pDur:'Recording length',
  pSensor:'Sensor', pRes:'Time resolution', pResV:'1/1024 s · ≈1 ms',
  send:'Send to the practice', save:'Save as a file', again:'New recording',
+ privacyLine:'End-to-end encrypted · no server can read the measurements',
+ rechtLinks:'<a href="/impressum.html">Imprint</a> · <a href="/privacy-en.html">Privacy</a> · <a href="/terms.html">Terms</a>',
+ sendRecht:'By sending, the handover under <a href="/terms.html#relay">section 9a of the Terms</a> applies: encrypted, deleted after 30 days at the latest, with no promise of an assessment. What is stored is set out in the <a href="/privacy-en.html">privacy policy</a>.',
  shareH:'If this helped you',
  shareOwner:'Show fellow horse people', shareVet:'Recommend to your practice',
  /*MDR — extern geprüft: im anglo-amerikanischen Raum ist die etablierte Formel
