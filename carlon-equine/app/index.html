@@ -2211,23 +2211,52 @@ const Triage = {
     const a=recs[recs.length-2].metrics.rmssd, b=recs[recs.length-1].metrics.rmssd;
     if(a==null||b==null) return null;
     const d=(b-a)/a;
-    if(d>0.08) return {dir:'up',pct:d,sym:'▲',col:'var(--good)'};
-    if(d<-0.08) return {dir:'down',pct:d,sym:'▼',col:'var(--red)'};
+    if(d>this.PARAMETER.trendSchwelle) return {dir:'up',pct:d,sym:'▲',col:'var(--good)'};
+    if(d<-this.PARAMETER.trendSchwelle) return {dir:'down',pct:d,sym:'▼',col:'var(--red)'};
     return {dir:'flat',pct:d,sym:'▬',col:'var(--text-dim)'};
   },
-  // Frühwarn-Ampel gegen individuelle RMSSD-Baseline (<70% = Warnung, <50% = Alarm)
+  /* ── DEUTUNGSPARAMETER ────────────────────────────────────────────────
+     🔴 WARUM DAS HIER STEHT UND NICHT MEHR IM CODE VERSTREUT
+
+     Der Tierarzt sieht „Alarm" und „81 % unter Baseline". Bis heute stand
+     nirgends, dass Alarm ein Verhaeltnis unter 0,5 bedeutet — die Zahl lag
+     als Literal mitten in einer Funktion. Damit war die Anzeige eine
+     BEHAUPTUNG: nachvollziehbar nur fuer den, der den Quelltext liest.
+
+     Der Polar H10 ist ein geprueftes Messgeraet, und wir geben seine
+     Rohdaten unveraendert weiter. Aber die Validierung des Sensors deckt
+     den EINGANG. Alles, was danach kommt — Filter, Baseline, Schwellen,
+     Sortierung — ist unsere Deutung, und dafuer haften wir.
+
+     Deshalb die Umkehrung: Jeder angezeigte Wert soll aus den
+     mitgelieferten Daten UND den mitgelieferten Parametern von einem
+     Dritten nachgerechnet werden koennen. Das verschiebt kein Risiko auf
+     Polar — es macht aus einer Behauptung eine pruefbare Aussage, und das
+     ist die belastbarere Position.
+
+     WER DIESE ZAHLEN AENDERT, aendert eine veroeffentlichte Zusage. Sie
+     reisen im Export mit; ein alter Befund bleibt damit nachrechenbar,
+     auch wenn wir sie spaeter anpassen.                                  */
+  PARAMETER:{
+    baselineWarnUnter:  0.70,   // RMSSD/Baseline darunter → „auffällig"
+    baselineAlarmUnter: 0.50,   // darunter → „deutlich unter der eigenen Baseline"
+    trendSchwelle:      0.08,   // ±8 % gegenüber der Vor-Aufnahme → ▲ / ▼
+    fallendeReiheAb:    3,      // so viele fallende Messungen in Folge → Frühwarnung
+  },
+
+  // Frühwarn-Ampel gegen individuelle RMSSD-Baseline
   baselineAmpel(h,rec){
     const base=h&&h.baselineRMSSD, rm=rec&&rec.metrics?rec.metrics.rmssd:null;
     if(!base||rm==null) return null;
     const ratio=rm/base, pct=Math.round((1-ratio)*100);
-    if(ratio<0.5) return {level:'alarm',ratio,pct,text:`RMSSD ${pct} % unter individueller Baseline (${fmt0(rm)} vs. ${fmt0(base)} ms) — deutlich unter der eigenen Baseline, tierärztlich einordnen`};
-    if(ratio<0.7) return {level:'warn',ratio,pct,text:`RMSSD ${pct} % unter Baseline (${fmt0(rm)} vs. ${fmt0(base)} ms) — auffällig unter der Baseline, engmaschig beobachten`};
+    if(ratio<this.PARAMETER.baselineAlarmUnter) return {level:'alarm',ratio,pct,text:`RMSSD ${pct} % unter individueller Baseline (${fmt0(rm)} vs. ${fmt0(base)} ms) — deutlich unter der eigenen Baseline, tierärztlich einordnen`};
+    if(ratio<this.PARAMETER.baselineWarnUnter) return {level:'warn',ratio,pct,text:`RMSSD ${pct} % unter Baseline (${fmt0(rm)} vs. ${fmt0(base)} ms) — auffällig unter der Baseline, engmaschig beobachten`};
     return null;
   },
   // Wie viele Messungen in Folge ist RMSSD gefallen? (Trend-Frühwarnung ab 3)
   fallingStreak(hid){
     const recs=State.recsFor(hid).filter(r=>r.metrics&&r.metrics.rmssd!=null);
-    if(recs.length<3) return 0;
+    if(recs.length<this.PARAMETER.fallendeReiheAb) return 0;
     let streak=0;
     for(let i=recs.length-1;i>0;i--){ if(recs[i].metrics.rmssd<recs[i-1].metrics.rmssd) streak++; else break; }
     return streak;
@@ -5293,8 +5322,65 @@ const Views={
   async toggleVisit(id,val){const h=State.horses.find(x=>x.id===id);h.needsVisit=val;await DB.put('horses',h);Nav.updateBadges();},
   async saveNotes(id,val){const h=State.horses.find(x=>x.id===id);h.notes=val;await DB.put('horses',h);Toast.show('Notiz gespeichert','ok');},
   async delRec(id){const r=State.recordings.find(x=>x.id===id);if(!confirm('Diese Aufnahme wirklich löschen?'))return;await DB.del('recordings',id);State.recordings=State.recordings.filter(x=>x.id!==id);Toast.show('Aufnahme gelöscht','info');Nav.refresh();},
+  /* ── HERKUNFT ────────────────────────────────────────────────────────
+     Bis heute gab der Export die Quelldaten weiter — und nur die. Wer den
+     Befund nachrechnen wollte, hatte die Rohdaten, aber nicht die
+     Parameter, mit denen wir daraus „Alarm" oder „81 % unter Baseline"
+     gemacht haben. Die standen als Zahlen im Quelltext.
+
+     Damit war jeder angezeigte Wert eine Behauptung. Jetzt ist er eine
+     pruefbare Aussage: Rohdaten + Parameter + Fassung reisen zusammen.
+
+     WARUM DAS DIE BESSERE RECHTSPOSITION IST
+     Der Polar H10 ist geprueft, und wir reichen seine RR-Intervalle
+     unveraendert durch. Aber die Validierung des Sensors deckt den
+     Eingang; unsere Deutung deckt sie nicht. Statt zu behaupten, das
+     Risiko liege beim Sensorhersteller, machen wir unsere eigene Rechnung
+     nachrechenbar. Ein Fehler wird dadurch ENTDECKBAR, bevor er schadet —
+     und wir koennen belegen, dass wir richtig gerechnet haben.
+
+     WAS HIER NICHT BEHAUPTET WIRD: nichts ueber die Messung selbst. Was
+     der Sensor geliefert hat, steht in den Quelldaten; wir geben nur
+     weiter, was dort steht, und sagen dazu, was WIR damit gemacht haben. */
+  herkunft(rec, pferd){
+    const q = rec && rec.metrics || {};
+    const base = pferd && pferd.baselineRMSSD;
+    return {
+      erzeugtVon: 'CARLON Equine Visite',
+      fassung: (typeof BUILD !== 'undefined' ? BUILD : 'unbekannt'),
+      erzeugtAm: new Date().toISOString(),
+      zusicherung: 'Jeder in der Praxisansicht angezeigte Wert ist aus den hier '
+                 + 'mitgelieferten Rohdaten und diesen Parametern nachrechenbar. '
+                 + 'Die Rohdaten sind unverändert so übernommen, wie sie importiert wurden.',
+      deutungsparameter: Object.assign({}, Triage.PARAMETER),
+      parameterBedeutung: {
+        baselineWarnUnter:  'RMSSD geteilt durch individuelle Baseline; darunter „auffällig"',
+        baselineAlarmUnter: 'dasselbe Verhältnis; darunter „deutlich unter der eigenen Baseline"',
+        trendSchwelle:      'relative Änderung gegenüber der Vor-Aufnahme für ▲/▼',
+        fallendeReiheAb:    'so viele fallende Messungen in Folge lösen die Frühwarnung aus'
+      },
+      verwendeteBaseline: base != null
+        ? { rmssdMs: base, quelle: 'individuelle Baseline dieses Pferdes aus der Praxisakte' }
+        : { rmssdMs: null, quelle: 'keine Baseline hinterlegt — Verlaufsbewertung nicht möglich' },
+      /* Nicht behaupten, sondern durchreichen: was die Quelle ueber ihre
+         eigene Messung sagt, steht hier unveraendert. Fehlt die Angabe,
+         steht das auch da. */
+      angabenDerQuelle: {
+        rrApproximiert: (q.metrics && q.metrics.equineSpecific
+                         && q.metrics.equineSpecific.rrApproximated) ?? q.rrApproximated ?? null,
+        signalqualitaet: (q.metrics && q.metrics.equineSpecific
+                          && q.metrics.equineSpecific.equineQualityScore) ?? null,
+        artefaktrate: (q.quality && q.quality.artifactRatePct) ?? null
+      }
+    };
+  },
   exportRec(id){const r=State.recordings.find(x=>x.id===id);if(!r||!r.metrics)return;
-    const blob=new Blob([JSON.stringify(r.metrics,null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='carlon-session-'+id+'.json';a.click();
+    const pferd=State.horses.find(h=>h.id===r.horseId);
+    /* Die Quelldaten bleiben unangetastet — der Herkunftsblock kommt
+       DANEBEN, nicht hinein. Wer die Datei im Viewer oeffnet, sieht
+       dieselben Werte wie bisher. */
+    const inhalt=Object.assign({}, r.metrics, { herkunft: Views.herkunft(r, pferd) });
+    const blob=new Blob([JSON.stringify(inhalt,null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='carlon-session-'+id+'.json';a.click();
     Toast.show('Für Detail-Analyse: im CARLON Viewer öffnen','info');},
   logConsult(hid){
     const h=State.horses.find(x=>x.id===hid);
