@@ -2383,20 +2383,13 @@ const Asthma={
        Urteil       · mit HERKUNFT, denn eine Aussage ohne Quelle ist eine Behauptung
        nichts       · dann steht nur der Marker-Verlauf da */
   kopf(a,sev,inds){
-    if(a.ausgeduennt) return `<p style="font-size:12px;color:var(--text-dim);margin-bottom:10px">
-      Die gespeicherte Schlagfolge dieser Aufnahme ist verdichtet — auf ihr laesst sich
-      kein belastbares Atemwegs-Screening rechnen. Die Kennwerte darunter bleiben gueltig.</p>`;
-    if(a.unzureichend) return `<p style="font-size:12px;color:var(--text-dim);margin-bottom:10px">
-      Datengrundlage zu klein fuer das Atemwegs-Screening — es braucht mindestens
-      sieben Minuten Ruhe und 200 Schlaege. Die Schwellen stammen aus laengeren
-      Ruheaufnahmen und wuerden auf kurzen Messungen zu haeufig anschlagen.</p>`;
-    if(!a.severity&&a.triggered==null) return `<p style="font-size:12px;color:var(--text-dim);margin-bottom:10px">
-      Fuer diese Aufnahme liegt kein Atemwegs-Screening vor. Unten der atemwegs-relevante
-      Marker im Verlauf.</p>`;
+    if(a.ausgeduennt) return `<p style="font-size:12px;color:var(--text-dim);margin-bottom:10px">Die gespeicherte Schlagfolge dieser Aufnahme ist verdichtet — darauf lässt sich kein belastbares Atemwegs-Screening rechnen.</p>`;
+    if(a.unzureichend) return `<p style="font-size:12px;color:var(--text-dim);margin-bottom:10px">Datengrundlage zu klein — das Atemwegs-Screening braucht sieben Minuten Ruhe und 200 Schläge.</p>`;
+    if(!a.severity&&a.triggered==null) return `<p style="font-size:12px;color:var(--text-dim);margin-bottom:10px">Für diese Aufnahme liegt kein Atemwegs-Screening vor.</p>`;
 
     const herkunft = a.quelle==='praxis'
       ? `in dieser Praxis aus der Aufnahme gerechnet`
-      : `aus CARLON EQUINE uebernommen`;
+      : `aus CARLON EQUINE übernommen`;
     const guete = (a.quelle==='praxis'&&a.guete!=null)
       ? ` · Artefakte ${fmt1(a.guete)} %${a.avBlock?` · ${a.avBlock} AV-Block-Pausen korrigiert`:''}` : '';
     const chips = (a.marker&&a.marker.length)
@@ -2404,12 +2397,17 @@ const Asthma={
       : inds.map(i=>`<span class="chip amber">${esc(i)}</span>`).join('');
 
     return `<div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;flex-wrap:wrap">
-        <span class="tri-badge ${a.triggered?(sev&&sev.c==='alert'?'tri-crit':'tri-elev'):'tri-stable'}"><span class="dot"></span>${a.triggered?(sev?sev.t:'Signal vorhanden'):'unauffaellig'}</span>
+        <span class="tri-badge ${a.triggered?(sev&&sev.c==='alert'?'tri-crit':'tri-elev'):'tri-stable'}"><span class="dot"></span>${a.triggered?(sev?sev.t:'Signal vorhanden'):'unauffällig'}</span>
         ${a.met!=null?`<span style="font-size:12px;color:var(--text-dim)">${a.met}/${a.tot} Marker positiv</span>`:''}
         ${a.score!=null?`<span style="font-size:12px;color:var(--text-dim)">Score ${fmt1(a.score)}</span>`:''}</div>
       <div style="font-size:11px;color:var(--text-faint);margin-bottom:12px">${herkunft}${guete}</div>
       ${chips?`<div class="chips" style="margin-bottom:12px">${chips}</div>`:''}
-      ${a.deutung?`<p style="font-size:12px;color:var(--text-dim);margin-bottom:10px">${esc(a.deutung)}</p>`:''}`;
+      `;
+    /* Die Deutungszeile der Engine wird BEWUSST nicht angezeigt. Sie ist
+       auf Deutsch fest verdrahtet und setzt Zahlen ein („Score 0.0 < 1.5,
+       0/6 primäre Marker positiv") — per Wörterbuch nicht übersetzbar, und
+       das Cockpit ist zweisprachig. Verloren geht nichts: Score, Marker mit
+       Schwelle und Verlauf stehen bereits darüber. */
   },
 
   /* ── Der Wochenverlauf ─────────────────────────────────────────────────
@@ -2419,9 +2417,9 @@ const Asthma={
 
      Bewusst als BEOBACHTUNG formuliert, nie als nachgewiesene Wirkung. */
   TREND:{
-    improving:{t:'Score faellt',d:'Die Marker haben sich ueber das Fenster verbessert.',c:'good'},
-    stable:{t:'Score stabil',d:'Keine gerichtete Veraenderung im Fenster.',c:'cyan'},
-    worsening:{t:'Score steigt',d:'Die Marker haben sich ueber das Fenster verschlechtert.',c:'alert'},
+    improving:{t:'Score fällt',d:'Die Marker haben sich über das Fenster verbessert.',c:'good'},
+    stable:{t:'Score stabil',d:'Keine gerichtete Veränderung im Fenster.',c:'cyan'},
+    worsening:{t:'Score steigt',d:'Die Marker haben sich über das Fenster verschlechtert.',c:'alert'},
     insufficientData:{t:'Verlauf noch offen',d:'Zu wenige Messungen oder Zeitraum zu kurz.',c:'dim'}
   },
   verlauf(a){
@@ -2433,7 +2431,7 @@ const Asthma={
       <div style="font-size:13px;font-weight:600;color:${col}">Verlauf: ${T.t}</div>
       <div style="font-size:12px;color:var(--text-dim);margin-top:2px">${T.d}</div>
       ${t.pointCount?`<div style="font-size:11px;color:var(--text-faint);margin-top:4px">
-        ${t.pointCount} Messung${t.pointCount!==1?'en':''} ueber ${t.windowDays||'—'} Tage · Score ${delta}</div>`:''}
+        ${t.pointCount} Messung${t.pointCount!==1?'en':''} über ${t.windowDays||'—'} Tage · Score ${delta}</div>`:''}
     </div>`;
   }
 };
@@ -9427,6 +9425,22 @@ const Sprache={
      Der deutsche Satz ist der Schluessel. Sortiert wie die Oberflaeche:
      Navigation, Board, Akte, Station, Karte, Verwaltung, Kauf. */
   WB:{
+    // Atemwegs-Screening — im Cockpit gerechnet (09.08.2026)
+    'Die gespeicherte Schlagfolge dieser Aufnahme ist verdichtet — darauf lässt sich kein belastbares Atemwegs-Screening rechnen.':'The stored beat sequence of this recording is condensed — no dependable airway screening can be computed from it.',
+    'Datengrundlage zu klein — das Atemwegs-Screening braucht sieben Minuten Ruhe und 200 Schläge.':'Too little data — the airway screening needs seven minutes at rest and 200 beats.',
+    'Für diese Aufnahme liegt kein Atemwegs-Screening vor.':'No airway screening is available for this recording.',
+    'in dieser Praxis aus der Aufnahme gerechnet':'computed in this practice from the recording',
+    'aus CARLON EQUINE übernommen':'taken from CARLON EQUINE',
+    'unauffällig':'unremarkable', 'Signal vorhanden':'signal present',
+    'niedriges Screening-Signal':'low screening signal',
+    'moderates Screening-Signal':'moderate screening signal',
+    'hohes Screening-Signal':'high screening signal',
+    'Score fällt':'Score falling', 'Score stabil':'Score stable', 'Score steigt':'Score rising',
+    'Verlauf noch offen':'Trend not yet established',
+    'Die Marker haben sich über das Fenster verbessert.':'The markers improved across the window.',
+    'Keine gerichtete Veränderung im Fenster.':'No directed change within the window.',
+    'Die Marker haben sich über das Fenster verschlechtert.':'The markers worsened across the window.',
+    'Zu wenige Messungen oder Zeitraum zu kurz.':'Too few recordings or the period is too short.',
     // Navigation und Rahmen
     'Heute':'Today', 'Board':'Board', 'Station':'Ward', 'Karte':'Map',
     'Pferde':'Horses', 'Verwaltung':'Admin', 'Navi':'Nav', 'Akte':'Record',

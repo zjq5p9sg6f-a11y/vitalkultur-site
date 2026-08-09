@@ -761,6 +761,18 @@ const HAUS={ appImStore:false, appUrl:'https://carlon.app' };
     </button>
     <div class="subactions"><a class="btn ghost" href="senden.html" data-i18n="sendFile">Aufnahme als Datei senden</a></div>
     <div class="share-note" id="linkNote" style="color:var(--cyan)"></div>
+
+    <!-- ── Der kuerzeste Weg auf das zweite Geraet ──────────────────────
+         Das Teilen-Blatt verlangt: App waehlen, Empfaenger tippen, Geraet
+         wechseln, Nachricht oeffnen. Im Stall steht der Laptop oder das
+         Android-Tablet aber meist DANEBEN. Dann ist Hinhalten und Scannen
+         der kuerzere Weg — und es verlaesst nichts das Telefon.
+         Gezeichnet mit dem eigenen qr.js, das gegen qrencode und zbarimg
+         geprueft ist (t-qr.mjs). -->
+    <div id="qrWeg" style="margin-top:var(--s4);text-align:center">
+      <div id="qrBild" style="display:inline-block;background:#fff;border-radius:12px;padding:10px;width:172px;height:172px"></div>
+      <div class="hint" style="max-width:46ch;margin:10px auto 0" data-i18n="qrHint">Oder mit dem Geraet scannen, das messen soll — Laptop oder Android-Tablet. Dabei verlaesst nichts dein Telefon.</div>
+    </div>
     <div class="hint" data-i18n="unsupHint">Du hast schon eine Aufnahme als Datei? Dann kannst du sie direkt an deine Praxis übergeben — dafür brauchst du kein Bluetooth.</div>
   </div>
 
@@ -1062,6 +1074,7 @@ const HAUS={ appImStore:false, appUrl:'https://carlon.app' };
   </div>
 </div>
 
+<script src="qr.js"></script>
 <script src="krypto.js"></script>
 <script src="p2p.js"></script>
 <!-- DIE WORTMARKE — auf JEDER Seite, nicht nur nach getaner Messung.
@@ -1200,6 +1213,7 @@ de:{
  pSensor:'Sensor', pRes:'Zeitauflösung', pResV:'1/1024 s · ≈1 ms',
  send:'An die Praxis senden', save:'Als Datei speichern', again:'Neue Messung',
  privacyLine:'Ende-zu-Ende verschlüsselt · kein Server kann die Messwerte lesen',
+ qrHint:'Oder mit dem Gerät scannen, das messen soll — Laptop oder Android-Tablet. Dabei verlässt nichts dein Telefon.',
  rechtLinks:'<a href="/impressum.html">Impressum</a> · <a href="/privacy.html">Datenschutz</a> · <a href="/agb.html">AGB</a>',
  sendRecht:'Mit dem Senden gilt die Übergabe nach <a href="/agb.html#postfach">§ 12b der AGB</a>: verschlüsselt, spätestens nach 30 Tagen gelöscht, keine Zusage einer Beurteilung. Was dabei gespeichert wird, steht in der <a href="/privacy.html">Datenschutzerklärung</a>.',
  shareH:'Wenn es dir geholfen hat',
@@ -1293,6 +1307,7 @@ en:{
  pSensor:'Sensor', pRes:'Time resolution', pResV:'1/1024 s · ≈1 ms',
  send:'Send to the practice', save:'Save as a file', again:'New recording',
  privacyLine:'End-to-end encrypted · no server can read the measurements',
+ qrHint:'Or scan it with the device that should measure — laptop or Android tablet. Nothing leaves your phone.',
  rechtLinks:'<a href="/impressum.html">Imprint</a> · <a href="/privacy-en.html">Privacy</a> · <a href="/terms.html">Terms</a>',
  sendRecht:'By sending, the handover under <a href="/terms.html#relay">section 9a of the Terms</a> applies: encrypted, deleted after 30 days at the latest, with no promise of an assessment. What is stored is set out in the <a href="/privacy-en.html">privacy policy</a>.',
  shareH:'If this helped you',
@@ -2844,7 +2859,24 @@ $('#btnSendLink').addEventListener('click', async ()=>{
 /* ── Start ─────────────────────────────────────────────────────────────── */
 applyLang();
 Vertrieb.start();
-if(!('bluetooth' in navigator)){ show('vUnsupported'); }
+/* Der QR traegt GENAU die Adresse dieser Seite — samt Fach, Schluessel und
+   Haendler-Code. Wer ihn scannt, landet in derselben Uebergabe, nicht auf
+   einer allgemeinen Startseite. Faellt qr.js aus, verschwindet der Block
+   lautlos: ein leerer weisser Kasten waere schlimmer als keiner.
+
+   Eigene Funktion, damit der Pruefstand sie aufrufen kann: In headless
+   Chrome GIBT es Web Bluetooth, der iOS-Zweig feuert dort also nie — eine
+   Zusicherung, die sich nur auf einem iPhone pruefen laesst, ist keine. */
+function qrWegZeichnen(){
+  const w=document.getElementById('qrWeg'), b=document.getElementById('qrBild');
+  if(!w||!b) return false;
+  try{
+    if(typeof QR==='undefined'){ w.style.display='none'; return false; }
+    b.innerHTML = QR.svg(location.href, { rand:1, dunkel:'#000308', hell:'#ffffff' });
+    return true;
+  }catch(e){ w.style.display='none'; return false; }
+}
+if(!('bluetooth' in navigator)){ show('vUnsupported'); qrWegZeichnen(); }
 else {
   show('vReady');
   /* Der Code kommt aus der URL, also von aussen. Als TEXT setzen statt
