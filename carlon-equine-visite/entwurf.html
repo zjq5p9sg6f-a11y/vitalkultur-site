@@ -98,6 +98,17 @@ h2{font-family:var(--font-brand);font-weight:300;font-size:clamp(27px,3.6vw,40px
 /* USP-Band: konkrete Faehigkeiten, je nach Kano-Ebene */
 .tarife{margin-top:46px;display:grid;grid-template-columns:repeat(2,1fr);gap:18px}
 .tarif{background:var(--bg-deep);border:1px solid var(--border-subtle);border-radius:18px;padding:30px 30px 28px;position:relative}
+  /* Preis als eine Zahl, gross, ohne Beiwerk — daneben nur die Einheit.
+     Zwei gleich grosse Zahlen (Monat/Jahr) zwingen zum Vergleichen; hier
+     fuehrt der Jahrespreis und die Alternative steht klein darunter. */
+  .tarif-preis{display:flex;align-items:baseline;gap:10px;justify-content:center;
+               margin-bottom:6px;flex-wrap:wrap}
+  .tarif-preis b{font-family:var(--font-brand);font-weight:300;
+                 font-size:clamp(40px,7vw,62px);letter-spacing:-.02em;
+                 color:var(--text-primary);line-height:1}
+  .tarif-preis span{font-size:14px;color:var(--text-secondary)}
+  .tarif-alt{text-align:center;font-size:13px;color:var(--text-dim);
+             margin-bottom:20px}
 .tarif.gewaehlt{border-color:var(--cyan);box-shadow:0 0 40px rgba(62,207,178,0.10)}
 .tarif .t-k{font-family:var(--font-mono);font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--cyan);margin-bottom:14px}
 .tarif .t-preis{font-family:var(--font-display);font-size:44px;font-weight:200;letter-spacing:-0.02em;color:var(--text-primary);line-height:1}
@@ -260,6 +271,13 @@ footer{border-top:1px solid var(--border-faint);padding:56px 24px 66px;text-alig
   font-weight: 300; pointer-events: none;
 }
 
+  /* Beruehrziele nach WCAG 2.5.8: mindestens 44 px fuer alles, was ein
+     KNOPF ist. Inline-Verweise im Fliesstext sind davon ausgenommen — sie
+     kuenstlich aufzublasen zerreisst den Satz. Gemessen an der Seite: die
+     Navigationsknoepfe und der Zweit-Aufruf lagen darunter. */
+  nav .nav-actions a, .btn, .btn-back, .btn-demo, .cta-primary, .footer-links a{
+    min-height:44px; display:inline-flex; align-items:center; justify-content:center;
+  }
 </style>
 </head>
 <body>
@@ -287,301 +305,314 @@ footer{border-top:1px solid var(--border-faint);padding:56px 24px 66px;text-alig
   </div>
 </nav>
 
-<main>
-  <!-- ═══════════════════════════════════════════════════════════════════
-       ENTWURF — nicht verlinkt, noindex. Die Live-Seite bleibt unberührt.
+<!-- ══════════════════════════════════════════════════════════════════════
+     AUFBAU (09.08.2026) — die Reihenfolge ist die Argumentation:
 
-       WAS SICH GEGENÜBER DER LIVE-SEITE ÄNDERT
-       1. Klartext statt Sprachbild im Hero. Die alte Überschrift ist schön,
-          sagt aber nicht, was die Praxis davon hat.
-       2. Ansprache „Sie" — zur Beurteilung, nicht als Entscheidung.
-       3. Wirtschaftlichkeit über UNSERE messbaren Zahlen (Kilometer, Zeit),
-          NICHT über eine GOT-Deckungsrechnung. Begründung im Vault,
-          15-Landingpage-Conversion-Entscheidungen.
-       4. Primärer Aufruf: das Cockpit führt sich selbst vor. Ein
-          persönlicher Termin skaliert nicht auf das Ziel, ohne Jans Zutun
-          zu funktionieren — ein Demo-Cockpit schon.
-       5. Der iPhone-Weg wird benannt statt verschwiegen.
-       6. Nur EIN farbiger Knopf je Fläche.
-       ═══════════════════════════════════════════════════════════════════ -->
+     1 Der Schmerz, den jeder mobile Tierarzt kennt: Reihenfolge unter
+       Unsicherheit. Erst DANN das Produkt.
+     2 Der Vorteil, den kein Gerät ersetzt — und der KEINE Werbung ist,
+       sondern die Eingangsbedingung des Verfahrens.
+     3 Was man sieht (Leistung, vergleichbar).
+     4 Warum die Zahlen tragen (Vertrauen — hier liegt der Burggraben).
+     5 Der Verlauf (das, was eine Momentaufnahme nie kann).
+     6 Anschluss an die Praxissoftware.
+     7 Was wir bewusst NICHT tun (Vertrauen durch Verzicht).
+     8 Preis — erst nach dem Wert, nie davor.
+     9 Demo ohne Risiko als eigentlicher Abschluss.
 
-  <!-- HERO -->
-  <header class="hero wrap rev">
+     KEINE Kundenstimmen, KEINE Partnerlogos: Es gibt noch keine. Und kein
+     Wettbewerber wird beim Namen genannt — vergleichende Werbung ist nach
+     § 6 UWG heikel und wir brauchen sie nicht.
+     ══════════════════════════════════════════════════════════════════════ -->
+
+<section class="hero">
+  <div class="wrap">
     <div class="eyebrow">CARLON Equine Visite · Praxisansicht für mobile Pferdetierärzte und Kliniken</div>
-    <h1>Sehen Sie früher, welches Pferd Sie <em>wirklich braucht.</em></h1>
-    <p class="hero-sub">Die Halterin misst zu Hause mit dem Polar&nbsp;H10 und schickt Ihnen die Aufnahme verschlüsselt. Sie öffnen den Verlauf im Browser — gegen die <strong>individuelle Baseline dieses Pferdes</strong>, nicht gegen einen allgemeinen Normwert. Dann entscheiden Sie: Rückmeldung, Kontrollmessung oder Termin vor Ort.</p>
+    <h1>Sehen Sie früher, welches Pferd Sie wirklich braucht.</h1>
+    <p class="hero-sub">
+      Die Halterin misst den Herzrhythmus zu Hause im Stall und schickt Ihnen die Aufnahme
+      verschlüsselt. Sie öffnen den Befund im Browser — mit Verlauf, Signalgüte und der
+      Abweichung von der individuellen Baseline dieses Pferds.
+      <strong>Ohne Konto, ohne Installation, ohne dass die Daten Ihre Praxis verlassen.</strong>
+    </p>
     <div class="cta-row">
-      <a class="cta-primary" href="/carlon-equine/app/" data-track="entwurf:demo">Cockpit mit 15&nbsp;Demo-Pferden öffnen →</a>
-      <a href="mailto:jan@vitalkultur.com?subject=CARLON%20Equine%20Visite%20%E2%80%94%20Gespr%C3%A4ch" style="display:inline-flex;align-items:center;gap:9px;padding:15px 30px;border-radius:999px;background:transparent;border:1px solid var(--border-strong);color:var(--text-secondary);font-weight:500;font-size:15px;text-decoration:none">Lieber erst sprechen</a>
+      <a class="cta-primary" href="/carlon-equine/app/">Cockpit mit 15&nbsp;Demo-Pferden öffnen →</a>
+      <a class="btn btn-back" href="#preis">Was es kostet</a>
     </div>
-    <p class="trust" style="margin-top:34px">Kein Diagnoseautomat · Kein Upload-Zwang · Kein Benutzerkonto · Die fachliche Entscheidung bleibt bei Ihnen</p>
-  </header>
-
-  <!-- KURZBEWEIS: Vorher / Nachher -->
-  <section class="wrap rev">
-    <div class="sec-eyebrow">Was sich ändert</div>
-    <h2>Eine Betreuungsebene <em>zwischen</em> den Terminen.</h2>
-    <p class="sec-lead">CARLON ersetzt weder Anamnese noch klinische Untersuchung. Es füllt die Lücke zwischen zwei Stallbesuchen — dort, wo Sie heute auf die Beschreibung der Halterin angewiesen sind.</p>
-    <div class="usps" style="grid-template-columns:1fr 1fr">
-      <div class="usp">
-        <div class="u-k">Bisher</div>
-        <h4>Momentaufnahme beim Termin</h4>
-        <p>Eine Messung, ein Zeitpunkt. Was dazwischen passiert ist, erfahren Sie am Telefon — beschrieben, nicht gemessen.</p>
-      </div>
-      <div class="usp">
-        <div class="u-k">Mit Visite</div>
-        <h4>Verlauf gegen die eigene Baseline</h4>
-        <p>Mehrere Messungen im Zeitverlauf, mit Signalqualität. Sie sehen, ob sich dieses Pferd gegenüber sich selbst verändert hat.</p>
-      </div>
-      <div class="usp">
-        <div class="u-k">Bisher</div>
-        <h4>Reihenfolge nach Anruf</h4>
-        <p>Wer zuerst anruft, wird zuerst gesehen — nicht unbedingt, wer es am nötigsten hat.</p>
-      </div>
-      <div class="usp">
-        <div class="u-k">Mit Visite</div>
-        <h4>Reihenfolge nach Abweichung</h4>
-        <p>Das Board sortiert nach Abstand zur eigenen Baseline. Die Route stellt sich danach.</p>
-      </div>
-    </div>
-  </section>
-
-  <!-- WAS SIE IN 30 SEKUNDEN SEHEN -->
-  <section class="feature wrap rev">
-    <div class="feature-grid">
-      <div class="f-txt">
-        <div class="f-k">Triage</div>
-        <h3>Was Sie in dreißig Sekunden sehen.</h3>
-        <ul>
-          <li><b>Reicht die Signalqualität</b> für eine Beurteilung überhaupt aus?</li>
-          <li>Liegt der Verlauf <b>innerhalb der individuellen Streuung</b> dieses Pferdes?</li>
-          <li>Ist die Abweichung <b>neu oder wiederkehrend</b>?</li>
-          <li>Genügt eine <b>Rückfrage</b> — oder gehört das Pferd nach oben auf die Route?</li>
-        </ul>
-        <p style="margin-top:18px;font-size:14px;color:var(--text-dim);font-style:italic">Die Software zeigt, dass sich etwas verändert hat. Was diese Veränderung medizinisch bedeutet, beurteilen Sie.</p>
-      </div>
-      <div class="f-shot"><img src="assets/visite-shots/10-triage.jpg" alt="Triage-Board: alle betreuten Pferde nach Abweichung von der individuellen Baseline sortiert" loading="lazy"></div>
-    </div>
-  </section>
-
-  <!-- DER ARBEITSTAG -->
-  <section class="wrap rev">
-    <div class="sec-eyebrow">Ein Tag mit Visite</div>
-    <h2>Nicht nur Vitaldaten — für die <em>mobile Praxis</em> gebaut.</h2>
-    <p class="sec-lead">Das Cockpit ist kein HRV-Betrachter mit angehängter Verwaltung. Es ist der Tagesablauf einer mobilen Praxis, in den die Messwerte eingebettet sind.</p>
-    <div class="usps">
-      <div class="usp">
-        <div class="u-k">07:30</div>
-        <h4>Auffällige Verläufe prüfen</h4>
-        <p>Was über Nacht eingegangen ist, steht oben. Ein Blick sagt, ob es die Reihenfolge des Tages ändert.</p>
-      </div>
-      <div class="usp">
-        <div class="u-k">07:40</div>
-        <h4>Route nach Dringlichkeit</h4>
-        <p>Kritische Pferde zuerst, dann der kürzeste Weg dazwischen. Übergabe an Google Maps mit einem Tipp.</p>
-      </div>
-      <div class="usp">
-        <div class="u-k">08:00</div>
-        <h4>Halter direkt aus dem Fall anrufen</h4>
-        <p>Nummer, Adresse, letzter Verlauf und Ihre eigene Notiz — auf derselben Fläche.</p>
-      </div>
-      <div class="usp">
-        <div class="u-k">unterwegs</div>
-        <h4>Feldmodus</h4>
-        <p>Großer Kontrast, große Bedienflächen. Für Stallgasse und Sonnenlicht, nicht für den Schreibtisch.</p>
-      </div>
-      <div class="usp">
-        <div class="u-k">nach dem Termin</div>
-        <h4>Befund und Honorar in einem Schritt</h4>
-        <p>Einschätzung eintragen, Leistung erfassen, gebrandetes PDF an die Halterin. Der Umsatz ist gebucht.</p>
-      </div>
-      <div class="usp">
-        <div class="u-k">abends</div>
-        <h4>Fahrtenbuch schreibt sich selbst</h4>
-        <p>Strecken, Zeiten, offene Posten, Ø&nbsp;Honorar — aus dem, was Sie ohnehin getan haben.</p>
-      </div>
-    </div>
-    <div class="shots two" style="margin-top:40px">
-      <img src="assets/visite-shots/05-tagesplan.jpg" alt="Tagesplan mit Stopps, Fahrstrecke, Tagesdauer und kritischen Fällen" loading="lazy">
-      <img src="assets/visite-shots/08-route.jpg" alt="Karte mit nach Dringlichkeit optimierter Abfahrroute" loading="lazy">
-    </div>
-  </section>
-
-  <!-- EINSATZBEREICHE -->
-  <section class="wrap rev">
-    <div class="sec-eyebrow">Wofür es sich lohnt</div>
-    <h2>Besonders sinnvoll, wenn eine Momentaufnahme <em>nicht genügt.</em></h2>
-    <div class="usps">
-      <div class="usp"><div class="u-k">Rekonvaleszenz</div><h4>Verlauf zwischen zwei Untersuchungen</h4><p>Kontrollmessungen unter vergleichbaren Bedingungen, statt auf den nächsten Termin zu warten.</p></div>
-      <div class="usp"><div class="u-k">Unklare Leistungsminderung</div><h4>Fällt das Berichtete mit einer Veränderung zusammen?</h4><p>Die Halterin beschreibt „irgendwie matt". Sie sehen, ob sich messbar etwas verschoben hat.</p></div>
-      <div class="usp"><div class="u-k">Wiederkehrendes</div><h4>Muster statt Einzelfall</h4><p>Pferde mit wiederkehrenden Auffälligkeiten bekommen einen Verlauf, an dem sich etwas ablesen lässt.</p></div>
-      <div class="usp"><div class="u-k">Trainingsbetreuung</div><h4>Belastung und Erholung über Wochen</h4><p>Mehrere Messzeitpunkte statt einer Aufnahme — für Reha und Aufbau.</p></div>
-      <div class="usp"><div class="u-k">Bestand und Turnier</div><h4>Vorsortieren, bevor Sie losfahren</h4><p>Mehrere Pferde eines Stalls in der richtigen Reihenfolge, bevor die Route steht.</p></div>
-      <div class="usp"><div class="u-k">Nachsorge</div><h4>Vorbereitet ins Gespräch</h4><p>Den Verlauf vor dem Anruf ansehen und die Zeit für das verwenden, was zählt.</p></div>
-    </div>
-  </section>
-
-  <!-- WAS ES NICHT IST -->
-  <section class="wrap rev">
-    <div class="sec-eyebrow">Abgrenzung</div>
-    <h2>Was CARLON bewusst <em>nicht</em> ist.</h2>
-    <p class="sec-lead">Diese Liste steht hier, weil sie die wichtigste ist. Wer HRV als fertige Ferndiagnostik verkauft, verkauft etwas, das es nicht gibt.</p>
-    <div class="usps">
-      <div class="usp"><div class="u-k">Kein Ersatz</div><h4>Nicht für die klinische Untersuchung</h4><p>Ein Verlauf ersetzt keine Hand am Pferd. Er sagt Ihnen, wann sie hingehört.</p></div>
-      <div class="usp"><div class="u-k">Keine Diagnose</div><h4>Die Software stellt keine</h4><p>Sie zeigt Messwerte, Signalqualität und Abweichung. Die Deutung ist ärztlich.</p></div>
-      <div class="usp"><div class="u-k">Keine Ampel</div><h4>Kein allgemeiner Normwert</h4><p>Verglichen wird jedes Pferd mit sich selbst — nicht mit einem umetikettierten Human-Cutoff.</p></div>
-      <div class="usp"><div class="u-k">Keine Cloud</div><h4>Nichts wird ohne Sie weitergegeben</h4><p>Die Praxisdaten liegen in Ihrem Browser. Wir können sie nicht lesen — auch nicht auf Anfrage.</p></div>
-      <div class="usp"><div class="u-k">Keine Migration</div><h4>Ihre Praxissoftware bleibt, wo sie ist</h4><p>Visite läuft daneben. Kein Datenumzug, kein Projekt, kein Dienstleister.</p></div>
-      <div class="usp"><div class="u-k">Kein Kanal</div><h4>Kein weiterer Posteingang</h4><p>Sie müssen nichts überwachen. Was eingeht, steht beim nächsten Öffnen oben.</p></div>
-    </div>
-  </section>
-
-  <!-- WIRTSCHAFTLICHKEIT -->
-  <section class="wrap rev">
-    <div class="sec-eyebrow">Wirtschaftlichkeit</div>
-    <h2>Die Rechnung, die das Cockpit <em>selbst aufmacht.</em></h2>
-    <p class="sec-lead">Wir rechnen Ihnen nicht vor, wie oft Sie etwas abrechnen sollen. Das Cockpit zeigt stattdessen, was Ihr Tag durch die Sortierung tatsächlich spart — jeden Tag, mit Ihren eigenen Zahlen.</p>
-    <div class="usps" style="grid-template-columns:repeat(3,1fr)">
-      <div class="usp"><div class="u-k">Im Tagesplan sichtbar</div><h4>Gesparte Kilometer</h4><p>Der Unterschied zwischen Ihrer Route und einer unsortierten Fahrt — vom Cockpit berechnet, nicht behauptet.</p></div>
-      <div class="usp"><div class="u-k">Im Tagesplan sichtbar</div><h4>Vermeidbare Fahrten</h4><p>Stabile Kontrollen, die per Verlauf statt per Anfahrt möglich sind. Sie entscheiden, welche.</p></div>
-      <div class="usp"><div class="u-k">In der Verwaltung sichtbar</div><h4>Erfasster Umsatz</h4><p>Was Sie an Ferneinschätzungen erfasst haben, steht als offener oder abgerechneter Posten — nicht in einer Notiz.</p></div>
-    </div>
-    <div class="path" style="margin-top:34px">
-      <p style="font-size:15px;line-height:1.75">Zur Frage der Abrechnung sagen wir genau einen Satz, und der ist nachprüfbar:<br><br>
-      <strong style="color:var(--text-primary)">Die GOT kennt die „Beratung im einzelnen Fall ohne Untersuchung, auch schriftlich oder fernmündlich" (Ziffer&nbsp;1).</strong><br><br>
-      Welche Position im Einzelfall zutrifft und welchen Satz Sie ansetzen, entscheiden Sie — nicht wir. CARLON gibt keine Abrechnungsempfehlung und rechnet nichts automatisch ab. Es bereitet die Dokumentation vor, auf die Sie Ihre Entscheidung stützen.</p>
-    </div>
-  </section>
-
-  <!-- DER WEG DER MESSUNG -->
-  <section class="wrap rev">
-    <div class="sec-eyebrow">Wie eine Messung zu Ihnen kommt</div>
-    <h2>Vom Stall in Ihre <em>Praxisansicht.</em></h2>
-    <div class="path">
-      <div class="chain">
-        <span class="node">Halterin misst</span><span class="arr">→</span>
-        <span class="node">Ende-zu-Ende verschlüsselt</span><span class="arr">→</span>
-        <span class="node">Ihr Browser</span><span class="arr">→</span>
-        <span class="node">Befund-PDF</span>
-      </div>
-      <p>Die Aufnahme wird bereits auf dem Gerät der Halterin gegen Ihren öffentlichen Schlüssel verschlüsselt. Der Schlüssel zum Öffnen entsteht in Ihrem Browser und verlässt ihn nie — wir könnten den Inhalt nicht lesen, auch wenn wir es wollten. Nach dreißig Tagen löscht das Zwischenpostfach von selbst; Ihre Kopie bleibt lokal bei Ihnen.</p>
-    </div>
-    <div class="usps" style="margin-top:36px">
-      <div class="usp">
-        <div class="u-k">Für die Halterin kostenlos</div>
-        <h4>Sie braucht nichts zu kaufen und nichts zu installieren</h4>
-        <p>Die Messstation läuft im Browser — mit einem Polar&nbsp;H10 und einem Android-Gerät oder Computer. Kein Konto, keine App. <strong>Auf iPhone und iPad lässt Apple Bluetooth im Browser nicht zu</strong>; dort führt der Weg über ein zweites Gerät, bis unsere iOS-App erschienen ist. Das sagen wir dazu, statt es zu verschweigen.</p>
-      </div>
-      <div class="usp">
-        <div class="u-k">Ihr Gewinnungsweg</div>
-        <h4>Ein Aushang für den Stall</h4>
-        <p>Das Cockpit druckt Ihnen einen Aushang mit Ihrem Namen und einem QR-Code. Wer ihn scannt, misst und sendet direkt an Sie. So kommen die Messungen zu Ihnen, ohne dass Sie jemanden überzeugen müssen.</p>
-      </div>
-    </div>
-  </section>
-
-  <!-- VERANTWORTUNG -->
-  <section class="wrap rev">
-    <div class="sec-eyebrow">Rollen</div>
-    <h2>CARLON misst nicht Ihre <em>Kompetenz.</em></h2>
-    <div class="usps" style="grid-template-columns:1fr 1fr">
-      <div class="usp">
-        <div class="u-k">CARLON übernimmt</div>
-        <h4>Aufbereitung</h4>
-        <ul style="margin-top:12px;padding-left:0;list-style:none;font-size:14.5px;color:var(--text-secondary);line-height:1.9">
-          <li>· Einlesen und strukturierte Darstellung</li>
-          <li>· Prüfung und Kennzeichnung der Signalqualität</li>
-          <li>· Vergleich mit der individuellen Baseline</li>
-          <li>· Zeitlicher Verlauf</li>
-          <li>· Priorisierung auffälliger Aufnahmen</li>
-          <li>· Vorbereitung des Befund-PDFs</li>
-        </ul>
-      </div>
-      <div class="usp">
-        <div class="u-k">Sie übernehmen</div>
-        <h4>Medizin</h4>
-        <ul style="margin-top:12px;padding-left:0;list-style:none;font-size:14.5px;color:var(--text-secondary);line-height:1.9">
-          <li>· Anamnese</li>
-          <li>· Medizinische Einordnung</li>
-          <li>· Entscheidung über weitere Diagnostik</li>
-          <li>· Diagnose und Therapie</li>
-          <li>· Kommunikation mit der Halterin</li>
-          <li>· Dokumentation der tierärztlichen Leistung</li>
-        </ul>
-      </div>
-    </div>
-    <p class="trust" style="margin-top:36px">Belegt, nicht behauptet · Einschätzung, keine Diagnose · Kein Medizinprodukt (MDR/FDA) · Daten bleiben lokal — Sie sind Verantwortlicher · Kein Server, keine Cloud.</p>
-  </section>
-
-  <!-- PREISE -->
-  <section class="wrap rev" id="preise">
-    <div class="sec-eyebrow">Was es kostet</div>
-    <h2>Eine Praxis, <em>ein Preis.</em></h2>
-    <p class="sec-lead">Kein Preis pro Pferd, keiner pro Platz, keine Einrichtungsgebühr. Der ganze Betrieb — jede Tierärztin, jedes Gerät.</p>
-    <div class="tarife">
-      <div class="tarif">
-        <div class="t-k">Monatlich</div>
-        <div><span class="t-preis">79 €</span><span class="t-takt">/ Monat</span></div>
-        <div class="t-netto">netto · zzgl. USt.</div>
-        <div class="t-note">Jederzeit kündbar, zum Ende der laufenden Abrechnungsperiode.</div>
-      </div>
-      <div class="tarif gewaehlt">
-        <div class="t-spar">2 Monate geschenkt</div>
-        <div class="t-k">Jährlich</div>
-        <div><span class="t-preis">790 €</span><span class="t-takt">/ Jahr</span></div>
-        <div class="t-netto">netto · zzgl. USt. · 65,83 € im Monat</div>
-        <div class="t-note">Zwölf Monate, kündbar mit einem Monat Frist zum Ende der Laufzeit.</div>
-      </div>
-    </div>
-    <ul class="enthalten">
-      <li>Ein Betrieb oder Standort — jede Tierärztin, jedes Gerät</li>
-      <li>Unbegrenzt Pferde, Aufnahmen und Befunde</li>
-      <li>Sofort nach der Zahlung aktiv — kein Schlüssel, kein Warten auf eine E-Mail</li>
-      <li>Jede Weiterentwicklung enthalten, keine Upgrade-Gebühr</li>
-      <li>Ihre Daten bleiben auf Ihrem Gerät — auch nach dem Abo</li>
-      <li>Persönliche Einführung, wenn Sie sie möchten</li>
-    </ul>
-    <p class="tarif-fuss">Nur an Unternehmer im Sinne des § 14 BGB — keine Verträge mit Verbrauchern. Zahlung, Rechnung und Umsatzsteuer wickelt Stripe als Merchant of Record ab; mit EU-USt-IdNr. greift das Reverse-Charge-Verfahren. Bedingungen in <a href="/agb.html#visite">§ 12a unserer AGB</a> · <a href="/privacy.html">Datenschutz</a></p>
-  </section>
-
-  <!-- FAQ -->
-  <section class="wrap rev">
-    <div class="sec-eyebrow">Häufige Fragen</div>
-    <h2>Was Tierärzte uns <em>zuerst fragen.</em></h2>
-    <div class="usps" style="grid-template-columns:1fr">
-      <div class="usp"><h4>Ersetzt CARLON eine Untersuchung?</h4><p>Nein. CARLON bereitet Verlaufsdaten auf und hilft bei der Reihenfolge. Ob eine klinische Untersuchung, weitere Diagnostik oder eine Behandlung nötig ist, entscheiden ausschließlich Sie.</p></div>
-      <div class="usp"><h4>Stellt CARLON Diagnosen?</h4><p>Nein. Die Software zeigt Messwerte, Signalqualität, Verlauf und Abweichung von der individuellen Baseline. Die medizinische Deutung bleibt bei Ihnen.</p></div>
-      <div class="usp"><h4>Kann ich eine Ferneinschätzung abrechnen?</h4><p>Die GOT kennt die Beratung im einzelnen Fall ohne Untersuchung, auch schriftlich oder fernmündlich (Ziffer&nbsp;1). Welche Position und welcher Satz im Einzelfall zutreffen, entscheiden Sie. CARLON gibt dazu keine Empfehlung und rechnet nichts automatisch ab.</p></div>
-      <div class="usp"><h4>Muss ich meine Praxissoftware ersetzen?</h4><p>Nein. Visite läuft eigenständig im Browser. Es gibt keinen Datenumzug und keine Schnittstelle, die eingerichtet werden müsste.</p></div>
-      <div class="usp"><h4>Brauche ich ein Benutzerkonto?</h4><p>Nein. Es gibt keine Registrierung und kein Passwort. Ihre Praxis-Kennung entsteht in Ihrem Browser.</p></div>
-      <div class="usp"><h4>Werden Daten auf einen Server hochgeladen?</h4><p>Die Aufnahmen liegen kurzzeitig verschlüsselt in einem Zwischenpostfach, bis Sie sie abholen — für uns nicht lesbar, nach dreißig Tagen automatisch gelöscht. Ihre Praxisdaten selbst verlassen Ihren Browser nie.</p></div>
-      <div class="usp"><h4>Braucht meine Praxis eigene Sensoren?</h4><p>Für die reine Auswertung nicht. Gemessen wird beim Pferd, mit einem Polar&nbsp;H10 — den die Halterin besitzt oder sich anschafft.</p></div>
-      <div class="usp"><h4>Funktioniert das bei jedem Pferd sofort?</h4><p>Für die Verlaufsbeurteilung braucht es zuerst eine belastbare individuelle Baseline. Eine einzelne Messung ohne Vorgeschichte zeigt einen Wert, keinen Verlauf — und wird auch so dargestellt.</p></div>
-      <div class="usp"><h4>Was passiert nach dem Abo?</h4><p>Die Anwendung wechselt in den Demo-Modus. Ihre Daten bleiben auf dem Gerät und lassen sich weiterhin öffnen und exportieren. Wir könnten sie gar nicht löschen — sie liegen bei Ihnen.</p></div>
-    </div>
-  </section>
-
-  <!-- SCHLUSS -->
-  <section class="final wrap rev">
-    <div class="sec-eyebrow">Selbst ansehen</div>
-    <h2>Fünfzehn Demo-Pferde. <em>Kein Termin nötig.</em></h2>
-    <p class="sec-lead">Das Cockpit führt sich selbst vor — mit fünfzehn Pferden, echten Verläufen und allem, was ein Praxistag braucht. Öffnen, durchklicken, selbst entscheiden. Wenn danach Fragen bleiben, sprechen wir darüber.</p>
-    <div class="cta-row" style="justify-content:center">
-      <a class="cta-primary" href="/carlon-equine/app/" data-track="entwurf:demo-final">Cockpit öffnen →</a>
-    </div>
-    <p style="margin-top:22px;font-size:13px;color:var(--text-dim);text-align:center">Für mobile Pferdetierärzte und Kliniken · 79 € netto im Monat · persönliche Einführung, wenn Sie sie wünschen</p>
-  </section>
-
-  <!-- Lightbox -->
-  <div class="lb-overlay" id="lightbox" role="dialog" aria-modal="true" aria-label="Vergrößerte Ansicht">
-    <button class="lb-close" id="lbClose" aria-label="Schließen">×</button>
-    <button class="lb-nav lb-prev" id="lbPrev" aria-label="Vorheriges Bild">‹</button>
-    <img id="lbImg" src="" alt="">
-    <button class="lb-nav lb-next" id="lbNext" aria-label="Nächstes Bild">›</button>
-    <div class="lb-cap" id="lbCap"></div>
+    <p class="cta-note">Kein Konto, keine Anmeldung, kein Download. Das Demo-Cockpit ist die vollständige Anwendung mit echten Beispielverläufen.</p>
   </div>
-</main>
-</main>
+</section>
+
+<!-- ── 2 · DER STRUKTURELLE VORTEIL ────────────────────────────────────
+     Das stärkste Argument der ganzen Seite, und es ist kein Marketing:
+     Der Screener verlangt ≥ 7 Minuten Ruhe. Nach Verladung und Fahrt ist
+     diese Bedingung systematisch nicht erfüllt. -->
+<section class="usps">
+  <div class="wrap">
+    <div class="sec-eyebrow">Der Unterschied, der vor der Messung entsteht</div>
+    <h2>Ein Pferd, das gerade transportiert wurde, misst nicht sich selbst.</h2>
+    <p class="sec-lead">
+      Herzfrequenzvariabilität ist ein Maß für Erholung. Verladen, Fahrt, fremde Halle,
+      fremde Menschen — all das verändert genau die Größe, die Sie beurteilen wollen.
+      Die Auswertung, die wir einsetzen, verlangt ausdrücklich <strong>mindestens sieben
+      Minuten Ruhe in gewohnter Umgebung</strong>. Eine Messung nach der Ankunft in der
+      Klinik erfüllt diese Bedingung systematisch nicht.
+    </p>
+    <div class="usp">
+      <h3>Gewohnte Box statt Untersuchungsraum</h3>
+      <p>Die Halterin legt den Gurt an, das Pferd steht wie immer. Kein Transport, keine
+         Aufregung durch Fremde, kein sperriges Gerät im Weg.</p>
+    </div>
+    <div class="usp">
+      <h3>Sie bekommen die Aufnahme, nicht den Termin</h3>
+      <p>Die Sendung liegt im Cockpit, wenn Sie Zeit haben. Sie entscheiden danach, ob und
+         wann ein Besuch nötig ist — und sehen vorher, wie dringend.</p>
+    </div>
+    <div class="usp">
+      <h3>Wiederholbar, ohne dass jemand fährt</h3>
+      <p>Eine Kontrolle in zwei Wochen kostet niemanden eine Anfahrt. Genau daraus entsteht
+         der Verlauf, den eine Momentaufnahme nie liefern kann.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ── 3 · LEISTUNG ─────────────────────────────────────────────────── -->
+<section>
+  <div class="wrap">
+    <div class="sec-eyebrow">Was im Cockpit steht</div>
+    <h2>Ein Blick, dann die Tiefe.</h2>
+    <p class="sec-lead">Oben das Urteil und der eine Grund dafür. Darunter alles, was Sie
+       zum Nachrechnen brauchen — nichts davon versteckt.</p>
+    <div class="grid">
+      <div class="card">
+        <h3>Einordnung mit Begründung</h3>
+        <p>Vier Stufen von stabil bis kritisch, immer mit dem Wert, der sie ausgelöst hat —
+           und mit der Abweichung von der Baseline <em>dieses</em> Pferds, nicht von einem
+           Lehrbuchwert.</p>
+      </div>
+      <div class="card">
+        <h3>Signalgüte, bevor Sie deuten</h3>
+        <p>Anteil auswertbarer Schlagpaare, Artefaktrate, korrigierte AV-Block-Pausen.
+           Eine Aufnahme, die nichts trägt, sagt Ihnen das — statt eine Zahl zu zeigen.</p>
+      </div>
+      <div class="card">
+        <h3>Atemwegs-Screening im Verlauf</h3>
+        <p>HRV-basierte Marker mit ihren Schwellen, einzeln aufgeführt. Kalibriert gegen
+           eine veröffentlichte Studie mit BAL-Referenz. Ein <strong>Screening</strong>,
+           ausdrücklich keine Diagnose.</p>
+      </div>
+      <div class="card">
+        <h3>Die üblichen Ansichten, in guter Auflösung</h3>
+        <p>Tachogramm, Poincaré, Spektrum, DFA, Histogramm — dieselben Darstellungen wie
+           in der iOS-App, im Vollbild neu gezeichnet statt hochskaliert.</p>
+      </div>
+      <div class="card">
+        <h3>Befund und Abrechnung an einer Stelle</h3>
+        <p>Befundbericht mit Ihrem Briefkopf, Rückmeldung an die Halterin, und eine
+           Übersicht, was noch offen ist.</p>
+      </div>
+      <div class="card">
+        <h3>Export ohne Sackgasse</h3>
+        <p>JSON, CSV, Kubios-kompatibel — und <strong>FHIR&nbsp;R5</strong> mit
+           LOINC-Codes für die Praxissoftware.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── 4 · VERTRAUEN: DER FILTER ───────────────────────────────────────
+     Der eigentliche Burggraben, und er lässt sich zeigen. -->
+<section class="trust">
+  <div class="wrap">
+    <div class="sec-eyebrow">Warum die Zahlen tragen</div>
+    <h2>Beim Pferd sind Pausen normal. Wer sie mitrechnet, misst Unsinn.</h2>
+    <p class="sec-lead">
+      Ein ruhendes Pferd zeigt AV-Block-Pausen — physiologisch, kein Befund. Rechnet man
+      sie roh mit, steigen SDNN und RMSSD dramatisch, und die Marker, die bei
+      <em>kleinen</em> Werten anschlagen, kippen ins Gegenteil.
+    </p>
+    <div class="usp">
+      <h3>Dieselbe Filterkette wie in der App, nicht eine nachgebaute</h3>
+      <p>Fünf Stufen, AV-Block-Erkennung mit Spline-Korrektur, Bewegungs-Artefakte,
+         Plausibilitätsgrenzen. Wir haben sie aus dem Original portiert und Wert für Wert
+         gegen die kompilierte Fassung geprüft, auf Bitmuster.</p>
+    </div>
+    <div class="usp">
+      <h3>Was das ausmacht — an zwanzig Ruheaufnahmen geprüft</h3>
+      <p>Ohne diese Vorstufe fiel in <strong>acht von zwanzig</strong> Aufnahmen die
+         Atemwegs-Einstufung anders aus, jedes Mal zu auffällig. Mit ihr: kein einziger
+         Unterschied mehr zur App-Auswertung.</p>
+    </div>
+    <div class="usp">
+      <h3>Und dort, wo es nicht reicht, sagt es das</h3>
+      <p>Zu wenige Schläge, zu kurz, zu viele Artefakte — dann steht „Datengrundlage zu
+         klein" und kein Urteil. Ein Werkzeug, das immer etwas sagt, ist kein Werkzeug.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ── 5 · DER VERLAUF ─────────────────────────────────────────────── -->
+<section>
+  <div class="wrap">
+    <div class="sec-eyebrow">Was eine Momentaufnahme nicht kann</div>
+    <h2>Die Richtung ist die Information.</h2>
+    <p class="sec-lead">
+      Ein einzelner HRV-Wert beim Pferd sagt wenig — es gibt keinen belastbaren
+      Normwert, an dem man ihn messen könnte. Aussagekräftig wird er erst gegen die
+      eigene Vorgeschichte des Tieres.
+    </p>
+    <div class="grid">
+      <div class="card">
+        <h3>Über Wochen statt über Minuten</h3>
+        <p>Jede neue Aufnahme reiht sich ein. Sie sehen, ob sich die Marker verbessern,
+           halten oder verschlechtern — mit Zeitfenster, Anzahl der Messungen und der
+           Veränderung als Zahl.</p>
+      </div>
+      <div class="card">
+        <h3>Nach einer Umstellung sichtbar</h3>
+        <p>Haltung, Fütterung, Management, Rekonvaleszenz: Die Kontrollmessung kostet
+           keine Anfahrt, also findet sie auch statt. Als Beobachtung — die Bewertung
+           bleibt bei Ihnen.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── 6 · ANSCHLUSS ──────────────────────────────────────────────── -->
+<section>
+  <div class="wrap">
+    <div class="sec-eyebrow">Anschluss</div>
+    <h2>Der Befund bleibt nicht in unserem Fenster stehen.</h2>
+    <p class="sec-lead">
+      Jede Aufnahme lässt sich als <strong>FHIR&nbsp;R5</strong> ausgeben — als
+      <code>Observation</code> mit LOINC-Codes und UCUM-Einheiten, das Pferd als
+      <code>Patient</code> mit den Kennungen, die Sie ohnehin führen: Praxissoftware-Nummer,
+      UELN, Mikrochip, Pass. Dazu JSON, CSV und ein Kubios-kompatibler Export für die
+      Forschung, und ein SHA-256-Prüfwert je Datensatz für die Dokumentation.
+    </p>
+  </div>
+</section>
+
+<!-- ── 7 · VERZICHT ───────────────────────────────────────────────── -->
+<section class="rev">
+  <div class="wrap">
+    <div class="sec-eyebrow">Grenzen, die wir selbst ziehen</div>
+    <h2>Was CARLON bewusst nicht tut.</h2>
+    <div class="grid">
+      <div class="card">
+        <h3>Keine Diagnose</h3>
+        <p>Die Software zeigt Messwerte, Signalqualität, Verlauf und Abweichung. Die
+           medizinische Deutung bleibt vollständig bei Ihnen. CARLON Equine Visite ist
+           kein Medizinprodukt im Sinne der Verordnung (EU) 2017/745.</p>
+      </div>
+      <div class="card">
+        <h3>Keine Behandlungsempfehlung</h3>
+        <p>Auch wenn ein Verlauf eindeutig aussieht: Ob etwas geändert wird, steht nirgends
+           auf dem Schirm. Das ist Ihre Entscheidung, nicht die einer Kennzahl.</p>
+      </div>
+      <div class="card">
+        <h3>Keine Datenbank bei uns</h3>
+        <p>Ihre Patienten liegen im Speicher Ihres Geräts. Wir haben keinen Zugriff und
+           könnten sie auch nicht löschen. Was zwischen Halterin und Praxis läuft, ist
+           verschlüsselt und für uns unlesbar.</p>
+      </div>
+      <div class="card">
+        <h3>Kein Notfallweg</h3>
+        <p>Eine Sendung ist kein Anruf. Bei akuten Beschwerden gilt, was immer gilt —
+           unmittelbar tierärztlich handeln.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── 8 · PREIS ──────────────────────────────────────────────────── -->
+<section id="preis" class="tarife">
+  <div class="wrap">
+    <div class="sec-eyebrow">Ein Preis, eine Praxis</div>
+    <h2>Kein Staffelmodell, keine Verhandlung.</h2>
+    <p class="sec-lead">
+      Ein Betrieb — eine Praxis oder ein Standort — mit allen tierärztlichen und
+      tiermedizinischen Mitarbeitenden und auf beliebig vielen Geräten dieses Betriebs.
+      Es gibt keinen Aufpreis je Pferd und keine Grenze für Aufnahmen.
+    </p>
+    <div class="tarif">
+      <div class="tarif-preis"><b>790&nbsp;€</b> <span>pro Jahr, zzgl. USt</span></div>
+      <div class="tarif-alt">oder 79&nbsp;€ monatlich · das Jahresabo entspricht 65,83&nbsp;€ im Monat</div>
+      <ul class="enthalten">
+        <li>Unbegrenzt Pferde, Aufnahmen und Verläufe</li>
+        <li>Alle Mitarbeitenden, alle Geräte des Betriebs</li>
+        <li>Befundbericht mit eigenem Briefkopf</li>
+        <li>Export als JSON, CSV, Kubios und FHIR&nbsp;R5</li>
+        <li>Monatlich kündbar zum Ende der Abrechnungsperiode</li>
+      </ul>
+      <p class="tarif-fuss">
+        Das Angebot richtet sich ausschließlich an Unternehmer im Sinne des § 14 BGB.
+        Zahlung, Rechnung und Umsatzsteuer laufen über unseren Zahlungsdienstleister als
+        Merchant of Record. Einzelheiten in
+        <a href="/agb.html#visite">§ 12a unserer AGB</a> und in der
+        <a href="/privacy.html">Datenschutzerklärung</a>.
+      </p>
+    </div>
+    <p class="sec-lead" style="margin-top:26px">
+      Zum Einordnen: Der Jahrespreis liegt in der Größenordnung eines einzelnen
+      Praxisbesuchs mit Anfahrt. Ob sich das trägt, entscheiden Sie am besten an Ihren
+      eigenen Zahlen — nicht an unseren.
+    </p>
+  </div>
+</section>
+
+<!-- ── 9 · DER ABSCHLUSS: RISIKO NULL ─────────────────────────────── -->
+<section class="final">
+  <div class="wrap">
+    <div class="sec-eyebrow">Bevor Sie irgendetwas entscheiden</div>
+    <h2>Fünfzehn Demo-Pferde. Echte Verläufe. Kein Konto.</h2>
+    <p class="sec-lead">
+      Das Demo-Cockpit ist nicht ein Video und keine Bildstrecke, sondern die vollständige
+      Anwendung. Öffnen Sie eine Akte, drehen Sie an den Ansichten, drucken Sie einen
+      Befund. Ein Pferd im Bestand zeigt einen Abwärtsverlauf über vier Wochen — sehen Sie
+      selbst, ab wann er auffällt.
+    </p>
+    <div class="cta-row">
+      <a class="cta-primary" href="/carlon-equine/app/">Cockpit mit 15&nbsp;Demo-Pferden öffnen →</a>
+    </div>
+    <p class="cta-note">Läuft im Browser. Nichts wird installiert, nichts übertragen, nichts angelegt.</p>
+  </div>
+</section>
+
+<!-- ── 10 · FAQ ───────────────────────────────────────────────────── -->
+<section>
+  <div class="wrap">
+    <div class="sec-eyebrow">Häufige Fragen</div>
+    <h2>Was Tierärzte uns zuerst fragen.</h2>
+    <div class="grid">
+      <div class="card">
+        <h3>Ersetzt CARLON eine Untersuchung?</h3>
+        <p>Nein. CARLON bereitet Verlaufsdaten auf und hilft bei der Reihenfolge. Ob eine
+           klinische Untersuchung, weitere Diagnostik oder eine Behandlung nötig ist,
+           entscheiden ausschließlich Sie.</p>
+      </div>
+      <div class="card">
+        <h3>Was braucht die Halterin?</h3>
+        <p>Einen handelsüblichen Brustgurt und ein Android-Gerät oder einen Rechner mit
+           Chrome oder Edge. Auf iPhone und iPad lässt Apple Bluetooth im Browser nicht zu;
+           die Seite führt dort auf ein messfähiges Gerät.</p>
+      </div>
+      <div class="card">
+        <h3>Was passiert nach einer Kündigung?</h3>
+        <p>Die Anwendung wechselt in einen funktionsreduzierten Modus. Ihre Daten bleiben
+           auf dem Gerät und lassen sich weiterhin öffnen und exportieren. Wir könnten sie
+           gar nicht löschen — sie liegen bei Ihnen.</p>
+      </div>
+      <div class="card">
+        <h3>Brauche ich einen Auftragsverarbeitungsvertrag?</h3>
+        <p>Das Cockpit läuft vollständig in Ihrem Browser; Patientendaten erreichen uns
+           nicht. Für den verschlüsselten Transportweg zwischen Halterin und Praxis klären
+           wir die Einordnung derzeit anwaltlich ab und sagen Ihnen das Ergebnis, bevor Sie
+           es brauchen.</p>
+      </div>
+    </div>
+  </div>
+</section>
 
 <footer>
   <div class="footer-brand">CARLON EQUINE VISITE</div>
