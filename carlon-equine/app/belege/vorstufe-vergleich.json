@@ -1,0 +1,463 @@
+[
+ {
+  "id": "S01",
+  "name": "Sauber · 32 bpm · 12 min · hohe Variabilitaet (gesund)",
+  "app": {
+   "txt": "moderate",
+   "score": 1.6
+  },
+  "neu": {
+   "txt": "moderate",
+   "score": 1.6
+  },
+  "alt": {
+   "txt": "moderate",
+   "score": 2.1
+  },
+  "kipptNeu": false,
+  "kipptAlt": false,
+  "flipsNeu": [],
+  "flipsAlt": [
+   "LF_HF_acute: false → true"
+  ]
+ },
+ {
+  "id": "S02",
+  "name": "Sauber · 38 bpm · 10 min · mittlere Variabilitaet",
+  "app": {
+   "txt": "high",
+   "score": 5.2
+  },
+  "neu": {
+   "txt": "high",
+   "score": 5.2
+  },
+  "alt": {
+   "txt": "high",
+   "score": 5.7
+  },
+  "kipptNeu": false,
+  "kipptAlt": false,
+  "flipsNeu": [],
+  "flipsAlt": [
+   "LF_HF_acute: false → true"
+  ]
+ },
+ {
+  "id": "S03",
+  "name": "Sauber · 42 bpm · 9 min · NIEDRIGE Variabilitaet (sEA-aehnlich)",
+  "app": {
+   "txt": "high",
+   "score": 7
+  },
+  "neu": {
+   "txt": "high",
+   "score": 7
+  },
+  "alt": {
+   "txt": "high",
+   "score": 7
+  },
+  "kipptNeu": false,
+  "kipptAlt": false,
+  "flipsNeu": [],
+  "flipsAlt": []
+ },
+ {
+  "id": "S04",
+  "name": "Sauber · 28 bpm · 20 min · sehr ruhiges Pferd, lange Aufnahme",
+  "app": {
+   "txt": "moderate",
+   "score": 1.6
+  },
+  "neu": {
+   "txt": "moderate",
+   "score": 1.6
+  },
+  "alt": {
+   "txt": "moderate",
+   "score": 2.1
+  },
+  "kipptNeu": false,
+  "kipptAlt": false,
+  "flipsNeu": [],
+  "flipsAlt": [
+   "LF_HF_acute: false → true"
+  ]
+ },
+ {
+  "id": "A05",
+  "name": "Artefakte 1 % · 34 bpm · 12 min",
+  "app": {
+   "txt": "moderate",
+   "score": 1.6
+  },
+  "neu": {
+   "txt": "moderate",
+   "score": 1.6
+  },
+  "alt": {
+   "txt": "high",
+   "score": 3.6
+  },
+  "kipptNeu": false,
+  "kipptAlt": true,
+  "flipsNeu": [],
+  "flipsAlt": [
+   "DFA_alpha1: false → true",
+   "LF_HF_acute: false → true"
+  ]
+ },
+ {
+  "id": "A06",
+  "name": "Artefakte 3 % · 34 bpm · 12 min",
+  "app": {
+   "txt": "moderate",
+   "score": 1.6
+  },
+  "neu": {
+   "txt": "moderate",
+   "score": 1.6
+  },
+  "alt": {
+   "txt": "high",
+   "score": 3.6
+  },
+  "kipptNeu": false,
+  "kipptAlt": true,
+  "flipsNeu": [],
+  "flipsAlt": [
+   "DFA_alpha1: false → true",
+   "LF_HF_acute: false → true"
+  ]
+ },
+ {
+  "id": "A07",
+  "name": "Artefakte 6 % · 36 bpm · 11 min",
+  "app": {
+   "txt": "insufficient",
+   "score": 0
+  },
+  "neu": {
+   "txt": "insufficient",
+   "score": 0
+  },
+  "alt": {
+   "txt": "high",
+   "score": 5.2
+  },
+  "kipptNeu": false,
+  "kipptAlt": true,
+  "flipsNeu": [],
+  "flipsAlt": [
+   "SDNN: fehlt → false",
+   "SD2: fehlt → false",
+   "SD2/SD1: fehlt → true",
+   "TINN: fehlt → true",
+   "DFA_alpha1: fehlt → true",
+   "SampEn: fehlt → false",
+   "HR_acute: fehlt → false",
+   "LF_HF_acute: fehlt → true"
+  ]
+ },
+ {
+  "id": "A08",
+  "name": "Artefakte 12 % · 36 bpm · 11 min",
+  "app": {
+   "txt": "kein Ergebnis",
+   "score": null
+  },
+  "neu": {
+   "txt": "kein Ergebnis",
+   "score": null
+  },
+  "alt": {
+   "txt": "high",
+   "score": 5.2
+  },
+  "kipptNeu": false,
+  "kipptAlt": true,
+  "flipsNeu": [],
+  "flipsAlt": [
+   "SDNN: fehlt → false",
+   "SD2: fehlt → false",
+   "SD2/SD1: fehlt → true",
+   "TINN: fehlt → true",
+   "DFA_alpha1: fehlt → true",
+   "SampEn: fehlt → false",
+   "HR_acute: fehlt → false",
+   "LF_HF_acute: fehlt → true"
+  ]
+ },
+ {
+  "id": "B09",
+  "name": "AV-Block · 5 Pausen · 30 bpm · 13 min",
+  "app": {
+   "txt": "moderate",
+   "score": 1.6
+  },
+  "neu": {
+   "txt": "moderate",
+   "score": 1.6
+  },
+  "alt": {
+   "txt": "moderate",
+   "score": 2.1
+  },
+  "kipptNeu": false,
+  "kipptAlt": false,
+  "flipsNeu": [],
+  "flipsAlt": [
+   "LF_HF_acute: false → true"
+  ]
+ },
+ {
+  "id": "B10",
+  "name": "AV-Block · 18 Pausen · 30 bpm · 13 min",
+  "app": {
+   "txt": "moderate",
+   "score": 1.6
+  },
+  "neu": {
+   "txt": "moderate",
+   "score": 1.6
+  },
+  "alt": {
+   "txt": "high",
+   "score": 3.6
+  },
+  "kipptNeu": false,
+  "kipptAlt": true,
+  "flipsNeu": [],
+  "flipsAlt": [
+   "DFA_alpha1: false → true",
+   "LF_HF_acute: false → true"
+  ]
+ },
+ {
+  "id": "B11",
+  "name": "AV-Block · 40 Pausen · 29 bpm · 15 min",
+  "app": {
+   "txt": "moderate",
+   "score": 1.6
+  },
+  "neu": {
+   "txt": "moderate",
+   "score": 1.6
+  },
+  "alt": {
+   "txt": "high",
+   "score": 4.6
+  },
+  "kipptNeu": false,
+  "kipptAlt": true,
+  "flipsNeu": [],
+  "flipsAlt": [
+   "DFA_alpha1: false → true",
+   "SampEn: false → true",
+   "LF_HF_acute: false → true"
+  ]
+ },
+ {
+  "id": "B12",
+  "name": "AV-Block 20 Pausen + Artefakte 2 % · 33 bpm · 12 min",
+  "app": {
+   "txt": "moderate",
+   "score": 1.6
+  },
+  "neu": {
+   "txt": "moderate",
+   "score": 1.6
+  },
+  "alt": {
+   "txt": "high",
+   "score": 3.6
+  },
+  "kipptNeu": false,
+  "kipptAlt": true,
+  "flipsNeu": [],
+  "flipsAlt": [
+   "DFA_alpha1: false → true",
+   "LF_HF_acute: false → true"
+  ]
+ },
+ {
+  "id": "R13",
+  "name": "Sehr ruhig · 28 bpm · 7,2 min · knapp ueber 200 Schlaegen",
+  "app": {
+   "txt": "moderate",
+   "score": 1.6
+  },
+  "neu": {
+   "txt": "moderate",
+   "score": 1.6
+  },
+  "alt": {
+   "txt": "moderate",
+   "score": 2.1
+  },
+  "kipptNeu": false,
+  "kipptAlt": false,
+  "flipsNeu": [],
+  "flipsAlt": [
+   "LF_HF_acute: false → true"
+  ]
+ },
+ {
+  "id": "R14",
+  "name": "Sehr ruhig · 28 bpm · 7,0 min · GENAU an der 200er-Kante",
+  "app": {
+   "txt": "insufficient",
+   "score": 0
+  },
+  "neu": {
+   "txt": "insufficient",
+   "score": 0
+  },
+  "alt": {
+   "txt": "insufficient",
+   "score": 0
+  },
+  "kipptNeu": false,
+  "kipptAlt": false,
+  "flipsNeu": [],
+  "flipsAlt": []
+ },
+ {
+  "id": "R15",
+  "name": "Sehr ruhig · 29 bpm · 7,5 min · niedrige Variabilitaet",
+  "app": {
+   "txt": "high",
+   "score": 7
+  },
+  "neu": {
+   "txt": "high",
+   "score": 7
+  },
+  "alt": {
+   "txt": "high",
+   "score": 7.5
+  },
+  "kipptNeu": false,
+  "kipptAlt": false,
+  "flipsNeu": [],
+  "flipsAlt": [
+   "LF_HF_acute: false → true"
+  ]
+ },
+ {
+  "id": "K16",
+  "name": "Kurz · 40 bpm · 7,1 min · knapp UEBER 420 s",
+  "app": {
+   "txt": "moderate",
+   "score": 3.2
+  },
+  "neu": {
+   "txt": "moderate",
+   "score": 3.2
+  },
+  "alt": {
+   "txt": "moderate",
+   "score": 3.2
+  },
+  "kipptNeu": false,
+  "kipptAlt": false,
+  "flipsNeu": [],
+  "flipsAlt": []
+ },
+ {
+  "id": "K17",
+  "name": "Kurz · 40 bpm · 6,9 min · knapp UNTER 420 s",
+  "app": {
+   "txt": "insufficient",
+   "score": 0
+  },
+  "neu": {
+   "txt": "insufficient",
+   "score": 0
+  },
+  "alt": {
+   "txt": "insufficient",
+   "score": 0
+  },
+  "kipptNeu": false,
+  "kipptAlt": false,
+  "flipsNeu": [],
+  "flipsAlt": []
+ },
+ {
+  "id": "K18",
+  "name": "Kurz + Artefakte 4 % · 44 bpm · 7,3 min",
+  "app": {
+   "txt": "insufficient",
+   "score": 0
+  },
+  "neu": {
+   "txt": "insufficient",
+   "score": 0
+  },
+  "alt": {
+   "txt": "high",
+   "score": 4.7
+  },
+  "kipptNeu": false,
+  "kipptAlt": true,
+  "flipsNeu": [],
+  "flipsAlt": [
+   "SDNN: fehlt → false",
+   "SD2: fehlt → false",
+   "SD2/SD1: fehlt → true",
+   "TINN: fehlt → true",
+   "DFA_alpha1: fehlt → false",
+   "SampEn: fehlt → true",
+   "HR_acute: fehlt → false",
+   "LF_HF_acute: fehlt → true"
+  ]
+ },
+ {
+  "id": "G19",
+  "name": "Grenzlage · 36 bpm · 11 min · SDNN/SD2 knapp an den Schwellen",
+  "app": {
+   "txt": "high",
+   "score": 7
+  },
+  "neu": {
+   "txt": "high",
+   "score": 7
+  },
+  "alt": {
+   "txt": "high",
+   "score": 7
+  },
+  "kipptNeu": false,
+  "kipptAlt": false,
+  "flipsNeu": [],
+  "flipsAlt": []
+ },
+ {
+  "id": "G20",
+  "name": "Grenzlage + AVB 10 · 36 bpm · 11 min",
+  "app": {
+   "txt": "high",
+   "score": 7
+  },
+  "neu": {
+   "txt": "high",
+   "score": 7
+  },
+  "alt": {
+   "txt": "high",
+   "score": 6.2
+  },
+  "kipptNeu": false,
+  "kipptAlt": false,
+  "flipsNeu": [],
+  "flipsAlt": [
+   "SDNN: true → false",
+   "SD2: true → false",
+   "DFA_alpha1: false → true",
+   "SampEn: false → true",
+   "LF_HF_acute: false → true"
+  ]
+ }
+]
