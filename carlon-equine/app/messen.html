@@ -59,6 +59,17 @@
    fiel die ganze Seite auf System-Fonts zurück — die Marke war unsichtbar. */
 @font-face{font-family:'Jost';font-style:normal;font-weight:300 700;font-display:swap;src:url('assets/fonts/jost-variable.woff2') format('woff2')}
 @font-face{font-family:'Inter';font-style:normal;font-weight:400 700;font-display:swap;src:url('assets/fonts/inter-variable.woff2') format('woff2')}
+  .brauchst{list-style:none;margin:var(--s3) 0 0;padding:0;max-width:52ch;
+            margin-left:auto;margin-right:auto;text-align:left}
+  .brauchst li{position:relative;padding-left:22px;margin-bottom:6px;
+               font-size:13px;line-height:1.55;color:var(--sec)}
+  .brauchst li::before{content:"";position:absolute;left:4px;top:8px;width:6px;height:6px;
+                       border-radius:50%;background:var(--acc,#3ECFB2);opacity:.8}
+  /* WCAG-Mindestgroesse fuer Beruehrziele. Gemessen: Impressum, Datenschutz
+     und AGB lagen bei unter 44 px — genau die Zeile, die ich gestern fuer
+     die Einbeziehung nach § 305 Abs. 2 BGB ergaenzt habe. Erreichbar heisst
+     auch: mit dem Daumen im Stall treffbar. */
+  .rechtsweg a{display:inline-block;min-height:44px;line-height:44px;padding:0 10px}
 </style>
 <style>
 /* ============================================================================
@@ -780,7 +791,17 @@ const HAUS={ appImStore:false, appUrl:'https://carlon.app' };
   <div id="vReady" class="hidden">
     <h1 data-i18n="readyH1">Messung für den Tierarzt</h1>
     <p class="sub" data-i18n="readySub">Verbinde den Polar-H10-Gurt deines Pferds. Die Aufnahme geht direkt an deine Tierärztin oder deinen Tierarzt — ohne Umweg über einen Server.</p>
-    <div class="room" id="roomLine"></div>
+    <!-- Erwartung VOR dem Knopf, nicht danach. Die sieben Minuten standen
+       bisher erst im Fortschrittstext — wer sie erst nach dem Start liest,
+       hat das Pferd schon angebunden und plant mit drei Minuten. Und die
+       beiden Zusagen (ohne Konto, verschluesselt) gehoeren dorthin, wo
+       jemand entscheidet, ob er anfaengt. -->
+  <ul class="brauchst" data-i18n-list="brauchst">
+    <li>Polar-H10-Gurt angelegt und die Elektrodenflaeche angefeuchtet</li>
+    <li>Etwa sieben Minuten Ruhe — kuerzer traegt die Auswertung nicht</li>
+    <li>Ohne Konto, ohne App · die Aufnahme wird verschluesselt uebergeben</li>
+  </ul>
+  <div class="room" id="roomLine"></div>
     <div class="field">
       <label for="horse" data-i18n="horseLabel">Name des Pferds</label>
       <input id="horse" type="text" placeholder="z. B. Mistral" data-i18n-ph="horsePh" autocomplete="off" spellcheck="false">
@@ -1099,11 +1120,20 @@ const HAUS={ appImStore:false, appUrl:'https://carlon.app' };
 <script>
 (function(){
   const d=document.getElementById('dach'); if(!d) return;
-  /* Die volle Produktmarke, nicht die halbe: DIESE Seite ist CARLON EQUINE.
+  /* 🔴 DAS ZEICHEN, NICHT DAS APP-ICON (09.08.2026).
+     Hier stand assets/icon-512.png — das App-Icon. Es traegt per
+     iOS-Konvention einen deckenden, gerundeten Kasten (Ecke Alpha 255),
+     und der stand im Fussband als schwarzes Quadrat um die Marke,
+     waehrend die Kopfzeile das freie Zeichen zeigt. Zwei Marken-
+     darstellungen auf einer Seite, eine davon billig.
+     carlon-logo-soft-128.png ist freigestellt (Ecke Alpha < 30) und
+     dasselbe Zeichen wie oben. Gemessen, nicht geschaetzt.
+
+     Die volle Produktmarke, nicht die halbe: DIESE Seite ist CARLON EQUINE.
      Die Menschen-Seite wird im Satz genannt, nicht in der Marke — sonst
      stuenden zwei Marken nebeneinander und keine wuerde erinnert. */
   d.innerHTML='<a class="dm" href="https://carlon.app" target="_blank" rel="noopener">'
-    +'<img src="assets/icon-512.png" alt=""><span>CARLON EQUINE</span></a>'
+    +'<img src="assets/carlon-logo-soft-128.png" alt=""><span>CARLON EQUINE</span></a>'
     +'<span>Herzrhythmen messen — beim Pferd, und mit CARLON auch beim Menschen. '
     +'Zwischen beiden ist eine gerichtete Kopplung beschrieben worden '
     +'(Callara et al., iScience 2024; kleine, explorative Studie).'
@@ -1213,6 +1243,7 @@ de:{
  pSensor:'Sensor', pRes:'Zeitauflösung', pResV:'1/1024 s · ≈1 ms',
  send:'An die Praxis senden', save:'Als Datei speichern', again:'Neue Messung',
  privacyLine:'Ende-zu-Ende verschlüsselt · kein Server kann die Messwerte lesen',
+ brauchst:['Polar-H10-Gurt angelegt und die Elektrodenfläche angefeuchtet','Etwa sieben Minuten Ruhe — kürzer trägt die Auswertung nicht','Ohne Konto, ohne App · die Aufnahme wird verschlüsselt übergeben'],
  qrHint:'Oder mit dem Gerät scannen, das messen soll — Laptop oder Android-Tablet. Dabei verlässt nichts dein Telefon.',
  rechtLinks:'<a href="/impressum.html">Impressum</a> · <a href="/privacy.html">Datenschutz</a> · <a href="/agb.html">AGB</a>',
  sendRecht:'Mit dem Senden gilt die Übergabe nach <a href="/agb.html#postfach">§ 12b der AGB</a>: verschlüsselt, spätestens nach 30 Tagen gelöscht, keine Zusage einer Beurteilung. Was dabei gespeichert wird, steht in der <a href="/privacy.html">Datenschutzerklärung</a>.',
@@ -1307,6 +1338,7 @@ en:{
  pSensor:'Sensor', pRes:'Time resolution', pResV:'1/1024 s · ≈1 ms',
  send:'Send to the practice', save:'Save as a file', again:'New recording',
  privacyLine:'End-to-end encrypted · no server can read the measurements',
+ brauchst:['Polar H10 belt fitted and the electrode area moistened','About seven minutes of rest — shorter does not carry the assessment','No account, no app · the recording is handed over encrypted'],
  qrHint:'Or scan it with the device that should measure — laptop or Android tablet. Nothing leaves your phone.',
  rechtLinks:'<a href="/impressum.html">Imprint</a> · <a href="/privacy-en.html">Privacy</a> · <a href="/terms.html">Terms</a>',
  sendRecht:'By sending, the handover under <a href="/terms.html#relay">section 9a of the Terms</a> applies: encrypted, deleted after 30 days at the latest, with no promise of an assessment. What is stored is set out in the <a href="/privacy-en.html">privacy policy</a>.',
@@ -1373,6 +1405,12 @@ function freienBesuchAnpassen(){
   }catch(e){ /* Im Zweifel bleibt der Aushang-Text stehen — nie ein leerer Kopf. */ }
 }
 function applyLang(){
+  /* Listen: ein Schluessel, mehrere Zeilen. Sonst muesste jede Zeile einen
+     eigenen Eintrag bekommen und eine vergessene faellt still auf Deutsch. */
+  document.querySelectorAll('[data-i18n-list]').forEach(el=>{
+    const v=t(el.getAttribute('data-i18n-list'),null);
+    if(Array.isArray(v)) el.innerHTML=v.map(z=>'<li>'+z+'</li>').join('');
+  });
   document.querySelectorAll('[data-i18n]').forEach(el=>{
     const v=t(el.getAttribute('data-i18n'),null);
     if(v!=null) el.innerHTML=v;
