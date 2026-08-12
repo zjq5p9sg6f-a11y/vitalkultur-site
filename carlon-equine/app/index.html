@@ -7880,6 +7880,7 @@ const Postfach={
   async _ruf(pfad, leib){
     const r=await fetch(this.DIENST+pfad,{method:'POST',
       headers:{'Content-Type':'application/json'}, body:JSON.stringify(leib)});
+      License.ZEIT.ausAntwort(r);   // Serverzeit ernten, kostet keine Anfrage
     return r.json().catch(()=>({ok:false,grund:'HTTP '+r.status}));
   },
   /* ── ÜBERGABE EMPFANGEN ────────────────────────────────────────────
@@ -8051,6 +8052,64 @@ const Postfach={
    ════════════════════════════════════════════════════════════════════════ */
 const License={
   PUB:{kty:'EC',crv:'P-256',x:'pqbiPaa-gOiZKjeRsQ7XMRe9am5L7giiV48Qjzp3enY',y:'5lg4Ipa-paTigXd7rxitFKwpee8h1Lu0W5eod1mYOok'},
+  /* ── ZEITWÄCHTER ────────────────────────────────────────────────────
+     DAS LOCH, DAS EIN ABLAUFDATUM ALLEIN NICHT SCHLIESST (12.08.2026)
+
+     Die Lizenz laeuft ab, wenn `exp` in der Vergangenheit liegt. Verglichen
+     wurde bisher gegen Date.now() — also gegen eine Uhr, die dem Nutzer
+     gehoert. Wer sie zurueckdreht, hat eine unbegrenzte Lizenz. Bei einem
+     Beta-Tester, der ohnehin kostenlos arbeitet, ist das kein Randfall,
+     sondern die naheliegendste Handlung der Welt.
+
+     Die Abwehr ist eine Hochwassermarke: der hoechste jemals gesehene
+     Zeitpunkt wird gemerkt. Geht die Uhr zurueck, gilt weiter die Marke.
+     Zurueckdrehen bringt also nichts — man kommt nie VOR den Punkt, an dem
+     man schon einmal war.
+
+     Gespeist wird sie aus zwei Quellen:
+       · der eigenen Uhr bei jedem Start (nach vorn ist unverdaechtig)
+       · dem Date-Kopf JEDER Antwort unserer Dienste. Serverzeit ist
+         massgeblich und kostet keine zusaetzliche Anfrage.
+
+     Wer den Speicher loescht, setzt die Marke zurueck — loescht damit aber
+     auch Lizenz UND alle Patientendaten. Fuer jemanden, der weiterarbeiten
+     will, ist das kein Weg. Genau darum ist die Marke dort richtig
+     aufgehoben und braucht keinen Server.
+
+     KEINE HAERTE GEGEN ANGRIFFE, und das ist Absicht: Wer die Datei im
+     Browser aufmacht, kann alles umgehen. Das hier verhindert das
+     BEQUEME Weiterlaufen, nicht den entschlossenen Bruch — und mehr kann
+     eine Anwendung, die vollstaendig beim Kunden laeuft, nicht leisten,
+     ohne ihr eigenes Versprechen zu brechen. */
+  ZEIT:{
+    SCHL:'carlon.zeit.marke',
+    _marke:null,
+    marke(){
+      if(this._marke==null){
+        const v=+(localStorage.getItem(this.SCHL)||0);
+        this._marke=isFinite(v)?v:0;
+      }
+      return this._marke;
+    },
+    merken(ms){
+      if(!isFinite(ms)||ms<=this.marke()) return;
+      /* Ein absurd weit in der Zukunft liegender Wert (falsch gestellte Uhr
+         nach vorn, kaputter Server-Kopf) wuerde die Marke fuer immer
+         vergiften. Mehr als ein Jahr Sprung wird nicht uebernommen. */
+      if(ms > this.marke()+400*86400000 && this.marke()>0) return;
+      this._marke=ms;
+      try{ localStorage.setItem(this.SCHL,String(ms)); }catch(e){}
+    },
+    /* Der Wert, gegen den geprueft wird: nie kleiner als das, was wir
+       schon gesehen haben. */
+    jetzt(){ return Math.max(Date.now(), this.marke()); },
+    /* Serverzeit aus einer beliebigen Antwort unserer Dienste. */
+    ausAntwort(r){
+      try{ const d=r&&r.headers&&r.headers.get('date');
+        if(d){ const t=Date.parse(d); if(isFinite(t)) this.merken(t); } }catch(e){}
+    },
+    zurueckgedreht(){ return Date.now() < this.marke()-3600000; },
+  },
   TIERS:{demo:{name:'Demo',color:'demo'},vet_solo:{name:'Vet-Solo',color:'paid'},vet_clinic:{name:'Vet-Clinic',color:'paid'},research:{name:'Research',color:'paid'}},
   /* EINE Quelle für jede Preisangabe. Vorher standen 49 € an fünf Stellen
      verstreut — Anzeige, ROI-Rechnung, Preistabelle, Kommentar. Genau so
@@ -8142,6 +8201,11 @@ const License={
      in einem Kommentar. */
   /* Drei Gruende, die Kasse NICHT herauszugeben. Jeder einzelne davon waere
      im Betrieb ein stiller Schaden, den erst die Buchhaltung findet. */
+  /* Beim Start die eigene Uhr anbieten: nach vorn ist unverdaechtig, nach
+     hinten wird sie ignoriert. Ohne diese Zeile waechst die Marke nur, wenn
+     ein Dienst antwortet — und ein Cockpit, das nie ins Netz geht, haette
+     gar keine. */
+  zeitStarten(){ this.ZEIT.merken(Date.now()); },
   checkoutLink(art){
     const url=(this.CHECKOUT||{})[art]||'';
     if(!url){
@@ -8188,7 +8252,8 @@ const License={
       if(typeof p.exp!=='number'||!isFinite(p.exp))
         return{valid:false,reason:'Kein Ablaufdatum im Schlüssel'};
       if(!this.TIERS[p.tier]) return{valid:false,reason:'Unbekannte Stufe'};
-      const expired=p.exp*1000<Date.now();
+      /* Gegen den Zeitwaechter, nicht gegen die Uhr des Nutzers — siehe ZEIT. */
+      const expired=p.exp*1000<this.ZEIT.jetzt();
       /* typ trennt AUSWEIS von ERLAUBNIS. Ein Abo-Token ("sub") weist nur nach,
          dass ein Abo existiert — er schaltet NICHTS frei. Nur eine
          Laufzeit-Lizenz ("lic", 14 Tage) gewaehrt Zugang. Alte Schluessel ohne
@@ -8335,6 +8400,7 @@ const License={
       const r=await fetch(this.DIENST+'/aktivieren',{method:'POST',
         headers:{'Content-Type':'application/json'},
         body:JSON.stringify({session_id:sid})});
+      License.ZEIT.ausAntwort(r);   // Serverzeit ernten, kostet keine Anfrage
       const d=await r.json().catch(()=>({}));
       if(!d.ok){
         // Nicht saeubern: ein spaeterer Versuch soll noch moeglich sein.
@@ -8367,6 +8433,7 @@ const License={
       const r=await fetch(this.DIENST+'/portal',{method:'POST',
         headers:{'Content-Type':'application/json'},
         body:JSON.stringify({token:s.sub,zurueck:location.href})});
+      License.ZEIT.ausAntwort(r);   // Serverzeit ernten, kostet keine Anfrage
       const d=await r.json().catch(()=>({}));
       if(!d.ok||!d.url){ Toast.show('Abo-Verwaltung gerade nicht erreichbar','warn'); return; }
       window.open(d.url,'_blank','noopener');
@@ -8383,6 +8450,7 @@ const License={
       const r=await fetch(this.RENEW_URL,{method:'POST',
         headers:{'Content-Type':'application/json'},
         body:JSON.stringify({token:s.sub})});
+      License.ZEIT.ausAntwort(r);   // Serverzeit ernten, kostet keine Anfrage
       const d=await r.json().catch(()=>({}));
       if(!d.ok){
         /* 402 heisst: wir HABEN gefragt und die Antwort war nein. Das ist
@@ -10165,6 +10233,10 @@ const Sprache={
 };
 
 (async function boot(){
+  /* ZUERST die Zeit sichern, VOR jeder Lizenzpruefung. Die Hochwassermarke
+     muss stehen, bevor irgendetwas ein Ablaufdatum vergleicht — sonst
+     prueft der erste Durchlauf noch gegen die zurueckgedrehte Uhr. */
+  License.zeitStarten();
   try{
     await DB.open();
     PWA.register();
