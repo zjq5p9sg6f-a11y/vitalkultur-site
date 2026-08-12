@@ -1,6 +1,13 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
+<!-- Schaltet das Einblenden frei — VOR dem ersten Bild, sonst blitzt der
+     Inhalt kurz auf. Laeuft diese eine Zeile nicht, bleibt die Seite
+     vollstaendig sichtbar; die Animation ist Zugabe, nicht Bedingung.
+     Der Totmannschalter greift, wenn das Skript weiter unten ausfaellt. -->
+<script>document.documentElement.className+=' rev-an';
+setTimeout(function(){ if(!document.querySelector('.rev.in'))
+  document.documentElement.className=document.documentElement.className.replace(' rev-an',''); },4000);</script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>CARLON Equine Visite — die Praxis-Ansicht für Tierärzte & Kliniken</title>
@@ -185,8 +192,32 @@ footer{border-top:1px solid var(--border-faint);padding:56px 24px 66px;text-alig
 .copyright{font-size:11px;color:var(--text-faint);margin-top:22px;line-height:1.7}
 
 /* Reveal */
-.rev{opacity:0;transform:translateY(16px);transition:opacity .6s ease,transform .6s ease}
-.rev.in{opacity:1;transform:none}
+/* ── EINBLENDEN BEIM SCROLLEN ──────────────────────────────────────────
+   UMGEDREHT am 12.08.2026, nach einem Aussenaudit („grosse Bereiche
+   blieben schwarz und leer"). Nachgemessen war der Mechanismus in Ordnung:
+   nach Sprung ans Seitenende und nach Durchscrollen blieb KEIN Element
+   unsichtbar. Aber die Bauart war falsch herum.
+
+   Vorher war `.rev` von sich aus unsichtbar und wurde erst durch
+   JavaScript sichtbar. Damit haengt der halbe Seiteninhalt an einer
+   Bedingung, die ausfallen kann — blockiertes Skript, ein Fehler weiter
+   oben im selben <script>, ein Leser-Modus. Faellt sie aus, ist die Seite
+   nicht kaputt, sondern LEER. Das sieht ein eiliger Tierarzt als „laedt
+   nicht" und ist weg, bevor er den Preis gesehen hat.
+
+   Jetzt ist sichtbar der Grundzustand und das Verstecken die Zusatzleistung:
+   die Bewegung schaltet sich selbst frei (`html.rev-an`, gesetzt im Kopf,
+   vor dem ersten Bild). Laeuft kein Skript, steht einfach alles da.
+   Zusaetzlich ein Totmannschalter: meldet sich nach 4 s kein einziges
+   eingeblendetes Element, faellt die Freischaltung zurueck. Lieber ohne
+   Animation als ohne Inhalt.
+   Und wer wenig Bewegung wuenscht, bekommt gar keine.                    */
+.rev{opacity:1;transform:none}
+html.rev-an .rev{opacity:0;transform:translateY(16px);transition:opacity .6s ease,transform .6s ease}
+html.rev-an .rev.in{opacity:1;transform:none}
+@media (prefers-reduced-motion:reduce){
+  html.rev-an .rev{opacity:1;transform:none;transition:none}
+}
 
 @media(max-width:760px){
   .wrap{padding-left:20px;padding-right:20px}
