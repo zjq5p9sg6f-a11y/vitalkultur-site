@@ -63,6 +63,12 @@ tausche('<meta name="twitter:card" content="summary_large_image">',
 /* ── Verweise: relative Pfade liegen eine Ebene tiefer ─────────────────
    Die englische Seite liegt in en/ — jeder relative Bildpfad muss hoch. */
 s = s.split('src="assets/').join('src="../assets/');
+/* Auch href= — der Muster-Befund haengt an einem href, nicht an einem src.
+   t-verweise hat es sofort gemeldet: en/assets/... gibt es nicht. Genau
+   dafuer ist die Inventur da; ohne sie waere der Beleg-Link der englischen
+   Seite tot gewesen, und tot ist er ausgerechnet an der Stelle, an der ein
+   Tierarzt den Beweis sehen will. */
+s = s.split('href="assets/').join('href="../assets/');
 s = s.split('url("assets/').join('url("../assets/');
 
 /* ── RECHTSTEXTE: pro Sprache, nicht pro Marke ─────────────────────────
@@ -538,6 +544,18 @@ tausche('"text": "Das Cockpit läuft vollständig in Ihrem Browser; Patientendat
         '"text": "The cockpit runs entirely in your browser; patient data never reaches us. For the encrypted transport path between owner and practice we are currently having the classification clarified by a lawyer and will tell you the outcome before you need it."');
 tausche('"url": "https://vitalkultur.com/carlon-equine-visite/",',
         '"url": "https://vitalkultur.com/carlon-equine-visite/en/",');
+
+
+/* Muster-Befund — das Artefakt, an dem ein Tierarzt uns beurteilt. */
+tausche('Sehen Sie den Befund, bevor Sie irgendetwas entscheiden.',
+        'See the findings report before you decide anything.');
+tausche(`Zwei Seiten, aus dem Demo-Bestand erzeugt — mit Ihrem Briefkopf, den Kennwerten,
+        Verlauf und Poincaré, und einem Abschnitt „Methode &amp; Grenzen", der die Quellen nennt.
+        Genau dieses Dokument geben Sie weiter.`,
+`Two pages, generated from the demo library — with your letterhead, the key values, the
+        trend and the Poincaré plot, plus a "Method & limits" section naming the sources.
+        This is the document you pass on.`);
+tausche('>Muster-Befund als PDF<', '>Sample findings report (PDF)<');
 
 if (fehlend.length) {
   console.error('\n  ✗ Der Bau bricht ab — diese Bloecke gibt es in index.html nicht (mehr):\n');

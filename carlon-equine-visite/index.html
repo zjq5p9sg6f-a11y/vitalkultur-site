@@ -323,6 +323,14 @@ h2{font-family:var(--font-brand);font-weight:300;font-size:clamp(27px,3.6vw,40px
 .final{padding-top:96px;padding-bottom:44px;text-align:center}
 /* Anmeldung — ruhig, nicht laut. Ein Formular auf einer Seite, die
    Zurueckhaltung verspricht, darf nicht wie eine Lead-Maschine aussehen. */
+/* Muster-Befund: ruhig, aber nicht versteckt. Es ist der Beleg, nicht die Deko. */
+.befundmuster{display:flex;align-items:center;gap:22px;flex-wrap:wrap;margin-top:34px;padding:22px 24px;
+  border:1px solid var(--border-subtle);border-radius:16px;
+  background:linear-gradient(150deg,rgba(62,207,178,0.05),rgba(62,207,178,0.012))}
+.befundmuster>div{flex:1;min-width:260px}
+.befundmuster b{display:block;font-size:16px;color:var(--text-primary);font-weight:500;margin-bottom:6px}
+.befundmuster span{font-size:14px;color:var(--text-secondary);font-weight:300;line-height:1.65}
+.befundmuster a{white-space:nowrap}
 .anmeldung{max-width:720px;margin:56px auto 0;text-align:left;padding:34px 32px 30px;position:relative;
   border:1px solid var(--border-subtle);border-radius:18px;
   background:linear-gradient(150deg,rgba(62,207,178,0.05),rgba(62,207,178,0.012))}
@@ -637,6 +645,22 @@ html.rev-an .rev.in{opacity:1;transform:none}
       </div>
       <div class="f-shot"><img src="assets/visite-shots/09-akte.jpg" loading="lazy"
         alt="Pferde-Akte: Messwerte gegen die individuelle Baseline, Signalgüte, Verlauf, dazu Ferneinschätzung erfassen und abrechnen"></div>
+    </div>
+
+    <!-- DAS ARTEFAKT, DAS DAS HAUS VERLAESST.
+         Ein Tierarzt beurteilt uns nicht am Cockpit, sondern an dem Dokument,
+         das er einer Ueberweisungsklinik weitergibt. „Tieraerzte wollen das
+         Artefakt sehen" — deshalb steht es hier zum Anfassen, nicht als
+         Beschreibung. Erzeugt aus der Demo ueber DENSELBEN Weg, den die
+         Praxis geht (Handoff.build), nicht nachgebaut. -->
+    <div class="befundmuster">
+      <div>
+        <b>Sehen Sie den Befund, bevor Sie irgendetwas entscheiden.</b>
+        <span>Zwei Seiten, aus dem Demo-Bestand erzeugt — mit Ihrem Briefkopf, den Kennwerten,
+        Verlauf und Poincaré, und einem Abschnitt „Methode &amp; Grenzen", der die Quellen nennt.
+        Genau dieses Dokument geben Sie weiter.</span>
+      </div>
+      <a class="btn ghost" href="assets/CARLON-Muster-Befund.pdf" download>Muster-Befund als PDF</a>
     </div>
     <div class="grid">
       <div class="card">

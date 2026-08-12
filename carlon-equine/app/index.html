@@ -6086,7 +6086,24 @@ svg .hov-cross,svg .hov-focus{display:none}
 @media print{ body{background:#fff;color:#15181A} .hand{display:none}
  :root{--bg:#fff;--border:#D5DBDE;--text:#15181A;--sec:#41494E;--dim:#5C666C}
  svg .grid-major{stroke:#8A9399} svg .grid-minor{stroke:#C3CBD0} svg text{fill:#41494E}
- *{-webkit-print-color-adjust:exact;print-color-adjust:exact} }
+ *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+ /* ── EIN DIAGRAMM BRICHT NICHT UEBER DIE SEITE ──────────────────────────
+    Am 12.08.2026 im gedruckten Muster-Befund gesehen: der Poincaré-Kasten
+    begann unten auf Seite 1 mit Ueberschrift und leerer Flaeche, die
+    Zeichnung stand auf Seite 2. Ein Befund, den eine Praxis an eine
+    Ueberweisungsklinik weitergibt, sieht dadurch unfertig aus — und das ist
+    genau das Dokument, an dem ein fremder Tierarzt uns beurteilt. Der
+    Befund ist das EINZIGE Stueck CARLON, das das Haus verlaesst.
+
+    Zwei Versuche gingen vorher daneben, weil ich Klassennamen GERATEN habe
+    (.karte, .chart, :has(> svg)). Der Kasten heisst .cw — nachgesehen in
+    der Vorlage, nicht im Erzeugnis, wo die Ueberschriften durch
+    text-transform anders aussehen als im Quelltext.
+    .tiles bleibt bewusst umbrechbar: sechs Kennwert-Kacheln duerfen sich
+    teilen, ein Diagramm nicht. */
+ .cw{break-inside:avoid;page-break-inside:avoid}
+ .cw .ct{break-after:avoid;page-break-after:avoid}
+ .meth,.foot,.hand{break-inside:avoid;page-break-inside:avoid} }
 </style>
 <div class="sheet">
   <div class="bar">${logo?`<img src="${logo}" alt="">`:''}
