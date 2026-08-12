@@ -8821,6 +8821,16 @@ const Seed={
     await State.load();
     await Seed.synthRoutineVisits();
     State.settings.isDemo=true; await State.saveSettings();   // Demo-Daten sind wegwerfbar → kein Backup-Nag beim First-Touch
+    /* DAS BAND NEU ZEICHNEN, SONST BLEIBT DER ALARM STEHEN.
+       renderBanner() unterdrueckt die Verlustwarnung in der Demo — aber es
+       lief lange VOR dieser Zeile, als isDemo noch falsch war, und wurde nie
+       wiederholt. Ergebnis: ein Interessent von der Visite-Seite laedt die
+       Demo und bekommt fuer den Rest der Sitzung einen roten Verlustalarm
+       ueber Software, die er noch gar nicht besitzt. Ein Aussenpruefer hat
+       genau das gemeldet („als erster Eindruck ein Alarm").
+       Ein Alarm ohne Anlass entwertet jeden spaeteren — deshalb ist das
+       keine Kosmetik. */
+    if(typeof Safe!=='undefined' && Safe.renderBanner) await Safe.renderBanner();
     Nav.refresh();Toast.show(`${cnt} Demo-Pferde geladen · inkl. synthetischem Verlauf`,'ok');
   },
   // Realistischer Tagesmix: neben den Notfällen ein paar STABILE Routine-Kontrollen in den Tag legen.
