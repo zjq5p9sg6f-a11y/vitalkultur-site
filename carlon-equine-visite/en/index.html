@@ -46,6 +46,111 @@ document.head.appendChild(s);})();</script>
 <link rel="alternate" hreflang="de" href="https://vitalkultur.com/carlon-equine-visite/">
 <link rel="alternate" hreflang="en" href="https://vitalkultur.com/carlon-equine-visite/en/">
 <link rel="alternate" hreflang="x-default" href="https://vitalkultur.com/carlon-equine-visite/">
+<!-- STRUKTURIERTE DATEN. Nur Aussagen, die auch SICHTBAR auf der Seite
+     stehen — Google verlangt das bei FAQPage ausdruecklich, und alles andere
+     waere ohnehin dieselbe Sorte Behauptung, gegen die diese Seite
+     anschreibt. Das Angebot steht als PreOrder: die Kasse ist bewusst noch
+     zu, „verfuegbar" waere gelogen. Erzeugt aus derselben Quelle wie der
+     sichtbare Text; t-schema-jsonld prueft beides gegeneinander. -->
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@graph": [
+  {
+   "@type": "Organization",
+   "@id": "https://vitalkultur.com/#org",
+   "name": "Vitalkultur",
+   "url": "https://vitalkultur.com/",
+   "email": "jan@vitalkultur.com",
+   "address": {
+    "@type": "PostalAddress",
+    "addressLocality": "Iffezheim",
+    "addressCountry": "DE"
+   }
+  },
+  {
+   "@type": "SoftwareApplication",
+   "name": "CARLON Equine Visite",
+   "url": "https://vitalkultur.com/carlon-equine-visite/en/",
+   "applicationCategory": "BusinessApplication",
+   "applicationSubCategory": "Veterinary practice software",
+   "operatingSystem": "Web (Chrome, Edge, Safari)",
+   "publisher": {
+    "@id": "https://vitalkultur.com/#org"
+   },
+   "inLanguage": [
+    "de",
+    "en"
+   ],
+   "description": "Browser-local practice view for equine vets and clinics: triage by biometric urgency, trends over weeks, route planning, findings report and export as FHIR R5. Not a medical device, not a diagnosis.",
+   "audience": {
+    "@type": "BusinessAudience",
+    "audienceType": "Equine veterinarians and equine clinics"
+   },
+   "offers": {
+    "@type": "Offer",
+    "price": "790",
+    "priceCurrency": "EUR",
+    "priceSpecification": {
+     "@type": "UnitPriceSpecification",
+     "price": "790",
+     "priceCurrency": "EUR",
+     "valueAddedTaxIncluded": false,
+     "billingDuration": 1,
+     "billingIncrement": 1,
+     "unitCode": "ANN",
+     "referenceQuantity": {
+      "@type": "QuantitativeValue",
+      "value": 1,
+      "unitCode": "ANN"
+     }
+    },
+    "availability": "https://schema.org/PreOrder",
+    "seller": {
+     "@id": "https://vitalkultur.com/#org"
+    }
+   }
+  },
+  {
+   "@type": "FAQPage",
+   "mainEntity": [
+    {
+     "@type": "Question",
+     "name": "Does CARLON replace an examination?",
+     "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "No. CARLON prepares trend data and helps with the order of visits. Whether a clinical examination, further diagnostics or treatment is needed is decided by you alone."
+     }
+    },
+    {
+     "@type": "Question",
+     "name": "What does the owner need?",
+     "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "A commercially available chest belt and an Android device or a computer with Chrome or Edge. On iPhone and iPad, Apple does not permit Bluetooth in the browser; the page directs you to a capable device there."
+     }
+    },
+    {
+     "@type": "Question",
+     "name": "What happens after cancellation?",
+     "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "The application switches to a reduced mode. Your data stays on the device and can still be opened and exported. We could not delete it — it is with you."
+     }
+    },
+    {
+     "@type": "Question",
+     "name": "Do I need a data processing agreement?",
+     "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "The cockpit runs entirely in your browser; patient data never reaches us. For the encrypted transport path between owner and practice we are currently having the classification clarified by a lawyer and will tell you the outcome before you need it."
+     }
+    }
+   ]
+  }
+ ]
+}
+</script>
 <link rel="canonical" href="https://vitalkultur.com/carlon-equine-visite/en/">
 <link rel="alternate" hreflang="de" href="https://vitalkultur.com/carlon-equine-visite/">
 <link rel="alternate" hreflang="en" href="https://vitalkultur.com/carlon-equine-visite/en/">

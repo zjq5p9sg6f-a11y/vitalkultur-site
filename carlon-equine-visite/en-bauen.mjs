@@ -241,10 +241,10 @@ tausche(' — wir antworten genauso schnell.', ' — we answer just as quickly.'
 // FAQ
 tausche('Häufige Fragen', 'Frequently asked');
 tausche('Was Tierärzte uns zuerst fragen.', 'What vets ask us first.');
-tausche('Ersetzt CARLON eine Untersuchung?', 'Does CARLON replace an examination?');
-tausche('Was braucht die Halterin?', 'What does the owner need?');
-tausche('Was passiert nach einer Kündigung?', 'What happens after cancellation?');
-tausche('Brauche ich einen Auftragsverarbeitungsvertrag?', 'Do I need a data processing agreement?');
+tausche('Ersetzt CARLON eine Untersuchung?', 'Does CARLON replace an examination?', 2);
+tausche('Was braucht die Halterin?', 'What does the owner need?', 2);
+tausche('Was passiert nach einer Kündigung?', 'What happens after cancellation?', 2);
+tausche('Brauche ich einen Auftragsverarbeitungsvertrag?', 'Do I need a data processing agreement?', 2);
 
 // Fuss
 tausche('Für Tierärzte &amp; Kliniken · Teil von CARLON Equine',
@@ -511,6 +511,33 @@ tausche(`Wir speichern Ihre Angaben ausschließlich, um Ihre Anmeldung zu bearbe
         (Art.&nbsp;6(1)(b) GDPR), on our own service — not with a form provider — and delete
         them after 180&nbsp;days at the latest. No newsletter, no sharing.`);
 tausche('Teil der Vitalkultur-App-Familie', 'Part of the Vitalkultur app family', 2);
+
+
+/* ── STRUKTURIERTE DATEN ──────────────────────────────────────────────
+   Die FAQ-Antworten stehen im Schema OHNE Zeilenumbrueche, die sichtbaren
+   Absaetze MIT. Deshalb hier noch einmal einzeln — und wortgleich zur
+   englischen Fassung des sichtbaren Textes, sonst faellt t-schemadaten.
+   Google verlangt genau diese Uebereinstimmung. */
+tausche('CARLON Equine Visite — the practice view for equine vets &amp; clinics</title>',
+        'CARLON Equine Visite — the practice view for equine vets &amp; clinics</title>');
+tausche('"applicationSubCategory": "Veterinärmedizinische Praxis-Software"',
+        '"applicationSubCategory": "Veterinary practice software"');
+tausche('"operatingSystem": "Web (Chrome, Edge, Safari)"',
+        '"operatingSystem": "Web (Chrome, Edge, Safari)"');
+tausche('"description": "Browser-lokale Praxis-Ansicht für Pferdetierärzte und Kliniken: Triage nach biometrischer Dringlichkeit, Verlauf über Wochen, Abfahrroute, Befundbericht und Export als FHIR R5. Kein Medizinprodukt, keine Diagnose."',
+        '"description": "Browser-local practice view for equine vets and clinics: triage by biometric urgency, trends over weeks, route planning, findings report and export as FHIR R5. Not a medical device, not a diagnosis."');
+tausche('"audienceType": "Tierärztinnen und Tierärzte, Pferdekliniken"',
+        '"audienceType": "Equine veterinarians and equine clinics"');
+tausche('"text": "Nein. CARLON bereitet Verlaufsdaten auf und hilft bei der Reihenfolge. Ob eine klinische Untersuchung, weitere Diagnostik oder eine Behandlung nötig ist, entscheiden ausschließlich Sie."',
+        '"text": "No. CARLON prepares trend data and helps with the order of visits. Whether a clinical examination, further diagnostics or treatment is needed is decided by you alone."');
+tausche('"text": "Einen handelsüblichen Brustgurt und ein Android-Gerät oder einen Rechner mit Chrome oder Edge. Auf iPhone und iPad lässt Apple Bluetooth im Browser nicht zu; die Seite führt dort auf ein messfähiges Gerät."',
+        '"text": "A commercially available chest belt and an Android device or a computer with Chrome or Edge. On iPhone and iPad, Apple does not permit Bluetooth in the browser; the page directs you to a capable device there."');
+tausche('"text": "Die Anwendung wechselt in einen funktionsreduzierten Modus. Ihre Daten bleiben auf dem Gerät und lassen sich weiterhin öffnen und exportieren. Wir könnten sie gar nicht löschen — sie liegen bei Ihnen."',
+        '"text": "The application switches to a reduced mode. Your data stays on the device and can still be opened and exported. We could not delete it — it is with you."');
+tausche('"text": "Das Cockpit läuft vollständig in Ihrem Browser; Patientendaten erreichen uns nicht. Für den verschlüsselten Transportweg zwischen Halterin und Praxis klären wir die Einordnung derzeit anwaltlich ab und sagen Ihnen das Ergebnis, bevor Sie es brauchen."',
+        '"text": "The cockpit runs entirely in your browser; patient data never reaches us. For the encrypted transport path between owner and practice we are currently having the classification clarified by a lawyer and will tell you the outcome before you need it."');
+tausche('"url": "https://vitalkultur.com/carlon-equine-visite/",',
+        '"url": "https://vitalkultur.com/carlon-equine-visite/en/",');
 
 if (fehlend.length) {
   console.error('\n  ✗ Der Bau bricht ab — diese Bloecke gibt es in index.html nicht (mehr):\n');

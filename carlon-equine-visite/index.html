@@ -46,6 +46,111 @@ document.head.appendChild(s);})();</script>
 <link rel="alternate" hreflang="de" href="https://vitalkultur.com/carlon-equine-visite/">
 <link rel="alternate" hreflang="en" href="https://vitalkultur.com/carlon-equine-visite/en/">
 <link rel="alternate" hreflang="x-default" href="https://vitalkultur.com/carlon-equine-visite/">
+<!-- STRUKTURIERTE DATEN. Nur Aussagen, die auch SICHTBAR auf der Seite
+     stehen — Google verlangt das bei FAQPage ausdruecklich, und alles andere
+     waere ohnehin dieselbe Sorte Behauptung, gegen die diese Seite
+     anschreibt. Das Angebot steht als PreOrder: die Kasse ist bewusst noch
+     zu, „verfuegbar" waere gelogen. Erzeugt aus derselben Quelle wie der
+     sichtbare Text; t-schema-jsonld prueft beides gegeneinander. -->
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@graph": [
+  {
+   "@type": "Organization",
+   "@id": "https://vitalkultur.com/#org",
+   "name": "Vitalkultur",
+   "url": "https://vitalkultur.com/",
+   "email": "jan@vitalkultur.com",
+   "address": {
+    "@type": "PostalAddress",
+    "addressLocality": "Iffezheim",
+    "addressCountry": "DE"
+   }
+  },
+  {
+   "@type": "SoftwareApplication",
+   "name": "CARLON Equine Visite",
+   "url": "https://vitalkultur.com/carlon-equine-visite/",
+   "applicationCategory": "BusinessApplication",
+   "applicationSubCategory": "Veterinärmedizinische Praxis-Software",
+   "operatingSystem": "Web (Chrome, Edge, Safari)",
+   "publisher": {
+    "@id": "https://vitalkultur.com/#org"
+   },
+   "inLanguage": [
+    "de",
+    "en"
+   ],
+   "description": "Browser-lokale Praxis-Ansicht für Pferdetierärzte und Kliniken: Triage nach biometrischer Dringlichkeit, Verlauf über Wochen, Abfahrroute, Befundbericht und Export als FHIR R5. Kein Medizinprodukt, keine Diagnose.",
+   "audience": {
+    "@type": "BusinessAudience",
+    "audienceType": "Tierärztinnen und Tierärzte, Pferdekliniken"
+   },
+   "offers": {
+    "@type": "Offer",
+    "price": "790",
+    "priceCurrency": "EUR",
+    "priceSpecification": {
+     "@type": "UnitPriceSpecification",
+     "price": "790",
+     "priceCurrency": "EUR",
+     "valueAddedTaxIncluded": false,
+     "billingDuration": 1,
+     "billingIncrement": 1,
+     "unitCode": "ANN",
+     "referenceQuantity": {
+      "@type": "QuantitativeValue",
+      "value": 1,
+      "unitCode": "ANN"
+     }
+    },
+    "availability": "https://schema.org/PreOrder",
+    "seller": {
+     "@id": "https://vitalkultur.com/#org"
+    }
+   }
+  },
+  {
+   "@type": "FAQPage",
+   "mainEntity": [
+    {
+     "@type": "Question",
+     "name": "Ersetzt CARLON eine Untersuchung?",
+     "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Nein. CARLON bereitet Verlaufsdaten auf und hilft bei der Reihenfolge. Ob eine klinische Untersuchung, weitere Diagnostik oder eine Behandlung nötig ist, entscheiden ausschließlich Sie."
+     }
+    },
+    {
+     "@type": "Question",
+     "name": "Was braucht die Halterin?",
+     "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Einen handelsüblichen Brustgurt und ein Android-Gerät oder einen Rechner mit Chrome oder Edge. Auf iPhone und iPad lässt Apple Bluetooth im Browser nicht zu; die Seite führt dort auf ein messfähiges Gerät."
+     }
+    },
+    {
+     "@type": "Question",
+     "name": "Was passiert nach einer Kündigung?",
+     "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Die Anwendung wechselt in einen funktionsreduzierten Modus. Ihre Daten bleiben auf dem Gerät und lassen sich weiterhin öffnen und exportieren. Wir könnten sie gar nicht löschen — sie liegen bei Ihnen."
+     }
+    },
+    {
+     "@type": "Question",
+     "name": "Brauche ich einen Auftragsverarbeitungsvertrag?",
+     "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Das Cockpit läuft vollständig in Ihrem Browser; Patientendaten erreichen uns nicht. Für den verschlüsselten Transportweg zwischen Halterin und Praxis klären wir die Einordnung derzeit anwaltlich ab und sagen Ihnen das Ergebnis, bevor Sie es brauchen."
+     }
+    }
+   ]
+  }
+ ]
+}
+</script>
 <meta name="twitter:card" content="summary_large_image">
 <!-- DER EINE SCHALTER. window.CARLON_LIVE entscheidet, ob diese Seite den
      Kaufweg zeigt oder den Beta-Satz. Er steht in einer eigenen Datei, weil
