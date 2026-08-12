@@ -30,6 +30,47 @@
 
 window.CARLON_LIVE = false;
 
+/* ════════════════════════════════════════════════════════════════════════
+   DER ZWEITE SCHALTER — das Postfach
+   ════════════════════════════════════════════════════════════════════════
+
+   false = DATEIWEG. Die Station legt eine Datei an, die Besitzerin verschickt
+           sie ueber ihren eigenen Kanal (Teilen-Blatt: WhatsApp, Mail,
+           Signal, AirDrop). Nichts liegt bei uns, nichts geht durch uns
+           hindurch.
+   true  = POSTFACH. Der Zwischenspeicher nimmt die Aufnahme entgegen und die
+           Praxis holt sie ab. Bequemer — die Praxis sieht "1 Aufnahme neu" —
+           aber es macht uns zum Auftragsverarbeiter.
+
+   WARUM DAS NICHT NUR EIN SCHALTER, SONDERN EINE PREISFRAGE IST
+   Mit Zwischenspeicher braucht JEDE einzelne Praxis einen
+   Auftragsverarbeitungsvertrag. Das ist eine Unterschrift je Kunde, ein
+   Dokument je Kunde, eine Pflicht je Kunde — dauerhaft, und es waechst mit
+   dem Umsatz. Bei 30 Praxen sind das 30 Vertraege und 30 Aktualisierungen bei
+   jeder Aenderung. Ohne Zwischenspeicher: null.
+
+   Das ist keine Ersparnis von ein paar hundert Euro Anwaltsprosa, das ist die
+   Abschaffung einer Steuer auf Wachstum.
+
+   DESHALB BLEIBT DER CODE GEBAUT UND AUS. Das Postfach ist ab jetzt die
+   Komfortfunktion, die eine Klinik DAZUBUCHT, wenn sie danach fragt. Dann
+   braucht es einen AVV — und dann gibt es auch den Kunden, der ihn bezahlt.
+   Erst verkaufen, dann die Buerokratie, die der Verkauf finanziert.
+
+   WAS DER SCHALTER NICHT ABSCHALTET: die Verschluesselung. Sie ist das
+   Produkt, nicht das Beiwerk. Eine rohe JSON ueber WhatsApp waere schlechter
+   als das Postfach, nicht besser — dann laege der Datensatz im Klartext auf
+   Metas Servern und in zwei Chat-Sicherungen. Wer einen Aushang gescannt hat,
+   verschickt Chiffrat; wer keinen hat, verschickt einen Datensatz, der so arm
+   ist, dass der Transportweg egal ist.
+
+   MIT DEM POSTFACH SCHLAEFT AUCH DER RUECKWEG. Die Praxis legte den Befund
+   bisher ins Fach der Besitzerin zurueck. Ohne Fach schickt sie das
+   Befund-PDF ueber ihren eigenen Kanal — so wie Praxen Befunde seit jeher
+   uebermitteln, und dabei ist sie Verantwortliche, nicht wir.               */
+
+window.CARLON_POSTFACH = false;
+
 /* KANONISCHE ADRESSE — die eine Stelle, unter der die Messstation dauerhaft
    erreichbar ist.
    ═══════════════════════════════════════════════════════════════════════

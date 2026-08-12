@@ -824,7 +824,7 @@ const HAUS={ appImStore:false, appUrl:'https://carlon.app' };
   <!-- ── 1) Bereit ── -->
   <div id="vReady" class="hidden">
     <h1 data-i18n="readyH1">Messung für den Tierarzt</h1>
-    <p class="sub" data-i18n="readySub">Verbinde den Polar-H10-Gurt deines Pferds. Die Aufnahme geht direkt an deine Tierärztin oder deinen Tierarzt — auf deinem Gerät verschlüsselt, lesen kann sie nur die Praxis.</p>
+    <p class="sub" data-i18n="readySub">Verbinde den Polar-H10-Gurt deines Pferds. Die Aufnahme entsteht auf deinem Gerät und wird dort für deine Praxis verschlüsselt — du schickst sie mit einem Tipp, lesen kann sie nur die Praxis.</p>
     <!-- Erwartung VOR dem Knopf, nicht danach. Die sieben Minuten standen
        bisher erst im Fortschrittstext — wer sie erst nach dem Start liest,
        hat das Pferd schon angebunden und plant mit drei Minuten. Und die
@@ -1150,6 +1150,13 @@ const HAUS={ appImStore:false, appUrl:'https://carlon.app' };
 </div>
 
 <script src="qr.js"></script>
+<!-- Die EINE Stelle, die auch das Impressum und das Cockpit lesen. Hier steht,
+     ob das Postfach an ist. Stuende die Zeile an zwei Orten, liefe sie
+     irgendwann auseinander — und dann sendet die Station in einen
+     Zwischenspeicher, waehrend die Datenschutzerklaerung behauptet, es gebe
+     keinen. Genau diese Sorte Widerspruch faellt zuerst jemandem auf, der
+     Aerger sucht. -->
+<script src="live.js"></script>
 <script src="krypto.js"></script>
 <script src="p2p.js"></script>
 <!-- DIE WORTMARKE — auf JEDER Seite, nicht nur nach getaner Messung.
@@ -1219,7 +1226,7 @@ de:{
  verdictCleanShort:'Das Signal ist sauber. Die Aufnahme ist kürzer als sieben Minuten — für einen belastbaren Ruhe-Verlauf und die Atemwegs-Auswertung darf sie gern länger sein.',
  verdictNoisy:'Das Signal war stellenweise unruhig. Weitergeben ist möglich — eine zweite Messung mit gut angefeuchtetem Gurt wird aber deutlich besser.',
  verdictBad:'Das Signal war stark gestört. Wir empfehlen, den Gurt neu anzufeuchten, nachzusetzen und noch einmal zu messen.',
- doneSubRoom:'Die Aufnahme kann jetzt direkt an die Praxis übertragen werden.',
+ doneSubRoom:'Die Aufnahme ist fertig — ein Tipp, und du schickst sie deiner Praxis.',
  doneSubFile:'Schick die Messung deiner Tierärztin — sie kann sie sofort öffnen, auch ohne Konto.',
  tooFew:'Es sind zu wenige Herzschläge erfasst worden, um die Aufnahme sinnvoll weiterzugeben.',
  dropTitle:'Verbindung unterbrochen',
@@ -1230,7 +1237,7 @@ de:{
  brandTag:'Equine Heart Science',
  /* Empfang */
  readyH1:'Messung für den Tierarzt',
- readySub:'Verbinde den Polar-H10-Gurt deines Pferds. Die Aufnahme geht direkt an deine Tierärztin oder deinen Tierarzt — auf deinem Gerät verschlüsselt, lesen kann sie nur die Praxis.',
+ readySub:'Verbinde den Polar-H10-Gurt deines Pferds. Die Aufnahme entsteht auf deinem Gerät und wird dort für deine Praxis verschlüsselt — du schickst sie mit einem Tipp, lesen kann sie nur die Praxis.',
  /* ── Wer OHNE Aushang hier landet ───────────────────────────────────────
     Der Text darüber ist für den Aushang geschrieben: dort steht das Fach
     der Praxis im Link, „geht direkt an deine Tierärztin" ist dann wahr.
@@ -1240,7 +1247,7 @@ de:{
     uns NEUE Praxen bringt; ihn mit einem falschen Satz zu empfangen wäre
     der teuerste Fehler auf dieser Seite. */
  freiH1:'Herzrhythmus deines Pferdes messen',
- freiSub:'Verbinde den Polar-H10-Gurt — die Aufnahme entsteht auf deinem Gerät. Am Ende bekommst du einen Link für deine Tierärztin oder deinen Tierarzt: nur wer ihn hat, kann die Messung öffnen. Ohne App, ohne Konto.',
+ freiSub:'Verbinde den Polar-H10-Gurt — die Aufnahme entsteht auf deinem Gerät und bleibt dort. Am Ende bekommst du eine Datei, die du deiner Tierärztin oder deinem Tierarzt schickst wie ein Foto. Ohne App, ohne Konto.',
  freiTitle:'Herzrhythmus beim Pferd messen — CARLON Equine',
  roomLabel:'Verbindungscode:',
  horseLabel:'Name des Pferds',
@@ -1298,10 +1305,19 @@ de:{
  pSensor:'Sensor', pRes:'Zeitauflösung', pResV:'1/1024 s · ≈1 ms',
  send:'An die Praxis senden', save:'Als Datei speichern', again:'Neue Messung',
  privacyLine:'Ende-zu-Ende verschlüsselt · kein Server kann die Messwerte lesen',
+ /* Der Weg OHNE Aushang. Kein Schlüssel, also keine Verschlüsselung — und
+    deshalb hier auch keine Behauptung darüber. Der Satz sagt, was wir
+    belegen können: die Datei entsteht hier und geht den Weg, den sie wählt. */
+ freiPrivacy:'Bleibt auf deinem Gerät · verschickt wird nur, was du selbst weitergibst',
  brauchst:['Polar-H10-Gurt angelegt und die Elektrodenfläche angefeuchtet','Etwa sieben Minuten Ruhe — kürzer trägt die Auswertung nicht','Ohne Konto, ohne App · die Aufnahme wird verschlüsselt übergeben'],
  qrHint:'Oder mit dem Gerät scannen, das messen soll — Laptop oder Android-Tablet. Dabei verlässt nichts dein Telefon.',
  rechtLinks:'<a href="/impressum.html">Impressum</a> · <a href="/privacy.html">Datenschutz</a> · <a href="/agb.html">AGB</a>',
- sendRecht:'Mit dem Senden gilt die Übergabe nach <a href="/agb.html#postfach">§ 12b der AGB</a>: verschlüsselt, spätestens nach 30 Tagen gelöscht, keine Zusage einer Beurteilung. Was dabei gespeichert wird, steht in der <a href="/privacy.html">Datenschutzerklärung</a>.',
+ /* AUSSAGE ÜBER UNS, NICHT ÜBER DIE DATEN — und das ist der ganze Trick.
+    „Kein personenbezogenes Datum" müsste man verteidigen: ein Pferdename ist
+    in der Pferdewelt ein kräftiges Merkmal, und den Absender liefert der
+    Kanal. „Wir verarbeiten es nicht" muss man nur belegen — und der Beleg ist
+    der Code, den die Prüfstrecke bewacht. */
+ sendRecht:'Die Datei entsteht auf deinem Gerät und verlässt es auf dem Weg, den du selbst wählst — wir bekommen sie nicht zu sehen und legen sie nirgends ab. Was diese Seite tut, steht in der <a href="/privacy.html">Datenschutzerklärung</a>; für die Nutzung gelten die <a href="/agb.html#uebergabe">AGB</a>.',
  shareH:'Wenn es dir geholfen hat',
  shareOwner:'Pferdefreunden zeigen', shareVet:'Deiner Praxis empfehlen',
  /*MDR — extern geprüft 06.08., Perplexity/Recherche: „was das Herz tut" ist umgangssprachlich zu breit;
@@ -1332,7 +1348,7 @@ en:{
  verdictCleanShort:'The signal is clean. The recording is shorter than seven minutes — for a dependable resting trend and the airway assessment it may well run longer.',
  verdictNoisy:'The signal was unsteady in places. Passing it on is possible — but a second recording with a well-moistened belt will be considerably better.',
  verdictBad:'The signal was badly disturbed. We recommend re-moistening the belt, reseating it and recording again.',
- doneSubRoom:'The recording can now be transferred straight to the practice.',
+ doneSubRoom:'The recording is ready — one tap and it goes to your practice.',
  doneSubFile:'Send the recording to your vet — they can open it right away, no account needed.',
  tooFew:'Too few heartbeats were captured to pass this recording on meaningfully.',
  dropTitle:'Connection lost',
@@ -1342,9 +1358,9 @@ en:{
 
  brandTag:'Equine Heart Science',
  readyH1:'Recording for your vet',
- readySub:'Connect your horse’s Polar H10 belt. The recording goes straight to your veterinarian — encrypted on your device, so only the practice can read it.',
+ readySub:'Connect your horse’s Polar H10 belt. The recording is made on your device and encrypted there for your practice — you send it with one tap, and only the practice can read it.',
  freiH1:'Measure your horse’s heart rhythm',
- freiSub:'Connect the Polar H10 belt — the recording is made on your device. At the end you get a link for your vet: only whoever holds it can open the recording. No app, no account.',
+ freiSub:'Connect the Polar H10 belt — the recording is made on your device and stays there. At the end you get a file you send to your vet like a photo. No app, no account.',
  freiTitle:'Measure equine heart rhythm — CARLON Equine',
  roomLabel:'Connection code:',
  horseLabel:'Horse’s name',
@@ -1394,10 +1410,11 @@ en:{
  pSensor:'Sensor', pRes:'Time resolution', pResV:'1/1024 s · ≈1 ms',
  send:'Send to the practice', save:'Save as a file', again:'New recording',
  privacyLine:'End-to-end encrypted · no server can read the measurements',
+ freiPrivacy:'Stays on your device · only what you pass on ever leaves it',
  brauchst:['Polar H10 belt fitted and the electrode area moistened','About seven minutes of rest — shorter does not carry the assessment','No account, no app · the recording is handed over encrypted'],
  qrHint:'Or scan it with the device that should measure — laptop or Android tablet. Nothing leaves your phone.',
  rechtLinks:'<a href="/impressum.html">Imprint</a> · <a href="/privacy-en.html">Privacy</a> · <a href="/terms.html">Terms</a>',
- sendRecht:'By sending, the handover under <a href="/terms.html#relay">section 9a of the Terms</a> applies: encrypted, deleted after 30 days at the latest, with no promise of an assessment. What is stored is set out in the <a href="/privacy-en.html">privacy policy</a>.',
+ sendRecht:'The file is created on your device and leaves it by a route you choose yourself — we never see it and store it nowhere. What this page does is set out in the <a href="/privacy-en.html">privacy policy</a>; use is governed by the <a href="/terms.html#handover">Terms</a>.',
  shareH:'If this helped you',
  shareOwner:'Show fellow horse people', shareVet:'Recommend to your practice',
  /*MDR — extern geprüft: im anglo-amerikanischen Raum ist die etablierte Formel
@@ -1458,6 +1475,16 @@ function freienBesuchAnpassen(){
     if(h1&&a) h1.textContent=a;
     if(sub&&b) sub.textContent=b;
     if(c) document.title=c;
+    /* OHNE AUSHANG GIBT ES KEINEN SCHLUESSEL — und damit keine
+       Verschluesselung. Bliebe hier „Ende-zu-Ende verschluesselt" stehen,
+       waere das genau die Sorte Zusage, die knapp ueber das Verteidigbare
+       hinausgeht: der Satz stimmt fuer den Aushang-Weg und ist auf diesem
+       Weg schlicht falsch. Was hier stimmt, ist etwas anderes und nicht
+       weniger wert: es wird nichts uebertragen, das die Besitzerin nicht
+       selbst verschickt. */
+    const pl=document.querySelector('[data-i18n="privacyLine"]');
+    const p2=t('freiPrivacy',null);
+    if(pl&&p2) pl.textContent=p2;
   }catch(e){ /* Im Zweifel bleibt der Aushang-Text stehen — nie ein leerer Kopf. */ }
 }
 function applyLang(){
@@ -2399,6 +2426,10 @@ const room=new URLSearchParams(location.search).get('room');
 const _q=new URLSearchParams(location.search);
 const fach=_q.get('fach'), praxisKey=_q.get('k');
 const POSTFACH='https://postfach.carlon.app';
+/* Kommt aus live.js — der EINEN Stelle, die auch das Cockpit und das
+   Impressum lesen. false = Dateiweg (Regelfall), true = Zwischenspeicher.
+   Steht hier oben, weil schon der Seitenaufbau danach fragt. */
+const POSTFACH_AN = (typeof window!=='undefined' && window.CARLON_POSTFACH===true);
 
 /* ── EIGENE IDENTITAET DES BESITZERS ────────────────────────────────────
    Damit die Tieraerztin antworten kann. Ohne sie endet das Produkt fuer den
@@ -2783,6 +2814,9 @@ async function ubKopieren(link){
    dass die eigene Praxis CARLON vielleicht noch gar nicht kennt. */
 async function standHolen(id){
   if(!id || !navigator.onLine) return null;
+  /* Ohne Postfach gibt es keinen Stand zu holen — und ohne bestehende
+     Identitaet gaebe es nur eine neue, die niemand braucht. */
+  if(!POSTFACH_AN && !hatSchonIdentitaet()) return null;
   let ich; try{ ich=await meineIdentitaet(); }catch(e){ return null; }
   const fach=(new URLSearchParams(location.search).get('fach'))||(ich&&ich.fach);
   if(!fach) return null;
@@ -2801,6 +2835,21 @@ function lageZeigen(){
   if(!offen){ k.classList.add('hidden'); return; }
   const tage=letzte?Math.floor((Date.now()-new Date(letzte.zeit))/86400000):0;
   const wann=tage<=0?'heute':tage===1?'gestern':`vor ${tage} Tagen`;
+
+  /* OHNE POSTFACH GIBT ES KEINEN RUECKWEG — und damit darf hier auch keiner
+     versprochen werden. „Der Befund erscheint hier" war wahr, solange die
+     Praxis ihn in das Fach der Besitzerin zurueckgelegt hat. Jetzt schickt
+     sie ihn ueber ihren eigenen Kanal, so wie Praxen Befunde seit jeher
+     uebermitteln. Bliebe der Satz stehen, wartete die Besitzerin auf etwas,
+     das nie kommt — und das ist schlimmer als gar keine Karte. */
+  if(!POSTFACH_AN){
+    k.innerHTML=`<span class="lg-punkt"></span><div>`
+      +`<b>${offen===1?'Aufnahme weitergegeben':offen+' Aufnahmen weitergegeben'}</b>`
+      +`<span id="lageText">${esc(wann)} · deine Tierärztin meldet sich auf ihrem üblichen Weg.</span></div>`;
+    k.classList.remove('hidden');
+    return;
+  }
+
   k.innerHTML=`<span class="lg-punkt"></span><div>`
     +`<b>${offen===1?'Deine Aufnahme ist bei der Praxis':offen+' Aufnahmen sind bei der Praxis'}</b>`
     +`<span id="lageText">${esc(wann)} gesendet · der Befund erscheint hier, sobald deine Tierärztin ihn geschrieben hat.</span></div>`;
@@ -2829,7 +2878,23 @@ function lageZeigen(){
     }
   }).catch(()=>{});
 }
+/* Der Rueckweg wird nicht ABGESCHNITTEN, sondern laeuft AUS.
+   ═══════════════════════════════════════════════════════════════════════
+   Wer gestern noch ueber das Postfach gesendet hat, wartet auf einen Befund.
+   Haette ich hier hart abgeschaltet, waere seine Aufnahme beantwortet worden
+   und die Antwort haette ihn nie erreicht — ein stiller Verlust, und
+   ausgerechnet bei dem, der uns vertraut hat.
+
+   Deshalb: geholt wird nur noch fuer Geraete, die SCHON eine Identitaet
+   haben. `meineIdentitaet()` legt sonst eine an — jeder neue Besucher haette
+   ab jetzt ein Schluesselpaar und eine Abfrage an einen Dienst bekommen, den
+   er nie benutzen wird. Ein Fach, das nie etwas empfaengt, ist kein leerer
+   Aufwand, sondern eine Kennung mehr, die es ohne Grund gibt. */
+function hatSchonIdentitaet(){
+  try{ return !!localStorage.getItem(ICH_SPEICHER); }catch(e){ return false; }
+}
 async function befundHolen(){
+  if(!POSTFACH_AN && !hatSchonIdentitaet()) return;
   let ich;
   try{ ich=await meineIdentitaet(); }catch(e){ return; }
   if(!ich||!navigator.onLine) return;
@@ -3589,7 +3654,47 @@ function metrics(rr){
 }
 const round2=x=>Math.round(x*100)/100;
 
-function buildExport(name,rr,m,secs){
+/* ── DIE ARMEN FELDER ───────────────────────────────────────────────────
+   Genau die Felder, die aus einem Tierdatensatz einen Personenbezug machen
+   koennen. Sie stehen HIER als Liste und nicht verstreut im Code, damit die
+   Pruefstrecke dieselbe Liste lesen kann — sonst bewacht sie eine Fassung,
+   die es nicht mehr gibt.
+
+   `userAgent` ist der eigentliche Grund fuer diese Liste: er ist eine
+   Geraetekennung. Ueber WhatsApp verschickt, reist damit ein Fingerabdruck
+   des Telefons der Besitzerin mit, den niemand braucht und niemand erwartet.
+
+   `partner` und `herkunft` sind Vertriebs-Merkmale. Sie zeigen auf eine
+   Praxis — und eine Einzelpraxis IST eine natuerliche Person. In einer Datei,
+   die die Besitzerin selbst weitergibt, haben sie ohnehin nichts zu suchen:
+   sie dienen uns, nicht ihr. */
+const ARME_FELDER=['source.userAgent','source.partner','source.herkunft'];
+
+/* Baut den Datensatz. `arm:true` erzeugt die Fassung fuer den Weg OHNE
+   Aushang-Schluessel: so wenig drin, dass der Transportweg egal ist.
+
+   NICHT "besser verschluesseln", sondern WENIGER HINEINSCHREIBEN. Was nicht
+   in der Datei steht, kann kein Transportweg verlieren. Das ist der
+   eigentliche Hebel — Verschluesselung schuetzt nur den Weg, Armut schuetzt
+   den Datensatz.
+
+   Der Standardaufruf (ohne Schalter) bleibt Feld fuer Feld unveraendert. Er
+   ist der Fingerabdruck, gegen den t-schema jede Aenderung des Formats
+   meldet; ihn hier still zu verkuerzen wuerde jeden Partner brechen, der
+   unser Format liest. */
+function buildExport(name,rr,m,secs,opt){
+  const satz=buildExportVoll(name,rr,m,secs);
+  if(!opt||!opt.arm) return satz;
+  for(const pfad of ARME_FELDER){
+    const teile=pfad.split('.');
+    let o=satz;
+    for(let i=0;i<teile.length-1 && o;i++) o=o[teile[i]];
+    if(o) delete o[teile[teile.length-1]];
+  }
+  return satz;
+}
+
+function buildExportVoll(name,rr,m,secs){
   return {
     schema:{ name:'carlon_equine_v1', version:'1.0' },
     source:{ app:'CARLON Mess-Station (Browser)', transport:'web-bluetooth', herkunft:quelleKey,
@@ -3626,6 +3731,91 @@ function buildExport(name,rr,m,secs){
   };
 }
 
+/* ════════════════════════════════════════════════════════════════════════
+   DER DATEIWEG — die eine Stelle, an der eine Datei das Geraet verlaesst
+   ════════════════════════════════════════════════════════════════════════
+
+   Beide Knoepfe ("An die Praxis senden" und "Als Datei speichern") holen ihre
+   Datei HIER. Zwei Bauwege haetten zwei Gestalten ergeben, und die
+   Pruefstrecke haette nur eine davon bewacht — die andere waere still
+   personenbezogen geblieben.
+
+   ZWEI WEGE, beide noetig:
+
+   Weg A · MIT AUSHANG (`?fach=` und `?k=` im Link)
+     Die Besitzerin hat den Aushang ihrer Praxis gescannt. Es gibt einen
+     oeffentlichen Schluessel. Die Datei wird dagegen verschluesselt — nur
+     diese eine Praxis kann sie oeffnen. WhatsApp traegt dann Chiffrat.
+     Das ist der Weg, den die Kundin eines zahlenden Tierarztes geht.
+
+   Weg B · OHNE AUSHANG (kein Schluessel)
+     Die Besitzerin hat uns selbst gefunden — und genau die bringt uns neue
+     Praxen. Gegen einen Schluessel, der nicht existiert, laesst sich nicht
+     verschluesseln, und ein Passwort waere Selbstbetrug: sie muesste es
+     ueber denselben Kanal durchgeben, dann ist nichts gewonnen.
+     Also die andere Loesung: den Datensatz so ARM machen, dass der
+     Transportweg egal ist. Wer den Sender wissen will, liest die
+     WhatsApp-Nachricht — den Absender liefert der Kanal, nicht die Datei.
+
+   Weg B ist keine Sackgasse, sondern die Vorstufe: schickt die Praxis ihr
+   spaeter einen Link mit `fach=` ("Messung anfordern" im Cockpit), ist sie
+   in Weg A.
+
+   `POSTFACH_AN` steht bewusst WEIT OBEN bei den uebrigen Adress-Konstanten
+   und nicht hier: `befundHolen()` laeuft schon beim Laden der Seite, also
+   lange bevor diese Zeile an der Reihe waere. Eine Konstante, die erst
+   spaeter deklariert wird, ist bis dahin nicht bloss undefiniert, sondern
+   wirft — die Seite waere weiss geblieben. Dieselbe Falle ist in dieser
+   Datei bei `hatPraxis` schon einmal zugeschnappt.                          */
+
+/* DIE ZUSAGE, die diese Funktion traegt und die die Rechtstexte behaupten:
+   Was das Geraet verlaesst, ist ENTWEDER versiegelt ODER arm. Ein dritter
+   Fall existiert nicht — deshalb holen beide Knoepfe ihre Datei hier.
+   `lesbar:true` erzwingt die arme Klarfassung: das ist die eigene Kopie der
+   Besitzerin, die sie auch selbst oeffnen koennen muss. Ein Chiffrat, das nur
+   ihre Praxis lesen kann, waere unter "Als Datei speichern" eine Zumutung. */
+async function weggabeDatei(opt){
+  const name=$('#horse').value.trim()||'Pferd';
+  const wegA=!!(fach&&praxisKey) && !(opt&&opt.lesbar);
+  /* Sprechender Dateiname. Er ist das Einzige, was die Tieraerztin in der
+     WhatsApp-Liste sieht, bevor sie tippt — "aufnahme.json" haette sie
+     zwischen zwanzig anderen nicht wiedergefunden. */
+  const stamp=(S.startedAt||new Date()).toISOString().slice(0,10);
+  const rein=name.replace(/[^\p{L}\p{N}_-]+/gu,'-').replace(/^-+|-+$/g,'')||'Pferd';
+  const dname=`CARLON_${rein}_${stamp}.json`;
+
+  const satz=buildExport(name,S.rr,metrics(S.rr),laufzeitSek(),{arm:!wegA});
+
+  /* Der Rueckweg wird NICHT mehr eingelegt. Er war die Rueckadresse fuer das
+     Postfach — ohne Postfach schickt die Praxis das Befund-PDF ueber ihren
+     eigenen Kanal, so wie Praxen Befunde seit jeher uebermitteln. Dabei ist
+     sie Verantwortliche, nicht wir. Eine Streichung, kein Bau. */
+
+  if(!wegA){
+    return { datei:new File([JSON.stringify(satz)],dname,{type:'application/json'}),
+             verschluesselt:false };
+  }
+  const umschlag=await Krypto.versiegeln(praxisKey, JSON.stringify(satz), fach);
+  /* Die Huelle bleibt JSON und traegt `art` — daran erkennt das Cockpit sie
+     am INHALT, nicht an der Dateiendung. Eine Endung ueberlebt den Weg durch
+     WhatsApp, Mail und drei Betriebssysteme nicht zuverlaessig; der Inhalt
+     schon. */
+  const huelle={ art:'carlon-umschlag', v:1, fach, umschlag };
+  return { datei:new File([JSON.stringify(huelle)],dname,{type:'application/json'}),
+           verschluesselt:true };
+}
+
+/* Herunterladen ist der RUECKFALL, nie der Hauptweg.
+   Auf dem iPhone sind es fuenf Handgriffe — Datei in "Dateien" suchen, App
+   wechseln, Kontakt suchen, Anhang finden, senden. Genau im Moment des
+   Erfolgs bricht da ein Teil ab, und man merkt es nie. */
+function dateiHerunterladen(datei){
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(datei); a.download=datei.name;
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(()=>URL.revokeObjectURL(a.href),4000);
+}
+
 /* ── Übergabe ──────────────────────────────────────────────────────────── */
 $('#btnSend').addEventListener('click', async ()=>{
   /* Das eigentliche Tor. Ein deaktivierter Knopf haelt niemanden auf, der
@@ -3636,6 +3826,48 @@ $('#btnSend').addEventListener('click', async ()=>{
   $('#err').textContent=''; $('#btnSend').disabled=true; $('#btnSave').disabled=true;
   $('#barWrap').classList.remove('hidden');
   try{
+    /* ── DER DATEIWEG ────────────────────────────────────────────────────
+       Der Regelweg, seit das Postfach schlaeft. Ein Tipp, dann das
+       Teilen-Blatt des Systems — WhatsApp, Mail, Signal, Threema, AirDrop.
+       Wir sehen nie, an wen es geht, und muessen keine fremde Adresse
+       speichern.
+
+       `canShare` wird GEFRAGT, nicht angenommen: Browser lehnen Dateien
+       ab, deren Typ sie nicht teilen duerfen, und ein `share()`, das
+       daran scheitert, saehe fuer die Besitzerin aus wie ein kaputter
+       Knopf. Sagt der Browser nein, faellt es auf Herunterladen zurueck —
+       sichtbar, mit Erklaerung, nicht still. */
+    if(!POSTFACH_AN && !room){
+      $('#status').textContent='Bereite die Datei vor…'; $('#pb').style.width='40%';
+      const {datei,verschluesselt}=await weggabeDatei();
+      $('#pb').style.width='100%';
+      const text=verschluesselt
+        ? 'Hier ist die Herzfrequenz-Messung von meinem Pferd. Die Datei ist für deine Praxis verschlüsselt.'
+        : 'Hier ist die Herzfrequenz-Messung von meinem Pferd. Öffnen mit CARLON: '
+          + (window.CARLON_KANON||new URL('index.html',location.href).toString());
+      let geteilt=false;
+      if(navigator.canShare && navigator.canShare({files:[datei]})){
+        try{
+          await navigator.share({title:'Messung für die Praxis', text, files:[datei]});
+          geteilt=true;
+        }catch(_){ /* abgebrochen oder abgelehnt — Rueckfall unten */ }
+      }
+      if(!geteilt) dateiHerunterladen(datei);
+      $('#status').innerHTML='<span class="done">✓ '
+        +(geteilt?'Datei weitergegeben':'Datei gespeichert')+'</span>'
+        +'<div style="font-size:12px;color:var(--sec);margin-top:6px">'
+        +(geteilt
+          ? (verschluesselt
+             ? 'Nur deine Praxis kann sie öffnen — unterwegs ist sie unlesbar.'
+             : 'Sie enthält nur die Messung deines Pferds, sonst nichts.')
+          : 'Dein Browser kann Dateien nicht direkt teilen. Die Datei liegt in deinen Downloads — schick sie deiner Tierärztin wie ein Foto.')
+        +'</div>';
+      Verlauf.hinzu({art:'gesendet'}); lageZeigen();
+      weitersagenZeigen();
+      $('#btnSend').classList.add('hidden'); $('#btnSave').disabled=false;
+      $('#btnAgain').classList.remove('hidden');
+      return;
+    }
     if(fach&&praxisKey){
       /* Der neue Weg: verschluesseln und einwerfen. Niemand muss warten.
          Verschluesselt wird HIER, auf dem Geraet des Besitzers — der
@@ -3704,8 +3936,19 @@ $('#btnSend').addEventListener('click', async ()=>{
   }
 });
 
-$('#btnSave').addEventListener('click',()=>{
+$('#btnSave').addEventListener('click',async ()=>{
   if(!S.blob) return;
+  /* Solange das Postfach lief, war dies der Rohexport. Jetzt ist es die
+     eigene Kopie der Besitzerin — arm und lesbar, damit sie sie auch dann
+     noch oeffnen kann, wenn sie sie in einem Jahr wiederfindet. */
+  if(!POSTFACH_AN){
+    try{
+      const {datei}=await weggabeDatei({lesbar:true});
+      dateiHerunterladen(datei);
+      $('#btnAgain').classList.remove('hidden');
+      return;
+    }catch(e){ /* faellt auf den Rohexport zurueck, statt gar nichts zu tun */ }
+  }
   const a=document.createElement('a');
   a.href=URL.createObjectURL(S.blob); a.download=S.fname;
   document.body.appendChild(a); a.click(); a.remove();

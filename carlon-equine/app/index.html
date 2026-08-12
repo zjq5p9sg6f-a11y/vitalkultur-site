@@ -2686,6 +2686,45 @@ const Importer = {
     try{ return JSON.parse(decodeURIComponent(escape(atob(m[1])))); }catch(e){ return null; }
   },
 
+  /* ── VERSIEGELTE DATEI ÖFFNEN ──────────────────────────────────────────
+     Der Dateiweg: die Besitzerin hat den Aushang dieser Praxis gescannt, ihre
+     Station hat gegen den oeffentlichen Schluessel DIESER Praxis
+     verschluesselt, und die Datei ist ueber WhatsApp gereist. Unterwegs war
+     sie unlesbar; hier ist sie es nicht.
+
+     ERKANNT WIRD AM INHALT, NICHT AN DER ENDUNG. Eine Dateiendung ueberlebt
+     den Weg durch drei Chat-Programme und zwei Betriebssysteme nicht
+     zuverlaessig — `art:'carlon-umschlag'` schon.
+
+     ENTSCHLUESSELT WIRD MIT DEM VORHANDENEN VERFAHREN. Krypto.oeffnen ist
+     dasselbe, das der Posteingang benutzt: ein zweiter Entschluesselungspfad
+     waere ein zweiter Ort, an dem eine Schluesselableitung auseinanderlaufen
+     kann — und das faellt erst auf, wenn eine echte Aufnahme nicht mehr
+     aufgeht.
+
+     WARUM DIE FEHLERMELDUNGEN SO GENAU SIND: "nicht lesbar" laesst die
+     Tieraerztin raten. Die haeufigste Ursache ist kein Fehler, sondern ein
+     Missverstaendnis — die Datei gehoert zur Praxis nebenan, oder dieses
+     Geraet hat die Praxis-Sicherung nie eingespielt. Beides kann sie sofort
+     selbst aufloesen, wenn es dasteht. */
+  async umschlagOeffnen(raw){
+    if(!raw || raw.art!=='carlon-umschlag' || !raw.umschlag) return {ok:true, raw};
+    if(typeof Krypto==='undefined' || typeof Praxis==='undefined')
+      return {ok:false, grund:'Verschlüsselte Aufnahme — das Schlüsselmodul fehlt in dieser Fassung'};
+    let ich;
+    try{ ich=await Praxis.ich(); }
+    catch(e){ return {ok:false, grund:'Der Praxis-Schlüssel ließ sich nicht laden'}; }
+    /* Die Fachnummer VOR dem Entschluesseln vergleichen. Sonst scheitert die
+       Entschluesselung an der Bindung und meldet dasselbe wie ein defektes
+       Chiffrat — die Tieraerztin suchte dann einen Fehler, wo keiner ist. */
+    if(raw.fach && ich.fach && raw.fach!==ich.fach)
+      return {ok:false, grund:'An eine andere Praxis adressiert — diese Aufnahme kann nur mit deren Schlüssel geöffnet werden'};
+    let klar;
+    try{ klar=await Krypto.oeffnen(ich.box.privateKey, raw.umschlag, raw.fach||ich.fach); }
+    catch(e){ return {ok:false, grund:'Verschlüsselte Aufnahme — ließ sich mit dem Schlüssel dieses Geräts nicht öffnen. Praxis-Sicherung schon eingespielt?'}; }
+    try{ return {ok:true, raw:JSON.parse(klar)}; }
+    catch(e){ return {ok:false, grund:'Entschlüsselt, aber der Inhalt ist kein gültiger Datensatz'}; }
+  },
   async scan(files){
     const skipped=[],jsonFiles=[],htmlFiles=[];
     for(const f of files){
@@ -2708,6 +2747,16 @@ const Importer = {
         if(f.__raw) raws=[f.__raw];                                  // schon konvertiert (Befund-Datei)
         else { const text=await f.text();
           raws=/\.ndjson$/i.test(f.name)?text.split('\n').filter(l=>l.trim()).map(l=>JSON.parse(l)):[JSON.parse(text)]; }
+        /* Versiegelte Dateien zuerst oeffnen. Danach ist alles Weitere
+           derselbe Weg wie bei jeder anderen Datei — nachnutzen, nicht
+           nachbauen. */
+        for(let i=0;i<raws.length;i++){
+          const r=await this.umschlagOeffnen(raws[i]);
+          if(!r.ok){ skipped.push({name:f.name, reason:r.grund}); raws[i]=null; continue; }
+          raws[i]=r.raw;
+        }
+        raws=raws.filter(Boolean);
+        if(!raws.length) continue;
         // FHIR-Bundles in unser Rohformat uebersetzen
         raws=raws.map(r=>(r&&r.resourceType==='Bundle')?(Importer.fromFHIR(r)||r):r);
         for(const raw of raws){
