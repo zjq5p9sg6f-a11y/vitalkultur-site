@@ -63,6 +63,13 @@
          text-transform:uppercase;color:#4a6478;text-align:center;line-height:1.6}
   .hinweis{font-size:8px;color:#4a6478;line-height:1.45;margin-top:3.5mm;max-width:72mm}
   @media print{ body{background:#fff;padding:0;gap:0} .steuer{display:none} .karte{box-shadow:none} }
+
+/* § 5 DDG: die Seite ist oeffentlich abrufbar, auch wenn sie als Druckvorlage
+   gedacht ist. Der Weg zu Impressum und Datenschutz muss von hier bestehen.
+   Nur am Bildschirm — auf dem gedruckten Blatt hat er nichts zu suchen. */
+.rechtsweg{max-width:60ch;margin:8mm auto 4mm;text-align:center;font-size:11px;opacity:.62}
+.rechtsweg a{display:inline-block;min-height:44px;line-height:44px;padding:0 10px;color:inherit}
+@media print{.rechtsweg{display:none}}
 </style>
 
 <div class="steuer">
@@ -113,3 +120,5 @@ function zeichnen(){
 feld.addEventListener('input', zeichnen);
 zeichnen();
 </script>
+
+<div class="rechtsweg"><a href="/impressum.html">Impressum</a> · <a href="/privacy.html">Datenschutz</a> · <a href="/agb.html">AGB</a></div>

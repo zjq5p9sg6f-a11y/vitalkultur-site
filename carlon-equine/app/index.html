@@ -5865,9 +5865,66 @@ const Handoff={
     return (Handoff._assets={font,logo});
   },
 
-  async build(recId){
+  /* ---------- Der Befund spricht die Sprache des Empfaengers ----------
+     Der Befund ist das EINZIGE Stueck CARLON, das das Haus verlaesst und bei
+     jemandem ankommt, der unser Cockpit nie sehen wird — Ueberweisungsklinik,
+     Studienpartner, Universitaet. Fuer Gent, Massey und jede weitere
+     internationale Zusammenarbeit ist nicht die Oberflaeche die Sprachmauer,
+     sondern dieses Dokument.
+
+     Die Sprache wird beim Erzeugen gewaehlt, NICHT im Dokument umgeschaltet.
+     Grund: die Datei bleibt damit frei von JavaScript (die Diagramme sind
+     eingebettetes SVG), sie druckt sauber, und es gibt keinen halb
+     uebersetzten Zwischenzustand. Weitere Sprachen sind ein Eintrag mehr —
+     die App traegt bereits zehn. */
+  WORTE:{
+    de:{ code:'de', loc:'de-DE', komma:true, datei:'Befund',
+      eyebrow:'Herzraten-Befund', vom:'Befund vom', besitzer:'Besitzer',
+      tMean:'Ø Puls', tMin:'Ruhe-Puls', tMax:'Spitze', tQual:'Signalgüte',
+      chartVit:'Puls und Herzratenvariabilität', chartPoi:'Schlag zu Schlag · Poincaré',
+      chartNix:'Keine Kurvendaten in dieser Aufnahme',
+      notiz:'Einschätzung der Praxis',
+      handT:'Für die weiterbehandelnde Praxis',
+      handP:'Dieser Befund enthält den vollständigen Datensatz als offenes FHIR-R5-Bundle — direkt in euer Praxis- oder Klinik-System übernehmbar, ohne Abtippen.',
+      handA:'FHIR-Bundle speichern',
+      methT:'Methode &amp; Grenzen.',
+      methGeraet:'Aufzeichnung Polar H10 (RR-Intervalle).',
+      /* Die Filterkette wird nur genannt, wenn sie auch gelaufen ist —
+         siehe `herkunftSatz`. van Loon 2019 gegen PubMed geprueft
+         (PMID 30871832): 2°-AV-Block ist eine physiologische Arrhythmie,
+         die unter Belastung verschwindet. Genau das tut unsere Stufe 4.
+         NIEMALS "van Loon 2017" — diese Arbeit existiert nicht. */
+      methKette:'Die Kennwerte wurden von der aufzeichnenden CARLON-App berechnet und dort durch die equine Filterkette geführt: Plausibilitätsprüfung, T-Wellen-Zusammenführung, Artefaktkorrektur nach Lipponen &amp; Tarvainen (2019, equine adaptiert), Reklassifikation des physiologischen AV-Blocks II° nach van Loon (2019, Vet Clin North Am Equine Pract 35:85–102) und Kubios-Spline.',
+      methRoh:'Diese Aufnahme enthielt keine von der App berechneten Kennwerte. Die mit † markierten Werte wurden hier aus der Rohserie der RR-Intervalle abgeleitet — ohne Artefaktkorrektur und ohne AV-Block-Reklassifikation. Der physiologische AV-Block II° ist beim ruhenden Pferd häufig (van Loon 2019) und hebt RMSSD und SDNN erheblich an; an echten Aufnahmen wurden bis zu +130 % gemessen. Diese Werte nicht gegen Referenzwerte oder eine Baseline stellen.',
+      methBand:'Frequenzbänder nach Visser (2002), nicht human. Nicht-stationäre Kennwerte werden bewusst nicht berechnet.',
+      mdrT:'Kein Medizinprodukt, keine Diagnose.',
+      mdr:'Nicht dazu bestimmt, Krankheiten zu erkennen, zu behandeln, zu heilen oder zu verhüten — die medizinische Beurteilung trifft ausschließlich die behandelnde Tierärztin oder der behandelnde Tierarzt.',
+      standard:'OFFENER BIOMETRIE-STANDARD FÜR PFERDE',
+      toast:'Befund erstellt — als Datei weitergeben (Mail, AirDrop, Messenger)' },
+    en:{ code:'en', loc:'en-GB', komma:false, datei:'Report',
+      eyebrow:'Heart rate report', vom:'Report of', besitzer:'Owner',
+      tMean:'Mean HR', tMin:'Resting HR', tMax:'Peak', tQual:'Signal quality',
+      chartVit:'Heart rate and heart rate variability', chartPoi:'Beat to beat · Poincaré',
+      chartNix:'No waveform data in this recording',
+      notiz:'Assessment by the practice',
+      handT:'For the receiving practice or clinic',
+      handP:'This report carries the complete dataset as an open FHIR R5 bundle — importable directly into your practice or clinic system, with nothing to retype.',
+      handA:'Save FHIR bundle',
+      methT:'Method &amp; limits.',
+      methGeraet:'Recorded with a Polar H10 (RR intervals).',
+      methKette:'The metrics were computed by the recording CARLON app and passed through its equine filter chain there: plausibility check, T-wave merging, artefact correction after Lipponen &amp; Tarvainen (2019, adapted for the horse), reclassification of physiological second-degree AV block after van Loon (2019, Vet Clin North Am Equine Pract 35:85–102), and Kubios spline interpolation.',
+      methRoh:'This recording contained no metrics computed by the app. Values marked † were derived here from the raw RR series — without artefact correction and without AV-block reclassification. Second-degree AV block is a frequent physiological finding in the resting horse (van Loon 2019) and raises RMSSD and SDNN considerably; up to +130 % has been measured on real recordings. Do not compare these values against reference ranges or a baseline.',
+      methBand:'Frequency bands after Visser (2002), not human ones. Non-stationary metrics are deliberately not computed.',
+      mdrT:'Not a medical device, not a diagnosis.',
+      mdr:'Not intended to detect, treat, cure or prevent disease — the medical assessment rests solely with the attending veterinarian.',
+      standard:'OPEN BIOMETRIC STANDARD FOR HORSES',
+      toast:'Report created — pass it on as a file (mail, AirDrop, messenger)' }
+  },
+
+  async build(recId, sprache){
     const r=State.recordings.find(x=>x.id===recId); if(!r||!r.metrics){ Toast.show('Keine Messwerte in dieser Aufnahme','warn'); return; }
     const h=State.horses.find(x=>x.id===r.horseId)||{};
+    const L=Handoff.WORTE[sprache]||Handoff.WORTE.de;
     // RR aus der gespeicherten Aufnahme; der Normalizer kennt alle Feldvarianten.
     const m=r.metrics;
     const rr=(r.rr&&r.rr.length?r.rr:null)
@@ -5876,23 +5933,36 @@ const Handoff={
     const {font,logo}=await Handoff.assets();
     const praxis=(State.settings&&State.settings.clinicName)||'';
     const when=new Date(r.startedAt||Date.now());
-    const dstr=when.toLocaleDateString('de-DE',{day:'2-digit',month:'long',year:'numeric'});
-    const tstr=when.toLocaleTimeString('de-DE',{hour:'2-digit',minute:'2-digit'});
+    const dstr=when.toLocaleDateString(L.loc,{day:'2-digit',month:'long',year:'numeric'});
+    const tstr=when.toLocaleTimeString(L.loc,{hour:'2-digit',minute:'2-digit'});
+
+    /* Herkunft der Zahlen — der Punkt, an dem sich Glaubwuerdigkeit entscheidet.
+       Der Normalizer weiss laengst, ob ein Kennwert aus dem App-Export stammt
+       (gefiltert) oder hier aus der Rohserie abgeleitet wurde. Das Cockpit
+       vermerkt dazu intern "bis zu 130 % zu hoch". Bis hierher stand davon
+       NICHTS im Befund: die Zahl wurde nackt gedruckt und darunter pauschal
+       Artefaktkorrektur behauptet — auch dann, wenn keine stattgefunden hatte.
+       Genau diese Sorte Fehler faellt einem Kardiologen als Erstes auf. */
+    const roh=(k)=>/uncorrected$/.test(String((m.provenance||{})[k]||''));
+    const irgendRoh=['rmssd','sdnn','meanHR','sd1','sd2'].some(roh);
 
     // Diagramme als fertiges SVG einbetten — die Datei braucht kein JS.
     const charts = rr.length>16
-      ? `<div class="cw"><div class="ct">Puls und Herzratenvariabilität</div>${Chart.dualVitals(rr,{w:900,h:340})}</div>`
-        + (rr.length>40?`<div class="cw"><div class="ct">Schlag zu Schlag · Poincaré</div>${Chart.poincare(rr,{size:520,sd1:m.sd1,sd2:m.sd2})}</div>`:'')
-      : '<div class="cw"><div class="ct">Keine Kurvendaten in dieser Aufnahme</div></div>';
+      ? `<div class="cw"><div class="ct">${L.chartVit}</div>${Chart.dualVitals(rr,{w:900,h:340})}</div>`
+        + (rr.length>40?`<div class="cw"><div class="ct">${L.chartPoi}</div>${Chart.poincare(rr,{size:520,sd1:m.sd1,sd2:m.sd2})}</div>`:'')
+      : `<div class="cw"><div class="ct">${L.chartNix}</div></div>`;
 
     const bundle=FHIR.bundle(r,h);
     const fhirB64=btoa(unescape(encodeURIComponent(JSON.stringify(bundle,null,2))));
-    const val=(k,v,u)=>v==null?'':`<div class="t"><span>${k}</span><b>${typeof v==='number'?fmt1(v).replace('.',','):v}${u?`<u>${u}</u>`:''}</b></div>`;
+    // Dezimaltrennzeichen folgt der Sprache — ein englischer Befund mit
+    // "42,3 ms" liest sich fuer einen Wissenschaftler wie ein Tippfehler.
+    const zahl=(v)=>{const s=fmt1(v); return L.komma?s.replace('.',','):s;};
+    const val=(k,v,u,pk)=>v==null?'':`<div class="t"><span>${k}${pk&&roh(pk)?' †':''}</span><b>${typeof v==='number'?zahl(v):v}${u?`<u>${u}</u>`:''}</b></div>`;
     const note=(h.notes||'').trim();
 
-    const html=`<!doctype html><html lang="de"><meta charset="utf-8">
+    const html=`<!doctype html><html lang="${L.code}"><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>CARLON Equine — Befund ${esc(h.name||'Pferd')} · ${dstr}</title>
+<title>CARLON Equine — ${L.datei} ${esc(h.name||'Pferd')} · ${dstr}</title>
 <style>
 ${font?`@font-face{font-family:'Jost';font-weight:300 700;font-display:swap;src:url('${font}') format('woff2')}`:''}
 :root{--void:#0A0A0C;--bg:#101013;--border:#26262C;--sub:#34343B;--text:#EDEEF1;--sec:#A4A5AC;--dim:#7E7E88;
@@ -5950,41 +6020,41 @@ svg .hov-cross,svg .hov-focus{display:none}
 <div class="sheet">
   <div class="bar">${logo?`<img src="${logo}" alt="">`:''}
     <div><div class="wm">CARLON EQUINE</div><div class="tag">Equine Heart Science</div></div>
-    <div class="who">${praxis?esc(praxis)+'<br>':''}Befund vom ${dstr}</div></div>
+    <div class="who">${praxis?esc(praxis)+'<br>':''}${L.vom} ${dstr}</div></div>
 
-  <span class="eyebrow">Herzraten-Befund</span>
+  <span class="eyebrow">${L.eyebrow}</span>
   <h1>${esc(h.name||'Pferd')}</h1>
-  <div class="sub">${dstr} · ${tstr}${h.breed?' · '+esc(h.breed):''}${h.owner?' · Besitzer: '+esc(h.owner):''}</div>
+  <div class="sub">${dstr} · ${tstr}${h.breed?' · '+esc(h.breed):''}${h.owner?' · '+L.besitzer+': '+esc(h.owner):''}</div>
 
   <div class="tiles">
-    ${val('Ø Puls',m.meanHR,'bpm')}${val('Ruhe-Puls',m.minHR,'bpm')}${val('Spitze',m.maxHR,'bpm')}
-    ${val('RMSSD',m.rmssd,'ms')}${val('SDNN',m.sdnn,'ms')}${val('Signalgüte',m.quality,'%')}
+    ${val(L.tMean,m.meanHR,'bpm','meanHR')}${val(L.tMin,m.minHR,'bpm')}${val(L.tMax,m.maxHR,'bpm')}
+    ${val('RMSSD',m.rmssd,'ms','rmssd')}${val('SDNN',m.sdnn,'ms','sdnn')}${val(L.tQual,m.quality,'%')}
   </div>
 
   ${charts}
 
-  ${note?`<div class="note"><span class="eyebrow">Einschätzung der Praxis</span><p>${esc(note)}</p></div>`:''}
+  ${note?`<div class="note"><span class="eyebrow">${L.notiz}</span><p>${esc(note)}</p></div>`:''}
 
   <!-- Der eigentliche Hebel: die empfangende Einrichtung uebernimmt den
        Datensatz in EIN Klick in ihr eigenes System. Wer den Befund bekommt,
        bekommt den Standard. -->
   <div class="hand">
-    <b>Für die weiterbehandelnde Praxis</b>
-    <p>Dieser Befund enthält den vollständigen Datensatz als offenes FHIR-R5-Bundle — direkt in euer Praxis- oder Klinik-System übernehmbar, ohne Abtippen.</p>
+    <b>${L.handT}</b>
+    <p>${L.handP}</p>
     <a download="CARLON_FHIR_${(h.name||'Pferd').replace(/[^\p{L}\p{N}_-]+/gu,'-')}.json"
-       href="data:application/fhir+json;base64,${fhirB64}">FHIR-Bundle speichern</a>
+       href="data:application/fhir+json;base64,${fhirB64}">${L.handA}</a>
   </div>
 
   <div class="meth">
-    <b style="color:var(--sec)">Methode &amp; Grenzen.</b> Aufzeichnung Polar H10 (RR-Intervalle).
-    Artefakt-Korrektur nach Lipponen-Tarvainen 2019 (equine-adaptiert), Frequenzbänder nach Visser 2002 (nicht human).
-    Nicht-stationäre Kennwerte werden bewusst nicht berechnet.
-    <b style="color:var(--sec)">Kein Medizinprodukt, keine Diagnose.</b> Nicht dazu bestimmt, Krankheiten zu erkennen, zu behandeln, zu heilen oder zu verhüten — die medizinische Beurteilung trifft ausschließlich die behandelnde Tierärztin oder der behandelnde Tierarzt.
+    <b style="color:var(--sec)">${L.methT}</b> ${L.methGeraet}
+    ${irgendRoh?`<b style="color:var(--sec)">†</b> ${L.methRoh}`:L.methKette}
+    ${L.methBand}
+    <b style="color:var(--sec)">${L.mdrT}</b> ${L.mdr}
   </div>
 
   <div class="foot">
     <div><div class="fw">CARLON EQUINE</div>
-      <div style="font-family:var(--mono);font-size:9.5px;letter-spacing:.2em;color:var(--cyan-deep);margin-top:4px">OFFENER BIOMETRIE-STANDARD FÜR PFERDE</div></div>
+      <div style="font-family:var(--mono);font-size:9.5px;letter-spacing:.2em;color:var(--cyan-deep);margin-top:4px">${L.standard}</div></div>
     <div class="fu"><a href="https://vitalkultur.com/carlon-equine/">vitalkultur.com/carlon-equine</a></div>
   </div>
 </div>
@@ -5992,10 +6062,10 @@ svg .hov-cross,svg .hov-focus{display:none}
 
     const blob=new Blob([html],{type:'text/html;charset=utf-8'});
     const a=document.createElement('a'); a.href=URL.createObjectURL(blob);
-    a.download=`CARLON_Befund_${(h.name||'Pferd').replace(/[^\p{L}\p{N}_-]+/gu,'-')}_${when.toISOString().slice(0,10)}.html`;
+    a.download=`CARLON_${L.datei}_${(h.name||'Pferd').replace(/[^\p{L}\p{N}_-]+/gu,'-')}_${when.toISOString().slice(0,10)}.html`;
     document.body.appendChild(a); a.click(); a.remove();
     setTimeout(()=>URL.revokeObjectURL(a.href),5000);
-    Toast.show('Befund erstellt — als Datei weitergeben (Mail, AirDrop, Messenger)','ok');
+    Toast.show(L.toast,'ok');
   }
 };
 

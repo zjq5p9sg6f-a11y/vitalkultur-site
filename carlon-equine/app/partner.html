@@ -69,6 +69,13 @@
         letter-spacing:.14em;text-transform:uppercase;color:var(--faint)}
   .hinweis{margin-top:5mm;font-size:9.5px;color:var(--faint);line-height:1.6;max-width:150mm}
   @media print{ body{background:#fff;padding:0} .blatt+.blatt{margin-top:0;page-break-before:always} }
+
+/* § 5 DDG: die Seite ist oeffentlich abrufbar, auch wenn sie als Druckvorlage
+   gedacht ist. Der Weg zu Impressum und Datenschutz muss von hier bestehen.
+   Nur am Bildschirm — auf dem gedruckten Blatt hat er nichts zu suchen. */
+.rechtsweg{max-width:60ch;margin:8mm auto 4mm;text-align:center;font-size:11px;opacity:.62}
+.rechtsweg a{display:inline-block;min-height:44px;line-height:44px;padding:0 10px;color:inherit}
+@media print{.rechtsweg{display:none}}
 </style>
 
 <!-- ════════════════ BLATT 1 ════════════════ -->
@@ -172,3 +179,5 @@
     <span>Entwurf · Blatt 2 von 2</span>
   </div>
 </div>
+
+<div class="rechtsweg"><a href="/impressum.html">Impressum</a> · <a href="/privacy.html">Datenschutz</a> · <a href="/agb.html">AGB</a></div>
