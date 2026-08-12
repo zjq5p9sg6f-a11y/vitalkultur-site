@@ -180,6 +180,37 @@ h2{font-family:var(--font-brand);font-weight:300;font-size:clamp(27px,3.6vw,40px
 
 /* Final CTA */
 .final{padding-top:96px;padding-bottom:44px;text-align:center}
+/* Anmeldung — ruhig, nicht laut. Ein Formular auf einer Seite, die
+   Zurueckhaltung verspricht, darf nicht wie eine Lead-Maschine aussehen. */
+.anmeldung{max-width:720px;margin:56px auto 0;text-align:left;padding:34px 32px 30px;position:relative;
+  border:1px solid var(--border-subtle);border-radius:18px;
+  background:linear-gradient(150deg,rgba(62,207,178,0.05),rgba(62,207,178,0.012))}
+.anmeldung h3{font-family:var(--font-brand);font-weight:400;font-size:clamp(20px,2.4vw,26px);
+  color:var(--text-primary);margin-bottom:10px;letter-spacing:-0.01em}
+.anm-lead{font-size:14.5px;color:var(--text-secondary);font-weight:300;line-height:1.7;margin-bottom:24px}
+.anm-art{display:flex;flex-wrap:wrap;gap:10px 22px;margin-bottom:22px}
+.anm-art label{display:flex;align-items:center;gap:8px;font-size:14px;color:var(--text-secondary);cursor:pointer}
+.anm-art input{accent-color:var(--cyan);width:16px;height:16px}
+.anm-raster{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
+.anmeldung label{display:block;font-size:12.5px;color:var(--text-dim);letter-spacing:0.02em}
+.anmeldung label span{color:var(--text-faint)}
+.anmeldung input,.anmeldung textarea{width:100%;margin-top:6px;padding:12px 13px;border-radius:10px;
+  border:1px solid var(--border-subtle);background:var(--bg-deep);color:var(--text-primary);
+  font-family:inherit;font-size:15px;line-height:1.5}
+.anmeldung input:focus,.anmeldung textarea:focus{outline:none;border-color:var(--cyan);
+  box-shadow:0 0 0 3px rgba(62,207,178,0.13)}
+.anm-weit{display:block;margin-top:16px}
+.anm-weit textarea{resize:vertical;min-height:74px}
+/* Der Honigtopf verschwindet, ohne display:none — manche Maschinen ueberspringen
+   ausgeblendete Felder, hier sollen sie gerade hineinlaufen. */
+.anm-topf{position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden}
+.anm-senden{margin-top:24px;display:inline-block;border:0;cursor:pointer;font-size:15px}
+.anm-senden[disabled]{opacity:0.55;cursor:default}
+.anm-status{margin-top:14px;font-size:14px;min-height:1.2em;color:var(--cyan)}
+.anm-status.fehler{color:#F27359}
+.anm-recht{margin-top:22px;font-size:12px;line-height:1.75;color:var(--text-dim)}
+.anm-recht a{color:var(--cyan)}
+@media(max-width:640px){.anm-raster{grid-template-columns:1fr}.anmeldung{padding:26px 20px 24px}}
 .final .cta-row{margin-top:44px}
 
 /* Footer */
@@ -735,6 +766,67 @@ html.rev-an .rev.in{opacity:1;transform:none}
       <a class="cta-primary" href="/carlon-equine/app/">Cockpit mit 15&nbsp;Demo-Pferden öffnen →</a>
     </div>
     <p class="cta-note">Läuft im Browser. Nichts wird installiert, nichts übertragen, nichts angelegt.</p>
+
+    <!-- ── ANMELDUNG ────────────────────────────────────────────────────
+         Hier standen zwei mailto:-Links. Ein Aussenaudit nannte das „den
+         teuersten Fehler im ganzen Aufbau": wer sie am Telefon oder in
+         einem Webmail-Postfach antippt, landet im besten Fall in einem
+         leeren Mailprogramm, im schlechteren nirgends — und meldet sich
+         kein zweites Mal.
+
+         KEIN FORMULARANBIETER. Formspree waere in zehn Minuten eingebaut
+         und liegt in den USA. Diese Seite verspricht weiter oben, dass
+         keine Daten bei Dritten liegen. Ein Tierarzt, der das liest und
+         dann ein Formular an formspree.io schickt, hat genau EINEN
+         Gedanken — und der kostet mehr als das Formular einbringt. Es geht
+         an unseren eigenen Dienst, dieselbe Bauart wie das Praxis-Postfach.
+
+         OHNE JAVASCRIPT FUNKTIONIERT ES TROTZDEM: das <form> traegt
+         action="mailto:" und faellt damit auf genau das zurueck, was
+         vorher da war — nie schlechter als heute. Dasselbe Prinzip wie
+         beim Einblenden: nichts Wichtiges haengt an einem Skript. -->
+    <form id="anmeldung" class="anmeldung"
+          action="mailto:jan@vitalkultur.com" method="post" enctype="text/plain">
+      <h3>Als Beta-Praxis mitmachen</h3>
+      <p class="anm-lead">Wer in der Beta mitgestaltet, behält seinen Preis als
+         Gründungspartner. Wir melden uns persönlich zurück — meist am selben Tag.</p>
+
+      <div class="anm-art" role="radiogroup" aria-label="Praxisart">
+        <label><input type="radio" name="art" value="mobil" checked> Ich bin mobil unterwegs</label>
+        <label><input type="radio" name="art" value="klinik"> Wir sind eine Klinik</label>
+      </div>
+
+      <div class="anm-raster">
+        <label>Name<input name="name" autocomplete="name" required></label>
+        <label>Praxis oder Klinik<input name="praxis" autocomplete="organization"></label>
+        <label>E-Mail<input name="email" type="email" autocomplete="email" required></label>
+        <label>Telefon <span>(falls Ihnen ein Anruf lieber ist)</span><input name="telefon" type="tel" autocomplete="tel"></label>
+        <label>Region<input name="region" placeholder="z.&nbsp;B. Ortenau, Oberbayern, Münsterland"></label>
+        <label>Etwa wie viele Pferde betreuen Sie?<input name="pferde" inputmode="numeric" placeholder="z.&nbsp;B. 180"></label>
+      </div>
+      <label class="anm-weit">Was möchten Sie zuerst wissen? <span>(freiwillig)</span>
+        <textarea name="nachricht" rows="3" placeholder="Eine Frage, ein Zweifel, ein Wunsch — was auch immer zuerst kommt."></textarea></label>
+
+      <!-- Honigtopf. Im Bild nicht vorhanden, fuer Vorleseprogramme
+           ausgeblendet. Maschinen fuellen jedes Feld aus, Menschen nie. Ein
+           Raetsel wuerde ausgerechnet den aelteren Tierarzt aussperren, den
+           wir am dringendsten wollen. -->
+      <div class="anm-topf" aria-hidden="true">
+        <label>Bitte freilassen<input name="hinweis" tabindex="-1" autocomplete="off"></label>
+      </div>
+
+      <button type="submit" class="cta-primary anm-senden">Anmeldung absenden →</button>
+      <p class="anm-status" id="anmStatus" role="status" aria-live="polite"></p>
+
+      <p class="anm-recht">
+        Wir speichern Ihre Angaben ausschließlich, um Ihre Anmeldung zu bearbeiten
+        (Art.&nbsp;6 Abs.&nbsp;1 lit.&nbsp;b DSGVO), auf unserem eigenen Dienst — nicht bei
+        einem Formularanbieter — und löschen sie spätestens nach 180&nbsp;Tagen.
+        Kein Newsletter, keine Weitergabe.
+        <a href="/privacy.html">Datenschutzerklärung</a> ·
+        oder schreiben Sie einfach an <a href="mailto:jan@vitalkultur.com">jan@vitalkultur.com</a>.
+      </p>
+    </form>
   </div>
 </section>
 
@@ -813,6 +905,45 @@ if(_lb) _lb.addEventListener('click', function(){
   localStorage.setItem('carlon.viewer.lang', window.CARLON_LANG);
   applyLang();
 });
+/* ── ANMELDUNG ABSENDEN ────────────────────────────────────────────────
+   Aufwertung, keine Bedingung: ohne dieses Skript bleibt das <form> mit
+   seinem action="mailto:" genau das, was vorher auf der Seite stand. Mit
+   ihm geht die Anmeldung an unseren eigenen Dienst, ohne dass die Seite
+   verlassen wird.
+   Der Dienst legt die Anmeldung ZUERST ab und versendet DANN die Mail —
+   scheitert der Versand, ist sie trotzdem angekommen. Deshalb ist „ok"
+   hier auch dann die Wahrheit, wenn benachrichtigt:false zurueckkommt.
+   Und wenn gar nichts geht, nennen wir die Adresse, die immer geht. */
+(function(){
+  var f = document.getElementById('anmeldung');
+  if(!f || !window.fetch) return;                 // ohne fetch bleibt mailto
+  var DIENST = 'https://anmeldung.carlon.app/anmeldung';
+  var status = document.getElementById('anmStatus');
+  var knopf  = f.querySelector('.anm-senden');
+  f.addEventListener('submit', function(e){
+    e.preventDefault();
+    var d = {}; new FormData(f).forEach(function(v,k){ d[k] = v; });
+    d.herkunft = 'visite-landingpage';
+    status.className = 'anm-status'; status.textContent = 'Wird gesendet …';
+    knopf.disabled = true;
+    fetch(DIENST, {method:'POST', headers:{'content-type':'application/json'}, body:JSON.stringify(d)})
+      .then(function(r){ return r.json().catch(function(){ return {ok:false}; }); })
+      .then(function(a){
+        if(!(a && a.ok)) throw new Error((a && a.fehler) || 'unbekannt');
+        ['.anm-raster','.anm-weit','.anm-art'].forEach(function(sel){
+          var e2=f.querySelector(sel); if(e2) e2.style.display='none'; });
+        knopf.style.display='none';
+        status.textContent='Angekommen. Wir melden uns bei Ihnen — meist am selben Tag.';
+      })
+      .catch(function(err){
+        status.className='anm-status fehler';
+        status.innerHTML='Das hat gerade nicht geklappt. Schreiben Sie uns bitte direkt an '+
+          '<a href="mailto:jan@vitalkultur.com">jan@vitalkultur.com</a> — wir antworten genauso schnell.';
+        knopf.disabled=false;
+      });
+  });
+})();
+
 // Reveal — IO für Scroll, aber was beim Laden schon im Viewport ist, sofort zeigen (kein Blank-Hero)
 (function(){
   var els = [].slice.call(document.querySelectorAll('.rev'));
