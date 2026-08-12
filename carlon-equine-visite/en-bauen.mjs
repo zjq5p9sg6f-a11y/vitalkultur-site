@@ -119,10 +119,10 @@ tausche('>Was es kostet<', '>What it costs<');
 tausche('Kein Konto, keine Anmeldung, kein Download. Das Demo-Cockpit ist die vollständige Anwendung mit echten Beispielverläufen.',
         'No account, no sign-up, no download. The demo cockpit is the complete application with real example trends.');
 tausche(`<strong>790&nbsp;€ im Jahr</strong> je Praxis oder Standort — oder 79&nbsp;€ monatlich,
-      jeweils zzgl. USt. Alle Tierärztinnen und Tierärzte, alle Pferde, alle Geräte.
+      jeweils netto. Alle Tierärztinnen und Tierärzte, alle Pferde, alle Geräte.
       Kein Aufpreis je Pferd, keine Sitzplatzgebühr.
       <a href="#preis">Was genau enthalten ist →</a>`,
-`<strong>€790 per year</strong> per practice or site — or €79 monthly, plus VAT.
+`<strong>€790 per year</strong> per practice or site — or €79 monthly, each net.
       All vets, all horses, all devices. No per-horse surcharge, no seat fee.
       <a href="#preis">What exactly is included →</a>`);
 
@@ -200,7 +200,7 @@ tausche('Kein Notfallweg', 'Not an emergency channel');
 // Abschnitt 8 — Preis
 tausche('Ein Preis, eine Praxis', 'One price, one practice');
 tausche('Kein Staffelmodell, keine Verhandlung.', 'No tiers, no negotiation.');
-tausche('<b>790&nbsp;€</b> <span>pro Jahr, zzgl. USt</span>', '<b>€790</b> <span>per year, plus VAT</span>');
+/* Ersetzt durch den praeziseren Satz weiter unten (USt. weist Stripe aus). */
 tausche('oder 79&nbsp;€ monatlich · das Jahresabo entspricht 65,83&nbsp;€ im Monat',
         'or €79 monthly · the annual plan works out at €65.83 per month');
 tausche('Unbegrenzt Pferde, Aufnahmen und Verläufe', 'Unlimited horses, recordings and trends');
@@ -445,20 +445,8 @@ tausche(`
       staff and on any number of that business's devices. There is no per-horse surcharge
       and no limit on recordings.
     `);
-tausche(`
-        Das Angebot richtet sich ausschließlich an Unternehmer im Sinne des § 14 BGB.
-        Zahlung, Rechnung und Umsatzsteuer laufen über unseren Zahlungsdienstleister als
-        Merchant of Record. Einzelheiten in
-        <a href="/agb.html#visite">§ 12a unserer AGB</a> und in der
-        <a href="/privacy.html">Datenschutzerklärung</a>.
-      `,
-        `
-        This offer is directed exclusively at entrepreneurs within the meaning of § 14 BGB.
-        Payment, invoicing and VAT run through our payment provider as merchant of record.
-        Details in
-        <a href="/terms.html#visite">§ 12a of our Terms</a> and in the
-        <a href="/privacy-en.html">Privacy Policy</a>.
-      `);
+/* (Der Absatz mit dem Angebot steht weiter unten in der praezisierten
+   Fassung — hier waere er doppelt.) */
 tausche(`
       Zum Einordnen: Der Jahrespreis liegt in der Größenordnung eines einzelnen
       Praxisbesuchs mit Anfahrt. Ob sich das trägt, entscheiden Sie am besten an Ihren
@@ -556,6 +544,21 @@ tausche(`Zwei Seiten, aus dem Demo-Bestand erzeugt — mit Ihrem Briefkopf, den 
         trend and the Poincaré plot, plus a "Method & limits" section naming the sources.
         This is the document you pass on.`);
 tausche('>Muster-Befund als PDF<', '>Sample findings report (PDF)<');
+
+
+/* Umsatzsteuer — WESSEN. Der Kern der Klaerung vom 12.08.2026. */
+tausche('<span>pro Jahr · USt. weist Stripe aus</span>',
+        '<span>per year · VAT charged by Stripe</span>');
+tausche(`Das Angebot richtet sich ausschließlich an Unternehmer im Sinne des § 14 BGB.
+        <strong>Wir selbst rechnen als Kleinunternehmer nach § 19 UStG ohne Umsatzsteuer ab.</strong>
+        Für das Browser-Cockpit tritt <strong>Stripe als Verkäufer im eigenen Namen</strong> auf
+        (Merchant of Record) und weist die Umsatzsteuer nach seinen Verhältnissen aus; mit
+        gültiger EU-USt-IdNr. greift dort das Reverse-Charge-Verfahren. Einzelheiten in`,
+`This offer is directed exclusively at entrepreneurs within the meaning of § 14 BGB.
+        <strong>We ourselves invoice without VAT under the German small-business rule (§ 19 UStG).</strong>
+        For the browser cockpit, <strong>Stripe acts as the seller in its own name</strong>
+        (merchant of record) and charges VAT according to its own status; with a valid EU VAT ID
+        the reverse-charge procedure applies there. Details in`);
 
 if (fehlend.length) {
   console.error('\n  ✗ Der Bau bricht ab — diese Bloecke gibt es in index.html nicht (mehr):\n');
