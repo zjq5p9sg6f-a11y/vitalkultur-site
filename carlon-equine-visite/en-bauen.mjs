@@ -82,6 +82,13 @@ tausche('href="/privacy.html">Datenschutzerklärung</a> ·', 'href="/privacy-en.
 tausche('<a href="/privacy.html" data-en="Privacy" data-de="Datenschutz">Datenschutz</a>',
         '<a href="/privacy-en.html">Privacy</a>');
 tausche('<a href="/agb.html#visite">AGB</a>', '<a href="/terms.html#visite">Terms</a>');
+/* Der praezisierte Umsatzsteuer-Absatz traegt die Rechtsverweise erneut —
+   beim Umschreiben sind sie wieder deutsch geworden. Ein englischer Leser
+   soll nicht gegen einen Text zustimmen, den er nicht lesen kann.
+   Generisch statt einzeln: was uebrig bleibt, wird umgehaengt. */
+s = s.split('href="/agb.html#visite"').join('href="/terms.html#visite"');
+s = s.split('href="/agb.html"').join('href="/terms.html"');
+s = s.split('href="/privacy.html"').join('href="/privacy-en.html"');
 tausche('<a href="/impressum.html">Impressum</a>', '<a href="/impressum.html">Legal notice</a>');
 
 /* ── Sprachwahl sichtbar machen ────────────────────────────────────────
