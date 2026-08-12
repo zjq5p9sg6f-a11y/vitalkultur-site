@@ -11,14 +11,32 @@ setTimeout(function(){ if(!document.querySelector('.rev.in'))
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>CARLON Equine Visite — die Praxis-Ansicht für Tierärzte &amp; Kliniken</title>
-<link rel="icon" href="/app-icon.png">
-<link rel="apple-touch-icon" href="/app-icon.png">
+<!-- FAVICON IN DER EQUINE-CI. Vorher lag hier das allgemeine App-Symbol —
+     das Erste, was ein Tierarzt vom Produkt sieht, war fremde Marke.
+     Drei Groessen statt einer: die feine Linienfuehrung der Wortmarke wird
+     bei 16 px zu Matsch. Die kleinen Fassungen sind deshalb VERDICKT
+     (Dilate r=7 bzw. 4), damit bei 16 px ein Pferdekopf zu erkennen ist
+     statt eines Flecks. Wiedererkennung schlaegt Detail, wenn beides nicht
+     geht. Erzeugt aus equine-mark-1200.png. -->
+<link rel="icon" type="image/png" sizes="16x16" href="/assets/equine-favicon-16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/equine-favicon-32.png">
+<link rel="icon" type="image/png" sizes="48x48" href="/assets/equine-favicon-48.png">
+<link rel="apple-touch-icon" href="/assets/equine-favicon-180.png">
 <!-- GoatCounter — privacy-first, cookieless. Miss Vet-Interesse getrennt: clinic-Besuche = Signal. -->
 <!-- GoatCounter — cookiefrei. count.js wertet DNT NICHT aus (Herstellerentscheidung),
      deshalb laden wir es bei Do-Not-Track / Global Privacy Control gar nicht erst.
      Erst dadurch stimmt die Opt-out-Zusage in der Datenschutzerklaerung. -->
-<link rel="icon" href="/app-icon.png">
-<link rel="apple-touch-icon" href="/app-icon.png">
+<!-- FAVICON IN DER EQUINE-CI. Vorher lag hier das allgemeine App-Symbol —
+     das Erste, was ein Tierarzt vom Produkt sieht, war fremde Marke.
+     Drei Groessen statt einer: die feine Linienfuehrung der Wortmarke wird
+     bei 16 px zu Matsch. Die kleinen Fassungen sind deshalb VERDICKT
+     (Dilate r=7 bzw. 4), damit bei 16 px ein Pferdekopf zu erkennen ist
+     statt eines Flecks. Wiedererkennung schlaegt Detail, wenn beides nicht
+     geht. Erzeugt aus equine-mark-1200.png. -->
+<link rel="icon" type="image/png" sizes="16x16" href="/assets/equine-favicon-16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/equine-favicon-32.png">
+<link rel="icon" type="image/png" sizes="48x48" href="/assets/equine-favicon-48.png">
+<link rel="apple-touch-icon" href="/assets/equine-favicon-180.png">
 <!-- GoatCounter — privacy-first, cookieless. Miss Vet-Interesse getrennt: clinic-Besuche = Signal. -->
 <!-- GoatCounter — cookiefrei. count.js wertet DNT NICHT aus (Herstellerentscheidung),
      deshalb laden wir es bei Do-Not-Track / Global Privacy Control gar nicht erst.
@@ -568,7 +586,7 @@ html.rev-an .rev.in{opacity:1;transform:none}
     <p class="hero-preis">
       <strong>790&nbsp;€ im Jahr</strong> je Praxis oder Standort — oder 79&nbsp;€ monatlich,
       jeweils netto. Alle Tierärztinnen und Tierärzte, alle Pferde, alle Geräte.
-      Kein Aufpreis je Pferd, keine Sitzplatzgebühr.
+      Keine Gebühr je Pferd, je Nutzer, je Gerät.
       <a href="#preis">Was genau enthalten ist →</a>
     </p>
   </div>
@@ -884,11 +902,11 @@ html.rev-an .rev.in{opacity:1;transform:none}
 <section id="preis" class="tarife">
   <div class="wrap">
     <div class="sec-eyebrow">Ein Preis, eine Praxis</div>
-    <h2>Kein Staffelmodell, keine Verhandlung.</h2>
+    <h2>Ein Preis je Betrieb. Kein Staffelmodell, keine Verhandlung.</h2>
     <p class="sec-lead">
       Ein Betrieb — eine Praxis oder ein Standort — mit allen tierärztlichen und
       tiermedizinischen Mitarbeitenden und auf beliebig vielen Geräten dieses Betriebs.
-      Es gibt keinen Aufpreis je Pferd und keine Grenze für Aufnahmen.
+      Es gibt <strong>keine Gebühr je Pferd, je Nutzer oder je Gerät</strong> und keine Grenze für Aufnahmen.
     </p>
     <div class="tarif">
       <div class="tarif-preis"><b>790&nbsp;€</b> <span>pro Jahr · USt. weist Stripe aus</span></div>

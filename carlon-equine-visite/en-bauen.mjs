@@ -127,10 +127,10 @@ tausche('Kein Konto, keine Anmeldung, kein Download. Das Demo-Cockpit ist die vo
         'No account, no sign-up, no download. The demo cockpit is the complete application with real example trends.');
 tausche(`<strong>790&nbsp;€ im Jahr</strong> je Praxis oder Standort — oder 79&nbsp;€ monatlich,
       jeweils netto. Alle Tierärztinnen und Tierärzte, alle Pferde, alle Geräte.
-      Kein Aufpreis je Pferd, keine Sitzplatzgebühr.
+      Keine Gebühr je Pferd, je Nutzer, je Gerät.
       <a href="#preis">Was genau enthalten ist →</a>`,
 `<strong>€790 per year</strong> per practice or site — or €79 monthly, each net.
-      All vets, all horses, all devices. No per-horse surcharge, no seat fee.
+      All vets, all horses, all devices. No fee per horse, per user, per device.
       <a href="#preis">What exactly is included →</a>`);
 
 // Abschnitt 1 — Messbedingung
@@ -206,7 +206,7 @@ tausche('Kein Notfallweg', 'Not an emergency channel');
 
 // Abschnitt 8 — Preis
 tausche('Ein Preis, eine Praxis', 'One price, one practice');
-tausche('Kein Staffelmodell, keine Verhandlung.', 'No tiers, no negotiation.');
+/* Ueberschrift traegt jetzt zusaetzlich den Betriebs-Bezug; weiter unten. */
 /* Ersetzt durch den praeziseren Satz weiter unten (USt. weist Stripe aus). */
 tausche('oder 79&nbsp;€ monatlich · das Jahresabo entspricht 65,83&nbsp;€ im Monat',
         'or €79 monthly · the annual plan works out at €65.83 per month');
@@ -445,12 +445,12 @@ tausche(`Eine Sendung ist kein Anruf. Bei akuten Beschwerden gilt, was immer gil
 tausche(`
       Ein Betrieb — eine Praxis oder ein Standort — mit allen tierärztlichen und
       tiermedizinischen Mitarbeitenden und auf beliebig vielen Geräten dieses Betriebs.
-      Es gibt keinen Aufpreis je Pferd und keine Grenze für Aufnahmen.
+      Es gibt <strong>keine Gebühr je Pferd, je Nutzer oder je Gerät</strong> und keine Grenze für Aufnahmen.
     `,
         `
       One business — one practice or one site — with all veterinary and veterinary-nursing
-      staff and on any number of that business's devices. There is no per-horse surcharge
-      and no limit on recordings.
+      staff and on any number of that business's devices. There is <strong>no fee per horse,
+      per user or per device</strong>, and no limit on recordings.
     `);
 /* (Der Absatz mit dem Angebot steht weiter unten in der praezisierten
    Fassung — hier waere er doppelt.) */
@@ -566,6 +566,13 @@ tausche(`Das Angebot richtet sich ausschließlich an Unternehmer im Sinne des §
         For the browser cockpit, <strong>Stripe acts as the seller in its own name</strong>
         (merchant of record) and charges VAT according to its own status; with a valid EU VAT ID
         the reverse-charge procedure applies there. Details in`);
+
+
+/* Preisversprechen enger gefasst — traegt auch eine zweite Stufe. */
+tausche('Ein Preis je Betrieb. Kein Staffelmodell, keine Verhandlung.',
+        'One price per business. No tiers, no negotiation.');
+/* im Rumpftext-Block mituebersetzt */
+/* in der Hero-Preiszeile mituebersetzt */
 
 if (fehlend.length) {
   console.error('\n  ✗ Der Bau bricht ab — diese Bloecke gibt es in index.html nicht (mehr):\n');
