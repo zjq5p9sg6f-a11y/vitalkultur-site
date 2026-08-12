@@ -19,7 +19,7 @@ document.head.appendChild(s);})();</script>
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Vitalkultur">
 <meta property="og:title" content="CARLON Equine – für Tierärzte & Kliniken">
-<meta property="og:description" content="Betreuung, die nicht an der Stalltür endet. Der Halter misst, du liest den Verlauf, das Pferd wird früher erreicht — browser-lokal, kein Server, keine Cloud.">
+<meta property="og:description" content="Betreuung, die nicht an der Stalltür endet. Der Halter misst, du liest den Verlauf, das Pferd wird früher erreicht — browser-lokal, Auswertung im Browser, nicht in der Cloud.">
 <meta property="og:url" content="https://vitalkultur.com/carlon-equine-visite/">
 <meta property="og:image" content="https://vitalkultur.com/carlon-equine/assets/og-equine.png">
 <meta property="og:locale" content="de_DE">
@@ -334,7 +334,7 @@ footer{border-top:1px solid var(--border-faint);padding:56px 24px 66px;text-alig
       <div class="card">
         <div class="k" data-en="Data protection" data-de="Datenschutz">Datenschutz</div>
         <h3 data-en="Data stays with the horse and with you" data-de="Daten bleiben beim Pferd und bei dir">Daten bleiben beim Pferd und bei dir</h3>
-        <p data-en="Browser-local, no server, no cloud. You are the controller under GDPR. Nothing leaves your device without your action." data-de="Browser-lokal, kein Server, keine Cloud. Du bist Verantwortlicher im Sinne der DSGVO. Nichts verlässt dein Gerät ohne dein Zutun.">Browser-lokal, kein Server, keine Cloud. Du bist Verantwortlicher im Sinne der DSGVO. Nichts verlässt dein Gerät ohne dein Zutun.</p>
+        <p data-en="Analysis runs in your browser, not in a cloud. You are the controller under GDPR. Nothing leaves your device without your action." data-de="Ausgewertet wird im Browser, nicht in einer Cloud. Du bist Verantwortlicher im Sinne der DSGVO. Nichts verlässt dein Gerät ohne dein Zutun.">Ausgewertet wird im Browser, nicht in einer Cloud. Du bist Verantwortlicher im Sinne der DSGVO. Nichts verlässt dein Gerät ohne dein Zutun.</p>
       </div>
     </div>
   </section>
@@ -471,16 +471,18 @@ footer{border-top:1px solid var(--border-faint);padding:56px 24px 66px;text-alig
       <div class="chain">
         <span class="node" data-en="Owner app (local)" data-de="Halter-App (lokal)">Halter-App (lokal)</span>
         <span class="arr">→</span>
-        <span class="node" data-en="Export file" data-de="Export-Datei">Export-Datei</span>
+        <span class="node" data-en="Encrypted before it leaves the device" data-de="Verschlüsselt, bevor es das Gerät verlässt">Verschlüsselt, bevor es das Gerät verlässt</span>
+        <span class="arr">→</span>
+        <span class="node" data-en="Letterbox (30 days, unreadable to us)" data-de="Postfach (30 Tage, für uns unlesbar)">Postfach (30 Tage, für uns unlesbar)</span>
         <span class="arr">→</span>
         <span class="node" data-en="Your browser (local)" data-de="Dein Browser (lokal)">Dein Browser (lokal)</span>
         <span class="arr">→</span>
         <span class="node" data-en="Findings PDF" data-de="Befund-PDF">Befund-PDF</span>
       </div>
-      <p data-en="No server sits in between. The data runs from the owner's device to yours and back — CARLON never sees it. You are the controller; the responsibility, and the trust, stay with you." data-de="Kein Server sitzt dazwischen. Die Daten laufen vom Gerät des Halters zu deinem und zurück — CARLON sieht sie nie. Du bist Verantwortlicher; die Verantwortung, und das Vertrauen, bleiben bei dir.">Kein Server sitzt dazwischen. Die Daten laufen vom Gerät des Halters zu deinem und zurück — CARLON sieht sie nie. Du bist Verantwortlicher; die Verantwortung, und das Vertrauen, bleiben bei dir.</p>
+      <p data-en="Between owner and practice sits a letterbox — and it can read nothing. The recording is encrypted on the owner's device (ECDH P-256, AES-GCM-256) before it leaves; we hold no key and delete automatically after 30 days at the latest. Analysis happens exclusively in your browser. You are the controller; the responsibility, and the trust, stay with you." data-de="Zwischen Halter und Praxis liegt ein Postfach — und es kann nichts lesen. Die Messung wird auf dem Gerät des Halters verschlüsselt (ECDH P-256, AES-GCM-256), bevor sie es verlässt; wir halten keinen Schlüssel und löschen spätestens nach 30 Tagen automatisch. Ausgewertet wird ausschließlich in deinem Browser. Du bist Verantwortlicher; die Verantwortung, und das Vertrauen, bleiben bei dir.">Zwischen Halter und Praxis liegt ein Postfach — und es kann nichts lesen. Die Messung wird auf dem Gerät des Halters verschlüsselt (ECDH P-256, AES-GCM-256), bevor sie es verlässt; wir halten keinen Schlüssel und löschen spätestens nach 30 Tagen automatisch. Ausgewertet wird ausschließlich in deinem Browser. Du bist Verantwortlicher; die Verantwortung, und das Vertrauen, bleiben bei dir.</p>
     </div>
     <p style="margin-top:20px;font-size:14.5px;color:var(--text-secondary);line-height:1.7;font-weight:300" data-en="And local doesn't mean fragile: the cockpit requests persistent browser storage, catches every failed write with an instant backup prompt, and lets you export the whole practice as one file at any time." data-de="Und lokal heißt nicht zerbrechlich: Das Cockpit fordert dauerhaften Browser-Speicher an, fängt jeden fehlgeschlagenen Schreibvorgang mit einem sofortigen Backup-Hinweis ab und lässt dich die ganze Praxis jederzeit als eine Datei exportieren.">Und lokal heißt nicht zerbrechlich: Das Cockpit fordert dauerhaften Browser-Speicher an, fängt jeden fehlgeschlagenen Schreibvorgang mit einem sofortigen Backup-Hinweis ab und lässt dich die ganze Praxis jederzeit als eine Datei exportieren.</p>
-    <p class="trust" data-en="Grounded, not claimed · An assessment, not a diagnosis · Not a medical device (MDR/FDA) · Data stays local — you are the controller · No server, no cloud." data-de="Belegt, nicht behauptet · Einschätzung, keine Diagnose · Kein Medizinprodukt (MDR/FDA) · Daten bleiben lokal — du bist Verantwortlicher · kein Server, keine Cloud.">Belegt, nicht behauptet · Einschätzung, keine Diagnose · Kein Medizinprodukt (MDR/FDA) · Daten bleiben lokal — du bist Verantwortlicher · kein Server, keine Cloud.</p>
+    <p class="trust" data-en="Grounded, not claimed · An assessment, not a diagnosis · Not a medical device (MDR/FDA) · Data stays local — you are the controller · No server, no cloud." data-de="Belegt, nicht behauptet · Einschätzung, keine Diagnose · Kein Medizinprodukt (MDR/FDA) · Daten bleiben lokal — du bist Verantwortlicher · Auswertung im Browser, nicht in der Cloud.">Belegt, nicht behauptet · Einschätzung, keine Diagnose · Kein Medizinprodukt (MDR/FDA) · Daten bleiben lokal — du bist Verantwortlicher · Auswertung im Browser, nicht in der Cloud.</p>
   </section>
 
   <!-- PREISE — Stripe verlangt veroeffentlichte Preise; ehrlicher ist es ohnehin.
@@ -493,6 +495,44 @@ footer{border-top:1px solid var(--border-faint);padding:56px 24px 66px;text-alig
                  kein Link, falscher Betrag, Testlink im Echtbetrieb. Zwei
                  Kopien derselben Links waeren die naechste stille Drift.
        Damit macht EIN Schalterumlegen die ganze Strecke scharf. -->
+  <!-- METHODE — steht bewusst VOR dem Preis.
+       Diese Zielgruppe kauft kein Gefuehl, sie kauft Methode. Die Seite
+       argumentierte bisher nur mit Nutzen (Prioritaet, Kontinuitaet, Respekt) —
+       richtig fuer einen Praxisinhaber, zu wenig fuer jemanden, der gelernt hat
+       zu fragen, wie eine Zahl entstanden ist.
+       NUR BELEGTES BENENNEN: Lipponen & Tarvainen 2019 ist gegen die
+       Grundwahrheit geprueft und zitierbar. Die AV-Block-Stufe wird BESCHRIEBEN,
+       nicht mit einer Publikation belegt — solange die genaue Quelle nicht
+       bestaetigt ist, waere eine Jahreszahl geraten, und bei diesem Leser ist
+       eine falsche Quelle teurer als gar keine. -->
+  <section class="wrap rev" id="methode">
+    <div class="sec-eyebrow" data-en="How it measures" data-de="Wie gemessen wird">Wie gemessen wird</div>
+    <h2 data-en="The method is open." data-de="Die Methode steht offen.">Die Methode steht offen.</h2>
+    <p class="sec-lead" data-en="Anyone asked to judge a number needs to know how it came about. So CARLON keeps its method open — and every analysis states its own quality." data-de="Wer eine Zahl beurteilen soll, muss wissen, wie sie entstanden ist. Deshalb liegt bei CARLON die Methode offen — und jede Auswertung nennt ihre eigene Güte.">Wer eine Zahl beurteilen soll, muss wissen, wie sie entstanden ist. Deshalb liegt bei CARLON die Methode offen — und jede Auswertung nennt ihre eigene Güte.</p>
+    <div class="feats">
+      <div class="feat">
+        <div class="f-k" data-en="ARTEFACTS" data-de="ARTEFAKTE">ARTEFAKTE</div>
+        <h4 data-en="Corrected by a published method" data-de="Bereinigt nach veröffentlichtem Verfahren">Bereinigt nach veröffentlichtem Verfahren</h4>
+        <p data-en="Correction follows Lipponen &amp; Tarvainen (2019) — threshold derived from the quartile deviation of the difference series, not from a house recipe. Thresholds are scaled to the horse, not carried over from humans." data-de="Die Korrektur folgt dem Verfahren von Lipponen &amp; Tarvainen (2019) — Schwelle aus der Quartilsabweichung der Differenzreihe, nicht aus einem Hausrezept. Die Schwellen sind auf das Pferd skaliert, nicht vom Menschen übernommen.">Die Korrektur folgt dem Verfahren von Lipponen &amp; Tarvainen (2019) — Schwelle aus der Quartilsabweichung der Differenzreihe, nicht aus einem Hausrezept. Die Schwellen sind auf das Pferd skaliert, nicht vom Menschen übernommen.</p>
+      </div>
+      <div class="feat">
+        <div class="f-k" data-en="AV BLOCK" data-de="AV-BLOCK">AV-BLOCK</div>
+        <h4 data-en="Vagal pauses are physiology, not error" data-de="Vagale Pausen sind Physiologie, kein Fehler">Vagale Pausen sind Physiologie, kein Fehler</h4>
+        <p data-en="Second-degree AV block in a resting horse is a physiological finding. Our pipeline keeps it as its own category — excluded from HRV, but not counted as measurement error. Smoothing it away corrupts every metric derived from it." data-de="Ein AV-Block II. Grades beim ruhenden Pferd ist ein physiologischer Befund. Unsere Pipeline führt ihn als eigene Kategorie — aus der HRV genommen, aber nicht als Messfehler gezählt. Wer ihn wegglättet, verfälscht jede daraus gerechnete Kennzahl.">Ein AV-Block II. Grades beim ruhenden Pferd ist ein physiologischer Befund. Unsere Pipeline führt ihn als eigene Kategorie — aus der HRV genommen, aber nicht als Messfehler gezählt. Wer ihn wegglättet, verfälscht jede daraus gerechnete Kennzahl.</p>
+      </div>
+      <div class="feat">
+        <div class="f-k" data-en="QUALITY" data-de="GÜTE">GÜTE</div>
+        <h4 data-en="Every recording states how far it carries" data-de="Jede Aufnahme nennt ihre eigene Belastbarkeit">Jede Aufnahme nennt ihre eigene Belastbarkeit</h4>
+        <p data-en="Signal quality, usable beat pairs, duration and time resolution (1/1024 s) appear in the measurement protocol of every analysis — not in the fine print. A recording that is not good enough says so itself." data-de="Signalgüte, auswertbare Schlagpaare, Aufnahmedauer und Zeitauflösung (1/1024 s) stehen im Messprotokoll jeder Auswertung — nicht im Kleingedruckten. Eine Aufnahme, die nichts taugt, sagt es selbst.">Signalgüte, auswertbare Schlagpaare, Aufnahmedauer und Zeitauflösung (1/1024 s) stehen im Messprotokoll jeder Auswertung — nicht im Kleingedruckten. Eine Aufnahme, die nichts taugt, sagt es selbst.</p>
+      </div>
+      <div class="feat">
+        <div class="f-k" data-en="RAW DATA" data-de="ROHDATEN">ROHDATEN</div>
+        <h4 data-en="The RR intervals stay yours" data-de="RR-Intervalle bleiben deine">RR-Intervalle bleiben deine</h4>
+        <p data-en="Export as raw data, with no proprietary index in between. Anyone who wants to recompute, cross-check with other software or publish, can. An analysis you cannot recompute is not one." data-de="Export als Rohdaten, ohne herstellereigene Bewertungszahl dazwischen. Wer nachrechnen, mit anderer Software prüfen oder publizieren will, kann es. Eine Auswertung, die man nicht nachrechnen kann, ist keine.">Export als Rohdaten, ohne herstellereigene Bewertungszahl dazwischen. Wer nachrechnen, mit anderer Software prüfen oder publizieren will, kann es. Eine Auswertung, die man nicht nachrechnen kann, ist keine.</p>
+      </div>
+    </div>
+  </section>
+
   <section class="wrap rev" id="preise">
     <div class="sec-eyebrow" data-en="What it costs" data-de="Was es kostet">Was es kostet</div>
     <h2 data-en="One practice, <em>one price.</em>" data-de="Eine Praxis, <em>ein Preis.</em>">Eine Praxis, <em>ein Preis.</em></h2>

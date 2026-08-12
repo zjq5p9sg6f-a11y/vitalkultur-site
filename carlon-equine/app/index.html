@@ -9268,7 +9268,18 @@ const Safe={
     if(hardFail){ risks.push('Speichern ist zuletzt fehlgeschlagen — bitte jetzt ein Backup sichern.'); wants.add('backup'); }
     /* Dringend, und bewusst NICHT wegklickbar: hier haengt jeder gedruckte
        Aushang dran, nicht nur die eigenen Daten. */
-    if(c.schluesselUngesichert){
+    /* NUR warnen, wenn es etwas zu verlieren GIBT — also NICHT in der Demo.
+       Der Satz spricht von gedruckten Aushaengen, die ins Leere zeigen; das
+       setzt eine Praxis voraus, die schon arbeitet. Eine Demo-Instanz hat
+       keine Aushaenge.
+       WARUM `hasData` NICHT genuegt: die Demo legt Pferde in State an, also
+       ist hasData dort wahr. Und die Demo-Unterdrueckung weiter unten greift
+       nur, wenn nichts `urgent` ist — diese Warnung stufte sich selbst als
+       dringend ein und hebelte sie damit aus. Ergebnis: jeder Interessent von
+       der Visite-Seite wurde mit einem roten Verlustalarm begruesst, bevor er
+       irgendetwas besass. Ein Alarm ohne Anlass entwertet jeden spaeteren. */
+    const istDemo = !!(State.settings && State.settings.isDemo);
+    if(c.schluesselUngesichert && !istDemo){
       risks.push('Ihre Praxis-Kennung ist noch nicht gesichert. Sie liegt nur in diesem Browser — geht sie verloren, zeigen alle gedruckten Aushänge dauerhaft ins Leere.');
       wants.add('backup'); urgent=true;
     }
