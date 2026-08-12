@@ -23,7 +23,7 @@ setTimeout(function(){ if(!document.querySelector('.rev.in'))
 :root{
   --bg-void:#000308; --bg-deep:#02080d; --bg-surface:#06101a; --bg-elev:#0b1a26;
   --border-faint:#102230; --border-subtle:#1b3548; --border-strong:#2a4d65;
-  --text-primary:#e8f8ff; --text-secondary:#8aa9bd; --text-dim:#4a6478; --text-faint:#2e4458;
+  --text-primary:#e8f8ff; --text-secondary:#8aa9bd; --text-dim:#5b7b93; --text-faint:#537b9f; /* AA-Kontrast: #4a6478 lag bei 3,33:1 und #2e4458 bei 2,05:1 auf #000308 — WCAG AA verlangt 4,5:1. Betroffen war genau das Kleingedruckte, das schuetzt: § 14 BGB, „kein Medizinprodukt", Impressum. Farbton behalten, nur so weit gehoben, bis die Schwelle erreicht ist (4,62 / 4,63:1) — immer noch zurueckhaltender als Apples Fussnotengrau. Gemessen 12.08.2026. */
   --cyan:#3ECFB2; --cyan-strong:#6EE6C8; --cyan-deep:#1E8C78;
   --cyan-glow-1:rgba(62,207,178,0.55); --cyan-glow-2:rgba(62,207,178,0.25); --cyan-faint:rgba(62,207,178,0.04);
   --equine:#d4a574;
@@ -72,6 +72,12 @@ h1{font-family:var(--font-brand);font-weight:300;font-size:clamp(33px,6vw,58px);
 .cta-primary{display:inline-flex;align-items:center;gap:9px;padding:15px 30px;border-radius:999px;background:var(--cyan);color:#00120f;font-weight:600;font-size:14.5px;letter-spacing:0.01em;box-shadow:0 0 34px rgba(62,207,178,0.22);transition:transform .16s,box-shadow .16s}
 .cta-primary:hover{transform:translateY(-2px);box-shadow:0 0 46px rgba(62,207,178,0.34)}
 .cta-note{font-family:var(--font-mono);font-size:11px;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-faint)}
+/* Preiszeile im Kopf: sichtbar, aber nicht lauter als die Kernbotschaft.
+   Sie qualifiziert, sie verkauft nicht. */
+.hero-preis{margin-top:26px;font-size:15px;line-height:1.75;color:var(--text-secondary);font-weight:300;
+  max-width:660px;margin-left:auto;margin-right:auto;padding-top:22px;border-top:1px solid var(--border-faint)}
+.hero-preis strong{color:var(--text-primary);font-weight:500}
+.hero-preis a{color:var(--cyan);white-space:nowrap}
 
 /* Sections — EIN einheitlicher vertikaler Rhythmus für alle */
 section{padding-top:78px;padding-bottom:78px}
@@ -371,6 +377,20 @@ html.rev-an .rev.in{opacity:1;transform:none}
       <a class="btn btn-back" href="#preis">Was es kostet</a>
     </div>
     <p class="cta-note">Kein Konto, keine Anmeldung, kein Download. Das Demo-Cockpit ist die vollständige Anwendung mit echten Beispielverläufen.</p>
+    <!-- PREIS SCHON IM KOPF (12.08.2026).
+         Er stand bisher erst weit unten. Ein Aussenaudit: „das qualifiziert
+         Besucher frueh statt sie am Ende zu ueberraschen." Das ist auch fair
+         gegenueber dem Leser — wer 790 Euro nicht ausgeben will, soll das
+         nach zehn Sekunden wissen und nicht nach zehn Absaetzen.
+         Die Zahlen stehen NICHT doppelt gepflegt hier: t-preisseite.mjs
+         bindet jede Preisangabe dieser Seite an die eine Quelle im Cockpit
+         (PREIS.soloMonat / soloJahr). Weicht eine ab, faellt die Strecke. -->
+    <p class="hero-preis">
+      <strong>790&nbsp;€ im Jahr</strong> je Praxis oder Standort — oder 79&nbsp;€ monatlich,
+      jeweils zzgl. USt. Alle Tierärztinnen und Tierärzte, alle Pferde, alle Geräte.
+      Kein Aufpreis je Pferd, keine Sitzplatzgebühr.
+      <a href="#preis">Was genau enthalten ist →</a>
+    </p>
   </div>
 </section>
 
@@ -414,6 +434,38 @@ html.rev-an .rev.in{opacity:1;transform:none}
     <h2>Ein Blick, dann die Tiefe.</h2>
     <p class="sec-lead">Oben das Urteil und der eine Grund dafür. Darunter alles, was Sie
        zum Nachrechnen brauchen — nichts davon versteckt.</p>
+
+    <!-- Bilder statt Beschreibung. Der Entwurf hatte KEIN einziges
+         Cockpit-Bild mehr — die alte Seite hatte sechs. Ein Werkzeug, das
+         man nicht sieht, muss man glauben; eines, das man sieht, muss man
+         nur noch wollen. -->
+    <div class="feature">
+      <div class="f-shot"><img src="assets/visite-shots/10-triage.jpg" loading="lazy"
+        alt="Triage-Board: jedes Pferd als Karte, sortiert nach Abweichung von seiner eigenen Baseline, mit Anruf-Knopf beim Halter"></div>
+      <div class="f-txt">
+        <div class="f-k">Triage</div>
+        <h3>Vier Stufen, und daneben steht, welcher Wert sie ausgelöst hat.</h3>
+        <ul>
+          <li><b>Nach Abweichung sortiert</b>, nicht nach Eingang — jedes Pferd gegen seine eigene Baseline, nicht gegen eine Tabelle.</li>
+          <li><b>Der Grund steht dabei.</b> Eine Einstufung ohne den auslösenden Wert wäre eine Meinung.</li>
+          <li><b>Die Halterin ist einen Tipp entfernt</b>, direkt von der Karte aus.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="feature flip">
+      <div class="f-txt">
+        <div class="f-k">Die Akte</div>
+        <h3>Alles, was Sie zum Nachrechnen brauchen — an einer Stelle.</h3>
+        <ul>
+          <li><b>Werte gegen die eigene Baseline</b> des Pferds, als Hinweis. Die Deutung bleibt bei Ihnen.</li>
+          <li><b>Signalgüte vor der Zahl</b>: wie viele Schlagpaare tragen die Auswertung überhaupt.</li>
+          <li><b>Ferneinschätzung erfassen und abrechnen</b>, ohne die Akte zu verlassen.</li>
+        </ul>
+      </div>
+      <div class="f-shot"><img src="assets/visite-shots/09-akte.jpg" loading="lazy"
+        alt="Pferde-Akte: Messwerte gegen die individuelle Baseline, Signalgüte, Verlauf, dazu Ferneinschätzung erfassen und abrechnen"></div>
+    </div>
     <div class="grid">
       <div class="card">
         <h3>Einordnung mit Begründung</h3>
@@ -453,7 +505,16 @@ html.rev-an .rev.in{opacity:1;transform:none}
 
 <!-- ── 4 · VERTRAUEN: DER FILTER ───────────────────────────────────────
      Der eigentliche Burggraben, und er lässt sich zeigen. -->
-<section class="trust">
+<!-- KEIN class="trust" hier. `.trust` ist die kleine graue Fusszeile
+     (12,5 px, text-faint) — auf einen ganzen Abschnitt gelegt faerbt sie
+     auch dessen <h2> blass. Gemessen am 12.08.2026: Kontrast 2,05:1 bei
+     40 px Schriftgroesse, WCAG AA verlangt 3:1 fuer grossen Text. Der
+     staerkste Satz der Seite stand damit fast unsichtbar da — und genau
+     so etwas liest ein Aussenpruefer als „abgedunkelte Bereiche".
+     Dieselbe Fehlerklasse wie bei den Messwert-Kacheln der Messstation:
+     eine Hilfsklasse sitzt auf einem Behaelter, fuer den sie nie gedacht
+     war. Im Quelltext sieht beides richtig aus. -->
+<section>
   <div class="wrap">
     <div class="sec-eyebrow">Warum die Zahlen tragen</div>
     <h2>Beim Pferd sind Pausen normal. Wer sie mitrechnet, misst Unsinn.</h2>
@@ -520,6 +581,73 @@ html.rev-an .rev.in{opacity:1;transform:none}
       <code>Patient</code> mit den Kennungen, die Sie ohnehin führen: Praxissoftware-Nummer,
       UELN, Mikrochip, Pass. Dazu JSON, CSV und ein Kubios-kompatibler Export für die
       Forschung, und ein SHA-256-Prüfwert je Datensatz für die Dokumentation.
+    </p>
+  </div>
+</section>
+
+<!-- ── 6b · PRAXISALLTAG ───────────────────────────────────────────
+     WARUM DIESER ABSCHNITT (12.08.2026): Der Entwurf hatte ihn nicht — die
+     alte Seite schon. Ein Aussenaudit nannte genau ihn den eigenstaendigen
+     Kaufgrund: „das hebt Visite vom reinen HRV-Auswertungstool zu einem
+     echten Arbeitswerkzeug fuer mobile Pferdetieraerzte und duerfte fuer
+     die Kaufentscheidung mindestens so schwer wiegen wie die Messdaten".
+     Bei keinem der genannten Wettbewerber gesehen.
+
+     Er steht bewusst UNMITTELBAR VOR den Grenzen und dem Preis: wer gerade
+     gelesen hat, dass das Werkzeug seinen Tag traegt und seine
+     Ferneinschaetzung abrechenbar macht, liest die Jahresgebuehr anders.
+
+     KEIN Eurobetrag und keine Beispielrechnung. Die GOT-Saetze haengen an
+     der Bemessung des Tierarztes; eine Summe von uns waere genau die Sorte
+     Zahl, die bei der ersten Nachpruefung durch einen Tierarzt auffliegt —
+     so ist es im Outreach-Kit schon einmal passiert. Genannt werden die
+     Ziffern, gerechnet wird in der Praxis. -->
+<section>
+  <div class="wrap">
+    <div class="sec-eyebrow">Ihr Arbeitstag</div>
+    <h2>Zwischen zwei Terminen liegt Ihr Fahrweg.</h2>
+    <p class="sec-lead">Die Auswertung ist die eine Hälfte. Die andere ist der Tag, an dem
+       Sie sie unterbringen müssen — und der entscheidet, ob ein Werkzeug den ersten
+       Monat überlebt.</p>
+
+    <div class="feature">
+      <div class="f-shot"><img src="assets/visite-shots/05-tagesplan.jpg" loading="lazy"
+        alt="Tagesplan: die Stopps des Tages als Karten, kritische zuerst, mit gesparter Fahrstrecke und Greifpunkt zum Umsortieren"></div>
+      <div class="f-txt">
+        <div class="f-k">Tagesplan</div>
+        <h3>Der Tag sortiert sich nach Dringlichkeit, nicht nach der Reihenfolge der Anrufe.</h3>
+        <ul>
+          <li><b>Die Einstufung ordnet die Stopps.</b> Was Sie anders sehen, schieben Sie per Greifpunkt um — die Software schlägt vor, sie entscheidet nicht.</li>
+          <li><b>Die Fahrzeit zum nächsten Stopp</b> steht an jeder Karte, bevor Sie zusagen.</li>
+          <li><b>Nichts davon verlässt Ihr Gerät</b> — auch die Adressen nicht.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="shots three">
+      <figure class="shot">
+        <div class="frame"><img src="assets/visite-shots/08-route.jpg" loading="lazy"
+          alt="Abfahrroute auf der Karte, kritische Pferde zuerst, direkt an Google Maps übergebbar"></div>
+        <figcaption>Karte &amp; Route — die Abfahrfolge, direkt an Google&nbsp;Maps übergeben, statt Adressen abzutippen.</figcaption>
+      </figure>
+      <figure class="shot">
+        <div class="frame"><img src="assets/visite-shots/06-kompakt.jpg" loading="lazy"
+          alt="Kompakte Tagesübersicht: alle Stopps als kleine Karten auf einer Zeitachse mit Fahrzeiten"></div>
+        <figcaption>Kompakt — der ganze Tag auf einer Zeitachse, wenn es schnell gehen muss.</figcaption>
+      </figure>
+      <figure class="shot">
+        <div class="frame"><img src="assets/visite-shots/07-verwaltung.jpg" loading="lazy"
+          alt="Verwaltung: Fahrtenbuch, Zeiterfassung, abgerechnete Ferneinschätzungen und CSV-Ausgabe"></div>
+        <figcaption>Verwaltung — Fahrtenbuch, Zeiterfassung, abgerechnete Ferneinschätzungen, als CSV heraus.</figcaption>
+      </figure>
+    </div>
+
+    <p class="sec-lead" style="margin-top:44px">
+      Die schriftliche oder fernmündliche Beratung ohne Untersuchung ist in der
+      <strong>GOT als Ziffer&nbsp;1</strong> geführt, der Tierarztbrief je angefangene
+      15&nbsp;Minuten als <strong>Ziffer&nbsp;89</strong>. Was das bei Ihrem Satz ergibt,
+      rechnen Sie besser als wir — CARLON erfasst die Ferneinschätzung nur an der Stelle,
+      an der sie entsteht, und gibt sie als CSV heraus.
     </p>
   </div>
 </section>

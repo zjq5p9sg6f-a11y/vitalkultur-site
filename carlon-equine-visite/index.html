@@ -36,7 +36,7 @@ document.head.appendChild(s);})();</script>
 :root{
   --bg-void:#000308; --bg-deep:#02080d; --bg-surface:#06101a; --bg-elev:#0b1a26;
   --border-faint:#102230; --border-subtle:#1b3548; --border-strong:#2a4d65;
-  --text-primary:#e8f8ff; --text-secondary:#8aa9bd; --text-dim:#4a6478; --text-faint:#2e4458;
+  --text-primary:#e8f8ff; --text-secondary:#8aa9bd; --text-dim:#5b7b93; --text-faint:#537b9f; /* AA-Kontrast: #4a6478 lag bei 3,33:1 und #2e4458 bei 2,05:1 auf #000308 — WCAG AA verlangt 4,5:1. Betroffen war genau das Kleingedruckte, das schuetzt: § 14 BGB, „kein Medizinprodukt", Impressum. Farbton behalten, nur so weit gehoben, bis die Schwelle erreicht ist (4,62 / 4,63:1) — immer noch zurueckhaltender als Apples Fussnotengrau. Gemessen 12.08.2026. */
   --cyan:#3ECFB2; --cyan-strong:#6EE6C8; --cyan-deep:#1E8C78;
   --cyan-glow-1:rgba(62,207,178,0.55); --cyan-glow-2:rgba(62,207,178,0.25); --cyan-faint:rgba(62,207,178,0.04);
   --equine:#d4a574;
