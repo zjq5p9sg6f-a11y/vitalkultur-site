@@ -291,6 +291,37 @@
         <li>Legt einen <strong>gehashten</strong> Nutzungsstempel ab (<code>n:</code> + gekürzter SHA-256 der Stripe-Kundennummer, ohne Namen) zur Erkennung aktiver Nutzung — Art. 6 Abs. 1 lit. f DSGVO; Löschung nach längstens 400 Tagen</li>
         <li>Sieht <strong>keine Gesundheits- oder Pferdedaten</strong></li>
       </ul>
+
+      <p><strong>Infrastruktur beider Dienste — Cloudflare:</strong></p>
+      <p>
+        Zwischenspeicher und Lizenzdienst laufen auf <strong>Cloudflare
+        Workers KV</strong> (Cloudflare, Inc., 101 Townsend St., San Francisco,
+        CA 94107, USA). Cloudflare ist insoweit Empfänger im Sinne des
+        Art. 13 Abs. 1 lit. e DSGVO.
+      </p>
+      <p>
+        <strong>Speicherort:</strong> Für Workers KV lässt sich nach der
+        Herstellerdokumentation <strong>keine Beschränkung auf die EU</strong>
+        festlegen — anders als bei anderen Cloudflare-Diensten gibt es keinen
+        Jurisdiktions-Schalter. Eine Übermittlung in ein Drittland ist deshalb
+        <strong>nicht auszuschließen</strong>. Grundlage sind die
+        EU-Standardvertragsklauseln gem. Durchführungsbeschluss (EU) 2021/914
+        (Art. 46 Abs. 2 lit. c DSGVO).
+      </p>
+      <p>
+        <strong>Als ergänzende Maßnahme wirkt unsere eigene Ende-zu-Ende-Verschlüsselung:</strong>
+        Cloudflare besitzt keinen Schlüssel und kann die Inhalte der Sendungen
+        nicht lesen. Cloudflare verschlüsselt die abgelegten Werte zusätzlich
+        selbst im Ruhezustand (AES-256-GCM); der Transport erfolgt über TLS.
+      </p>
+      <p>
+        <em>Was diese Verschlüsselung nicht erfasst:</em> Die
+        <strong>Metadaten</strong> einer Sendung — Kennung, Art, Größe und
+        Zeitstempel — sind Metadaten des Speichers und für Cloudflare sichtbar.
+        Geschützt sind die Inhalte, nicht die Verkehrsdaten. Wir sagen das hier
+        ausdrücklich, weil die Fachnummer eines Postfachs über die Zeit
+        erkennen ließe, wie oft eine Praxis Sendungen erhält.
+      </p>
     </div>
 
     <h2>4. Datenexport — Art. 20 DSGVO (Datenportabilität)</h2>
@@ -388,7 +419,10 @@
       verbessern. Da GoatCounter weder dauerhaft wiedererkennt noch Profile bildet,
       überwiegen die Interessen der Besucher nicht.<br>
       <strong>Dienstleister:</strong> GoatCounter wird von Martin Tournoij
-      (Niederlande, EU) betrieben. Kein Drittlandtransfer.<br>
+      (Irland, EU) betrieben; die Server stehen bei der Hetzner Online GmbH in
+      Deutschland und Finnland. Kein Drittlandtransfer. Nach Angaben des
+      Anbieters werden weder IP-Adressen noch der vollständige
+      User-Agent gespeichert.<br>
       <strong>Speicherdauer:</strong> Es werden ausschließlich aggregierte Kennzahlen
       ohne Personenbezug vorgehalten; die zur Sitzungserkennung genutzten Merkmale
       verfallen nach spätestens 8 Stunden. In Sicherungskopien des Dienstes können

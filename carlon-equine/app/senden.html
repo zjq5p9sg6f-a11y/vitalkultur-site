@@ -118,6 +118,9 @@ p.sub{color:var(--sec);font-size:clamp(13px,1.15vw,15px);margin:0 auto var(--s4)
   transition:border-color .16s,color .16s}
 .btn:hover{border-color:var(--strong);color:var(--text)}
 .hint{font-size:11.5px;color:var(--dim);margin-top:var(--s4);line-height:1.55}
+/* Fingerkuppe statt Nadelstich: 44px ist Apples Mindestmass, sonst trifft
+   niemand die Rechtslinks auf dem Telefon. */
+.rechtsweg a{display:inline-block;min-height:44px;line-height:44px;padding:0 10px}
 .privacy{margin-top:var(--s4);font-size:10.5px;color:var(--dim);display:flex;align-items:center;justify-content:center;gap:8px;
   font-family:var(--font-mono);letter-spacing:.08em}
 .privacy svg{width:13px;height:13px;color:var(--cyan-deep);flex:none}
@@ -174,6 +177,13 @@ p.sub{color:var(--sec);font-size:clamp(13px,1.15vw,15px);margin:0 auto var(--s4)
     <a id="measureLink" href="messen.html">direkt hier messen</a>.</div>
 
   <div class="privacy"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>Direkt-Übertragung · kein Server sieht deine Daten</div>
+
+  <!-- § 5 DDG und Art. 13 DSGVO: von JEDER Seite erreichbar, nicht nur von der
+       Startseite. Und § 305 Abs. 2 BGB: ohne diesen Weg sind die AGB, die die
+       Uebergabe regeln, gar nicht einbezogen. Dieselbe Zeile traegt messen.html;
+       sie fehlte hier, weil die Korrektur vom 08.08. nur eine der beiden Seiten
+       erreicht hat. -->
+  <div class="hint rechtsweg" style="max-width:60ch;margin:var(--s3) auto 0"><a href="/impressum.html">Impressum</a> · <a href="/privacy.html">Datenschutz</a> · <a href="/agb.html">AGB</a></div>
 </div>
 
 <script src="p2p.js"></script>

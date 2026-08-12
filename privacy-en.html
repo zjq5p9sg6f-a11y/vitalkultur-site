@@ -287,6 +287,36 @@
         <li>Stores a <strong>hashed</strong> usage marker (<code>n:</code> + truncated SHA-256 of the Stripe customer number, without any name) to detect active use — Art. 6(1)(f) GDPR; deleted after 400 days at the latest</li>
         <li>Sees <strong>no health or horse data</strong></li>
       </ul>
+
+      <p><strong>Infrastructure behind both services — Cloudflare:</strong></p>
+      <p>
+        The relay and the licence service run on <strong>Cloudflare Workers
+        KV</strong> (Cloudflare, Inc., 101 Townsend St., San Francisco,
+        CA 94107, USA). Cloudflare is therefore a recipient within the meaning
+        of Art. 13(1)(e) GDPR.
+      </p>
+      <p>
+        <strong>Storage location:</strong> according to the vendor's own
+        documentation, Workers KV <strong>cannot be confined to the EU</strong> —
+        unlike other Cloudflare services it offers no jurisdiction switch. A
+        transfer to a third country therefore <strong>cannot be ruled out</strong>.
+        It is based on the EU Standard Contractual Clauses pursuant to
+        Implementing Decision (EU) 2021/914 (Art. 46(2)(c) GDPR).
+      </p>
+      <p>
+        <strong>Our own end-to-end encryption acts as a supplementary measure:</strong>
+        Cloudflare holds no key and cannot read the content of a delivery.
+        Cloudflare additionally encrypts stored values at rest (AES-256-GCM);
+        transport runs over TLS.
+      </p>
+      <p>
+        <em>What this encryption does not cover:</em> the
+        <strong>metadata</strong> of a delivery — identifier, kind, size and
+        timestamp — are storage metadata and are visible to Cloudflare. The
+        content is protected, the traffic data is not. We state this explicitly
+        because, over time, a compartment number would reveal how often a given
+        practice receives deliveries.
+      </p>
     </div>
 
     <h2>4. Data export — Art. 20 GDPR (portability)</h2>
@@ -379,7 +409,9 @@
       neither recognises visitors persistently nor builds profiles, visitors’
       interests do not override ours.<br>
       <strong>Service provider:</strong> GoatCounter is operated by Martin Tournoij
-      (Netherlands, EU). No third-country transfer.<br>
+      (Ireland, EU); its servers are located at Hetzner Online GmbH in Germany
+      and Finland. No third-country transfer. According to the provider, neither
+      IP addresses nor the full User-Agent header are stored.<br>
       <strong>Retention:</strong> Only aggregated, non-personal metrics are kept; the
       attributes used for session recognition expire after 8 hours at most. According
       to the provider, data may remain in backups for up to 30 days.<br>
