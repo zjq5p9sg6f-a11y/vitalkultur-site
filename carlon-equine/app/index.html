@@ -1603,6 +1603,23 @@ svg.viz .sd-lbl{fill:var(--cyan-strong);font-size:10px;font-weight:600;font-fami
 .tier-opt h4{font-size:15px;font-weight:600;margin-bottom:4px}
 .tier-opt ul{list-style:none;font-size:12px;color:var(--text-secondary);line-height:1.7;margin-top:4px}
 .tier-opt li::before{content:"✓ ";color:var(--good)}
+/* ── PILOT-BAND ────────────────────────────────────────────────────────
+   Drei Zustaende, und der Farbwechsel ist die Information:
+   ruhig (cyan) → knapp (gold, ab 14 Tagen) → abgelaufen (rot).
+   Ein Band, das von Anfang an alarmiert, wird nach zwei Tagen ignoriert —
+   dann warnt es genau dann nicht mehr, wenn es darauf ankommt. */
+.pilot-band{display:flex;align-items:center;gap:12px;padding:10px 18px;font-size:13px;
+  border-bottom:1px solid var(--cyan-deep,#1E8C78);
+  background:linear-gradient(90deg,rgba(62,207,178,.13),transparent);color:var(--text-secondary)}
+.pilot-band b{color:var(--cyan)}
+.pilot-band .rest{font-family:var(--font-mono);font-variant-numeric:tabular-nums}
+.pilot-band .nach{color:var(--text-dim);font-size:12px}
+.pilot-band.knapp{border-color:rgba(255,181,71,.5);background:linear-gradient(90deg,rgba(255,181,71,.14),transparent)}
+.pilot-band.knapp b{color:var(--amber)}
+.pilot-band.aus{border-color:rgba(242,115,89,.55);background:linear-gradient(90deg,rgba(242,115,89,.15),transparent)}
+.pilot-band.aus b{color:#F27359}
+.pilot-band svg{width:17px;height:17px;flex-shrink:0}
+@media(max-width:640px){.pilot-band{font-size:12px;padding:9px 13px;gap:9px}.pilot-band .nach{display:none}}
 .demo-ribbon{background:linear-gradient(90deg,rgba(255,181,71,.12),transparent);border:1px solid rgba(255,181,71,.25);
   border-radius:var(--r-m);padding:11px 16px;margin-bottom:var(--s4);display:flex;align-items:center;gap:12px;font-size:13px}
 .demo-ribbon svg{width:18px;height:18px;color:var(--amber);flex-shrink:0}
@@ -1838,6 +1855,11 @@ nav.tabs button.on{text-shadow:none}
   </header>
   <div id="safeBanner" class="safe-banner" style="display:none"></div>
   <div id="saatBanner" class="safe-banner saat" style="display:none"></div>
+  <!-- PILOT-BAND. Ein Beta-Zugang, der ohne Vorwarnung endet, ist eine
+       Panne; einer, der seine Restzeit zeigt, macht das Verlaengerungs-
+       gespraech zum natuerlichen Moment. Steht bewusst UEBER dem Inhalt und
+       nicht in den Einstellungen: dort sieht es niemand. -->
+  <div id="pilotBand" class="pilot-band" style="display:none"></div>
   <main id="main"></main>
   <nav class="bottom-nav" id="bottomNav">
     <button data-tab="today" class="on"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M3 9h18M8 2v4M16 2v4M8 14l2.5 2.5L16 12"/></svg><span>Heute</span></button>
@@ -8258,7 +8280,7 @@ const License={
          dass ein Abo existiert — er schaltet NICHTS frei. Nur eine
          Laufzeit-Lizenz ("lic", 14 Tage) gewaehrt Zugang. Alte Schluessel ohne
          typ zaehlen als Lizenz, damit Bestandskunden nicht ausgesperrt werden. */
-      return{valid:!expired,expired,tier:p.tier,lic:p.lic,exp:p.exp,founder:!!p.founder,
+      return{valid:!expired,expired,tier:p.tier,lic:p.lic,exp:p.exp,founder:!!p.founder,beta:!!p.beta,
              typ:p.typ||'lic', cus:p.cus||null,
              seats:(typeof p.seats==='number'&&p.seats>0)?p.seats:1};
     }catch(e){return{valid:false,reason:e.message||'Fehler'};}
@@ -8517,7 +8539,7 @@ const License={
       Toast.show(`Freigeschaltet: ${this.TIERS[this.tier()].name} · ${this.lic()||''}`,'ok');
       return true;
     }
-    State.license={provider:'offline',tier:r.tier,lic:r.lic,exp:r.exp,key,founder:r.founder,seats:r.seats};
+    State.license={provider:'offline',tier:r.tier,lic:r.lic,exp:r.exp,key,founder:r.founder,beta:r.beta,seats:r.seats};
     State.settings.license=State.license;await State.saveSettings();
     UI.closeModal();Toast.show(`Freigeschaltet: ${this.TIERS[r.tier].name} · ${r.lic}`,'ok');Nav.render();return true;
   },
@@ -8594,8 +8616,9 @@ const License={
     return {tage, kulanz:!!l.kulanz, erschoepft:!!l.kulanzErschoepft,
             abgelehnt:!!(State.settings.license||{}).abgelehntSeit};
   },
-  daysLeft(){const l=State.license;if(!l||!l.exp)return null;return Math.max(0,Math.round((l.exp*1000-Date.now())/86400000));},
+  daysLeft(){const l=State.license;if(!l||!l.exp)return null;return Math.max(0,Math.round((l.exp*1000-this.ZEIT.jetzt())/86400000));},
   isFounder(){const l=State.license;return !!(l&&l.founder);},
+  isBeta(){const l=State.license;return !!(l&&l.beta);},
   // Erneuerungs-Bedarf (kein stiller Cliff): abgelaufen / läuft bald ab. Modus-aware.
   needsRenewal(){
     const l=State.license; if(!l)return null;
@@ -9316,7 +9339,35 @@ const Nav={
     $$('#tabs button').forEach(b=>b.classList.toggle('on',match(b)));
     $$('#bottomNav button').forEach(b=>b.classList.toggle('on',match(b)));
     this.render();const m=$('#main');if(m)m.scrollTop=0;window.scrollTo(0,0);},
+  /* ── PILOT-BAND ZEICHNEN ─────────────────────────────────────────────
+     Bei jedem Bildwechsel neu, damit die Restzeit nicht auf dem Stand des
+     Seitenaufrufs stehenbleibt. Gerechnet wird ueber License.daysLeft(),
+     und das laeuft gegen den Zeitwaechter — ein zurueckgedrehtes
+     Systemdatum zaehlt das Band also nicht wieder hoch.
+
+     WARUM ES DAS BAND GIBT: Ein Pilot-Zugang, der ohne Vorwarnung endet,
+     ist eine Panne und kostet genau den Partner, den man gewinnen wollte.
+     Einer, der seine Restzeit zeigt, macht das Verlaengerungsgespraech zum
+     natuerlichen Moment. Und der Satz „Ihre Daten bleiben" steht dabei,
+     weil das die eigentliche Sorge ist — nicht der Zugang, die Patienten. */
+  pilotBand(){
+    const el=$('#pilotBand'); if(!el) return;
+    if(!License.isBeta()){ el.style.display='none'; return; }
+    const d=License.daysLeft();
+    const aus=(d===null||d<=0);
+    const knapp=(!aus && d<=14);
+    el.className='pilot-band'+(aus?' aus':(knapp?' knapp':''));
+    const uhr='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 2"/></svg>';
+    const wer=(State.license&&State.license.lic)?esc(State.license.lic):'Pilot';
+    el.innerHTML = aus
+      ? `${uhr}<div><b>Pilot-Zugang beendet</b> — ${wer}. Die Anwendung läuft im reduzierten Modus weiter.</div>`
+        +`<span class="nach">Ihre Aufnahmen bleiben lesbar und exportierbar — sie liegen auf Ihrem Gerät.</span>`
+      : `${uhr}<div><b>Pilot-Zugang</b> — ${wer} · noch <span class="rest">${d}</span> ${d===1?'Tag':'Tage'}</div>`
+        +`<span class="nach">Danach reduzierter Modus. Ihre Aufnahmen bleiben — sie liegen auf Ihrem Gerät.</span>`;
+    el.style.display='flex';
+  },
   render(){
+    this.pilotBand();
     const enterToday=(this.cur==='today' && this._lastCur!=='today');
     const map={today:Views.today,board:Views.board,station:Views.station,map:Views.map,roster:Views.roster,detail:Views.detail,revenue:Views.revenue,logbook:Views.logbook,coherence:Views.coherence,cohdetail:Views.coherenceDetail,pairdetail:Views.pairDetail};
     $('#main').innerHTML=(map[this.cur]||Views.today).call(Views);
