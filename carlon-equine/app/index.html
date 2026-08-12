@@ -8189,6 +8189,23 @@ const License={
      und "kostet uns jeden Tag Support".
      Der Link wird danach bereinigt, damit ein Neuladen nicht erneut
      freischaltet und die Sitzungsnummer nicht im Verlauf stehen bleibt. */
+  /* ── Einstieg aus der Landingpage ────────────────────────────────────
+     Die Visite-Seite nennt Preise, hat aber bewusst KEINE eigenen
+     Stripe-Links: zwei Stellen mit denselben Zahlungslinks driften
+     auseinander, und ein Link, der auf den falschen Betrag zeigt, zieht
+     entweder zu wenig Geld ein oder verliert einen Kunden.
+     Stattdessen ruft sie hierher mit ?kasse=1 — die Preis-Ansicht oeffnet
+     sich, und die Kasse bleibt an EINER Stelle, mitsamt ihren drei Sperren
+     (kein Link / falscher Betrag / Testlink im Echtbetrieb). */
+  oeffneKasseAusLink(){
+    const u = new URL(location.href);
+    if (u.searchParams.get('kasse') !== '1') return;
+    u.searchParams.delete('kasse');
+    history.replaceState(null, '', u.pathname + (u.search || '') + u.hash);
+    // Zahlt die Praxis schon, waere ein Kaufdialog verwirrend — dann die Lizenz zeigen.
+    setTimeout(() => { try { this.isPaid() ? UI.licenseInfo() : UI.upgrade(); } catch(e){} }, 350);
+  },
+
   async freischaltenAusRueckleitung(){
     const u=new URL(location.href);
     const sid=u.searchParams.get('session_id');
@@ -10026,6 +10043,7 @@ const Sprache={
     /* Erst die Rueckkehr aus der Kasse abfangen, dann faellige Erneuerung.
        Beides still — wer die App oeffnet, will arbeiten, nicht verwalten. */
     await License.freischaltenAusRueckleitung();
+    License.oeffneKasseAusLink();
     License.lizenzHolenWennFaellig();
     /* DREI AUSLOESER statt nur beim Start. Eine Praxis-App bleibt tagelang im
        Hintergrund offen; ohne diese beiden wuerde nie erneuert und die

@@ -2368,6 +2368,13 @@ const kannSenden=true;
    Der Schluessel wird als source.partner in den Export uebernommen, damit die
    Herkunft einer Aufnahme nachvollziehbar bleibt.                            */
 const PARTNERS = {};
+/* HERKUNFT DES KLICKS — wird in den Export uebernommen und reist mit der
+   Messung bis ins Praxis-Cockpit. Ohne Leser waere die Marke am geteilten
+   Link blosse Buchhaltung: man saehe nie, ob Mundpropaganda traegt.
+   'halter' = ueber eine geteilte Messung hereingekommen. */
+const quelleKey = (new URLSearchParams(location.search).get('q')||'')
+  .toLowerCase().replace(/[^a-z0-9_-]/g,'').slice(0,24) || null;
+
 const partnerKey = (new URLSearchParams(location.search).get('partner')||'')
                      .toLowerCase().replace(/[^a-z0-9_-]/g,'').slice(0,32);
 const partner = PARTNERS[partnerKey] || null;
@@ -3259,10 +3266,19 @@ function drawSpark(){
        KANON statt location.href: ein Link, der aus einem Tunnel oder von
        localhost geteilt wird, ist tot, sobald das Fenster zu ist — derselbe
        Fehler, an dem der Aushang schon einmal gestorben wäre. */
+    /* HERKUNFT AM GETEILTEN LINK.
+       Ohne diese Marke ist die Mundpropaganda unsichtbar: eine Praxis kommt
+       ueber eine geteilte Messung herein, und niemand kann es sehen. Ein
+       Kanal, den man nicht misst, laesst sich nicht verstaerken — und man
+       weiss nie, ob er ueberhaupt traegt.
+       `q=halter` = ein Halter hat geteilt. Der Haendlerweg nutzt weiter
+       `partner=`; beide bleiben unterscheidbar. Kein Personenbezug, kein
+       Cookie — nur die Herkunft des Klicks. */
     const st=(function(){
       try{
         const b=new URL('messen.html', window.CARLON_KANON||location.href);
-        return b.origin==='https://vitalkultur.com' ? b.origin+'/messen' : b.toString();
+        const basis = b.origin==='https://vitalkultur.com' ? b.origin+'/messen' : b.toString();
+        return basis + (basis.indexOf('?')<0 ? '?' : '&') + 'q=halter';
       }catch(_){ return location.href.split('#')[0]; }
     })();
     const text='Damit kann man den Herzrhythmus vom Pferd selbst messen:';
@@ -3451,7 +3467,7 @@ const round2=x=>Math.round(x*100)/100;
 function buildExport(name,rr,m,secs){
   return {
     schema:{ name:'carlon_equine_v1', version:'1.0' },
-    source:{ app:'CARLON Mess-Station (Browser)', transport:'web-bluetooth',
+    source:{ app:'CARLON Mess-Station (Browser)', transport:'web-bluetooth', herkunft:quelleKey,
              /* NIE 'Polar H10' erfinden, wenn der Name fehlt. Ein Datensatz,
                 der ein Geraet behauptet, das er nicht kennt, ist im
                 Zweifelsfall wertlos — und in einer Studie schaedlich. */

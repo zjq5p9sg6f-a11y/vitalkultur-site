@@ -274,6 +274,7 @@ footer{border-top:1px solid var(--border-faint);padding:56px 24px 66px;text-alig
 }
 
 </style>
+  <script src="/carlon-equine/app/live.js"></script>
 </head>
 <body>
 <div class="bg-wash"></div>
@@ -483,9 +484,15 @@ footer{border-top:1px solid var(--border-faint);padding:56px 24px 66px;text-alig
   </section>
 
   <!-- PREISE — Stripe verlangt veroeffentlichte Preise; ehrlicher ist es ohnehin.
-       BEWUSST OHNE Kaufknopf: die Kasse schaltet erst frei, wenn Jan sie
-       freigibt (CARLON_LIVE). Ein Knopf, der ins Leere fuehrt, kostet mehr
-       Vertrauen als ein fehlender Knopf. -->
+       DER KAUFKNOPF HAENGT AM SCHALTER (live.js, window.CARLON_LIVE):
+         false → gar kein Knopf, dafuer ein ehrlicher Satz. Ein Knopf, der ins
+                 Leere fuehrt, kostet mehr Vertrauen als ein fehlender Knopf.
+         true  → "Abonnieren" fuehrt ins Cockpit (?kasse=1), NICHT direkt zu
+                 Stripe. Grund: die Zahlungslinks liegen an genau EINER Stelle
+                 (License.CHECKOUT im Cockpit) mitsamt ihren drei Sperren —
+                 kein Link, falscher Betrag, Testlink im Echtbetrieb. Zwei
+                 Kopien derselben Links waeren die naechste stille Drift.
+       Damit macht EIN Schalterumlegen die ganze Strecke scharf. -->
   <section class="wrap rev" id="preise">
     <div class="sec-eyebrow" data-en="What it costs" data-de="Was es kostet">Was es kostet</div>
     <h2 data-en="One practice, <em>one price.</em>" data-de="Eine Praxis, <em>ein Preis.</em>">Eine Praxis, <em>ein Preis.</em></h2>
@@ -515,6 +522,35 @@ footer{border-top:1px solid var(--border-faint);padding:56px 24px 66px;text-alig
       <li data-en="Your data stays on your device — also after the subscription ends" data-de="Deine Daten bleiben auf deinem Gerät — auch nach dem Abo">Deine Daten bleiben auf deinem Gerät — auch nach dem Abo</li>
       <li data-en="Beta co-creators keep their price as founding partners" data-de="Beta-Mitgestalter behalten ihren Preis als Gründungs-Partner">Beta-Mitgestalter behalten ihren Preis als Gründungs-Partner</li>
     </ul>
+
+    <!-- KAUFWEG — erscheint NUR bei window.CARLON_LIVE === true (live.js).
+         Faellt live.js aus (Cache, Ladefehler), bleibt es beim Beta-Satz:
+         lieber nicht verkaufen als versehentlich verkaufen. -->
+    <div id="kaufweg" style="margin-top:22px"></div>
+    <script>
+    (function(){
+      var box = document.getElementById('kaufweg');
+      if (!box) return;
+      var live = (typeof window.CARLON_LIVE !== 'undefined') && window.CARLON_LIVE === true;
+      var de = (document.documentElement.lang || 'de').indexOf('en') !== 0;
+      if (live) {
+        box.innerHTML =
+          '<a class="btn primary" href="/carlon-equine/app/?kasse=1" ' +
+          'data-en="Subscribe — activates immediately" data-de="Abonnieren — sofort aktiv">' +
+          (de ? 'Abonnieren — sofort aktiv' : 'Subscribe — activates immediately') + '</a>';
+      } else {
+        box.innerHTML =
+          '<p class="tarif-fuss" style="margin:0" ' +
+          'data-en="The checkout is not open yet — we are in beta and onboarding practices personally. ' +
+          'The prices above are final and will not change for founding partners." ' +
+          'data-de="Die Kasse ist noch nicht offen — wir sind in der Beta und begleiten Praxen persoenlich. ' +
+          'Die Preise oben stehen fest und aendern sich fuer Gruendungs-Partner nicht.">' +
+          (de ? 'Die Kasse ist noch nicht offen — wir sind in der Beta und begleiten Praxen pers\u00f6nlich. Die Preise oben stehen fest und \u00e4ndern sich f\u00fcr Gr\u00fcndungs-Partner nicht.'
+              : 'The checkout is not open yet — we are in beta and onboarding practices personally. The prices above are final and will not change for founding partners.') +
+          '</p>';
+      }
+    })();
+    </script>
 
     <p class="tarif-fuss" data-en="Business customers only (§ 14 BGB) — no contracts with consumers. Payment, invoice and VAT are handled by Stripe as merchant of record; with an EU VAT ID the reverse-charge procedure applies. Terms in <a href=&quot;/agb.html#visite&quot;>§ 12a of our T&amp;Cs</a> · <a href=&quot;/privacy.html&quot;>Privacy</a>" data-de="Nur an Unternehmer im Sinne des § 14 BGB — keine Verträge mit Verbrauchern. Zahlung, Rechnung und Umsatzsteuer wickelt Stripe als Merchant of Record ab; mit EU-USt-IdNr. greift das Reverse-Charge-Verfahren. Bedingungen in <a href=&quot;/agb.html#visite&quot;>§ 12a unserer AGB</a> · <a href=&quot;/privacy.html&quot;>Datenschutz</a>">Nur an Unternehmer im Sinne des § 14 BGB — keine Verträge mit Verbrauchern. Zahlung, Rechnung und Umsatzsteuer wickelt Stripe als Merchant of Record ab; mit EU-USt-IdNr. greift das Reverse-Charge-Verfahren. Bedingungen in <a href="/agb.html#visite">§ 12a unserer AGB</a> · <a href="/privacy.html">Datenschutz</a></p>
   </section>
