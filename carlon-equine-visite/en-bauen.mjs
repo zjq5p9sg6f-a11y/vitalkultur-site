@@ -114,11 +114,11 @@ tausche('CARLON Equine Visite · Praxisansicht für mobile Pferdetierärzte und 
 tausche('Sehen Sie früher, welches Pferd Sie wirklich braucht.',
         'See sooner which horse actually needs you.');
 tausche(`Die Halterin misst den Herzrhythmus zu Hause im Stall und schickt Ihnen die Aufnahme
-      verschlüsselt. Sie öffnen den Befund im Browser — mit Verlauf, Signalgüte und der
+      als verschlüsselte Datei. Sie öffnen den Befund im Browser — mit Verlauf, Signalgüte und der
       Abweichung von der individuellen Baseline dieses Pferds.
       <strong>Ohne Konto, ohne Installation, ohne dass die Daten Ihre Praxis verlassen.</strong>`,
 `The owner records the heart rhythm at home in the stable and sends you the recording
-      encrypted. You open the findings in your browser — with the trend, the signal quality and
+      as an encrypted file. You open the findings in your browser — with the trend, the signal quality and
       the deviation from this horse's own baseline.
       <strong>No account, no installation, and the data never leaves your practice.</strong>`);
 tausche('Cockpit mit 15&nbsp;Demo-Pferden öffnen →', 'Open the cockpit with 15&nbsp;demo horses →', 2);
@@ -433,15 +433,17 @@ tausche(`Auch wenn ein Verlauf eindeutig aussieht: Ob etwas geändert wird, steh
         `Even when a trend looks unambiguous: whether anything is changed appears nowhere
            on the screen. That is your decision, not a metric's.`);
 tausche(`Ihre Patienten liegen im Speicher Ihres Geräts. Wir haben keinen Zugriff und
-           könnten sie auch nicht löschen. Was zwischen Halterin und Praxis läuft, ist
-           verschlüsselt und für uns unlesbar.`,
+           könnten sie auch nicht löschen. Die Aufnahme der Halterin läuft gar nicht erst
+           über uns: Sie schickt Ihnen eine Datei — hat sie Ihren Aushang gescannt, ist die
+           für Ihre Praxis verschlüsselt.`,
         `Your patients live in your device's storage. We have no access and could not
-           delete them either. What passes between owner and practice is encrypted and
-           unreadable to us.`);
-tausche(`Eine Sendung ist kein Anruf. Bei akuten Beschwerden gilt, was immer gilt —
-           unmittelbar tierärztlich handeln.`,
-        `A recording is not a phone call. In acute cases what always applies still applies —
-           act veterinarily, immediately.`);
+           delete them either. The owner's recording never passes through us at all: she
+           sends you a file — and if she scanned your poster, that file is encrypted for
+           your practice.`);
+tausche(`Eine zugeschickte Datei ist kein Anruf. Bei akuten Beschwerden gilt, was immer
+           gilt — unmittelbar tierärztlich handeln.`,
+        `A file someone sends you is not a phone call. In acute cases what always applies
+           still applies — act veterinarily, immediately.`);
 tausche(`
       Ein Betrieb — eine Praxis oder ein Standort — mit allen tierärztlichen und
       tiermedizinischen Mitarbeitenden und auf beliebig vielen Geräten dieses Betriebs.
@@ -491,14 +493,14 @@ tausche(`Die Anwendung wechselt in einen funktionsreduzierten Modus. Ihre Daten 
            gar nicht löschen — sie liegen bei Ihnen.`,
         `The application switches to a reduced mode. Your data stays on the device and can
            still be opened and exported. We could not delete it — it is with you.`);
-tausche(`Das Cockpit läuft vollständig in Ihrem Browser; Patientendaten erreichen uns
-           nicht. Für den verschlüsselten Transportweg zwischen Halterin und Praxis klären
-           wir die Einordnung derzeit anwaltlich ab und sagen Ihnen das Ergebnis, bevor Sie
-           es brauchen.`,
-        `The cockpit runs entirely in your browser; patient data never reaches us. For the
-           encrypted transport path between owner and practice we are currently having the
-           classification clarified by a lawyer and will tell you the outcome before you
-           need it.`);
+tausche(`Nein. Das Cockpit läuft vollständig in Ihrem Browser, und auch die Aufnahme der
+           Halterin erreicht uns nicht: Ihre Messstation legt eine Datei auf ihrem eigenen
+           Gerät an, die sie Ihnen selbst schickt. Es gibt keinen Zwischenspeicher bei uns —
+           und damit nichts, worüber ein Auftragsverarbeitungsvertrag zu schließen wäre.`,
+        `No. The cockpit runs entirely in your browser, and the owner's recording never
+           reaches us either: her measuring station creates a file on her own device, which
+           she sends to you herself. There is no relay at our end — and therefore nothing a
+           data processing agreement could be about.`);
 
 
 /* Der Datenschutz-Hinweis am Formular. Er MUSS in der Sprache stehen, in der
@@ -535,8 +537,8 @@ tausche('"text": "Einen handelsüblichen Brustgurt und ein Android-Gerät oder e
         '"text": "A commercially available chest belt and an Android device or a computer with Chrome or Edge. On iPhone and iPad, Apple does not permit Bluetooth in the browser; the page directs you to a capable device there."');
 tausche('"text": "Die Anwendung wechselt in einen funktionsreduzierten Modus. Ihre Daten bleiben auf dem Gerät und lassen sich weiterhin öffnen und exportieren. Wir könnten sie gar nicht löschen — sie liegen bei Ihnen."',
         '"text": "The application switches to a reduced mode. Your data stays on the device and can still be opened and exported. We could not delete it — it is with you."');
-tausche('"text": "Das Cockpit läuft vollständig in Ihrem Browser; Patientendaten erreichen uns nicht. Für den verschlüsselten Transportweg zwischen Halterin und Praxis klären wir die Einordnung derzeit anwaltlich ab und sagen Ihnen das Ergebnis, bevor Sie es brauchen."',
-        '"text": "The cockpit runs entirely in your browser; patient data never reaches us. For the encrypted transport path between owner and practice we are currently having the classification clarified by a lawyer and will tell you the outcome before you need it."');
+tausche('"text": "Nein. Das Cockpit läuft vollständig in Ihrem Browser, und auch die Aufnahme der Halterin erreicht uns nicht: Ihre Messstation legt eine Datei auf ihrem eigenen Gerät an, die sie Ihnen selbst schickt. Es gibt keinen Zwischenspeicher bei uns — und damit nichts, worüber ein Auftragsverarbeitungsvertrag zu schließen wäre."',
+        '"text": "No. The cockpit runs entirely in your browser, and the owner\'s recording never reaches us either: her measuring station creates a file on her own device, which she sends to you herself. There is no relay at our end — and therefore nothing a data processing agreement could be about."');
 tausche('"url": "https://vitalkultur.com/carlon-equine-visite/",',
         '"url": "https://vitalkultur.com/carlon-equine-visite/en/",');
 

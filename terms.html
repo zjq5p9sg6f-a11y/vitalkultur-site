@@ -434,65 +434,86 @@
     </p>
     <p>
       <strong>Clarification:</strong> this assurance covers opening and viewing
-      your own files. It does <strong>not</strong> cover handing a recording over
-      to a veterinary practice through the measuring station (section 2.4). In
-      that case an <strong>encrypted</strong> delivery is transmitted, on your
-      own initiative, to a relay operated by the provider and held there for a
-      limited time — see section 9a.
+      your own files. Handing a recording over to a veterinary practice through
+      the measuring station (section 2.4) likewise involves no transmission to
+      the provider: the station creates a <strong>file on your own device</strong>
+      which you pass on yourself — see section 9a.
     </p>
 
-    <h2 id="relay">9a. Handover to a Veterinary Practice — Encrypted Relay</h2>
+    <!-- The relay was switched off on 13 Aug 2026. This section describes what
+         the code does: window.CARLON_POSTFACH in live.js is false, and the
+         t-dateiweg check guards that the dataset keeps what is promised here.
+         A contract text is a claim about the code. -->
+    <h2 id="handover">9a. Handover of a Recording to a Veterinary Practice</h2>
+    <!-- Old anchor: links to #relay already in circulation must not break. -->
+    <span id="relay"></span>
     <p>
-      <strong>(1) Purpose.</strong> The measuring station (section 2.4) lets a
-      user hand a recording over to a veterinary practice using the cockpit under
-      section 2.5. The provider operates a relay for this purpose (“mailbox”).
-      The relay is a <strong>transport path, not an archive and not a
-      backup.</strong> Users remain responsible for keeping their own copy of a
-      recording they wish to retain.
+      <strong>(1) Purpose.</strong> The measuring station (section 2.4) turns a
+      recording into a <strong>file on the user's own device</strong>. The user
+      passes that file on personally, over a route they choose themselves (for
+      example a messenger, email, or a direct transfer between two devices).
+      <strong>The provider takes no part in this handover.</strong> It does not
+      receive the file, does not store it, does not forward it, and at no point
+      learns its content or its recipient.
     </p>
     <p>
-      <strong>(2) Encryption.</strong> The recording is encrypted on the user's
-      device against the receiving practice's public key. The corresponding
-      private key never leaves the practice's browser. The provider stores only
-      the ciphertext together with its size, the time of receipt and a
-      compartment number; that number is the fingerprint of the practice's public
-      signing key and carries no name. <strong>The provider can neither read nor
-      restore the content of a delivery.</strong>
+      <strong>(2) Encryption where a practice key is present.</strong> If the
+      station is opened via a practice's poster or invitation, the call carries
+      that practice's public key. The file is then encrypted on the user's device
+      against that key; the corresponding private key never leaves the practice's
+      browser. In transit the file is <strong>unreadable to third parties</strong>
+      — including the operator of the route chosen by the user, and including the
+      provider.
     </p>
     <p>
-      <strong>(3) Retention.</strong> A delivery is deleted once the practice has
-      retrieved it, and at the latest <strong>30 days</strong> after it arrives.
-      After that it is permanently lost and cannot be restored by the provider
-      either. Users are informed of this before sending.
+      <strong>(3) Handover without a practice key.</strong> Where no practice key
+      is present, encryption is technically impossible. The file is then limited
+      to a <strong>reduced dataset</strong>: the beat-to-beat intervals, the
+      metrics derived from them, signal-quality information, the sensor
+      designation, the time and duration of the recording, and the freely chosen
+      name of the animal. It contains <strong>no details about the user as a
+      person</strong> and no identifier of their device. By choosing the route,
+      the user decides to whom they identify themselves.
     </p>
     <p>
-      <strong>(4) No claim to delivery or assessment.</strong> The provider owes
-      the operation of the relay, not delivery, acknowledgement or assessment by
-      the practice. Whether, when and with what result a practice retrieves a
-      delivery is outside the provider's control. No treatment or advisory
-      relationship arises between the user and the provider.
+      <strong>(4) Retention is the user's responsibility.</strong> The provider
+      keeps <strong>no copy</strong> of the recording. There is no relay, no
+      archive and no backup at the provider. If the file is lost on the user's
+      device or on the route they chose, the provider <strong>cannot restore
+      it</strong>. Anyone wishing to keep a recording must save it themselves.
     </p>
     <p>
-      <strong>(5) Retrieval status.</strong> Users can check in the measuring
-      station whether a delivery they sent has been retrieved. The provider keeps
-      a note of retrieval for each delivery for at most <strong>90 days</strong>.
-      That note contains no content of the delivery.
+      <strong>(5) No claim to delivery or assessment.</strong> The provider owes
+      the operation of the measuring station, not delivery, acknowledgement or
+      assessment by a practice. Whether, when and with what result a practice
+      opens a file that has been handed over is outside the provider's control.
+      No treatment or advisory relationship arises between the user and the
+      provider.
     </p>
     <p>
-      <strong>(6) Usage limits.</strong> The provider may protect the relay
-      against overload and abuse and may limit the size of individual deliveries,
-      the number of deliveries per compartment and the number of submissions per
-      unit of time.
+      <strong>(6) Response from the practice.</strong> A report or other response
+      from the practice reaches the user by whatever route that practice normally
+      uses. The provider supplies <strong>no transmission path</strong> for this
+      and takes no part in it. The practice is the controller for that
+      transmission.
     </p>
     <p>
-      <strong>(7) Not for emergencies.</strong> The relay is
+      <strong>(7) Not for emergencies.</strong> Handing over a recording is
       <strong>not</strong> suitable for emergencies. In acute cases seek
       veterinary help directly.
     </p>
     <p>
-      <strong>(8) Responsibility.</strong> The user warrants being entitled to
-      record and hand over the data of the horse concerned. After retrieval the
-      receiving practice is solely responsible for the processing. The
+      <strong>(8) Separate delivery service.</strong> The provider may, at a
+      practice's request, offer a separate service that receives recordings in
+      encrypted form and holds them for retrieval. Such a service is <strong>not
+      part of this contract</strong>; it requires a separate agreement including a
+      data processing agreement under Art. 28 GDPR. Without such an agreement, no
+      transmission to the provider takes place.
+    </p>
+    <p>
+      <strong>(9) Responsibility.</strong> The user warrants being entitled to
+      record and hand over the data of the horse concerned. Once a practice has
+      received a file, that practice is solely responsible for the processing. The
       <a href="/privacy-en.html">privacy policy</a> applies in addition.
     </p>
 

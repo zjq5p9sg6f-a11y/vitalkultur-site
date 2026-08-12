@@ -254,31 +254,53 @@
         <li>No account, no sign-in, no analytics cookies</li>
       </ul>
 
-      <p><strong>Handover to the practice — end-to-end encrypted:</strong></p>
+      <p><strong>Handover to the practice — as a file, without us:</strong></p>
       <p>
-        The recording is encrypted <strong>on the owner's device</strong> against
-        the practice's public key (ECIES over P-256, HKDF-SHA-256, AES-GCM-256).
-        The relay <code>postfach.carlon.app</code> stores nothing but
-        <strong>ciphertext</strong> together with its size, a timestamp and a
-        compartment number. That compartment number is the fingerprint of the
-        practice's public signing key (<code>SHA-256(signPub)[0:16]</code>) — it
-        carries no name. <strong>Vitalkultur cannot decrypt these
-        deliveries.</strong> They are deleted automatically after
-        <strong>30 days</strong>.
+        The measuring station turns the recording into a <strong>file on the
+        owner's device</strong>. The owner passes that file on herself, over a
+        route she chooses (messenger, email, direct transfer).
+        <strong>We do not process this file.</strong> It never reaches us, we do
+        not store it and do not forward it; we learn neither its content nor its
+        recipient. There is <strong>no relay at Vitalkultur</strong> for it.
+      </p>
+      <p>
+        <strong>With a practice key (poster or invitation scanned):</strong> the
+        file is encrypted <strong>on the owner's device</strong> against the
+        practice's public key (ECIES over P-256, HKDF-SHA-256, AES-GCM-256). The
+        corresponding private key is created in the practice's browser and never
+        leaves it. In transit the file is therefore unreadable even to the
+        operator of the route chosen by the owner.
+      </p>
+      <p>
+        <strong>Without a practice key:</strong> encryption is then impossible —
+        one cannot encrypt against a key that does not exist. Instead the file is
+        limited to a <strong>reduced dataset</strong>: beat-to-beat intervals,
+        the metrics derived from them, signal quality, sensor designation, time
+        and duration, and the freely chosen name of the animal. It contains
+        <strong>no details about any person</strong> and no identifier of the
+        device — in particular no browser identifier. By choosing the route, the
+        owner decides to whom she identifies herself.
+      </p>
+      <p class="hinweis">
+        <em>So that this is more than a promise:</em> an automated check
+        (<code>t-dateiweg</code>) blocks release if any field or value pointing
+        to a person appears in that reduced dataset.
       </p>
 
       <p><strong>Practice cockpit “CARLON Equine Visite”:</strong></p>
       <ul>
         <li>All practice and patient data stay <strong>local in the practice's browser</strong> (IndexedDB) — there is no Vitalkultur database</li>
         <li>The practice's private key never leaves that browser; we cannot restore it either</li>
-        <li>The findings sent back to the owner are encrypted the same way and placed in the owner's compartment</li>
+        <li>The practice sends its findings by its own usual route — just as it transmits findings otherwise. We provide <strong>no transmission path</strong> for this and take no part in it</li>
       </ul>
 
       <p>
         <strong>Roles under Art. 4 GDPR:</strong> for the data of its clients and
         patients the <strong>veterinary practice is the controller</strong>.
         Vitalkultur provides the tool and has <strong>no access</strong> to the
-        content — the relay sees ciphertext only.
+        content. Where an owner hands a recording of her own horse to her own
+        vet, <strong>Art. 2(2)(c) GDPR</strong> applies in addition: she is
+        acting for purely personal purposes.
       </p>
 
       <p><strong>Licence service <code>lizenz.carlon.app</code>:</strong></p>
@@ -288,12 +310,13 @@
         <li>Sees <strong>no health or horse data</strong></li>
       </ul>
 
-      <p><strong>Infrastructure behind both services — Cloudflare:</strong></p>
+      <p><strong>Infrastructure behind the licence service — Cloudflare:</strong></p>
       <p>
-        The relay and the licence service run on <strong>Cloudflare Workers
-        KV</strong> (Cloudflare, Inc., 101 Townsend St., San Francisco,
-        CA 94107, USA). Cloudflare is therefore a recipient within the meaning
-        of Art. 13(1)(e) GDPR.
+        The licence service runs on <strong>Cloudflare Workers KV</strong>
+        (Cloudflare, Inc., 101 Townsend St., San Francisco, CA 94107, USA).
+        Cloudflare is therefore a recipient within the meaning of
+        Art. 13(1)(e) GDPR. <strong>Recordings do not travel through it</strong> —
+        they reach neither Cloudflare nor us.
       </p>
       <p>
         <strong>Storage location:</strong> according to the vendor's own
@@ -304,18 +327,10 @@
         Implementing Decision (EU) 2021/914 (Art. 46(2)(c) GDPR).
       </p>
       <p>
-        <strong>Our own end-to-end encryption acts as a supplementary measure:</strong>
-        Cloudflare holds no key and cannot read the content of a delivery.
+        <em>What is stored there:</em> nothing but the hashed usage marker of a
+        practice described above — no health data, no horse data, no names.
         Cloudflare additionally encrypts stored values at rest (AES-256-GCM);
         transport runs over TLS.
-      </p>
-      <p>
-        <em>What this encryption does not cover:</em> the
-        <strong>metadata</strong> of a delivery — identifier, kind, size and
-        timestamp — are storage metadata and are visible to Cloudflare. The
-        content is protected, the traffic data is not. We state this explicitly
-        because, over time, a compartment number would reveal how often a given
-        practice receives deliveries.
       </p>
     </div>
 

@@ -823,79 +823,103 @@
       Art. 28 DSGVO ist deshalb weder erforderlich noch möglich; der Kunde bleibt
       allein Verantwortlicher im Sinne des Art. 4 Nr. 7 DSGVO. Die Pflichten des
       Kunden aus § 12 dieser AGB gelten entsprechend. Für die Entgegennahme
-      verschlüsselter Sendungen über den Zwischen­speicher gilt ergänzend § 12b.
+      von Aufnahmen aus der Messstation gilt ergänzend § 12b.
     </p>
 
     <!-- ============================================================
-         § 12b ÜBERGABE AN EINE PRAXIS · ZWISCHENSPEICHER (POSTFACH)
+         § 12b ÜBERGABE AN EINE PRAXIS · DATEIWEG
+         Der Zwischenspeicher ist zum 13.08.2026 abgeschaltet. Diese
+         Klausel beschreibt, was der Code TUT — window.CARLON_POSTFACH
+         in live.js steht auf false, und die Pruefstrecke t-dateiweg
+         bewacht, dass der Datensatz haelt, was hier steht.
+         Ein Vertragstext ist eine Behauptung ueber den Code.
          ============================================================ -->
 
-    <h2 id="postfach">§ 12b Übergabe an eine Tierarzt­praxis, Zwischen­speicher</h2>
+    <h2 id="uebergabe">§ 12b Übergabe einer Aufnahme an eine Tierarzt­praxis</h2>
+    <!-- Alter Anker: bereits verschickte und gedruckte Verweise auf
+         #postfach dürfen nicht ins Leere zeigen. -->
+    <span id="postfach"></span>
 
     <p>
       <strong>(1) Zweck und Einordnung.</strong> Über die Messstation (§ 3.4)
-      kann ein Nutzer eine Aufnahme an eine Tierarzt­praxis übergeben, die das
-      Cockpit nach § 12a nutzt. Der Anbieter stellt dafür einen
-      Zwischen­speicher bereit („Postfach“). Der Zwischen­speicher ist ein
-      <strong>Transportweg, kein Archiv und keine Daten­sicherung.</strong> Der
-      Nutzer bleibt dafür verantwortlich, seine Aufnahme selbst zu sichern,
-      wenn er sie behalten möchte.
+      erzeugt der Nutzer aus seiner Aufnahme eine <strong>Datei auf seinem
+      eigenen Endgerät</strong>. Er gibt diese Datei selbst weiter — über einen
+      Übertragungs­weg, den er selbst auswählt (etwa Messenger, E-Mail oder
+      Direkt­übertragung zwischen zwei Geräten).
+      <strong>Der Anbieter ist an dieser Weitergabe nicht beteiligt.</strong> Er
+      nimmt die Datei nicht entgegen, speichert sie nicht, leitet sie nicht
+      weiter und erhält zu keinem Zeitpunkt Kenntnis von ihrem Inhalt oder
+      ihrem Empfänger.
     </p>
 
     <p>
-      <strong>(2) Verschlüsselung.</strong> Die Aufnahme wird vor dem Versand
-      auf dem Gerät des Nutzers gegen den öffentlichen Schlüssel der
-      empfangenden Praxis verschlüsselt. Der zugehörige private Schlüssel
-      verbleibt ausschließlich im Browser der Praxis. Der Anbieter speichert
-      ausschließlich das Chiffrat nebst Größe, Eingangs­zeitpunkt und einer
-      Fach­nummer; die Fach­nummer ist der Fingerabdruck des öffentlichen
-      Signier­schlüssels der Praxis und enthält keinen Namen.
-      <strong>Der Anbieter kann den Inhalt einer Sendung nicht lesen und nicht
-      wiederherstellen.</strong>
+      <strong>(2) Verschlüsselung bei hinterlegtem Praxis­schlüssel.</strong>
+      Ruft der Nutzer die Messstation über den Aushang oder eine Einladung
+      einer Praxis auf, enthält der Aufruf den öffentlichen Schlüssel dieser
+      Praxis. Die Datei wird dann noch auf dem Gerät des Nutzers gegen diesen
+      Schlüssel verschlüsselt; der zugehörige private Schlüssel verbleibt
+      ausschließlich im Browser der Praxis. Die Datei ist auf dem
+      Übertragungs­weg <strong>für Dritte nicht lesbar</strong> — auch nicht für
+      den Betreiber des vom Nutzer gewählten Übertragungs­wegs und nicht für den
+      Anbieter.
     </p>
 
     <p>
-      <strong>(3) Speicher­dauer.</strong> Eine Sendung wird gelöscht, sobald
-      die Praxis sie abgerufen hat, spätestens jedoch
-      <strong>30&nbsp;Tage</strong> nach ihrem Eingang. Nach Ablauf dieser Frist
-      ist die Sendung endgültig verloren; sie kann auch vom Anbieter nicht
-      wiederhergestellt werden. Der Nutzer wird hierauf vor dem Versand
-      hingewiesen.
+      <strong>(3) Übergabe ohne hinterlegten Praxis­schlüssel.</strong> Liegt
+      kein Praxis­schlüssel vor, ist eine Verschlüsselung technisch nicht
+      möglich. Die Datei wird in diesem Fall auf einen <strong>reduzierten
+      Datensatz</strong> beschränkt: Sie enthält die Herzschlag­abstände, die
+      daraus berechneten Kenn­werte, Angaben zur Signal­güte, die Bezeichnung des
+      Sensors, Zeitpunkt und Dauer der Aufnahme sowie den vom Nutzer frei
+      gewählten Namen des Tieres. Sie enthält <strong>keine Angaben zur Person
+      des Nutzers</strong> und keine Kennung seines Endgeräts. Der Nutzer
+      entscheidet mit der Wahl des Übertragungs­wegs, wem er sich zu erkennen
+      gibt.
     </p>
 
     <p>
-      <strong>(4) Kein Anspruch auf Zustellung oder Beurteilung.</strong> Der
-      Anbieter schuldet die Bereitstellung des Zwischen­speichers, nicht die
-      Zustellung, die Kenntnisnahme oder die Beurteilung durch die Praxis. Ob,
-      wann und mit welchem Ergebnis eine Praxis eine Sendung abruft, liegt
-      außerhalb des Einfluss­bereichs des Anbieters und begründet keine Pflichten
-      des Anbieters gegenüber dem Nutzer. Ein Behandlungs- oder
+      <strong>(4) Aufbewahrung ist Sache des Nutzers.</strong> Der Anbieter
+      hält <strong>keine Kopie</strong> der Aufnahme vor. Es gibt keinen
+      Zwischen­speicher, kein Archiv und keine Daten­sicherung beim Anbieter.
+      Geht die Datei auf dem Gerät des Nutzers oder auf dem von ihm gewählten
+      Übertragungs­weg verloren, kann der Anbieter sie <strong>nicht
+      wiederherstellen</strong>. Wer eine Aufnahme behalten möchte, muss sie
+      selbst sichern.
+    </p>
+
+    <p>
+      <strong>(5) Kein Anspruch auf Zustellung oder Beurteilung.</strong> Der
+      Anbieter schuldet die Bereitstellung der Messstation, nicht die
+      Zustellung, die Kenntnisnahme oder die Beurteilung durch eine Praxis. Ob,
+      wann und mit welchem Ergebnis eine Praxis eine übergebene Datei öffnet,
+      liegt außerhalb des Einfluss­bereichs des Anbieters und begründet keine
+      Pflichten des Anbieters gegenüber dem Nutzer. Ein Behandlungs- oder
       Beratungs­verhältnis zwischen dem Nutzer und dem Anbieter entsteht durch
       die Übergabe nicht.
     </p>
 
     <p>
-      <strong>(5) Abhol­stand.</strong> Der Nutzer kann in der Messstation
-      abfragen, ob eine von ihm versandte Sendung abgerufen wurde. Der Anbieter
-      speichert dafür je Sendung für längstens <strong>90&nbsp;Tage</strong>
-      einen Vermerk über den Abruf. Dieser Vermerk enthält keinen Inhalt der
-      Sendung.
+      <strong>(6) Rückmeldung der Praxis.</strong> Ein Befund oder eine
+      sonstige Rückmeldung der Praxis erreicht den Nutzer auf dem Weg, den die
+      Praxis dafür üblicherweise nutzt. Der Anbieter stellt hierfür
+      <strong>keinen Übertragungs­weg bereit</strong> und ist an der Rückmeldung
+      nicht beteiligt. Verantwortlich für diese Übermittlung ist die Praxis.
     </p>
 
     <p>
-      <strong>(6) Nutzungs­grenzen.</strong> Der Anbieter darf den
-      Zwischen­speicher gegen Überlastung und Missbrauch schützen und dazu die
-      Größe einzelner Sendungen, die Zahl der Sendungen je Fach sowie die Zahl
-      der Einlieferungen je Zeit­einheit begrenzen. Die jeweils geltenden Grenzen
-      sind maßvoll an einer üblichen Nutzung ausgerichtet und werden in der
-      Messstation angezeigt, sobald sie greifen.
+      <strong>(7) Keine Notfall­versorgung.</strong> Die Übergabe einer
+      Aufnahme ist für Notfälle <strong>nicht</strong> geeignet. Bei akuten
+      Beschwerden ist unmittelbar tier­ärztliche Hilfe in Anspruch zu nehmen.
     </p>
 
     <p>
-      <strong>(7) Keine Notfall­versorgung.</strong> Der Weg über den
-      Zwischen­speicher ist für Notfälle <strong>nicht</strong> geeignet. Bei
-      akuten Beschwerden ist unmittelbar tier­ärztliche Hilfe in Anspruch zu
-      nehmen.
+      <strong>(8) Gesonderter Zustell­dienst.</strong> Der Anbieter kann einer
+      Praxis auf deren Wunsch gesondert einen Dienst anbieten, der Aufnahmen
+      verschlüsselt entgegennimmt und zum Abruf bereithält. Ein solcher Dienst
+      ist <strong>nicht Gegenstand dieses Vertrags</strong>; er setzt eine
+      gesonderte Vereinbarung einschließlich eines Vertrags über die
+      Auftrags­verarbeitung nach Art. 28 DSGVO voraus. Ohne eine solche
+      Vereinbarung findet eine Übertragung an den Anbieter nicht statt.
     </p>
 
     <p>

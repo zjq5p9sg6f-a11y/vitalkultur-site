@@ -258,31 +258,56 @@
         <li>Kein Konto, keine Anmeldung, keine Cookies zu Analysezwecken</li>
       </ul>
 
-      <p><strong>Übergabe an die Praxis — Ende-zu-Ende verschlüsselt:</strong></p>
+      <p><strong>Übergabe an die Praxis — als Datei, ohne uns:</strong></p>
       <p>
-        Die Aufnahme wird <strong>auf dem Gerät der Besitzerin</strong> gegen den
-        öffentlichen Schlüssel der Praxis verschlüsselt (ECIES über P-256,
-        HKDF-SHA-256, AES-GCM-256). Der Zwischenspeicher
-        <code>postfach.carlon.app</code> speichert ausschließlich
-        <strong>Chiffrat</strong> nebst Größe, Zeitstempel und einer Fachnummer.
-        Die Fachnummer ist der Fingerabdruck des öffentlichen Signierschlüssels
-        der Praxis (<code>SHA-256(signPub)[0:16]</code>) — sie enthält keinen
-        Namen. <strong>Vitalkultur kann diese Sendungen nicht entschlüsseln.</strong>
-        Sie werden nach <strong>30 Tagen</strong> automatisch gelöscht.
+        Die Messstation erzeugt aus der Aufnahme eine <strong>Datei auf dem Gerät
+        der Besitzerin</strong>. Sie gibt diese Datei selbst weiter — über einen
+        Weg, den sie selbst wählt (Messenger, E-Mail, Direktübertragung).
+        <strong>Wir verarbeiten diese Datei nicht.</strong> Sie erreicht uns
+        nicht, wird von uns nicht gespeichert und nicht weitergeleitet; wir
+        erfahren weder ihren Inhalt noch ihren Empfänger. Es gibt für sie
+        <strong>keinen Zwischenspeicher bei Vitalkultur</strong>.
+      </p>
+      <p>
+        <strong>Mit Praxis-Schlüssel (Aushang oder Einladung gescannt):</strong>
+        Die Datei wird noch <strong>auf dem Gerät der Besitzerin</strong> gegen
+        den öffentlichen Schlüssel der Praxis verschlüsselt (ECIES über P-256,
+        HKDF-SHA-256, AES-GCM-256). Der zugehörige private Schlüssel entsteht im
+        Browser der Praxis und verlässt ihn nie. Unterwegs ist die Datei damit
+        auch für den Betreiber des gewählten Übertragungswegs unlesbar.
+      </p>
+      <p>
+        <strong>Ohne Praxis-Schlüssel:</strong> Dann ist keine Verschlüsselung
+        möglich — gegen einen Schlüssel, den es nicht gibt, lässt sich nicht
+        verschlüsseln. Die Datei wird stattdessen auf einen <strong>reduzierten
+        Datensatz</strong> beschränkt: Herzschlagabstände, daraus berechnete
+        Kennwerte, Signalgüte, Sensorbezeichnung, Zeitpunkt und Dauer sowie der
+        frei gewählte Name des Tieres. <strong>Nicht enthalten sind Angaben zur
+        Person</strong> und keine Kennung des Endgeräts — insbesondere keine
+        Browserkennung. Wem sie sich zu erkennen gibt, entscheidet die
+        Besitzerin mit der Wahl des Übertragungswegs.
+      </p>
+      <p class="hinweis">
+        <em>Damit das keine bloße Zusage bleibt:</em> Eine automatische
+        Prüfstrecke (<code>t-dateiweg</code>) lässt die Veröffentlichung nicht
+        zu, wenn in diesem reduzierten Datensatz ein Feld oder ein Wert
+        auftaucht, der auf eine Person zeigt.
       </p>
 
       <p><strong>Praxis-Cockpit „CARLON Equine Visite":</strong></p>
       <ul>
         <li>Alle Praxis- und Patientendaten liegen <strong>lokal im Browser der Praxis</strong> (IndexedDB) — es gibt keine Vitalkultur-Datenbank</li>
         <li>Der private Schlüssel der Praxis verlässt diesen Browser nicht; er ist auch für uns nicht wiederherstellbar</li>
-        <li>Der Befund an die Besitzerin wird ebenso verschlüsselt und in deren Fach gelegt</li>
+        <li>Den Befund übermittelt die Praxis auf ihrem eigenen Weg — so wie sie Befunde sonst auch übermittelt. Wir stellen dafür <strong>keinen Übertragungsweg</strong> bereit und sind daran nicht beteiligt</li>
       </ul>
 
       <p>
         <strong>Rollen nach Art. 4 DSGVO:</strong> Für die Daten ihrer Kundinnen
         und Patienten ist die <strong>Tierarztpraxis Verantwortlicher</strong>.
         Vitalkultur stellt das Werkzeug bereit und hat auf die Inhalte
-        <strong>keinen Zugriff</strong> — der Zwischenspeicher sieht nur Chiffrat.
+        <strong>keinen Zugriff</strong>. Für die Übergabe einer Aufnahme durch
+        die Besitzerin an ihre eigene Tierärztin gilt zudem <strong>Art. 2
+        Abs. 2 lit. c DSGVO</strong>: Sie handelt dabei zu persönlichen Zwecken.
       </p>
 
       <p><strong>Lizenzdienst <code>lizenz.carlon.app</code>:</strong></p>
@@ -292,12 +317,13 @@
         <li>Sieht <strong>keine Gesundheits- oder Pferdedaten</strong></li>
       </ul>
 
-      <p><strong>Infrastruktur beider Dienste — Cloudflare:</strong></p>
+      <p><strong>Infrastruktur des Lizenzdienstes — Cloudflare:</strong></p>
       <p>
-        Zwischenspeicher und Lizenzdienst laufen auf <strong>Cloudflare
-        Workers KV</strong> (Cloudflare, Inc., 101 Townsend St., San Francisco,
-        CA 94107, USA). Cloudflare ist insoweit Empfänger im Sinne des
-        Art. 13 Abs. 1 lit. e DSGVO.
+        Der Lizenzdienst läuft auf <strong>Cloudflare Workers KV</strong>
+        (Cloudflare, Inc., 101 Townsend St., San Francisco, CA 94107, USA).
+        Cloudflare ist insoweit Empfänger im Sinne des Art. 13 Abs. 1 lit. e
+        DSGVO. <strong>Aufnahmen laufen nicht darüber</strong> — sie erreichen
+        weder Cloudflare noch uns.
       </p>
       <p>
         <strong>Speicherort:</strong> Für Workers KV lässt sich nach der
@@ -309,18 +335,11 @@
         (Art. 46 Abs. 2 lit. c DSGVO).
       </p>
       <p>
-        <strong>Als ergänzende Maßnahme wirkt unsere eigene Ende-zu-Ende-Verschlüsselung:</strong>
-        Cloudflare besitzt keinen Schlüssel und kann die Inhalte der Sendungen
-        nicht lesen. Cloudflare verschlüsselt die abgelegten Werte zusätzlich
-        selbst im Ruhezustand (AES-256-GCM); der Transport erfolgt über TLS.
-      </p>
-      <p>
-        <em>Was diese Verschlüsselung nicht erfasst:</em> Die
-        <strong>Metadaten</strong> einer Sendung — Kennung, Art, Größe und
-        Zeitstempel — sind Metadaten des Speichers und für Cloudflare sichtbar.
-        Geschützt sind die Inhalte, nicht die Verkehrsdaten. Wir sagen das hier
-        ausdrücklich, weil die Fachnummer eines Postfachs über die Zeit
-        erkennen ließe, wie oft eine Praxis Sendungen erhält.
+        <em>Was dort liegt:</em> ausschließlich der gehashte Nutzungsstempel
+        einer Praxis (oben beschrieben) — keine Gesundheitsdaten, keine
+        Pferdedaten, keine Namen. Cloudflare verschlüsselt die abgelegten Werte
+        zusätzlich selbst im Ruhezustand (AES-256-GCM); der Transport erfolgt
+        über TLS.
       </p>
     </div>
 
@@ -515,10 +534,11 @@
       Zahlungsabwicklung des Abonnements „CARLON Equine Visite" (siehe 8a)
       sowie bei gesetzlicher Verpflichtung zur Offenlegung
       (Art. 6 Abs. 1 lit. c DSGVO, z.&nbsp;B. auf behördliche Anordnung).
-      Die über den Zwischenspeicher <code>postfach.carlon.app</code>
-      übertragenen Aufnahmen und Befunde sind Ende-zu-Ende verschlüsselt und
-      für Vitalkultur wie für den Betreiber der Infrastruktur inhaltlich
-      nicht zugänglich.
+      Aufnahmen aus der Messstation und Befunde aus dem Praxis-Cockpit werden
+      von uns <strong>gar nicht übertragen</strong>: Sie entstehen als Datei auf
+      dem Gerät und werden von der Besitzerin bzw. der Praxis auf einem selbst
+      gewählten Weg weitergegeben. Wir können sie deshalb an niemanden
+      weitergeben — wir haben sie nicht.
     </p>
 
     <h2>11. Speicherdauer (Art. 5 Abs. 1 lit. e DSGVO)</h2>
