@@ -242,6 +242,40 @@ p.sub{color:var(--sec);font-size:clamp(13px,1.15vw,15px);margin:0 auto clamp(var
 .pulsemeta{font-family:var(--font-mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;
   color:var(--dim);margin-bottom:var(--s4)}
 .pulsemeta b{color:var(--sec);font-weight:700;font-variant-numeric:tabular-nums}
+/* ── Live-Kennzahlen: der Puls sitzt IN einer Kachel ────────────────────
+   Die grosse Zahl blieb gross, wanderte aber in den Kachelblock. Sie ueber
+   die volle Breite zu legen (statt ueber zwei Spalten) haelt die Reihe
+   darunter bei JEDER Fensterbreite gleichmaessig — eine halbe Restkachel
+   am Zeilenende sieht aus wie ein Fehler. */
+/* Feste Dreiteilung statt auto-fit: die Elterngrid legt bei breitem Fenster
+   sechs Spalten an, in denen drei Kacheln nur die halbe Reihe fuellen — die
+   Zeile sieht dann abgeschnitten aus. Drei Kacheln, drei Spalten, immer.
+   Auch am Handy tragfaehig: 380 px ergeben ~113 px je Kachel, ueber der
+   Untergrenze von 102 px, die der Kachelblock ohnehin ansetzt. */
+.grid.livegrid{grid-template-columns:repeat(3,minmax(0,1fr))}
+/* .grid.livegrid, nicht .livegrid: `.grid` steht SPAETER in dieser Datei und
+   wiegt gleich schwer — bei Gleichstand entscheidet die Reihenfolge, also
+   hat auto-fit gewonnen und die Regel hier war wirkungslos. Im Quelltext
+   sah sie richtig aus; sichtbar wurde es erst im Bild. */
+.grid.livegrid .hero{grid-column:1/-1}
+.grid.livegrid .hero .pulse{font-size:clamp(46px,6.6vw,86px);margin:5px 0 0;text-align:left}
+/* CASCADE-KOLLISION, am 12.08.2026 am laufenden Bildschirm nachgemessen:
+   Die Kachel bringt eigene Regeln fuer ihre Bausteine mit — `.tile span` ist
+   die kleine Beschriftung (9,5 px), `.tile b` die grosse Zahl (27 px). Im
+   Puls-Block heisst der Baustein aber genau umgekehrt: die Zahl steht in
+   einem <span>, die Unterzeile enthaelt ein <b>. Ergebnis: die 86-px-Zahl
+   wurde auf 9,5 px gequetscht und ihre eigene Unterzeile auf 27 px
+   hochgezogen — die Hierarchie stand auf dem Kopf. Sichtbar war das nur im
+   Bild, nicht im Quelltext; deshalb steht die Messung in t-kachel.js.
+   Hier wird nicht die Kachel umgebaut, sondern der Puls-Block gegen sie
+   verteidigt: enger gefasste Selektoren, gleiche Absicht. */
+.grid.livegrid .hero .pulse span{font-family:var(--font-brand);font-size:inherit;font-weight:600;
+  color:inherit;letter-spacing:inherit;text-transform:none}
+.grid.livegrid .hero em{font-family:var(--font-mono);font-size:10.5px;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--dim);margin-top:10px}
+.grid.livegrid .hero em b{display:inline;font-family:var(--font-mono);font-size:10.5px;
+  line-height:inherit;margin-top:0;letter-spacing:.14em;color:var(--amber);font-weight:700;
+  font-variant-numeric:tabular-nums}
 .livepanel{margin-top:var(--s3);text-align:left}
 .livepanel .qual{margin:0;justify-content:flex-start}
 .heart.beat{animation:b .8s ease-out}
@@ -790,7 +824,7 @@ const HAUS={ appImStore:false, appUrl:'https://carlon.app' };
   <!-- ── 1) Bereit ── -->
   <div id="vReady" class="hidden">
     <h1 data-i18n="readyH1">Messung für den Tierarzt</h1>
-    <p class="sub" data-i18n="readySub">Verbinde den Polar-H10-Gurt deines Pferds. Die Aufnahme wird auf deinem Gerät verschlüsselt, bevor sie es verlässt — lesen kann sie nur deine Praxis.</p>
+    <p class="sub" data-i18n="readySub">Verbinde den Polar-H10-Gurt deines Pferds. Die Aufnahme geht direkt an deine Tierärztin oder deinen Tierarzt — auf deinem Gerät verschlüsselt, lesen kann sie nur die Praxis.</p>
     <!-- Erwartung VOR dem Knopf, nicht danach. Die sieben Minuten standen
        bisher erst im Fortschrittstext — wer sie erst nach dem Start liest,
        hat das Pferd schon angebunden und plant mit drei Minuten. Und die
@@ -834,47 +868,66 @@ const HAUS={ appImStore:false, appUrl:'https://carlon.app' };
     <div class="rrwarn hidden" id="rrWarn" role="alert"></div>
     <p class="sub" id="liveSub" data-i18n="liveSub">Ruhig stehen lassen. Je ruhiger das Pferd, desto aussagekräftiger die Aufnahme.</p>
 
-    <div class="pulse"><svg class="heart" id="heart" viewBox="0 0 24 24" fill="currentColor"><path d="M12 21s-8-4.6-8-10.4A4.6 4.6 0 0112 7a4.6 4.6 0 018 3.6C20 16.4 12 21 12 21z"/></svg><span id="hr" aria-live="off">–</span><small>bpm</small></div>
-    <div class="pulsemeta"><span id="hrRangeLbl">Bisher</span> <b id="hrRange">–</b> <span id="hrRangeUnit">bpm</span></div>
+    <!-- ── MESSWERTE ZUERST ──────────────────────────────────────────────
+         Die Kacheln standen unter den Diagrammen. Wer im Stall aufs Telefon
+         schaut, will aber ZUERST die Zahlen sehen — Puls, Schlaege, Dauer,
+         Akku — und erst danach die Kurven. Dieselbe Ordnung wie auf dem
+         Abschluss-Bildschirm: Kennzahlen oben, Bilder darunter.
+         Der Puls bleibt die grosse Zahl, sitzt aber jetzt IN einer Kachel
+         ueber der ganzen Breite, damit der Block als ein Instrument liest
+         und nicht als Ueberschrift mit Anhang. -->
+    <div class="grid livegrid">
+      <button class="tile gold hero" data-info="hr" aria-label="Puls — erklären">
+        <span data-i18n="tPulsLive">Puls</span>
+        <div class="pulse"><svg class="heart" id="heart" viewBox="0 0 24 24" fill="currentColor"><path d="M12 21s-8-4.6-8-10.4A4.6 4.6 0 0112 7a4.6 4.6 0 018 3.6C20 16.4 12 21 12 21z"/></svg><span id="hr" aria-live="off">–</span><small>bpm</small></div>
+        <em><span id="hrRangeLbl">Bisher</span> <b id="hrRange">–</b> <span id="hrRangeUnit">bpm</span></em>
+      </button>
+      <button class="tile" data-info="beats" aria-label="Herzschläge — erklären"><span data-i18n="tBeats">Herzschläge</span><b id="beats">0</b><em data-i18n="tBeatsSub">bisher erfasst</em></button>
+      <button class="tile neutral" data-info="dur" aria-label="Dauer — erklären"><span data-i18n="tDur">Dauer</span><b id="dur">0:00</b><em data-i18n="tDurSub">seit dem Start</em></button>
+      <button class="tile gold" data-info="batt"><span data-i18n="tBatt">Gurt-Akku</span><b id="batt">–</b><em data-i18n="tBattSub">Ladestand des Senders</em></button>
+    </div>
+
+    <!-- ── DUALGRAF ZUERST ───────────────────────────────────────────────
+         Puls und Herzratenvariabilitaet im Verlauf — GENAU die Darstellung
+         des Abschluss-Bildschirms, samt Serien-Pillen, Vollbild-Knopf und
+         Bildunterschrift. Der Live-Schirm ist nicht der aermere Bruder des
+         Ergebnisses: was am Ende beeindruckt, muss WAEHREND der Messung
+         beeindrucken, sonst haelt niemand die sieben Minuten durch. -->
+    <div class="chart-wrap" id="vitalsWrap" hidden>
+      <div class="ct">
+        <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"><path d="M2 12h3l2-7 4 14 3-9 2 2h6"/></svg>
+        <b id="ctVitalsLive">Puls + HRV · Verlauf<button class="info-i" data-info="vitals" aria-label="Was zeigt dieses Diagramm?"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 16v-5M12 8h.01"/><circle cx="12" cy="12" r="9"/></svg></button></b><i id="vitalsN"></i>
+      </div>
+      <button class="chart-zoombtn" data-zoom="vitals" aria-label="Vollbild"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg></button>
+      <div class="series">
+        <button class="pill gold" data-info="hr" aria-label="Puls-Reihe — erklären"><span class="pd"></span><span class="nm" id="pillPulseNmLive">Puls</span><span class="rg" id="pillHrRgLive"></span><span class="av" id="pillHrLive"></span></button>
+        <button class="pill cyan" data-info="rmssd" aria-label="HRV-Reihe — erklären"><span class="pd"></span><span class="nm" id="pillHrvNmLive">HRV</span><span class="rg" id="pillHvRgLive"></span><span class="av" id="pillHvLive"></span></button>
+      </div>
+      <div id="vitalsLive"></div>
+      <div class="capt" id="vitalsCapLive">Puls (Gold) und HRV (Cyan) über die bisherige Aufnahme. Die HRV ist ein gleitendes Fenster und reagiert auf Puls-Übergänge. <b style="color:var(--sec);font-weight:600">Tippen heftet den Wert an, Doppeltippen öffnet das Vollbild.</b></div>
+    </div>
+
+    <!-- ── POINCARÉ ──────────────────────────────────────────────────────
+         Jeder Schlag gegen seinen Vorgaenger. Reine Geometrie, kein Urteil —
+         aber das schoenste Bild, das die Herzratenvariabilitaet hat, und es
+         wird mit jeder Minute dichter. Hier stand einmal eine aermere
+         Fassung ohne Ellipse und ohne SD1/SD2; siehe drawSpark(). -->
+    <div class="chart-wrap" id="poinWrap" hidden>
+      <div class="ct">
+        <svg class="ic" style="color:var(--cyan)" viewBox="0 0 24 24" fill="currentColor"><circle cx="7" cy="17" r="1.5"/><circle cx="11" cy="13" r="1.5"/><circle cx="15" cy="10" r="1.5"/><circle cx="18" cy="6" r="1.5"/><circle cx="9" cy="12" r="1.5" opacity=".5"/><circle cx="14" cy="15" r="1.5" opacity=".5"/></svg>
+        <b id="ctPoinLive">Poincaré<button class="info-i" data-info="poin" aria-label="Was zeigt dieses Diagramm?"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 16v-5M12 8h.01"/><circle cx="12" cy="12" r="9"/></svg></button></b><i id="poinN"></i>
+      </div>
+      <button class="chart-zoombtn" data-zoom="poin" aria-label="Vollbild"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg></button>
+      <div id="poinLive"></div>
+    </div>
 
     <div class="chart-wrap">
       <div class="ct">
         <svg class="ic" style="color:var(--cyan)" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><path d="M3 12h2l1.5-5 2 10 2-8 1.5 6 1.5-3 1.5 4 1.5-6L18 12h3"/></svg>
         <b id="ctLive" data-i18n-skip>Letzte Schläge<button class="info-i" data-info="rr" aria-label="Was zeigt dieses Diagramm?"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 16v-5M12 8h.01"/><circle cx="12" cy="12" r="9"/></svg></button></b><i id="liveN"></i>
       </div>
-      <div id="spark" aria-hidden="true"></div>
-    </div>
-
-    <!-- Die Wolke entsteht Schlag fuer Schlag. Reine Geometrie: jeder Punkt
-         ist ein Schlag gegen seinen Vorgaenger. Sie BEURTEILT nichts — das
-         bleibt der Tieraerztin — aber sie zeigt sofort, dass hier etwas
-         Echtes gemessen wird, und sie ist das schoenste Bild, das die
-         Herzratenvariabilitaet hat. -->
-    <!-- DUALGRAF: Puls und Herzratenvariabilitaet im Verlauf, dieselbe
-         Darstellung wie auf dem Abschluss-Bildschirm. Der Live-Schirm soll
-         nicht der aermere Bruder des Ergebnisses sein — was am Ende
-         beeindruckt, muss WAEHREND der Messung beeindrucken, sonst haelt
-         niemand die fuenf Minuten durch. -->
-    <!-- WEITERSAGEN WAEHREND DER MESSUNG.
-         Der Hoehepunkt der Begeisterung liegt HIER, nicht am Ende: die
-         Wolke fuellt sich, die Atemwelle setzt ein, und man steht ohnehin
-         fuenf Minuten daneben und hat nichts zu tun. Danach ist der Moment
-         vorbei — man packt zusammen und geht.
-         Erscheint bewusst erst mit der Atemkurve, also dann, wenn es
-         wirklich etwas zu zeigen gibt. Geteilt wird NUR die Station, nie
-         die laufende Messung. -->
-    <div class="jetzt-teilen" id="jetztTeilen" hidden>
-      <div class="jt-txt"><b>Das sollte deine Stallnachbarin sehen</b>
-        <span>Der Link zur Messstation — ohne deine Daten.</span></div>
-      <button class="btn ghost" id="jtBtn">Weitersagen</button>
-    </div>
-
-    <div class="chart-wrap" id="vitalsWrap" hidden>
-      <div class="ct">
-        <svg class="ic" style="color:var(--cyan)" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><path d="M3 17l4-9 3 12 3-15 3 9 2-4h3"/></svg>
-        <b data-i18n-skip>Puls und Variabilität im Verlauf</b><i id="vitalsN"></i>
-      </div>
-      <div id="vitalsLive" aria-hidden="true"></div>
+      <button class="chart-zoombtn" data-zoom="rr" aria-label="Vollbild"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg></button>
+      <div id="spark"></div>
     </div>
 
     <!-- ATEMKURVE. Der Moment, der wirkt: man sieht das Pferd atmen — im
@@ -883,24 +936,25 @@ const HAUS={ appImStore:false, appUrl:'https://carlon.app' };
          zeigen muss, um als Welle erkennbar zu sein. -->
     <div class="chart-wrap" id="breathWrap" hidden>
       <div class="ct">
-        <svg class="ic" style="color:var(--cyan)" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><path d="M3 14c3-6 6-6 9 0s6 6 9 0"/></svg>
-        <b data-i18n-skip>Atmung im Herzschlag</b><i id="breathN"></i>
+        <svg class="ic" style="color:#4DA6F2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><path d="M3 14c2.5 0 2.5-6 5-6s2.5 6 5 6 2.5-6 5-6 2.5 6 5 6"/></svg>
+        <b id="ctBreathLive">Atemkurve<button class="info-i" data-info="breath" aria-label="Was zeigt dieses Diagramm?"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 16v-5M12 8h.01"/><circle cx="12" cy="12" r="9"/></svg></button></b><i id="breathN"></i>
       </div>
-      <div id="breathLive" aria-hidden="true"></div>
+      <button class="chart-zoombtn" data-zoom="breath" aria-label="Vollbild"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg></button>
+      <div id="breathLive"></div>
     </div>
 
-    <div class="chart-wrap" id="poinWrap" hidden>
-      <div class="ct">
-        <svg class="ic" style="color:var(--cyan)" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><circle cx="9" cy="15" r="1.4"/><circle cx="13" cy="11" r="1.4"/><circle cx="16" cy="14" r="1.4"/><circle cx="11" cy="8" r="1.4"/><path d="M3 21L21 3"/></svg>
-        <b data-i18n-skip>Jeder Schlag gegen den vorherigen</b><i id="poinN"></i>
-      </div>
-      <div id="poinLive" aria-hidden="true"></div>
-    </div>
-
-    <div class="grid">
-      <button class="tile" data-info="beats" aria-label="Herzschläge — erklären"><span data-i18n="tBeats">Herzschläge</span><b id="beats">0</b><em data-i18n="tBeatsSub">bisher erfasst</em></button>
-      <button class="tile neutral" data-info="dur" aria-label="Dauer — erklären"><span data-i18n="tDur">Dauer</span><b id="dur">0:00</b><em data-i18n="tDurSub">seit dem Start</em></button>
-      <button class="tile gold" data-info="batt"><span data-i18n="tBatt">Gurt-Akku</span><b id="batt">–</b><em data-i18n="tBattSub">Ladestand des Senders</em></button>
+    <!-- WEITERSAGEN WAEHREND DER MESSUNG.
+         Der Hoehepunkt der Begeisterung liegt HIER, nicht am Ende: die
+         Wolke fuellt sich, die Atemwelle setzt ein, und man steht ohnehin
+         sieben Minuten daneben und hat nichts zu tun. Danach ist der Moment
+         vorbei — man packt zusammen und geht.
+         Erscheint bewusst erst mit der Atemkurve, also dann, wenn es
+         wirklich etwas zu zeigen gibt. Geteilt wird NUR die Station, nie
+         die laufende Messung. -->
+    <div class="jetzt-teilen" id="jetztTeilen" hidden>
+      <div class="jt-txt"><b>Das sollte deine Stallnachbarin sehen</b>
+        <span>Der Link zur Messstation — ohne deine Daten.</span></div>
+      <button class="btn ghost" id="jtBtn">Weitersagen</button>
     </div>
 
     <!-- Beantwortet die Frage, die im Stall wirklich zaehlt: wann darf ich
@@ -1176,7 +1230,7 @@ de:{
  brandTag:'Equine Heart Science',
  /* Empfang */
  readyH1:'Messung für den Tierarzt',
- readySub:'Verbinde den Polar-H10-Gurt deines Pferds. Die Aufnahme wird auf deinem Gerät verschlüsselt, bevor sie es verlässt — lesen kann sie nur deine Praxis.',
+ readySub:'Verbinde den Polar-H10-Gurt deines Pferds. Die Aufnahme geht direkt an deine Tierärztin oder deinen Tierarzt — auf deinem Gerät verschlüsselt, lesen kann sie nur die Praxis.',
  /* ── Wer OHNE Aushang hier landet ───────────────────────────────────────
     Der Text darüber ist für den Aushang geschrieben: dort steht das Fach
     der Praxis im Link, „geht direkt an deine Tierärztin" ist dann wahr.
@@ -1220,6 +1274,7 @@ de:{
  liveRange:'Bisher', liveRangeUnit:'bpm',
  lastBeats:'Letzte Schläge',
  tBeats:'Herzschläge', tBeatsSub:'bisher erfasst',
+ tPulsLive:'Puls',
  tDur:'Dauer', tDurSub:'seit dem Start',
  tBatt:'Gurt-Akku', tBattSub:'Ladestand des Senders',
  progressH:'Aufnahme-Fortschritt',
@@ -1287,7 +1342,7 @@ en:{
 
  brandTag:'Equine Heart Science',
  readyH1:'Recording for your vet',
- readySub:'Connect your horse’s Polar H10 belt. The recording is encrypted on your device before it leaves — only your practice can read it.',
+ readySub:'Connect your horse’s Polar H10 belt. The recording goes straight to your veterinarian — encrypted on your device, so only the practice can read it.',
  freiH1:'Measure your horse’s heart rhythm',
  freiSub:'Connect the Polar H10 belt — the recording is made on your device. At the end you get a link for your vet: only whoever holds it can open the recording. No app, no account.',
  freiTitle:'Measure equine heart rhythm — CARLON Equine',
@@ -1316,6 +1371,7 @@ en:{
  liveRange:'So far', liveRangeUnit:'bpm',
  lastBeats:'Recent beats',
  tBeats:'Heartbeats', tBeatsSub:'captured so far',
+ tPulsLive:'Pulse',
  tDur:'Duration', tDurSub:'since the start',
  tBatt:'Belt battery', tBattSub:'charge level of the sensor',
  progressH:'Recording progress',
@@ -1692,7 +1748,18 @@ const Chart={
      HR-Gold ist Marken-CI (Rot bleibt dem Alarm vorbehalten). Ausgewiesen
      wird die Fenstergroesse — ohne sie ist eine HRV-Kurve nicht lesbar.
      Bewertet wird nichts: keine Zonen, keine Referenz, keine Einstufung. */
-  vitals(rr,{w=720,h=320}={}){
+  /* anim=false schaltet das Einzeichnen ab. WARUM DAS NOETIG IST:
+     Die Kurve zeichnet sich beim Erscheinen selbst (CSS-Animation ueber
+     stroke-dashoffset, 1,15 s). Waehrend der Messung wird das Diagramm aber
+     bei jedem zweiten Schlag komplett neu erzeugt — und ein FRISCHER
+     Pfadknoten startet die Animation von vorn, also wieder bei
+     stroke-dashoffset:1, wo die Linie unsichtbar ist. Ergebnis: die Kurve
+     verschwindet und schreibt sich neu, alle paar Sekunden. Genau das
+     Flackern, das Jan am 12.08.2026 gemeldet hat.
+     Nachgemessen: der Dualgraf ist das EINZIGE Diagramm mit path.draw —
+     deshalb flackerte auch nur er (probe: f_andere_mit_draw alle false).
+     Die Animation gehoert dem ersten Erscheinen, nicht jedem Neuzeichnen. */
+  vitals(rr,{w=720,h=320,anim=true}={}){
     if(!rr||rr.length<10) return '';
     const n=rr.length, uid=Math.round(w*11+h+3);
     const hf=rr.map(v=>60000/v);
@@ -1751,8 +1818,8 @@ const Chart={
     const dHV=decHV.map(([i,v],k)=>`${k?'L':'M'}${X(tAll[i0+i]).toFixed(1)},${YV(v).toFixed(1)}`).join(' ');
     g+=`<path d="${dHV} L${X(T).toFixed(1)},${pB.toFixed(1)} L${X(tAll[i0]).toFixed(1)},${pB.toFixed(1)} Z" fill="url(#ar-${uid})" stroke="none"/>`;
     const dHF=decHF.map(([i,v],k)=>`${k?'L':'M'}${X(tAll[i]).toFixed(1)},${YH(v).toFixed(1)}`).join(' ');
-    g+=`<path class="draw" pathLength="1" d="${dHF}" fill="none" stroke="var(--amber)" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round"/>`;
-    g+=`<path class="draw d2" pathLength="1" d="${dHV}" fill="none" stroke="var(--cyan)" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round"/>`;
+    g+=`<path class="${anim?'draw':''}" pathLength="1" d="${dHF}" fill="none" stroke="var(--amber)" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round"/>`;
+    g+=`<path class="${anim?'draw d2':''}" pathLength="1" d="${dHV}" fill="none" stroke="var(--cyan)" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round"/>`;
 
     g+=`<rect x="${pad.l}" y="${pad.t}" width="${plotW.toFixed(1)}" height="${plotH.toFixed(1)}" class="axis"/>`;
     g+=Chart._bezel(pad.l,pad.t,plotW,plotH);
@@ -1868,7 +1935,16 @@ const Chart={
     return Chart._hov(g,w,h,pts,'breath','',alt);
   },
 
-  poincare(rr,{size=360,sd1=null,sd2=null}={}){
+  /* ACHTUNG, STILLE FALLE: alle anderen Diagramme heissen {w,h}, dieses
+     heisst {size} — es MUSS quadratisch bleiben. Der Live-Aufruf uebergab
+     jahrelang {w:640,h:330}; beides fiel wirkungslos auf den Standardwert
+     360 zurueck, ohne dass irgendetwas gemeldet haette. Die Wolke wurde
+     also klein gezeichnet und vom Browser hochskaliert — dicke Punkte,
+     grobes Fadenkreuz, unscharfe Achsenschrift. Deshalb werden w/h jetzt
+     angenommen und auf die kuerzere Seite abgebildet: ein falscher
+     Options-Name kann hier nicht mehr still danebengehen. */
+  poincare(rr,{size=null,w=null,h=null,sd1=null,sd2=null}={}){
+    size = size || (w&&h ? Math.min(w,h) : w || h || 360);
     if(!rr||rr.length<4) return '';
     const xs=rr.slice(0,-1), ys=rr.slice(1), pad=52;
     /* ROBUSTE SPANNE statt Minimum/Maximum.
@@ -2182,7 +2258,7 @@ de:{
     ['Hinweis','Die Dauer sagt nichts über die Qualität — dafür steht die Signalgüte im Messprotokoll.']]},
   hr:{t:'Ø Herzfrequenz',r:[
     ['Was','Der durchschnittliche Puls über die Aufnahme, in Schlägen pro Minute.'],
-    ['Rechenweg','Zeitgewichtet gerechnet: 60000 geteilt durch den mittleren Schlagabstand. Der Mittelwert der Momentan-Pulse wäre systematisch zu hoch (Jensen-Ungleichung).'],
+    ['Rechenweg','Zeitgewichtet gerechnet: 60000 geteilt durch den mittleren Schlagabstand. Den Mittelwert der einzelnen Puls-Werte zu nehmen wäre systematisch zu hoch — ein kurzer, schneller Schlag zählte dort genauso viel wie ein langer, obwohl er weniger Zeit ausfüllt (Jensen-Ungleichung).'],
     ['Spannweite','Die Pille über der Grafik zeigt zusätzlich den niedrigsten und höchsten Wert der Aufnahme.'],
     ['Einordnung','Ob ein Wert für dein Pferd üblich ist, hängt von Alter, Rasse, Training und Situation ab — das beurteilt deine Tierärztin.']]},
   rmssd:{t:'HRV · RMSSD',r:[
@@ -2247,7 +2323,7 @@ en:{
     ['Note','Length says nothing about quality — signal quality in the recording log covers that.']]},
   hr:{t:'Average pulse',r:[
     ['What','The average pulse across the recording, in beats per minute.'],
-    ['How it is calculated','Time-weighted: 60000 divided by the mean beat interval. Averaging the instantaneous pulses would be systematically too high (Jensen’s inequality).'],
+    ['How it is calculated','Time-weighted: 60000 divided by the mean beat interval. Averaging the individual pulse values would be systematically too high — a short, fast beat would count as much as a long one although it fills less time (Jensen’s inequality).'],
     ['Range','The pill above the chart additionally shows the lowest and highest value of the recording.'],
     ['Interpretation','Whether a value is usual for your horse depends on age, breed, training and situation — your veterinarian assesses that.']]},
   rmssd:{t:'HRV · RMSSD',r:[
@@ -2509,6 +2585,8 @@ function relabel(){
   const cp=$('#ctPoin'); if(cp) cp.childNodes[0].nodeValue=t('chartPoin');
   const sp=$('#pillPulseNm'); if(sp) sp.textContent=t('seriesPulse');
   const sh=$('#pillHrvNm'); if(sh) sh.textContent=t('seriesHrv');
+  const spL=$('#pillPulseNmLive'); if(spL) spL.textContent=t('seriesPulse');
+  const shL=$('#pillHrvNmLive'); if(shL) shL.textContent=t('seriesHrv');
   document.querySelectorAll('.privacy').forEach(el=>{ const n=[...el.childNodes].find(x=>x.nodeType===3&&x.textContent.trim());
     if(n) n.nodeValue=t('privacy'); });
   const sH=$('#shareHtxt'); if(sH) sH.textContent=t('shareH');
@@ -3208,45 +3286,84 @@ function updateQuality(){
     : pct>=0.75 ? t('sigNoisy') : t('sigBad');
 }
 
+/* Reihenfolge auf dem Schirm: Dualgraf · Poincaré · Tachogramm · Atemkurve.
+   Gezeichnet wird hier in der Reihenfolge der SCHWELLEN (Tachogramm ab 3,
+   Wolke ab 12, Atemkurve ab 60, Dualgraf ab 90) — die Anzeige ordnet das
+   Markup, nicht diese Funktion. Wichtig ist nur, dass keine fruehe Rueckkehr
+   ein spaeteres Diagramm verschluckt; deshalb steht kein `return` mehr
+   zwischen den Bloecken. Vorher tat es das: fehlte #poinWrap, wurden
+   Atemkurve UND Dualgraf still nie gezeichnet. */
 function drawSpark(){
-  const rr=S.rr.slice(-120); if(rr.length<3) return;
-  $('#liveN').textContent=fmt0(rr.length)+' '+t('beatsUnit');
-  $('#spark').innerHTML = Chart.tachogram(rr,
+  const letzte=S.rr.slice(-120); if(letzte.length<3) return;
+  $('#liveN').textContent=fmt0(letzte.length)+' '+t('beatsUnit');
+  $('#spark').innerHTML = Chart.tachogram(letzte,
     narrow()?{w:380,h:250,xlabel:'LETZTE SCHLÄGE'}:{w:640,h:190,xlabel:'LETZTE SCHLÄGE'});
 
-  /* Die Wolke braucht Punkte, um eine Wolke zu sein — unter 12 Schlaegen
+  /* ── Dualgraf ─────────────────────────────────────────────────────────
+     Braucht ein Fenster, ueber das sich Variabilitaet ueberhaupt bilden
+     kann — darunter zeigt er eine Gerade und wirkt kaputt statt ruhig. */
+  const v=$('#vitalsWrap');
+  if(v && S.rr.length>=90){
+    /* Das Einzeichnen gehoert dem ERSTEN Erscheinen. Ob es das ist, steht
+       schon im DOM — kein zusaetzlicher Merker, der beim Neustart
+       vergessen werden koennte. Zustand ablesen, nicht doppelt fuehren. */
+    const erstesMal = v.hidden === true;
+    v.hidden=false;
+    $('#vitalsN').textContent=fmt0(S.rr.length)+' '+t('beatsUnit');
+    $('#vitalsLive').innerHTML = Chart.vitals(S.rr,
+      narrow()?{w:380,h:300,anim:erstesMal}:{w:640,h:300,anim:erstesMal});
+    /* Serien-Pillen wie auf dem Abschluss-Bildschirm: Mittelwert und
+       Spannweite je Kurve. Reine Beschreibung der Reihe, kein Urteil. */
+    const hfA=S.rr.map(x=>60000/x);
+    const Wb=Math.min(30,Math.max(5,Math.floor(S.rr.length/3)));
+    const hvA=S.rr.map((_,i)=>{ const lo=Math.max(1,i-Wb+1); let s=0,c=0;
+      for(let j=lo;j<=i;j++){ const d=S.rr[j]-S.rr[j-1]; s+=d*d; c++; }
+      return c?Math.sqrt(s/c):0; }).slice(Math.min(Wb,S.rr.length-2));
+    const mit=a=>a.reduce((x,y)=>x+y,0)/a.length;
+    $('#pillHrLive').innerHTML='Ø '+Math.round(mit(hfA))+'<u>bpm</u>';
+    $('#pillHrRgLive').textContent=Math.round(Math.min(...hfA))+'–'+Math.round(Math.max(...hfA));
+    $('#pillHvLive').innerHTML='Ø '+Math.round(mit(hvA))+'<u>ms</u>';
+    $('#pillHvRgLive').textContent=Math.round(Math.min(...hvA))+'–'+Math.round(Math.max(...hvA));
+  } else if(v){ v.hidden=true; }
+
+  /* ── Poincaré ─────────────────────────────────────────────────────────
+     Die Wolke braucht Punkte, um eine Wolke zu sein — unter 12 Schlaegen
      sieht sie nach Zufall aus und verspricht mehr, als sie zeigt. Deshalb
-     erscheint sie erst dann, dafuer aus ALLEN Schlaegen, nicht nur den
-     letzten 120: dass sie mit jeder Minute dichter wird, ist der Punkt. */
-  const w=$('#poinWrap'); if(!w) return;
-  if(S.rr.length<12){ w.hidden=true; return; }
-  w.hidden=false;
-  $('#poinN').textContent=fmt0(S.rr.length)+' '+t('beatsUnit');
-  $('#poinLive').innerHTML = Chart.poincare(S.rr,
-    narrow()?{w:380,h:300}:{w:640,h:330});
+     erst ab dann, dafuer aus ALLEN Schlaegen, nicht nur den letzten 120:
+     dass sie mit jeder Minute dichter wird, ist der Punkt.
 
-  /* Die Atemwelle braucht mehrere Zyklen, sonst ist sie eine Zacke und
-     keine Welle. Ab 60 Schlaegen traegt sie — und ab da ist sie das
-     Staerkste, was der Bildschirm zu bieten hat. */
-  const b=$('#breathWrap'); if(!b) return;
-  if(S.rr.length<60){ b.hidden=true; return; }
-  b.hidden=false;
-  $('#breathN').textContent=fmt0(S.rr.length)+' '+t('beatsUnit');
-  $('#breathLive').innerHTML = Chart.breath(S.rr.slice(-400),
-    narrow()?{w:380,h:250}:{w:640,h:250});
+     GENAU DIE DARSTELLUNG DES ABSCHLUSS-BILDSCHIRMS, nicht eine aermere.
+     Hier stand `narrow()?{w:380,h:300}:{w:640,h:330}` — poincare() kennt
+     aber `size`, nicht w/h. Beide Werte fielen still auf 360 zurueck, und
+     ohne sd1/sd2 fehlten Ellipse, Schwerpunkt und die SD1/SD2-Beschriftung
+     ganz. Die Wolke wurde klein gezeichnet und vom Browser hochskaliert:
+     dicke Punkte, grobes Fadenkreuz. Ein Options-Name, den niemand prueft,
+     ist ein stiller Fehler — t-wolke.js bindet jetzt beide Aufrufstellen
+     aneinander.
+     SD1/SD2 sind exakte Umformungen von RMSSD und SDNN (Brennan 2001),
+     gerechnet ueber ALLE Schlaege — dieselbe Formel wie in finish(). */
+  const w=$('#poinWrap');
+  if(w && S.rr.length>=12){
+    w.hidden=false;
+    $('#poinN').textContent=fmt0(S.rr.length)+' '+t('beatsUnit');
+    const mL=metrics(S.rr);
+    const sd1=mL.rmssdMs/Math.SQRT2;
+    const sd2=Math.sqrt(Math.max(0, 2*mL.sdnnMs*mL.sdnnMs - sd1*sd1));
+    $('#poinLive').innerHTML = Chart.poincare(S.rr,{size:narrow()?420:640,sd1,sd2});
+  } else if(w){ w.hidden=true; }
 
-  /* Der Dualgraf braucht ein Fenster, ueber das sich Variabilitaet
-     ueberhaupt bilden kann — darunter zeigt er eine Gerade und wirkt
-     kaputt statt ruhig. */
+  /* ── Atemkurve ────────────────────────────────────────────────────────
+     Braucht mehrere Zyklen, sonst ist sie eine Zacke und keine Welle. */
+  const b=$('#breathWrap');
+  if(b && S.rr.length>=60){
+    b.hidden=false;
+    $('#breathN').textContent=fmt0(S.rr.length)+' '+t('beatsUnit');
+    $('#breathLive').innerHTML = Chart.breath(S.rr.slice(-400),
+      narrow()?{w:380,h:250}:{w:640,h:250});
+  } else if(b){ b.hidden=true; }
+
   const jt=$('#jetztTeilen');
   if(jt && !S._teilenWeg) jt.hidden = S.rr.length<60;
-
-  const v=$('#vitalsWrap'); if(!v) return;
-  if(S.rr.length<90){ v.hidden=true; return; }
-  v.hidden=false;
-  $('#vitalsN').textContent=fmt0(S.rr.length)+' '+t('beatsUnit');
-  $('#vitalsLive').innerHTML = Chart.vitals(S.rr,
-    narrow()?{w:380,h:300}:{w:640,h:300});
 }
 
 /* WEITERSAGEN, ohne die Messung zu gefaehrden.
@@ -3383,9 +3500,9 @@ function finish(){
     for(let j=lo;j<=i;j++){ const d=rr[j]-rr[j-1]; s+=d*d; c++; } return c?Math.sqrt(s/c):0; })
     .slice(Math.min(Wb,rr.length-2));
   const avg=a=>a.reduce((x,y)=>x+y,0)/a.length;
-  $('#pillHr').innerHTML=Math.round(m.meanHRBpm)+'<u>bpm</u>';
+  $('#pillHr').innerHTML='Ø '+Math.round(m.meanHRBpm)+'<u>bpm</u>';
   $('#pillHrRg').textContent=Math.round(Math.min(...hfArr))+'–'+Math.round(Math.max(...hfArr));
-  $('#pillHv').innerHTML=Math.round(avg(hvArr))+'<u>ms</u>';
+  $('#pillHv').innerHTML='Ø '+Math.round(avg(hvArr))+'<u>ms</u>';
   $('#pillHvRg').textContent=Math.round(Math.min(...hvArr))+'–'+Math.round(Math.max(...hvArr));
   $('#vMeta').textContent=fmt0(rr.length)+' '+t('beatsUnit')+' · '+mmss(secs);
   // SD1/SD2 nach Brennan 2001 — reine Umformung der beiden Pflichtfelder.
@@ -3590,12 +3707,25 @@ $('#btnSave').addEventListener('click',()=>{
 
 // Verwerfen und neu starten: Daten weg, Gurt bleibt verbunden. Genau der Fall
 // "Signal war Mist" — ohne erneutes Koppeln, das im Stall am meisten kostet.
+/* Alle Live-Diagramme zurueck in den Anfangszustand: Inhalt weg UND wieder
+   verborgen. Das Verbergen ist nicht Kosmetik — an `hidden` liest drawSpark()
+   ab, ob eine Kurve zum ERSTEN Mal erscheint und sich einzeichnen darf.
+   Bliebe der Rahmen offen, zeigte die neue Messung zuerst die Kurven der
+   verworfenen — und genau die wollte man ja gerade loswerden. */
+function liveDiagrammeZuruecksetzen(){
+  ['#vitalsWrap','#poinWrap','#breathWrap'].forEach(s=>{ const e=$(s); if(e) e.hidden=true; });
+  ['#vitalsLive','#poinLive','#breathLive','#spark'].forEach(s=>{ const e=$(s); if(e) e.innerHTML=''; });
+  ['#liveN','#vitalsN','#poinN','#breathN','#pillHrLive','#pillHrRgLive','#pillHvLive','#pillHvRgLive']
+    .forEach(s=>{ const e=$(s); if(e) e.textContent=''; });
+  const jt=$('#jetztTeilen'); if(jt && !S._teilenWeg) jt.hidden=true;
+}
+
 $('#btnRestart').addEventListener('click',()=>{
   if(S.rr.length>=12 && !confirmDiscard()) return;
   S.rr=[]; S.hr=0; S.startedAt=new Date(); S.hrMin=null; S.hrMax=null;
   $('#hrRange').textContent='–'; $('#recFill').style.width='0';
   $('#hr').textContent='–'; $('#beats').textContent='0'; $('#dur').textContent='0:00';
-  $('#spark').innerHTML=''; $('#qdot').className='dot';
+  liveDiagrammeZuruecksetzen(); $('#qdot').className='dot';
   $('#qtxt').textContent='Signal wird geprüft…';
   $('#liveTitle').textContent='Messung läuft';
   $('#liveSub').textContent='Ruhig stehen lassen. Je ruhiger das Pferd, desto aussagekräftiger die Aufnahme.';
@@ -3898,7 +4028,7 @@ $('#btnAgain').addEventListener('click',()=>{
   $('#barWrap').classList.add('hidden');
   $('#btnSend').disabled=false; $('#btnSend').classList.remove('hidden');
   $('#btnSave').disabled=false; $('#btnAgain').classList.add('hidden');
-  $('#spark').innerHTML=''; $('#beats').textContent='0'; $('#dur').textContent='0:00';
+  liveDiagrammeZuruecksetzen(); $('#beats').textContent='0'; $('#dur').textContent='0:00';
   $('#qdot').className='dot'; $('#qtxt').textContent='Signal wird geprüft…';
   $('#liveTitle').textContent='Messung läuft'; $('#btnStop').textContent='Messung beenden';
   $('.card').classList.remove('beleg');
