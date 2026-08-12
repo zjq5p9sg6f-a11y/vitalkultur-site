@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="de">
+<html lang="en">
 <head>
 <!-- Schaltet das Einblenden frei — VOR dem ersten Bild, sonst blitzt der
      Inhalt kurz auf. Laeuft diese eine Zeile nicht, bleibt die Seite
@@ -10,7 +10,7 @@ setTimeout(function(){ if(!document.querySelector('.rev.in'))
   document.documentElement.className=document.documentElement.className.replace(' rev-an',''); },4000);</script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>CARLON Equine Visite — die Praxis-Ansicht für Tierärzte &amp; Kliniken</title>
+<title>CARLON Equine Visite — the practice view for equine vets &amp; clinics</title>
 <link rel="icon" href="/app-icon.png">
 <link rel="apple-touch-icon" href="/app-icon.png">
 <!-- GoatCounter — privacy-first, cookieless. Miss Vet-Interesse getrennt: clinic-Besuche = Signal. -->
@@ -28,21 +28,25 @@ if(d=='1'||d=='yes'||navigator.globalPrivacyControl===true)return;
 var s=document.createElement('script');s.async=true;s.src='//gc.zgo.at/count.js';
 s.setAttribute('data-goatcounter','https://vitalkultur.goatcounter.com/count');
 document.head.appendChild(s);})();</script>
-<meta name="description" content="CARLON Equine Visite — die browser-lokale Praxis-Ansicht für Tierärzte & Kliniken. Der Halter misst mit der CARLON Equine App, du liest den Verlauf: Triage nach Dringlichkeit, Abfahrroute, Befund-PDF. Auswertung im Browser, kein Konto, verschlüsselt unterwegs.">
+<meta name="description" content="CARLON Equine Visite — the browser-local practice view for equine vets and clinics. The owner records with the CARLON Equine app, you read the trend: triage by urgency, route planning, findings PDF. Analysed in the browser, no account, encrypted in transit.">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Vitalkultur">
-<meta property="og:title" content="CARLON Equine – für Tierärzte & Kliniken">
-<meta property="og:description" content="Betreuung, die nicht an der Stalltür endet. Der Halter misst, du liest den Verlauf, das Pferd wird früher erreicht — browser-lokal, Auswertung im Browser, nicht in der Cloud.">
-<meta property="og:url" content="https://vitalkultur.com/carlon-equine-visite/">
+<meta property="og:title" content="CARLON Equine – for equine vets &amp; clinics">
+<meta property="og:description" content="Care that does not stop at the stable door. The owner records, you read the trend, the horse is reached earlier — browser-local, analysed in the browser, not in the cloud.">
+<meta property="og:url" content="https://vitalkultur.com/carlon-equine-visite/en/">
 <meta property="og:image" content="https://vitalkultur.com/carlon-equine/assets/og-equine.png">
-<meta property="og:locale" content="de_DE">
-<meta property="og:locale:alternate" content="en_US">
+<meta property="og:locale" content="en_US">
+<meta property="og:locale:alternate" content="de_DE">
 <!-- SPRACHPAAR. Ohne hreflang existiert die englische Fassung fuer
      Suchmaschinen nicht, egal wie gut sie uebersetzt ist — und Google zeigt
      einem englischen Leser weiter die deutsche Seite. x-default zeigt auf
      diese hier: Deutsch ist die Heimatfassung, en/ wird daraus gebaut
      (siehe en-bauen.mjs). -->
 <link rel="canonical" href="https://vitalkultur.com/carlon-equine-visite/">
+<link rel="alternate" hreflang="de" href="https://vitalkultur.com/carlon-equine-visite/">
+<link rel="alternate" hreflang="en" href="https://vitalkultur.com/carlon-equine-visite/en/">
+<link rel="alternate" hreflang="x-default" href="https://vitalkultur.com/carlon-equine-visite/">
+<link rel="canonical" href="https://vitalkultur.com/carlon-equine-visite/en/">
 <link rel="alternate" hreflang="de" href="https://vitalkultur.com/carlon-equine-visite/">
 <link rel="alternate" hreflang="en" href="https://vitalkultur.com/carlon-equine-visite/en/">
 <link rel="alternate" hreflang="x-default" href="https://vitalkultur.com/carlon-equine-visite/">
@@ -402,7 +406,8 @@ html.rev-an .rev.in{opacity:1;transform:none}
     </div>
     <div class="nav-actions">
       <a class="nav-equine" href="/carlon-equine-visite/en/" hreflang="en" lang="en">English</a>
-      <a class="nav-equine" href="/carlon-equine/" data-en="&lsaquo; Equine App" data-de="&lsaquo; Equine App">&lsaquo; Equine App</a>
+      <a class="nav-equine" href="/carlon-equine-visite/" hreflang="de" lang="de">Deutsch</a>
+      <a class="nav-equine" href="/carlon-equine/">&lsaquo; Equine App</a>
       <a class="btn btn-demo" href="/carlon-equine/app/" title="Live-Cockpit mit Demo-Daten öffnen" >&#9654; Demo-Cockpit</a>
       
     </div>
@@ -417,7 +422,7 @@ html.rev-an .rev.in{opacity:1;transform:none}
      2 Der Vorteil, den kein Gerät ersetzt — und der KEINE Werbung ist,
        sondern die Eingangsbedingung des Verfahrens.
      3 Was man sieht (Leistung, vergleichbar).
-     4 Warum die Zahlen tragen (Vertrauen — hier liegt der Burggraben).
+     4 Why the numbers hold (Vertrauen — hier liegt der Burggraben).
      5 Der Verlauf (das, was eine Momentaufnahme nie kann).
      6 Anschluss an die Praxissoftware.
      7 Was wir bewusst NICHT tun (Vertrauen durch Verzicht).
@@ -431,19 +436,19 @@ html.rev-an .rev.in{opacity:1;transform:none}
 
 <section class="hero">
   <div class="wrap">
-    <div class="eyebrow">CARLON Equine Visite · Praxisansicht für mobile Pferdetierärzte und Kliniken</div>
-    <h1>Sehen Sie früher, welches Pferd Sie wirklich braucht.</h1>
+    <div class="eyebrow">CARLON Equine Visite · practice view for ambulatory equine vets and clinics</div>
+    <h1>See sooner which horse actually needs you.</h1>
     <p class="hero-sub">
-      Die Halterin misst den Herzrhythmus zu Hause im Stall und schickt Ihnen die Aufnahme
-      verschlüsselt. Sie öffnen den Befund im Browser — mit Verlauf, Signalgüte und der
-      Abweichung von der individuellen Baseline dieses Pferds.
-      <strong>Ohne Konto, ohne Installation, ohne dass die Daten Ihre Praxis verlassen.</strong>
+      The owner records the heart rhythm at home in the stable and sends you the recording
+      encrypted. You open the findings in your browser — with the trend, the signal quality and
+      the deviation from this horse's own baseline.
+      <strong>No account, no installation, and the data never leaves your practice.</strong>
     </p>
     <div class="cta-row">
-      <a class="cta-primary" href="/carlon-equine/app/">Cockpit mit 15&nbsp;Demo-Pferden öffnen →</a>
-      <a class="btn btn-back" href="#preis">Was es kostet</a>
+      <a class="cta-primary" href="/carlon-equine/app/">Open the cockpit with 15&nbsp;demo horses →</a>
+      <a class="btn btn-back" href="#preis">What it costs</a>
     </div>
-    <p class="cta-note">Kein Konto, keine Anmeldung, kein Download. Das Demo-Cockpit ist die vollständige Anwendung mit echten Beispielverläufen.</p>
+    <p class="cta-note">No account, no sign-up, no download. The demo cockpit is the complete application with real example trends.</p>
     <!-- PREIS SCHON IM KOPF (12.08.2026).
          Er stand bisher erst weit unten. Ein Aussenaudit: „das qualifiziert
          Besucher frueh statt sie am Ende zu ueberraschen." Das ist auch fair
@@ -453,10 +458,9 @@ html.rev-an .rev.in{opacity:1;transform:none}
          bindet jede Preisangabe dieser Seite an die eine Quelle im Cockpit
          (PREIS.soloMonat / soloJahr). Weicht eine ab, faellt die Strecke. -->
     <p class="hero-preis">
-      <strong>790&nbsp;€ im Jahr</strong> je Praxis oder Standort — oder 79&nbsp;€ monatlich,
-      jeweils zzgl. USt. Alle Tierärztinnen und Tierärzte, alle Pferde, alle Geräte.
-      Kein Aufpreis je Pferd, keine Sitzplatzgebühr.
-      <a href="#preis">Was genau enthalten ist →</a>
+      <strong>€790 per year</strong> per practice or site — or €79 monthly, plus VAT.
+      All vets, all horses, all devices. No per-horse surcharge, no seat fee.
+      <a href="#preis">What exactly is included →</a>
     </p>
   </div>
 </section>
@@ -467,29 +471,29 @@ html.rev-an .rev.in{opacity:1;transform:none}
      diese Bedingung systematisch nicht erfüllt. -->
 <section class="usps">
   <div class="wrap">
-    <div class="sec-eyebrow">Der Unterschied, der vor der Messung entsteht</div>
-    <h2>Ein Pferd, das gerade transportiert wurde, misst nicht sich selbst.</h2>
+    <div class="sec-eyebrow">The difference that arises before the measurement</div>
+    <h2>A horse that has just been transported is not measuring itself.</h2>
     <p class="sec-lead">
-      Herzfrequenzvariabilität ist ein Maß für Erholung. Verladen, Fahrt, fremde Halle,
-      fremde Menschen — all das verändert genau die Größe, die Sie beurteilen wollen.
-      Die Auswertung, die wir einsetzen, verlangt ausdrücklich <strong>mindestens sieben
-      Minuten Ruhe in gewohnter Umgebung</strong>. Eine Messung nach der Ankunft in der
-      Klinik erfüllt diese Bedingung systematisch nicht.
+      Heart rate variability is a measure of recovery. Loading, the journey, an unfamiliar
+      hall, unfamiliar people — all of it changes exactly the quantity you want to assess.
+      The analysis we use explicitly requires <strong>at least seven minutes of rest in
+      familiar surroundings</strong>. A measurement taken after arrival at the clinic
+      systematically fails that condition.
     </p>
     <div class="usp">
-      <h3>Gewohnte Box statt Untersuchungsraum</h3>
-      <p>Die Halterin legt den Gurt an, das Pferd steht wie immer. Kein Transport, keine
-         Aufregung durch Fremde, kein sperriges Gerät im Weg.</p>
+      <h3>Its own box, not an examination room</h3>
+      <p>The owner puts on the belt, the horse stands as it always does. No transport, no
+         excitement from strangers, no bulky equipment in the way.</p>
     </div>
     <div class="usp">
-      <h3>Sie bekommen die Aufnahme, nicht den Termin</h3>
-      <p>Die Sendung liegt im Cockpit, wenn Sie Zeit haben. Sie entscheiden danach, ob und
-         wann ein Besuch nötig ist — und sehen vorher, wie dringend.</p>
+      <h3>You get the recording, not the appointment</h3>
+      <p>The recording sits in the cockpit when you have time. You decide afterwards whether
+         and when a visit is needed — and you see beforehand how urgent it is.</p>
     </div>
     <div class="usp">
-      <h3>Wiederholbar, ohne dass jemand fährt</h3>
-      <p>Eine Kontrolle in zwei Wochen kostet niemanden eine Anfahrt. Genau daraus entsteht
-         der Verlauf, den eine Momentaufnahme nie liefern kann.</p>
+      <h3>Repeatable without anyone driving out</h3>
+      <p>A follow-up in two weeks costs nobody a drive. That is exactly how the trend comes
+         about that a snapshot can never deliver.</p>
     </div>
   </div>
 </section>
@@ -497,74 +501,74 @@ html.rev-an .rev.in{opacity:1;transform:none}
 <!-- ── 3 · LEISTUNG ─────────────────────────────────────────────────── -->
 <section>
   <div class="wrap">
-    <div class="sec-eyebrow">Was im Cockpit steht</div>
-    <h2>Ein Blick, dann die Tiefe.</h2>
-    <p class="sec-lead">Oben das Urteil und der eine Grund dafür. Darunter alles, was Sie
-       zum Nachrechnen brauchen — nichts davon versteckt.</p>
+    <div class="sec-eyebrow">What the cockpit shows</div>
+    <h2>One glance, then the depth.</h2>
+    <p class="sec-lead">The assessment at the top and the one reason for it. Below it everything you
+       need to check the maths — none of it hidden.</p>
 
     <!-- Bilder statt Beschreibung. Der Entwurf hatte KEIN einziges
          Cockpit-Bild mehr — die alte Seite hatte sechs. Ein Werkzeug, das
          man nicht sieht, muss man glauben; eines, das man sieht, muss man
          nur noch wollen. -->
     <div class="feature">
-      <div class="f-shot"><img src="assets/visite-shots/10-triage.jpg" loading="lazy"
+      <div class="f-shot"><img src="../assets/visite-shots/10-triage.jpg" loading="lazy"
         alt="Triage-Board: jedes Pferd als Karte, sortiert nach Abweichung von seiner eigenen Baseline, mit Anruf-Knopf beim Halter"></div>
       <div class="f-txt">
         <div class="f-k">Triage</div>
-        <h3>Vier Stufen, und daneben steht, welcher Wert sie ausgelöst hat.</h3>
+        <h3>Four levels, and next to each the value that triggered it.</h3>
         <ul>
-          <li><b>Nach Abweichung sortiert</b>, nicht nach Eingang — jedes Pferd gegen seine eigene Baseline, nicht gegen eine Tabelle.</li>
-          <li><b>Der Grund steht dabei.</b> Eine Einstufung ohne den auslösenden Wert wäre eine Meinung.</li>
-          <li><b>Die Halterin ist einen Tipp entfernt</b>, direkt von der Karte aus.</li>
+          <li><b>Sorted by deviation</b>, not by arrival — every horse against its own baseline, not against a table.</li>
+          <li><b>The reason is shown with it.</b> A classification without the triggering value would be an opinion.</li>
+          <li><b>The owner is one tap away</b>, straight from the card.</li>
         </ul>
       </div>
     </div>
 
     <div class="feature flip">
       <div class="f-txt">
-        <div class="f-k">Die Akte</div>
-        <h3>Alles, was Sie zum Nachrechnen brauchen — an einer Stelle.</h3>
+        <div class="f-k">The record</div>
+        <h3>Everything you need to check the maths — in one place.</h3>
         <ul>
-          <li><b>Werte gegen die eigene Baseline</b> des Pferds, als Hinweis. Die Deutung bleibt bei Ihnen.</li>
-          <li><b>Signalgüte vor der Zahl</b>: wie viele Schlagpaare tragen die Auswertung überhaupt.</li>
-          <li><b>Ferneinschätzung erfassen und abrechnen</b>, ohne die Akte zu verlassen.</li>
+          <li><b>Values against the horse's own baseline</b>, as an indication. The interpretation stays with you.</li>
+          <li><b>Signal quality before the number</b>: how many beat pairs actually carry the analysis.</li>
+          <li><b>Record and bill the remote assessment</b> without leaving the file.</li>
         </ul>
       </div>
-      <div class="f-shot"><img src="assets/visite-shots/09-akte.jpg" loading="lazy"
+      <div class="f-shot"><img src="../assets/visite-shots/09-akte.jpg" loading="lazy"
         alt="Pferde-Akte: Messwerte gegen die individuelle Baseline, Signalgüte, Verlauf, dazu Ferneinschätzung erfassen und abrechnen"></div>
     </div>
     <div class="grid">
       <div class="card">
-        <h3>Einordnung mit Begründung</h3>
-        <p>Vier Stufen von stabil bis kritisch, immer mit dem Wert, der sie ausgelöst hat —
-           und mit der Abweichung von der Baseline <em>dieses</em> Pferds, nicht von einem
-           Lehrbuchwert.</p>
+        <h3>A classification with its reason</h3>
+        <p>Four levels from stable to critical, always with the value that triggered it —
+           and with the deviation from <em>this</em> horse's baseline, not from a textbook
+           figure.</p>
       </div>
       <div class="card">
-        <h3>Signalgüte, bevor Sie deuten</h3>
-        <p>Anteil auswertbarer Schlagpaare, Artefaktrate, korrigierte AV-Block-Pausen.
-           Eine Aufnahme, die nichts trägt, sagt Ihnen das — statt eine Zahl zu zeigen.</p>
+        <h3>Signal quality before interpretation</h3>
+        <p>Share of usable beat pairs, artefact rate, corrected AV-block pauses.
+           A recording that carries nothing tells you so — instead of showing a number.</p>
       </div>
       <div class="card">
-        <h3>Atemwegs-Screening im Verlauf</h3>
-        <p>HRV-basierte Marker mit ihren Schwellen, einzeln aufgeführt. Kalibriert gegen
-           eine veröffentlichte Studie mit BAL-Referenz. Ein <strong>Screening</strong>,
-           ausdrücklich keine Diagnose.</p>
+        <h3>Airway screening over time</h3>
+        <p>HRV-based markers with their thresholds, listed individually. Calibrated against
+           a published study with a BAL reference. A <strong>screening</strong>,
+           explicitly not a diagnosis.</p>
       </div>
       <div class="card">
-        <h3>Die üblichen Ansichten, in guter Auflösung</h3>
-        <p>Tachogramm, Poincaré, Spektrum, DFA, Histogramm — dieselben Darstellungen wie
-           in der iOS-App, im Vollbild neu gezeichnet statt hochskaliert.</p>
+        <h3>The familiar views, at proper resolution</h3>
+        <p>Tachogram, Poincaré, spectrum, DFA, histogram — the same views as in the iOS app,
+           redrawn at full size rather than scaled up.</p>
       </div>
       <div class="card">
-        <h3>Befund und Abrechnung an einer Stelle</h3>
-        <p>Befundbericht mit Ihrem Briefkopf, Rückmeldung an die Halterin, und eine
-           Übersicht, was noch offen ist.</p>
+        <h3>Findings and billing in one place</h3>
+        <p>A findings report on your own letterhead, feedback to the owner, and an overview
+           of what is still open.</p>
       </div>
       <div class="card">
-        <h3>Export ohne Sackgasse</h3>
-        <p>JSON, CSV, Kubios-kompatibel — und <strong>FHIR&nbsp;R5</strong> mit
-           LOINC-Codes für die Praxissoftware.</p>
+        <h3>Export without a dead end</h3>
+        <p>JSON, CSV, Kubios-compatible — and <strong>FHIR&nbsp;R5</strong> with
+           LOINC codes for your practice software.</p>
       </div>
     </div>
   </div>
@@ -583,29 +587,29 @@ html.rev-an .rev.in{opacity:1;transform:none}
      war. Im Quelltext sieht beides richtig aus. -->
 <section>
   <div class="wrap">
-    <div class="sec-eyebrow">Warum die Zahlen tragen</div>
-    <h2>Beim Pferd sind Pausen normal. Wer sie mitrechnet, misst Unsinn.</h2>
+    <div class="sec-eyebrow">Why the numbers hold</div>
+    <h2>In horses, pauses are normal. Count them in and you measure nonsense.</h2>
     <p class="sec-lead">
-      Ein ruhendes Pferd zeigt AV-Block-Pausen — physiologisch, kein Befund. Rechnet man
-      sie roh mit, steigen SDNN und RMSSD dramatisch, und die Marker, die bei
-      <em>kleinen</em> Werten anschlagen, kippen ins Gegenteil.
+      A resting horse shows AV-block pauses — physiological, not a finding. Count them in
+      raw and SDNN and RMSSD rise dramatically, and the markers that respond to
+      <em>small</em> values flip into the opposite.
     </p>
     <div class="usp">
-      <h3>Dieselbe Filterkette wie in der App, nicht eine nachgebaute</h3>
-      <p>Fünf Stufen, AV-Block-Erkennung mit Spline-Korrektur, Bewegungs-Artefakte,
-         Plausibilitätsgrenzen. Wir haben sie aus dem Original portiert und Wert für Wert
-         gegen die kompilierte Fassung geprüft, auf Bitmuster.</p>
+      <h3>The same filter chain as in the app, not a rebuilt one</h3>
+      <p>Five stages, AV-block detection with spline correction, motion artefacts,
+         plausibility limits. We ported them from the original and checked value by value
+         against the compiled version, bit pattern for bit pattern.</p>
     </div>
     <div class="usp">
-      <h3>Was das ausmacht — an zwanzig Ruheaufnahmen geprüft</h3>
-      <p>Ohne diese Vorstufe fiel in <strong>acht von zwanzig</strong> Aufnahmen die
-         Atemwegs-Einstufung anders aus, jedes Mal zu auffällig. Mit ihr: kein einziger
-         Unterschied mehr zur App-Auswertung.</p>
+      <h3>What difference it makes — tested on twenty resting recordings</h3>
+      <p>Without this stage, the airway classification came out differently in
+         <strong>eight out of twenty</strong> recordings, every time too conspicuous. With
+         it: not a single difference from the app's analysis remains.</p>
     </div>
     <div class="usp">
-      <h3>Und dort, wo es nicht reicht, sagt es das</h3>
-      <p>Zu wenige Schläge, zu kurz, zu viele Artefakte — dann steht „Datengrundlage zu
-         klein" und kein Urteil. Ein Werkzeug, das immer etwas sagt, ist kein Werkzeug.</p>
+      <h3>And where it is not enough, it says so</h3>
+      <p>Too few beats, too short, too many artefacts — then it says “insufficient data”
+         and gives no verdict. A tool that always says something is not a tool.</p>
     </div>
   </div>
 </section>
@@ -613,25 +617,24 @@ html.rev-an .rev.in{opacity:1;transform:none}
 <!-- ── 5 · DER VERLAUF ─────────────────────────────────────────────── -->
 <section>
   <div class="wrap">
-    <div class="sec-eyebrow">Was eine Momentaufnahme nicht kann</div>
-    <h2>Die Richtung ist die Information.</h2>
+    <div class="sec-eyebrow">What a snapshot cannot do</div>
+    <h2>The direction is the information.</h2>
     <p class="sec-lead">
-      Ein einzelner HRV-Wert beim Pferd sagt wenig — es gibt keinen belastbaren
-      Normwert, an dem man ihn messen könnte. Aussagekräftig wird er erst gegen die
-      eigene Vorgeschichte des Tieres.
+      A single HRV value in a horse says little — there is no robust normal value to
+      measure it against. It only becomes meaningful against the animal's own history.
     </p>
     <div class="grid">
       <div class="card">
-        <h3>Über Wochen statt über Minuten</h3>
-        <p>Jede neue Aufnahme reiht sich ein. Sie sehen, ob sich die Marker verbessern,
-           halten oder verschlechtern — mit Zeitfenster, Anzahl der Messungen und der
-           Veränderung als Zahl.</p>
+        <h3>Over weeks rather than minutes</h3>
+        <p>Every new recording joins the line. You see whether the markers improve, hold or
+           deteriorate — with the time window, the number of measurements and the change
+           as a figure.</p>
       </div>
       <div class="card">
-        <h3>Nach einer Umstellung sichtbar</h3>
-        <p>Haltung, Fütterung, Management, Rekonvaleszenz: Die Kontrollmessung kostet
-           keine Anfahrt, also findet sie auch statt. Als Beobachtung — die Bewertung
-           bleibt bei Ihnen.</p>
+        <h3>Visible after a change</h3>
+        <p>Housing, feeding, management, convalescence: the follow-up measurement costs no
+           drive, so it actually happens. As an observation — the assessment stays with
+           you.</p>
       </div>
     </div>
   </div>
@@ -640,14 +643,14 @@ html.rev-an .rev.in{opacity:1;transform:none}
 <!-- ── 6 · ANSCHLUSS ──────────────────────────────────────────────── -->
 <section>
   <div class="wrap">
-    <div class="sec-eyebrow">Anschluss</div>
-    <h2>Der Befund bleibt nicht in unserem Fenster stehen.</h2>
+    <div class="sec-eyebrow">Interoperability</div>
+    <h2>The findings do not stay inside our window.</h2>
     <p class="sec-lead">
-      Jede Aufnahme lässt sich als <strong>FHIR&nbsp;R5</strong> ausgeben — als
-      <code>Observation</code> mit LOINC-Codes und UCUM-Einheiten, das Pferd als
-      <code>Patient</code> mit den Kennungen, die Sie ohnehin führen: Praxissoftware-Nummer,
-      UELN, Mikrochip, Pass. Dazu JSON, CSV und ein Kubios-kompatibler Export für die
-      Forschung, und ein SHA-256-Prüfwert je Datensatz für die Dokumentation.
+      Every recording can be exported as <strong>FHIR&nbsp;R5</strong> — as an
+      <code>Observation</code> with LOINC codes and UCUM units, the horse as a
+      <code>Patient</code> with the identifiers you already keep: practice software number,
+      UELN, microchip, passport. Plus JSON, CSV and a Kubios-compatible export for research,
+      and a SHA-256 checksum per record for your documentation.
     </p>
   </div>
 </section>
@@ -671,50 +674,49 @@ html.rev-an .rev.in{opacity:1;transform:none}
      Ziffern, gerechnet wird in der Praxis. -->
 <section>
   <div class="wrap">
-    <div class="sec-eyebrow">Ihr Arbeitstag</div>
-    <h2>Zwischen zwei Terminen liegt Ihr Fahrweg.</h2>
-    <p class="sec-lead">Die Auswertung ist die eine Hälfte. Die andere ist der Tag, an dem
-       Sie sie unterbringen müssen — und der entscheidet, ob ein Werkzeug den ersten
-       Monat überlebt.</p>
+    <div class="sec-eyebrow">Your working day</div>
+    <h2>Between two appointments lies your drive.</h2>
+    <p class="sec-lead">The analysis is one half. The other is the day you have to fit it into — and that
+       is what decides whether a tool survives its first month.</p>
 
     <div class="feature">
-      <div class="f-shot"><img src="assets/visite-shots/05-tagesplan.jpg" loading="lazy"
+      <div class="f-shot"><img src="../assets/visite-shots/05-tagesplan.jpg" loading="lazy"
         alt="Tagesplan: die Stopps des Tages als Karten, kritische zuerst, mit gesparter Fahrstrecke und Greifpunkt zum Umsortieren"></div>
       <div class="f-txt">
-        <div class="f-k">Tagesplan</div>
-        <h3>Der Tag sortiert sich nach Dringlichkeit, nicht nach der Reihenfolge der Anrufe.</h3>
+        <div class="f-k">Day plan</div>
+        <h3>The day sorts itself by urgency, not by the order the calls came in.</h3>
         <ul>
-          <li><b>Die Einstufung ordnet die Stopps.</b> Was Sie anders sehen, schieben Sie per Greifpunkt um — die Software schlägt vor, sie entscheidet nicht.</li>
+          <li><b>The classification orders the stops.</b> Where you see it differently you drag the card — the software suggests, it does not decide.</li>
           <li><b>Die Fahrzeit zum nächsten Stopp</b> steht an jeder Karte, bevor Sie zusagen.</li>
-          <li><b>Nichts davon verlässt Ihr Gerät</b> — auch die Adressen nicht.</li>
+          <li><b>None of it leaves your device</b> — not even the addresses.</li>
         </ul>
       </div>
     </div>
 
     <div class="shots three">
       <figure class="shot">
-        <div class="frame"><img src="assets/visite-shots/08-route.jpg" loading="lazy"
+        <div class="frame"><img src="../assets/visite-shots/08-route.jpg" loading="lazy"
           alt="Abfahrroute auf der Karte, kritische Pferde zuerst, direkt an Google Maps übergebbar"></div>
-        <figcaption>Karte &amp; Route — die Abfahrfolge, direkt an Google&nbsp;Maps übergeben, statt Adressen abzutippen.</figcaption>
+        <figcaption>Map &amp; route — the departure order, handed straight to Google&nbsp;Maps instead of retyping addresses.</figcaption>
       </figure>
       <figure class="shot">
-        <div class="frame"><img src="assets/visite-shots/06-kompakt.jpg" loading="lazy"
+        <div class="frame"><img src="../assets/visite-shots/06-kompakt.jpg" loading="lazy"
           alt="Kompakte Tagesübersicht: alle Stopps als kleine Karten auf einer Zeitachse mit Fahrzeiten"></div>
-        <figcaption>Kompakt — der ganze Tag auf einer Zeitachse, wenn es schnell gehen muss.</figcaption>
+        <figcaption>Compact — the whole day on one timeline, when it has to be quick.</figcaption>
       </figure>
       <figure class="shot">
-        <div class="frame"><img src="assets/visite-shots/07-verwaltung.jpg" loading="lazy"
+        <div class="frame"><img src="../assets/visite-shots/07-verwaltung.jpg" loading="lazy"
           alt="Verwaltung: Fahrtenbuch, Zeiterfassung, abgerechnete Ferneinschätzungen und CSV-Ausgabe"></div>
-        <figcaption>Verwaltung — Fahrtenbuch, Zeiterfassung, abgerechnete Ferneinschätzungen, als CSV heraus.</figcaption>
+        <figcaption>Administration — mileage log, time tracking, billed remote assessments, exported as CSV.</figcaption>
       </figure>
     </div>
 
     <p class="sec-lead" style="margin-top:44px">
-      Die schriftliche oder fernmündliche Beratung ohne Untersuchung ist in der
-      <strong>GOT als Ziffer&nbsp;1</strong> geführt, der Tierarztbrief je angefangene
-      15&nbsp;Minuten als <strong>Ziffer&nbsp;89</strong>. Was das bei Ihrem Satz ergibt,
-      rechnen Sie besser als wir — CARLON erfasst die Ferneinschätzung nur an der Stelle,
-      an der sie entsteht, und gibt sie als CSV heraus.
+      Written or telephone advice without examination is listed in the German veterinary
+      fee schedule (GOT) as <strong>item&nbsp;1</strong>, the veterinary letter per started
+      15&nbsp;minutes as <strong>item&nbsp;89</strong>. What that comes to at your rate you
+      can work out better than we can — CARLON only records the remote assessment where it
+      arises, and exports it as CSV.
     </p>
   </div>
 </section>
@@ -722,30 +724,30 @@ html.rev-an .rev.in{opacity:1;transform:none}
 <!-- ── 7 · VERZICHT ───────────────────────────────────────────────── -->
 <section class="rev">
   <div class="wrap">
-    <div class="sec-eyebrow">Grenzen, die wir selbst ziehen</div>
-    <h2>Was CARLON bewusst nicht tut.</h2>
+    <div class="sec-eyebrow">Limits we draw ourselves</div>
+    <h2>What CARLON deliberately does not do.</h2>
     <div class="grid">
       <div class="card">
-        <h3>Keine Diagnose</h3>
-        <p>Die Software zeigt Messwerte, Signalqualität, Verlauf und Abweichung. Die
-           medizinische Deutung bleibt vollständig bei Ihnen. CARLON Equine Visite ist
-           kein Medizinprodukt im Sinne der Verordnung (EU) 2017/745.</p>
+        <h3>No diagnosis</h3>
+        <p>The software shows measured values, signal quality, trend and deviation. The
+           medical interpretation remains entirely with you. CARLON Equine Visite is not a
+           medical device within the meaning of Regulation (EU) 2017/745.</p>
       </div>
       <div class="card">
-        <h3>Keine Behandlungsempfehlung</h3>
-        <p>Auch wenn ein Verlauf eindeutig aussieht: Ob etwas geändert wird, steht nirgends
-           auf dem Schirm. Das ist Ihre Entscheidung, nicht die einer Kennzahl.</p>
+        <h3>No treatment recommendation</h3>
+        <p>Even when a trend looks unambiguous: whether anything is changed appears nowhere
+           on the screen. That is your decision, not a metric's.</p>
       </div>
       <div class="card">
-        <h3>Keine Datenbank bei uns</h3>
-        <p>Ihre Patienten liegen im Speicher Ihres Geräts. Wir haben keinen Zugriff und
-           könnten sie auch nicht löschen. Was zwischen Halterin und Praxis läuft, ist
-           verschlüsselt und für uns unlesbar.</p>
+        <h3>No database at our end</h3>
+        <p>Your patients live in your device's storage. We have no access and could not
+           delete them either. What passes between owner and practice is encrypted and
+           unreadable to us.</p>
       </div>
       <div class="card">
-        <h3>Kein Notfallweg</h3>
-        <p>Eine Sendung ist kein Anruf. Bei akuten Beschwerden gilt, was immer gilt —
-           unmittelbar tierärztlich handeln.</p>
+        <h3>Not an emergency channel</h3>
+        <p>A recording is not a phone call. In acute cases what always applies still applies —
+           act veterinarily, immediately.</p>
       </div>
     </div>
   </div>
@@ -754,29 +756,29 @@ html.rev-an .rev.in{opacity:1;transform:none}
 <!-- ── 8 · PREIS ──────────────────────────────────────────────────── -->
 <section id="preis" class="tarife">
   <div class="wrap">
-    <div class="sec-eyebrow">Ein Preis, eine Praxis</div>
-    <h2>Kein Staffelmodell, keine Verhandlung.</h2>
+    <div class="sec-eyebrow">One price, one practice</div>
+    <h2>No tiers, no negotiation.</h2>
     <p class="sec-lead">
-      Ein Betrieb — eine Praxis oder ein Standort — mit allen tierärztlichen und
-      tiermedizinischen Mitarbeitenden und auf beliebig vielen Geräten dieses Betriebs.
-      Es gibt keinen Aufpreis je Pferd und keine Grenze für Aufnahmen.
+      One business — one practice or one site — with all veterinary and veterinary-nursing
+      staff and on any number of that business's devices. There is no per-horse surcharge
+      and no limit on recordings.
     </p>
     <div class="tarif">
-      <div class="tarif-preis"><b>790&nbsp;€</b> <span>pro Jahr, zzgl. USt</span></div>
-      <div class="tarif-alt">oder 79&nbsp;€ monatlich · das Jahresabo entspricht 65,83&nbsp;€ im Monat</div>
+      <div class="tarif-preis"><b>€790</b> <span>per year, plus VAT</span></div>
+      <div class="tarif-alt">or €79 monthly · the annual plan works out at €65.83 per month</div>
       <ul class="enthalten">
-        <li>Unbegrenzt Pferde, Aufnahmen und Verläufe</li>
-        <li>Alle Mitarbeitenden, alle Geräte des Betriebs</li>
-        <li>Befundbericht mit eigenem Briefkopf</li>
-        <li>Export als JSON, CSV, Kubios und FHIR&nbsp;R5</li>
-        <li>Monatlich kündbar zum Ende der Abrechnungsperiode</li>
+        <li>Unlimited horses, recordings and trends</li>
+        <li>All staff, all devices of the business</li>
+        <li>Findings report on your own letterhead</li>
+        <li>Export as JSON, CSV, Kubios and FHIR&nbsp;R5</li>
+        <li>Cancellable monthly, effective at the end of the billing period</li>
       </ul>
       <p class="tarif-fuss">
-        Das Angebot richtet sich ausschließlich an Unternehmer im Sinne des § 14 BGB.
-        Zahlung, Rechnung und Umsatzsteuer laufen über unseren Zahlungsdienstleister als
-        Merchant of Record. Einzelheiten in
-        <a href="/agb.html#visite">§ 12a unserer AGB</a> und in der
-        <a href="/privacy.html">Datenschutzerklärung</a>.
+        This offer is directed exclusively at entrepreneurs within the meaning of § 14 BGB.
+        Payment, invoicing and VAT run through our payment provider as merchant of record.
+        Details in
+        <a href="/terms.html#visite">§ 12a of our Terms</a> and in the
+        <a href="/privacy-en.html">Privacy Policy</a>.
       </p>
 
 <!-- KAUFWEG — erscheint NUR bei window.CARLON_LIVE === true (live.js).
@@ -809,9 +811,8 @@ html.rev-an .rev.in{opacity:1;transform:none}
     </script>
     </div>
     <p class="sec-lead" style="margin-top:26px">
-      Zum Einordnen: Der Jahrespreis liegt in der Größenordnung eines einzelnen
-      Praxisbesuchs mit Anfahrt. Ob sich das trägt, entscheiden Sie am besten an Ihren
-      eigenen Zahlen — nicht an unseren.
+      For scale: the annual price is in the region of a single practice visit including the
+      drive. Whether that pays off is best decided against your own figures — not ours.
     </p>
   </div>
 </section>
@@ -819,18 +820,17 @@ html.rev-an .rev.in{opacity:1;transform:none}
 <!-- ── 9 · DER ABSCHLUSS: RISIKO NULL ─────────────────────────────── -->
 <section class="final">
   <div class="wrap">
-    <div class="sec-eyebrow">Bevor Sie irgendetwas entscheiden</div>
-    <h2>Fünfzehn Demo-Pferde. Echte Verläufe. Kein Konto.</h2>
+    <div class="sec-eyebrow">Before you decide anything</div>
+    <h2>Fifteen demo horses. Real trends. No account.</h2>
     <p class="sec-lead">
-      Das Demo-Cockpit ist nicht ein Video und keine Bildstrecke, sondern die vollständige
-      Anwendung. Öffnen Sie eine Akte, drehen Sie an den Ansichten, drucken Sie einen
-      Befund. Ein Pferd im Bestand zeigt einen Abwärtsverlauf über vier Wochen — sehen Sie
-      selbst, ab wann er auffällt.
+      The demo cockpit is not a video and not a slideshow, but the complete application.
+      Open a file, work the views, print a findings report. One horse in the list shows a
+      downward trend over four weeks — see for yourself from when it becomes noticeable.
     </p>
     <div class="cta-row">
-      <a class="cta-primary" href="/carlon-equine/app/">Cockpit mit 15&nbsp;Demo-Pferden öffnen →</a>
+      <a class="cta-primary" href="/carlon-equine/app/">Open the cockpit with 15&nbsp;demo horses →</a>
     </div>
-    <p class="cta-note">Läuft im Browser. Nichts wird installiert, nichts übertragen, nichts angelegt.</p>
+    <p class="cta-note">Runs in the browser. Nothing installed, nothing transmitted, nothing created.</p>
 
     <!-- ── ANMELDUNG ────────────────────────────────────────────────────
          Hier standen zwei mailto:-Links. Ein Aussenaudit nannte das „den
@@ -852,43 +852,42 @@ html.rev-an .rev.in{opacity:1;transform:none}
          beim Einblenden: nichts Wichtiges haengt an einem Skript. -->
     <form id="anmeldung" class="anmeldung"
           action="mailto:jan@vitalkultur.com" method="post" enctype="text/plain">
-      <h3>Als Beta-Praxis mitmachen</h3>
-      <p class="anm-lead">Wer in der Beta mitgestaltet, behält seinen Preis als
-         Gründungspartner. Wir melden uns persönlich zurück — meist am selben Tag.</p>
+      <h3>Join as a beta practice</h3>
+      <p class="anm-lead">Take part in the beta and you keep your founding-partner price. We reply
+         personally — usually the same day.</p>
 
       <div class="anm-art" role="radiogroup" aria-label="Praxisart">
-        <label><input type="radio" name="art" value="mobil" checked> Ich bin mobil unterwegs</label>
-        <label><input type="radio" name="art" value="klinik"> Wir sind eine Klinik</label>
+        <label><input type="radio" name="art" value="mobil" checked> I work ambulatory</label>
+        <label><input type="radio" name="art" value="klinik"> We are a clinic</label>
       </div>
 
       <div class="anm-raster">
         <label>Name<input name="name" autocomplete="name" required></label>
-        <label>Praxis oder Klinik<input name="praxis" autocomplete="organization"></label>
-        <label>E-Mail<input name="email" type="email" autocomplete="email" required></label>
-        <label>Telefon <span>(falls Ihnen ein Anruf lieber ist)</span><input name="telefon" type="tel" autocomplete="tel"></label>
-        <label>Region<input name="region" placeholder="z.&nbsp;B. Ortenau, Oberbayern, Münsterland"></label>
-        <label>Etwa wie viele Pferde betreuen Sie?<input name="pferde" inputmode="numeric" placeholder="z.&nbsp;B. 180"></label>
+        <label>Practice or clinic<input name="praxis" autocomplete="organization"></label>
+        <label>Email<input name="email" type="email" autocomplete="email" required></label>
+        <label>Phone <span>(if you would rather be called)</span><input name="telefon" type="tel" autocomplete="tel"></label>
+        <label>Region<input name="region" placeholder="e.g. Ortenau, Bavaria, Münsterland"></label>
+        <label>Roughly how many horses do you look after?<input name="pferde" inputmode="numeric" placeholder="e.g. 180"></label>
       </div>
-      <label class="anm-weit">Was möchten Sie zuerst wissen? <span>(freiwillig)</span>
-        <textarea name="nachricht" rows="3" placeholder="Eine Frage, ein Zweifel, ein Wunsch — was auch immer zuerst kommt."></textarea></label>
+      <label class="anm-weit">What would you like to know first? <span>(optional)</span>
+        <textarea name="nachricht" rows="3" placeholder="A question, a doubt, a wish — whatever comes first."></textarea></label>
 
       <!-- Honigtopf. Im Bild nicht vorhanden, fuer Vorleseprogramme
            ausgeblendet. Maschinen fuellen jedes Feld aus, Menschen nie. Ein
            Raetsel wuerde ausgerechnet den aelteren Tierarzt aussperren, den
            wir am dringendsten wollen. -->
       <div class="anm-topf" aria-hidden="true">
-        <label>Bitte freilassen<input name="hinweis" tabindex="-1" autocomplete="off"></label>
+        <label>Please leave empty<input name="hinweis" tabindex="-1" autocomplete="off"></label>
       </div>
 
-      <button type="submit" class="cta-primary anm-senden">Anmeldung absenden →</button>
+      <button type="submit" class="cta-primary anm-senden">Send registration →</button>
       <p class="anm-status" id="anmStatus" role="status" aria-live="polite"></p>
 
       <p class="anm-recht">
-        Wir speichern Ihre Angaben ausschließlich, um Ihre Anmeldung zu bearbeiten
-        (Art.&nbsp;6 Abs.&nbsp;1 lit.&nbsp;b DSGVO), auf unserem eigenen Dienst — nicht bei
-        einem Formularanbieter — und löschen sie spätestens nach 180&nbsp;Tagen.
-        Kein Newsletter, keine Weitergabe.
-        <a href="/privacy.html">Datenschutzerklärung</a> ·
+        We store your details solely in order to process your registration
+        (Art.&nbsp;6(1)(b) GDPR), on our own service — not with a form provider — and delete
+        them after 180&nbsp;days at the latest. No newsletter, no sharing.
+        <a href="/privacy-en.html">Privacy Policy</a> ·
         oder schreiben Sie einfach an <a href="mailto:jan@vitalkultur.com">jan@vitalkultur.com</a>.
       </p>
     </form>
@@ -898,33 +897,32 @@ html.rev-an .rev.in{opacity:1;transform:none}
 <!-- ── 10 · FAQ ───────────────────────────────────────────────────── -->
 <section>
   <div class="wrap">
-    <div class="sec-eyebrow">Häufige Fragen</div>
-    <h2>Was Tierärzte uns zuerst fragen.</h2>
+    <div class="sec-eyebrow">Frequently asked</div>
+    <h2>What vets ask us first.</h2>
     <div class="grid">
       <div class="card">
-        <h3>Ersetzt CARLON eine Untersuchung?</h3>
-        <p>Nein. CARLON bereitet Verlaufsdaten auf und hilft bei der Reihenfolge. Ob eine
-           klinische Untersuchung, weitere Diagnostik oder eine Behandlung nötig ist,
-           entscheiden ausschließlich Sie.</p>
+        <h3>Does CARLON replace an examination?</h3>
+        <p>No. CARLON prepares trend data and helps with the order of visits. Whether a
+           clinical examination, further diagnostics or treatment is needed is decided by
+           you alone.</p>
       </div>
       <div class="card">
-        <h3>Was braucht die Halterin?</h3>
-        <p>Einen handelsüblichen Brustgurt und ein Android-Gerät oder einen Rechner mit
-           Chrome oder Edge. Auf iPhone und iPad lässt Apple Bluetooth im Browser nicht zu;
-           die Seite führt dort auf ein messfähiges Gerät.</p>
+        <h3>What does the owner need?</h3>
+        <p>A commercially available chest belt and an Android device or a computer with
+           Chrome or Edge. On iPhone and iPad, Apple does not permit Bluetooth in the
+           browser; the page directs you to a capable device there.</p>
       </div>
       <div class="card">
-        <h3>Was passiert nach einer Kündigung?</h3>
-        <p>Die Anwendung wechselt in einen funktionsreduzierten Modus. Ihre Daten bleiben
-           auf dem Gerät und lassen sich weiterhin öffnen und exportieren. Wir könnten sie
-           gar nicht löschen — sie liegen bei Ihnen.</p>
+        <h3>What happens after cancellation?</h3>
+        <p>The application switches to a reduced mode. Your data stays on the device and can
+           still be opened and exported. We could not delete it — it is with you.</p>
       </div>
       <div class="card">
-        <h3>Brauche ich einen Auftragsverarbeitungsvertrag?</h3>
-        <p>Das Cockpit läuft vollständig in Ihrem Browser; Patientendaten erreichen uns
-           nicht. Für den verschlüsselten Transportweg zwischen Halterin und Praxis klären
-           wir die Einordnung derzeit anwaltlich ab und sagen Ihnen das Ergebnis, bevor Sie
-           es brauchen.</p>
+        <h3>Do I need a data processing agreement?</h3>
+        <p>The cockpit runs entirely in your browser; patient data never reaches us. For the
+           encrypted transport path between owner and practice we are currently having the
+           classification clarified by a lawyer and will tell you the outcome before you
+           need it.</p>
       </div>
     </div>
   </div>
@@ -932,25 +930,25 @@ html.rev-an .rev.in{opacity:1;transform:none}
 
 <footer>
   <div class="footer-brand">CARLON EQUINE VISITE</div>
-  <div class="footer-tagline">Für Tierärzte &amp; Kliniken · Teil von CARLON Equine</div>
-  <div class="footer-madein" data-en="Made in Iffezheim · Germany" data-de="Made in Iffezheim · Deutschland">Made in Iffezheim · Deutschland</div>
+  <div class="footer-tagline">For equine vets &amp; clinics · part of CARLON Equine</div>
+  <div class="footer-madein" data-en="Made in Iffezheim · Germany" data-de="Made in Iffezheim · Germany">Made in Iffezheim · Germany</div>
   <div class="footer-links">
-    <a href="/carlon-equine/" data-en="CARLON Equine (the app)" data-de="CARLON Equine (die App)">CARLON Equine (die App)</a>
-    <a href="/carlon-equine/coherence.html" data-en="Therapy &amp; research" data-de="Therapie &amp; Forschung">Therapie &amp; Forschung</a>
-    <a href="/privacy.html" data-en="Privacy" data-de="Datenschutz">Datenschutz</a>
-    <a href="/agb.html#visite">AGB</a>
-    <a href="/impressum.html">Impressum</a>
+    <a href="/carlon-equine/" data-en="CARLON Equine (the app)" data-de="CARLON Equine (the app)">CARLON Equine (the app)</a>
+    <a href="/carlon-equine/coherence.html" data-en="Therapy &amp; research" data-de="Therapy &amp; research">Therapy &amp; research</a>
+    <a href="/privacy-en.html">Privacy</a>
+    <a href="/terms.html#visite">Terms</a>
+    <a href="/impressum.html">Legal notice</a>
   </div>
   <div class="footer-family">
     <a href="/" aria-label="Vitalkultur" style="display:inline-block;margin-bottom:11px"><img src="/assets/vitalkultur-wordmark.png" alt="Vitalkultur" style="height:26px;width:auto;opacity:0.82"></a>
-    <div class="fam-label" data-en="Part of the Vitalkultur app family" data-de="Teil der Vitalkultur-App-Familie">Teil der Vitalkultur-App-Familie</div>
+    <div class="fam-label" data-en="Part of the Vitalkultur app family" data-de="Part of the Vitalkultur app family">Part of the Vitalkultur app family</div>
   </div>
   <div class="copyright">© 2026 Vitalkultur · <span data-en="Iffezheim, Germany" data-de="Iffezheim, Deutschland">Iffezheim, Deutschland</span></div>
 </footer>
 
 <script>
 // Sprache geteilt mit der Hauptseite (gleicher localStorage-Key).
-window.CARLON_LANG = localStorage.getItem('carlon.viewer.lang') || 'de';
+window.CARLON_LANG = 'en';   // feste Sprache dieser Adresse, kein Speicher-Merker
 function applyLang(){
   var lang = window.CARLON_LANG;
   document.querySelectorAll('[data-en][data-de]').forEach(function(el){
@@ -1008,7 +1006,7 @@ if(_lb) _lb.addEventListener('click', function(){
     e.preventDefault();
     var d = {}; new FormData(f).forEach(function(v,k){ d[k] = v; });
     d.herkunft = 'visite-landingpage';
-    status.className = 'anm-status'; status.textContent = 'Wird gesendet …';
+    status.className = 'anm-status'; status.textContent = 'Sending …';
     knopf.disabled = true;
     fetch(DIENST, {method:'POST', headers:{'content-type':'application/json'}, body:JSON.stringify(d)})
       .then(function(r){ return r.json().catch(function(){ return {ok:false}; }); })
@@ -1017,12 +1015,12 @@ if(_lb) _lb.addEventListener('click', function(){
         ['.anm-raster','.anm-weit','.anm-art'].forEach(function(sel){
           var e2=f.querySelector(sel); if(e2) e2.style.display='none'; });
         knopf.style.display='none';
-        status.textContent='Angekommen. Wir melden uns bei Ihnen — meist am selben Tag.';
+        status.textContent='Received. We will get back to you — usually the same day.';
       })
       .catch(function(err){
         status.className='anm-status fehler';
-        status.innerHTML='Das hat gerade nicht geklappt. Schreiben Sie uns bitte direkt an '+
-          '<a href="mailto:jan@vitalkultur.com">jan@vitalkultur.com</a> — wir antworten genauso schnell.';
+        status.innerHTML='That did not work just now. Please write to us directly at '+
+          '<a href="mailto:jan@vitalkultur.com">jan@vitalkultur.com</a> — we answer just as quickly.';
         knopf.disabled=false;
       });
   });
