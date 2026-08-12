@@ -2254,12 +2254,50 @@ const Triage = {
   },
 
   // Frühwarn-Ampel gegen individuelle RMSSD-Baseline
+  /* HERKUNFT DES VERGLEICHSWERTS — die ehrlichste Zeile im ganzen Cockpit.
+     ═══════════════════════════════════════════════════════════════════════
+     Ein Aussenaudit vom 12.08.2026 hat den wunden Punkt getroffen: In einer
+     Akte stand „RMSSD 81 % unter individueller Baseline (9 vs. 48 ms)",
+     waehrend darunter „1 Aufnahme" stand. Eine INDIVIDUELLE Baseline aus
+     einer einzigen Messung gibt es nicht.
+
+     Die Ursache ist nicht eine falsche Rechnung, sondern ein falsches WORT:
+     `h.baselineRMSSD` kommt aus dem Feld `baselineRMSSDms` des importierten
+     Datensatzes — es ist ein ANGEGEBENER Wert, nicht ein aus den Aufnahmen
+     dieses Pferds gerechneter. Solange genug eigene Aufnahmen vorliegen,
+     deckt sich beides in der Sache. Bei einer einzigen deckt es sich nicht,
+     und ein Tierarzt sieht das sofort.
+
+     Das ist teuer, weil Methodenehrlichkeit unser staerkstes Argument ist:
+     Wer AV-Block-Pausen als eigene Kategorie fuehrt statt sie wegzuglaetten,
+     darf keine Baseline behaupten, die es nicht gibt.
+
+     Ab MIN_EIGEN eigenen Aufnahmen heisst der Wert „individuelle Baseline".
+     Darunter heisst er, was er ist — und die Anzeige sagt dazu, ab wann die
+     eigene Baseline traegt. Gerechnet wird in beiden Faellen gleich; nur
+     behauptet wird weniger. */
+  MIN_EIGEN: 4,
+  basisHerkunft(h){
+    const base=h&&h.baselineRMSSD;
+    if(!base) return null;
+    const eigene=State.recsFor(h.id).filter(r=>r&&r.metrics&&r.metrics.rmssd!=null).length;
+    const eigenstaendig = eigene>=this.MIN_EIGEN;
+    return {
+      wert: base,
+      eigene,
+      eigenstaendig,
+      name: eigenstaendig ? 'individueller Baseline' : 'dem angegebenen Ausgangswert',
+      kurz: eigenstaendig ? 'Baseline' : 'Ausgangswert',
+      zusatz: eigenstaendig ? ''
+        : ` — noch keine eigene Baseline (${eigene} von ${this.MIN_EIGEN} Aufnahmen); der Wert stammt aus dem Datensatz`,
+    };
+  },
   baselineAmpel(h,rec){
-    const base=h&&h.baselineRMSSD, rm=rec&&rec.metrics?rec.metrics.rmssd:null;
-    if(!base||rm==null) return null;
-    const ratio=rm/base, pct=Math.round((1-ratio)*100);
-    if(ratio<this.PARAMETER.baselineAlarmUnter) return {level:'alarm',ratio,pct,text:`RMSSD ${pct} % unter individueller Baseline (${fmt0(rm)} vs. ${fmt0(base)} ms) — deutlich unter der eigenen Baseline, tierärztlich einordnen`};
-    if(ratio<this.PARAMETER.baselineWarnUnter) return {level:'warn',ratio,pct,text:`RMSSD ${pct} % unter Baseline (${fmt0(rm)} vs. ${fmt0(base)} ms) — auffällig unter der Baseline, engmaschig beobachten`};
+    const b=this.basisHerkunft(h), rm=rec&&rec.metrics?rec.metrics.rmssd:null;
+    if(!b||rm==null) return null;
+    const base=b.wert, ratio=rm/base, pct=Math.round((1-ratio)*100);
+    if(ratio<this.PARAMETER.baselineAlarmUnter) return {level:'alarm',ratio,pct,eigen:b.eigenstaendig,text:`RMSSD ${pct} % unter ${b.name} (${fmt0(rm)} vs. ${fmt0(base)} ms) — tierärztlich einordnen${b.zusatz}`};
+    if(ratio<this.PARAMETER.baselineWarnUnter) return {level:'warn',ratio,pct,eigen:b.eigenstaendig,text:`RMSSD ${pct} % unter ${b.name} (${fmt0(rm)} vs. ${fmt0(base)} ms) — engmaschig beobachten${b.zusatz}`};
     return null;
   },
   // Wie viele Messungen in Folge ist RMSSD gefallen? (Trend-Frühwarnung ab 3)
@@ -4895,7 +4933,7 @@ const Views={
           ${Views.verdictHero(h,rec,tri)}
           <div class="panel" style="margin-bottom:var(--s4)">
             <h2 style="font-size:13px;color:var(--text-dim);letter-spacing:.06em;text-transform:uppercase"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12h4l3 8 4-16 3 8h4"/></svg>Kernwerte &amp; Begründung</h2>
-            ${(()=>{const amp=Triage.baselineAmpel(h,rec);const streak=Triage.fallingStreak(h.id);if(!amp&&streak<3)return'';const lvl=amp?amp.level:'warn';const parts=[];if(amp)parts.push(amp.text);if(streak>=3)parts.push(`RMSSD ${streak}× in Folge fallend`);return `<div class="warnbanner ${lvl}">${IC.bolt}<div><b>Auffällig · gegen die individuelle Baseline</b><span>${parts.map(esc).join(' · ')}</span></div></div>`;})()}
+            ${(()=>{const amp=Triage.baselineAmpel(h,rec);const streak=Triage.fallingStreak(h.id);if(!amp&&streak<3)return'';const lvl=amp?amp.level:'warn';const parts=[];if(amp)parts.push(amp.text);if(streak>=3)parts.push(`RMSSD ${streak}× in Folge fallend`);return `<div class="warnbanner ${lvl}">${IC.bolt}<div><b>Auffällig · gegen ${amp&&amp.eigen===false?'den angegebenen Ausgangswert':'die individuelle Baseline'}</b><span>${parts.map(esc).join(' · ')}</span></div></div>`;})()}
             <div class="stat-row">
               ${Views.stat('RMSSD','ms',m.rmssd,Views.clsRMSSD(m.rmssd))}
               ${Views.stat('Ruhe-HF','bpm',m.meanHR,Views.clsHR(m.meanHR))}
@@ -9504,7 +9542,14 @@ const Sprache={
     'Kein Medizinprodukt, keine Diagnose.',
     'Nicht dazu bestimmt, Krankheiten zu erkennen, zu behandeln, zu heilen oder zu verhüten — die medizinische Beurteilung trifft ausschließlich die behandelnde Tierärztin oder der behandelnde Tierarzt.',
     'Diese Einschätzung basiert auf der Herzratenvariabilität und ersetzt keine tierärztliche Diagnose.',
-    'deutlich unter der eigenen Baseline, tierärztlich einordnen',
+    /* Die Baseline-Saetze bleiben deutsch — sie sind die regulatorische
+       Einordnung, nicht Oberflaeche. Der Wortlaut hat sich am 12.08.2026
+       geaendert (Herkunft des Vergleichswerts wird jetzt benannt), deshalb
+       stehen hier die TRAGENDEN Teilsaetze statt eines ganzen Satzes:
+       ein Volltext-Eintrag veraltet beim naechsten Umformulieren still. */
+    'tierärztlich einordnen',
+    'engmaschig beobachten',
+    'noch keine eigene Baseline',
     'Auffällig unregelmäßige Kurzzeit-Variabilität — Screening-Hinweis, keine Diagnose; bitte tierärztlich einordnen lassen',
     'Screening-Hinweis, keine Diagnose — klinische Abklärung (BAL) bleibt tierärztlich.',
     'Trainings-Domäne, keine tierärztliche Beurteilung.',
