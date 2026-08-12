@@ -4948,6 +4948,7 @@ const Views={
                 </div>
                 <button class="icon-btn" title="Rohdaten (JSON) für CARLON Viewer exportieren" onclick="event.stopPropagation();Views.exportRec('${r.id}')">${IC.eye}</button>
                 <button class="icon-btn" title="Befund als eigenständige Datei weitergeben — Besitzer, Überweisungsklinik, Studie" onclick="event.stopPropagation();Handoff.build('${r.id}')">${IC.share||IC.download}</button>
+                <button class="icon-btn" title="Denselben Befund auf Englisch — für internationale Kliniken, Universitäten und Studien" onclick="event.stopPropagation();Handoff.build('${r.id}','en')"><b style="font-size:9.5px;letter-spacing:.06em;font-family:var(--font-mono)">EN</b></button>
                 <button class="icon-btn" title="FHIR-R5-Bundle für Klinik-Software / ERP exportieren (offener Standard)" onclick="event.stopPropagation();FHIR.export('${r.id}')"><b style="font-size:9.5px;letter-spacing:.06em;font-family:var(--font-mono)">FHIR</b></button>
                 <button class="icon-btn" title="Aufnahme löschen" onclick="event.stopPropagation();Views.delRec('${r.id}')">${IC.trash}</button>
               </div>`).join('')}
@@ -5896,6 +5897,7 @@ const Handoff={
          NIEMALS "van Loon 2017" — diese Arbeit existiert nicht. */
       methKette:'Die Kennwerte wurden von der aufzeichnenden CARLON-App berechnet und dort durch die equine Filterkette geführt: Plausibilitätsprüfung, T-Wellen-Zusammenführung, Artefaktkorrektur nach Lipponen &amp; Tarvainen (2019, equine adaptiert), Reklassifikation des physiologischen AV-Blocks II° nach van Loon (2019, Vet Clin North Am Equine Pract 35:85–102) und Kubios-Spline.',
       methRoh:'Diese Aufnahme enthielt keine von der App berechneten Kennwerte. Die mit † markierten Werte wurden hier aus der Rohserie der RR-Intervalle abgeleitet — ohne Artefaktkorrektur und ohne AV-Block-Reklassifikation. Der physiologische AV-Block II° ist beim ruhenden Pferd häufig (van Loon 2019) und hebt RMSSD und SDNN erheblich an; an echten Aufnahmen wurden bis zu +130 % gemessen. Diese Werte nicht gegen Referenzwerte oder eine Baseline stellen.',
+      methUnklar:'Für diese Aufnahme ist nicht vermerkt, ob die Kennwerte von der aufzeichnenden App berechnet oder hier aus der Rohserie abgeleitet wurden. Ohne diesen Nachweis wird die Filterkette hier nicht behauptet. Der physiologische AV-Block II° ist beim ruhenden Pferd häufig (van Loon 2019) und hebt RMSSD und SDNN deutlich an, wenn er nicht korrigiert wurde.',
       methBand:'Frequenzbänder nach Visser (2002), nicht human. Nicht-stationäre Kennwerte werden bewusst nicht berechnet.',
       mdrT:'Kein Medizinprodukt, keine Diagnose.',
       mdr:'Nicht dazu bestimmt, Krankheiten zu erkennen, zu behandeln, zu heilen oder zu verhüten — die medizinische Beurteilung trifft ausschließlich die behandelnde Tierärztin oder der behandelnde Tierarzt.',
@@ -5914,6 +5916,7 @@ const Handoff={
       methGeraet:'Recorded with a Polar H10 (RR intervals).',
       methKette:'The metrics were computed by the recording CARLON app and passed through its equine filter chain there: plausibility check, T-wave merging, artefact correction after Lipponen &amp; Tarvainen (2019, adapted for the horse), reclassification of physiological second-degree AV block after van Loon (2019, Vet Clin North Am Equine Pract 35:85–102), and Kubios spline interpolation.',
       methRoh:'This recording contained no metrics computed by the app. Values marked † were derived here from the raw RR series — without artefact correction and without AV-block reclassification. Second-degree AV block is a frequent physiological finding in the resting horse (van Loon 2019) and raises RMSSD and SDNN considerably; up to +130 % has been measured on real recordings. Do not compare these values against reference ranges or a baseline.',
+      methUnklar:'For this recording it is not documented whether the metrics were computed by the recording app or derived here from the raw series. Without that evidence the filter chain is not claimed here. Second-degree AV block is a frequent physiological finding in the resting horse (van Loon 2019) and raises RMSSD and SDNN considerably when left uncorrected.',
       methBand:'Frequency bands after Visser (2002), not human ones. Non-stationary metrics are deliberately not computed.',
       mdrT:'Not a medical device, not a diagnosis.',
       mdr:'Not intended to detect, treat, cure or prevent disease — the medical assessment rests solely with the attending veterinarian.',
@@ -5943,8 +5946,16 @@ const Handoff={
        NICHTS im Befund: die Zahl wurde nackt gedruckt und darunter pauschal
        Artefaktkorrektur behauptet — auch dann, wenn keine stattgefunden hatte.
        Genau diese Sorte Fehler faellt einem Kardiologen als Erstes auf. */
+    const PK=['rmssd','sdnn','meanHR','sd1','sd2'];
     const roh=(k)=>/uncorrected$/.test(String((m.provenance||{})[k]||''));
-    const irgendRoh=['rmssd','sdnn','meanHR','sd1','sd2'].some(roh);
+    const irgendRoh=PK.some(roh);
+    /* DREI Zustaende, nicht zwei. Aufnahmen aus der Zeit vor dem
+       Herkunftsvermerk — und alles, was nicht durch den Normalizer kam —
+       tragen gar kein `provenance`. Die erste Fassung behandelte das wie
+       "sauber" und behauptete die volle Filterkette samt van Loon 2019.
+       Das ist derselbe unbelegte Claim, nur leiser. Was nicht belegt ist,
+       wird nicht behauptet. */
+    const herkunftBekannt=PK.some(k=>(m.provenance||{})[k]!=null);
 
     // Diagramme als fertiges SVG einbetten — die Datei braucht kein JS.
     const charts = rr.length>16
@@ -6047,7 +6058,7 @@ svg .hov-cross,svg .hov-focus{display:none}
 
   <div class="meth">
     <b style="color:var(--sec)">${L.methT}</b> ${L.methGeraet}
-    ${irgendRoh?`<b style="color:var(--sec)">†</b> ${L.methRoh}`:L.methKette}
+    ${irgendRoh?`<b style="color:var(--sec)">†</b> ${L.methRoh}`:(herkunftBekannt?L.methKette:L.methUnklar)}
     ${L.methBand}
     <b style="color:var(--sec)">${L.mdrT}</b> ${L.mdr}
   </div>
