@@ -1780,6 +1780,42 @@ const Chart={
      Jetzt steht er eigenstaendig oben rechts IM Diagramm, wo nichts ihn
      abschneidet. Ohne diesen Hinweis waere die Achsenwahl eine stille
      Behauptung. */
+  /* ── UNSICHERE HRV-FENSTER ────────────────────────────────────────────
+     Die HRV-Kurve ist ein gleitendes RMSSD über ein Fenster von `Wb`
+     Schlägen. Ein EINZIGER auffälliger Abstand geht in dieses Fenster ein
+     und BLEIBT DARIN, bis er hinten herausfällt — er hebt die Kurve also
+     über die volle Fensterlänge an. Im Bild sieht das aus wie ein
+     anhaltender Zustand des Tieres; tatsächlich ist es ein Schlag.
+
+     AN EINER ECHTEN AUFNAHME GEMESSEN (Testpferd 2, 325 Schläge):
+     98,8 % der Schlagpaare sind unauffällig — aber 25,4 % der Kurve werden
+     von VIER Artefakten getragen. Die Signalgüte-Zahl klingt makellos und
+     verschweigt genau das, weil sie PAARE zählt und nicht FENSTER.
+
+     KRITERIUM: der Abstand weicht um mehr als 20 % vom vorigen ab
+     (Task Force 1996 / Malik) — dasselbe, das die Kennwerte für den zweiten
+     RMSSD-Wert benutzen und das der Export als `quality.method` deklariert.
+     EIN Kriterium, EINE Stelle: sonst sagt der Beleg etwas anderes als das
+     Bild.
+
+     BEWUSST NICHT `_artifacts`: das prüft den EINZELSCHLAG gegen den Median.
+     Für die Verschmierung zählt aber das PAAR, denn genau die aufeinander
+     folgende Differenz geht ins RMSSD ein. Zwei Fragen, zwei Kriterien —
+     und beide dürfen nebeneinander im Bild stehen.
+
+     ⚠ WORT-FÜR-WORT GLEICH IN STATION UND COCKPIT. Zwei Rechenwege für
+       dieselbe Frage laufen auseinander, und es fällt erst auf, wenn beide
+       Seiten über derselben Aufnahme verschiedene Abschnitte strichel.
+       `t-achse` läuft auf beiden Seiten und vergleicht feste Eichwerte. */
+  _fensterUnsicher(rr,Wb){
+    const n=rr.length, pre=new Array(n+1).fill(0);
+    for(let j=0;j<n;j++)
+      pre[j+1]=pre[j]+((j>=1 && Math.abs(rr[j]-rr[j-1])>0.20*rr[j-1])?1:0);
+    const out=new Array(n).fill(false);
+    for(let i=0;i<n;i++){ const lo=Math.max(1,i-Wb+1); out[i]=(pre[i+1]-pre[lo])>0; }
+    return out;
+  },
+
   _clipNote(x,y,n){
     if(!n) return '';
     return `<text x="${x.toFixed(1)}" y="${y.toFixed(1)}" text-anchor="end" style="fill:var(--amber);font-family:var(--font-mono);font-size:9.5px;opacity:.85">${n} ${n===1?'Wert':'Werte'} außerhalb</text>`;
@@ -1980,12 +2016,10 @@ const Chart={
        Malik): ein Abstand, der um mehr als 20 % vom vorigen abweicht. EIN
        Kriterium, EINE Stelle — sonst sagt der Beleg etwas anderes als das
        Bild. */
-    const unplaus=new Array(n).fill(0);
-    for(let j=1;j<n;j++) if(Math.abs(rr[j]-rr[j-1])>0.20*rr[j-1]) unplaus[j]=1;
-    const preU=new Array(n+1).fill(0);
-    for(let j=0;j<n;j++) preU[j+1]=preU[j]+unplaus[j];
-    /* Traegt das Fenster, das bei Schlag i endet, ein auffaelliges Paar? */
-    const fensterUnsicher=i=>{ const lo=Math.max(1,i-Wb+1); return (preU[i+1]-preU[lo])>0; };
+    /* Der Baustein steht bei Chart._fensterUnsicher — Wort fuer Wort
+       derselbe im Cockpit. */
+    const _unsicher=Chart._fensterUnsicher(rr,Wb);
+    const fensterUnsicher=i=>_unsicher[i];
 
     /* Zusammenhaengende unsichere Abschnitte — in ZEIT, nicht in Schlaegen:
        so liegt das Band genau unter dem Stueck Kurve, das es meint. */

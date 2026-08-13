@@ -3094,6 +3094,49 @@ const Chart={
   },
   /* Hinweis am Rand, wenn Werte ausserhalb des gezeigten Bereichs liegen.
      Ohne diesen Hinweis waere die Achsenwahl eine stille Behauptung. */
+  /* ── UNSICHERE HRV-FENSTER ────────────────────────────────────────────
+     Die HRV-Kurve ist ein gleitendes RMSSD über ein Fenster von `Wb`
+     Schlägen. Ein EINZIGER auffälliger Abstand geht in dieses Fenster ein
+     und BLEIBT DARIN, bis er hinten herausfällt — er hebt die Kurve also
+     über die volle Fensterlänge an. Im Bild sieht das aus wie ein
+     anhaltender Zustand des Tieres; tatsächlich ist es ein Schlag.
+
+     AN EINER ECHTEN AUFNAHME GEMESSEN (Testpferd 2, 325 Schläge):
+     98,8 % der Schlagpaare sind unauffällig — aber 25,4 % der Kurve werden
+     von VIER Artefakten getragen. Die Signalgüte-Zahl klingt makellos und
+     verschweigt genau das, weil sie PAARE zählt und nicht FENSTER.
+
+     KRITERIUM: der Abstand weicht um mehr als 20 % vom vorigen ab
+     (Task Force 1996 / Malik) — dasselbe, das die Kennwerte für den zweiten
+     RMSSD-Wert benutzen und das der Export als `quality.method` deklariert.
+     EIN Kriterium, EINE Stelle: sonst sagt der Beleg etwas anderes als das
+     Bild.
+
+     BEWUSST NICHT `_artifacts`: das prüft den EINZELSCHLAG gegen den Median.
+     Für die Verschmierung zählt aber das PAAR, denn genau die aufeinander
+     folgende Differenz geht ins RMSSD ein. Zwei Fragen, zwei Kriterien —
+     und beide dürfen nebeneinander im Bild stehen.
+
+     ⚠ WORT-FÜR-WORT GLEICH IN STATION UND COCKPIT. Zwei Rechenwege für
+       dieselbe Frage laufen auseinander, und es fällt erst auf, wenn beide
+       Seiten über derselben Aufnahme verschiedene Abschnitte strichel.
+       `t-achse` läuft auf beiden Seiten und vergleicht feste Eichwerte. */
+  _fensterUnsicher(rr,Wb){
+    const n=rr.length, pre=new Array(n+1).fill(0);
+    for(let j=0;j<n;j++)
+      pre[j+1]=pre[j]+((j>=1 && Math.abs(rr[j]-rr[j-1])>0.20*rr[j-1])?1:0);
+    const out=new Array(n).fill(false);
+    for(let i=0;i<n;i++){ const lo=Math.max(1,i-Wb+1); out[i]=(pre[i+1]-pre[lo])>0; }
+    return out;
+  },
+
+  /* Eindeutige Kennung je Zeichnung. Aus Breite und Hoehe berechnet
+     kollidieren zwei gleich grosse Diagramme im selben Dokument — dann
+     nimmt der Browser die erste Verlaufs- oder Beschneidungs-Kennung, und
+     die zweite Grafik zeichnet mit fremden Vorgaben. */
+  _nr:0,
+  _uid(w,h){ return Math.round(w*13+h+7)+'-'+(++Chart._nr); },
+
   _clipNote(x,y,n){
     if(!n) return '';
     return `<text x="${x.toFixed(1)}" y="${y.toFixed(1)}" text-anchor="end" style="fill:var(--amber);font-family:var(--font-mono);font-size:9.5px;opacity:.85">${n} ${n===1?'Wert':'Werte'} ausserhalb</text>`;
@@ -3400,6 +3443,11 @@ const Chart={
     const hf=rr.map(v=>60000/v);
     const Wb=Math.min(30,Math.max(5,Math.floor(n/3)));
     const hrv=rr.map((_,i)=>{const lo=Math.max(1,i-Wb+1);let s=0,c=0;for(let j=lo;j<=i;j++){const d=rr[j]-rr[j-1];s+=d*d;c++;}return c?Math.sqrt(s/c):0;});
+    /* Wo traegt das gleitende Fenster ein auffaelliges Paar? Siehe
+       Chart._fensterUnsicher — Wort fuer Wort dieselbe Rechnung wie in der
+       Messstation. */
+    const unsicher=Chart._fensterUnsicher(rr,Wb);
+    const unsicherZahl=unsicher.reduce((a,b)=>a+(b?1:0),0);
     const t=[];let acc=0;for(let i=0;i<n;i++){acc+=rr[i]/1000;t.push(acc);}const T=t[n-1]||1;
     const pad={l:50,r:50,t:16,b:34};const plotW=w-pad.l-pad.r,plotH=h-pad.t-pad.b;
     const X=tt=>pad.l+(tt/T)*plotW;
@@ -3414,7 +3462,7 @@ const Chart={
     const hfLo=rHF.min,hfHi=rHF.max,hvLo=rHV.min,hvHi=rHV.max;
     const YH=v=>pad.t+(1-(Math.max(hfLo,Math.min(hfHi,v))-hfLo)/(hfHi-hfLo))*plotH;
     const YV=v=>pad.t+(1-(Math.max(hvLo,Math.min(hvHi,v))-hvLo)/(hvHi-hvLo))*plotH;
-    const uid=Math.round(w*13+h+7);
+    const uid=Chart._uid(w,h);
     let g=Chart._area(uid,CY)
       +`<rect x="${pad.l}" y="${pad.t}" width="${plotW.toFixed(1)}" height="${plotH.toFixed(1)}" rx="8" fill="#0E0E0E"/>`;
     Chart.niceTicks(hfLo,hfHi,4).forEach(tk=>{if(tk<hfLo||tk>hfHi)return;g+=`<line class="grid-minor" x1="${pad.l}" x2="${w-pad.r}" y1="${YH(tk).toFixed(1)}" y2="${YH(tk).toFixed(1)}"/><text x="${pad.l-7}" y="${(YH(tk)+3).toFixed(1)}" text-anchor="end" style="fill:${GOLD}">${fmt0(tk)}</text>`;});
@@ -3428,13 +3476,40 @@ const Chart={
     const dHF=Chart._decimate(hf,cols), dHV=Chart._decimate(hrv,cols);
     const pHV=dHV.map(([i,v],k)=>`${k?'L':'M'}${X(t[i]).toFixed(1)},${YV(v).toFixed(1)}`).join(' ');
     g+=`<path d="${pHV} L${X(T).toFixed(1)},${(h-pad.b).toFixed(1)} L${pad.l},${(h-pad.b).toFixed(1)} Z" fill="url(#ar-${uid})" stroke="none"/>`;
+    /* Die Baender liegen UNTER den Kurven und ueber der Flaeche — sichtbar,
+       aber nie im Weg. Bewusst blass: ein auffaelliges Paar ist beim Pferd
+       oft eine physiologische Pause und kein Alarm. */
+    const bandLaeufe=[]; let bAb=null;
+    for(let i=0;i<n;i++){
+      if(unsicher[i] && bAb===null) bAb=t[i];
+      if(!unsicher[i] && bAb!==null){ bandLaeufe.push([bAb,t[i]]); bAb=null; }
+    }
+    if(bAb!==null) bandLaeufe.push([bAb,T]);
+    g+=bandLaeufe.slice(0,60).map(([a,b])=>
+      `<rect x="${X(a).toFixed(1)}" y="${pad.t}" width="${Math.max(1,X(b)-X(a)).toFixed(1)}" height="${plotH.toFixed(1)}" fill="var(--amber)" fill-opacity=".055"/>`).join('');
     g+=`<path d="${dHF.map(([i,v],k)=>`${k?'L':'M'}${X(t[i]).toFixed(1)},${YH(v).toFixed(1)}`).join(' ')}" fill="none" stroke="${GOLD}" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round"/>`;
-    g+=`<path d="${pHV}" fill="none" stroke="${CY}" stroke-width="1.7" stroke-linejoin="round" stroke-linecap="round"/>`;
+    /* Die HRV-Linie in Stuecke gleicher Sicherheit. Der Anschlusspunkt
+       gehoert zum FOLGENDEN Stueck, sonst klafft an jeder Grenze ein Pixel —
+       und das saehe aus wie ein Messaussetzer. */
+    const hvSt=[]; let aktS=null;
+    for(let k=0;k<dHV.length;k++){
+      const u=unsicher[dHV[k][0]];
+      if(!aktS || aktS.u!==u){ aktS={u, pts: k>0?[dHV[k-1]]:[]}; hvSt.push(aktS); }
+      aktS.pts.push(dHV[k]);
+    }
+    g+=hvSt.map(st=>`<path d="${st.pts.map(([i,v],k)=>`${k?'L':'M'}${X(t[i]).toFixed(1)},${YV(v).toFixed(1)}`).join(' ')}" fill="none" stroke="${CY}" stroke-width="1.7" stroke-linejoin="round" stroke-linecap="round"`
+      +(st.u?` stroke-dasharray="3.5 3" stroke-opacity=".62"`:'')+`/>`).join('');
     g+=`<rect x="${pad.l}" y="${pad.t}" width="${plotW.toFixed(1)}" height="${plotH.toFixed(1)}" fill="none" class="axis"/>`;
     g+=Chart._clipNote(w-pad.r-4,h-3,rHF.clipped+rHV.clipped);
     g+=Chart._bezel(pad.l,pad.t,plotW,plotH);
     /* Einheiten waagerecht oben an ihrer Achse statt gedreht am Rand —
        gedrehte Achsentitel liest man nicht, sie kosten nur Rand. */
+    if(unsicherZahl){
+      const kurz = plotW < 360;
+      g+=`<text x="${(pad.l+7).toFixed(1)}" y="${(pad.t+12).toFixed(1)}" text-anchor="start"`
+        +` style="fill:${CY};font-family:var(--font-mono);font-size:9.5px;opacity:.8">`
+        +(kurz?'gestrichelt = unsicher':'gestrichelt · hinterlegt: Fenster enthält ein auffälliges Schlagpaar')+`</text>`;
+    }
     g+=`<text x="${(pad.l-7)}" y="${(pad.t-5).toFixed(0)}" text-anchor="end" class="label-axis" style="fill:${GOLD}">BPM</text>`;
     g+=`<text x="${(w-pad.r+7)}" y="${(pad.t-5).toFixed(0)}" text-anchor="start" class="label-axis" style="fill:${CY}">MS</text>`;
     g+=Chart._badges(w-pad.r,[
@@ -3443,8 +3518,33 @@ const Chart={
     g+=`<text x="${(pad.l+plotW/2).toFixed(0)}" y="${h-2}" text-anchor="middle" class="label-axis">ZEIT<tspan class="label-unit"> (s)</tspan></text>`;
     const af=Chart._artifacts(rr);
     rr.forEach((v,i)=>{if(af[i]){const ax=X(t[i]),ay=YH(hf[i]),ar=3.2;g+=`<path d="M${ax.toFixed(1)},${(ay-ar).toFixed(1)} L${(ax+ar).toFixed(1)},${ay.toFixed(1)} L${ax.toFixed(1)},${(ay+ar).toFixed(1)} L${(ax-ar).toFixed(1)},${ay.toFixed(1)} Z" fill="none" stroke="var(--amber)" stroke-width="1.3" opacity=".9"/>`;}});
-    const _dm=rr.map((v,i)=>({x:+X(t[i]).toFixed(1),y:+YH(hf[i]).toFixed(1),y2:+YV(hrv[i]).toFixed(1),i,t:+t[i].toFixed(1),hf:Math.round(hf[i]),hrv:Math.round(hrv[i]),rr:Math.round(v),af:af[i]}));
-    return Chart._hov(g,w,h,_dm,"dual");
+    const _dm=rr.map((v,i)=>({x:+X(t[i]).toFixed(1),y:+YH(hf[i]).toFixed(1),y2:+YV(hrv[i]).toFixed(1),i,t:+t[i].toFixed(1),hf:Math.round(hf[i]),hrv:Math.round(hrv[i]),rr:Math.round(v),af:af[i],hvU:unsicher[i]?1:0}));
+    /* Bildbeschreibung — diese Grafik hatte gar keine. Fuer einen blinden
+       Leser war sie damit stumm, und die Verschmierung erst recht. */
+    /* In REGELMAESSIGE Saetze zerlegt: die Sprachdecke kann eine Kette nicht
+       treffen, ihre Glieder aber schon. Jeder Satz hat hier eine feste Form,
+       zu der genau eine Regel gehoert.
+       ⚠ Und der Numerus stimmt: „1 Werte liegen" stand hier, bis die
+         Sprachdecke den Satz vorgelegt hat. Ein Zaehltext ohne Einzahl faellt
+         bei genau dem Fall auf, der am haeufigsten vorkommt. */
+    const _kap=rHF.clipped+rHV.clipped;
+    const _alt=`Puls und Herzratenvariabilität über ${fmt0(T)} Sekunden. `
+      +`Puls ${fmt0(Math.min(...hf))} bis ${fmt0(Math.max(...hf))} Schläge pro Minute, `
+      +`HRV ${fmt0(Math.min(...hrv))} bis ${fmt0(Math.max(...hrv))} Millisekunden.`
+      /* ⚠ SATZANFANG BEWUSST EIN WORT, KEINE ZIFFER. Die Sprachdecke zerlegt
+         zusammengesetzte Meldungen nur VOR einem Grossbuchstaben; begann der
+         Satz mit „1 Wert…", blieb die ganze Kette unuebersetzt — und zwar
+         still. Lieber den eigenen Satz umstellen als an der gemeinsamen
+         Zerlegung drehen, die jede andere Meldung im Cockpit mittraegt. */
+      +(_kap?` Außerhalb der gezeigten Achse ${_kap===1?'liegt ein Wert':'liegen '+_kap+' Werte'}, am Rand gehalten.`:'')
+      +(unsicherZahl?` Auf ${unsicherZahl} von ${n} Schlägen enthält das gleitende HRV-Fenster ein auffälliges Schlagpaar.`:'');
+    /* ⚠ DER SIEBTE PARAMETER IST HIER `dataAttrs`, NICHT `alt` — anders als
+       in der Messstation. Den Beschreibungstext einfach durchzureichen
+       haette ihn als rohe Attribute in das umschliessende Element gekippt.
+       Zwei Funktionen gleichen Namens mit verschiedenen Parametern sind eine
+       Falle; hier wird sie benannt statt umgangen. */
+    return Chart._hov(g,w,h,_dm,"dual",'',
+      ` role="img" aria-label="${_alt.replace(/"/g,'')}"`);
   },
   ring(score,{size=120,color='var(--cyan)',label='Score'}={}){
     const r=size/2-10, c=2*Math.PI*r, cx=size/2, cy=size/2;
@@ -3614,7 +3714,7 @@ const Chart={
       if(focs[1]&&best.y2!=null){focs[1].setAttribute('cx',best.x);focs[1].setAttribute('cy',best.y2);focs[1].classList.add('on');}
       let html;
       if(mode==='scatter'){const dR=best.rn1-best.rn;html=`<div class="tt-date">RRₙ → RRₙ₊₁</div><div class="tt-val">${best.rn} → ${best.rn1} ms</div><div class="tt-cls" style="color:var(--text-secondary)">HR ${Math.round(60000/best.rn)} bpm · ΔRR ${dR>0?'+':''}${dR} ms</div>`;}
-      else if(mode==='dual') html=`<div class="tt-date">${best.t!=null?fmt0(best.t)+' s':'Schlag '+(best.i+1)}${best.af?' · ⚠ Fehlbeat':''}</div><div class="tt-val" style="color:#FFB547">${best.hf!=null?best.hf+' bpm':best.rr+' ms'}</div><div class="tt-cls" style="color:var(--cyan)">${best.hrv!=null?best.hrv+' ms HRV':best.hr+' bpm'}</div>`;
+      else if(mode==='dual') html=`<div class="tt-date">${best.t!=null?fmt0(best.t)+' s':'Schlag '+(best.i+1)}${best.af?' · ⚠ Fehlbeat':''}</div><div class="tt-val" style="color:#FFB547">${best.hf!=null?best.hf+' bpm':best.rr+' ms'}</div><div class="tt-cls" style="color:var(--cyan)">${best.hrv!=null?best.hrv+' ms HRV':best.hr+' bpm'}${best.hvU?' <span style="opacity:.75">· auffälliges Paar im Fenster</span>':''}</div>`;
       else if(mode==='spec') html=`<div class="tt-date">${best.bd}-Band</div><div class="tt-val">${fmt0(best.pw)} <span style="font-size:11px;color:var(--text-dim)">ms²</span></div><div class="tt-cls" style="color:var(--text-secondary)">${best.pct}% Gesamt${best.f?' · Peak '+best.f+' Hz':''}</div>`;
       else html=`<div class="tt-date">Schlag ${best.i+1}</div><div class="tt-val">${best.rr} ms</div><div class="tt-cls" style="color:var(--text-secondary)">${best.hr} bpm</div>`;
       const ay=best.y2!=null?Math.min(best.y,best.y2):best.y;
@@ -10008,6 +10108,10 @@ const Sprache={
        mit einem FRISCHEN Browserprofil lief: im mitgeschleppten Profil war
        eine andere Stelle vorgelagert und verdeckte diese. */
     'Verlaufskontrolle HRV':'HRV follow-up',
+    /* Legende der HRV-Verschmierung — beide Laengen, weil das Diagramm bei
+       schmalem Bild die kurze Fassung setzt. */
+    'gestrichelt · hinterlegt: Fenster enthält ein auffälliges Schlagpaar':'dashed · shaded: window contains an irregular beat pair',
+    'gestrichelt = unsicher':'dashed = uncertain',
     'Trainings-/Coaching-Beratung':'Training / coaching advice',
     'Triage-Vorabklärung':'Triage pre-assessment',
     'Notizen':'Notes',
@@ -10195,6 +10299,18 @@ const Sprache={
        er erscheinen KANN — ein deutscher Rest auf einer englischen Seite ist
        kein kleinerer Fehler, nur ein selteneres Vorkommnis. */
     [/^(\d+) nicht lesbar$/,'$1 unreadable'],
+    /* Bildbeschreibung des Dual-Diagramms, Satz fuer Satz. Ohne diese Regeln
+       liest ein englischer Screenreader die einzige Beschreibung der Grafik
+       auf Deutsch vor — und das ist der Leser, der sie am noetigsten hat. */
+    [/^Puls und Herzratenvariabilität über ([\d.,]+) Sekunden\.$/,'Pulse and heart rate variability over $1 seconds.'],
+    [/^Puls ([\d.,]+) bis ([\d.,]+) Schläge pro Minute, HRV ([\d.,]+) bis ([\d.,]+) Millisekunden\.$/,
+     'Pulse $1 to $2 beats per minute, HRV $3 to $4 milliseconds.'],
+    [/^Außerhalb der gezeigten Achse liegt ein Wert, am Rand gehalten\.$/,
+     'One value lies outside the axis shown, held at the edge.'],
+    [/^Außerhalb der gezeigten Achse liegen ([\d.,]+) Werte, am Rand gehalten\.$/,
+     '$1 values lie outside the axis shown, held at the edge.'],
+    [/^Auf ([\d.,]+) von ([\d.,]+) Schlägen enthält das gleitende HRV-Fenster ein auffälliges Schlagpaar\.$/,
+     'On $1 of $2 beats the rolling HRV window contains an irregular beat pair.'],
     /* ZUSAMMENGESETZT: „Leistungsart · 15 Min". Das Woerterbuch trifft nur
        ganze Zeichenketten, hier steht aber die Art MIT ihrer Dauer. Statt
        jede Kombination einzeln zu pflegen — fuenf Arten mal beliebige
