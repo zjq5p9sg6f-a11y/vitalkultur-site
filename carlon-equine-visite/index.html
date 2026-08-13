@@ -313,6 +313,28 @@ h2{font-family:var(--font-brand);font-weight:300;font-size:clamp(27px,3.6vw,40px
 .feature .f-txt li b{color:var(--text-primary);font-weight:500}
 .feature .f-txt li::before{content:"";position:absolute;left:0;top:8px;width:7px;height:7px;border-radius:2px;background:var(--cyan);transform:rotate(45deg)}
 /* 3er-Raster, Bilder in voller Hoehe (kein Crop) */
+/* Messstation — HOCHKANT. Die Station wird im Stall auf einem Telefon
+   benutzt, einhändig, neben einem Pferd. Ein Bild im Breitformat zeigte
+   etwas, das es so nie gibt, und der Tierarzt schätzte den Ablauf falsch ein.
+   Deshalb ein eigenes Raster: vier schmale Bilder statt drei breiter, und
+   `object-fit:contain`, damit oben nichts abgeschnitten wird — bei 16/10 und
+   `cover` verschwände genau der Teil, auf den es ankommt. */
+/* ZWEI JE REIHE, NICHT VIER.
+   ⚠ Erste Fassung stellte vier Telefone nebeneinander. Gemessen waren die
+     Rahmen dann 151 px breit — die Kennwerte darin (130,3 ms · 76,2 ms)
+     waren bei rund vier Pixel Schrifthöhe schlicht unlesbar. Ein Screenshot,
+     den niemand entziffern kann, ist Dekoration und kein Beweis; er kostet
+     Ladezeit und liefert nichts.
+     Zwei je Reihe ergeben rund 330 px — die Größe, bei der die Zahlen
+     tatsächlich zu lesen sind. Gemessen, nicht geschätzt. */
+.shots.telefon{display:grid;grid-template-columns:repeat(2,1fr);gap:26px 34px;
+  max-width:760px;margin-inline:auto}
+.shots.telefon .frame{aspect-ratio:390/844;border:1px solid var(--border-subtle);
+  border-radius:20px;overflow:hidden;background:#02080d;
+  box-shadow:0 30px 70px -40px rgba(0,0,0,0.85)}
+.shots.telefon .frame img{width:100%;height:100%;object-fit:cover;object-position:top center;display:block}
+.shots.telefon figcaption{font-size:13px;margin-top:14px}
+@media(max-width:560px){.shots.telefon{grid-template-columns:1fr;max-width:340px}}
 .shots.three{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
 .shots.three .frame{aspect-ratio:auto;border:1px solid var(--border-subtle);border-radius:14px;overflow:hidden;background:rgba(6,16,26,0.5)}
 .shots.three .frame img{width:100%;height:auto;display:block}
@@ -614,14 +636,102 @@ html.rev-an .rev.in{opacity:1;transform:none}
     </div>
     <div class="usp">
       <h3>Sie bekommen die Aufnahme, nicht den Termin</h3>
-      <p>Die Sendung liegt im Cockpit, wenn Sie Zeit haben. Sie entscheiden danach, ob und
-         wann ein Besuch nötig ist — und sehen vorher, wie dringend.</p>
+      <p>Die Halterin schickt Ihnen eine Datei — Sie öffnen sie, wenn Sie Zeit haben. Sie
+         entscheiden danach, ob und wann ein Besuch nötig ist, und sehen vorher, wie
+         dringend.</p>
     </div>
     <div class="usp">
       <h3>Wiederholbar, ohne dass jemand fährt</h3>
       <p>Eine Kontrolle in zwei Wochen kostet niemanden eine Anfahrt. Genau daraus entsteht
          der Verlauf, den eine Momentaufnahme nie liefern kann.</p>
     </div>
+  </div>
+</section>
+
+<!-- ── 2b · DIE MESSSTATION ────────────────────────────────────────────
+     WARUM DIESER ABSCHNITT EXISTIERT (13.08.2026)
+     Die Messstation kam auf dieser Seite NICHT VOR — kein Bild, kein
+     Abschnitt, kein Verweis. Der Tierarzt sah das Cockpit, also seine eigene
+     Seite, und nie das, was seine Kundin erlebt. Genau davon haengt aber ab,
+     ob ueberhaupt eine Aufnahme bei ihm ankommt: er kann das Werkzeug nicht
+     empfehlen, wenn er nicht weiss, wie es sich anfuehlt.
+
+     Die Bilder sind ECHT und entstehen aus der laufenden Seite mit einer
+     realen Aufnahme (`station-bilder.mjs`, Testpferd 2 · 325 Schlaege ·
+     9:25 min). Keine Attrappen: eine gezeichnete Vorschau altert in dem
+     Moment, in dem sich die Oberflaeche aendert, und niemand merkt es, weil
+     kein Pruefstand ein Bild liest. Neu bauen mit einem Befehl. -->
+<section class="usps">
+  <div class="wrap">
+    <div class="sec-eyebrow">Was Ihre Kundin erlebt</div>
+    <h2>Sie scannt einen Aushang. Mehr muss sie nicht können.</h2>
+    <p class="sec-lead">
+      Keine App, kein Konto, keine Installation — die Messstation läuft im Browser ihres
+      Telefons. Gurt anlegen, sieben Minuten stehen lassen, senden. Was bei Ihnen ankommt,
+      ist eine Datei, die <strong>auf ihrem Gerät entsteht</strong> und die sie Ihnen
+      selbst schickt.
+    </p>
+
+    <div class="shots telefon">
+      <figure class="shot">
+        <div class="frame"><img src="assets/station-shots/01-start.jpg" loading="lazy"
+          alt="Messstation im Browser des Telefons: Startbildschirm mit dem Hinweis, dass die Aufnahme auf dem Gerät entsteht und für die Praxis verschlüsselt wird"></div>
+        <figcaption>Der Aushang führt hierher. Ein Feld für den Pferdenamen, ein Knopf zum Gurt — mehr steht nicht im Weg.</figcaption>
+      </figure>
+      <figure class="shot">
+        <div class="frame"><img src="assets/station-shots/02-live.jpg" loading="lazy"
+          alt="Laufende Messung: Puls, Zahl der erfassten Herzschläge, Dauer und eine Ampel für die Signalgüte"></div>
+        <figcaption>Während der Aufnahme sieht sie, ob das Signal trägt — nicht erst hinterher.</figcaption>
+      </figure>
+    </div>
+
+    <div class="shots telefon" style="margin-top:34px">
+      <figure class="shot">
+        <div class="frame"><img src="assets/station-shots/04-beleg.jpg" loading="lazy"
+          alt="Ergebnis der Messung: 324 Herzschläge, 9:25 Minuten, Ø Puls 34 bpm, RMSSD 130,3 ms und daneben der Wert über nur unauffällige Paare, 76,2 ms"></div>
+        <figcaption>Das Ergebnis, sofort. <strong>Zwei RMSSD-Werte statt einem</strong> — der rohe und der über nur unauffällige Schlagpaare.</figcaption>
+      </figure>
+      <figure class="shot">
+        <div class="frame"><img src="assets/station-shots/07-protokoll.jpg" loading="lazy"
+          alt="Messprotokoll: Signalgüte, auswertbare Schlagpaare 319 von 323, Aufnahmedauer, Sensorbezeichnung und Zeitauflösung 1/1024 Sekunde"></div>
+        <figcaption>Das Messprotokoll sagt, <strong>wie gut</strong> die Aufnahme ist: auswertbare Schlagpaare, Sensor, Zeitauflösung.</figcaption>
+      </figure>
+    </div>
+
+    <div class="usp">
+      <h3>Zwei Zahlen, nicht eine</h3>
+      <p>Beim Pferd liegen physiologische Pausen — der AV-Block II° ist beim ruhenden Pferd
+         normal — und echte Störungen in derselben Serie. Ein Filter kann sie nicht
+         unterscheiden, er wirft beides weg. Die Station nennt deshalb den rohen Wert
+         <em>und</em> den über unauffällige Paare. Welcher Anteil wovon stammt, entscheiden
+         Sie, nicht die Software.</p>
+    </div>
+    <div class="usp">
+      <h3>Nichts läuft über uns</h3>
+      <p>Hat Ihre Kundin Ihren Aushang gescannt, ist die Datei schon auf ihrem Telefon
+         <strong>gegen Ihren Schlüssel verschlüsselt</strong>. Sie verschickt sie über den
+         Weg, den sie selbst wählt. Wir bekommen sie nicht zu sehen und legen sie nirgends
+         ab — deshalb braucht es zwischen uns keinen Auftragsverarbeitungsvertrag.</p>
+    </div>
+
+    <div class="shots telefon" style="margin-top:34px">
+      <figure class="shot">
+        <div class="frame"><img src="assets/station-shots/06-tachogramm.jpg" loading="lazy"
+          alt="RR-Tachogramm über 324 Schläge und darunter die aus der Herzschlag-Modulation abgeleitete Atemkurve"></div>
+        <figcaption>RR-Tachogramm und Atemkurve — dieselben Rohdaten, die Sie danach im Cockpit auswerten.</figcaption>
+      </figure>
+      <figure class="shot">
+        <div class="frame"><img src="assets/station-shots/08-senden.jpg" loading="lazy"
+          alt="Der Sende-Knopf An die Praxis senden mit dem Hinweis, dass die Datei auf dem Gerät entsteht und es auf einem selbst gewählten Weg verlässt"></div>
+        <figcaption>Ein Tipp öffnet das Teilen-Blatt ihres Telefons. Der Satz darunter ist die ganze Datenschutz-Zusage.</figcaption>
+      </figure>
+    </div>
+
+    <p class="sec-lead" style="margin-top:40px">
+      Sie können die Station <strong>sofort selbst ausprobieren</strong> — auch ohne Gurt:
+      sie spielt eine echte Aufnahme ab.
+      <a href="/carlon-equine/app/messen.html">Messstation öffnen →</a>
+    </p>
   </div>
 </section>
 

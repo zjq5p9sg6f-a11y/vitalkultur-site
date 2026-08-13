@@ -317,6 +317,28 @@ h2{font-family:var(--font-brand);font-weight:300;font-size:clamp(27px,3.6vw,40px
 .feature .f-txt li b{color:var(--text-primary);font-weight:500}
 .feature .f-txt li::before{content:"";position:absolute;left:0;top:8px;width:7px;height:7px;border-radius:2px;background:var(--cyan);transform:rotate(45deg)}
 /* 3er-Raster, Bilder in voller Hoehe (kein Crop) */
+/* Messstation — HOCHKANT. Die Station wird im Stall auf einem Telefon
+   benutzt, einhändig, neben einem Pferd. Ein Bild im Breitformat zeigte
+   etwas, das es so nie gibt, und der Tierarzt schätzte den Ablauf falsch ein.
+   Deshalb ein eigenes Raster: vier schmale Bilder statt drei breiter, und
+   `object-fit:contain`, damit oben nichts abgeschnitten wird — bei 16/10 und
+   `cover` verschwände genau der Teil, auf den es ankommt. */
+/* ZWEI JE REIHE, NICHT VIER.
+   ⚠ Erste Fassung stellte vier Telefone nebeneinander. Gemessen waren die
+     Rahmen dann 151 px breit — die Kennwerte darin (130,3 ms · 76,2 ms)
+     waren bei rund vier Pixel Schrifthöhe schlicht unlesbar. Ein Screenshot,
+     den niemand entziffern kann, ist Dekoration und kein Beweis; er kostet
+     Ladezeit und liefert nichts.
+     Zwei je Reihe ergeben rund 330 px — die Größe, bei der die Zahlen
+     tatsächlich zu lesen sind. Gemessen, nicht geschätzt. */
+.shots.telefon{display:grid;grid-template-columns:repeat(2,1fr);gap:26px 34px;
+  max-width:760px;margin-inline:auto}
+.shots.telefon .frame{aspect-ratio:390/844;border:1px solid var(--border-subtle);
+  border-radius:20px;overflow:hidden;background:#02080d;
+  box-shadow:0 30px 70px -40px rgba(0,0,0,0.85)}
+.shots.telefon .frame img{width:100%;height:100%;object-fit:cover;object-position:top center;display:block}
+.shots.telefon figcaption{font-size:13px;margin-top:14px}
+@media(max-width:560px){.shots.telefon{grid-template-columns:1fr;max-width:340px}}
 .shots.three{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
 .shots.three .frame{aspect-ratio:auto;border:1px solid var(--border-subtle);border-radius:14px;overflow:hidden;background:rgba(6,16,26,0.5)}
 .shots.three .frame img{width:100%;height:auto;display:block}
@@ -618,14 +640,100 @@ html.rev-an .rev.in{opacity:1;transform:none}
     </div>
     <div class="usp">
       <h3>You get the recording, not the appointment</h3>
-      <p>The recording sits in the cockpit when you have time. You decide afterwards whether
-         and when a visit is needed — and you see beforehand how urgent it is.</p>
+      <p>The owner sends you a file — you open it when you have time. You decide afterwards
+         whether and when a visit is needed, and you see beforehand how urgent it is.</p>
     </div>
     <div class="usp">
       <h3>Repeatable without anyone driving out</h3>
       <p>A follow-up in two weeks costs nobody a drive. That is exactly how the trend comes
          about that a snapshot can never deliver.</p>
     </div>
+  </div>
+</section>
+
+<!-- ── 2b · DIE MESSSTATION ────────────────────────────────────────────
+     WARUM DIESER ABSCHNITT EXISTIERT (13.08.2026)
+     Die Messstation kam auf dieser Seite NICHT VOR — kein Bild, kein
+     Abschnitt, kein Verweis. Der Tierarzt sah das Cockpit, also seine eigene
+     Seite, und nie das, was seine Kundin erlebt. Genau davon haengt aber ab,
+     ob ueberhaupt eine Aufnahme bei ihm ankommt: er kann das Werkzeug nicht
+     empfehlen, wenn er nicht weiss, wie es sich anfuehlt.
+
+     Die Bilder sind ECHT und entstehen aus der laufenden Seite mit einer
+     realen Aufnahme (`station-bilder.mjs`, Testpferd 2 · 325 Schlaege ·
+     9:25 min). Keine Attrappen: eine gezeichnete Vorschau altert in dem
+     Moment, in dem sich die Oberflaeche aendert, und niemand merkt es, weil
+     kein Pruefstand ein Bild liest. Neu bauen mit einem Befehl. -->
+<section class="usps">
+  <div class="wrap">
+    <div class="sec-eyebrow">What your client experiences</div>
+    <h2>She scans a poster. That is all she needs to know.</h2>
+    <p class="sec-lead">
+      No app, no account, no installation — the measuring station runs in her phone's browser.
+      Put the belt on, let the horse stand for seven minutes, send. What reaches you is a
+      file that is <strong>created on her device</strong> and that she sends you herself.
+    </p>
+
+    <div class="shots telefon">
+      <figure class="shot">
+        <div class="frame"><img src="../assets/station-shots/01-start.jpg" loading="lazy"
+          alt="Measuring station in the phone browser: start screen stating that the recording is created on the device and encrypted for the practice"></div>
+        <figcaption>The poster leads here. One field for the horse's name, one button for the belt — nothing else in the way.</figcaption>
+      </figure>
+      <figure class="shot">
+        <div class="frame"><img src="../assets/station-shots/02-live.jpg" loading="lazy"
+          alt="Recording in progress: pulse, number of captured heartbeats, duration and a signal-quality indicator"></div>
+        <figcaption>During the recording she can see whether the signal holds — not only afterwards.</figcaption>
+      </figure>
+    </div>
+
+    <div class="shots telefon" style="margin-top:34px">
+      <figure class="shot">
+        <div class="frame"><img src="../assets/station-shots/04-beleg.jpg" loading="lazy"
+          alt="Recording result: 324 heartbeats, 9:25 minutes, mean pulse 34 bpm, RMSSD 130.3 ms and next to it the value over unremarkable pairs only, 76.2 ms"></div>
+        <figcaption>The result, immediately. <strong>Two RMSSD values instead of one</strong> — the raw one and the one over unremarkable beat pairs only.</figcaption>
+      </figure>
+      <figure class="shot">
+        <div class="frame"><img src="../assets/station-shots/07-protokoll.jpg" loading="lazy"
+          alt="Measurement log: signal quality, 319 of 323 usable beat pairs, recording duration, sensor designation and time resolution of 1/1024 second"></div>
+        <figcaption>The measurement log states <strong>how good</strong> the recording is: usable beat pairs, sensor, time resolution.</figcaption>
+      </figure>
+    </div>
+
+    <div class="usp">
+      <h3>Two numbers, not one</h3>
+      <p>In horses, physiological pauses — second-degree AV block is normal in a resting
+         horse — and genuine artefacts occur in the same series. A filter cannot tell them
+         apart; it discards both. The station therefore reports the raw value <em>and</em>
+         the one over unremarkable pairs. Which share comes from what is your call, not the
+         software's.</p>
+    </div>
+    <div class="usp">
+      <h3>Nothing passes through us</h3>
+      <p>If your client scanned your poster, the file is already encrypted
+         <strong>against your key</strong> on her phone. She sends it by whatever route she
+         chooses. We never see it and store it nowhere — which is why no data processing
+         agreement is needed between us.</p>
+    </div>
+
+    <div class="shots telefon" style="margin-top:34px">
+      <figure class="shot">
+        <div class="frame"><img src="../assets/station-shots/06-tachogramm.jpg" loading="lazy"
+          alt="RR tachogram over 324 beats and below it the breathing curve derived from heartbeat modulation"></div>
+        <figcaption>RR tachogram and breathing curve — the same raw data you then analyse in the cockpit.</figcaption>
+      </figure>
+      <figure class="shot">
+        <div class="frame"><img src="../assets/station-shots/08-senden.jpg" loading="lazy"
+          alt="The send button reading Send to the practice, with the note that the file is created on the device and leaves it by a route of your choosing"></div>
+        <figcaption>One tap opens her phone's share sheet. The sentence below it is the entire privacy commitment.</figcaption>
+      </figure>
+    </div>
+
+    <p class="sec-lead" style="margin-top:40px">
+      You can <strong>try the station yourself right now</strong> — even without a belt: it
+      replays a real recording.
+      <a href="/carlon-equine/app/messen.html">Open the measuring station →</a>
+    </p>
   </div>
 </section>
 

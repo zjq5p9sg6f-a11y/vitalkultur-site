@@ -290,10 +290,79 @@ tausche(`Die Halterin legt den Gurt an, das Pferd steht wie immer. Kein Transpor
          Aufregung durch Fremde, kein sperriges Gerät im Weg.`,
         `The owner puts on the belt, the horse stands as it always does. No transport, no
          excitement from strangers, no bulky equipment in the way.`);
-tausche(`Die Sendung liegt im Cockpit, wenn Sie Zeit haben. Sie entscheiden danach, ob und
-         wann ein Besuch nötig ist — und sehen vorher, wie dringend.`,
-        `The recording sits in the cockpit when you have time. You decide afterwards whether
-         and when a visit is needed — and you see beforehand how urgent it is.`);
+tausche(`Die Halterin schickt Ihnen eine Datei — Sie öffnen sie, wenn Sie Zeit haben. Sie
+         entscheiden danach, ob und wann ein Besuch nötig ist, und sehen vorher, wie
+         dringend.`,
+        `The owner sends you a file — you open it when you have time. You decide afterwards
+         whether and when a visit is needed, and you see beforehand how urgent it is.`);
+
+/* ── 2b · DIE MESSSTATION (neu 13.08.2026) ────────────────────────────
+   Der ganze Abschnitt ist neu. Ohne diese Bloecke bliebe er auf der
+   englischen Seite deutsch stehen — und zwar STILL, weil der Bauer nur
+   meldet, was er ERWARTET und nicht findet, nicht was er nie gesehen hat.
+   Genau deshalb prueft t-englisch die Seiten zusaetzlich gegeneinander. */
+tausche('Was Ihre Kundin erlebt', 'What your client experiences');
+tausche('Sie scannt einen Aushang. Mehr muss sie nicht können.',
+        'She scans a poster. That is all she needs to know.');
+tausche(`Keine App, kein Konto, keine Installation — die Messstation läuft im Browser ihres
+      Telefons. Gurt anlegen, sieben Minuten stehen lassen, senden. Was bei Ihnen ankommt,
+      ist eine Datei, die <strong>auf ihrem Gerät entsteht</strong> und die sie Ihnen
+      selbst schickt.`,
+`No app, no account, no installation — the measuring station runs in her phone's browser.
+      Put the belt on, let the horse stand for seven minutes, send. What reaches you is a
+      file that is <strong>created on her device</strong> and that she sends you herself.`);
+tausche('Der Aushang führt hierher. Ein Feld für den Pferdenamen, ein Knopf zum Gurt — mehr steht nicht im Weg.',
+        'The poster leads here. One field for the horse\'s name, one button for the belt — nothing else in the way.');
+tausche('Während der Aufnahme sieht sie, ob das Signal trägt — nicht erst hinterher.',
+        'During the recording she can see whether the signal holds — not only afterwards.');
+tausche('Das Ergebnis, sofort. <strong>Zwei RMSSD-Werte statt einem</strong> — der rohe und der über nur unauffällige Schlagpaare.',
+        'The result, immediately. <strong>Two RMSSD values instead of one</strong> — the raw one and the one over unremarkable beat pairs only.');
+tausche('Das Messprotokoll sagt, <strong>wie gut</strong> die Aufnahme ist: auswertbare Schlagpaare, Sensor, Zeitauflösung.',
+        'The measurement log states <strong>how good</strong> the recording is: usable beat pairs, sensor, time resolution.');
+tausche('Zwei Zahlen, nicht eine', 'Two numbers, not one');
+tausche(`Beim Pferd liegen physiologische Pausen — der AV-Block II° ist beim ruhenden Pferd
+         normal — und echte Störungen in derselben Serie. Ein Filter kann sie nicht
+         unterscheiden, er wirft beides weg. Die Station nennt deshalb den rohen Wert
+         <em>und</em> den über unauffällige Paare. Welcher Anteil wovon stammt, entscheiden
+         Sie, nicht die Software.`,
+        `In horses, physiological pauses — second-degree AV block is normal in a resting
+         horse — and genuine artefacts occur in the same series. A filter cannot tell them
+         apart; it discards both. The station therefore reports the raw value <em>and</em>
+         the one over unremarkable pairs. Which share comes from what is your call, not the
+         software's.`);
+tausche('Nichts läuft über uns', 'Nothing passes through us');
+tausche(`Hat Ihre Kundin Ihren Aushang gescannt, ist die Datei schon auf ihrem Telefon
+         <strong>gegen Ihren Schlüssel verschlüsselt</strong>. Sie verschickt sie über den
+         Weg, den sie selbst wählt. Wir bekommen sie nicht zu sehen und legen sie nirgends
+         ab — deshalb braucht es zwischen uns keinen Auftragsverarbeitungsvertrag.`,
+        `If your client scanned your poster, the file is already encrypted
+         <strong>against your key</strong> on her phone. She sends it by whatever route she
+         chooses. We never see it and store it nowhere — which is why no data processing
+         agreement is needed between us.`);
+tausche('RR-Tachogramm und Atemkurve — dieselben Rohdaten, die Sie danach im Cockpit auswerten.',
+        'RR tachogram and breathing curve — the same raw data you then analyse in the cockpit.');
+tausche('Ein Tipp öffnet das Teilen-Blatt ihres Telefons. Der Satz darunter ist die ganze Datenschutz-Zusage.',
+        'One tap opens her phone\'s share sheet. The sentence below it is the entire privacy commitment.');
+tausche(`Sie können die Station <strong>sofort selbst ausprobieren</strong> — auch ohne Gurt:
+      sie spielt eine echte Aufnahme ab.
+      <a href="/carlon-equine/app/messen.html">Messstation öffnen →</a>`,
+`You can <strong>try the station yourself right now</strong> — even without a belt: it
+      replays a real recording.
+      <a href="/carlon-equine/app/messen.html">Open the measuring station →</a>`);
+/* Die Bildbeschreibungen sind für blinde Leser der einzige Zugang zum Bild —
+   auf einer englischen Seite müssen sie englisch sein. */
+tausche('alt="Messstation im Browser des Telefons: Startbildschirm mit dem Hinweis, dass die Aufnahme auf dem Gerät entsteht und für die Praxis verschlüsselt wird"',
+        'alt="Measuring station in the phone browser: start screen stating that the recording is created on the device and encrypted for the practice"');
+tausche('alt="Laufende Messung: Puls, Zahl der erfassten Herzschläge, Dauer und eine Ampel für die Signalgüte"',
+        'alt="Recording in progress: pulse, number of captured heartbeats, duration and a signal-quality indicator"');
+tausche('alt="Ergebnis der Messung: 324 Herzschläge, 9:25 Minuten, Ø Puls 34 bpm, RMSSD 130,3 ms und daneben der Wert über nur unauffällige Paare, 76,2 ms"',
+        'alt="Recording result: 324 heartbeats, 9:25 minutes, mean pulse 34 bpm, RMSSD 130.3 ms and next to it the value over unremarkable pairs only, 76.2 ms"');
+tausche('alt="Messprotokoll: Signalgüte, auswertbare Schlagpaare 319 von 323, Aufnahmedauer, Sensorbezeichnung und Zeitauflösung 1/1024 Sekunde"',
+        'alt="Measurement log: signal quality, 319 of 323 usable beat pairs, recording duration, sensor designation and time resolution of 1/1024 second"');
+tausche('alt="RR-Tachogramm über 324 Schläge und darunter die aus der Herzschlag-Modulation abgeleitete Atemkurve"',
+        'alt="RR tachogram over 324 beats and below it the breathing curve derived from heartbeat modulation"');
+tausche('alt="Der Sende-Knopf An die Praxis senden mit dem Hinweis, dass die Datei auf dem Gerät entsteht und es auf einem selbst gewählten Weg verlässt"',
+        'alt="The send button reading Send to the practice, with the note that the file is created on the device and leaves it by a route of your choosing"');
 tausche(`Eine Kontrolle in zwei Wochen kostet niemanden eine Anfahrt. Genau daraus entsteht
          der Verlauf, den eine Momentaufnahme nie liefern kann.`,
         `A follow-up in two weeks costs nobody a drive. That is exactly how the trend comes
