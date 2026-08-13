@@ -4398,6 +4398,7 @@ const Views={
       ${(h.owner||h.phone)?`<div class="pc-owner">${IC.owner}<b>${esc(h.owner||'—')}</b>${(h.place||h.stable)?`<span>· ${esc(h.place||h.stable)}</span>`:''}${h.phone?`<a class="pc-call" href="tel:${esc(h.phone)}" onclick="event.stopPropagation()" title="${esc(h.phone)} anrufen">${IC.phone}</a>`:''}</div>`:''}
       <div class="foot">
         ${h.needsVisit?'<span class="chip visit">Besuch fällig</span>':'<span class="chip" style="opacity:.5" onclick="event.stopPropagation();Views.toggleVisit(\''+h.id+'\',true).then(()=>Nav.refresh())">+ Zu Route</span>'}
+        ${h.nachsorge?'<span class="chip cyan" title="Entlass-Nachsorge läuft — die Halterin misst zu Hause">Nachsorge</span>':''}
         <span class="age">vor ${relTime(rec.startedAt)}</span>
       </div>
     </div>`;
@@ -5102,6 +5103,7 @@ const Views={
           <button class="btn ghost" onclick="Views.planVisit('${h.id}')" title="Termin in Google/Apple Kalender">${IC.calendar} Termin</button>
           <button class="btn ghost" onclick="Views.ownerMode('${h.id}')" title="Vollbild zum Zeigen für den Besitzer — iPad umdrehen">${IC.eye||''} Besitzer-Modus</button>
           <button class="btn ghost" onclick="Views.ownerFeedback('${h.id}')" title="Befundtext für den Besitzer erzeugen">Rückmeldung</button>
+          ${License.can('nachsorge')?`<button class="btn ghost" onclick="Views.nachsorge('${h.id}')" title="Entlass-Karte mit QR — die Halterin misst zu Hause weiter, der Verlauf kommt zu Ihnen">Nachsorge einrichten</button>`:''}
           <button class="btn ghost" onclick="Views.editHorse('${h.id}')">Stammdaten</button>
         </div>
       </div>
@@ -5749,6 +5751,75 @@ const Views={
     const inhalt=Object.assign({}, r.metrics, { herkunft: Views.herkunft(r, pferd) });
     const blob=new Blob([JSON.stringify(inhalt,null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='carlon-session-'+id+'.json';a.click();
     Toast.show('Für Detail-Analyse: im CARLON Viewer öffnen','info');},
+  /* ── ENTLASS-NACHSORGE (Klinik-Stufe, Jan 13.08.2026) ────────────────
+     Der Moment, fuer den die Klinik-Stufe gebaut ist: der Patient verlaesst
+     das Tor, und statt Blindflug bis zum Rueckruf bekommt die Halterin eine
+     gedruckte Entlass-Karte — QR auf die Messstation, gezielt fuer DIESES
+     Pferd (Praxis.anfordern: fach+k+#a, Verlauf landet auf der richtigen
+     Akte, egal von welchem Geraet). Rein additive Klinik-Funktion; dem
+     Solo-Vet wird nichts genommen (ADR bei FEATURES). */
+  async nachsorge(hid){
+    if(!License.can('nachsorge')){ UI.upgrade&&UI.upgrade(); return; }
+    const h=State.horses.find(x=>x.id===hid); if(!h) return;
+    const link=await Praxis.anfordern(hid);
+    if(!link){ return; }                       // Tor (Einladung) hat gesprochen
+    h.nachsorge={seit:new Date().toISOString()};
+    await DB.put('horses',h);                  /* kanonischer Weg (s. toggleVisit) */
+    UI.modal(`<div class="modal-head"><h3>Nachsorge — ${esc(h.name)}</h3><button class="closex" onclick="UI.closeModal()">${IC.x}</button></div>
+    <div class="modal-body">
+      <p style="color:var(--text-secondary);font-size:13.5px;line-height:1.6;margin-bottom:14px">
+        Die Halterin misst zu Hause weiter — <b>einmal täglich sieben Minuten in Ruhe</b> —
+        und der Verlauf gegen die Baseline liegt hier, bevor jemand anruft. Die
+        Entlass-Karte führt sie ohne App und ohne Konto durch.</p>
+      <div style="background:var(--bg-deep);border:1px solid var(--border-subtle);border-radius:var(--r-s);padding:11px;font-size:11.5px;word-break:break-all;color:var(--text-secondary)">${esc(link)}</div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn ghost" onclick="UI.closeModal()">Schließen</button>
+      <button class="btn ghost" onclick="navigator.clipboard.writeText('${link.replace(/'/g,"\\'")}').then(()=>Toast.show('Link kopiert','ok'))">${IC.kette} Kopieren</button>
+      <button class="btn primary" onclick="Views.nachsorgeKarteDrucken('${h.id}','${link.replace(/'/g,"\\'")}')">${IC.drucker} Entlass-Karte drucken</button>
+    </div>`);
+    Nav.refresh&&Nav.refresh();
+  },
+  /* HTML getrennt vom Popup — eine Druckansicht, die nur im window.open
+     lebt, kann kein Pruefstand lesen (t-klinik liest genau dieses Artefakt). */
+  nachsorgeHTML(hid,link){
+    const h=State.horses.find(x=>x.id===hid); if(!h) return null;
+    let qr=''; try{ qr=QR.svg(link,{hell:'#ffffff',dunkel:'#0A0A0C'}); }catch(e){ return null; }
+    const s=State.settings, praxis=esc(s.clinicName||License.lic()||'Ihre Tierarztpraxis');
+    const kontakt=[s.clinicPhone,s.clinicMail].map(x=>(x||'').trim()).filter(Boolean).map(esc).join(' · ');
+    const html=`<!doctype html><html lang="de"><head><meta charset="utf-8"><title>${praxis} — Nachsorge ${esc(h.name)}</title>
+      <style>@page{size:A5 landscape;margin:0}*{box-sizing:border-box;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+      body{margin:0;font-family:Inter,-apple-system,system-ui,sans-serif;color:#14141A;background:#fff}
+      .karte{width:210mm;height:148mm;padding:12mm 14mm;display:flex;gap:10mm;align-items:center}
+      .li{flex:1.3}.re{flex:0 0 62mm;text-align:center}
+      .re svg{width:58mm;height:58mm}
+      h1{font-size:19pt;margin:0 0 2mm;font-weight:650}
+      .pferd{font-size:13pt;color:#1E8C78;font-weight:600;margin-bottom:5mm}
+      .schritt{display:flex;gap:4mm;margin-bottom:3.2mm;font-size:10.5pt;line-height:1.45;align-items:baseline}
+      .schritt b.nr{color:#1E8C78;font-variant-numeric:tabular-nums}
+      .fuss{margin-top:5mm;font-size:8.5pt;color:#555;line-height:1.5}
+      .scan{font-size:9pt;color:#1E8C78;letter-spacing:.08em;text-transform:uppercase;margin-top:2mm}</style></head>
+      <body><div class="karte">
+        <div class="li">
+          <h1>Nachsorge zu Hause</h1>
+          <div class="pferd">${esc(h.name)} · ${praxis}</div>
+          <div class="schritt"><b class="nr">1</b><div><b>Ab morgen einmal täglich:</b> Gurt anfeuchten, anlegen, Pferd in der eigenen Box stehen lassen.</div></div>
+          <div class="schritt"><b class="nr">2</b><div><b>QR-Code scannen</b> — die Messstation öffnet im Browser, ohne App und ohne Konto, und führt durch.</div></div>
+          <div class="schritt"><b class="nr">3</b><div><b>Sieben Minuten Ruhe</b>, dann ein Tipp auf „An die Praxis senden" — verschlüsselt, direkt an uns.</div></div>
+          <div class="fuss">Der Verlauf liegt damit bei ${praxis}, bevor jemand anrufen muss. Bei akuten Beschwerden gilt wie immer: sofort anrufen.${kontakt?' · '+kontakt:''}</div>
+        </div>
+        <div class="re">${qr}<div class="scan">Mit dem Telefon scannen</div></div>
+      </div></body></html>`;
+    return html;
+  },
+  nachsorgeKarteDrucken(hid,link){
+    const html=this.nachsorgeHTML(hid,link);
+    if(!html){ Toast.show('QR konnte nicht erzeugt werden','warn'); return; }
+    const w=window.open('','_blank','width=980,height=740');
+    if(!w){ Toast.show('Bitte Pop-ups für den Ausdruck erlauben','info'); return; }
+    w.document.write(html); w.document.close();
+    setTimeout(()=>{ try{ w.focus(); w.print(); }catch(_){ } }, 900);
+  },
   logConsult(hid){
     const h=State.horses.find(x=>x.id===hid);
     UI.modal(`<div class="modal-head"><h3>Beratung erfassen — ${esc(h.name)}</h3><button class="closex" onclick="UI.closeModal()">${IC.x}</button></div>
@@ -8501,9 +8572,17 @@ const License={
     research:  ['pdf','csv','coherence'],
     vet_solo:  ['pdf','csv','routeHandoff','coherence','ownerFeedback'],
     vet_clinic:['pdf','csv','routeHandoff','coherence','ownerFeedback',
-                'multiSeat']        // Lizenz nennt eine Platzzahl; siehe seats()
+                'multiSeat',        // Lizenz nennt eine Platzzahl; siehe seats()
+                'nachsorge']        // Entlass-Nachsorge-Flow (13.08., s. u.)
   },
-  /* OFFENER PUNKT, bewusst hier und nicht in einer Notiz nebenan:
+  /* ENTSCHIEDEN (Jan, 13.08.2026) — der offene Punkt unten ist damit
+     beantwortet: Die Klinik-Stufe (jetzt 199 €/Monat, PREIS-Quelle oben)
+     traegt sich durch den ENTLASS-NACHSORGE-FLOW — rein ADDITIV, dem
+     Solo-Vet wird nichts genommen (die Briefkopf-Begruendung unten gilt
+     unveraendert). Der Magnet: Betreuung, die nicht am Kliniktor endet —
+     Entlass-Karte je Patient, Heim-Messung ab Entlasstag, Verlauf gegen
+     die Baseline vor dem Rueckruf. */
+  /* OFFENER PUNKT (historisch, s. Entscheidung oben), bewusst hier und nicht in einer Notiz nebenan:
      Zwischen vet_solo (79 €) und vet_clinic (149 €) steht damit genau EIN
      Merkmal — die im Schluessel genannte Platzzahl, und die ist vertraglich,
      nicht technisch. Das traegt den Aufschlag nicht — auch nicht den auf
@@ -8529,7 +8608,7 @@ const License={
     if(this.abgelaufen()) return false;
     return (this.FEATURES[this.tier()]||[]).includes(f);
   },
-  CLINIC_ONLY:['clinicBranding','multiSeat'],
+  CLINIC_ONLY:['clinicBranding','multiSeat','nachsorge'],
   /* Die Platzzahl steht im Schluessel und wird ANGEZEIGT, nicht technisch
      erzwungen — ohne Server laesst sich geraeteuebergreifend nichts durchsetzen,
      und ein Schein-Schutz waere schlechter als eine klare Angabe. Sie ist eine

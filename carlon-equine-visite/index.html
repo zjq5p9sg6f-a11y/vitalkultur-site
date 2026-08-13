@@ -240,7 +240,12 @@ document.head.appendChild(s);})();</script>
 }
 *{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth}
-body{background:var(--bg-void);color:var(--text-primary);font-family:var(--font-display);line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+/* ⚠ iPHONE „SCHWIMMT" (Jans Geraetebefund 13.08.): overflow-x:hidden am
+   body verhindert auf iOS-Safari das seitliche Ziehen NICHT — die Seite
+   wackelt beim Scrollen, sobald irgendein Element uebersteht. `clip` am
+   html-Element unterbindet den seitlichen Scrollkontext wirklich. */
+html{overflow-x:clip}
+body{background:var(--bg-void);color:var(--text-primary);font-family:var(--font-display);line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:clip;max-width:100vw}
 a{color:inherit;text-decoration:none}
 em{font-style:normal;color:var(--cyan)}
 .wrap{max-width:1080px;margin:0 auto;padding-left:24px;padding-right:24px}
@@ -385,7 +390,13 @@ h1{font-family:var(--font-brand);font-weight:300;font-size:clamp(38px,4vw,56px);
 @media(max-width:860px){
   .hero-grid{grid-template-columns:1fr;gap:var(--sp-34)}
   .hero-visual{max-width:430px;justify-self:center;width:100%}
-  .hero-phone{left:-3%}
+  /* Nichts ragt mehr ueber die Kante (Geraetebefund): Mandala und Telefon
+     bleiben innerhalb der Visual-Spalte. */
+  .hero-phone{left:0}
+  .hero-mandala{right:-2%;top:-4%;width:64%}
+  .hero-aura{inset:-6%}
+  .hero-fluss{flex-wrap:wrap}
+  .hf-linie{min-width:26px}
 }
 /* Sections — EIN einheitlicher vertikaler Rhythmus für alle */
 section{padding-top:var(--sp-89);padding-bottom:var(--sp-89)}
@@ -655,7 +666,25 @@ html.rev-an .rev.in{opacity:1;transform:none}
 /* Mobil war die Telefon-Reihe eine Scrollwand: sechs Hochkant-Bilder à
    ~735 px uebereinander — rund sechs Bildschirmseiten zwischen Hero und
    den Cockpit-Argumenten. Jetzt wischt sie wie die anderen Reihen. */
+/* ── MOBIL: EINE GESTEN-SPRACHE (Jan, 13.08.) ─────────────────────────
+   Die Seite war auf dem Telefon eine Scroll-Saeule aus gestapelten
+   Karten. Jedes Karten-RASTER (Belege, USPs, FAQ, Verlaufs-Karten) wird
+   unter 720 px zum horizontalen Wisch-Karussell — dasselbe Muster, das
+   die Screenshot-Reihen laengst nutzen, inklusive Wisch-Hinweis. Die
+   Seite wird um Bildschirmmeter kuerzer, ohne dass Inhalt faellt. */
 @media (max-width: 720px){
+  .usps, .grid{
+    display: flex; grid-template-columns: none;
+    overflow-x: auto; overflow-y: hidden;
+    scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch;
+    overscroll-behavior-x: contain; scrollbar-width: none;
+    gap: 13px; margin-left: -20px; margin-right: -20px; padding: 4px 20px 14px;
+    scroll-padding: 20px;
+  }
+  .usps::-webkit-scrollbar, .grid::-webkit-scrollbar{ display: none; }
+  .usps > .usp, .grid > .card{
+    flex: 0 0 82%; min-width: 0; scroll-snap-align: center; scroll-snap-stop: always;
+  }
   .shots.two, .shots.three, .shots.telefon{
     display: flex; grid-template-columns: none;
     overflow-x: auto; overflow-y: hidden;
@@ -1755,10 +1784,15 @@ if(_lb) _lb.addEventListener('click', function(){
   }, {passive:true});
   // Swipe-Hinweis unter mobile Carousels
   if(window.matchMedia && window.matchMedia('(max-width:720px)').matches){
-    [].slice.call(document.querySelectorAll('.shots.two, .shots.three, .shots.telefon')).forEach(function(row){
+    [].slice.call(document.querySelectorAll('.shots.two, .shots.three, .shots.telefon, .usps, .grid')).forEach(function(row){
       if(row.children.length<2) return;
       var h=document.createElement('div'); h.className='swipe-hint';
-      var de=(window.CARLON_LANG==='en')?'Swipe · tap to enlarge':'Wischen · tippen zum Vergrößern';
+      /* Nur Bild-Reihen sind zoombar — ein Hinweis, der bei Text-Karten
+         „tippen zum Vergroessern" verspricht, waere ein totes Versprechen. */
+      var istBild=row.className.indexOf('shots')>=0;
+      var de=(window.CARLON_LANG==='en')
+        ? (istBild?'Swipe · tap to enlarge':'Swipe')
+        : (istBild?'Wischen · tippen zum Vergrößern':'Wischen');
       h.textContent='‹ '+de+' ›';
       row.parentNode.insertBefore(h, row.nextSibling);
     });
