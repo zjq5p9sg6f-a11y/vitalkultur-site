@@ -6191,6 +6191,13 @@ const Handoff={
       mdrT:'Kein Medizinprodukt, keine Diagnose.',
       mdr:'Nicht dazu bestimmt, Krankheiten zu erkennen, zu behandeln, zu heilen oder zu verhüten — die medizinische Beurteilung trifft ausschließlich die behandelnde Tierärztin oder der behandelnde Tierarzt.',
       standard:'OFFENER BIOMETRIE-STANDARD FÜR PFERDE',
+      chartHist:'Verteilung der RR-Intervalle',
+      histSub:'Klassenbreite 1/128 s (7,8 ms) — kardiologischer Standard',
+      chartSpek:'Leistungsspektrum · Bänder nach Visser (2002)',
+      spekSub:'VLF 0–0,01 · LF 0,01–0,07 · HF 0,07–0,6 Hz — equine Bänder, nicht human',
+      chartVerlauf:'RMSSD im Verlauf · {n} Aufnahmen',
+      verlaufBase:'Baseline',
+      verlaufSub:'Jede Marke eine Aufnahme dieses Pferdes — Momentaufnahmen werden zur Kurve.',
       toast:'Bericht erstellt — als Datei weitergeben (Mail, AirDrop, Messenger)' },
     en:{ code:'en', loc:'en-GB', komma:false, datei:'Report',
       eyebrow:'Heart rate report', vom:'Report of', besitzer:'Owner',
@@ -6210,6 +6217,13 @@ const Handoff={
       mdrT:'Not a medical device, not a diagnosis.',
       mdr:'Not intended to detect, treat, cure or prevent disease — the medical assessment rests solely with the attending veterinarian.',
       standard:'OPEN BIOMETRIC STANDARD FOR HORSES',
+      chartHist:'RR interval distribution',
+      histSub:'Bin width 1/128 s (7.8 ms) — cardiology standard',
+      chartSpek:'Power spectrum · bands after Visser (2002)',
+      spekSub:'VLF 0–0.01 · LF 0.01–0.07 · HF 0.07–0.6 Hz — equine bands, not human',
+      chartVerlauf:'RMSSD over time · {n} recordings',
+      verlaufBase:'Baseline',
+      verlaufSub:'Each mark is one recording of this horse — snapshots become a curve.',
       toast:'Report created — pass it on as a file (mail, AirDrop, messenger)' }
   },
 
@@ -6247,10 +6261,32 @@ const Handoff={
     const herkunftBekannt=PK.some(k=>(m.provenance||{})[k]!=null);
 
     // Diagramme als fertiges SVG einbetten — die Datei braucht kein JS.
+    /* 13.08.2026 (Jan): "das PDF ist recht duenn fuer unsere Verhaeltnisse."
+       Das Cockpit rechnet Spektrum, Verteilung und Verlauf laengst — der
+       Bericht hat sie nur nie gezeigt. PORTIERT, nicht nachgebaut: dieselben
+       Chart-Funktionen wie im Cockpit (psdChart, histChart, ts), damit
+       Bildschirm und Papier dieselbe Eichung tragen. Beschreibung, keine
+       Deutung — die Einordnung bleibt tieraerztlich. */
+    const psd = rr.length>=120 ? HRV.lombPSD(rr) : null;
+    const bd  = psd ? HRV.bands(psd) : null;
+    const lfhf = (bd&&bd.lfhf!=null)?bd.lfhf:((m&&m.lfhf!=null)?m.lfhf:null);
+    const lfhfTxt = lfhf!=null ? (L.komma?lfhf.toFixed(2).replace('.',','):lfhf.toFixed(2)) : null;
+    const verlaufSerie = State.recsFor(h.id)
+      .filter(x=>x.metrics&&x.metrics.rmssd!=null)
+      .map(x=>({x:x.startedAt,y:x.metrics.rmssd}));
     const charts = rr.length>16
       ? `<div class="cw"><div class="ct">${L.chartVit}</div>${Chart.dualVitals(rr,{w:900,h:340})}</div>`
-        + (rr.length>40?`<div class="cw"><div class="ct">${L.chartPoi}</div>${Chart.poincare(rr,{size:520,sd1:m.sd1,sd2:m.sd2})}</div>`:'')
+        + (rr.length>40?`<div class="zwei">
+          <div class="cw"><div class="ct">${L.chartPoi}</div>${Chart.poincare(rr,{size:520,sd1:m.sd1,sd2:m.sd2})}</div>
+          <div class="cw"><div class="ct">${L.chartHist}</div>${HRV.histChart(rr,{w:430,h:420})}<div class="cs">${L.histSub}</div></div>
+        </div>`:'')
+        + (psd&&bd?`<div class="cw"><div class="ct">${L.chartSpek}</div>${HRV.psdChart(psd,{w:900,h:270})}<div class="cs">${L.spekSub}${lfhfTxt?` · LF/HF ${lfhfTxt}`:''}</div></div>`:'')
       : `<div class="cw"><div class="ct">${L.chartNix}</div></div>`;
+    /* Der Verlauf ist das Produktversprechen der Visite-Seite ("mit ...
+       Verlauf und Poincaré") — ab drei Aufnahmen wird er zur Kurve. */
+    const verlauf = verlaufSerie.length>=3
+      ? `<div class="cw"><div class="ct">${L.chartVerlauf.replace('{n}',verlaufSerie.length)}</div>${Chart.ts(verlaufSerie,{w:900,h:240,unit:'ms',baseline:(h.baselineRMSSD!=null?h.baselineRMSSD:null),baselineLabel:L.verlaufBase})}<div class="cs">${L.verlaufSub}</div></div>`
+      : '';
 
     const bundle=FHIR.bundle(r,h);
     const fhirB64=btoa(unescape(encodeURIComponent(JSON.stringify(bundle,null,2))));
@@ -6267,7 +6303,10 @@ const Handoff={
 ${font?`@font-face{font-family:'Jost';font-weight:300 700;font-display:swap;src:url('${font}') format('woff2')}`:''}
 :root{--void:#0A0A0C;--bg:#101013;--border:#26262C;--sub:#34343B;--text:#EDEEF1;--sec:#A4A5AC;--dim:#7E7E88;
  --cyan:#3ECFB2;--cyan-deep:#1E8C78;--amber:#ffb547;--mono:ui-monospace,'SF Mono',Menlo,monospace;
- --brand:'Jost',system-ui,sans-serif;--ui:system-ui,-apple-system,'Segoe UI',sans-serif}
+ --brand:'Jost',system-ui,sans-serif;--ui:system-ui,-apple-system,'Segoe UI',sans-serif;
+ /* Aliase: die portierten Chart-Funktionen referenzieren Cockpit-Variablen.
+    Ohne Definition wuerde fill:var(--text-dim) zu SCHWARZ auf SCHWARZ. */
+ --text-dim:#7E7E88;--text-secondary:#A4A5AC;--text-faint:#5E5E68;--good:#4ADE80;--font-mono:ui-monospace,'SF Mono',Menlo,monospace}
 *{box-sizing:border-box;margin:0;padding:0}
 body{background:var(--void);color:var(--text);font-family:var(--ui);line-height:1.55;-webkit-font-smoothing:antialiased;
  padding:clamp(16px,4vw,44px);display:flex;justify-content:center}
@@ -6286,6 +6325,9 @@ h1{font-family:var(--brand);font-weight:600;font-size:clamp(26px,4vw,38px);lette
 .t b{display:block;font-family:var(--mono);font-size:24px;font-weight:700;margin-top:7px;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
 .t b u{text-decoration:none;font-size:.48em;color:var(--sec);font-weight:400;margin-left:3px}
 .cw{background:var(--bg);border:1px solid var(--border);border-radius:14px;padding:14px;margin-bottom:10px}
+.zwei{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+@media(max-width:720px){.zwei{grid-template-columns:1fr}}
+.cs{font-family:var(--mono);font-size:10px;color:var(--dim);margin-top:8px;letter-spacing:.02em}
 .ct{font-family:var(--mono);font-size:10.5px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;margin-bottom:12px}
 svg.viz,svg.chart{width:100%;height:auto;display:block;overflow:visible}
 svg .grid-major{stroke:#fff;stroke-opacity:.16;stroke-width:.9}
@@ -6315,6 +6357,11 @@ svg .hov-cross,svg .hov-focus{display:none}
 @media print{ body{background:#fff;color:#15181A} .hand{display:none}
  :root{--bg:#fff;--border:#D5DBDE;--text:#15181A;--sec:#41494E;--dim:#5C666C}
  svg .grid-major{stroke:#8A9399} svg .grid-minor{stroke:#C3CBD0} svg text{fill:#41494E}
+ :root{--text-dim:#5C666C;--text-secondary:#41494E;--text-faint:#8A9399;--good:#1E8C78}
+ /* histChart traegt eine hartkodierte dunkle Innenflaeche — auf Papier
+    wuerde sie als schwarzer Kasten drucken. Attribut-Selektor schlaegt
+    Praesentationsattribut. */
+ svg rect[fill="#0E0E0E"]{fill:#F1F4F5}
  *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
  /* ── EIN DIAGRAMM BRICHT NICHT UEBER DIE SEITE ──────────────────────────
     Am 12.08.2026 im gedruckten Muster-Befund gesehen: der Poincaré-Kasten
@@ -6349,6 +6396,8 @@ svg .hov-cross,svg .hov-focus{display:none}
   </div>
 
   ${charts}
+
+  ${verlauf}
 
   ${note?`<div class="note"><span class="eyebrow">${L.notiz}</span><p>${esc(note)}</p></div>`:''}
 

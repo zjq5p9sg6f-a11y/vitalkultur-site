@@ -712,11 +712,13 @@ tausche('"url": "https://vitalkultur.com/carlon-equine-visite/",',
    Befund macht die Praxis — deshalb hier nie "findings". */
 tausche('Sehen Sie den Bericht, bevor Sie irgendetwas entscheiden.',
         'See the report before you decide anything.');
-tausche(`Aus dem Demo-Bestand erzeugt (fiktive Beispieldaten) — mit Briefkopf, den Kennwerten,
-        Verlauf und Poincaré, und einem Abschnitt „Methode &amp; Grenzen", der die Quellen nennt.
+tausche(`Aus dem Demo-Bestand erzeugt (fiktive Beispieldaten) — Kennwerte, Puls- und HRV-Kurve,
+        Poincaré, RR-Verteilung, Leistungsspektrum nach Visser (2002) und der RMSSD-Verlauf über
+        Wochen, dazu „Methode &amp; Grenzen" mit Quellen.
         Der Bericht liefert die Daten; den Befund macht Ihre Praxis.`,
-`Generated from the demo library (fictitious sample data) — with letterhead, the key values,
-        the trend and the Poincaré plot, plus a "Method & limits" section naming the sources.
+`Generated from the demo library (fictitious sample data) — key values, heart-rate and HRV
+        curve, Poincaré plot, RR distribution, power spectrum after Visser (2002) and the RMSSD
+        trend across weeks, plus a "Method & limits" section naming the sources.
         The report delivers the data; the findings are made by your practice.`);
 tausche('>Muster-Bericht als PDF<', '>Sample report (PDF)<');
 
