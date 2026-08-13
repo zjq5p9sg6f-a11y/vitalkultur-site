@@ -1381,6 +1381,9 @@ de:{
  wsNachbarinT:'Einer Stallnachbarin zeigen',
  wsNachbarinS:'Nur die Messstation, ohne deine Daten — sie misst dann ihr eigenes Pferd.',
  wsKarte:'Karte teilen',
+ wsStallT:'Aushang für deinen Stall',
+ wsStallS:'Ein Blatt für die Stallgasse — damit auch andere Halter ihre Tierärztin nach CARLON fragen können.',
+ wsStallBtn:'Aushang drucken',
  /* „So geht's weiter" nach dem Versand — die drei Fragen, die im Stall
     offen bleiben: meldet sich jemand? wo ist meine Kopie? wann wieder? */
  swT:'So geht’s weiter',
@@ -1535,6 +1538,9 @@ en:{
  wsNachbarinT:'Show a barn neighbour',
  wsNachbarinS:'Only the measuring station, none of your data — she then measures her own horse.',
  wsKarte:'Share the card',
+ wsStallT:'A poster for your barn',
+ wsStallS:'One sheet for the barn aisle — so other owners can ask their vet about CARLON too.',
+ wsStallBtn:'Print the poster',
  swT:'What happens next',
  swListe:['Your practice will get back to you on their usual channel — nothing more for you to do.','Your copy stays on this device — any time under “Save as a file”.','In calm weeks, measure about once a month — that builds a baseline for your horse.'],
  lgHeute:'today', lgGestern:'yesterday', lgVorTagen:'{n} days ago',
@@ -3176,7 +3182,14 @@ function weitersagenZeigen(){
      `<h3>${t('wsTitel')}</h3>`
     +`<div class="ws-zeile"><div><b>${t('wsNachbarinT')}</b>`
     +`<span>${t('wsNachbarinS')}</span></div>`
-    +`<button class="btn ghost" id="wsFreund">${t('wsKarte')}</button></div>`;
+    +`<button class="btn ghost" id="wsFreund">${t('wsKarte')}</button></div>`
+    /* HALTER-BOTTOM-UP (Wachstums-Hebel 1, 13.08.): ein nachfragender
+       Kunde schliesst bei einer Tieraerztin in Minuten, was kein Anruf
+       schafft. Der Stall-Aushang ist das physische Artefakt dafuer —
+       QR auf die Produktseite, Sie-Form (er haengt oeffentlich). */
+    +`<div class="ws-zeile"><div><b>${t('wsStallT')}</b>`
+    +`<span>${t('wsStallS')}</span></div>`
+    +`<button class="btn ghost" id="wsStall">${t('wsStallBtn')}</button></div>`;
   /* AN DEN ORT DER ZUFRIEDENHEIT (Audit #17): die Karte lag als Kopf-Element
      weit oben auf der Seite — nach dem Versand, dem einzigen Moment, in dem
      sie erscheint, sah sie dort niemand. Dieselbe Mechanik, kein neues
@@ -3193,6 +3206,41 @@ function weitersagenZeigen(){
      den eigenen Werten — ein sehr viel besseres Teilstueck als ein nackter
      Link. Zwei konkurrierende Teilen-Wege waeren ausserdem verwirrend. */
   $('#wsFreund').addEventListener('click', ()=>share('owner'));
+  const st=$('#wsStall'); if(st) st.addEventListener('click', stallAushangDrucken);
+}
+
+/* Stall-Aushang: der Bottom-up-Kanal als Blatt Papier. Sie-Form — er
+   haengt oeffentlich in der Stallgasse und spricht fremde Halter an.
+   QR fuehrt auf die Produktseite (nicht auf die Station: ohne den Aushang
+   einer Praxis fehlt der Schluessel, und die Seite erklaert den Weg). */
+function stallAushangDrucken(){
+  const ziel='https://vitalkultur.com/carlon-equine/';
+  let qr=''; try{ qr=QR.svg(ziel,{rand:1,dunkel:'#0A0A0C',hell:'#ffffff'}); }catch(_){ return; }
+  const html=`<!doctype html><html lang="de"><head><meta charset="utf-8"><title>CARLON Equine — Aushang</title>
+    <style>@page{size:A4;margin:0}*{box-sizing:border-box;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+    body{margin:0;font-family:Inter,-apple-system,system-ui,sans-serif;color:#14141A;background:#fff}
+    .blatt{width:210mm;min-height:297mm;padding:22mm 20mm;display:flex;flex-direction:column;align-items:center;text-align:center}
+    h1{font-size:26pt;margin:10mm 0 4mm;font-weight:650}
+    .sub{font-size:12.5pt;color:#444;max-width:150mm;line-height:1.55}
+    .qr{margin:12mm 0 6mm}.qr svg{width:72mm;height:72mm}
+    .frag{font-size:15pt;color:#1E8C78;font-weight:600;max-width:150mm;line-height:1.5;margin-top:8mm}
+    .fuss{margin-top:auto;font-size:9pt;color:#666;line-height:1.6;max-width:160mm}</style></head>
+    <body><div class="blatt">
+      <h1>Der Herzschlag Ihres Pferds — gemessen im eigenen Stall</h1>
+      <div class="sub">Mit einem Polar-H10-Gurt und dem Browser Ihres Telefons: sieben Minuten
+        Ruhe, und die Aufnahme gehört Ihnen — als Datei auf Ihrem Gerät.</div>
+      <div class="qr">${qr}</div>
+      <div class="sub">QR-Code scannen und ansehen, wie es funktioniert.</div>
+      <div class="frag">Fragen Sie Ihre Tierärztin oder Ihren Tierarzt nach
+        CARLON Equine Visite — dann kommen Ihre Messungen verschlüsselt direkt
+        in die Praxis, und der Verlauf liegt dort, bevor jemand fahren muss.</div>
+      <div class="fuss">CARLON Equine · vitalkultur.com/carlon-equine · Kein Medizinprodukt —
+        die medizinische Beurteilung erfolgt ausschließlich durch Ihre Tierärztin oder Ihren Tierarzt.</div>
+    </div></body></html>`;
+  const w=window.open('','_blank','width=880,height=1180');
+  if(!w) return;
+  w.document.write(html); w.document.close();
+  setTimeout(()=>{ try{ w.focus(); w.print(); }catch(_){ } }, 900);
 }
 
 async function ubKopieren(link){
