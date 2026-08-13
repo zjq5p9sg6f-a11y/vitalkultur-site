@@ -8470,13 +8470,17 @@ const License={
          Produkt zuzuordnen. */
       year :'https://buy.stripe.com/5kQ5kD1Dh8tDfcG8pZgbm01',   // 790 €/Jahr
       month:'https://buy.stripe.com/8x28wP95JbFP1lQ6hRgbm00',   //  79 €/Monat
-      /* 🔴 JAN-HANDGRIFF (Bauauftrag AP3): zwei Payment-Links am selben
-         Produkt anlegen — 199 €/Monat und 1.990 €/Jahr — mit
-         metadata.tier=vet_clinic an BEIDEN Preisen (der Lizenzdienst
-         leitet die Stufe sonst nur aus dem Betrag ab) und derselben
-         Rueckleitung ?session_id={CHECKOUT_SESSION_ID}. Dann hier
-         eintragen. Bis dahin: null → „Schluessel eingeben". */
-      clinicMonth:'', clinicYear:'',
+      /* Klinik-Links angelegt am 13.08.2026 (Claude im Stripe-Dashboard,
+         Jans Sitzung): beide am LIVE-Produkt prod_V1xTYl1ssi7USy,
+         Preise mit metadata.tier=vet_clinic:
+          199 €/Monat  price_1U3zB6FYqQiMtCiDkwZxWHqd · plink_1U40rE…
+        1.990 €/Jahr   price_1U40fEFYqQiMtCiDoWCnTX7y · plink_1U40xO…
+         Managed Payments, autom. Steuer, Steuer-ID-Feld, Namens- und
+         Unternehmens-Erfassung, AGB-Zustimmung und Rueckleitung mit
+         ?session_id={CHECKOUT_SESSION_ID} — identisch zu den
+         Solo-Links konfiguriert und in der Detailansicht nachgelesen. */
+      clinicMonth:'https://buy.stripe.com/14AaEXa9NeS12pU21Bgbm02',
+      clinicYear :'https://buy.stripe.com/00wfZh5Tx25f8Oi0Xxgbm03',
     }
   },
   get CHECKOUT(){ return this.CHECKOUT_ALL[LIVE?'live':'test']; },
