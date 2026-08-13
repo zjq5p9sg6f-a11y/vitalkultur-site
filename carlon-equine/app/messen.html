@@ -1616,7 +1616,8 @@ const Chart={
       } else if(mode==='vitals'){
         html=`<div class="tt-h">${best.tt} ${t('afterStart')}</div>`
             +`<div class="tt-v" style="color:var(--amber)">${best.hr} bpm</div>`
-            +`<div class="tt-s" style="color:var(--cyan)">${best.hv!=null?fmt1(best.hv)+' ms HRV':'HRV \u2014'}</div>`;
+            +`<div class="tt-s" style="color:var(--cyan)">${best.hv!=null?fmt1(best.hv)+' ms HRV':'HRV \u2014'}`
+            +`${best.hvU?' <span style="opacity:.75">\u00b7 auff\u00e4lliges Paar im Fenster</span>':''}</div>`;
       } else {
         html=`<div class="tt-h">Schlag ${best.i+1}</div>`
             +`<div class="tt-v" style="color:var(--cyan)">${best.rr} ms</div>`
@@ -1705,6 +1706,19 @@ const Chart={
   /* Nur Flaechenverlaeufe, KEIN Linien-Glow: eine weichgezeichnete Linie
      wirkt wattig. Praezision entsteht durch eine harte Kante — die Tiefe
      kommt aus dem Verlauf unter der Kurve. */
+  /* ⚠ JEDE ZEICHNUNG BRAUCHT EINE EIGENE KENNUNG.
+     Die Kennung wurde aus Breite und Hoehe berechnet — und die Live-Ansicht
+     zeichnet dasselbe Diagramm in denselben Massen wie die Ergebnis-Ansicht.
+     Damit lagen ZWEI `clipPath` mit derselben ID im Dokument; der Browser
+     nimmt die erste, und die gehoerte einem verborgenen Zweig. Ergebnis: die
+     Beschneidung griff gar nicht, und die Pulslinie eines gekappten Wertes
+     lief quer ueber die ganze Karte.
+     Der Fehler war schon vorher da (auch der Farbverlauf `ar-` kollidierte),
+     nur harmlos — erst der Clip hat ihn sichtbar gemacht.
+     Jetzt zaehlt ein Zaehler mit: gleiche Masse, verschiedene Kennung. */
+  _nr:0,
+  _uid(w,h){ return Math.round(w*11+h+3)+'-'+(++Chart._nr); },
+
   _defs(id, clip){
     return `<defs>
       <linearGradient id="ar-${id}" x1="0" y1="0" x2="0" y2="1">
@@ -1819,7 +1833,7 @@ const Chart={
   tachogram(rr,{w=720,h=230,xlabel='SCHLAG-NR.'}={}){
     if(!rr||rr.length<2) return '';
     const pad={l:52,r:16,t:14,b:32}, n=rr.length;
-    const uid=Math.round(w*7+h+11);
+    const uid=Chart._uid(w,h);
     /* Robuste Grenzen statt min/max — siehe Chart._robust. Beim Tachogramm
        faellt es besonders auf: ein einziger halbierter Abstand (T-Welle als
        Schlag gezaehlt) zog die Achse bis 500 ms hinunter, waehrend die Reihe
@@ -1883,7 +1897,7 @@ const Chart={
      Die Animation gehoert dem ersten Erscheinen, nicht jedem Neuzeichnen. */
   vitals(rr,{w=720,h=320,anim=true}={}){
     if(!rr||rr.length<10) return '';
-    const n=rr.length, uid=Math.round(w*11+h+3);
+    const n=rr.length, uid=Chart._uid(w,h);
     const hf=rr.map(v=>60000/v);
     const Wb=Math.min(30,Math.max(5,Math.floor(n/3)));
     const all=rr.map((_,i)=>{ const lo=Math.max(1,i-Wb+1); let s=0,c=0;
@@ -1941,15 +1955,86 @@ const Chart={
     const hvSlice=all.slice(i0);
     const decHV=Chart._decimate(hvSlice,cols);
     const decHF=Chart._decimate(hf,cols);
+
+    /* ── DIE VERSCHMIERUNG SICHTBAR MACHEN ─────────────────────────────
+       ⚠ DER BEFUND (13.08.2026, an der echten Aufnahme gemessen)
+       Die HRV-Kurve ist ein gleitendes RMSSD ueber ein Fenster von ${Wb}
+       Schlaegen. Ein EINZIGER auffaelliger Abstand geht in dieses Fenster
+       ein und BLEIBT DARIN, bis er hinten wieder herausfaellt — er hebt die
+       Kurve also ueber ${Wb} Schlaege an. Im Bild sieht das aus wie ein
+       anhaltender Zustand des Tieres; tatsaechlich ist es ein Schlag.
+       Genau so entstand in der Beispielmessung ein „Plateau", das keines war.
+
+       WAS WIR NICHT TUN: den Wert herausrechnen. Diese Seite klassifiziert
+       nicht — beim Pferd liegen physiologische Pausen (AV-Block II°, beim
+       ruhenden Tier normal) und echte Stoerungen in derselben Serie, und ein
+       Filter kann sie nicht unterscheiden. Wer hier faengt, entscheidet
+       heimlich, was Physiologie war.
+
+       WAS WIR TUN: die Rechnung bleibt unveraendert, aber die Kurve ZEIGT,
+       wo ihr Fenster ein auffaelliges Paar enthaelt — gestrichelt, hinterlegt
+       und benannt. Die Auskunft „hier bin ich mir nicht sicher" ist mehr
+       wert als eine glatte Linie, die sie verschweigt.
+
+       Das Kriterium ist dasselbe wie bei den Kennwerten (Task Force 1996 /
+       Malik): ein Abstand, der um mehr als 20 % vom vorigen abweicht. EIN
+       Kriterium, EINE Stelle — sonst sagt der Beleg etwas anderes als das
+       Bild. */
+    const unplaus=new Array(n).fill(0);
+    for(let j=1;j<n;j++) if(Math.abs(rr[j]-rr[j-1])>0.20*rr[j-1]) unplaus[j]=1;
+    const preU=new Array(n+1).fill(0);
+    for(let j=0;j<n;j++) preU[j+1]=preU[j]+unplaus[j];
+    /* Traegt das Fenster, das bei Schlag i endet, ein auffaelliges Paar? */
+    const fensterUnsicher=i=>{ const lo=Math.max(1,i-Wb+1); return (preU[i+1]-preU[lo])>0; };
+
+    /* Zusammenhaengende unsichere Abschnitte — in ZEIT, nicht in Schlaegen:
+       so liegt das Band genau unter dem Stueck Kurve, das es meint. */
+    const unsicherBaender=[]; let laufAb=null;
+    for(let k=0;k<hvSlice.length;k++){
+      const i=i0+k, u=fensterUnsicher(i);
+      if(u && laufAb===null) laufAb=tAll[i];
+      if(!u && laufAb!==null){ unsicherBaender.push([laufAb,tAll[i]]); laufAb=null; }
+    }
+    if(laufAb!==null) unsicherBaender.push([laufAb,tAll[n-1]]);
+    const unsicherSchlaege=hvSlice.reduce((a,_,k)=>a+(fensterUnsicher(i0+k)?1:0),0);
+
+    /* Die Kurve in Stuecke gleicher Sicherheit zerlegen. Der Anschlusspunkt
+       gehoert zum FOLGENDEN Stueck — sonst entstuende an jeder Grenze eine
+       Luecke von einem Pixel, und die saehe aus wie ein Messaussetzer. */
+    const hvStuecke=[]; let akt=null;
+    for(let k=0;k<decHV.length;k++){
+      const u=fensterUnsicher(i0+decHV[k][0]);
+      if(!akt || akt.u!==u){
+        akt={u, pts: k>0 ? [decHV[k-1]] : []};
+        hvStuecke.push(akt);
+      }
+      akt.pts.push(decHV[k]);
+    }
+    const pfadHV=st=>st.pts.map(([i,v],k)=>`${k?'L':'M'}${X(tAll[i0+i]).toFixed(1)},${YV(v).toFixed(1)}`).join(' ');
+
     const dHV=decHV.map(([i,v],k)=>`${k?'L':'M'}${X(tAll[i0+i]).toFixed(1)},${YV(v).toFixed(1)}`).join(' ');
     const dHF=decHF.map(([i,v],k)=>`${k?'L':'M'}${X(tAll[i]).toFixed(1)},${YH(v).toFixed(1)}`).join(' ');
     /* BESCHNITTEN AUF DIE ZEICHENFLAECHE. Ohne das liefe die Kurve eines
        gekappten Wertes ueber die Achsenbeschriftung und den Rand hinaus —
        und saehe aus wie ein Zeichenfehler statt wie ein Ausreisser. */
+    /* ⚠ ANIMATION UND STRICHELUNG SCHLIESSEN SICH AUS: `path.draw` zeichnet
+       sich selbst ueber `stroke-dasharray`/`stroke-dashoffset`. Eine zweite
+       Strichelung darauf ergaebe ein Flackern statt einer Aussage. Sobald es
+       unsichere Abschnitte gibt, laeuft die HRV-Linie deshalb ohne Animation
+       ein — der Puls behaelt seine. */
+    const hvAnim = anim && unsicherSchlaege===0;
     g+=`<g clip-path="url(#cl-${uid})">`
       +`<path d="${dHV} L${X(T).toFixed(1)},${pB.toFixed(1)} L${X(tAll[i0]).toFixed(1)},${pB.toFixed(1)} Z" fill="url(#ar-${uid})" stroke="none"/>`
+      /* Die Baender liegen UNTER den Kurven und ueber der Flaeche — sichtbar,
+         aber nie im Weg. Bewusst neutral-warm und sehr blass: eine kraeftige
+         Farbe wuerde wie ein Alarm wirken, und ein auffaelliges Paar ist beim
+         Pferd oft schlicht eine physiologische Pause. */
+      +unsicherBaender.slice(0,60).map(([a,b])=>
+        `<rect x="${X(a).toFixed(1)}" y="${pad.t}" width="${Math.max(1,X(b)-X(a)).toFixed(1)}" height="${plotH.toFixed(1)}" fill="var(--amber)" fill-opacity=".055"/>`).join('')
       +`<path class="${anim?'draw':''}" pathLength="1" d="${dHF}" fill="none" stroke="var(--amber)" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round"/>`
-      +`<path class="${anim?'draw d2':''}" pathLength="1" d="${dHV}" fill="none" stroke="var(--cyan)" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round"/>`
+      +hvStuecke.map(st=>
+        `<path class="${hvAnim?'draw d2':''}"${hvAnim?' pathLength="1"':''} d="${pfadHV(st)}" fill="none" stroke="var(--cyan)" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round"`
+        +(st.u?` stroke-dasharray="3.5 3" stroke-opacity=".62"`:'')+`/>`).join('')
       +`</g>`;
 
     /* Wo etwas ueber die Kante lief, steht eine Marke — an der Stelle der
@@ -1978,6 +2063,25 @@ const Chart={
        ganzen. */
     const kapp=rH.clipped+rV.clipped;
     g+=Chart._clipNote(w-pad.r-6, pad.t+12, kapp);
+    /* Die Legende zur Strichelung. Sie steht IM Diagramm — die
+       Zeitachsen-Beschriftung darunter ist auf dem Telefon abgeschnitten,
+       und dort wird gemessen. Bei schmalem Bild die kurze Fassung: ein
+       Hinweis, der ueber den Rand laeuft, ist keiner. */
+    if(unsicherSchlaege){
+      /* ⚠ GEMESSEN, NICHT GESCHAETZT: bei 380 px Breite belegt der
+         Kapp-Hinweis rechts 97 px und die Legende links 177 px — zusammen
+         mehr als die 272 px Zeichenflaeche. Die beiden Texte lagen
+         uebereinander und ergaben Buchstabensalat.
+         Steht der Kapp-Hinweis, rueckt die Legende deshalb eine Zeile
+         tiefer. Zwei Hinweise, die sich gegenseitig unlesbar machen, sind
+         schlechter als einer. */
+      const kurz = plotW < 360;
+      const txt = kurz ? 'gestrichelt = unsicher'
+                       : 'gestrichelt · hinterlegt: Fenster enthält ein auffälliges Schlagpaar';
+      const zeile = kapp ? pad.t+25 : pad.t+12;
+      g+=`<text x="${(pad.l+7).toFixed(1)}" y="${zeile.toFixed(1)}" text-anchor="start"`
+        +` style="fill:var(--cyan);font-family:var(--font-mono);font-size:9.5px;opacity:.8">${txt}</text>`;
+    }
     g+=`<text x="${pad.l}" y="${h-4}" text-anchor="start" class="label-axis">ZEIT<tspan class="label-unit"> (MM:SS) · HRV IM GLEITENDEN FENSTER VON ${Wb} SCHLÄGEN</tspan></text>`;
 
     /* Endwert-Marken wie in der App: der letzte Wert steht als Plakette am
@@ -2007,14 +2111,19 @@ const Chart={
     // 50.000 Schlaegen).
     const pts=decHF.map(([i,v])=>({x:+X(tAll[i]).toFixed(1),y:+YH(v).toFixed(1),
       y2:(i>=i0?+YV(all[i]).toFixed(1):null), i, tt:ms(tAll[i]),
-      hr:Math.round(v), hv:(i>=i0?Math.round(all[i]*10)/10:null)}));
+      hr:Math.round(v), hv:(i>=i0?Math.round(all[i]*10)/10:null),
+      /* Die Unsicherheit reist bis in den Tooltip. Wer einen Wert antippt,
+         soll dort erfahren, was die gestrichelte Linie meint — sonst liest
+         er eine Zahl ab, die glatter aussieht, als sie ist. */
+      hvU:(i>=i0 && fensterUnsicher(i))?1:0}));
     /* Die Bildbeschreibung nennt die ECHTE Spanne der Messung, nicht die der
        Achse. Wer nur zuhört, bekaeme sonst einen beschnittenen Bericht — und
        genau das waere die stille Faelschung, die das Kappen vermeiden soll. */
     const alt=`Puls und Herzratenvariabilität über ${ms(T)} Aufnahmedauer. `
       +`Puls ${fmt0(Math.min(...hf))} bis ${fmt0(Math.max(...hf))} Schläge pro Minute, `
       +`HRV ${fmt0(Math.min(...hvSlice))} bis ${fmt0(Math.max(...hvSlice))} Millisekunden.`
-      +(kapp?` ${kapp} Wert${kapp===1?'':'e'} liegen außerhalb der gezeigten Achse und sind am Rand markiert; die Achse folgt den übrigen, damit der Verlauf lesbar bleibt.`:'');
+      +(kapp?` ${kapp} Wert${kapp===1?'':'e'} liegen außerhalb der gezeigten Achse und sind am Rand markiert; die Achse folgt den übrigen, damit der Verlauf lesbar bleibt.`:'')
+      +(unsicherSchlaege?` Auf ${unsicherSchlaege} von ${hvSlice.length} Schlägen enthält das gleitende HRV-Fenster ein auffälliges Schlagpaar; die Kurve ist dort gestrichelt und hinterlegt. Ein einzelner auffälliger Abstand hebt sie über die volle Fensterlänge von ${Wb} Schlägen an — das sieht wie ein anhaltender Zustand aus und ist keiner.`:'');
     return Chart._hov(g,w,h,pts,'vitals','',alt);
   },
 

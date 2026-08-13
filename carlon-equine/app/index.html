@@ -10002,6 +10002,14 @@ const Sprache={
     'abgerechnet':'billed',
     'Zweitmeinung':'Second opinion',
     'Telemetrie-Ferneinschätzung':'Telemetry remote assessment',
+    /* ⚠ DREI VON FÜNF LEISTUNGSARTEN FEHLTEN. Sie stehen in derselben
+       Auswahlliste wie die beiden uebersetzten — ein englischer Tierarzt sah
+       also eine halb deutsche Liste. Aufgefallen ist es erst, als t-sprache
+       mit einem FRISCHEN Browserprofil lief: im mitgeschleppten Profil war
+       eine andere Stelle vorgelagert und verdeckte diese. */
+    'Verlaufskontrolle HRV':'HRV follow-up',
+    'Trainings-/Coaching-Beratung':'Training / coaching advice',
+    'Triage-Vorabklärung':'Triage pre-assessment',
     'Notizen':'Notes',
     'Klinische Notizen, Verlauf, Absprachen…':'Clinical notes, history, agreements…',
     'Foto hinzufügen/ändern':'Add/change photo',
@@ -10182,6 +10190,21 @@ const Sprache={
     [/^(\d+) km gespart$/,'$1 km saved'],
     [/^(\d+)\/(\d+) erledigt$/,'$1/$2 done'],
     [/^(\d+) gesamt im System$/,'$1 in the system'],
+    /* Zaehltext des Posteingangs. Er kann nur noch fuer Altbestand
+       erscheinen (das Postfach schlaeft), muss aber uebersetzt sein, solange
+       er erscheinen KANN — ein deutscher Rest auf einer englischen Seite ist
+       kein kleinerer Fehler, nur ein selteneres Vorkommnis. */
+    [/^(\d+) nicht lesbar$/,'$1 unreadable'],
+    /* ZUSAMMENGESETZT: „Leistungsart · 15 Min". Das Woerterbuch trifft nur
+       ganze Zeichenketten, hier steht aber die Art MIT ihrer Dauer. Statt
+       jede Kombination einzeln zu pflegen — fuenf Arten mal beliebige
+       Minuten — nutzt die Regel das Woerterbuch NACH: der Ersatz darf eine
+       Funktion sein. Neue Leistungsarten uebersetzen sich damit von selbst,
+       sobald sie im Woerterbuch stehen.
+       Faellt die Art dort nicht auf, bleibt sie stehen statt zu
+       verschwinden — ein halb uebersetzter Eintrag ist immer noch lesbar,
+       ein leerer nicht. */
+    [/^(.+) · (\d+) Min$/, (_m,art,min)=>(Sprache.WB[art]||art)+' · '+min+' min'],
     [/^Abfahrroute planen · (\d+)$/,'Plan route · $1'],
     [/^Zuerst: (.+) · (\d+) km$/,'First: $1 · $2 km'],
     [/^Einsatzplan · (.+)$/,'Day plan · $1'],
