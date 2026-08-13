@@ -9,12 +9,12 @@
      Seite verlinkt: erreichbar ausschliesslich ueber einen gedruckten
      Aushang. Damit konnte genau die Seite, die sich von selbst verbreitet,
      von niemandem gefunden werden. Freigegeben am 07.08.2026. -->
-<meta name="description" content="Nimm den Herzrhythmus deines Pferdes mit dem Polar-H10-Gurt direkt im Browser auf — ohne App und ohne Konto. Am Ende bekommst du einen verschlüsselten Link für deine Tierärztin oder deinen Tierarzt.">
+<meta name="description" content="Nimm den Herzrhythmus deines Pferdes mit dem Polar-H10-Gurt direkt im Browser auf — ohne App und ohne Konto. Am Ende entsteht eine Datei, die du deiner Tierärztin oder deinem Tierarzt schickst wie ein Foto.">
 <link rel="canonical" href="https://vitalkultur.com/carlon-equine/app/messen.html">
 <!-- Vorschau beim Teilen: ohne diese Angaben zeigen Messenger eine graue
      Kompassnadel statt der Marke. Das Bild liegt bereits im Repo. -->
 <meta property="og:title" content="Herzraten-Messung beim Pferd — CARLON Equine">
-<meta property="og:description" content="Den Herzrhythmus deines Pferdes mit dem Polar H10 direkt im Browser aufnehmen — ohne App, ohne Konto. Am Ende ein verschlüsselter Link für deine Tierärztin.">
+<meta property="og:description" content="Den Herzrhythmus deines Pferdes mit dem Polar H10 direkt im Browser aufnehmen — ohne App, ohne Konto. Am Ende: eine Datei, die du deiner Tierärztin schickst wie ein Foto.">
 <!-- Eigenes Vorschaubild fuer die Station, nicht das allgemeine der
      Produktseite: die Wolke stammt aus einer ECHTEN Aufnahme (Testpferd 2,
      Polar H10, 24.06.2026) und ist dieselbe Zeichnung wie die Teilkarte, die
@@ -809,20 +809,11 @@ const HAUS={ appImStore:false, appUrl:'https://carlon.app' };
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 007.5.5l3-3a5 5 0 00-7-7l-1.7 1.7"/><path d="M14 11a5 5 0 00-7.5-.5l-3 3a5 5 0 007 7l1.7-1.7"/></svg>
       <span id="btnSendLinkTxt">Link an ein messendes Gerät senden</span>
     </button>
-    <!-- 2026-08-13 VOM WEG GENOMMEN, nicht geloescht.
-         Dieser Knopf fuehrte auf senden.html. Die Seite verspricht dort eine
-         "Direkt-Uebertragung, ohne Umweg ueber einen Server" und ruft
-         P2P.send() auf — dessen Relay zeigt jedoch auf
-         wss://carlon-signaling.example.workers.dev, einen PLATZHALTER. Der
-         Weg funktioniert also nicht, und er lag auf dem Hauptweg: messen,
-         dann "Datei senden" tippen.
-         Der Dateiweg-Umbau vom 13.08. hat senden.html nicht erfasst.
-         Ein Link auf eine kaputte Funktion ist schlechter als kein Link.
-         WIEDER EINHAENGEN, sobald senden.html auf den Dateiweg umgebaut ist:
-         Datei waehlen -> gegen den Praxis-Schluessel verschluesseln ->
-         navigator.share, genau wie es btnSend hier schon tut.
+    <!-- 2026-08-13 wieder eingehaengt: senden.html ist am 13.08. auf den
+         Dateiweg umgebaut worden (versiegeln, wenn ein Praxis-Schluessel im
+         Link steckt, dann navigator.share — wie btnSend hier). Der tote
+         P2P-Relay-Weg, wegen dem der Knopf ausgehaengt war, ist Geschichte. -->
     <div class="subactions"><a class="btn ghost" href="senden.html" data-i18n="sendFile">Aufnahme als Datei senden</a></div>
-    -->
     <div class="share-note" id="linkNote" style="color:var(--cyan)"></div>
 
     <!-- ── Der kuerzeste Weg auf das zweite Geraet ──────────────────────
@@ -1121,6 +1112,21 @@ const HAUS={ appImStore:false, appUrl:'https://carlon.app' };
     </div>
     <div class="err" id="err" role="alert"></div>
 
+    <!-- ── „So geht's weiter" (Audit #16) ─────────────────────────────────
+         Erscheint erst NACH einem aufgeloesten share() — vorher waere
+         „deine Praxis meldet sich" ein leeres Versprechen. Karte und
+         Punktliste sind die vorhandenen Bausteine der Seite (.next,
+         .brauchst), keine neue Optik. -->
+    <div class="next" id="soWeiter" hidden>
+      <div class="next-h">
+        <span class="eyebrow" style="margin-bottom:6px" data-i18n="swT">So geht’s weiter</span>
+        <ul class="brauchst" style="margin-left:0" data-i18n-list="swListe">
+          <li>Deine Praxis meldet sich auf ihrem üblichen Weg — du musst nichts weiter tun.</li>
+          <li>Deine Kopie bleibt auf diesem Gerät — jederzeit unter „Als Datei speichern“.</li>
+          <li>Miss in ruhigen Wochen etwa einmal im Monat — so entsteht eine Baseline für dein Pferd.</li>
+        </ul>
+      </div>
+    </div>
 
     <div class="share">
       <div class="share-h">
@@ -1361,7 +1367,9 @@ de:{
  sendDownload:'Dein Browser kann Dateien nicht direkt teilen. Die Datei liegt in deinen Downloads — schick sie deiner Tierärztin wie ein Foto.',
  shareTitel:'Messung für die Praxis',
  shareMsgKurz:'Hier ist die Herzfrequenz-Messung von meinem Pferd:',
- shareMsgVerschl:'Hier ist die Herzfrequenz-Messung von meinem Pferd. Die Datei ist für deine Praxis verschlüsselt.',
+ /* Weg-A-Datei: gelesen wird die Nachricht von der PRAXIS (Sie-Form) — und
+    ohne den Cockpit-Link wüsste sie nicht, womit sie die Datei öffnet. */
+ shareMsgVerschl:'Hier ist die Herzfrequenz-Messung von meinem Pferd. Die Datei ist für Ihre Praxis versiegelt — Sie öffnen sie im CARLON-Cockpit: https://vitalkultur.com/carlon-equine/app/',
  shareMsgOffen:'Hier ist die Herzfrequenz-Messung von meinem Pferd. Öffnen mit CARLON: {x}',
  /* Übergabe-Karte */
  ubTitel:'Für deine Tierärztin',
@@ -1373,6 +1381,10 @@ de:{
  wsNachbarinT:'Einer Stallnachbarin zeigen',
  wsNachbarinS:'Nur die Messstation, ohne deine Daten — sie misst dann ihr eigenes Pferd.',
  wsKarte:'Karte teilen',
+ /* „So geht's weiter" nach dem Versand — die drei Fragen, die im Stall
+    offen bleiben: meldet sich jemand? wo ist meine Kopie? wann wieder? */
+ swT:'So geht’s weiter',
+ swListe:['Deine Praxis meldet sich auf ihrem üblichen Weg — du musst nichts weiter tun.','Deine Kopie bleibt auf diesem Gerät — jederzeit unter „Als Datei speichern“.','Miss in ruhigen Wochen etwa einmal im Monat — so entsteht eine Baseline für dein Pferd.'],
  /* Lage-Karte. Zaehltexte als GANZE Saetze je Numerus — kein zusammen-
     gesetztes „{n} + Restsatz", das in einer Sprache bricht. */
  lgHeute:'heute', lgGestern:'gestern', lgVorTagen:'vor {n} Tagen',
@@ -1402,6 +1414,11 @@ de:{
  sendRecht:'Die Datei entsteht auf deinem Gerät und verlässt es auf dem Weg, den du selbst wählst — wir bekommen sie nicht zu sehen und legen sie nirgends ab. Was diese Seite tut, steht in der <a href="/privacy.html">Datenschutzerklärung</a>; für die Nutzung gelten die <a href="/agb.html#uebergabe">AGB</a>.',
  shareH:'Wenn es dir geholfen hat',
  shareOwner:'Pferdefreunden zeigen', shareVet:'Deiner Praxis empfehlen',
+ /* Empfehlung AN die Praxis: gelesen wird sie von der Tierärztin (Sie-Form),
+    und das Ziel ist die kanonische Visite-Verkaufsseite — nicht die
+    Besitzer-Produktseite. */
+ shVetMsg:'Ich habe die Ruhe-Herzrate meines Pferds im Browser gemessen — mit dem Polar-Gurt, die Aufnahme geht als Datei an meine Praxis. Vielleicht ist das auch etwas für Ihre Praxis — so lesen Tierärztinnen und Tierärzte solche Messungen:',
+ shVetUrl:'https://vitalkultur.com/carlon-equine-visite/',
  /*MDR — extern geprüft 06.08., Perplexity/Recherche: „was das Herz tut" ist umgangssprachlich zu breit;
     Formulierung auf reine Datenerfassung verengt. Nicht ohne erneute Prüfung ändern. */
  footerNote:'Diese Seite zeichnet Herzschlag-Daten deines Pferds auf — die medizinische Beurteilung erfolgt ausschließlich durch deine Tierärztin oder deinen Tierarzt.',
@@ -1508,7 +1525,7 @@ en:{
  sendDownload:'Your browser can’t share files directly. The file is in your downloads — send it to your vet like a photo.',
  shareTitel:'Recording for the practice',
  shareMsgKurz:'Here is the heart rate recording of my horse:',
- shareMsgVerschl:'Here is the heart rate recording of my horse. The file is encrypted for your practice.',
+ shareMsgVerschl:'Here is the heart rate recording of my horse. The file is sealed for your practice — open it in the CARLON cockpit: https://vitalkultur.com/carlon-equine/app/',
  shareMsgOffen:'Here is the heart rate recording of my horse. Open it with CARLON: {x}',
  ubTitel:'For your vet',
  ubText:'They open the link and see your recording analysed right away — no account, no sign-in, nothing to install.',
@@ -1518,6 +1535,8 @@ en:{
  wsNachbarinT:'Show a barn neighbour',
  wsNachbarinS:'Only the measuring station, none of your data — she then measures her own horse.',
  wsKarte:'Share the card',
+ swT:'What happens next',
+ swListe:['Your practice will get back to you on their usual channel — nothing more for you to do.','Your copy stays on this device — any time under “Save as a file”.','In calm weeks, measure about once a month — that builds a baseline for your horse.'],
  lgHeute:'today', lgGestern:'yesterday', lgVorTagen:'{n} days ago',
  lgWeiter1:'Recording passed on', lgWeiterN:'{n} recordings passed on',
  lgWeiterSub:'{x} · your vet will get back to you on their usual channel.',
@@ -1537,6 +1556,8 @@ en:{
  sendRecht:'The file is created on your device and leaves it by a route you choose yourself — we never see it and store it nowhere. What this page does is set out in the <a href="/privacy-en.html">privacy policy</a>; use is governed by the <a href="/terms.html#handover">Terms</a>.',
  shareH:'If this helped you',
  shareOwner:'Show fellow horse people', shareVet:'Recommend to your practice',
+ shVetMsg:'I measured my horse’s resting heart rate in the browser — with the Polar belt, and the recording goes to my practice as a file. This might be something for your practice too — this is how veterinarians read these recordings:',
+ shVetUrl:'https://vitalkultur.com/carlon-equine-visite/en/',
  /*MDR — extern geprüft: im anglo-amerikanischen Raum ist die etablierte Formel
     „not intended to diagnose, treat, cure, or prevent any disease" belastbarer als eine
     woertliche Uebersetzung. Nicht ohne erneute Pruefung aendern. */
@@ -3156,6 +3177,17 @@ function weitersagenZeigen(){
     +`<div class="ws-zeile"><div><b>${t('wsNachbarinT')}</b>`
     +`<span>${t('wsNachbarinS')}</span></div>`
     +`<button class="btn ghost" id="wsFreund">${t('wsKarte')}</button></div>`;
+  /* AN DEN ORT DER ZUFRIEDENHEIT (Audit #17): die Karte lag als Kopf-Element
+     weit oben auf der Seite — nach dem Versand, dem einzigen Moment, in dem
+     sie erscheint, sah sie dort niemand. Dieselbe Mechanik, kein neues
+     Konzept: das Element wird in den Beleg bewegt, direkt vor die
+     „Wenn es dir geholfen hat"-Zeile, wo der Blick gerade ist. */
+  /* Nur verschieben, wenn der Beleg wirklich SICHTBAR ist — sonst wandert
+     die Karte in einen versteckten Container und ist fuer niemanden da
+     (und t-breite misst zu Recht 0 px). offsetParent ist null, solange ein
+     Vorfahre display:none traegt. */
+  const s=document.querySelector('#vDone .share');
+  if(s && s.parentNode && s.offsetParent!==null && k.nextElementSibling!==s) s.parentNode.insertBefore(k,s);
   k.classList.remove('hidden');
   /* NICHT selbst nachbauen: share('owner') erzeugt eine gerenderte Karte mit
      den eigenen Werten — ein sehr viel besseres Teilstueck als ein nackter
@@ -4325,6 +4357,9 @@ $('#btnSend').addEventListener('click', async ()=>{
       /* Nur ein aufgeloestes share() ist ein Versand; der Download ist eine
          Kopie in den eigenen Haenden — die Lage-Karte zaehlt nur Gesendetes. */
       Verlauf.hinzu({art: geteilt?'gesendet':'gespeichert'}); lageZeigen();
+      /* „So geht's weiter" nur nach echtem Versand — beim Download-Fallback
+         hat die Praxis noch nichts, und Zeile 1 waere gelogen. */
+      if(geteilt){ const sw=$('#soWeiter'); if(sw) sw.hidden=false; }
       weitersagenZeigen();
       $('#btnSend').classList.add('hidden'); $('#btnSave').disabled=false;
       $('#btnAgain').classList.remove('hidden');
@@ -4475,9 +4510,11 @@ function Toast_ok(msg){
    WICHTIG: der geteilte Link enthaelt NIE den room-Code — das ist die private
    Verbindung zu genau einer Praxis und gehoert niemandem sonst. */
 /* Zielseiten bewusst getrennt: das Verzeichnis .../app/ ist das PRAXIS-
-   Cockpit — dorthin einen Pferdebesitzer zu schicken war schlicht falsch. */
+   Cockpit — dorthin einen Pferdebesitzer zu schicken war schlicht falsch.
+   Die Praxis-Empfehlung zielt seit dem Audit (#22) auf die kanonische
+   Visite-Verkaufsseite; ihre Adresse liegt sprachabhaengig im Katalog
+   (shVetUrl), nicht mehr hier. */
 const SHARE_STATION = location.origin + location.pathname;                 // die Mess-Station selbst
-const SHARE_PRODUCT = location.origin + location.pathname.replace(/app\/messen\.html$/,''); // Produktseite
 
 /* ── BELEG-GRAFIK ───────────────────────────────────────────────────────
    Ein nackter Link erzeugt beim Empfaenger eine graue Vorschau. Geteilt wird
@@ -4704,8 +4741,10 @@ async function share(kind){
   const horse=($('#horse').value||'mein Pferd').trim();
   const cfg = kind==='vet' ? {
     title:'CARLON Equine',
-    text:'Ich habe die Ruhe-Herzrate meines Pferds gemessen und die Aufnahme direkt an meine Praxis geschickt — aus dem Browser, mit dem Polar-Gurt. Vielleicht ist das auch etwas für Ihre Patienten:',
-    url: SHARE_PRODUCT
+    /* Sie-Form aus dem Katalog (DE/EN) — es liest die Praxis. Ziel ist die
+       Visite-Seite in der Sprache der Besitzerin. */
+    text: t('shVetMsg'),
+    url: t('shVetUrl')
   } : {
     title:'Herzraten-Messung beim Pferd',
     text:`So sieht der Herzschlag von ${horse} aus — direkt im Browser mit dem Polar-Gurt gemessen, ohne App. Die Auswertung macht der Tierarzt:`,
@@ -4748,6 +4787,10 @@ $('#btnAgain').addEventListener('click',()=>{
   $('#barWrap').classList.add('hidden');
   $('#btnSend').disabled=false; $('#btnSend').classList.remove('hidden');
   $('#btnSave').disabled=false; $('#btnAgain').classList.add('hidden');
+  /* Versand-Nachspiel zuruecksetzen — sonst verspricht der naechste Beleg
+     schon VOR dem Senden „deine Praxis meldet sich". */
+  const _sw=$('#soWeiter'); if(_sw) _sw.hidden=true;
+  const _wk=$('#weiterKarte'); if(_wk) _wk.classList.add('hidden');
   liveDiagrammeZuruecksetzen(); $('#beats').textContent='0'; $('#dur').textContent='0:00';
   $('#qdot').className='dot'; $('#qtxt').textContent=t('sigChecking');
   $('#liveTitle').textContent=t('liveH1'); $('#btnStop').textContent=t('stop');

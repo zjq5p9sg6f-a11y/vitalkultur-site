@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="theme-color" content="#050505">
 <title>Support — CARLON Equine | Vitalkultur</title>
-<meta name="description" content="Support & Kontakt für CARLON Equine — Polar-H10-Pairing, Offline-Aufnahme, Browser-Auswertung, Referral. Direkter Draht zu Jan während der Beta.">
+<meta name="description" content="Support & Kontakt für CARLON Equine — Polar-H10-Pairing, Browser-Messstation, Auswertung im Browser, Weitergabe an die Praxis. Direkter Draht zu Jan während der Beta.">
 <link rel="icon" href="app/assets/icon-512.png">
 <style>
   :root{
@@ -58,26 +58,26 @@
   <h2>Häufige Fragen</h2>
 
   <details><summary>Polar H10 koppeln</summary>
-    <p>Feuchte die Elektrodenzonen des Gurts an — beim Pferd ist Elektroden-Gel wegen der Fell-Impedanz praktisch Pflicht für ein sauberes Signal. Lege den Gurt an, öffne die App und verbinde den H10 unter „Geräte". Die Signalqualitäts-Anzeige zeigt dir, wann der Kontakt gut genug ist.</p>
+    <p>Feuchte die Elektrodenzonen des Gurts an — beim Pferd ist Elektroden-Gel wegen der Fell-Impedanz praktisch Pflicht für ein sauberes Signal. Lege den Gurt an und öffne die <a href="/messen">Messstation im Browser</a> — dort verbindest du den H10 mit einem Tipp (Android, Laptop oder Tablet mit Chrome/Edge). Die Signalanzeige zeigt dir, wann der Kontakt gut genug ist. Sobald die App im App Store ist, verbindest du den Gurt auch dort unter „Geräte".</p>
   </details>
   <details><summary>Geräteinterne Aufnahme (ohne iPhone in Reichweite)</summary>
-    <p>Der H10 kann mehrtägig direkt am Gurt aufzeichnen — Langzeit-Weide, Übernacht-Stall, Transport. Du startest die Aufnahme in der App, trennst das iPhone, und synchronisierst später mit einem Klick. Wichtig: Der H10 hat nur einen Aufnahme-Slot; eine ältere Aufnahme muss vor der neuen gelöscht werden (die App führt dich durch).</p>
+    <p>Der H10 kann mehrtägig direkt am Gurt aufzeichnen — Langzeit-Weide, Übernacht-Stall, Transport. Dieser Weg kommt mit der iOS-App: sobald sie im App Store ist, startest du die Aufnahme dort, trennst das iPhone und synchronisierst später mit einem Klick (wichtig: der H10 hat nur einen Aufnahme-Slot; eine ältere Aufnahme muss vor der neuen gelöscht werden). Heute misst du live über die <a href="/messen">Browser-Messstation</a> — das Gerät bleibt dabei in Bluetooth-Reichweite.</p>
   </details>
   <details><summary>Auswertung im Browser öffnen</summary>
     <p>Jeder JSON-Export öffnet sich direkt im Browser-Viewer auf <a href="/carlon-equine/">carlon-equine</a> — per Drag-and-Drop oder Datei-Auswahl. Beim Öffnen und Betrachten <strong>eigener Dateien</strong> findet <strong>keine Übertragung</strong> statt: Der Viewer läuft rein lokal im Browser (Zero-Upload). Kein Login, keine Installation. Auch die Messstation überträgt nichts an uns: Sie legt eine <strong>Datei auf deinem Gerät</strong> an, die du selbst weitergibst — hast du den Aushang deiner Praxis gescannt, ist sie dabei <strong>verschlüsselt</strong> (<a href="/agb.html#uebergabe">§ 12b der AGB</a>).</p>
   </details>
   <details><summary>Auswertung an den Tierarzt weitergeben</summary>
-    <p>Aus der App generierst du mit einem Tap ein Referral-PDF oder teilst den JSON-Export. Halter-Namen und Tierarzt-Kontakte werden per Privacy-by-Design nicht mitexportiert. Der Tierarzt öffnet den Export im Browser-Viewer und sieht die volle Auswertung.</p>
+    <p>Die Messstation legt am Ende eine Datei <code>CARLON_&lt;Pferd&gt;_&lt;Datum&gt;.json</code> auf deinem Gerät an — die schickst du deiner Praxis wie ein Foto, auf dem Weg, den ihr ohnehin nutzt. Sie enthält nur die Messung deines Pferds; Halter-Name und Tierarzt-Kontakte stecken nicht darin. Hat deine Praxis einen CARLON-Aushang, ist die Datei für sie versiegelt. Die Praxis öffnet sie im Browser und sieht die volle Auswertung. Sobald die App im App Store ist, teilst du den Export auch von dort mit einem Tap.</p>
   </details>
   <details><summary>Warum stellt CARLON keine Diagnose?</summary>
-    <p>CARLON Equine ist ein Forschungs- und Beobachtungs-Werkzeug, <strong>kein Medizinprodukt</strong> unter MDR oder FDA. Alle On-Screen-Flags sind Screening-Indikatoren, die eine tierärztliche Folge-Konsultation erfordern — niemals Diagnosen. So bleibt der Befund immer beim Tierarzt.</p>
+    <p>CARLON Equine ist ein Forschungs- und Beobachtungs-Werkzeug, <strong>kein Medizinprodukt</strong> unter MDR oder FDA. Alle On-Screen-Flags sind Beobachtungshinweise, die eine tierärztliche Folge-Konsultation erfordern — niemals Diagnosen. So bleibt der Befund immer beim Tierarzt.</p>
   </details>
   <details><summary>Kubios / eigene Analyse</summary>
     <p>Der Export ist Kubios-kompatibel (Roh-RR als JSON und als CSV, eine Spalte <code>rr_ms</code>) und trägt einen SHA-256-Integritäts-Hash plus W3C-PROV-Provenance-Kette — reproduzierbar und audit-fest für R/Python/Kubios-Workflows.</p>
   </details>
 
   <div class="disclaimer">
-    <strong>⚠ Positionierung:</strong> CARLON Equine ist ein Forschungs- und Beobachtungs-Werkzeug, kein Medizinprodukt unter MDR oder FDA. Alle Bildschirm-Flags sind Screening-Indikatoren, die eine Tierarzt-Konsultation erfordern — niemals Diagnosen.
+    <strong>⚠ Positionierung:</strong> CARLON Equine ist ein Forschungs- und Beobachtungs-Werkzeug, kein Medizinprodukt unter MDR oder FDA. Alle Bildschirm-Flags sind Beobachtungshinweise, die eine Tierarzt-Konsultation erfordern — niemals Diagnosen.
   </div>
 
   <footer>

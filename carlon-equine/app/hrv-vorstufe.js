@@ -79,6 +79,100 @@
     },
   };
 
+  /* ═══════════════════════════════════════════════════════════════════════
+     1b · Messprofil  (Port von Messprofil, EquineFilterPipeline.swift 56e4e2a4)
+     ───────────────────────────────────────────────────────────────────────
+     JEDER spezies-getunte Parameter der Kette an EINER Stelle, Feldnamen
+     identisch mit der Swift-Fassung — der Port bleibt zeilenweise vergleichbar.
+     Default equineV1 ist Wert fuer Wert aus den bisherigen Konstanten gezogen;
+     das Verhalten ohne explizites Profil ist byte-identisch (t-messprofil
+     beweist beides: Identitaet UND dass ein fremdes Profil wirklich steuert).
+     Es wird GENAU EIN Profil mitgeliefert — fuer andere Spezies sind die Werte
+     unbelegt; das Profil erlaubt beliebige Werte, EMPFIEHLT keine.
+     ═══════════════════════════════════════════════════════════════════════ */
+
+  const MessprofilEquineV1 = Object.freeze({
+    name: 'equine-v1',
+    speciesTag: 'equine',
+    // Stage 0 — Plausibilitaet
+    plausibelUntenMs: EquineRRPlausibility.untenMs,
+    plausibelObenMs: EquineRRPlausibility.obenMs,
+    absurdObenMs: EquineRRPlausibility.absurdObenMs,
+    // Stage 1 — T-Wellen-Refraktaerfilter
+    twaveMedianUntenMs: 300,
+    twaveMedianObenMs: 3500,
+    twaveRefraktaerFaktor: 0.5,
+    twaveMinimumMs: 100,
+    // Stage 2 — Lipponen-Tarvainen
+    ltAlpha: 5.2,
+    // Stage 3 — physiologischer 2°-AV-Block (van Loon 2019)
+    avBlockAktiv: true,
+    avBlockRatioUnten: 1.8,
+    avBlockRatioOben: 2.2,
+    avBlockIsolationAbweichung: 0.25,
+    avBlockMedianFensterBeats: 10,
+    // Stage 4 — Kubios-Korrekturschwellen, equine 3x skaliert
+    korrekturSchwelleStrongSek: 0.4,
+    korrekturSchwelleMediumSek: 0.6,
+    korrekturSchwelleLowSek: 0.9,
+    korrekturSchwelleVeryLowSek: 1.2,
+    // Qualitaetsklasse (eigene konservative Festlegung, KEIN Literaturwert)
+    qualitaetExzellentUnterPct: 1.0,
+    qualitaetGutUnterPct: 3.0,
+    qualitaetPoorUnterPct: 10.0,
+    // Artefakt-Riegel
+    riegelKeinErgebnisAbPct: 10.0,
+    riegelNichtlinearAbPct: 5.0,
+    // Frequenzbaender — Literale wie in Swift; die Deckung mit BandConfigEquine
+    // unten bewacht t-messprofil (zwei Wahrheiten fuer dieselben Baender fallen
+    // sonst erst auf, wenn Export und PSD verschiedene Grenzen nennen).
+    bandVlfHiHz: 0.01,
+    bandLfHiHz: 0.07,
+    bandHfHiHz: 0.60,
+    bandLabel: 'Equine-Visser-2002',
+    bandCitation: 'Visser 2002, Stucke 2015 Review, Wonghanchao 2025',
+    groundTruthFlag: 'ground_truth_van_loon_de_clercq_2017',
+  });
+
+  /* Vollstaendiger Parametersatz als Export-Block (snake_case) — identische
+     Schluessel wie Messprofil.exportBlock() in Swift. Landet im Forschungs-
+     Export; ein fehlendes Feld macht den Export unreproduzierbar. */
+  function messprofilExportBlock(profil) {
+    const block = {
+      name: profil.name,
+      species_tag: profil.speciesTag,
+      stage0_plausibel_unten_ms: profil.plausibelUntenMs,
+      stage0_plausibel_oben_ms: profil.plausibelObenMs,
+      stage0_absurd_oben_ms: profil.absurdObenMs,
+      stage1_twave_median_unten_ms: profil.twaveMedianUntenMs,
+      stage1_twave_median_oben_ms: profil.twaveMedianObenMs,
+      stage1_twave_refraktaer_faktor: profil.twaveRefraktaerFaktor,
+      stage1_twave_minimum_ms: profil.twaveMinimumMs,
+      stage2_lt_alpha: profil.ltAlpha,
+      stage3_av_block_aktiv: profil.avBlockAktiv,
+      stage3_av_block_ratio_unten: profil.avBlockRatioUnten,
+      stage3_av_block_ratio_oben: profil.avBlockRatioOben,
+      stage3_av_block_isolation_abweichung: profil.avBlockIsolationAbweichung,
+      stage3_av_block_median_fenster_beats: profil.avBlockMedianFensterBeats,
+      stage4_korrektur_schwelle_strong_sek: profil.korrekturSchwelleStrongSek,
+      stage4_korrektur_schwelle_medium_sek: profil.korrekturSchwelleMediumSek,
+      stage4_korrektur_schwelle_low_sek: profil.korrekturSchwelleLowSek,
+      stage4_korrektur_schwelle_very_low_sek: profil.korrekturSchwelleVeryLowSek,
+      qualitaet_exzellent_unter_pct: profil.qualitaetExzellentUnterPct,
+      qualitaet_gut_unter_pct: profil.qualitaetGutUnterPct,
+      qualitaet_poor_unter_pct: profil.qualitaetPoorUnterPct,
+      riegel_kein_ergebnis_ab_pct: profil.riegelKeinErgebnisAbPct,
+      riegel_nichtlinear_ab_pct: profil.riegelNichtlinearAbPct,
+      band_vlf_hi_hz: profil.bandVlfHiHz,
+      band_lf_hi_hz: profil.bandLfHiHz,
+      band_hf_hi_hz: profil.bandHfHiHz,
+      band_label: profil.bandLabel,
+      band_citation: profil.bandCitation,
+    };
+    if (profil.groundTruthFlag != null) block.ground_truth = profil.groundTruthFlag;
+    return block;
+  }
+
   /* Beat-Annotation. Nur `normal` geht in die HRV-Rechnung ein. */
   const BeatAnnotation = {
     normal: 'N',                 // Normal Sinus
@@ -110,7 +204,8 @@
      RR verschmelzen. Die Indizes der verschmolzenen Schlaege gehen an Stage 3.
      ═══════════════════════════════════════════════════════════════════════ */
 
-  function stage1TWaveRefractoryFilter(rr) {
+  function stage1TWaveRefractoryFilter(rr, profil) {
+    profil = profil || MessprofilEquineV1;
     if (rr.length < 10) return { merged: rr.slice(), mergeCount: 0, mergedIndices: [] };
     const result = [];
     const mergedIdxs = [];
@@ -121,11 +216,11 @@
       // Nur benachbarte, NICHT verschmolzene RR fuer den Median (keine Kontamination)
       const windowStart = Math.max(0, i - 5);
       const windowEnd = Math.min(rr.length, i + 5);
-      const window = rr.slice(windowStart, windowEnd).filter((v) => v >= 300 && v <= 3500);
+      const window = rr.slice(windowStart, windowEnd).filter((v) => v >= profil.twaveMedianUntenMs && v <= profil.twaveMedianObenMs);
       if (!window.length) { result.push(rr[i]); continue; }
       const med = computeMedian(window);
-      const refractory = 0.5 * med;
-      if (rr[i] < refractory && rr[i] > 100 && i + 1 < rr.length) {
+      const refractory = profil.twaveRefraktaerFaktor * med;
+      if (rr[i] < refractory && rr[i] > profil.twaveMinimumMs && i + 1 < rr.length) {
         result.push(rr[i] + rr[i + 1]);
         mergedIdxs.push(result.length - 1);   // Index im verschmolzenen Array
         skipNext = true;
@@ -146,7 +241,8 @@
      ueberstimmen — siehe dort.
      ═══════════════════════════════════════════════════════════════════════ */
 
-  function stage2LipponenTarvainenClassification(rr) {
+  function stage2LipponenTarvainenClassification(rr, profil) {
+    profil = profil || MessprofilEquineV1;
     if (rr.length < 5) {
       return { classes: new Array(rr.length).fill(BeatClass.normal), qd90: 0 };
     }
@@ -155,7 +251,7 @@
     for (let i = 1; i < rr.length; i++) dRR.push(rr[i] - rr[i - 1]);
 
     const qd90Global = computeQuartileDeviation(dRR);
-    const alpha = 5.2;
+    const alpha = profil.ltAlpha;
     const threshold = alpha * qd90Global;
 
     const classes = [BeatClass.normal];   // erster Schlag immer normal
@@ -216,7 +312,8 @@
      beide Nachbarn innerhalb ±25 % des Medians (Isolationstest).
      ═══════════════════════════════════════════════════════════════════════ */
 
-  function stage3EquineAVBlockReclassification(rrMs, classes) {
+  function stage3EquineAVBlockReclassification(rrMs, classes, profil) {
+    profil = profil || MessprofilEquineV1;
     const annotations = [];
 
     for (let i = 0; i < classes.length; i++) {
@@ -228,16 +325,19 @@
           ? BeatAnnotation.ectopic
           : BeatAnnotation.motionArtifact;
         if (!(i > 0 && i < rrMs.length)) { annotations.push(rueckfall); continue; }
+        // Messprofil: die van-Loon-Regel ist NUR beim Pferd belegt. Ohne sie
+        // bleibt die Stage-2-Einstufung stehen (wie in der Swift-Fassung).
+        if (!profil.avBlockAktiv) { annotations.push(rueckfall); continue; }
 
         // Fenster 10 Beats (Sprint E.16 BUG #1.4): groessere N sind robuster
         // gegen vorherige AVBs im Fenster, weil ein einzelner AVB den Median
         // nicht dominiert.
-        const windowStart = Math.max(0, i - 10);
-        const windowEnd = Math.min(rrMs.length, i + 10);
+        const windowStart = Math.max(0, i - profil.avBlockMedianFensterBeats);
+        const windowEnd = Math.min(rrMs.length, i + profil.avBlockMedianFensterBeats);
         const localMedian = computeMedian(rrMs.slice(windowStart, windowEnd));
         const ratio = rrMs[i] / localMedian;
 
-        if (ratio >= 1.8 && ratio <= 2.2) {
+        if (ratio >= profil.avBlockRatioUnten && ratio <= profil.avBlockRatioOben) {
           // Isolationstest (van Loon 2019): beim physiologischen Block kehren die
           // Nachbarn zum Median zurueck. Pathologische Bloecke / Bewegungsartefakte
           // zeigen chaotische, verschobene Nachbarn.
@@ -245,12 +345,12 @@
           const nextRR = i < rrMs.length - 1 ? rrMs[i + 1] : localMedian;
           const prevDeviation = Math.abs(prevRR - localMedian) / localMedian;
           const nextDeviation = Math.abs(nextRR - localMedian) / localMedian;
-          if (prevDeviation < 0.25 && nextDeviation < 0.25) {
+          if (prevDeviation < profil.avBlockIsolationAbweichung && nextDeviation < profil.avBlockIsolationAbweichung) {
             annotations.push(BeatAnnotation.avBlockPhysiological);
           } else {
             annotations.push(BeatAnnotation.motionArtifact);
           }
-        } else if (ratio > 2.2) {
+        } else if (ratio > profil.avBlockRatioOben) {
           annotations.push(BeatAnnotation.motionArtifact);   // hochgradig oder Artefakt
         } else {
           // ABWEICHUNGSNOTIZ: im Original steht hier
@@ -275,11 +375,11 @@
       if (annotations[i] !== BeatAnnotation.avBlockPhysiological) continue;
       const j = i + 1;
       if (!(j < annotations.length && annotations[j] === BeatAnnotation.ectopic && j < rrMs.length)) continue;
-      const fensterStart = Math.max(0, j - 10);
-      const fensterEnde = Math.min(rrMs.length, j + 10);
+      const fensterStart = Math.max(0, j - profil.avBlockMedianFensterBeats);
+      const fensterEnde = Math.min(rrMs.length, j + profil.avBlockMedianFensterBeats);
       const median = computeMedian(rrMs.slice(fensterStart, fensterEnde));
       if (!(median > 0)) continue;
-      if (Math.abs(rrMs[j] - median) / median < 0.25) {
+      if (Math.abs(rrMs[j] - median) / median < profil.avBlockIsolationAbweichung) {
         annotations[j] = BeatAnnotation.normal;
       }
     }
@@ -379,16 +479,17 @@
     4: 'Unusable — discard',
   };
 
-  function computeQualityClass(annotations) {
+  function computeQualityClass(annotations, profil) {
+    profil = profil || MessprofilEquineV1;
     if (!annotations.length) return 4;
     let nonNormal = 0;
     for (const a of annotations) {
       if (a !== BeatAnnotation.normal && a !== BeatAnnotation.avBlockPhysiological) nonNormal++;
     }
     const pct = (nonNormal / annotations.length) * 100;
-    if (pct < 1.0) return 1;
-    if (pct < 3.0) return 2;
-    if (pct < 10.0) return 3;
+    if (pct < profil.qualitaetExzellentUnterPct) return 1;
+    if (pct < profil.qualitaetGutUnterPct) return 2;
+    if (pct < profil.qualitaetPoorUnterPct) return 3;
     return 4;
   }
 
@@ -496,14 +597,15 @@
      8 · Die Pipeline  (EquineFilterPipeline.process)
      ═══════════════════════════════════════════════════════════════════════ */
 
-  function pipelineProcess(rrIntervalsMs) {
+  function pipelineProcess(rrIntervalsMs, profil) {
+    profil = profil || MessprofilEquineV1;
     // Stage 0+1: Plausibilitaet markieren + T-Wellen-Merge.
     // RR werden BEHALTEN (nicht entfernt) — ausserhalb der Spanne = motionArtifact.
-    const stage1 = stage1TWaveRefractoryFilter(rrIntervalsMs);
+    const stage1 = stage1TWaveRefractoryFilter(rrIntervalsMs, profil);
     // Stage 2
-    const stage2 = stage2LipponenTarvainenClassification(stage1.merged);
+    const stage2 = stage2LipponenTarvainenClassification(stage1.merged, profil);
     // Stage 3
-    const stage3 = stage3EquineAVBlockReclassification(stage1.merged, stage2.classes);
+    const stage3 = stage3EquineAVBlockReclassification(stage1.merged, stage2.classes, profil);
     // Stage 3.5: T-Wellen-Merges aus Stage 1 nachtragen
     for (const idx of stage1.mergedIndices) if (idx < stage3.length) stage3[idx] = BeatAnnotation.motionArtifact;
     // Stage 3.6: Plausibilitaet.
@@ -515,14 +617,15 @@
     for (let i = 0; i < n36; i++) {
       const rr = stage1.merged[i];
       const istPhysiologischerBlock = stage3[i] === BeatAnnotation.avBlockPhysiological;
-      const absurd = !isFinite(rr) || rr < EquineRRPlausibility.untenMs || rr > EquineRRPlausibility.absurdObenMs;
-      if (absurd || (!istPhysiologischerBlock && !EquineRRPlausibility.gueltig(rr))) {
+      const absurd = !isFinite(rr) || rr < profil.plausibelUntenMs || rr > profil.absurdObenMs;
+      const plausibel = rr >= profil.plausibelUntenMs && rr <= profil.plausibelObenMs;
+      if (absurd || (!istPhysiologischerBlock && !plausibel)) {
         stage3[i] = BeatAnnotation.motionArtifact;
       }
     }
     // Stage 4
     const stage4 = stage4CubicSplineCorrection(stage1.merged, stage3);
-    const qc = computeQualityClass(stage4.annotations);
+    const qc = computeQualityClass(stage4.annotations, profil);
 
     const avIdx = [], ectIdx = [], motIdx = [];
     for (let i = 0; i < stage4.annotations.length; i++) {
@@ -553,15 +656,22 @@
     const artifactPct = ((stage4.annotations.length - normalCount - avBlockCount) / bewertbar) * 100;
 
     const medianRR = computeMedian(stage1.merged);
+    // Seit 2026-08-13 werden ALLE Strings aus dem aktiven Messprofil erzeugt —
+    // was der Export deklariert, ist zwangslaeufig das, womit gerechnet wurde
+    // (Wortlaut identisch mit der Swift-Fassung, equine-v1 liefert die alten
+    // Strings woertlich).
     const methodology = [
-      'stage0_plausibility_equine_range_' + Math.trunc(EquineRRPlausibility.untenMs) + '_' + Math.trunc(EquineRRPlausibility.obenMs) + 'ms',
-      'stage1_twave_refractory_filter_0.5x_medRR',
-      'stage2_lipponen_tarvainen_2019_alpha5.2_QD90',
-      'stage3_equine_av_block_1.8_2.2x_medRR_isolated',
-      'stage4_cubic_spline_equine_thresholds_0.4_1.2s',
-      'ground_truth_van_loon_de_clercq_2017',
-      'stage5_motion_burst_aggregation_jan_stall_pattern_2026',
+      'messprofil_' + profil.name,
+      'stage0_plausibility_' + profil.speciesTag + '_range_' + Math.trunc(profil.plausibelUntenMs) + '_' + Math.trunc(profil.plausibelObenMs) + 'ms',
+      'stage1_twave_refractory_filter_' + profil.twaveRefraktaerFaktor + 'x_medRR',
+      'stage2_lipponen_tarvainen_2019_alpha' + profil.ltAlpha + '_QD90',
+      profil.avBlockAktiv
+        ? 'stage3_' + profil.speciesTag + '_av_block_' + profil.avBlockRatioUnten + '_' + profil.avBlockRatioOben + 'x_medRR_isolated'
+        : 'stage3_av_block_reclassification_disabled',
+      'stage4_cubic_spline_' + profil.speciesTag + '_thresholds_' + profil.korrekturSchwelleStrongSek + '_' + profil.korrekturSchwelleVeryLowSek + 's',
     ];
+    if (profil.groundTruthFlag != null && profil.avBlockAktiv) methodology.push(profil.groundTruthFlag);
+    methodology.push('stage5_motion_burst_aggregation_jan_stall_pattern_2026');
 
     const burstResult = detectMotionBursts(stage4.annotations, stage4.corrected);
 
@@ -578,9 +688,12 @@
       qualityClass: qc,
       qualityLabel: QualityClass[qc],
       medianRR: medianRR,
-      alpha: 5.2,
+      alpha: profil.ltAlpha,
       quartileDeviation: stage2.qd90,
       methodology: methodology,
+      /* Der Stempel: womit gerechnet wurde. Der Export nimmt von hier den
+         vollstaendigen Parametersatz (messprofilExportBlock). */
+      messprofil: profil,
       motionBursts: burstResult.bursts,
       /** Nur `normal`-Schlaege — was die App in die HRV-Rechnung laesst. */
       get validBeatsForHRV() {
@@ -1047,21 +1160,22 @@
     opts = opts || {};
     const liveMode = !!opts.liveMode;
     const skipWelchPSD = !!opts.skipWelchPSD;
+    const profil = opts.profil || MessprofilEquineV1;
 
     // Stage 0: Filterkette (useEquineSpecificFilters = true, der App-Standard)
-    const pipeline = pipelineProcess(rrIntervalsMs);
+    const pipeline = pipelineProcess(rrIntervalsMs, profil);
 
     if (pipeline.cleanRR.length < 30) {
       return null;   // App: guard pipeline.cleanRR.count >= 30 else { return nil }
     }
 
-    // ── ARTEFAKT-RIEGEL 1 ─────────────────────────────────────────────────
+    // ── ARTEFAKT-RIEGEL 1 (Grenze aus dem Messprofil, equine-v1: 10 %) ────
     const artefaktRate = pipeline.artifactRatePct;
-    if (!(artefaktRate < 10.0)) {
-      return null;   // App: guard artefaktRate < 10.0 else { return nil }
+    if (!(artefaktRate < profil.riegelKeinErgebnisAbPct)) {
+      return null;   // App: guard artefaktRate < riegelKeinErgebnisAbPct else { return nil }
     }
-    // ── ARTEFAKT-RIEGEL 2 ─────────────────────────────────────────────────
-    const nichtlineareBelastbar = artefaktRate < 5.0;
+    // ── ARTEFAKT-RIEGEL 2 (equine-v1: 5 %) ────────────────────────────────
+    const nichtlineareBelastbar = artefaktRate < profil.riegelNichtlinearAbPct;
 
     const corrected = pipeline.cleanRR;
 
@@ -1096,7 +1210,12 @@
     if (!(liveMode || skipWelchPSD) && corrected.length >= 60) {
       const resampled = cubicSplineResampleTo4Hz(corrected);
       if (resampled.samples.length >= 64) {
-        const psd = welchPSD(resampled.samples, resampled.fs, BandConfigEquine);
+        // Baender aus dem Messprofil — fuer equine-v1 identisch mit
+        // BandConfigEquine (t-messprofil bewacht die Deckung).
+        const psd = welchPSD(resampled.samples, resampled.fs, {
+          vlfHi: profil.bandVlfHiHz, lfHi: profil.bandLfHiHz, hfHi: profil.bandHfHiHz,
+          label: profil.bandLabel, citation: profil.bandCitation,
+        });
         if (psd) {
           const lfHf = psd.lfPowerMs2 + psd.hfPowerMs2;
           lfPowerMs2 = psd.lfPowerMs2;
@@ -1151,6 +1270,9 @@
       lfNuPct: lfNuPct,
       hfNuPct: hfNuPct,
       // ── Vorstufen-Zustand: WARUM ein Wert fehlt ────────────────────────
+      /* Der Stempel: womit gerechnet wurde (voller Satz via
+         HRVVorstufe.messprofilExportBlock(v.messprofil)). */
+      messprofil: pipeline.messprofil,
       artefaktRatePct: artefaktRate,
       nichtlineareBelastbar: nichtlineareBelastbar,
       avBlockCount: pipeline.avBlockIndices.length,
@@ -1180,11 +1302,12 @@
    * Anzeige im Cockpit ("kann nicht beurteilt werden, weil …") statt einer
    * leeren Kachel.
    */
-  function abbruchGrund(rrIntervalsMs) {
-    const p = pipelineProcess(rrIntervalsMs);
+  function abbruchGrund(rrIntervalsMs, opts) {
+    const profil = (opts && opts.profil) || MessprofilEquineV1;
+    const p = pipelineProcess(rrIntervalsMs, profil);
     if (p.cleanRR.length < 30) return 'zu wenige auswertbare Schlaege (' + p.cleanRR.length + ' < 30)';
-    if (!(p.artifactRatePct < 10.0)) {
-      return 'Artefaktrate ' + p.artifactRatePct.toFixed(1) + ' % — ab 10 % gibt die App kein Ergebnis aus';
+    if (!(p.artifactRatePct < profil.riegelKeinErgebnisAbPct)) {
+      return 'Artefaktrate ' + p.artifactRatePct.toFixed(1) + ' % — ab ' + profil.riegelKeinErgebnisAbPct + ' % gibt die App kein Ergebnis aus';
     }
     return null;
   }
@@ -1229,7 +1352,11 @@
     BeatClass: BeatClass,
     QualityClass: QualityClass,
     BandConfig: { equine: BandConfigEquine, human: BandConfigHuman },
-    VERSION: '1.0.0 (Port-Stand Repo 2026-08-08)',
+    // Messprofil (Port von Messprofil.swift): equine-v1 ist das EINZIGE
+    // mitgelieferte Profil; eigenes Profil via analysiere(rr, {profil: {...}}).
+    Messprofil: { equineV1: MessprofilEquineV1 },
+    messprofilExportBlock: messprofilExportBlock,
+    VERSION: '1.1.0 (Messprofil · Port-Stand EquineFilterPipeline 56e4e2a4, 2026-08-13)',
   };
 
   if (typeof module !== 'undefined' && module.exports) module.exports = HRVVorstufe;

@@ -2,7 +2,7 @@
    App-Shell wird precached; Fonts & Leaflet lokal gebündelt (assets/) — keine externen CDNs,
    sodass die App nach dem ersten Online-Start vollständig offline läuft.
    Gesundheitsdaten liegen in IndexedDB — der SW cached nur Programm-Assets. */
-const VERSION = 'carlon-clinic-719b664764';
+const VERSION = 'carlon-clinic-ed4a9599ed';
 /* ACHTUNG: JEDE Datei in CORE wird ausgeliefert, bis VERSION sich aendert.
    Zweimal in dieser Nacht passiert — einmal beim Livegang-Schalter, einmal bei
    krypto.js: Datei geaendert, Version vergessen, und der Browser lieferte
@@ -23,7 +23,8 @@ const CORE = [
   'live.js',
   'qr.js',
   'index.html',
-  'landing.html',
+  /* landing.html ist seit 13.08. nur noch ein Redirect-Stub auf
+     /carlon-equine-visite/ — ein Redirect gehoert nicht in den Precache. */
   'senden.html',
   'messen.html',
   'impressum.html',
