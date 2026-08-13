@@ -186,10 +186,10 @@ tausche('Export ohne Sackgasse', 'Export without a dead end');
 tausche('Warum die Zahlen tragen', 'Why the numbers hold', 2);   // Kommentar + Text
 tausche('Beim Pferd sind Pausen normal. Wer sie mitrechnet, misst Unsinn.',
         'In horses, pauses are normal. Count them in and you measure nonsense.');
-tausche('Dieselbe Filterkette wie in der App, nicht eine nachgebaute',
-        'The same filter chain as in the app, not a rebuilt one');
-tausche('Was das ausmacht — an zwanzig eigenen Ruheaufnahmen geprüft',
-        'What difference it makes — tested on twenty of our own resting recordings');
+tausche('Misst keinen Mist',
+        'No junk in your numbers');
+tausche('Zu auffällig ist auch falsch',
+        'Too conspicuous is wrong too');
 tausche('Und dort, wo es nicht reicht, sagt es das', 'And where it is not enough, it says so');
 
 // Abschnitt 4 — Verlauf
@@ -350,15 +350,17 @@ tausche('<div class="sec-eyebrow">Die Messstation</div>',
         '<div class="sec-eyebrow">The measuring station</div>');
 tausche('Eine Messstation, die im Browser läuft — ohne App, ohne Konto.',
         'A measuring station that runs in the browser — no app, no account.');
-tausche(`Es gibt <strong>nichts zu installieren</strong>. Die Halterin scannt Ihren Aushang, und
-      die Messstation ist da — im Browser, ohne Anmeldung. Sie verbindet den
+tausche(`Es gibt <strong>nichts zu installieren</strong>. Die Halterin öffnet Ihren Mess-Link —
+      als Nachricht bekommen, auf Ihrer Praxis-Website gefunden oder vom Aushang
+      gescannt — und die Messstation ist da: im Browser, ohne Anmeldung. Sie verbindet den
       Polar-H10-Gurt, lässt das Pferd stehen und tippt einmal auf Senden.
       <strong>Kein Onboarding, keine Rückfragen bei Ihnen.</strong> Gemessen wird mit einem
       Android-Telefon oder einem Rechner mit Chrome oder Edge — auf dem iPhone lässt Apple
       Bluetooth im Browser nicht zu. Im Stall genügt ein einziges messfähiges Gerät für
       alle Pferde.`,
-`There is <strong>nothing to install</strong>. The owner scans your poster and the measuring
-      station is there — in the browser, no sign-up. She connects the Polar H10 belt, lets
+`There is <strong>nothing to install</strong>. The owner opens your measuring link —
+      received as a message, found on your practice website or scanned from the poster —
+      and the measuring station is there: in the browser, no sign-up. She connects the Polar H10 belt, lets
       the horse stand and taps send once.
       <strong>No onboarding, no questions coming back to you.</strong> Recording works on an
       Android phone or a computer with Chrome or Edge — on iPhone, Apple does not permit
@@ -394,12 +396,12 @@ tausche(`Beim Pferd liegen physiologische Pausen — der AV-Block II° ist beim 
          the one over unremarkable pairs. Which share comes from what is your call, not the
          software's.`);
 tausche('Nichts läuft über uns', 'Nothing passes through us');
-tausche(`Hat Ihre Kundin Ihren Aushang gescannt, ist die Datei schon auf ihrem Telefon
+tausche(`Öffnet Ihre Kundin Ihren Mess-Link, ist die Datei schon auf ihrem Gerät
          <strong>gegen Ihren Schlüssel verschlüsselt</strong>. Sie verschickt sie über den
          Weg, den sie selbst wählt. Wir bekommen sie nicht zu sehen und legen sie nirgends
          ab — deshalb braucht es zwischen uns keinen Auftragsverarbeitungsvertrag.`,
-        `If your client scanned your poster, the file is already encrypted
-         <strong>against your key</strong> on her phone. She sends it by whatever route she
+        `The moment your client opens your measuring link, the file is already encrypted
+         <strong>against your key</strong> on her device. She sends it by whatever route she
          chooses. We never see it and store it nowhere — which is why no data processing
          agreement is needed between us.`);
 tausche('RR-Tachogramm und Atemkurve — dieselben Rohdaten, die Sie danach im Cockpit auswerten.',
@@ -482,18 +484,22 @@ tausche(`
       raw and SDNN and RMSSD rise dramatically, and the markers that respond to
       <em>small</em> values flip into the opposite.
     `);
-tausche(`Fünf Stufen, AV-Block-Erkennung mit Spline-Korrektur, Bewegungs-Artefakte,
-         Plausibilitätsgrenzen. Wir haben sie aus dem Original portiert und Wert für Wert
-         gegen die kompilierte Fassung geprüft, auf Bitmuster.`,
-        `Five stages, AV-block detection with spline correction, motion artefacts,
-         plausibility limits. We ported them from the original and checked value by value
-         against the compiled version, bit pattern for bit pattern.`);
-tausche(`Ohne diese Vorstufe fiel in <strong>acht von zwanzig</strong> Aufnahmen die
-         Atemwegs-Einstufung anders aus, jedes Mal zu auffällig. Mit ihr: kein einziger
-         Unterschied mehr zur App-Auswertung.`,
-        `Without this stage, the airway classification came out differently in
-         <strong>eight out of twenty</strong> recordings, every time too conspicuous. With
-         it: not a single difference from the app's analysis remains.`);
+tausche(`AV-Block-Pausen, Bewegungs-Artefakte, unplausible Schläge — die Auswertung
+         erkennt und korrigiert sie, <strong>bevor</strong> ein Kennwert entsteht. Ob
+         eine Aufnahme aus der App kommt oder aus der Browser-Station: Sie bekommen
+         denselben, bereinigten Wert.`,
+        `AV-block pauses, motion artefacts, implausible beats — the analysis detects
+         and corrects them <strong>before</strong> any metric is computed. Whether a
+         recording comes from the app or from the browser station: you get the same,
+         cleaned value.`);
+tausche(`Ungefiltert wirkt ein ruhendes Pferd systematisch auffälliger, als es ist.
+         Eine Triage, die zu oft warnt, ist so wertlos wie eine, die schweigt —
+         deshalb wird erst bereinigt, dann eingestuft. Damit ein auffälliges Pferd
+         auffällt, weil es das Pferd ist. Nicht die Messung.`,
+        `Unfiltered, a resting horse looks systematically more conspicuous than it is.
+         A triage that warns too often is as worthless as one that stays silent —
+         so the data is cleaned first, classified second. So that a conspicuous horse
+         stands out because of the horse. Not the measurement.`);
 tausche(`Zu wenige Schläge, zu kurz, zu viele Artefakte — dann steht „Datengrundlage zu
          klein" und kein Urteil. Ein Werkzeug, das immer etwas sagt, ist kein Werkzeug.`,
         `Too few beats, too short, too many artefacts — then it says “insufficient data”
@@ -570,12 +576,12 @@ tausche(`Auch wenn ein Verlauf eindeutig aussieht: Ob etwas geändert wird, steh
            on the screen. That is your decision, not a metric's.`);
 tausche(`Ihre Patienten liegen im Speicher Ihres Geräts. Wir haben keinen Zugriff und
            könnten sie auch nicht löschen. Die Aufnahme der Halterin läuft gar nicht erst
-           über uns: Sie schickt Ihnen eine Datei — hat sie Ihren Aushang gescannt, ist die
-           für Ihre Praxis verschlüsselt.`,
+           über uns: Sie schickt Ihnen eine Datei — geöffnet über Ihren Mess-Link, ist sie
+           von der ersten Sekunde an für Ihre Praxis verschlüsselt.`,
         `Your patients live in your device's storage. We have no access and could not
            delete them either. The owner's recording never passes through us at all: she
-           sends you a file — and if she scanned your poster, that file is encrypted for
-           your practice.`);
+           sends you a file — opened via your measuring link, it is encrypted for your
+           practice from the very first second.`);
 tausche(`Eine zugeschickte Datei ist kein Anruf. Bei akuten Beschwerden gilt, was immer
            gilt — unmittelbar tierärztlich handeln.`,
         `A file someone sends you is not a phone call. In acute cases what always applies
@@ -760,10 +766,10 @@ tausche('<span id="heroBeta"> Wir sind in der Beta und begleiten jede Praxis per
 // Kundin-erlebt-Praxis-Karte (Messstation)
 tausche('Ihre Kundin erlebt Ihre Praxis, nicht unsere Software',
         'Your client experiences your practice, not our software');
-tausche(`Sie scannt Ihren Aushang, misst auf Ihre Empfehlung, und die Rückmeldung trägt
+tausche(`Sie misst über Ihren Mess-Link auf Ihre Empfehlung, und die Rückmeldung trägt
          Ihren Briefkopf. Die Kontrolle nach der Umstellung, die bisher am Fahrweg
          scheiterte, wird zu einem Kontaktpunkt Ihrer Praxis.`,
-        `She scans your poster, records on your recommendation, and the reply carries
+        `She records via your measuring link on your recommendation, and the reply carries
          your letterhead. The follow-up after a management change that used to fail on
          the drive out becomes a touchpoint of your practice.`);
 
@@ -789,17 +795,21 @@ tausche('<h2>So beginnt Ihre Praxis.</h2>', '<h2>How your practice begins.</h2>'
 tausche('<div class="u-k">Schritt 1</div>', '<div class="u-k">Step 1</div>');
 tausche('<div class="u-k">Schritt 2</div>', '<div class="u-k">Step 2</div>');
 tausche('<div class="u-k">Schritt 3</div>', '<div class="u-k">Step 3</div>');
-tausche('<h3>Aushang drucken</h3>', '<h3>Print your poster</h3>');
-tausche(`Sie drucken aus dem Cockpit Ihren Aushang — er trägt Ihren QR-Code und Ihren
-           Schlüssel. Er hängt in der Stallgasse oder liegt im Wartezimmer.`,
-        `You print your poster from the cockpit — it carries your QR code and your
-           key. It hangs in the barn aisle or sits in the waiting room.`);
-tausche('<h3>Die Halterin scannt</h3>', '<h3>The owner scans</h3>');
-tausche(`Ab dem Scan ist jede Aufnahme von der ersten Sekunde an für Ihre Praxis
-           verschlüsselt. Die Halterin misst und schickt Ihnen die Datei auf dem Weg,
-           den sie ohnehin nutzt.`,
-        `From the scan on, every recording is encrypted for your practice from the very
-           first second. The owner records and sends you the file on whatever channel
+tausche('<h3>Mess-Link teilen</h3>', '<h3>Share your measuring link</h3>');
+tausche(`Ihr Cockpit erzeugt Ihren persönlichen Mess-Link — er trägt Ihren Schlüssel.
+           Verschicken Sie ihn als Nachricht, setzen Sie ihn auf Ihre Praxis-Website —
+           oder drucken Sie ihn als QR-Aushang für Stallgasse und Wartezimmer.`,
+        `Your cockpit creates your personal measuring link — it carries your key.
+           Send it as a message, put it on your practice website — or print it as a
+           QR poster for the barn aisle and the waiting room.`);
+tausche('<h3>Die Halterin öffnet und misst</h3>', '<h3>The owner opens it and records</h3>');
+tausche(`Ein Tipp auf den Link oder ein Scan, und die Messstation ist da — im Browser,
+           ohne App, ohne Konto. Jede Aufnahme ist von der ersten Sekunde an für Ihre
+           Praxis verschlüsselt; die Datei schickt die Halterin auf dem Weg, den sie
+           ohnehin nutzt.`,
+        `One tap on the link or one scan, and the measuring station is there — in the
+           browser, no app, no account. Every recording is encrypted for your practice
+           from the very first second; the owner sends you the file on whatever channel
            she already uses.`);
 tausche('<h3>Datei ins Cockpit ziehen</h3>', '<h3>Drag the file into the cockpit</h3>');
 tausche(`Signalgüte, Baseline-Abgleich und Einstufung stehen sofort — die Triage

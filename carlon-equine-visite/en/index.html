@@ -945,8 +945,9 @@ html.rev-an .rev.in{opacity:1;transform:none}
          Jetzt steht die Bedingung SOFORT hier, nicht erst in der FAQ. -->
     <h2>A measuring station that runs in the browser — no app, no account.</h2>
     <p class="sec-lead">
-      There is <strong>nothing to install</strong>. The owner scans your poster and the measuring
-      station is there — in the browser, no sign-up. She connects the Polar H10 belt, lets
+      There is <strong>nothing to install</strong>. The owner opens your measuring link —
+      received as a message, found on your practice website or scanned from the poster —
+      and the measuring station is there: in the browser, no sign-up. She connects the Polar H10 belt, lets
       the horse stand and taps send once.
       <strong>No onboarding, no questions coming back to you.</strong> Recording works on an
       Android phone or a computer with Chrome or Edge — on iPhone, Apple does not permit
@@ -1002,7 +1003,7 @@ html.rev-an .rev.in{opacity:1;transform:none}
            (Aushang, Briefkopf-Befund, Rueckmeldung) — hier wird sie
            zum Bindungs-Argument gebuendelt. -->
       <h3>Your client experiences your practice, not our software</h3>
-      <p>She scans your poster, records on your recommendation, and the reply carries
+      <p>She records via your measuring link on your recommendation, and the reply carries
          your letterhead. The follow-up after a management change that used to fail on
          the drive out becomes a touchpoint of your practice.</p>
     </div>
@@ -1016,8 +1017,8 @@ html.rev-an .rev.in{opacity:1;transform:none}
     </div>
     <div class="usp">
       <h3>Nothing passes through us</h3>
-      <p>If your client scanned your poster, the file is already encrypted
-         <strong>against your key</strong> on her phone. She sends it by whatever route she
+      <p>The moment your client opens your measuring link, the file is already encrypted
+         <strong>against your key</strong> on her device. She sends it by whatever route she
          chooses. We never see it and store it nowhere — which is why no data processing
          agreement is needed between us.</p>
     </div>
@@ -1173,21 +1174,22 @@ html.rev-an .rev.in{opacity:1;transform:none}
          wie in Abschnitt 2, damit die Karten-Sprache der Seite EINE ist. -->
     <div class="usps">
     <div class="usp">
-      <h3>The same filter chain as in the app, not a rebuilt one</h3>
-      <p>Five stages, AV-block detection with spline correction, motion artefacts,
-         plausibility limits. We ported them from the original and checked value by value
-         against the compiled version, bit pattern for bit pattern.</p>
+      <h3>No junk in your numbers</h3>
+      <p>AV-block pauses, motion artefacts, implausible beats — the analysis detects
+         and corrects them <strong>before</strong> any metric is computed. Whether a
+         recording comes from the app or from the browser station: you get the same,
+         cleaned value.</p>
     </div>
     <div class="usp">
-      <!-- „eigenen" — ein Wort, das aus einer scheinbaren Studie eine
-           ehrliche interne Pruefung macht. Genau dadurch glaubwuerdiger.
-           Die Zahl steht GROSS (Comet-Audit): der staerkste Beweis-Satz
-           der Seite stand im Absatz versteckt. -->
-      <h3>What difference it makes — tested on twenty of our own resting recordings</h3>
-      <div class="u-zahl">8<span>/20</span></div>
-      <p>Without this stage, the airway classification came out differently in
-         <strong>eight out of twenty</strong> recordings, every time too conspicuous. With
-         it: not a single difference from the app's analysis remains.</p>
+      <!-- 14.08.2026 (Jan): die interne QA-Zahl (8/20) ist raus — sie las
+           sich wie eine Mini-Studie und machte klein, was gross ist. Der
+           Beleg (app/belege/vorstufe-vergleich.json) bleibt im Repo; die
+           Karte traegt jetzt den NUTZEN der Bereinigung fuer die Triage. -->
+      <h3>Too conspicuous is wrong too</h3>
+      <p>Unfiltered, a resting horse looks systematically more conspicuous than it is.
+         A triage that warns too often is as worthless as one that stays silent —
+         so the data is cleaned first, classified second. So that a conspicuous horse
+         stands out because of the horse. Not the measurement.</p>
     </div>
     <div class="usp">
       <h3>And where it is not enough, it says so</h3>
@@ -1327,8 +1329,8 @@ html.rev-an .rev.in{opacity:1;transform:none}
         <h3>No database at our end</h3>
         <p>Your patients live in your device's storage. We have no access and could not
            delete them either. The owner's recording never passes through us at all: she
-           sends you a file — and if she scanned your poster, that file is encrypted for
-           your practice.</p>
+           sends you a file — opened via your measuring link, it is encrypted for your
+           practice from the very first second.</p>
       </div>
       <div class="card">
         <h3>Not an emergency channel</h3>
@@ -1354,15 +1356,17 @@ html.rev-an .rev.in{opacity:1;transform:none}
     <div class="usps">
       <div class="usp">
         <div class="u-k">Step 1</div>
-        <h3>Print your poster</h3>
-        <p>You print your poster from the cockpit — it carries your QR code and your
-           key. It hangs in the barn aisle or sits in the waiting room.</p>
+        <h3>Share your measuring link</h3>
+        <p>Your cockpit creates your personal measuring link — it carries your key.
+           Send it as a message, put it on your practice website — or print it as a
+           QR poster for the barn aisle and the waiting room.</p>
       </div>
       <div class="usp">
         <div class="u-k">Step 2</div>
-        <h3>The owner scans</h3>
-        <p>From the scan on, every recording is encrypted for your practice from the very
-           first second. The owner records and sends you the file on whatever channel
+        <h3>The owner opens it and records</h3>
+        <p>One tap on the link or one scan, and the measuring station is there — in the
+           browser, no app, no account. Every recording is encrypted for your practice
+           from the very first second; the owner sends you the file on whatever channel
            she already uses.</p>
       </div>
       <div class="usp">

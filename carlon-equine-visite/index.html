@@ -941,8 +941,9 @@ html.rev-an .rev.in{opacity:1;transform:none}
          Jetzt steht die Bedingung SOFORT hier, nicht erst in der FAQ. -->
     <h2>Eine Messstation, die im Browser läuft — ohne App, ohne Konto.</h2>
     <p class="sec-lead">
-      Es gibt <strong>nichts zu installieren</strong>. Die Halterin scannt Ihren Aushang, und
-      die Messstation ist da — im Browser, ohne Anmeldung. Sie verbindet den
+      Es gibt <strong>nichts zu installieren</strong>. Die Halterin öffnet Ihren Mess-Link —
+      als Nachricht bekommen, auf Ihrer Praxis-Website gefunden oder vom Aushang
+      gescannt — und die Messstation ist da: im Browser, ohne Anmeldung. Sie verbindet den
       Polar-H10-Gurt, lässt das Pferd stehen und tippt einmal auf Senden.
       <strong>Kein Onboarding, keine Rückfragen bei Ihnen.</strong> Gemessen wird mit einem
       Android-Telefon oder einem Rechner mit Chrome oder Edge — auf dem iPhone lässt Apple
@@ -998,7 +999,7 @@ html.rev-an .rev.in{opacity:1;transform:none}
            (Aushang, Briefkopf-Befund, Rueckmeldung) — hier wird sie
            zum Bindungs-Argument gebuendelt. -->
       <h3>Ihre Kundin erlebt Ihre Praxis, nicht unsere Software</h3>
-      <p>Sie scannt Ihren Aushang, misst auf Ihre Empfehlung, und die Rückmeldung trägt
+      <p>Sie misst über Ihren Mess-Link auf Ihre Empfehlung, und die Rückmeldung trägt
          Ihren Briefkopf. Die Kontrolle nach der Umstellung, die bisher am Fahrweg
          scheiterte, wird zu einem Kontaktpunkt Ihrer Praxis.</p>
     </div>
@@ -1012,7 +1013,7 @@ html.rev-an .rev.in{opacity:1;transform:none}
     </div>
     <div class="usp">
       <h3>Nichts läuft über uns</h3>
-      <p>Hat Ihre Kundin Ihren Aushang gescannt, ist die Datei schon auf ihrem Telefon
+      <p>Öffnet Ihre Kundin Ihren Mess-Link, ist die Datei schon auf ihrem Gerät
          <strong>gegen Ihren Schlüssel verschlüsselt</strong>. Sie verschickt sie über den
          Weg, den sie selbst wählt. Wir bekommen sie nicht zu sehen und legen sie nirgends
          ab — deshalb braucht es zwischen uns keinen Auftragsverarbeitungsvertrag.</p>
@@ -1169,21 +1170,22 @@ html.rev-an .rev.in{opacity:1;transform:none}
          wie in Abschnitt 2, damit die Karten-Sprache der Seite EINE ist. -->
     <div class="usps">
     <div class="usp">
-      <h3>Dieselbe Filterkette wie in der App, nicht eine nachgebaute</h3>
-      <p>Fünf Stufen, AV-Block-Erkennung mit Spline-Korrektur, Bewegungs-Artefakte,
-         Plausibilitätsgrenzen. Wir haben sie aus dem Original portiert und Wert für Wert
-         gegen die kompilierte Fassung geprüft, auf Bitmuster.</p>
+      <h3>Misst keinen Mist</h3>
+      <p>AV-Block-Pausen, Bewegungs-Artefakte, unplausible Schläge — die Auswertung
+         erkennt und korrigiert sie, <strong>bevor</strong> ein Kennwert entsteht. Ob
+         eine Aufnahme aus der App kommt oder aus der Browser-Station: Sie bekommen
+         denselben, bereinigten Wert.</p>
     </div>
     <div class="usp">
-      <!-- „eigenen" — ein Wort, das aus einer scheinbaren Studie eine
-           ehrliche interne Pruefung macht. Genau dadurch glaubwuerdiger.
-           Die Zahl steht GROSS (Comet-Audit): der staerkste Beweis-Satz
-           der Seite stand im Absatz versteckt. -->
-      <h3>Was das ausmacht — an zwanzig eigenen Ruheaufnahmen geprüft</h3>
-      <div class="u-zahl">8<span>/20</span></div>
-      <p>Ohne diese Vorstufe fiel in <strong>acht von zwanzig</strong> Aufnahmen die
-         Atemwegs-Einstufung anders aus, jedes Mal zu auffällig. Mit ihr: kein einziger
-         Unterschied mehr zur App-Auswertung.</p>
+      <!-- 14.08.2026 (Jan): die interne QA-Zahl (8/20) ist raus — sie las
+           sich wie eine Mini-Studie und machte klein, was gross ist. Der
+           Beleg (app/belege/vorstufe-vergleich.json) bleibt im Repo; die
+           Karte traegt jetzt den NUTZEN der Bereinigung fuer die Triage. -->
+      <h3>Zu auffällig ist auch falsch</h3>
+      <p>Ungefiltert wirkt ein ruhendes Pferd systematisch auffälliger, als es ist.
+         Eine Triage, die zu oft warnt, ist so wertlos wie eine, die schweigt —
+         deshalb wird erst bereinigt, dann eingestuft. Damit ein auffälliges Pferd
+         auffällt, weil es das Pferd ist. Nicht die Messung.</p>
     </div>
     <div class="usp">
       <h3>Und dort, wo es nicht reicht, sagt es das</h3>
@@ -1325,8 +1327,8 @@ html.rev-an .rev.in{opacity:1;transform:none}
         <h3>Keine Datenbank bei uns</h3>
         <p>Ihre Patienten liegen im Speicher Ihres Geräts. Wir haben keinen Zugriff und
            könnten sie auch nicht löschen. Die Aufnahme der Halterin läuft gar nicht erst
-           über uns: Sie schickt Ihnen eine Datei — hat sie Ihren Aushang gescannt, ist die
-           für Ihre Praxis verschlüsselt.</p>
+           über uns: Sie schickt Ihnen eine Datei — geöffnet über Ihren Mess-Link, ist sie
+           von der ersten Sekunde an für Ihre Praxis verschlüsselt.</p>
       </div>
       <div class="card">
         <h3>Kein Notfallweg</h3>
@@ -1352,16 +1354,18 @@ html.rev-an .rev.in{opacity:1;transform:none}
     <div class="usps">
       <div class="usp">
         <div class="u-k">Schritt 1</div>
-        <h3>Aushang drucken</h3>
-        <p>Sie drucken aus dem Cockpit Ihren Aushang — er trägt Ihren QR-Code und Ihren
-           Schlüssel. Er hängt in der Stallgasse oder liegt im Wartezimmer.</p>
+        <h3>Mess-Link teilen</h3>
+        <p>Ihr Cockpit erzeugt Ihren persönlichen Mess-Link — er trägt Ihren Schlüssel.
+           Verschicken Sie ihn als Nachricht, setzen Sie ihn auf Ihre Praxis-Website —
+           oder drucken Sie ihn als QR-Aushang für Stallgasse und Wartezimmer.</p>
       </div>
       <div class="usp">
         <div class="u-k">Schritt 2</div>
-        <h3>Die Halterin scannt</h3>
-        <p>Ab dem Scan ist jede Aufnahme von der ersten Sekunde an für Ihre Praxis
-           verschlüsselt. Die Halterin misst und schickt Ihnen die Datei auf dem Weg,
-           den sie ohnehin nutzt.</p>
+        <h3>Die Halterin öffnet und misst</h3>
+        <p>Ein Tipp auf den Link oder ein Scan, und die Messstation ist da — im Browser,
+           ohne App, ohne Konto. Jede Aufnahme ist von der ersten Sekunde an für Ihre
+           Praxis verschlüsselt; die Datei schickt die Halterin auf dem Weg, den sie
+           ohnehin nutzt.</p>
       </div>
       <div class="usp">
         <div class="u-k">Schritt 3</div>
