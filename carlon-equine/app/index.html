@@ -2709,6 +2709,12 @@ const Importer = {
      selbst aufloesen, wenn es dasteht. */
   async umschlagOeffnen(raw){
     if(!raw || raw.art!=='carlon-umschlag' || !raw.umschlag) return {ok:true, raw};
+    /* Die Umschlag-Version wurde geschrieben (v:1), aber nie gelesen —
+       eine kuenftige Station v2 (anderes Format) waere als „liess sich
+       mit dem Schluessel dieses Geraets nicht oeffnen" fehldiagnostiziert
+       worden, und die Tieraerztin haette am falschen Ort gesucht. */
+    if(raw.v && raw.v>1)
+      return {ok:false, grund:'Diese Aufnahme stammt aus einer neueren Fassung der Messstation — bitte das Cockpit neu laden (Strg+F5), dann klappt es'};
     if(typeof Krypto==='undefined' || typeof Praxis==='undefined')
       return {ok:false, grund:'Verschlüsselte Aufnahme — das Schlüsselmodul fehlt in dieser Fassung'};
     let ich;

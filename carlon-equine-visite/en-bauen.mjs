@@ -187,8 +187,8 @@ tausche('Beim Pferd sind Pausen normal. Wer sie mitrechnet, misst Unsinn.',
         'In horses, pauses are normal. Count them in and you measure nonsense.');
 tausche('Dieselbe Filterkette wie in der App, nicht eine nachgebaute',
         'The same filter chain as in the app, not a rebuilt one');
-tausche('Was das ausmacht — an zwanzig Ruheaufnahmen geprüft',
-        'What difference it makes — tested on twenty resting recordings');
+tausche('Was das ausmacht — an zwanzig eigenen Ruheaufnahmen geprüft',
+        'What difference it makes — tested on twenty of our own resting recordings');
 tausche('Und dort, wo es nicht reicht, sagt es das', 'And where it is not enough, it says so');
 
 // Abschnitt 4 — Verlauf
@@ -298,16 +298,18 @@ tausche('Therapie &amp; Forschung', 'Therapy &amp; research', 2);   // data-de +
 tausche(`
       Transport, fremde Umgebung, fremde Menschen — jeder dieser Reize verschiebt genau die
       autonome Balance, die Sie beurteilen wollen. Der Messort ist bei der Ruhe-HRV keine
-      Nebensache, sondern Teil der Methode: Die Auswertung verlangt ausdrücklich
-      <strong>mindestens sieben Minuten Ruhe in gewohnter Umgebung</strong>. Nach Verladung
+      Nebensache, sondern Teil der Methode: Die Atemwegs-Auswertung verlangt
+      <strong>mindestens sieben Minuten Ruhe in gewohnter Umgebung</strong> — darunter gibt
+      sie kein Ergebnis aus. Nach Verladung
       und Fahrt ist diese Bedingung systematisch nicht erfüllt — in der eigenen Box ist sie
       es jeden Tag.
     `,
         `
       Transport, unfamiliar surroundings, unfamiliar people — each of these stimuli shifts
       exactly the autonomic balance you want to assess. For resting HRV the measurement
-      site is not a side issue but part of the method: the analysis explicitly requires
-      <strong>at least seven minutes of rest in familiar surroundings</strong>. After
+      site is not a side issue but part of the method: the airway analysis requires
+      <strong>at least seven minutes of rest in familiar surroundings</strong> — below that
+      it returns no result. After
       loading and a journey this condition is systematically unmet — in the horse's own
       box it is met every day.
     `);
@@ -345,22 +347,32 @@ tausche(`Statt Anruf und Handyvideo schickt die Halterin eine standardisierte Au
    Genau deshalb prueft t-englisch die Seiten zusaetzlich gegeneinander. */
 tausche('<div class="sec-eyebrow">Die Messstation</div>',
         '<div class="sec-eyebrow">The measuring station</div>');
-tausche('Eine Messstation, die im Browser läuft. Auf jedem Telefon.',
-        'A measuring station that runs in the browser. On any phone.');
+tausche('Eine Messstation, die im Browser läuft — ohne App, ohne Konto.',
+        'A measuring station that runs in the browser — no app, no account.');
 tausche(`Es gibt <strong>nichts zu installieren</strong>. Die Halterin scannt Ihren Aushang, und
-      die Messstation ist da — im Browser ihres Telefons, ohne App, ohne Konto, ohne
-      Anmeldung. Sie verbindet den Polar-H10-Gurt, lässt das Pferd stehen und tippt einmal
-      auf Senden. <strong>Kein Onboarding, keine Rückfragen bei Ihnen.</strong>`,
+      die Messstation ist da — im Browser, ohne Anmeldung. Sie verbindet den
+      Polar-H10-Gurt, lässt das Pferd stehen und tippt einmal auf Senden.
+      <strong>Kein Onboarding, keine Rückfragen bei Ihnen.</strong> Gemessen wird mit einem
+      Android-Telefon oder einem Rechner mit Chrome oder Edge — auf dem iPhone lässt Apple
+      Bluetooth im Browser nicht zu. Im Stall genügt ein einziges messfähiges Gerät für
+      alle Pferde.`,
 `There is <strong>nothing to install</strong>. The owner scans your poster and the measuring
-      station is there — in her phone's browser, no app, no account, no sign-up. She connects
-      the Polar H10 belt, lets the horse stand and taps send once. <strong>No onboarding, no
-      questions coming back to you.</strong>`);
+      station is there — in the browser, no sign-up. She connects the Polar H10 belt, lets
+      the horse stand and taps send once.
+      <strong>No onboarding, no questions coming back to you.</strong> Recording works on an
+      Android phone or a computer with Chrome or Edge — on iPhone, Apple does not permit
+      Bluetooth in the browser. One capable device in the barn is enough for
+      all horses.`);
 tausche(`Bei Ihnen kommt kein Screenshot an, sondern ein Datensatz: alle Schlagabstände im
       Rohzustand, die daraus berechneten Kennwerte und die Signalgüte dazu. Sie sehen also
-      nicht nur eine Zahl, sondern auch, <strong>wie sehr Sie ihr trauen können</strong>.`,
+      nicht nur eine Zahl, sondern auch, <strong>wie sehr Sie ihr trauen können</strong>.
+      Ins Cockpit kommt die Datei mit einem Handgriff — hineinziehen, fertig: Signalgüte,
+      Baseline-Abgleich und Einstufung stehen sofort da.`,
 `What reaches you is not a screenshot but a dataset: every beat-to-beat interval in its raw
       state, the metrics derived from it, and the signal quality alongside. So you see not
-      just a number, but also <strong>how far you can trust it</strong>.`);
+      just a number, but also <strong>how far you can trust it</strong>.
+      Into the cockpit the file goes with one motion — drag it in, done: signal quality,
+      baseline comparison and classification are there at once.`);
 tausche('Der Aushang führt hierher. Ein Feld für den Pferdenamen, ein Knopf zum Gurt — mehr steht nicht im Weg.',
         'The poster leads here. One field for the horse\'s name, one button for the belt — nothing else in the way.');
 tausche('Während der Aufnahme sieht sie, ob das Signal trägt — nicht erst hinterher.',
@@ -527,8 +539,10 @@ tausche(`Die Auswertung ist die eine Hälfte. Die andere ist der Tag, an dem
        is what decides whether a tool survives its first month.`);
 tausche(`<b>Die Einstufung ordnet die Stopps.</b> Was Sie anders sehen, schieben Sie per Greifpunkt um — die Software schlägt vor, sie entscheidet nicht.`,
         `<b>The classification orders the stops.</b> Where you see it differently you drag the card — the software suggests, it does not decide.`);
-tausche(`<b>Nichts davon verlässt Ihr Gerät</b> — auch die Adressen nicht.`,
-        `<b>None of it leaves your device</b> — not even the addresses.`);
+tausche(`<b>Nichts davon verlässt Ihr Gerät von selbst</b> — erst Ihr Tipp übergibt
+            die Route an die Karten-App.`,
+        `<b>None of it leaves your device on its own</b> — only your tap hands
+            the route to the maps app.`);
 tausche(`
       Die schriftliche oder fernmündliche Beratung ohne Untersuchung ist in der
       <strong>GOT als Ziffer&nbsp;1</strong> geführt, der Tierarztbrief je angefangene
@@ -730,6 +744,93 @@ tausche('aria-label="Bildansicht"', 'aria-label="Image view"');
 tausche('aria-label="Schließen"', 'aria-label="Close"');
 tausche('aria-label="Vorheriges Bild"', 'aria-label="Previous image"');
 tausche('aria-label="Nächstes Bild"', 'aria-label="Next image"');
+
+
+/* ══ NEUE BLOECKE (13.08., Persona-/Kybernetik-Audit) ══════════════════ */
+
+// Hero: Beta-Satz (verschwindet bei CARLON_LIVE=true von selbst)
+tausche('<span id="heroBeta"> Wir sind in der Beta und begleiten jede Praxis persönlich — wer jetzt einsteigt, behält seinen Preis als Gründungspartner.</span>',
+        '<span id="heroBeta"> We are in beta and accompany every practice personally — join now and you keep your price as a founding partner.</span>');
+
+// Kundin-erlebt-Praxis-Karte (Messstation)
+tausche('Ihre Kundin erlebt Ihre Praxis, nicht unsere Software',
+        'Your client experiences your practice, not our software');
+tausche(`Sie scannt Ihren Aushang, misst auf Ihre Empfehlung, und die Rückmeldung trägt
+         Ihren Briefkopf. Die Kontrolle nach der Umstellung, die bisher am Fahrweg
+         scheiterte, wird zu einem Kontaktpunkt Ihrer Praxis.`,
+        `She scans your poster, records on your recommendation, and the reply carries
+         your letterhead. The follow-up after a management change that used to fail on
+         the drive out becomes a touchpoint of your practice.`);
+
+// Physiologie-Lead (Warum die Zahlen tragen)
+tausche(`
+      Die Herzratenvariabilität liest die Balance des autonomen Nervensystems ab — das
+      Wechselspiel aus Sympathikus und Parasympathikus, das sich unter Belastung des
+      Organismus verschiebt. Für die Einstufung zählt deshalb die eigene Baseline des
+      Pferds; nur die Atemwegs-Marker tragen zusätzlich studienbasierte Schwellen
+      (Nyerges-Bohák 2025).
+    `,
+        `
+      Heart rate variability reads the balance of the autonomic nervous system — the
+      interplay of sympathetic and parasympathetic tone that shifts when the organism is
+      under strain. That is why the classification rests on the horse's own baseline;
+      only the airway markers additionally carry study-based thresholds
+      (Nyerges-Bohák 2025).
+    `);
+
+// Start-Sektion (So beginnt Ihre Praxis)
+tausche('<div class="sec-eyebrow">Der Start</div>', '<div class="sec-eyebrow">Getting started</div>');
+tausche('<h2>So beginnt Ihre Praxis.</h2>', '<h2>How your practice begins.</h2>');
+tausche('<div class="u-k">Schritt 1</div>', '<div class="u-k">Step 1</div>');
+tausche('<div class="u-k">Schritt 2</div>', '<div class="u-k">Step 2</div>');
+tausche('<div class="u-k">Schritt 3</div>', '<div class="u-k">Step 3</div>');
+tausche('<h3>Aushang drucken</h3>', '<h3>Print your poster</h3>');
+tausche(`Sie drucken aus dem Cockpit Ihren Aushang — er trägt Ihren QR-Code und Ihren
+           Schlüssel. Er hängt in der Stallgasse oder liegt im Wartezimmer.`,
+        `You print your poster from the cockpit — it carries your QR code and your
+           key. It hangs in the barn aisle or sits in the waiting room.`);
+tausche('<h3>Die Halterin scannt</h3>', '<h3>The owner scans</h3>');
+tausche(`Ab dem Scan ist jede Aufnahme von der ersten Sekunde an für Ihre Praxis
+           verschlüsselt. Die Halterin misst und schickt Ihnen die Datei auf dem Weg,
+           den sie ohnehin nutzt.`,
+        `From the scan on, every recording is encrypted for your practice from the very
+           first second. The owner records and sends you the file on whatever channel
+           she already uses.`);
+tausche('<h3>Datei ins Cockpit ziehen</h3>', '<h3>Drag the file into the cockpit</h3>');
+tausche(`Signalgüte, Baseline-Abgleich und Einstufung stehen sofort — die Triage
+           ordnet das Pferd ein, der Befund ist aus der Akte heraus erstellt.`,
+        `Signal quality, baseline comparison and classification are there at once — the
+           triage places the horse, and the findings report is created straight from the
+           record.`);
+
+// FAQ: Nacht-Einwand + Baseline (Titel doppelt: Karte + JSON-LD-name)
+tausche('Entsteht daraus eine Pflicht, ständig hinzusehen?',
+        'Does this create a duty to keep watching?', 2);
+tausche(`Nein. CARLON sendet keine Alarme, und die Halterin sieht keine Einstufung —
+           die entsteht erst in Ihrem Cockpit, wenn Sie es öffnen. Eine zugeschickte
+           Datei ist eine Zusendung wie eine E-Mail: Wann Sie sie sichten, bestimmen
+           Sie und kommunizieren es wie bisher. Für den Notfall gilt, was immer gilt:
+           der Anruf.`,
+        `No. CARLON sends no alerts, and the owner sees no classification — it only
+           comes into being in your cockpit, when you open it. A file sent to you is a
+           delivery like an email: when you review it is up to you, communicated to your
+           clients as before. For emergencies, what has always applied still applies:
+           the phone call.`);
+tausche('"text": "Nein. CARLON sendet keine Alarme, und die Halterin sieht keine Einstufung — die entsteht erst in Ihrem Cockpit, wenn Sie es öffnen. Eine zugeschickte Datei ist eine Zusendung wie eine E-Mail: Wann Sie sie sichten, bestimmen Sie und kommunizieren es wie bisher. Für den Notfall gilt, was immer gilt: der Anruf."',
+        '"text": "No. CARLON sends no alerts, and the owner sees no classification — it only comes into being in your cockpit, when you open it. A file sent to you is a delivery like an email: when you review it is up to you, communicated to your clients as before. For emergencies, what has always applied still applies: the phone call."');
+tausche('Woher kommt die Baseline?', 'Where does the baseline come from?', 2);
+tausche(`Aus den Ruhemessungen dieses Pferds selbst: Ab vier eigenen Aufnahmen gilt der
+           Wert als individuelle Baseline. Bis dahin zeigt das Cockpit offen an, dass der
+           Vergleichswert noch aus dem Referenz-Datensatz stammt — und wie viele eigene
+           Aufnahmen noch fehlen. Es tut nicht so, als wüsste es schon etwas.`,
+        `From this horse's own resting recordings: from four recordings on, the value
+           counts as an individual baseline. Until then the cockpit openly shows that the
+           comparison value still comes from the reference dataset — and how many of the
+           horse's own recordings are still missing. It does not pretend to know
+           something it does not.`);
+tausche('"text": "Aus den Ruhemessungen dieses Pferds selbst: Ab vier eigenen Aufnahmen gilt der Wert als individuelle Baseline. Bis dahin zeigt das Cockpit offen an, dass der Vergleichswert noch aus dem Referenz-Datensatz stammt — und wie viele eigene Aufnahmen noch fehlen. Es tut nicht so, als wüsste es schon etwas."',
+        '"text": "From this horse\'s own resting recordings: from four recordings on, the value counts as an individual baseline. Until then the cockpit openly shows that the comparison value still comes from the reference dataset — and how many of the horse\'s own recordings are still missing. It does not pretend to know something it does not."');
+
 
 if (fehlend.length) {
   console.error('\n  ✗ Der Bau bricht ab — diese Bloecke gibt es in index.html nicht (mehr):\n');

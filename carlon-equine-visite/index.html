@@ -164,6 +164,22 @@ document.head.appendChild(s);})();</script>
       "@type": "Answer",
       "text": "Die Marker sind an einer veröffentlichten, BAL-referenzierten Studie kalibriert (Nyerges-Bohák 2025, Equine Veterinary Journal, n = 40) und werden mit ihren Schwellen einzeln ausgewiesen. Die BAL-Zytologie bleibt der Goldstandard — der Verlauf ersetzt sie nicht, er begründet, wann sie ansteht."
      }
+    },
+    {
+     "@type": "Question",
+     "name": "Entsteht daraus eine Pflicht, ständig hinzusehen?",
+     "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Nein. CARLON sendet keine Alarme, und die Halterin sieht keine Einstufung — die entsteht erst in Ihrem Cockpit, wenn Sie es öffnen. Eine zugeschickte Datei ist eine Zusendung wie eine E-Mail: Wann Sie sie sichten, bestimmen Sie und kommunizieren es wie bisher. Für den Notfall gilt, was immer gilt: der Anruf."
+     }
+    },
+    {
+     "@type": "Question",
+     "name": "Woher kommt die Baseline?",
+     "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Aus den Ruhemessungen dieses Pferds selbst: Ab vier eigenen Aufnahmen gilt der Wert als individuelle Baseline. Bis dahin zeigt das Cockpit offen an, dass der Vergleichswert noch aus dem Referenz-Datensatz stammt — und wie viele eigene Aufnahmen noch fehlen. Es tut nicht so, als wüsste es schon etwas."
+     }
     }
    ]
   }
@@ -455,7 +471,8 @@ h2{font-family:var(--font-brand);font-weight:300;font-size:clamp(28px,3.6vw,var(
 .shots.telefon .frame img{width:100%;height:100%;object-fit:cover;object-position:top center;display:block}
 .shots.telefon figcaption{font-size:14px;margin-top:14px}
 @media(max-width:900px){.shots.telefon{grid-template-columns:repeat(2,1fr)}}
-@media(max-width:560px){.shots.telefon{grid-template-columns:1fr;max-width:340px;margin-inline:auto}}
+/* (max-width:560px-Sonderfall der Telefon-Reihe entfaellt — sie ist ab
+   720 px ein Wisch-Karussell, siehe unten.) */
 .shots.three{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
 .shots.three .frame{aspect-ratio:auto;border:1px solid var(--border-subtle);border-radius:14px;overflow:hidden;background:rgba(6,16,26,0.5)}
 .shots.three .frame img{width:100%;height:auto;display:block}
@@ -586,8 +603,11 @@ html.rev-an .rev.in{opacity:1;transform:none}
 .shot .frame img, .f-shot img { pointer-events: none; }
 
 /* ===== Mobile: Screenshot-Reihen horizontal swipebar (wie Equine-Homepage) ===== */
+/* Mobil war die Telefon-Reihe eine Scrollwand: sechs Hochkant-Bilder à
+   ~735 px uebereinander — rund sechs Bildschirmseiten zwischen Hero und
+   den Cockpit-Argumenten. Jetzt wischt sie wie die anderen Reihen. */
 @media (max-width: 720px){
-  .shots.two, .shots.three{
+  .shots.two, .shots.three, .shots.telefon{
     display: flex; grid-template-columns: none;
     overflow-x: auto; overflow-y: hidden;
     scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch;
@@ -595,11 +615,16 @@ html.rev-an .rev.in{opacity:1;transform:none}
     gap: 14px; margin-left: -20px; margin-right: -20px; padding: 4px 20px 14px;
     scroll-padding: 20px;
   }
-  .shots.two::-webkit-scrollbar, .shots.three::-webkit-scrollbar{ display: none; }
+  .shots.two::-webkit-scrollbar, .shots.three::-webkit-scrollbar, .shots.telefon::-webkit-scrollbar{ display: none; }
   .shots.two > .shot, .shots.three > .shot{
     flex: 0 0 86%; min-width: 0; scroll-snap-align: center; scroll-snap-stop: always;
   }
-  .shots.two > .shot .frame, .shots.three > .shot .frame{ cursor: pointer; }
+  /* Hochkant braucht weniger Breite als Querformat — 62 % statt 86 %,
+     sonst ragt ein einzelnes Telefon ueber den ganzen Schirm. */
+  .shots.telefon > .shot{
+    flex: 0 0 62%; min-width: 0; scroll-snap-align: center; scroll-snap-stop: always;
+  }
+  .shots.two > .shot .frame, .shots.three > .shot .frame, .shots.telefon > .shot .frame{ cursor: pointer; }
   /* Wisch-Hinweis */
   .swipe-hint{ display:flex; align-items:center; gap:7px; justify-content:center;
     font-family:var(--font-mono); font-size:var(--t-mark); letter-spacing:0.14em; text-transform:uppercase;
@@ -723,7 +748,7 @@ html.rev-an .rev.in{opacity:1;transform:none}
       <a class="cta-primary" href="/carlon-equine/app/">Cockpit mit 15&nbsp;Demo-Pferden öffnen →</a>
       <a class="btn btn-back" href="#preis">Was es kostet</a>
     </div>
-    <p class="cta-note">Das Demo-Cockpit ist die vollständige Anwendung mit echten Beispielverläufen — ohne Konto, ohne Installation. Die Daten verlassen Ihre Praxis nicht.</p>
+    <p class="cta-note">Das Demo-Cockpit ist die vollständige Anwendung mit echten Beispielverläufen — ohne Konto, ohne Installation. Die Daten verlassen Ihre Praxis nicht.<span id="heroBeta"> Wir sind in der Beta und begleiten jede Praxis persönlich — wer jetzt einsteigt, behält seinen Preis als Gründungspartner.</span></p>
     <!-- Die drei staerksten Argumente der Seite, above the fold — jede
          Zeile wird weiter unten mit einem eigenen Abschnitt eingeloest. -->
     <ul class="hero-belege">
@@ -768,8 +793,9 @@ html.rev-an .rev.in{opacity:1;transform:none}
     <p class="sec-lead">
       Transport, fremde Umgebung, fremde Menschen — jeder dieser Reize verschiebt genau die
       autonome Balance, die Sie beurteilen wollen. Der Messort ist bei der Ruhe-HRV keine
-      Nebensache, sondern Teil der Methode: Die Auswertung verlangt ausdrücklich
-      <strong>mindestens sieben Minuten Ruhe in gewohnter Umgebung</strong>. Nach Verladung
+      Nebensache, sondern Teil der Methode: Die Atemwegs-Auswertung verlangt
+      <strong>mindestens sieben Minuten Ruhe in gewohnter Umgebung</strong> — darunter gibt
+      sie kein Ergebnis aus. Nach Verladung
       und Fahrt ist diese Bedingung systematisch nicht erfüllt — in der eigenen Box ist sie
       es jeden Tag.
     </p>
@@ -823,17 +849,27 @@ html.rev-an .rev.in{opacity:1;transform:none}
 <section>
   <div class="wrap">
     <div class="sec-eyebrow">Die Messstation</div>
-    <h2>Eine Messstation, die im Browser läuft. Auf jedem Telefon.</h2>
+    <!-- ⚠ „Auf jedem Telefon" stand hier — und die FAQ derselben Seite
+         sagt, dass iPhones im Browser nicht messen koennen (Apple laesst
+         kein Web-Bluetooth zu). Wer die Kernzusage einer Ueberschrift in
+         der eigenen FAQ widerlegt findet, misstraut ab da jeder weiteren.
+         Jetzt steht die Bedingung SOFORT hier, nicht erst in der FAQ. -->
+    <h2>Eine Messstation, die im Browser läuft — ohne App, ohne Konto.</h2>
     <p class="sec-lead">
       Es gibt <strong>nichts zu installieren</strong>. Die Halterin scannt Ihren Aushang, und
-      die Messstation ist da — im Browser ihres Telefons, ohne App, ohne Konto, ohne
-      Anmeldung. Sie verbindet den Polar-H10-Gurt, lässt das Pferd stehen und tippt einmal
-      auf Senden. <strong>Kein Onboarding, keine Rückfragen bei Ihnen.</strong>
+      die Messstation ist da — im Browser, ohne Anmeldung. Sie verbindet den
+      Polar-H10-Gurt, lässt das Pferd stehen und tippt einmal auf Senden.
+      <strong>Kein Onboarding, keine Rückfragen bei Ihnen.</strong> Gemessen wird mit einem
+      Android-Telefon oder einem Rechner mit Chrome oder Edge — auf dem iPhone lässt Apple
+      Bluetooth im Browser nicht zu. Im Stall genügt ein einziges messfähiges Gerät für
+      alle Pferde.
     </p>
     <p class="sec-lead" style="margin-top:var(--sp-21)">
       Bei Ihnen kommt kein Screenshot an, sondern ein Datensatz: alle Schlagabstände im
       Rohzustand, die daraus berechneten Kennwerte und die Signalgüte dazu. Sie sehen also
       nicht nur eine Zahl, sondern auch, <strong>wie sehr Sie ihr trauen können</strong>.
+      Ins Cockpit kommt die Datei mit einem Handgriff — hineinziehen, fertig: Signalgüte,
+      Baseline-Abgleich und Einstufung stehen sofort da.
     </p>
 
     <div class="shots telefon">
@@ -871,6 +907,17 @@ html.rev-an .rev.in{opacity:1;transform:none}
 
     <div class="usps">
       <div class="usp">
+      <!-- Das strategische Argument der niedergelassenen Praxis: die
+           Kundenbindung laeuft unter IHREM Namen, nicht unserem. Jede
+           Aussage hier existiert bereits an anderer Stelle der Seite
+           (Aushang, Briefkopf-Befund, Rueckmeldung) — hier wird sie
+           zum Bindungs-Argument gebuendelt. -->
+      <h3>Ihre Kundin erlebt Ihre Praxis, nicht unsere Software</h3>
+      <p>Sie scannt Ihren Aushang, misst auf Ihre Empfehlung, und die Rückmeldung trägt
+         Ihren Briefkopf. Die Kontrolle nach der Umstellung, die bisher am Fahrweg
+         scheiterte, wird zu einem Kontaktpunkt Ihrer Praxis.</p>
+    </div>
+    <div class="usp">
       <h3>Zwei Zahlen, nicht eine</h3>
       <p>Beim Pferd liegen physiologische Pausen — der AV-Block II° ist beim ruhenden Pferd
          normal — und echte Störungen in derselben Serie. Ein Filter kann sie nicht
@@ -1014,6 +1061,13 @@ html.rev-an .rev.in{opacity:1;transform:none}
     <div class="sec-eyebrow">Warum die Zahlen tragen</div>
     <h2>Beim Pferd sind Pausen normal. Wer sie mitrechnet, misst Unsinn.</h2>
     <p class="sec-lead">
+      Die Herzratenvariabilität liest die Balance des autonomen Nervensystems ab — das
+      Wechselspiel aus Sympathikus und Parasympathikus, das sich unter Belastung des
+      Organismus verschiebt. Für die Einstufung zählt deshalb die eigene Baseline des
+      Pferds; nur die Atemwegs-Marker tragen zusätzlich studienbasierte Schwellen
+      (Nyerges-Bohák 2025).
+    </p>
+    <p class="sec-lead" style="margin-top:var(--sp-21)">
       Ein ruhendes Pferd zeigt AV-Block-Pausen — physiologisch, kein Befund. Rechnet man
       sie roh mit, steigen SDNN und RMSSD dramatisch, und die Marker, die bei
       <em>kleinen</em> Werten anschlagen, kippen ins Gegenteil.
@@ -1029,7 +1083,9 @@ html.rev-an .rev.in{opacity:1;transform:none}
          gegen die kompilierte Fassung geprüft, auf Bitmuster.</p>
     </div>
     <div class="usp">
-      <h3>Was das ausmacht — an zwanzig Ruheaufnahmen geprüft</h3>
+      <!-- „eigenen" — ein Wort, das aus einer scheinbaren Studie eine
+           ehrliche interne Pruefung macht. Genau dadurch glaubwuerdiger. -->
+      <h3>Was das ausmacht — an zwanzig eigenen Ruheaufnahmen geprüft</h3>
       <p>Ohne diese Vorstufe fiel in <strong>acht von zwanzig</strong> Aufnahmen die
          Atemwegs-Einstufung anders aus, jedes Mal zu auffällig. Mit ihr: kein einziger
          Unterschied mehr zur App-Auswertung.</p>
@@ -1119,7 +1175,8 @@ html.rev-an .rev.in{opacity:1;transform:none}
         <ul>
           <li><b>Die Einstufung ordnet die Stopps.</b> Was Sie anders sehen, schieben Sie per Greifpunkt um — die Software schlägt vor, sie entscheidet nicht.</li>
           <li><b>Die Fahrzeit zum nächsten Stopp</b> steht an jeder Karte, bevor Sie zusagen.</li>
-          <li><b>Nichts davon verlässt Ihr Gerät</b> — auch die Adressen nicht.</li>
+          <li><b>Nichts davon verlässt Ihr Gerät von selbst</b> — erst Ihr Tipp übergibt
+            die Route an die Karten-App.</li>
         </ul>
       </div>
     </div>
@@ -1185,6 +1242,42 @@ html.rev-an .rev.in{opacity:1;transform:none}
   </div>
 </section>
 
+<!-- ── 7b · DER START ──────────────────────────────────────────────
+     Der Aushang wurde auf der Seite zweimal vorausgesetzt („Ihren
+     Aushang") und nie erklaert — der Weg vom Abo zur ersten eingehenden
+     Aufnahme war unsichtbar, und was man sich nicht vorstellen kann,
+     kauft man nicht. Alle drei Schritte sind Code-verifiziert:
+     UI.aushangDrucken() nach Lizenz, Schluessel im QR (t-pilotschluessel),
+     Drag&Drop-Import (dropzone). Bewusst VOR dem Preis: erst der Weg,
+     dann die Zahl. -->
+<section>
+  <div class="wrap">
+    <div class="sec-eyebrow">Der Start</div>
+    <h2>So beginnt Ihre Praxis.</h2>
+    <div class="usps">
+      <div class="usp">
+        <div class="u-k">Schritt 1</div>
+        <h3>Aushang drucken</h3>
+        <p>Sie drucken aus dem Cockpit Ihren Aushang — er trägt Ihren QR-Code und Ihren
+           Schlüssel. Er hängt in der Stallgasse oder liegt im Wartezimmer.</p>
+      </div>
+      <div class="usp">
+        <div class="u-k">Schritt 2</div>
+        <h3>Die Halterin scannt</h3>
+        <p>Ab dem Scan ist jede Aufnahme von der ersten Sekunde an für Ihre Praxis
+           verschlüsselt. Die Halterin misst und schickt Ihnen die Datei auf dem Weg,
+           den sie ohnehin nutzt.</p>
+      </div>
+      <div class="usp">
+        <div class="u-k">Schritt 3</div>
+        <h3>Datei ins Cockpit ziehen</h3>
+        <p>Signalgüte, Baseline-Abgleich und Einstufung stehen sofort — die Triage
+           ordnet das Pferd ein, der Befund ist aus der Akte heraus erstellt.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
 <!-- ── 8 · PREIS ──────────────────────────────────────────────────── -->
 <section id="preis">
   <div class="wrap">
@@ -1238,6 +1331,9 @@ html.rev-an .rev.in{opacity:1;transform:none}
       var live = (typeof window.CARLON_LIVE !== 'undefined') && window.CARLON_LIVE === true;
       var de = (document.documentElement.lang || 'de').indexOf('en') !== 0;
       if (live) {
+        /* Beim Live-Gang verschwindet der Beta-Satz im Hero von selbst —
+           zwei Stellen, ein Schalter. */
+        var hb = document.getElementById('heroBeta'); if (hb) hb.remove();
         box.innerHTML =
           '<a class="cta-primary" href="/carlon-equine/app/?kasse=1" ' +
           'data-en="Subscribe — activates immediately" data-de="Abonnieren — sofort aktiv">' +
@@ -1268,7 +1364,82 @@ html.rev-an .rev.in{opacity:1;transform:none}
   </div>
 </section>
 
-<!-- ── 9 · DER ABSCHLUSS: RISIKO NULL ─────────────────────────────── -->
+<!-- ── 9 · FAQ — VOR dem Abschluss: Einwandbehandlung wirkt nur,
+     wenn danach eine Handlung moeglich ist. Wer erst in der FAQ
+     ueberzeugt wird, hatte vorher den weitesten Weg zum Formular. ───────────────────────────────────────────────────── -->
+<section>
+  <div class="wrap">
+    <div class="sec-eyebrow">Häufige Fragen</div>
+    <h2>Was Tierärzte uns zuerst fragen.</h2>
+    <div class="grid">
+      <div class="card">
+        <h3>Ersetzt CARLON eine Untersuchung?</h3>
+        <p>Nein. CARLON bereitet Verlaufsdaten auf und hilft bei der Reihenfolge. Ob eine
+           klinische Untersuchung, weitere Diagnostik oder eine Behandlung nötig ist,
+           entscheiden ausschließlich Sie.</p>
+      </div>
+      <div class="card">
+        <h3>Was braucht die Halterin?</h3>
+        <p>Einen Polar-H10-Brustgurt und ein Android-Gerät oder einen Rechner mit
+           Chrome oder Edge. Auf iPhone und iPad lässt Apple Bluetooth im Browser nicht zu;
+           die Seite führt dort auf ein messfähiges Gerät.</p>
+      </div>
+      <div class="card">
+        <h3>Was passiert nach einer Kündigung?</h3>
+        <p>Die Anwendung wechselt in einen funktionsreduzierten Modus. Ihre Daten bleiben
+           auf dem Gerät und lassen sich weiterhin öffnen und exportieren. Wir könnten sie
+           gar nicht löschen — sie liegen bei Ihnen.</p>
+      </div>
+      <div class="card">
+        <h3>Brauche ich einen Auftragsverarbeitungsvertrag?</h3>
+        <p>Nein. Das Cockpit läuft vollständig in Ihrem Browser, und auch die Aufnahme der
+           Halterin erreicht uns nicht: Ihre Messstation legt eine Datei auf ihrem eigenen
+           Gerät an, die sie Ihnen selbst schickt. Es gibt keinen Zwischenspeicher bei uns —
+           und damit nichts, worüber ein Auftragsverarbeitungsvertrag zu schließen wäre.</p>
+      </div>
+      <div class="card">
+        <h3>Was taugt eine Messung von Laienhand?</h3>
+        <p>Jede Aufnahme bringt ihr Messprotokoll mit: Anteil auswertbarer Schlagpaare,
+           Artefaktrate, Sensor, Zeitauflösung. Eine Aufnahme, die nichts trägt, wird genau
+           so ausgewiesen — Sie deuten nie blind. Und die Rohdaten liegen bei: jeder
+           einzelne Schlagabstand.</p>
+      </div>
+      <div class="card">
+        <h3>Welche Evidenz steht hinter den Atemwegs-Markern?</h3>
+        <p>Die Marker sind an einer veröffentlichten, BAL-referenzierten Studie kalibriert
+           (Nyerges-Bohák 2025, Equine Veterinary Journal, n = 40) und werden mit ihren
+           Schwellen einzeln ausgewiesen. Die BAL-Zytologie bleibt der Goldstandard — der
+           Verlauf ersetzt sie nicht, er begründet, wann sie ansteht.</p>
+      </div>
+      <!-- Der Nacht-Einwand: jedes System, das Dringlichkeit einstuft,
+           erzeugt potenziell die Erwartung, dass jemand hinsieht. Beide
+           Aussagen Code-verifiziert: keine Push/Alarm-APIs im ganzen
+           Produkt; die Station zeigt der Halterin ausdruecklich KEINE
+           Einstufung (messen.html: „Die Deutung ist das Produkt der
+           Praxis und bleibt dort"). -->
+      <div class="card">
+        <h3>Entsteht daraus eine Pflicht, ständig hinzusehen?</h3>
+        <p>Nein. CARLON sendet keine Alarme, und die Halterin sieht keine Einstufung —
+           die entsteht erst in Ihrem Cockpit, wenn Sie es öffnen. Eine zugeschickte
+           Datei ist eine Zusendung wie eine E-Mail: Wann Sie sie sichten, bestimmen
+           Sie und kommunizieren es wie bisher. Für den Notfall gilt, was immer gilt:
+           der Anruf.</p>
+      </div>
+      <!-- Baseline-Herkunft: MIN_EIGEN = 4 im Cockpit-Code; davor weist
+           die Akte offen aus, dass der Vergleichswert noch aus dem
+           Referenz-Datensatz stammt. -->
+      <div class="card">
+        <h3>Woher kommt die Baseline?</h3>
+        <p>Aus den Ruhemessungen dieses Pferds selbst: Ab vier eigenen Aufnahmen gilt der
+           Wert als individuelle Baseline. Bis dahin zeigt das Cockpit offen an, dass der
+           Vergleichswert noch aus dem Referenz-Datensatz stammt — und wie viele eigene
+           Aufnahmen noch fehlen. Es tut nicht so, als wüsste es schon etwas.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── 10 · DER ABSCHLUSS: RISIKO NULL ─────────────────────────────── -->
 <section class="final">
   <div class="wrap">
     <div class="sec-eyebrow">Bevor Sie irgendetwas entscheiden</div>
@@ -1345,55 +1516,6 @@ html.rev-an .rev.in{opacity:1;transform:none}
         oder schreiben Sie einfach an <a href="mailto:jan@vitalkultur.com">jan@vitalkultur.com</a>.
       </p>
     </form>
-  </div>
-</section>
-
-<!-- ── 10 · FAQ ───────────────────────────────────────────────────── -->
-<section>
-  <div class="wrap">
-    <div class="sec-eyebrow">Häufige Fragen</div>
-    <h2>Was Tierärzte uns zuerst fragen.</h2>
-    <div class="grid">
-      <div class="card">
-        <h3>Ersetzt CARLON eine Untersuchung?</h3>
-        <p>Nein. CARLON bereitet Verlaufsdaten auf und hilft bei der Reihenfolge. Ob eine
-           klinische Untersuchung, weitere Diagnostik oder eine Behandlung nötig ist,
-           entscheiden ausschließlich Sie.</p>
-      </div>
-      <div class="card">
-        <h3>Was braucht die Halterin?</h3>
-        <p>Einen Polar-H10-Brustgurt und ein Android-Gerät oder einen Rechner mit
-           Chrome oder Edge. Auf iPhone und iPad lässt Apple Bluetooth im Browser nicht zu;
-           die Seite führt dort auf ein messfähiges Gerät.</p>
-      </div>
-      <div class="card">
-        <h3>Was passiert nach einer Kündigung?</h3>
-        <p>Die Anwendung wechselt in einen funktionsreduzierten Modus. Ihre Daten bleiben
-           auf dem Gerät und lassen sich weiterhin öffnen und exportieren. Wir könnten sie
-           gar nicht löschen — sie liegen bei Ihnen.</p>
-      </div>
-      <div class="card">
-        <h3>Brauche ich einen Auftragsverarbeitungsvertrag?</h3>
-        <p>Nein. Das Cockpit läuft vollständig in Ihrem Browser, und auch die Aufnahme der
-           Halterin erreicht uns nicht: Ihre Messstation legt eine Datei auf ihrem eigenen
-           Gerät an, die sie Ihnen selbst schickt. Es gibt keinen Zwischenspeicher bei uns —
-           und damit nichts, worüber ein Auftragsverarbeitungsvertrag zu schließen wäre.</p>
-      </div>
-      <div class="card">
-        <h3>Was taugt eine Messung von Laienhand?</h3>
-        <p>Jede Aufnahme bringt ihr Messprotokoll mit: Anteil auswertbarer Schlagpaare,
-           Artefaktrate, Sensor, Zeitauflösung. Eine Aufnahme, die nichts trägt, wird genau
-           so ausgewiesen — Sie deuten nie blind. Und die Rohdaten liegen bei: jeder
-           einzelne Schlagabstand.</p>
-      </div>
-      <div class="card">
-        <h3>Welche Evidenz steht hinter den Atemwegs-Markern?</h3>
-        <p>Die Marker sind an einer veröffentlichten, BAL-referenzierten Studie kalibriert
-           (Nyerges-Bohák 2025, Equine Veterinary Journal, n = 40) und werden mit ihren
-           Schwellen einzeln ausgewiesen. Die BAL-Zytologie bleibt der Goldstandard — der
-           Verlauf ersetzt sie nicht, er begründet, wann sie ansteht.</p>
-      </div>
-    </div>
   </div>
 </section>
 
@@ -1560,7 +1682,7 @@ if(_lb) _lb.addEventListener('click', function(){
   }, {passive:true});
   // Swipe-Hinweis unter mobile Carousels
   if(window.matchMedia && window.matchMedia('(max-width:720px)').matches){
-    [].slice.call(document.querySelectorAll('.shots.two, .shots.three')).forEach(function(row){
+    [].slice.call(document.querySelectorAll('.shots.two, .shots.three, .shots.telefon')).forEach(function(row){
       if(row.children.length<2) return;
       var h=document.createElement('div'); h.className='swipe-hint';
       var de=(window.CARLON_LANG==='en')?'Swipe · tap to enlarge':'Wischen · tippen zum Vergrößern';

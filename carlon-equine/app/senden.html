@@ -227,6 +227,14 @@ async function start(file){
   $('#pb').style.width='0';
   $('#status').textContent='Verbinde mit der Praxis…';
   try{
+    /* ⚠ INTERIM-RIEGEL (13.08.): der Relay in p2p.js ist ein PLATZHALTER
+       (example.workers.dev) — dieser Weg KANN derzeit nicht gelingen. Das
+       Cockpit prueft genau das seit dem 12.08.; diese Seite tat es nicht
+       und liess die Besitzerin nach dem muehsamsten Schritt (Datei
+       gesucht!) in einen garantierten Fehlschlag laufen. Bis zum Umbau
+       auf den Dateiweg sagt die Seite ehrlich, was geht. */
+    if(!window.P2P || !P2P.RELAY || P2P.RELAY.includes('example.workers.dev'))
+      throw new Error('relay-platzhalter');
     await P2P.send(room, file, {
       onStatus:s=>{ if(s==='connected') $('#status').textContent='Verbunden — übertrage…'; },
       onProgress:p=>{ $('#pb').style.width=Math.round(p*100)+'%'; }
@@ -235,8 +243,10 @@ async function start(file){
     $('#status').innerHTML='<span class="done">✓ Aufnahme übertragen</span>';
   }catch(e){
     $('#status').textContent='';
-    $('#err').textContent='Übertragung fehlgeschlagen — ist der Empfang in der Praxis geöffnet?';
-    $('#btnRetry').classList.remove('hidden');
+    $('#err').textContent = (e && e.message==='relay-platzhalter')
+      ? 'Dieser Übertragungsweg wird gerade umgebaut. Schick die Datei deiner Praxis direkt — wie ein Foto, über WhatsApp, Mail oder AirDrop.'
+      : 'Übertragung fehlgeschlagen — ist der Empfang in der Praxis geöffnet?';
+    if(!(e && e.message==='relay-platzhalter')) $('#btnRetry').classList.remove('hidden');
   }
 }
 </script>

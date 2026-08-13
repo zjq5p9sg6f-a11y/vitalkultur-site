@@ -831,7 +831,11 @@ const HAUS={ appImStore:false, appUrl:'https://carlon.app' };
       <div id="qrBild" style="display:inline-block;background:#fff;border-radius:12px;padding:10px;width:172px;height:172px"></div>
       <div class="hint" style="max-width:46ch;margin:10px auto 0" data-i18n="qrHint">Oder mit dem Geraet scannen, das messen soll — Laptop oder Android-Tablet. Dabei verlaesst nichts dein Telefon.</div>
     </div>
-    <div class="hint" data-i18n="unsupHint">Du hast schon eine Aufnahme als Datei? Dann kannst du sie direkt an deine Praxis übergeben — dafür brauchst du kein Bluetooth.</div>
+    <!-- ⚠ Hier stand „kannst du sie direkt an deine Praxis uebergeben" —
+         ein Versprechen auf senden.html, dessen Knopf am 13.08. ausgehaengt
+         wurde. Ein Satz, der auf eine tote Interaktion zeigt, trifft genau
+         die wertvollste Besucherin: die mit App-Export in der Hand. -->
+    <div class="hint" data-i18n="unsupHint">Du hast schon eine Aufnahme als Datei? Schick sie deiner Praxis direkt — wie ein Foto, auf dem Weg, den ihr ohnehin nutzt.</div>
   </div>
 
   <!-- ── 1) Bereit ── -->
@@ -1094,7 +1098,13 @@ const HAUS={ appImStore:false, appUrl:'https://carlon.app' };
     </button>
     <!-- Einbeziehung nach § 305 Abs. 2 BGB: der Hinweis steht dort, wo die
          Handlung passiert — nicht in einer Fußzeile, die niemand liest. -->
-    <p class="hint" style="max-width:52ch;margin:var(--s2) auto 0" data-i18n="sendRecht">Mit dem Senden gilt die Übergabe nach <a href="/agb.html#postfach">§ 12b der AGB</a>: verschlüsselt, spätestens nach 30 Tagen gelöscht, keine Zusage einer Beurteilung. Was dabei gespeichert wird, steht in der <a href="/privacy.html">Datenschutzerklärung</a>.</p>
+    <!-- ⚠ Der statische Fallback behauptete hier die POSTFACH-Welt
+         (§ 12b, „nach 30 Tagen geloescht") — einen Speicher, den es nicht
+         mehr gibt. applyLang() ueberschreibt ihn im Normalfall mit dem
+         Katalogtext; genau beim Skript-Ausfall blieb die falsche
+         Behauptung stehen. Eine Quelle, zwei Ausspielungen: der Fallback
+         ist jetzt WORTGLEICH zum Katalog (sendRecht). -->
+    <p class="hint" style="max-width:52ch;margin:var(--s2) auto 0" data-i18n="sendRecht">Die Datei entsteht auf deinem Gerät und verlässt es auf dem Weg, den du selbst wählst — wir bekommen sie nicht zu sehen und legen sie nirgends ab. Was diese Seite tut, steht in der <a href="/privacy.html">Datenschutzerklärung</a>; für die Nutzung gelten die <a href="/agb.html#uebergabe">AGB</a>.</p>
     <div class="subactions">
       <button class="btn ghost" id="btnSave" data-i18n="save">Als Datei speichern</button>
       <button class="btn ghost hidden" id="btnAgain" data-i18n="again">Neue Messung</button>
@@ -1126,6 +1136,11 @@ const HAUS={ appImStore:false, appUrl:'https://carlon.app' };
        tragen wie das Wörterbuch — sonst zeigt genau der Ausfall die alte, zu
        breite Fassung („was das Herz tut"). Beide Stellen zusammen ändern. -->
   <div class="hint" style="max-width:60ch;margin-left:auto;margin-right:auto" data-i18n="footerNote">Diese Seite zeichnet Herzschlag-Daten deines Pferds auf — die medizinische Beurteilung erfolgt ausschließlich durch deine Tierärztin oder deinen Tierarzt.</div>
+  <!-- Der wahrscheinlichste Vet-Erstkontakt mit CARLON ist DIESE Seite:
+       eine Halterin schickt den Link statt der Datei. Bisher musste sich
+       genau der Besucher, der zahlen wuerde, den Verkaufsweg selbst
+       suchen. Eine leise Zeile, Sie-Anrede wie auf der Visite-Seite. -->
+  <div class="hint" style="max-width:60ch;margin:8px auto 0" data-i18n="vetZeile">Sie sind Tierärztin oder Tierarzt? So liest Ihre Praxis diese Messungen: <a href="/carlon-equine-visite/">CARLON Equine Visite →</a></div>
   <div class="privacy"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg><span data-i18n="privacyLine">Ende-zu-Ende verschlüsselt · kein Server kann die Messwerte lesen</span></div>
   <!-- § 5 DDG und Art. 13 DSGVO: von JEDER Seite erreichbar, nicht nur von der
        Startseite. Und § 305 Abs. 2 BGB: ohne diesen Weg sind die AGB, die die
@@ -1287,7 +1302,7 @@ de:{
  wayIosT:'Apple-Geräte: CARLON EQUINE', wayIosS:'Die App misst nativ und kann deutlich mehr als diese Seite.',
  sendLink:'Link an ein messendes Gerät senden',
  sendFile:'Aufnahme als Datei senden',
- unsupHint:'Du hast schon eine Aufnahme als Datei? Dann kannst du sie direkt an deine Praxis übergeben — dafür brauchst du kein Bluetooth.',
+ unsupHint:'Du hast schon eine Aufnahme als Datei? Schick sie deiner Praxis direkt — wie ein Foto, auf dem Weg, den ihr ohnehin nutzt.',
  /* Live */
  liveEyebrow:'Aufnahme läuft', liveH1:'Messung läuft',
  liveSub:'Ruhig stehen lassen. Je ruhiger das Pferd, desto aussagekräftiger die Aufnahme.',
@@ -1300,6 +1315,10 @@ de:{
  progressH:'Aufnahme-Fortschritt',
  progressStart:'Empfohlen sind mindestens sieben Minuten ruhige Messung — erst dann trägt die Atemwegs-Auswertung.',
  stop:'Messung beenden', restart:'Verwerfen und neu starten',
+ stopBestaetigen:'Erst {x} gemessen — wirklich beenden? Nochmal tippen.',
+ stromStill:'Seit einigen Sekunden kommen keine Herzschläge an — sitzt der Gurt noch? Elektroden nachfeuchten hilft meistens.',
+ sendAbgebrochen:'Nichts verschickt — tippe erneut auf „An die Praxis senden".',
+ sendFehlerDatei:'Das hat nicht geklappt — tippe auf „Als Datei speichern" und schick die Datei deiner Tierärztin wie ein Foto.',
  liveHint:'Halte das Gerät in der Nähe und lass den Bildschirm an — schläft er ein, bricht die Bluetooth-Verbindung ab.',
  /* Beleg */
  doneEyebrow:'Aufnahme abgeschlossen',
@@ -1336,6 +1355,7 @@ de:{
  /*MDR — extern geprüft 06.08., Perplexity/Recherche: „was das Herz tut" ist umgangssprachlich zu breit;
     Formulierung auf reine Datenerfassung verengt. Nicht ohne erneute Prüfung ändern. */
  footerNote:'Diese Seite zeichnet Herzschlag-Daten deines Pferds auf — die medizinische Beurteilung erfolgt ausschließlich durch deine Tierärztin oder deinen Tierarzt.',
+ vetZeile:'Sie sind Tierärztin oder Tierarzt? So liest Ihre Praxis diese Messungen: <a href="/carlon-equine-visite/">CARLON Equine Visite →</a>',
  disclaimer:'Kein Medizinprodukt, keine Diagnose.',
  /* Vollbild */
  zFit:'Anpassen', zWhole:'Ganze Aufnahme',
@@ -1393,7 +1413,7 @@ en:{
  wayIosT:'Apple devices: CARLON EQUINE', wayIosS:'The app records natively and does considerably more than this page.',
  sendLink:'Send the link to a device that can record',
  sendFile:'Send a recording as a file',
- unsupHint:'Already have a recording as a file? You can hand it to your practice directly — no Bluetooth needed for that.',
+ unsupHint:'Already have a recording as a file? Send it to your practice directly — like a photo, on whatever channel you already use.',
  liveEyebrow:'Recording in progress', liveH1:'Recording',
  liveSub:'Let the horse stand quietly. The calmer the horse, the more meaningful the recording.',
  liveRange:'So far', liveRangeUnit:'bpm',
@@ -1405,6 +1425,10 @@ en:{
  progressH:'Recording progress',
  progressStart:'At least seven minutes of quiet recording is recommended — only then does the airway assessment carry.',
  stop:'Finish recording', restart:'Discard and start over',
+ stopBestaetigen:'Only {x} recorded — really finish? Tap again.',
+ stromStill:'No heartbeats have arrived for a few seconds — is the belt still snug? Re-wetting the electrodes usually helps.',
+ sendAbgebrochen:'Nothing sent — tap “Send to the practice” again.',
+ sendFehlerDatei:'That did not work — tap “Save as file” and send the file to your vet like a photo.',
  liveHint:'Keep the device nearby and leave the screen on — if it sleeps, the Bluetooth connection drops.',
  doneEyebrow:'Recording complete',
  tBeatsDone:'Heartbeats', tBeatsDoneSub:'individual beats captured',
@@ -1433,6 +1457,7 @@ en:{
     „not intended to diagnose, treat, cure, or prevent any disease" belastbarer als eine
     woertliche Uebersetzung. Nicht ohne erneute Pruefung aendern. */
  footerNote:'This page records heart rate and rhythm data from your horse — any medical assessment is made exclusively by your veterinarian.',
+ vetZeile:'Are you a veterinarian? This is how practices read these recordings: <a href="/carlon-equine-visite/en/">CARLON Equine Visite →</a>',
  disclaimer:'For informational purposes only. Not a medical device. Not intended to diagnose, treat, cure, or prevent any disease.',
  zFit:'Fit', zWhole:'Whole recording',
  zHintV:'Pinch to zoom, swipe to pan',
@@ -3514,6 +3539,7 @@ function onBeat(ev){
     S.rrGesehen=true;
     while(off+2<=v.byteLength){
       const rrMs=Math.round(v.getUint16(off,true)*1000/1024);
+      S.letzterSchlagMs=Date.now(); /* Totmannschalter-Futter (tick) */
       if(S.rr.length<50000) S.rr.push(rrMs);
       off+=2;
     }
@@ -3606,6 +3632,23 @@ function tick(){
       .replace('{n}', String(Math.max(0, REC_BEATS - schlaege)));
   } else {
     $('#recTxt').textContent = t('recRemaining').replace('{x}', mmss(REC_SEC-secs));
+  }
+  /* ── TOTMANNSCHALTER FUER DEN DATENSTROM (13.08.) ────────────────────
+     Trocknende Elektroden lassen den Strom stehen, OHNE dass
+     gattserverdisconnected feuert (bekannter H10-Flatline-Modus): die Uhr
+     lief weiter, der letzte Puls stand eingefroren, und die Halterin
+     merkte erst am Beleg — oder nie —, dass ab Minute 2 nichts mehr kam.
+     Jetzt meldet die Seite nach 8 s ohne Schlag und nimmt die Meldung
+     selbststaendig zurueck, sobald Schlaege wieder eintreffen. Das Band
+     wird nur angefasst, wenn ES es gesetzt hat (dataset.strom) — die
+     Artefakt-Meldung, die dasselbe Element nutzt, bleibt unberuehrt. */
+  const w=$('#rrWarn');
+  if(w && !S.demo && !S.stopped && S.letzterSchlagMs){
+    if(Date.now()-S.letzterSchlagMs>8000){
+      if(w.classList.contains('hidden')){ w.textContent=t('stromStill'); w.dataset.strom='1'; w.classList.remove('hidden'); }
+    } else if(w.dataset.strom){
+      w.classList.add('hidden'); delete w.dataset.strom;
+    }
   }
 }
 function mmss(sec){ sec=Math.max(0,Math.floor(sec)); return Math.floor(sec/60)+':'+String(sec%60).padStart(2,'0'); }
@@ -3777,6 +3820,29 @@ document.addEventListener('visibilitychange', ()=>{
 
 /* ── Beenden ───────────────────────────────────────────────────────────── */
 $('#btnStop').addEventListener('click', async ()=>{
+  /* ── ZWEITIPP UNTER DER EMPFEHLUNG (13.08.) ──────────────────────────
+     „Verwerfen" war doppelt gesichert, „Beenden" nicht — dabei ist der
+     Fehltipp aufs Beenden der teurere: einhaendig im Stall beendete er
+     die Messung unwiderruflich VOR der Sieben-Minuten-Schwelle, und neu
+     messen heisst neu koppeln und neues Stillstehen. Unter der
+     Empfehlung armiert der erste Tipp nur; ab erreichter Empfehlung
+     beendet er sofort. Der Beispiel-Lauf (S.demo) beendet programmatisch
+     und bleibt aussen vor. */
+  if(!S.demo && !S._stopArmiert){
+    const secs=laufzeitSek(), schlaege=(S.rr&&S.rr.length)||0;
+    if(secs<REC_SEC || schlaege<REC_BEATS){
+      S._stopArmiert=true;
+      const bestaetigung=t('stopBestaetigen').replace('{x}', mmss(secs));
+      $('#btnStop').textContent=bestaetigung;
+      setTimeout(()=>{ S._stopArmiert=false;
+        /* Nur zuruecksetzen, wenn noch UNSER Text steht — nach einem
+           Verbindungsabriss traegt der Knopf „Aufnahme abschliessen"
+           (dropStop), und den darf der Timer nicht ueberschreiben. */
+        try{ if(!S.stopped && $('#btnStop').textContent===bestaetigung) $('#btnStop').textContent=t('stop'); }catch(_){}
+      }, 4000);
+      return;
+    }
+  }
   S.stopped=true;
   clearInterval(S.timer);
   if(_beispielUhr){ clearTimeout(_beispielUhr); _beispielUhr=null; }
@@ -4111,12 +4177,26 @@ $('#btnSend').addEventListener('click', async ()=>{
         ? 'Hier ist die Herzfrequenz-Messung von meinem Pferd. Die Datei ist für deine Praxis verschlüsselt.'
         : 'Hier ist die Herzfrequenz-Messung von meinem Pferd. Öffnen mit CARLON: '
           + (window.CARLON_KANON||new URL('index.html',location.href).toString());
-      let geteilt=false;
+      let geteilt=false, abgebrochen=false;
       if(navigator.canShare && navigator.canShare({files:[datei]})){
         try{
           await navigator.share({title:'Messung für die Praxis', text, files:[datei]});
           geteilt=true;
-        }catch(_){ /* abgebrochen oder abgelehnt — Rueckfall unten */ }
+        }catch(err){
+          /* ⚠ WEGTIPPEN IST KEIN VERSAND. Vorher schluckte dieser catch
+             alles, fiel auf Herunterladen zurueck und verbuchte trotzdem
+             art:'gesendet' — ein einhaendiger Fehltipp im Stall erzeugte
+             „Aufnahme weitergegeben", und die Halterin wartete auf eine
+             Praxis, die nie etwas bekommen hat. Abbruch ist jetzt ein
+             eigener, ehrlicher Zweig. */
+          if(err && (err.name==='AbortError'||err.name==='NotAllowedError')) abgebrochen=true;
+        }
+      }
+      if(abgebrochen){
+        $('#pb').style.width='0%';
+        $('#status').textContent=t('sendAbgebrochen');
+        $('#btnSend').disabled=false; $('#btnSave').disabled=false;
+        return;
       }
       if(!geteilt) dateiHerunterladen(datei);
       $('#status').innerHTML='<span class="done">✓ '
@@ -4128,7 +4208,9 @@ $('#btnSend').addEventListener('click', async ()=>{
              : 'Sie enthält nur die Messung deines Pferds, sonst nichts.')
           : 'Dein Browser kann Dateien nicht direkt teilen. Die Datei liegt in deinen Downloads — schick sie deiner Tierärztin wie ein Foto.')
         +'</div>';
-      Verlauf.hinzu({art:'gesendet'}); lageZeigen();
+      /* Nur ein aufgeloestes share() ist ein Versand; der Download ist eine
+         Kopie in den eigenen Haenden — die Lage-Karte zaehlt nur Gesendetes. */
+      Verlauf.hinzu({art: geteilt?'gesendet':'gespeichert'}); lageZeigen();
       weitersagenZeigen();
       $('#btnSend').classList.add('hidden'); $('#btnSave').disabled=false;
       $('#btnAgain').classList.remove('hidden');
@@ -4197,7 +4279,14 @@ $('#btnSend').addEventListener('click', async ()=>{
     $('#btnAgain').classList.remove('hidden');
   }catch(e){
     $('#status').textContent='';
-    $('#err').textContent='Übertragung fehlgeschlagen — ist der Empfang in der Praxis geöffnet? Du kannst die Datei speichern und stattdessen senden.';
+    /* ⚠ Der alte Text stammte aus der Postfach-Aera („ist der Empfang in
+       der Praxis geoeffnet?") — im Dateiweg gibt es keinen Empfang, der
+       offen sein koennte. Die Halterin suchte den Fehler bei der Praxis,
+       und die Praxis bekam Anrufe. Jetzt zeigt der Text auf den Rueckfall,
+       der immer geht. */
+    $('#err').textContent = POSTFACH_AN
+      ? 'Übertragung fehlgeschlagen — ist der Empfang in der Praxis geöffnet? Du kannst die Datei speichern und stattdessen senden.'
+      : t('sendFehlerDatei');
     $('#btnSend').disabled=false; $('#btnSave').disabled=false;
   }
 });
