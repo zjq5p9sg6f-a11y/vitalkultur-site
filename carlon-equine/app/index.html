@@ -1803,7 +1803,10 @@ nav.tabs button.on{text-shadow:none}
       <img src="assets/carlon-logo-soft-128.png" alt="">
       <div>
         <div class="wm">CARLON EQUINE VISITE <span class="beta-pill" title="Test-Beta — Feedback willkommen">BETA</span></div>
-        <div class="tag">Equine Heart Science</div>
+        <!-- Klinik-Name ADDITIV (AP2, 13.08.): bei vet_clinic steht der
+             Betrieb aus der Lizenz neben der Tagline — Solo verliert
+             nichts (ADR). Gefuellt von Nav.render(), Quelle License.lic(). -->
+        <div class="tag">Equine Heart Science<span id="klinikName"></span></div>
       </div>
     </div>
     <nav class="tabs" id="tabs">
@@ -7362,6 +7365,12 @@ const UI={
       ['year','Jahresabo',(License.PREIS.soloJahr/12).toFixed(2).replace('.',','),`${License.PREIS.soloJahr} € im Jahr — zwei Monate günstiger`,'beste Wahl'],
       ['month','Monatsabo',String(License.PREIS.soloMonat),'monatlich kündbar',''],
     ];
+    /* Klinik-Stufe (AP3): eigener Block unter der Praxis — der Magnet ist
+       der Entlasstag (Nachsorge-Flow), nicht die Platzzahl. */
+    const kplans=[
+      ['clinicYear','Klinik · Jahresabo',(License.PREIS.klinikJahr/12).toFixed(2).replace('.',','),`${License.PREIS.klinikJahr.toLocaleString('de-DE')} € im Jahr — zwei Monate günstiger`,''],
+      ['clinicMonth','Klinik · Monatsabo',String(License.PREIS.klinikMonat),'monatlich kündbar',''],
+    ];
     // ROI-Pitch aus den eigenen Zahlen des Vets: erfasster Telemetrie-Umsatz vs. Lizenz
     const booked=(State.consults||[]).reduce((s,c)=>s+(c.fee||0),0);
     const mult=booked>0?Math.max(1,Math.round(booked/License.PREIS.soloMonat)):0;
@@ -7379,6 +7388,21 @@ const UI={
       </div>
       <div class="tier-table" style="margin-top:10px">
         ${plans.map(([id,name,price,note,badge],i)=>`<div class="tier-opt ${i===0?'feat':''}">
+          <div style="flex:1"><h4>${name}${badge?` <span class="chip cyan">${badge}</span>`:''}</h4>
+            <div style="font-size:12px;color:var(--text-dim)">${note}</div></div>
+          <div class="price"><b>${price}</b><span>€ / Monat</span>
+            ${(()=>{const u=License.checkoutLink(id);
+              return u?`<a class="btn primary" style="margin-top:8px;padding:7px 12px;font-size:12px" href="${u}" target="_blank" rel="noopener">Abonnieren</a>`
+                      :`<button class="btn ghost" style="margin-top:8px;padding:7px 12px;font-size:12px" onclick="UI.activate()">Schlüssel eingeben</button>`;})()}</div>
+        </div>`).join('')}
+      </div>
+      <div class="tier-opt feat" style="align-items:flex-start;margin-top:14px">
+        <div style="flex:1"><h4>CARLON Equine Visite — Klinik</h4>
+          <div style="font-size:12px;color:var(--text-dim)">Nachsorge ab dem Entlasstag · mehrere Teams, Plätze in einer Lizenz</div>
+          <ul><li>Alles aus der Praxis-Stufe</li><li>Entlass-Karte je Patient — die Halterin misst zu Hause weiter</li><li>Klinik-Name im Cockpit</li></ul></div>
+      </div>
+      <div class="tier-table" style="margin-top:10px">
+        ${kplans.map(([id,name,price,note,badge],i)=>`<div class="tier-opt">
           <div style="flex:1"><h4>${name}${badge?` <span class="chip cyan">${badge}</span>`:''}</h4>
             <div style="font-size:12px;color:var(--text-dim)">${note}</div></div>
           <div class="price"><b>${price}</b><span>€ / Monat</span>
@@ -7821,7 +7845,7 @@ const UI={
     const l=State.license||{tier:'demo'};const d=License.daysLeft();
     this.modal(`<div class="modal-head"><button class="closex" onclick="UI.closeModal()">${IC.x}</button><h3>Lizenz</h3></div>
     <div class="modal-body">
-      <div class="tier-opt feat"><div style="flex:1"><h4>${License.TIERS[l.tier].name}${License.isFounder()?' <span class="chip cyan">Gründungs-Partner</span>':''}</h4>
+      <div class="tier-opt feat"><div style="flex:1"><h4>${License.TIERS[l.tier].name}${License.isFounder()?' <span class="chip cyan">Gründungs-Partner</span>':''}${License.seats()>1?` <span class="chip">${License.seats()} Plätze</span>`:''}</h4>
         <div style="font-size:13px;color:var(--text-secondary);margin-top:4px">${esc(l.lic||'')}</div>
         ${(()=>{const lz=License.laufzeit(); if(!lz) return '';
           /* Die Zahl, die ein mobiler Tierarzt VOR der Tour sehen will:
@@ -8427,6 +8451,10 @@ const License={
     test:{
       year :'https://buy.stripe.com/test_5kQ5kD1Dh8tDfcG8pZgbm01',   // 790 €/Jahr
       month:'https://buy.stripe.com/test_8x28wP95JbFP1lQ6hRgbm00',   //  79 €/Monat
+      /* Klinik-Stufe (AP3, 13.08.): Links folgen, sobald Jan sie bei
+         Stripe anlegt — bis dahin gibt checkoutLink() null zurueck und
+         die Kachel faellt sauber auf „Schluessel eingeben" zurueck. */
+      clinicMonth:'', clinicYear:'',
     },
     live:{
       /* Angelegt am 07.08.2026, nachdem Stripe das Unternehmensprofil
@@ -8442,6 +8470,13 @@ const License={
          Produkt zuzuordnen. */
       year :'https://buy.stripe.com/5kQ5kD1Dh8tDfcG8pZgbm01',   // 790 €/Jahr
       month:'https://buy.stripe.com/8x28wP95JbFP1lQ6hRgbm00',   //  79 €/Monat
+      /* 🔴 JAN-HANDGRIFF (Bauauftrag AP3): zwei Payment-Links am selben
+         Produkt anlegen — 199 €/Monat und 1.990 €/Jahr — mit
+         metadata.tier=vet_clinic an BEIDEN Preisen (der Lizenzdienst
+         leitet die Stufe sonst nur aus dem Betrag ab) und derselben
+         Rueckleitung ?session_id={CHECKOUT_SESSION_ID}. Dann hier
+         eintragen. Bis dahin: null → „Schluessel eingeben". */
+      clinicMonth:'', clinicYear:'',
     }
   },
   get CHECKOUT(){ return this.CHECKOUT_ALL[LIVE?'live':'test']; },
@@ -8458,7 +8493,7 @@ const License={
      Die LIVE-Links stehen seit 07.08.2026 (siehe oben). Die Testlinks
      hier tragen test_ im Pfad und werden von checkoutLink() ausserhalb von
      Beta und localhost zusaetzlich gesperrt. */
-  CHECKOUT_BETRAG:{ month:79, year:790 },
+  CHECKOUT_BETRAG:{ month:79, year:790, clinicMonth:199, clinicYear:1990 },
   /* Die Zahlungs-Links zeigen noch auf Stripes Testumgebung. Wird die
      Beta-Sperre geloest, ohne sie zu tauschen, laeuft der Kunde durch eine
      Kasse, die kein Geld einzieht — und wir merken es an nichts ausser einer
@@ -8478,7 +8513,9 @@ const License={
       return null;
     }
     // 1) Angezeigter Preis gegen den Betrag, fuer den der Link angelegt wurde
-    const soll=art==='year'?this.PREIS.soloJahr:this.PREIS.soloMonat;
+    const SOLL={month:this.PREIS.soloMonat, year:this.PREIS.soloJahr,
+                clinicMonth:this.PREIS.klinikMonat, clinicYear:this.PREIS.klinikJahr};
+    const soll=SOLL[art];
     const ist=(this.CHECKOUT_BETRAG||{})[art];
     if(ist!==soll){
       console.warn(`[CARLON] Kasse gesperrt: angezeigt ${soll} €, Zahlungslink gilt fuer ${ist} €.`);
@@ -8573,7 +8610,8 @@ const License={
     vet_solo:  ['pdf','csv','routeHandoff','coherence','ownerFeedback'],
     vet_clinic:['pdf','csv','routeHandoff','coherence','ownerFeedback',
                 'multiSeat',        // Lizenz nennt eine Platzzahl; siehe seats()
-                'nachsorge']        // Entlass-Nachsorge-Flow (13.08., s. u.)
+                'nachsorge',        // Entlass-Nachsorge-Flow (13.08., s. u.)
+                'clinicBranding']   // Klinik-Name im Kopf (additiv, AP2)
   },
   /* ENTSCHIEDEN (Jan, 13.08.2026) — der offene Punkt unten ist damit
      beantwortet: Die Klinik-Stufe (jetzt 199 €/Monat, PREIS-Quelle oben)
@@ -9633,6 +9671,11 @@ const Nav={
   },
   render(){
     this.pilotBand();
+    /* Klinik-Name im Kopf — nur vet_clinic, nur wenn die Lizenz einen
+       Namen traegt. Idempotent bei jedem Render (Lizenzwechsel greift). */
+    const kn=$('#klinikName');
+    if(kn){ const zeig=License.can('clinicBranding')&&License.lic();
+      kn.textContent=zeig?(' · '+License.lic()):''; }
     const enterToday=(this.cur==='today' && this._lastCur!=='today');
     const map={today:Views.today,board:Views.board,station:Views.station,map:Views.map,roster:Views.roster,detail:Views.detail,revenue:Views.revenue,logbook:Views.logbook,coherence:Views.coherence,cohdetail:Views.coherenceDetail,pairdetail:Views.pairDetail};
     $('#main').innerHTML=(map[this.cur]||Views.today).call(Views);
