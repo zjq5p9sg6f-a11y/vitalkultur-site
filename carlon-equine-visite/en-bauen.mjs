@@ -109,45 +109,48 @@ tausche("window.CARLON_LANG = localStorage.getItem('carlon.viewer.lang') || 'de'
    ══════════════════════════════════════════════════════════════════════ */
 
 // Kopfbereich
-tausche('CARLON Equine Visite · Praxisansicht für mobile Pferdetierärzte und Kliniken',
-        'CARLON Equine Visite · practice view for ambulatory equine vets and clinics');
-tausche('Sehen Sie früher, welches Pferd Sie wirklich braucht.',
-        'See sooner which horse actually needs you.');
-tausche(`Die Halterin misst den Herzrhythmus zu Hause im Stall und schickt Ihnen die Aufnahme
-      als verschlüsselte Datei. Sie öffnen den Befund im Browser — mit Verlauf, Signalgüte und der
-      Abweichung von der individuellen Baseline dieses Pferds.
-      <strong>Ohne Konto, ohne Installation, ohne dass die Daten Ihre Praxis verlassen.</strong>`,
-`The owner records the heart rhythm at home in the stable and sends you the recording
-      as an encrypted file. You open the findings in your browser — with the trend, the signal quality and
-      the deviation from this horse's own baseline.
-      <strong>No account, no installation, and the data never leaves your practice.</strong>`);
+tausche('CARLON Equine Visite · für Tierärztinnen und Tierärzte',
+        'CARLON Equine Visite · for veterinary surgeons');
+tausche('Sie sehen das Pferd, bevor Sie losfahren.',
+        'You see the horse before you get in the car.');
+tausche(`Die Halterin misst zu Hause im Stall und schickt Ihnen die Aufnahme. Sie öffnen sie im
+      Browser und sehen, wie weit dieses Pferd von <strong>seiner eigenen</strong> Baseline
+      abweicht — bevor Sie entscheiden, wer heute dran ist.`,
+`The owner records at home in the stable and sends you the recording. You open it in your
+      browser and see how far this horse deviates from <strong>its own</strong> baseline —
+      before you decide who is up today.`);
 tausche('Cockpit mit 15&nbsp;Demo-Pferden öffnen →', 'Open the cockpit with 15&nbsp;demo horses →', 2);
 tausche('>Was es kostet<', '>What it costs<');
-tausche('Kein Konto, keine Anmeldung, kein Download. Das Demo-Cockpit ist die vollständige Anwendung mit echten Beispielverläufen.',
-        'No account, no sign-up, no download. The demo cockpit is the complete application with real example trends.');
-tausche(`<strong>790&nbsp;€ im Jahr</strong> je Praxis oder Standort — oder 79&nbsp;€ monatlich,
-      jeweils netto. Alle Tierärztinnen und Tierärzte, alle Pferde, alle Geräte.
-      Keine Gebühr je Pferd, je Nutzer, je Gerät.
-      <a href="#preis">Was genau enthalten ist →</a>`,
-`<strong>€790 per year</strong> per practice or site — or €79 monthly, each net.
-      All vets, all horses, all devices. No fee per horse, per user, per device.
-      <a href="#preis">What exactly is included →</a>`);
+tausche('Das Demo-Cockpit ist die vollständige Anwendung mit echten Beispielverläufen — ohne Konto, ohne Installation. Die Daten verlassen Ihre Praxis nicht.',
+        'The demo cockpit is the complete application with real example trends — no account, no installation. The data never leaves your practice.');
+/* Der Preis stand bis 13.08.2026 im Kopf und ist dort entfernt — wer den
+   Preis liest, bevor er den Wert kennt, rechnet gegen ein Produkt, das er
+   noch nicht verstanden hat. Der Block entfaellt hier mit. */
 
 // Abschnitt 1 — Messbedingung
-tausche('Der Unterschied, der vor der Messung entsteht', 'The difference that arises before the measurement');
-tausche('Ein Pferd, das gerade transportiert wurde, misst nicht sich selbst.',
+tausche('Warum die Messung in den Stall gehört', 'The difference that arises before the measurement');
+tausche('Aussagekräftig wird eine Messung dort, wo das Pferd seinen normalen Tag hat.',
         'A horse that has just been transported is not measuring itself.');
-tausche('Gewohnte Box statt Untersuchungsraum', 'Its own box, not an examination room');
+/* Die Abrechnungs-Karte (neu 13.08.2026) — das Geld-Argument stand bisher
+   ganz unten auf der Seite. GOT-Ziffern werden GENANNT, nie verrechnet. */
+tausche('Die Ferneinschätzung ist abrechenbar', 'Remote assessment is billable');
+tausche(`Die Beratung ohne Untersuchung führt die <strong>GOT als Ziffer&nbsp;1</strong>, den
+         Tierarztbrief je angefangene 15&nbsp;Minuten als <strong>Ziffer&nbsp;89</strong>. Aus
+         einem Anruf ohne Grundlage wird eine Leistung mit einer.`,
+`German veterinary fee schedule (GOT) lists advice without examination as <strong>item&nbsp;1</strong>,
+         and the veterinary letter per started 15&nbsp;minutes as <strong>item&nbsp;89</strong>. A
+         phone call without a basis becomes a service with one.`);
+tausche('In der eigenen Box, zur gewohnten Zeit', 'Its own box, not an examination room');
 tausche('Sie bekommen die Aufnahme, nicht den Termin', 'You get the recording, not the appointment');
 tausche('Wiederholbar, ohne dass jemand fährt', 'Repeatable without anyone driving out');
 
 // Abschnitt 2 — Cockpit
 tausche('Was im Cockpit steht', 'What the cockpit shows');
-tausche('Ein Blick, dann die Tiefe.', 'One glance, then the depth.');
-tausche(`Oben das Urteil und der eine Grund dafür. Darunter alles, was Sie
-       zum Nachrechnen brauchen — nichts davon versteckt.`,
-`The assessment at the top and the one reason for it. Below it everything you
-       need to check the maths — none of it hidden.`);
+tausche('Erst die Reihenfolge. Dann die Zahlen, die sie begründen.', 'One glance, then the depth.');
+tausche(`Oben die Einstufung und der Wert, der sie ausgelöst hat. Darunter alles,
+       was Sie zum Nachrechnen brauchen — nichts davon versteckt.`,
+`The classification at the top and the value that triggered it. Below it
+       everything you need to check the maths — none of it hidden.`);
 tausche('<div class="f-k">Triage</div>', '<div class="f-k">Triage</div>');
 tausche('Vier Stufen, und daneben steht, welcher Wert sie ausgelöst hat.',
         'Four levels, and next to each the value that triggered it.');
@@ -156,7 +159,7 @@ tausche('Alles, was Sie zum Nachrechnen brauchen — an einer Stelle.',
         'Everything you need to check the maths — in one place.');
 tausche('Einordnung mit Begründung', 'A classification with its reason');
 tausche('Signalgüte, bevor Sie deuten', 'Signal quality before interpretation');
-tausche('Atemwegs-Screening im Verlauf', 'Airway screening over time');
+tausche('Atemwegs-Marker im Verlauf', 'Airway markers over time');
 tausche('Die üblichen Ansichten, in guter Auflösung', 'The familiar views, at proper resolution');
 tausche('Befund und Abrechnung an einer Stelle', 'Findings and billing in one place');
 tausche('Export ohne Sackgasse', 'Export without a dead end');
@@ -173,13 +176,13 @@ tausche('Und dort, wo es nicht reicht, sagt es das', 'And where it is not enough
 
 // Abschnitt 4 — Verlauf
 tausche('Was eine Momentaufnahme nicht kann', 'What a snapshot cannot do');
-tausche('Die Richtung ist die Information.', 'The direction is the information.');
+tausche('Ein Wert sagt wenig. Sein Verlauf sagt alles.', 'The direction is the information.');
 tausche('Über Wochen statt über Minuten', 'Over weeks rather than minutes');
 tausche('Nach einer Umstellung sichtbar', 'Visible after a change');
 
 // Abschnitt 5 — Anschluss
 tausche('>Anschluss<', '>Interoperability<');
-tausche('Der Befund bleibt nicht in unserem Fenster stehen.',
+tausche('Der Befund geht in Ihre Praxissoftware, nicht in eine Sackgasse.',
         'The findings do not stay inside our window.');
 
 // Abschnitt 6 — Arbeitstag
@@ -226,9 +229,11 @@ tausche('Läuft im Browser. Nichts wird installiert, nichts übertragen, nichts 
 // Formular
 tausche('Als Beta-Praxis mitmachen', 'Join as a beta practice');
 tausche(`Wer in der Beta mitgestaltet, behält seinen Preis als
-         Gründungspartner. Wir melden uns persönlich zurück — meist am selben Tag.`,
-`Take part in the beta and you keep your founding-partner price. We reply
-         personally — usually the same day.`);
+         Gründungspartner. Ihre Anmeldung liest der Entwickler selbst — und meldet
+         sich persönlich zurück, meist am selben Tag.`,
+`Take part in the beta and you keep your founding-partner price. The developer
+         reads your registration himself — and replies personally, usually the
+         same day.`);
 tausche('> Ich bin mobil unterwegs<', '> I work ambulatory<');
 tausche('> Wir sind eine Klinik<', '> We are a clinic<');
 tausche('<label>Name<input', '<label>Name<input');
@@ -273,18 +278,33 @@ tausche('Therapie &amp; Forschung', 'Therapy &amp; research', 2);   // data-de +
    sich dort ein Zeichen, findet der Block hier nicht mehr statt und der
    Bau bricht ab — genau so soll es sein. */
 tausche(`
-      Herzfrequenzvariabilität ist ein Maß für Erholung. Verladen, Fahrt, fremde Halle,
-      fremde Menschen — all das verändert genau die Größe, die Sie beurteilen wollen.
-      Die Auswertung, die wir einsetzen, verlangt ausdrücklich <strong>mindestens sieben
-      Minuten Ruhe in gewohnter Umgebung</strong>. Eine Messung nach der Ankunft in der
-      Klinik erfüllt diese Bedingung systematisch nicht.
+      Herzfrequenzvariabilität misst Erholung — und Erholung zeigt sich nur in Ruhe: in der
+      eigenen Box, zur gewohnten Zeit, ohne fremde Menschen. Die Auswertung verlangt
+      ausdrücklich <strong>mindestens sieben Minuten Ruhe in gewohnter Umgebung</strong>.
+      Verladen, Fahrt und Wartebereich verändern genau die Größe, die Sie beurteilen wollen.
     `,
         `
-      Heart rate variability is a measure of recovery. Loading, the journey, an unfamiliar
-      hall, unfamiliar people — all of it changes exactly the quantity you want to assess.
-      The analysis we use explicitly requires <strong>at least seven minutes of rest in
-      familiar surroundings</strong>. A measurement taken after arrival at the clinic
-      systematically fails that condition.
+      Heart rate variability measures recovery — and recovery only shows at rest: in the
+      horse's own box, at the usual time, with no strangers present. The analysis explicitly
+      requires <strong>at least seven minutes of rest in familiar surroundings</strong>.
+      Loading, the journey and the waiting area change exactly the quantity you want to
+      assess.
+    `);
+/* Der Atemwegs-Absatz ist neu (13.08.2026) — und er ist das staerkste
+   Argument der Seite: bei Asthma IST die Umgebung der Gegenstand. */
+tausche(`
+      <strong>Beim Atemwegs-Management ist das nicht nur eine Bedingung, sondern der ganze
+      Punkt.</strong> Was das Pferd belastet, steht im Stall: Einstreu, Heu, Lüftung. Eine
+      Messung in der Klinik nimmt ausgerechnet die Umgebung heraus, um die es geht. Zu Hause,
+      wiederholt über Wochen, sehen Sie stattdessen, was Sie wirklich wissen wollen — ob die
+      Umstellung gewirkt hat.
+    `,
+        `
+      <strong>For airway management this is not merely a condition — it is the entire
+      point.</strong> What burdens the horse is in the stable: bedding, hay, ventilation. A
+      recording taken at the clinic removes precisely the environment in question. At home,
+      repeated over weeks, you see instead what you actually want to know — whether the
+      change worked.
     `);
 tausche(`Die Halterin legt den Gurt an, das Pferd steht wie immer. Kein Transport, keine
          Aufregung durch Fremde, kein sperriges Gerät im Weg.`,
@@ -301,16 +321,24 @@ tausche(`Die Halterin schickt Ihnen eine Datei — Sie öffnen sie, wenn Sie Zei
    englischen Seite deutsch stehen — und zwar STILL, weil der Bauer nur
    meldet, was er ERWARTET und nicht findet, nicht was er nie gesehen hat.
    Genau deshalb prueft t-englisch die Seiten zusaetzlich gegeneinander. */
-tausche('Was Ihre Kundin erlebt', 'What your client experiences');
-tausche('Sie scannt einen Aushang. Mehr muss sie nicht können.',
-        'She scans a poster. That is all she needs to know.');
-tausche(`Keine App, kein Konto, keine Installation — die Messstation läuft im Browser ihres
-      Telefons. Gurt anlegen, sieben Minuten stehen lassen, senden. Was bei Ihnen ankommt,
-      ist eine Datei, die <strong>auf ihrem Gerät entsteht</strong> und die sie Ihnen
-      selbst schickt.`,
-`No app, no account, no installation — the measuring station runs in her phone's browser.
-      Put the belt on, let the horse stand for seven minutes, send. What reaches you is a
-      file that is <strong>created on her device</strong> and that she sends you herself.`);
+tausche('<div class="sec-eyebrow">Die Messstation</div>',
+        '<div class="sec-eyebrow">The measuring station</div>');
+tausche('Eine Messstation, die im Browser läuft. Auf jedem Telefon.',
+        'A measuring station that runs in the browser. On any phone.');
+tausche(`Es gibt <strong>nichts zu installieren</strong>. Die Halterin scannt Ihren Aushang, und
+      die Messstation ist da — im Browser ihres Telefons, ohne App, ohne Konto, ohne
+      Anmeldung. Sie verbindet den Polar-H10-Gurt, lässt das Pferd stehen und tippt einmal
+      auf Senden. <strong>Kein Onboarding, keine Rückfragen bei Ihnen.</strong>`,
+`There is <strong>nothing to install</strong>. The owner scans your poster and the measuring
+      station is there — in her phone's browser, no app, no account, no sign-up. She connects
+      the Polar H10 belt, lets the horse stand and taps send once. <strong>No onboarding, no
+      questions coming back to you.</strong>`);
+tausche(`Bei Ihnen kommt kein Screenshot an, sondern ein Datensatz: alle Schlagabstände im
+      Rohzustand, die daraus berechneten Kennwerte und die Signalgüte dazu. Sie sehen also
+      nicht nur eine Zahl, sondern auch, <strong>wie sehr Sie ihr trauen können</strong>.`,
+`What reaches you is not a screenshot but a dataset: every beat-to-beat interval in its raw
+      state, the metrics derived from it, and the signal quality alongside. So you see not
+      just a number, but also <strong>how far you can trust it</strong>.`);
 tausche('Der Aushang führt hierher. Ein Feld für den Pferdenamen, ein Knopf zum Gurt — mehr steht nicht im Weg.',
         'The poster leads here. One field for the horse\'s name, one button for the belt — nothing else in the way.');
 tausche('Während der Aufnahme sieht sie, ob das Signal trägt — nicht erst hinterher.',
@@ -390,10 +418,10 @@ tausche(`Anteil auswertbarer Schlagpaare, Artefaktrate, korrigierte AV-Block-Pau
         `Share of usable beat pairs, artefact rate, corrected AV-block pauses.
            A recording that carries nothing tells you so — instead of showing a number.`);
 tausche(`HRV-basierte Marker mit ihren Schwellen, einzeln aufgeführt. Kalibriert gegen
-           eine veröffentlichte Studie mit BAL-Referenz. Ein <strong>Screening</strong>,
+           eine veröffentlichte Studie mit BAL-Referenz. Ein <strong>Beobachtungshinweis</strong>,
            ausdrücklich keine Diagnose.`,
         `HRV-based markers with their thresholds, listed individually. Calibrated against
-           a published study with a BAL reference. A <strong>screening</strong>,
+           a published study with a BAL reference. An <strong>observational note</strong>,
            explicitly not a diagnosis.`);
 tausche(`Tachogramm, Poincaré, Spektrum, DFA, Histogramm — dieselben Darstellungen wie
            in der iOS-App, im Vollbild neu gezeichnet statt hochskaliert.`,
@@ -625,8 +653,8 @@ tausche('>Muster-Befund als PDF<', '>Sample findings report (PDF)<');
 
 
 /* Umsatzsteuer — WESSEN. Der Kern der Klaerung vom 12.08.2026. */
-tausche('<span>pro Jahr · USt. weist Stripe aus</span>',
-        '<span>per year · VAT charged by Stripe</span>');
+tausche('<span>netto pro Jahr · USt. weist Stripe aus</span>',
+        '<span>net per year · VAT charged by Stripe</span>');
 tausche(`Das Angebot richtet sich ausschließlich an Unternehmer im Sinne des § 14 BGB.
         <strong>Wir selbst rechnen als Kleinunternehmer nach § 19 UStG ohne Umsatzsteuer ab.</strong>
         Für das Browser-Cockpit tritt <strong>Stripe als Verkäufer im eigenen Namen</strong> auf
@@ -639,11 +667,17 @@ tausche(`Das Angebot richtet sich ausschließlich an Unternehmer im Sinne des §
         the reverse-charge procedure applies there. Details in`);
 
 
-/* Preisversprechen enger gefasst — traegt auch eine zweite Stufe. */
-tausche('Ein Preis je Betrieb. Kein Staffelmodell, keine Verhandlung.',
-        'One price per business. No tiers, no negotiation.');
+/* Positiv behauptet statt doppelt verneint (Copy-CI §12). */
+tausche('Ein Preis für den ganzen Betrieb.',
+        'One price for the whole business.');
 /* im Rumpftext-Block mituebersetzt */
 /* in der Hero-Preiszeile mituebersetzt */
+
+// Lightbox (Bedienelemente sind aria-only — sichtbar sind nur Zeichen)
+tausche('aria-label="Bildansicht"', 'aria-label="Image view"');
+tausche('aria-label="Schließen"', 'aria-label="Close"');
+tausche('aria-label="Vorheriges Bild"', 'aria-label="Previous image"');
+tausche('aria-label="Nächstes Bild"', 'aria-label="Next image"');
 
 if (fehlend.length) {
   console.error('\n  ✗ Der Bau bricht ab — diese Bloecke gibt es in index.html nicht (mehr):\n');
