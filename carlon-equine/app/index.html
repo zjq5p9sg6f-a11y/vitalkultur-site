@@ -2738,16 +2738,16 @@ const Importer = {
     const skipped=[],jsonFiles=[],htmlFiles=[];
     for(const f of files){
       if(/\.(json|ndjson)$/i.test(f.name)||f.type==='application/json')jsonFiles.push(f);
-      else if(/\.html?$/i.test(f.name))htmlFiles.push(f);          // Befund-Datei einer anderen Praxis
-      else if(f.name&&!f.name.startsWith('.'))skipped.push({name:f.name,reason:/\.txt$/i.test(f.name)?'KI-Kontext-Text — kein Datenexport':'kein JSON- oder Befund-Format'});
+      else if(/\.html?$/i.test(f.name))htmlFiles.push(f);          // Bericht-Datei einer anderen Praxis
+      else if(f.name&&!f.name.startsWith('.'))skipped.push({name:f.name,reason:/\.txt$/i.test(f.name)?'KI-Kontext-Text — kein Datenexport':'kein JSON- oder Bericht-Format'});
     }
     // Befund-Dateien: eingebettetes FHIR-Bundle herausloesen
     for(const f of htmlFiles){
       try{ const b=Importer.fhirFromReportHTML(await f.text());
         const raw=b?Importer.fromFHIR(b):null;
         if(raw) jsonFiles.push({name:f.name,__raw:raw});
-        else skipped.push({name:f.name,reason:'Befund-Datei ohne eingebettetes FHIR-Bundle'});
-      }catch(e){ skipped.push({name:f.name,reason:'Befund-Datei nicht lesbar'}); }
+        else skipped.push({name:f.name,reason:'Bericht-Datei ohne eingebettetes FHIR-Bundle'});
+      }catch(e){ skipped.push({name:f.name,reason:'Bericht-Datei nicht lesbar'}); }
     }
     const parsed=[];
     for(const f of jsonFiles){
@@ -5167,8 +5167,8 @@ const Views={
                   <div class="m"><span class="tri-badge tri-${r.triage.level}" style="padding:2px 8px;font-size:10px"><span class="dot"></span>${Triage.LEVELS[r.triage.level].label}</span></div>
                 </div>
                 <button class="icon-btn" title="Rohdaten (JSON) für CARLON Viewer exportieren" onclick="event.stopPropagation();Views.exportRec('${r.id}')">${IC.eye}</button>
-                <button class="icon-btn" title="Befund als eigenständige Datei weitergeben — Besitzer, Überweisungsklinik, Studie" onclick="event.stopPropagation();Handoff.build('${r.id}')">${IC.share||IC.download}</button>
-                <button class="icon-btn" title="Denselben Befund auf Englisch — für internationale Kliniken, Universitäten und Studien" onclick="event.stopPropagation();Handoff.build('${r.id}','en')"><b style="font-size:9.5px;letter-spacing:.06em;font-family:var(--font-mono)">EN</b></button>
+                <button class="icon-btn" title="Bericht als eigenständige Datei weitergeben — Besitzer, Überweisungsklinik, Studie" onclick="event.stopPropagation();Handoff.build('${r.id}')">${IC.share||IC.download}</button>
+                <button class="icon-btn" title="Denselben Bericht auf Englisch — für internationale Kliniken, Universitäten und Studien" onclick="event.stopPropagation();Handoff.build('${r.id}','en')"><b style="font-size:9.5px;letter-spacing:.06em;font-family:var(--font-mono)">EN</b></button>
                 <button class="icon-btn" title="FHIR-R5-Bundle für Klinik-Software / ERP exportieren (offener Standard)" onclick="event.stopPropagation();FHIR.export('${r.id}')"><b style="font-size:9.5px;letter-spacing:.06em;font-family:var(--font-mono)">FHIR</b></button>
                 <button class="icon-btn" title="Aufnahme löschen" onclick="event.stopPropagation();Views.delRec('${r.id}')">${IC.trash}</button>
               </div>`).join('')}
@@ -6168,14 +6168,14 @@ const Handoff={
      uebersetzten Zwischenzustand. Weitere Sprachen sind ein Eintrag mehr —
      die App traegt bereits zehn. */
   WORTE:{
-    de:{ code:'de', loc:'de-DE', komma:true, datei:'Befund',
-      eyebrow:'Herzraten-Befund', vom:'Befund vom', besitzer:'Besitzer',
+    de:{ code:'de', loc:'de-DE', komma:true, datei:'Bericht',
+      eyebrow:'Herzraten-Bericht', vom:'Bericht vom', besitzer:'Besitzer',
       tMean:'Ø Puls', tMin:'Ruhe-Puls', tMax:'Spitze', tQual:'Signalgüte',
       chartVit:'Puls und Herzratenvariabilität', chartPoi:'Schlag zu Schlag · Poincaré',
       chartNix:'Keine Kurvendaten in dieser Aufnahme',
       notiz:'Einschätzung der Praxis',
       handT:'Für die weiterbehandelnde Praxis',
-      handP:'Dieser Befund enthält den vollständigen Datensatz als offenes FHIR-R5-Bundle — direkt in euer Praxis- oder Klinik-System übernehmbar, ohne Abtippen.',
+      handP:'Dieser Bericht enthält den vollständigen Datensatz als offenes FHIR-R5-Bundle — direkt in euer Praxis- oder Klinik-System übernehmbar, ohne Abtippen.',
       handA:'FHIR-Bundle speichern',
       methT:'Methode &amp; Grenzen.',
       methGeraet:'Aufzeichnung Polar H10 (RR-Intervalle).',
@@ -6191,7 +6191,7 @@ const Handoff={
       mdrT:'Kein Medizinprodukt, keine Diagnose.',
       mdr:'Nicht dazu bestimmt, Krankheiten zu erkennen, zu behandeln, zu heilen oder zu verhüten — die medizinische Beurteilung trifft ausschließlich die behandelnde Tierärztin oder der behandelnde Tierarzt.',
       standard:'OFFENER BIOMETRIE-STANDARD FÜR PFERDE',
-      toast:'Befund erstellt — als Datei weitergeben (Mail, AirDrop, Messenger)' },
+      toast:'Bericht erstellt — als Datei weitergeben (Mail, AirDrop, Messenger)' },
     en:{ code:'en', loc:'en-GB', komma:false, datei:'Report',
       eyebrow:'Heart rate report', vom:'Report of', besitzer:'Owner',
       tMean:'Mean HR', tMin:'Resting HR', tMax:'Peak', tQual:'Signal quality',
@@ -10364,9 +10364,9 @@ const Sprache={
     'Befund-PDF':'Findings PDF',
     'Befundtext für den Besitzer erzeugen':'Generate findings text for the owner',
     'Gebrandeter PDF-Befund + Umsatz in einem Schritt':'Branded PDF findings and revenue in one step',
-    'Befund als eigenständige Datei weitergeben — Besitzer, Überweisungsklinik, Studie':'Pass the findings on as a standalone file — owner, referral clinic, study',
+    'Bericht als eigenständige Datei weitergeben — Besitzer, Überweisungsklinik, Studie':'Pass the report on as a standalone file — owner, referral clinic, study',
     'Rohdaten (JSON) für CARLON Viewer exportieren':'Export raw data (JSON) for the CARLON viewer',
-    'Denselben Befund auf Englisch — für internationale Kliniken, Universitäten und Studien':'The same findings in English — for international clinics, universities and studies',
+    'Denselben Bericht auf Englisch — für internationale Kliniken, Universitäten und Studien':'The same report in English — for international clinics, universities and studies',
     'FHIR-R5-Bundle für Klinik-Software / ERP exportieren (offener Standard)':'Export a FHIR R5 bundle for clinic software / ERP (open standard)',
     'Fachliche Erklärung':'Technical explanation',
     'ist im vollen Cockpit enthalten.':'is included in the full cockpit.',

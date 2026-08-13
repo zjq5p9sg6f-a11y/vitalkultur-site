@@ -707,16 +707,18 @@ tausche('"url": "https://vitalkultur.com/carlon-equine-visite/",',
         '"url": "https://vitalkultur.com/carlon-equine-visite/en/",');
 
 
-/* Muster-Befund — das Artefakt, an dem ein Tierarzt uns beurteilt. */
-tausche('Sehen Sie den Befund, bevor Sie irgendetwas entscheiden.',
-        'See the findings report before you decide anything.');
-tausche(`Zwei Seiten, aus dem Demo-Bestand erzeugt — mit Ihrem Briefkopf, den Kennwerten,
+/* Muster-Bericht — das Artefakt, an dem ein Tierarzt uns beurteilt.
+   Rollentrennung (13.08.2026): die Software liefert den BERICHT, den
+   Befund macht die Praxis — deshalb hier nie "findings". */
+tausche('Sehen Sie den Bericht, bevor Sie irgendetwas entscheiden.',
+        'See the report before you decide anything.');
+tausche(`Aus dem Demo-Bestand erzeugt (fiktive Beispieldaten) — mit Briefkopf, den Kennwerten,
         Verlauf und Poincaré, und einem Abschnitt „Methode &amp; Grenzen", der die Quellen nennt.
-        Genau dieses Dokument geben Sie weiter.`,
-`Two pages, generated from the demo library — with your letterhead, the key values, the
-        trend and the Poincaré plot, plus a "Method & limits" section naming the sources.
-        This is the document you pass on.`);
-tausche('>Muster-Befund als PDF<', '>Sample findings report (PDF)<');
+        Der Bericht liefert die Daten; den Befund macht Ihre Praxis.`,
+`Generated from the demo library (fictitious sample data) — with letterhead, the key values,
+        the trend and the Poincaré plot, plus a "Method & limits" section naming the sources.
+        The report delivers the data; the findings are made by your practice.`);
+tausche('>Muster-Bericht als PDF<', '>Sample report (PDF)<');
 
 
 /* Umsatzsteuer — WESSEN. Der Kern der Klaerung vom 12.08.2026. */

@@ -160,19 +160,22 @@ p.sub{color:var(--sec);font-size:clamp(13px,1.15vw,15px);margin:0 auto var(--s4)
     </div>
   </div>
 
-  <span class="eyebrow">Übergabe an die Praxis</span>
-  <h1>Aufnahme senden</h1>
+  <!-- ZWEISPRACHIG wie messen.html: data-i18n + Katalog L unten im Skript.
+       Der deutsche Text bleibt als Fallback im Markup stehen — faellt das
+       Skript aus, ist die Seite deutsch, nie leer. -->
+  <span class="eyebrow" data-i18n="eyebrow">Übergabe an die Praxis</span>
+  <h1 data-i18n="h1">Aufnahme senden</h1>
   <!-- Die Kopfzeile behauptete "Ende-zu-Ende, ohne Umweg über einen Server" —
        das war die Sprache des toten Relay-Wegs. Die neue Wahrheit ist staerker:
        es gibt gar keine Uebertragung durch uns. -->
-  <p class="sub">Gib die Herzraten-Aufnahme deines Pferds an deine Tierärztin oder deinen Tierarzt weiter. Die Datei bleibt auf deinem Gerät — du schickst sie selbst, auf deinem Weg.</p>
+  <p class="sub" data-i18n="sub">Gib die Herzraten-Aufnahme deines Pferds an deine Tierärztin oder deinen Tierarzt weiter. Die Datei bleibt auf deinem Gerät — du schickst sie selbst, auf deinem Weg.</p>
   <div class="room" id="sealLine"></div>
 
   <div id="pickArea">
     <label class="drop" id="drop" tabindex="0">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M17 8l-5-5-5 5M12 3v12"/></svg>
-      <h4>Aufnahme-Datei wählen</h4>
-      <p>Die <b>.json</b>-Datei aus der CARLON-App oder der Mess-Station</p>
+      <h4 data-i18n="dropT">Aufnahme-Datei wählen</h4>
+      <p data-i18n="dropS">Die <b>.json</b>-Datei aus der CARLON-App oder der Mess-Station</p>
       <input type="file" id="file" accept=".json,.ndjson,application/json" hidden>
     </label>
   </div>
@@ -187,24 +190,24 @@ p.sub{color:var(--sec);font-size:clamp(13px,1.15vw,15px);margin:0 auto var(--s4)
          Datei-Dialogs heraus lehnen Browser navigator.share() teils ab
          (NotAllowedError) — das saehe aus wie ein kaputter Knopf. Deshalb
          der Zwischenschritt: Datei liegt bereit, EIN Tipp gibt sie weiter. -->
-    <button class="btn primary" id="btnShare">An die Praxis weitergeben</button>
-    <button class="btn hidden" id="btnAgain">Weitere Aufnahme senden</button>
+    <button class="btn primary" id="btnShare" data-i18n="btnShare">An die Praxis weitergeben</button>
+    <button class="btn hidden" id="btnAgain" data-i18n="btnAgain">Weitere Aufnahme senden</button>
   </div>
   <div class="err" id="err"></div>
 
-  <div class="hint">Noch keine Aufnahme? Mit einem Polar-H10-Gurt kannst du
+  <div class="hint" data-i18n="hintMessen">Noch keine Aufnahme? Mit einem Polar-H10-Gurt kannst du
     <a id="measureLink" href="messen.html">direkt hier messen</a>.</div>
 
   <!-- "Direkt-Übertragung" war die Zusage des Relay-Wegs. Jetzt gilt mehr:
        die Seite macht ueberhaupt keine Netz-Aufrufe ausser ihrem eigenen Laden. -->
-  <div class="privacy"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>Alles bleibt auf deinem Gerät · kein Server sieht deine Daten</div>
+  <div class="privacy"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg><span data-i18n="privacyLine">Alles bleibt auf deinem Gerät · kein Server sieht deine Daten</span></div>
 
   <!-- § 5 DDG und Art. 13 DSGVO: von JEDER Seite erreichbar, nicht nur von der
        Startseite. Und § 305 Abs. 2 BGB: ohne diesen Weg sind die AGB, die die
        Uebergabe regeln, gar nicht einbezogen. Dieselbe Zeile traegt messen.html;
        sie fehlte hier, weil die Korrektur vom 08.08. nur eine der beiden Seiten
        erreicht hat. -->
-  <div class="hint rechtsweg" style="max-width:60ch;margin:var(--s3) auto 0"><a href="/impressum.html">Impressum</a> · <a href="/privacy.html">Datenschutz</a> · <a href="/agb.html">AGB</a></div>
+  <div class="hint rechtsweg" style="max-width:60ch;margin:var(--s3) auto 0" data-i18n="rechtLinks"><a href="/impressum.html">Impressum</a> · <a href="/privacy.html">Datenschutz</a> · <a href="/agb.html">AGB</a></div>
 </div>
 
 <!-- p2p.js ist raus: der Relay darin ist ein Platzhalter (example.workers.dev),
@@ -214,6 +217,86 @@ p.sub{color:var(--sec);font-size:clamp(13px,1.15vw,15px);margin:0 auto var(--s4)
 <script>
 'use strict';
 const $=s=>document.querySelector(s);
+
+/* ── SPRACHE — dieselbe leichte Mechanik wie messen.html ──────────────────
+   Die Wahl liegt in localStorage 'vk.lang' und wird ueber ALLE Vitalkultur-
+   Seiten geteilt (messen.html nutzt denselben Schluessel). Ohne gespeicherte
+   Wahl entscheidet die Browsersprache. Das deutsche Markup bleibt als
+   Fallback stehen: faellt dieses Skript aus, ist die Seite deutsch, nie leer.
+   applyLang() laeuft VOR dem Weiterreichen des Praxis-Links unten — es
+   ersetzt das innerHTML des Mess-Hinweises, und erst DANACH darf jemand
+   #measureLink anfassen, sonst ginge die href-Anpassung still verloren. */
+const L={
+de:{
+ title:'Aufnahme an die Praxis senden — CARLON Equine',
+ eyebrow:'Übergabe an die Praxis',
+ h1:'Aufnahme senden',
+ sub:'Gib die Herzraten-Aufnahme deines Pferds an deine Tierärztin oder deinen Tierarzt weiter. Die Datei bleibt auf deinem Gerät — du schickst sie selbst, auf deinem Weg.',
+ sealSiegel:'Wird für deine Praxis versiegelt — nur sie kann die Datei öffnen.',
+ dropT:'Aufnahme-Datei wählen',
+ dropS:'Die <b>.json</b>-Datei aus der CARLON-App oder der Mess-Station',
+ btnShare:'An die Praxis weitergeben',
+ btnAgain:'Weitere Aufnahme senden',
+ hintMessen:'Noch keine Aufnahme? Mit einem Polar-H10-Gurt kannst du <a id="measureLink" href="messen.html">direkt hier messen</a>.',
+ privacyLine:'Alles bleibt auf deinem Gerät · kein Server sieht deine Daten',
+ rechtLinks:'<a href="/impressum.html">Impressum</a> · <a href="/privacy.html">Datenschutz</a> · <a href="/agb.html">AGB</a>',
+ errFalscheDatei:'Bitte die .json-Datei aus der CARLON-App oder der Mess-Station wählen.',
+ errKeinJson:'Das ist keine CARLON-Aufnahme — nimm die Datei, die die App oder die Messstation gespeichert hat.',
+ errVorbereiten:'Die Datei ließ sich nicht vorbereiten — versuch es bitte noch einmal.',
+ statusSchonVersiegelt:'Bereits für deine Praxis versiegelt — bereit zum Weitergeben.',
+ statusVersiegelt:'Für deine Praxis versiegelt — bereit zum Weitergeben.',
+ statusBereit:'Bereit zum Weitergeben.',
+ shareTitel:'Messung für die Praxis',
+ shareTextVersiegelt:'Hier ist die Herzfrequenz-Messung von meinem Pferd. Die Datei ist für deine Praxis verschlüsselt.',
+ shareTextOffen:'Hier ist die Herzfrequenz-Messung von meinem Pferd. Öffnen mit CARLON: ',
+ statusAbgebrochen:'Nichts verschickt — tippe erneut auf „An die Praxis weitergeben“.',
+ sendGeteilt:'Datei weitergegeben', sendGespeichert:'Datei gespeichert',
+ sendGeteiltVerschl:'Nur deine Praxis kann sie öffnen — unterwegs ist sie unlesbar.',
+ sendGeteiltOffen:'Sie enthält nur die Messung deines Pferds, sonst nichts.',
+ sendDownload:'Dein Browser kann Dateien nicht direkt teilen. Die Datei liegt in deinen Downloads — schick sie deiner Tierärztin wie ein Foto.'
+},
+en:{
+ title:'Send a recording to the practice — CARLON Equine',
+ eyebrow:'Handover to the practice',
+ h1:'Send a recording',
+ sub:'Pass your horse’s heart rate recording on to your vet. The file stays on your device — you send it yourself, on your own channel.',
+ sealSiegel:'It will be sealed for your practice — only they can open the file.',
+ dropT:'Choose the recording file',
+ dropS:'The <b>.json</b> file from the CARLON app or the measuring station',
+ btnShare:'Pass on to the practice',
+ btnAgain:'Send another recording',
+ hintMessen:'No recording yet? With a Polar H10 belt you can <a id="measureLink" href="messen.html">measure right here</a>.',
+ privacyLine:'Everything stays on your device · no server sees your data',
+ rechtLinks:'<a href="/impressum.html">Imprint</a> · <a href="/privacy-en.html">Privacy</a> · <a href="/terms.html">Terms</a>',
+ errFalscheDatei:'Please choose the .json file from the CARLON app or the measuring station.',
+ errKeinJson:'This is not a CARLON recording — take the file the app or the measuring station saved.',
+ errVorbereiten:'The file could not be prepared — please try again.',
+ statusSchonVersiegelt:'Already sealed for your practice — ready to pass on.',
+ statusVersiegelt:'Sealed for your practice — ready to pass on.',
+ statusBereit:'Ready to pass on.',
+ shareTitel:'Recording for the practice',
+ shareTextVersiegelt:'Here is the heart rate recording of my horse. The file is encrypted for your practice.',
+ shareTextOffen:'Here is the heart rate recording of my horse. Open it with CARLON: ',
+ statusAbgebrochen:'Nothing sent — tap “Pass on to the practice” again.',
+ sendGeteilt:'File passed on', sendGespeichert:'File saved',
+ sendGeteiltVerschl:'Only your practice can open it — in transit it is unreadable.',
+ sendGeteiltOffen:'It contains only your horse’s measurement, nothing else.',
+ sendDownload:'Your browser can’t share files directly. The file is in your downloads — send it to your vet like a photo.'
+}};
+let LANG=(()=>{
+  try{ const s=localStorage.getItem('vk.lang'); if(s&&L[s]) return s; }catch(e){}
+  return (navigator.language||'de').toLowerCase().startsWith('de')?'de':'en';
+})();
+function t(k,fb){ const d=L[LANG]||L.de; return (d&&d[k])!=null?d[k]:((L.de&&L.de[k])!=null?L.de[k]:(fb!=null?fb:k)); }
+function applyLang(){
+  document.querySelectorAll('[data-i18n]').forEach(el=>{
+    const v=t(el.getAttribute('data-i18n'),null);
+    if(v!=null) el.innerHTML=v;
+  });
+  document.documentElement.lang=LANG;
+  document.title=t('title');
+}
+applyLang();
 
 /* ── ADRESSE LESEN — dieselben Parameter wie messen.html ──────────────────
    `?fach=` + `?k=` kommen vom Aushang der Praxis: Fachnummer und oeffentlicher
@@ -241,7 +324,7 @@ const hatSiegel=!!(fach&&praxisKey);
    nichts. Der Dateiweg braucht keinen Code: ohne Aushang ist es schlicht
    Weg B (Datei unveraendert weitergeben). Kein Fehler, keine Huerde. */
 if(hatSiegel){
-  $('#sealLine').textContent='Wird für deine Praxis versiegelt — nur sie kann die Datei öffnen.';
+  $('#sealLine').textContent=t('sealSiegel');
 }
 
 const drop=$('#drop'), fi=$('#file');
@@ -260,7 +343,7 @@ let sendung=null;
 /* ── VORBEREITEN — lesen, erkennen, ggf. versiegeln. Alles lokal. ───────── */
 async function vorbereiten(file){
   if(!/\.(json|ndjson)$/i.test(file.name)){
-    $('#err').textContent='Bitte die .json-Datei aus der CARLON-App oder der Mess-Station wählen.'; return; }
+    $('#err').textContent=t('errFalscheDatei'); return; }
   $('#err').textContent='';
   try{
     /* Die Datei wird gelesen, um sie zu ERKENNEN, nicht um sie zu bewerten:
@@ -271,7 +354,7 @@ async function vorbereiten(file){
     let inhalt;
     try{ inhalt=JSON.parse(text); }
     catch(e){
-      $('#err').textContent='Das ist keine CARLON-Aufnahme — nimm die Datei, die die App oder die Messstation gespeichert hat.';
+      $('#err').textContent=t('errKeinJson');
       return;
     }
     const schonVersiegelt=!!(inhalt && inhalt.art==='carlon-umschlag');
@@ -294,11 +377,11 @@ async function vorbereiten(file){
     $('#btnShare').classList.remove('hidden'); $('#btnAgain').classList.add('hidden');
     $('#fname').textContent=datei.name; $('#fsize').textContent=kb(datei.size);
     $('#status').textContent= versiegelt
-      ? (schonVersiegelt ? 'Bereits für deine Praxis versiegelt — bereit zum Weitergeben.'
-                         : 'Für deine Praxis versiegelt — bereit zum Weitergeben.')
-      : 'Bereit zum Weitergeben.';
+      ? (schonVersiegelt ? t('statusSchonVersiegelt')
+                         : t('statusVersiegelt'))
+      : t('statusBereit');
   }catch(e){
-    $('#err').textContent='Die Datei ließ sich nicht vorbereiten — versuch es bitte noch einmal.';
+    $('#err').textContent=t('errVorbereiten');
   }
 }
 
@@ -320,13 +403,13 @@ $('#btnShare').addEventListener('click', async ()=>{
   const {datei,versiegelt}=sendung;
   $('#err').textContent='';
   const text=versiegelt
-    ? 'Hier ist die Herzfrequenz-Messung von meinem Pferd. Die Datei ist für deine Praxis verschlüsselt.'
-    : 'Hier ist die Herzfrequenz-Messung von meinem Pferd. Öffnen mit CARLON: '
+    ? t('shareTextVersiegelt')
+    : t('shareTextOffen')
       + (window.CARLON_KANON||new URL('index.html',location.href).toString());
   let geteilt=false, abgebrochen=false;
   if(navigator.canShare && navigator.canShare({files:[datei]})){
     try{
-      await navigator.share({title:'Messung für die Praxis', text, files:[datei]});
+      await navigator.share({title:t('shareTitel'), text, files:[datei]});
       geteilt=true;
     }catch(err){
       /* ⚠ WEGTIPPEN IST KEIN VERSAND — dieselbe Lehre wie in messen.html:
@@ -337,18 +420,18 @@ $('#btnShare').addEventListener('click', async ()=>{
     }
   }
   if(abgebrochen){
-    $('#status').textContent='Nichts verschickt — tippe erneut auf „An die Praxis weitergeben“.';
+    $('#status').textContent=t('statusAbgebrochen');
     return;
   }
   if(!geteilt) dateiHerunterladen(datei);
   $('#status').innerHTML='<span class="done">✓ '
-    +(geteilt?'Datei weitergegeben':'Datei gespeichert')+'</span>'
+    +(geteilt?t('sendGeteilt'):t('sendGespeichert'))+'</span>'
     +'<div style="font-size:12px;color:var(--sec);margin-top:6px">'
     +(geteilt
       ? (versiegelt
-         ? 'Nur deine Praxis kann sie öffnen — unterwegs ist sie unlesbar.'
-         : 'Sie enthält nur die Messung deines Pferds, sonst nichts.')
-      : 'Dein Browser kann Dateien nicht direkt teilen. Die Datei liegt in deinen Downloads — schick sie deiner Tierärztin wie ein Foto.')
+         ? t('sendGeteiltVerschl')
+         : t('sendGeteiltOffen'))
+      : t('sendDownload'))
     +'</div>';
   $('#btnShare').classList.add('hidden');
   $('#btnAgain').classList.remove('hidden');

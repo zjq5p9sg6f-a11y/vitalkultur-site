@@ -965,9 +965,9 @@ const HAUS={ appImStore:false, appUrl:'https://carlon.app' };
          wirklich etwas zu zeigen gibt. Geteilt wird NUR die Station, nie
          die laufende Messung. -->
     <div class="jetzt-teilen" id="jetztTeilen" hidden>
-      <div class="jt-txt"><b>Das sollte deine Stallnachbarin sehen</b>
-        <span>Der Link zur Messstation — ohne deine Daten.</span></div>
-      <button class="btn ghost" id="jtBtn">Weitersagen</button>
+      <div class="jt-txt"><b data-i18n="jtTitel">Das sollte deine Stallnachbarin sehen</b>
+        <span data-i18n="jtSub">Der Link zur Messstation — ohne deine Daten.</span></div>
+      <button class="btn ghost" id="jtBtn" data-i18n="jtBtn">Weitersagen</button>
     </div>
 
     <!-- Beantwortet die Frage, die im Stall wirklich zaehlt: wann darf ich
@@ -981,7 +981,7 @@ const HAUS={ appImStore:false, appUrl:'https://carlon.app' };
       </div>
       <div class="qbar"><i id="recFill"></i></div>
       <div class="proto-row" style="cursor:default">
-        <span class="qual"><span class="dot" id="qdot"></span><span id="qtxt" aria-live="polite">Signal wird geprüft…</span></span>
+        <span class="qual"><span class="dot" id="qdot"></span><span id="qtxt" aria-live="polite" data-i18n="sigChecking">Signal wird geprüft…</span></span>
       </div>
     </div>
 
@@ -1322,6 +1322,11 @@ de:{
  wayIosT:'Apple-Geräte: CARLON EQUINE', wayIosS:'Die App misst nativ und kann deutlich mehr als diese Seite.',
  sendLink:'Link an ein messendes Gerät senden',
  sendFile:'Aufnahme als Datei senden',
+ /* Eigenen Sitzungslink an das zweite Geraet reichen (#btnSendLink) */
+ linkShareTitel:'CARLON Equine — Messung',
+ linkShareText:'Mein Link zur Herzraten-Messung — auf einem Android-Gerät oder Computer in Chrome öffnen:',
+ linkKopiertGeraet:'Link kopiert — jetzt an dein Gerät schicken',
+ linkKopiert:'Link kopiert',
  unsupHint:'Du hast schon eine Aufnahme als Datei? Schick sie deiner Praxis direkt — wie ein Foto, auf dem Weg, den ihr ohnehin nutzt.',
  /* Live */
  liveEyebrow:'Aufnahme läuft', liveH1:'Messung läuft',
@@ -1336,6 +1341,8 @@ de:{
  progressStart:'Empfohlen sind mindestens sieben Minuten ruhige Messung — erst dann trägt die Atemwegs-Auswertung.',
  stop:'Messung beenden', restart:'Verwerfen und neu starten',
  stopBestaetigen:'Erst {x} gemessen — wirklich beenden? Nochmal tippen.',
+ restartToast:'Neu gestartet — der Gurt bleibt verbunden',
+ restartConfirm:'Wirklich verwerfen? Nochmal tippen',
  stromStill:'Seit einigen Sekunden kommen keine Herzschläge an — sitzt der Gurt noch? Elektroden nachfeuchten hilft meistens.',
  sendAbgebrochen:'Nichts verschickt — tippe erneut auf „An die Praxis senden".',
  sendFehlerDatei:'Das hat nicht geklappt — tippe auf „Als Datei speichern" und schick die Datei deiner Tierärztin wie ein Foto.',
@@ -1343,6 +1350,12 @@ de:{
  reconnZurueck:'Wieder verbunden — die Lücke wird in der Aufnahme vermerkt, deine Tierärztin sieht sie mit.',
  reconnFehl:'Noch nicht erreichbar — Gurt kurz abnehmen, Elektroden nachfeuchten, wieder anlegen und erneut tippen.',
  liveHint:'Halte das Gerät in der Nähe und lass den Bildschirm an — schläft er ein, bricht die Bluetooth-Verbindung ab.',
+ /* Weitersagen-Moment waehrend der Messung (#jetztTeilen) */
+ jtTitel:'Das sollte deine Stallnachbarin sehen',
+ jtSub:'Der Link zur Messstation — ohne deine Daten.',
+ jtBtn:'Weitersagen',
+ jtShareTitel:'CARLON EQUINE Messstation',
+ jtShareText:'Damit kann man den Herzrhythmus vom Pferd selbst messen:',
  /* Beleg */
  doneEyebrow:'Aufnahme abgeschlossen',
  tBeatsDone:'Herzschläge', tBeatsDoneSub:'erfasste Einzelschläge',
@@ -1422,6 +1435,13 @@ de:{
     Besitzer-Produktseite. */
  shVetMsg:'Ich habe die Ruhe-Herzrate meines Pferds im Browser gemessen — mit dem Polar-Gurt, die Aufnahme geht als Datei an meine Praxis. Vielleicht ist das auch etwas für Ihre Praxis — so lesen Tierärztinnen und Tierärzte solche Messungen:',
  shVetUrl:'https://vitalkultur.com/carlon-equine-visite/',
+ /* Empfehlung an andere Halter + note()-Meldungen (share()) */
+ shOwnerTitel:'Herzraten-Messung beim Pferd',
+ shOwnerMsg:'So sieht der Herzschlag von {x} aus — direkt im Browser mit dem Polar-Gurt gemessen, ohne App. Die Auswertung macht der Tierarzt:',
+ horseFallback:'mein Pferd',
+ noteDanke:'Danke — das bedeutet uns viel',
+ noteBild:'Bild gespeichert — Text ist kopiert',
+ noteText:'Text kopiert — jetzt einfügen und senden',
  /*MDR — extern geprüft 06.08., Perplexity/Recherche: „was das Herz tut" ist umgangssprachlich zu breit;
     Formulierung auf reine Datenerfassung verengt. Nicht ohne erneute Prüfung ändern. */
  footerNote:'Diese Seite zeichnet Herzschlag-Daten deines Pferds auf — die medizinische Beurteilung erfolgt ausschließlich durch deine Tierärztin oder deinen Tierarzt.',
@@ -1486,6 +1506,10 @@ en:{
  wayIosT:'Apple devices: CARLON EQUINE', wayIosS:'The app records natively and does considerably more than this page.',
  sendLink:'Send the link to a device that can record',
  sendFile:'Send a recording as a file',
+ linkShareTitel:'CARLON Equine — Recording',
+ linkShareText:'My link to the heart rate recording — open it in Chrome on an Android device or computer:',
+ linkKopiertGeraet:'Link copied — now send it to your device',
+ linkKopiert:'Link copied',
  unsupHint:'Already have a recording as a file? Send it to your practice directly — like a photo, on whatever channel you already use.',
  liveEyebrow:'Recording in progress', liveH1:'Recording',
  liveSub:'Let the horse stand quietly. The calmer the horse, the more meaningful the recording.',
@@ -1499,6 +1523,8 @@ en:{
  progressStart:'At least seven minutes of quiet recording is recommended — only then does the airway assessment carry.',
  stop:'Finish recording', restart:'Discard and start over',
  stopBestaetigen:'Only {x} recorded — really finish? Tap again.',
+ restartToast:'Started over — the belt stays connected',
+ restartConfirm:'Really discard? Tap again',
  stromStill:'No heartbeats have arrived for a few seconds — is the belt still snug? Re-wetting the electrodes usually helps.',
  sendAbgebrochen:'Nothing sent — tap “Send to the practice” again.',
  sendFehlerDatei:'That did not work — tap “Save as file” and send the file to your vet like a photo.',
@@ -1506,6 +1532,11 @@ en:{
  reconnZurueck:'Reconnected — the gap is noted in the recording, your vet sees it too.',
  reconnFehl:'Not reachable yet — take the belt off briefly, re-wet the electrodes, put it back on and tap again.',
  liveHint:'Keep the device nearby and leave the screen on — if it sleeps, the Bluetooth connection drops.',
+ jtTitel:'Your barn neighbour should see this',
+ jtSub:'The link to the measuring station — none of your data.',
+ jtBtn:'Spread the word',
+ jtShareTitel:'CARLON EQUINE measuring station',
+ jtShareText:'With this you can measure your horse’s heart rhythm yourself:',
  doneEyebrow:'Recording complete',
  tBeatsDone:'Heartbeats', tBeatsDoneSub:'individual beats captured',
  tDurDone:'Duration', tDurDoneSub:'length of the recording',
@@ -1564,6 +1595,12 @@ en:{
  shareOwner:'Show fellow horse people', shareVet:'Recommend to your practice',
  shVetMsg:'I measured my horse’s resting heart rate in the browser — with the Polar belt, and the recording goes to my practice as a file. This might be something for your practice too — this is how veterinarians read these recordings:',
  shVetUrl:'https://vitalkultur.com/carlon-equine-visite/en/',
+ shOwnerTitel:'Equine heart rate recording',
+ shOwnerMsg:'This is what {x}’s heartbeat looks like — measured right in the browser with the Polar belt, no app. The assessment is made by the vet:',
+ horseFallback:'my horse',
+ noteDanke:'Thank you — that means a lot to us',
+ noteBild:'Image saved — the text is copied',
+ noteText:'Text copied — now paste and send',
  /*MDR — extern geprüft: im anglo-amerikanischen Raum ist die etablierte Formel
     „not intended to diagnose, treat, cure, or prevent any disease" belastbarer als eine
     woertliche Uebersetzung. Nicht ohne erneute Pruefung aendern. */
@@ -3212,7 +3249,11 @@ function weitersagenZeigen(){
 /* Stall-Aushang: der Bottom-up-Kanal als Blatt Papier. Sie-Form — er
    haengt oeffentlich in der Stallgasse und spricht fremde Halter an.
    QR fuehrt auf die Produktseite (nicht auf die Station: ohne den Aushang
-   einer Praxis fehlt der Schluessel, und die Seite erklaert den Weg). */
+   einer Praxis fehlt der Schluessel, und die Seite erklaert den Weg).
+   BEWUSST NUR DEUTSCH: der Aushang haengt in deutschen Staellen und wird
+   von fremden Haltern dort gelesen — die Sprache der Stallgasse, nicht die
+   der Bildschirm-Einstellung. Eine EN-Fassung kommt mit einem eigenen
+   Markt (eigene Produktseite als QR-Ziel), nicht per Katalog-Uebersetzung. */
 function stallAushangDrucken(){
   const ziel='https://vitalkultur.com/carlon-equine/';
   let qr=''; try{ qr=QR.svg(ziel,{rand:1,dunkel:'#0A0A0C',hell:'#ffffff'}); }catch(_){ return; }
@@ -3494,15 +3535,15 @@ function subjectId(name){
    auf sein eigenes zweites Geraet, ohne ihn muesste er ihn abtippen. */
 $('#btnSendLink').addEventListener('click', async ()=>{
   const url=location.href;
-  const cfg={ title:'CARLON Equine — Messung', text:'Mein Link zur Herzraten-Messung — auf einem Android-Gerät oder Computer in Chrome öffnen:', url };
+  const cfg={ title:t('linkShareTitel'), text:t('linkShareText'), url };
   const n=$('#linkNote');
   const say=m=>{ n.textContent=m; setTimeout(()=>{ if(n.textContent===m) n.textContent=''; },5000); };
   try{
     if(navigator.share){ await navigator.share(cfg); return; }
-    await navigator.clipboard.writeText(url); say('Link kopiert — jetzt an dein Gerät schicken');
+    await navigator.clipboard.writeText(url); say(t('linkKopiertGeraet'));
   }catch(e){
     if(e && e.name==='AbortError') return;
-    try{ await navigator.clipboard.writeText(url); say('Link kopiert'); }catch(_){ say(url); }
+    try{ await navigator.clipboard.writeText(url); say(t('linkKopiert')); }catch(_){ say(url); }
   }
 });
 
@@ -3973,7 +4014,7 @@ function drawSpark(){
         return basis + (basis.indexOf('?')<0 ? '?' : '&') + 'q=halter';
       }catch(_){ return location.href.split('#')[0]; }
     })();
-    const text='Damit kann man den Herzrhythmus vom Pferd selbst messen:';
+    const text=t('jtShareText');
     /* Mit Bild teilen, wenn das Geraet es kann — ein nackter Link traegt
        keine Begeisterung, die Wolke schon. Faellt sauber auf Text zurueck. */
     let datei=null;
@@ -3986,11 +4027,11 @@ function drawSpark(){
     }catch(_){ }
     if(navigator.share){
       try{ await navigator.share(datei?{title:'CARLON EQUINE',text,url:st,files:[datei]}
-                                      :{title:'CARLON EQUINE Messstation',text,url:st}); }
+                                      :{title:t('jtShareTitel'),text,url:st}); }
       catch(_){ /* abgebrochen */ }
     } else {
       try{ await navigator.clipboard.writeText(st); }catch(_){ }
-      jt.textContent='Kopiert ✓'; setTimeout(()=>{ jt.textContent='Weitersagen'; },2200);
+      jt.textContent=t('ubKopiert'); setTimeout(()=>{ jt.textContent=t('jtBtn'); },2200);
     }
     S._teilenWeg=true; const box=$('#jetztTeilen'); if(box) box.hidden=true;
   });
@@ -4533,7 +4574,7 @@ $('#btnRestart').addEventListener('click',()=>{
   $('#liveTitle').textContent=t('liveH1');
   $('#liveSub').textContent=t('liveSub');
   $('#btnStop').textContent=t('stop');
-  Toast_ok('Neu gestartet — der Gurt bleibt verbunden');
+  Toast_ok(t('restartToast'));
 });
 // Bewusst kein window.confirm: ein Browser-Dialog kann die Bluetooth-Sitzung
 // blockieren. Rueckfrage nur, wenn wirklich Daten verloren gehen.
@@ -4541,10 +4582,12 @@ let _armed=false, _armTimer=null;
 function confirmDiscard(){
   if(_armed){ _armed=false; clearTimeout(_armTimer); return true; }
   _armed=true;
-  const b=$('#btnRestart'); const t=b.textContent;
-  b.textContent='Wirklich verwerfen? Nochmal tippen';
+  /* `alt` statt `t`: die alte lokale Konstante verschattete den Uebersetzer
+     t() — derselbe Fehler wie einst bei der Anfrage-Ueberschrift. */
+  const b=$('#btnRestart'); const alt=b.textContent;
+  b.textContent=t('restartConfirm');
   b.style.borderColor='var(--amber)'; b.style.color='var(--amber)';
-  _armTimer=setTimeout(()=>{ _armed=false; b.textContent=t; b.style.borderColor=''; b.style.color=''; },4000);
+  _armTimer=setTimeout(()=>{ _armed=false; b.textContent=alt; b.style.borderColor=''; b.style.color=''; },4000);
   return false;
 }
 function Toast_ok(msg){
@@ -4786,7 +4829,7 @@ async function shareCardBlob(){
 }
 
 async function share(kind){
-  const horse=($('#horse').value||'mein Pferd').trim();
+  const horse=($('#horse').value||t('horseFallback')).trim();
   const cfg = kind==='vet' ? {
     title:'CARLON Equine',
     /* Sie-Form aus dem Katalog (DE/EN) — es liest die Praxis. Ziel ist die
@@ -4794,8 +4837,8 @@ async function share(kind){
     text: t('shVetMsg'),
     url: t('shVetUrl')
   } : {
-    title:'Herzraten-Messung beim Pferd',
-    text:`So sieht der Herzschlag von ${horse} aus — direkt im Browser mit dem Polar-Gurt gemessen, ohne App. Die Auswertung macht der Tierarzt:`,
+    title:t('shOwnerTitel'),
+    text:t('shOwnerMsg').replace('{x}',horse),
     url: SHARE_STATION
   };
   try{
@@ -4806,21 +4849,21 @@ async function share(kind){
       if(blob) file=new File([blob],`${horse.replace(/[^\p{L}\p{N}_-]+/gu,'-')}-Herzrate.png`,{type:'image/png'});
     }catch(_){}
     if(navigator.share && file && navigator.canShare && navigator.canShare({files:[file]})){
-      await navigator.share({...cfg, files:[file]}); note('Danke — das bedeutet uns viel'); return;
+      await navigator.share({...cfg, files:[file]}); note(t('noteDanke')); return;
     }
-    if(navigator.share){ await navigator.share(cfg); note('Danke — das bedeutet uns viel'); return; }
+    if(navigator.share){ await navigator.share(cfg); note(t('noteDanke')); return; }
     if(file){                                   // Desktop: Bild sichern + Text kopieren
       const a=document.createElement('a'); a.href=URL.createObjectURL(file); a.download=file.name;
       document.body.appendChild(a); a.click(); a.remove();
       setTimeout(()=>URL.revokeObjectURL(a.href),4000);
       try{ await navigator.clipboard.writeText(cfg.text+' '+cfg.url); }catch(_){}
-      note('Bild gespeichert — Text ist kopiert'); return;
+      note(t('noteBild')); return;
     }
     await navigator.clipboard.writeText(cfg.text+' '+cfg.url);
-    note('Text kopiert — jetzt einfügen und senden');
+    note(t('noteText'));
   }catch(e){
     if(e && e.name==='AbortError') return;
-    try{ await navigator.clipboard.writeText(cfg.url); note('Link kopiert'); }
+    try{ await navigator.clipboard.writeText(cfg.url); note(t('linkKopiert')); }
     catch(_){ note(cfg.url); }
   }
 }
