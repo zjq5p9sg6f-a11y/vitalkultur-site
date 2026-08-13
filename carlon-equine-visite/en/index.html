@@ -337,26 +337,55 @@ h1{font-family:var(--font-brand);font-weight:300;font-size:clamp(38px,4vw,56px);
   animation:heroAura 7s ease-in-out infinite}
 @keyframes heroAura{0%,100%{opacity:0.65}50%{opacity:1}}
 @media (prefers-reduced-motion:reduce){.hero-aura{animation:none}}
-.hero-shot{position:relative;z-index:1;display:block;border:1px solid var(--border-subtle);
-  border-radius:18px;overflow:hidden;background:var(--bg-deep);
-  box-shadow:0 40px 90px -40px rgba(0,0,0,0.85),0 0 55px rgba(62,207,178,0.10);
+/* GERAETE-RAHMEN (Jan, 13.08.): nicht zwei Screenshots, sondern zwei
+   GERAETE — das Tablet der Praxis mit der Auswertung, das Telefon der
+   Halterin mit den Kurven. Bezel als CSS, kein Bild-Asset: dunkler Rand,
+   Continuous-Corner-Anmutung, Kamerapunkt/Insel als Detail. */
+.hero-shot{position:relative;z-index:1;display:block;border-radius:26px;overflow:hidden;
+  border:1px solid var(--border-strong);background:#08080b;padding:13px;
+  box-shadow:0 40px 90px -40px rgba(0,0,0,0.85),0 0 55px rgba(62,207,178,0.10),
+    inset 0 1px 0 rgba(255,255,255,0.06);
   transition:transform .18s,box-shadow .18s}
-.hero-shot:hover{transform:translateY(-3px);box-shadow:0 46px 100px -40px rgba(0,0,0,0.9),0 0 70px rgba(62,207,178,0.16)}
-.hero-shot img{width:100%;height:auto;display:block}
+.hero-shot:hover{transform:translateY(-3px);box-shadow:0 46px 100px -40px rgba(0,0,0,0.9),0 0 70px rgba(62,207,178,0.16),inset 0 1px 0 rgba(255,255,255,0.06)}
+.hero-shot::after{content:'';position:absolute;top:5px;left:50%;transform:translateX(-50%);
+  width:5px;height:5px;border-radius:50%;background:#16242c;box-shadow:inset 0 0 2px #000}
+.hero-shot img{width:100%;height:auto;display:block;border-radius:14px}
 /* Der Messbeleg der Halterin, ueberlappend — der andere Endpunkt des
    Kreislaufs. Rein illustrativ (aria-hidden): dieselben Zahlen erklaert
    der Messstations-Abschnitt weiter unten in Ruhe. */
 .hero-phone{position:absolute;z-index:2;left:-7%;bottom:-5%;width:32%;
-  /* Beschnitten auf den Kopf des Belegs (Kennzahlen) — das volle
-     Telefon-Bild ist 1:2,17 und hing bis in die Bildunterschrift. */
+  /* Beschnitten auf die Kurven (Puls/HRV in Gold und Cyan) — das volle
+     Bild ist 1:2,17 und hing bis in die Bildunterschrift. */
   aspect-ratio:9/13;
-  border:1px solid var(--border-strong);border-radius:14px;overflow:hidden;
-  background:var(--bg-deep);box-shadow:0 30px 60px -28px rgba(0,0,0,0.9);pointer-events:none}
-.hero-phone img{width:100%;height:100%;object-fit:cover;object-position:top;display:block}
+  border:1px solid var(--border-strong);border-radius:26px;overflow:hidden;
+  background:#08080b;padding:7px;
+  box-shadow:0 30px 60px -28px rgba(0,0,0,0.9),inset 0 1px 0 rgba(255,255,255,0.06);
+  pointer-events:none}
+.hero-phone::after{content:'';position:absolute;top:13px;left:50%;transform:translateX(-50%);
+  width:24%;height:8px;border-radius:999px;background:#04060a;z-index:3;
+  box-shadow:0 0 0 1px #14141a}
+.hero-phone img{width:100%;height:100%;object-fit:cover;object-position:top;display:block;border-radius:19px}
 /* Die Unterschrift beginnt rechts vom ueberlappenden Telefon. */
 .hero-visual figcaption{margin-top:var(--sp-21);font-size:var(--t-klein);
   color:var(--text-dim);font-weight:300;line-height:1.6;margin-left:31%;padding-left:var(--sp-13)}
 .hero-visual figcaption b{color:var(--text-secondary);font-weight:500}
+/* ── DIE FLUSS-LEISTE (Jan, 13.08.) ──────────────────────────────────
+   Telefon und Cockpit standen nebeneinander, aber DASS sie ein System
+   sind — die Messung der Halterin landet im Cockpit des Tierarztes —
+   musste man aus der Bildunterschrift lesen. Jetzt zeigt es eine Zeile:
+   zwei Marken, dazwischen wandert ein Puls-Punkt (die Datei) vom Stall
+   in die Praxis. Gedaempfte Bewegung im Aura-Takt, kein Spielzeug. */
+.hero-fluss{display:flex;align-items:center;gap:var(--sp-8);margin-bottom:var(--sp-8)}
+.hf-chip{font-family:var(--font-mono);font-size:var(--t-mark);letter-spacing:0.07em;
+  text-transform:uppercase;color:var(--cyan);background:rgba(62,207,178,0.07);
+  border:1px solid var(--cyan-deep);border-radius:999px;padding:5px 11px;white-space:nowrap}
+.hf-linie{position:relative;flex:1;height:1px;background:var(--cyan-deep);min-width:34px}
+.hf-linie i{position:absolute;top:-2.5px;left:0;width:6px;height:6px;border-radius:50%;
+  background:var(--cyan-strong);box-shadow:0 0 8px var(--cyan-glow-1);
+  animation:flussPuls 3.5s ease-in-out infinite}
+@keyframes flussPuls{0%{left:0;opacity:0}12%{opacity:1}88%{opacity:1}100%{left:calc(100% - 6px);opacity:0}}
+@media (prefers-reduced-motion:reduce){.hf-linie i{animation:none;left:calc(50% - 3px)}}
+@media (max-width:560px){.hf-chip{font-size:9px;padding:4px 8px}}
 @media(max-width:860px){
   .hero-grid{grid-template-columns:1fr;gap:var(--sp-34)}
   .hero-visual{max-width:430px;justify-self:center;width:100%}
@@ -764,12 +793,19 @@ html.rev-an .rev.in{opacity:1;transform:none}
     <figure class="hero-visual">
       <span class="hero-mandala" aria-hidden="true"></span>
       <span class="hero-aura" aria-hidden="true"></span>
+      <!-- Das PAAR erzaehlt den Kreis (Jan, 13.08.): das Telefon der
+           Halterin zeigt die KURVEN der Messstation (Puls/HRV, Tachogramm),
+           das Tablet der Praxis DIE AUSWERTUNG GENAU DAVON — Akte mit
+           Einstufung, Kernwerten gegen die Baseline, Readiness. -->
       <a class="hero-shot" href="/carlon-equine/app/" title="Open the demo cockpit">
-        <img src="../assets/visite-shots/10-triage.jpg" fetchpriority="high"
-          alt="Triage board of the cockpit: 15 horses sorted by biometric urgency, six critical open, each card with the deviation from its own baseline"></a>
-      <span class="hero-phone" aria-hidden="true"><img src="../assets/station-shots/04-beleg.jpg" alt=""></span>
-      <figcaption>Real views, no mock-ups: the demo’s triage board, next to the measurement
-        receipt as the owner sends it. <b>One click opens the application.</b></figcaption>
+        <img src="../assets/visite-shots/09-akte.jpg" fetchpriority="high"
+          alt="Horse record in the cockpit: classification Stable with reasoning, key values RMSSD, resting HR, SDNN and DFA against the individual baseline, training readiness and remote assessment"></a>
+      <span class="hero-phone" aria-hidden="true"><img src="../assets/station-shots/06-tachogramm.jpg" alt=""></span>
+      <figcaption>
+        <span class="hero-fluss"><span class="hf-chip">Recorded in the stable</span><span
+          class="hf-linie" aria-hidden="true"><i></i></span><span class="hf-chip">Read in your practice</span></span>
+        Real views, no mock-ups — <b>one click opens the application.</b>
+      </figcaption>
     </figure>
     <!-- ⚠ HIER STAND DER PREIS (bis 13.08.2026).
          Die Begruendung von damals war „qualifiziert Besucher frueh". Sie

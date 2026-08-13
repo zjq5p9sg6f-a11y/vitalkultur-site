@@ -133,12 +133,13 @@ tausche('<li><b>Ausgewertet in Ihrem Browser</b> — die Daten bleiben in der Pr
 tausche('<li><b>Abrechenbar</b> — die Ferneinschätzung führt die GOT als Ziffer&nbsp;1, den Brief als Ziffer&nbsp;89.</li>',
         '<li><b>Billable</b> — the German fee schedule (GOT) lists the remote assessment as item&nbsp;1, the letter as item&nbsp;89.</li>');
 tausche('title="Demo-Cockpit öffnen"', 'title="Open the demo cockpit"');
-tausche(`alt="Triage-Board des Cockpits: 15 betreute Pferde nach biometrischer Dringlichkeit sortiert, sechs kritisch offen, jede Karte mit Abweichung von der eigenen Baseline"`,
-        `alt="Triage board of the cockpit: 15 horses sorted by biometric urgency, six critical open, each card with the deviation from its own baseline"`);
-tausche(`Echte Ansichten, keine Attrappen: das Triage-Board der Demo, daneben der
-        Messbeleg, wie ihn die Halterin schickt. <b>Ein Klick öffnet die Anwendung.</b>`,
-        `Real views, no mock-ups: the demo’s triage board, next to the measurement
-        receipt as the owner sends it. <b>One click opens the application.</b>`);
+tausche(`alt="Pferde-Akte im Cockpit: Einstufung Stabil mit Begründung, Kernwerte RMSSD, Ruhe-HF, SDNN und DFA gegen die individuelle Baseline, Trainings-Readiness und Ferneinschätzung"`,
+        `alt="Horse record in the cockpit: classification Stable with reasoning, key values RMSSD, resting HR, SDNN and DFA against the individual baseline, training readiness and remote assessment"`);
+// Fluss-Leiste im Hero (Stall → Praxis)
+tausche('<span class="hf-chip">Im Stall gemessen</span>', '<span class="hf-chip">Recorded in the stable</span>');
+tausche('<span class="hf-chip">In Ihrer Praxis gelesen</span>', '<span class="hf-chip">Read in your practice</span>');
+tausche(`Echte Ansichten, keine Attrappen — <b>ein Klick öffnet die Anwendung.</b>`,
+        `Real views, no mock-ups — <b>one click opens the application.</b>`);
 /* Der Preis stand bis 13.08.2026 im Kopf und ist dort entfernt — wer den
    Preis liest, bevor er den Wert kennt, rechnet gegen ein Produkt, das er
    noch nicht verstanden hat. Der Block entfaellt hier mit. */
