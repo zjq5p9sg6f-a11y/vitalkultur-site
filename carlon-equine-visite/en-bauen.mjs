@@ -111,26 +111,42 @@ tausche("window.CARLON_LANG = localStorage.getItem('carlon.viewer.lang') || 'de'
 // Kopfbereich
 tausche('CARLON Equine Visite · für Tierärztinnen und Tierärzte',
         'CARLON Equine Visite · for veterinary surgeons');
-tausche('Sie sehen das Pferd, bevor Sie losfahren.',
-        'You see the horse before you get in the car.');
-tausche(`Die Halterin misst zu Hause im Stall und schickt Ihnen die Aufnahme. Sie öffnen sie im
-      Browser und sehen, wie weit dieses Pferd von <strong>seiner eigenen</strong> Baseline
-      abweicht — bevor Sie entscheiden, wer heute dran ist.`,
-`The owner records at home in the stable and sends you the recording. You open it in your
-      browser and see how far this horse deviates from <strong>its own</strong> baseline —
-      before you decide who is up today.`);
+/* Dieselbe Zeile wie in der og:description — Identitaet, nicht Funktion. */
+tausche('Betreuung, die nicht an der Stalltür endet.',
+        'Care that does not stop at the stable door.');
+tausche(`Der Anruf sagt „irgendwie nicht fit". Die Messung, die Ihnen die Halterin aus dem
+      Stall schickt, sagt, wie weit dieses Pferd von <strong>seiner eigenen</strong>
+      Baseline abweicht — Sie entscheiden mit Datengrundlage, wer heute dran ist und
+      wer bis zur Kontrolle warten kann.`,
+`The phone call says “not quite right somehow”. The recording the owner sends you from
+      the stable says how far this horse deviates from <strong>its own</strong> baseline —
+      you decide on evidence who is up today and who can wait until the follow-up.`);
 tausche('Cockpit mit 15&nbsp;Demo-Pferden öffnen →', 'Open the cockpit with 15&nbsp;demo horses →', 2);
 tausche('>Was es kostet<', '>What it costs<');
 tausche('Das Demo-Cockpit ist die vollständige Anwendung mit echten Beispielverläufen — ohne Konto, ohne Installation. Die Daten verlassen Ihre Praxis nicht.',
         'The demo cockpit is the complete application with real example trends — no account, no installation. The data never leaves your practice.');
+/* Hero-Belege + Visual (13.08.: φ-Split-Kopf) */
+tausche('<li><b>Gemessen im Stall,</b> in Ruhe — gegen die eigene Baseline dieses Pferds.</li>',
+        '<li><b>Recorded in the stable,</b> at rest — against this horse’s own baseline.</li>');
+tausche('<li><b>Ausgewertet in Ihrem Browser</b> — die Daten bleiben in der Praxis, ein AVV entfällt.</li>',
+        '<li><b>Analysed in your browser</b> — the data stays in your practice, no data-processing agreement needed.</li>');
+tausche('<li><b>Abrechenbar</b> — die Ferneinschätzung führt die GOT als Ziffer&nbsp;1, den Brief als Ziffer&nbsp;89.</li>',
+        '<li><b>Billable</b> — the German fee schedule (GOT) lists the remote assessment as item&nbsp;1, the letter as item&nbsp;89.</li>');
+tausche('title="Demo-Cockpit öffnen"', 'title="Open the demo cockpit"');
+tausche(`alt="Triage-Board des Cockpits: 15 betreute Pferde nach biometrischer Dringlichkeit sortiert, sechs kritisch offen, jede Karte mit Abweichung von der eigenen Baseline"`,
+        `alt="Triage board of the cockpit: 15 horses sorted by biometric urgency, six critical open, each card with the deviation from its own baseline"`);
+tausche(`Echte Ansichten, keine Attrappen: das Triage-Board der Demo, daneben der
+        Messbeleg, wie ihn die Halterin schickt. <b>Ein Klick öffnet die Anwendung.</b>`,
+        `Real views, no mock-ups: the demo’s triage board, next to the measurement
+        receipt as the owner sends it. <b>One click opens the application.</b>`);
 /* Der Preis stand bis 13.08.2026 im Kopf und ist dort entfernt — wer den
    Preis liest, bevor er den Wert kennt, rechnet gegen ein Produkt, das er
    noch nicht verstanden hat. Der Block entfaellt hier mit. */
 
 // Abschnitt 1 — Messbedingung
 tausche('Warum die Messung in den Stall gehört', 'The difference that arises before the measurement');
-tausche('Aussagekräftig wird eine Messung dort, wo das Pferd seinen normalen Tag hat.',
-        'A horse that has just been transported is not measuring itself.');
+tausche('Ruhe-HRV gibt es nur dort, wo Ruhe ist: im eigenen Stall.',
+        'Resting HRV only exists where rest exists: in the horse’s own stable.');
 /* Die Abrechnungs-Karte (neu 13.08.2026) — das Geld-Argument stand bisher
    ganz unten auf der Seite. GOT-Ziffern werden GENANNT, nie verrechnet. */
 tausche('Die Ferneinschätzung ist abrechenbar', 'Remote assessment is billable');
@@ -141,7 +157,8 @@ tausche(`Die Beratung ohne Untersuchung führt die <strong>GOT als Ziffer&nbsp;1
          and the veterinary letter per started 15&nbsp;minutes as <strong>item&nbsp;89</strong>. A
          phone call without a basis becomes a service with one.`);
 tausche('In der eigenen Box, zur gewohnten Zeit', 'Its own box, not an examination room');
-tausche('Sie bekommen die Aufnahme, nicht den Termin', 'You get the recording, not the appointment');
+tausche('Aus „Können Sie mal draufschauen?" wird eine Messung',
+        'From “could you take a quick look?” to a measurement');
 tausche('Wiederholbar, ohne dass jemand fährt', 'Repeatable without anyone driving out');
 
 // Abschnitt 2 — Cockpit
@@ -211,8 +228,9 @@ tausche('Kein Notfallweg', 'Not an emergency channel');
 tausche('Ein Preis, eine Praxis', 'One price, one practice');
 /* Ueberschrift traegt jetzt zusaetzlich den Betriebs-Bezug; weiter unten. */
 /* Ersetzt durch den praeziseren Satz weiter unten (USt. weist Stripe aus). */
-tausche('oder 79&nbsp;€ monatlich · das Jahresabo entspricht 65,83&nbsp;€ im Monat',
-        'or €79 monthly · the annual plan works out at €65.83 per month');
+/* Die Monatsrate fuehrt (Jan, 13.08.) — die grosse Zahl ist der Anker. */
+tausche('oder 790&nbsp;€ im Jahr — entspricht 65,83&nbsp;€ im Monat, zwei Monate gespart',
+        'or €790 per year — €65.83 a month, two months saved');
 tausche('Unbegrenzt Pferde, Aufnahmen und Verläufe', 'Unlimited horses, recordings and trends');
 tausche('Alle Mitarbeitenden, alle Geräte des Betriebs', 'All staff, all devices of the business');
 tausche('Befundbericht mit eigenem Briefkopf', 'Findings report on your own letterhead');
@@ -278,29 +296,32 @@ tausche('Therapie &amp; Forschung', 'Therapy &amp; research', 2);   // data-de +
    sich dort ein Zeichen, findet der Block hier nicht mehr statt und der
    Bau bricht ab — genau so soll es sein. */
 tausche(`
-      Herzfrequenzvariabilität misst Erholung — und Erholung zeigt sich nur in Ruhe: in der
-      eigenen Box, zur gewohnten Zeit, ohne fremde Menschen. Die Auswertung verlangt
-      ausdrücklich <strong>mindestens sieben Minuten Ruhe in gewohnter Umgebung</strong>.
-      Verladen, Fahrt und Wartebereich verändern genau die Größe, die Sie beurteilen wollen.
+      Transport, fremde Umgebung, fremde Menschen — jeder dieser Reize verschiebt genau die
+      autonome Balance, die Sie beurteilen wollen. Der Messort ist bei der Ruhe-HRV keine
+      Nebensache, sondern Teil der Methode: Die Auswertung verlangt ausdrücklich
+      <strong>mindestens sieben Minuten Ruhe in gewohnter Umgebung</strong>. Nach Verladung
+      und Fahrt ist diese Bedingung systematisch nicht erfüllt — in der eigenen Box ist sie
+      es jeden Tag.
     `,
         `
-      Heart rate variability measures recovery — and recovery only shows at rest: in the
-      horse's own box, at the usual time, with no strangers present. The analysis explicitly
-      requires <strong>at least seven minutes of rest in familiar surroundings</strong>.
-      Loading, the journey and the waiting area change exactly the quantity you want to
-      assess.
+      Transport, unfamiliar surroundings, unfamiliar people — each of these stimuli shifts
+      exactly the autonomic balance you want to assess. For resting HRV the measurement
+      site is not a side issue but part of the method: the analysis explicitly requires
+      <strong>at least seven minutes of rest in familiar surroundings</strong>. After
+      loading and a journey this condition is systematically unmet — in the horse's own
+      box it is met every day.
     `);
 /* Der Atemwegs-Absatz ist neu (13.08.2026) — und er ist das staerkste
    Argument der Seite: bei Asthma IST die Umgebung der Gegenstand. */
 tausche(`
-      <strong>Beim Atemwegs-Management ist das nicht nur eine Bedingung, sondern der ganze
+      <strong>Beim equinen Asthma ist das nicht nur eine Bedingung, sondern der ganze
       Punkt.</strong> Was das Pferd belastet, steht im Stall: Einstreu, Heu, Lüftung. Eine
       Messung in der Klinik nimmt ausgerechnet die Umgebung heraus, um die es geht. Zu Hause,
       wiederholt über Wochen, sehen Sie stattdessen, was Sie wirklich wissen wollen — ob die
       Umstellung gewirkt hat.
     `,
         `
-      <strong>For airway management this is not merely a condition — it is the entire
+      <strong>For equine asthma this is not merely a condition — it is the entire
       point.</strong> What burdens the horse is in the stable: bedding, hay, ventilation. A
       recording taken at the clinic removes precisely the environment in question. At home,
       repeated over weeks, you see instead what you actually want to know — whether the
@@ -310,11 +331,12 @@ tausche(`Die Halterin legt den Gurt an, das Pferd steht wie immer. Kein Transpor
          Aufregung durch Fremde, kein sperriges Gerät im Weg.`,
         `The owner puts on the belt, the horse stands as it always does. No transport, no
          excitement from strangers, no bulky equipment in the way.`);
-tausche(`Die Halterin schickt Ihnen eine Datei — Sie öffnen sie, wenn Sie Zeit haben. Sie
-         entscheiden danach, ob und wann ein Besuch nötig ist, und sehen vorher, wie
-         dringend.`,
-        `The owner sends you a file — you open it when you have time. You decide afterwards
-         whether and when a visit is needed, and you see beforehand how urgent it is.`);
+tausche(`Statt Anruf und Handyvideo schickt die Halterin eine standardisierte Aufnahme
+         samt Messprotokoll. Sie öffnen sie, wenn Sie Zeit haben — und sehen vorher,
+         wie dringend es ist.`,
+        `Instead of a phone call and a shaky video, the owner sends a standardised
+         recording with its measurement report. You open it when you have time — and
+         see beforehand how urgent it is.`);
 
 /* ── 2b · DIE MESSSTATION (neu 13.08.2026) ────────────────────────────
    Der ganze Abschnitt ist neu. Ohne diese Bloecke bliebe er auf der
@@ -417,12 +439,14 @@ tausche(`Anteil auswertbarer Schlagpaare, Artefaktrate, korrigierte AV-Block-Pau
            Eine Aufnahme, die nichts trägt, sagt Ihnen das — statt eine Zahl zu zeigen.`,
         `Share of usable beat pairs, artefact rate, corrected AV-block pauses.
            A recording that carries nothing tells you so — instead of showing a number.`);
-tausche(`HRV-basierte Marker mit ihren Schwellen, einzeln aufgeführt. Kalibriert gegen
-           eine veröffentlichte Studie mit BAL-Referenz. Ein <strong>Beobachtungshinweis</strong>,
-           ausdrücklich keine Diagnose.`,
-        `HRV-based markers with their thresholds, listed individually. Calibrated against
-           a published study with a BAL reference. An <strong>observational note</strong>,
-           explicitly not a diagnosis.`);
+tausche(`HRV-basierte Marker mit ihren Schwellen, einzeln aufgeführt — kalibriert an
+           einer BAL-referenzierten Studie (Nyerges-Bohák 2025, Equine Veterinary
+           Journal, n = 40). Ein <strong>Beobachtungshinweis</strong>, ausdrücklich
+           keine Diagnose: Die BAL-Zytologie bleibt der Goldstandard.`,
+        `HRV-based markers with their thresholds, listed individually — calibrated against
+           a BAL-referenced study (Nyerges-Bohák 2025, Equine Veterinary Journal,
+           n = 40). An <strong>observational note</strong>, explicitly not a
+           diagnosis: BAL cytology remains the gold standard.`);
 tausche(`Tachogramm, Poincaré, Spektrum, DFA, Histogramm — dieselben Darstellungen wie
            in der iOS-App, im Vollbild neu gezeichnet statt hochskaliert.`,
         `Tachogram, Poincaré, spectrum, DFA, histogram — the same views as in the iOS app,
@@ -579,10 +603,10 @@ tausche(`Nein. CARLON bereitet Verlaufsdaten auf und hilft bei der Reihenfolge. 
         `No. CARLON prepares trend data and helps with the order of visits. Whether a
            clinical examination, further diagnostics or treatment is needed is decided by
            you alone.`);
-tausche(`Einen handelsüblichen Brustgurt und ein Android-Gerät oder einen Rechner mit
+tausche(`Einen Polar-H10-Brustgurt und ein Android-Gerät oder einen Rechner mit
            Chrome oder Edge. Auf iPhone und iPad lässt Apple Bluetooth im Browser nicht zu;
            die Seite führt dort auf ein messfähiges Gerät.`,
-        `A commercially available chest belt and an Android device or a computer with
+        `A Polar H10 chest belt and an Android device or a computer with
            Chrome or Edge. On iPhone and iPad, Apple does not permit Bluetooth in the
            browser; the page directs you to a capable device there.`);
 tausche(`Die Anwendung wechselt in einen funktionsreduzierten Modus. Ihre Daten bleiben
@@ -630,8 +654,36 @@ tausche('"audienceType": "Tierärztinnen und Tierärzte, Pferdekliniken"',
         '"audienceType": "Equine veterinarians and equine clinics"');
 tausche('"text": "Nein. CARLON bereitet Verlaufsdaten auf und hilft bei der Reihenfolge. Ob eine klinische Untersuchung, weitere Diagnostik oder eine Behandlung nötig ist, entscheiden ausschließlich Sie."',
         '"text": "No. CARLON prepares trend data and helps with the order of visits. Whether a clinical examination, further diagnostics or treatment is needed is decided by you alone."');
-tausche('"text": "Einen handelsüblichen Brustgurt und ein Android-Gerät oder einen Rechner mit Chrome oder Edge. Auf iPhone und iPad lässt Apple Bluetooth im Browser nicht zu; die Seite führt dort auf ein messfähiges Gerät."',
-        '"text": "A commercially available chest belt and an Android device or a computer with Chrome or Edge. On iPhone and iPad, Apple does not permit Bluetooth in the browser; the page directs you to a capable device there."');
+tausche('"text": "Einen Polar-H10-Brustgurt und ein Android-Gerät oder einen Rechner mit Chrome oder Edge. Auf iPhone und iPad lässt Apple Bluetooth im Browser nicht zu; die Seite führt dort auf ein messfähiges Gerät."',
+        '"text": "A Polar H10 chest belt and an Android device or a computer with Chrome or Edge. On iPhone and iPad, Apple does not permit Bluetooth in the browser; the page directs you to a capable device there."');
+
+/* Die zwei neuen FAQ-Karten (13.08., Persona-Pass) — Frage-Titel stehen
+   doppelt (Karte + JSON-LD-name), daher n=2; die Antworten getrennt als
+   Karten-Block und als JSON-LD-Zeile. */
+tausche('Was taugt eine Messung von Laienhand?',
+        'How good can a layperson’s recording be?', 2);
+tausche(`Jede Aufnahme bringt ihr Messprotokoll mit: Anteil auswertbarer Schlagpaare,
+           Artefaktrate, Sensor, Zeitauflösung. Eine Aufnahme, die nichts trägt, wird genau
+           so ausgewiesen — Sie deuten nie blind. Und die Rohdaten liegen bei: jeder
+           einzelne Schlagabstand.`,
+        `Every recording carries its own measurement report: share of usable beat pairs,
+           artefact rate, sensor, timing resolution. A recording that carries nothing is
+           flagged as exactly that — you never interpret blind. And the raw data comes
+           with it: every single beat interval.`);
+tausche('"text": "Jede Aufnahme bringt ihr Messprotokoll mit: Anteil auswertbarer Schlagpaare, Artefaktrate, Sensor, Zeitauflösung. Eine Aufnahme, die nichts trägt, wird genau so ausgewiesen — Sie deuten nie blind. Und die Rohdaten liegen bei: jeder einzelne Schlagabstand."',
+        '"text": "Every recording carries its own measurement report: share of usable beat pairs, artefact rate, sensor, timing resolution. A recording that carries nothing is flagged as exactly that — you never interpret blind. And the raw data comes with it: every single beat interval."');
+tausche('Welche Evidenz steht hinter den Atemwegs-Markern?',
+        'What evidence sits behind the airway markers?', 2);
+tausche(`Die Marker sind an einer veröffentlichten, BAL-referenzierten Studie kalibriert
+           (Nyerges-Bohák 2025, Equine Veterinary Journal, n = 40) und werden mit ihren
+           Schwellen einzeln ausgewiesen. Die BAL-Zytologie bleibt der Goldstandard — der
+           Verlauf ersetzt sie nicht, er begründet, wann sie ansteht.`,
+        `The markers are calibrated against a published, BAL-referenced study
+           (Nyerges-Bohák 2025, Equine Veterinary Journal, n = 40) and are shown
+           individually with their thresholds. BAL cytology remains the gold standard —
+           the trend does not replace it, it substantiates when it is due.`);
+tausche('"text": "Die Marker sind an einer veröffentlichten, BAL-referenzierten Studie kalibriert (Nyerges-Bohák 2025, Equine Veterinary Journal, n = 40) und werden mit ihren Schwellen einzeln ausgewiesen. Die BAL-Zytologie bleibt der Goldstandard — der Verlauf ersetzt sie nicht, er begründet, wann sie ansteht."',
+        '"text": "The markers are calibrated against a published, BAL-referenced study (Nyerges-Bohák 2025, Equine Veterinary Journal, n = 40) and are shown individually with their thresholds. BAL cytology remains the gold standard — the trend does not replace it, it substantiates when it is due."');
 tausche('"text": "Die Anwendung wechselt in einen funktionsreduzierten Modus. Ihre Daten bleiben auf dem Gerät und lassen sich weiterhin öffnen und exportieren. Wir könnten sie gar nicht löschen — sie liegen bei Ihnen."',
         '"text": "The application switches to a reduced mode. Your data stays on the device and can still be opened and exported. We could not delete it — it is with you."');
 tausche('"text": "Nein. Das Cockpit läuft vollständig in Ihrem Browser, und auch die Aufnahme der Halterin erreicht uns nicht: Ihre Messstation legt eine Datei auf ihrem eigenen Gerät an, die sie Ihnen selbst schickt. Es gibt keinen Zwischenspeicher bei uns — und damit nichts, worüber ein Auftragsverarbeitungsvertrag zu schließen wäre."',
@@ -653,8 +705,8 @@ tausche('>Muster-Befund als PDF<', '>Sample findings report (PDF)<');
 
 
 /* Umsatzsteuer — WESSEN. Der Kern der Klaerung vom 12.08.2026. */
-tausche('<span>netto pro Jahr · USt. weist Stripe aus</span>',
-        '<span>net per year · VAT charged by Stripe</span>');
+tausche('<span>netto im Monat · USt. weist Stripe aus</span>',
+        '<span>net per month · VAT charged by Stripe</span>');
 tausche(`Das Angebot richtet sich ausschließlich an Unternehmer im Sinne des § 14 BGB.
         <strong>Wir selbst rechnen als Kleinunternehmer nach § 19 UStG ohne Umsatzsteuer ab.</strong>
         Für das Browser-Cockpit tritt <strong>Stripe als Verkäufer im eigenen Namen</strong> auf

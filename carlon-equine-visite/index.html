@@ -130,7 +130,7 @@ document.head.appendChild(s);})();</script>
      "name": "Was braucht die Halterin?",
      "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Einen handelsüblichen Brustgurt und ein Android-Gerät oder einen Rechner mit Chrome oder Edge. Auf iPhone und iPad lässt Apple Bluetooth im Browser nicht zu; die Seite führt dort auf ein messfähiges Gerät."
+      "text": "Einen Polar-H10-Brustgurt und ein Android-Gerät oder einen Rechner mit Chrome oder Edge. Auf iPhone und iPad lässt Apple Bluetooth im Browser nicht zu; die Seite führt dort auf ein messfähiges Gerät."
      }
     },
     {
@@ -147,6 +147,22 @@ document.head.appendChild(s);})();</script>
      "acceptedAnswer": {
       "@type": "Answer",
       "text": "Nein. Das Cockpit läuft vollständig in Ihrem Browser, und auch die Aufnahme der Halterin erreicht uns nicht: Ihre Messstation legt eine Datei auf ihrem eigenen Gerät an, die sie Ihnen selbst schickt. Es gibt keinen Zwischenspeicher bei uns — und damit nichts, worüber ein Auftragsverarbeitungsvertrag zu schließen wäre."
+     }
+    },
+    {
+     "@type": "Question",
+     "name": "Was taugt eine Messung von Laienhand?",
+     "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Jede Aufnahme bringt ihr Messprotokoll mit: Anteil auswertbarer Schlagpaare, Artefaktrate, Sensor, Zeitauflösung. Eine Aufnahme, die nichts trägt, wird genau so ausgewiesen — Sie deuten nie blind. Und die Rohdaten liegen bei: jeder einzelne Schlagabstand."
+     }
+    },
+    {
+     "@type": "Question",
+     "name": "Welche Evidenz steht hinter den Atemwegs-Markern?",
+     "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Die Marker sind an einer veröffentlichten, BAL-referenzierten Studie kalibriert (Nyerges-Bohák 2025, Equine Veterinary Journal, n = 40) und werden mit ihren Schwellen einzeln ausgewiesen. Die BAL-Zytologie bleibt der Goldstandard — der Verlauf ersetzt sie nicht, er begründet, wann sie ansteht."
      }
     }
    ]
@@ -244,23 +260,44 @@ nav{position:sticky;top:0;z-index:50;background:rgba(0,3,8,0.72);backdrop-filter
    Selektor-Staerke plus Klasse (0,2,2) — gewinnt in jeder Reihenfolge. */
 @media(max-width:560px){nav .nav-actions a.nav-equine{display:none}}
 
-/* Hero */
-.hero{padding-top:var(--sp-144);padding-bottom:var(--sp-89);text-align:center}
+/* Hero — φ-SPLIT (13.08.): links das Versprechen, rechts der Beweis.
+   Vorher war der Kopf reiner TEXT — das Produkt tauchte erst zwei
+   Bildschirmseiten tiefer auf. Die 50-ms-Regel des Conversion-Playbooks
+   verlangt ein Visual im Hero (40-50 % der Flaeche, kein Stock-Foto):
+   hier ist es das ECHTE Triage-Board plus der Messbeleg der Halterin —
+   der ganze Kreislauf des Produkts in einem Blick, und ein Klick darauf
+   oeffnet die echte Anwendung. Dahinter das Pferd-Mandala als
+   Wasserzeichen (CI §1.3: Geldschein-Prinzip, 0.04-0.08) mit der
+   atmenden Aura der Equine-Homepage — portiert, nicht nachgebaut. */
+.hero{padding-top:var(--sp-89);padding-bottom:var(--sp-89)}
+.hero-grid{display:grid;grid-template-columns:1.05fr 0.95fr;gap:var(--sp-55);align-items:center}
 /* Augenbraue: Mono, gesperrt, KURZ. Sie ist eine Marke, kein Satz —
    gesperrter Monospace ueber die halbe Seite liest niemand. */
 .eyebrow{font-family:var(--font-mono);font-size:var(--t-mark);letter-spacing:0.28em;
   text-transform:uppercase;color:var(--cyan);margin-bottom:var(--sp-21)}
-h1{font-family:var(--font-brand);font-weight:300;font-size:clamp(38px,6.2vw,var(--t-h1));
-  line-height:1.06;letter-spacing:-0.02em;margin-bottom:var(--sp-21);
-  /* Die Schlagzeile braucht eine Bahn, sonst zerfaellt sie in vier magere
-     Zeilen. 15 Zeichen je Zeile ist die Untergrenze fuer grosse Grade. */
-  max-width:15ch;margin-left:auto;margin-right:auto;text-wrap:balance}
+h1{font-family:var(--font-brand);font-weight:300;font-size:clamp(38px,4vw,56px);
+  line-height:1.08;letter-spacing:-0.02em;margin-bottom:var(--sp-21);
+  /* 56 = 72/√φ (die naechste Stufe unter dem Voll-Hero-Grad): in der
+     Split-Spalte bricht 72 px mitten im Satz („das / Pferd"). 20ch Bahn
+     ergibt die beiden Sinnzeilen: „Betreuung, die nicht" / „an der Stalltür
+     endet." — die Schlagzeile bricht sinnvoll, nicht mitten im Bild. */
+  max-width:20ch;text-wrap:balance}
 /* Der Vorspann traegt EINEN Gedanken. Stand hier ein Absatz von vier
    Zeilen, las ihn im Hero niemand — dort entscheidet sich in Sekunden, ob
    weitergelesen wird. */
 .hero-sub{font-size:var(--t-body);font-weight:300;color:var(--text-secondary);
-  max-width:30em;margin:0 auto var(--sp-34);line-height:1.6}
-.cta-row{display:flex;flex-wrap:wrap;gap:16px;align-items:center;justify-content:center}
+  max-width:30em;margin:0 0 var(--sp-34);line-height:1.6}
+/* Drei Belege above the fold — die drei staerksten Argumente der Seite
+   (Stall-Messung, browser-lokal, abrechenbar) als eine Zeile je Beleg.
+   Dieselbe Rauten-Sprache wie .enthalten/.feature — ein Vokabular. */
+.hero-belege{margin:var(--sp-34) 0 0;padding:var(--sp-21) 0 0;list-style:none;
+  border-top:1px solid var(--border-faint);display:flex;flex-direction:column;gap:var(--sp-13)}
+.hero-belege li{position:relative;padding-left:20px;font-size:var(--t-klein);
+  color:var(--text-secondary);font-weight:300;line-height:1.55}
+.hero-belege li b{color:var(--text-primary);font-weight:500}
+.hero-belege li::before{content:"";position:absolute;left:0;top:7px;width:7px;height:7px;
+  border-radius:2px;background:var(--cyan);transform:rotate(45deg)}
+.cta-row{display:flex;flex-wrap:wrap;gap:16px;align-items:center}
 .cta-primary{display:inline-flex;align-items:center;gap:9px;padding:15px 30px;border-radius:999px;background:var(--cyan);color:#00120f;font-weight:600;font-size:14px;letter-spacing:0.01em;box-shadow:0 0 34px rgba(62,207,178,0.22);transition:transform .16s,box-shadow .16s}
 .cta-primary:hover{transform:translateY(-2px);box-shadow:0 0 46px rgba(62,207,178,0.34)}
 /* ⚠ WAR MONO-FLIESSTEXT: 121 Zeichen in gesperrtem Monospace, gemessen
@@ -268,7 +305,43 @@ h1{font-family:var(--font-brand);font-weight:300;font-size:clamp(38px,6.2vw,var(
    Satz darin ist eine Lesebremse und sah auf der Seite aus wie ein
    Terminal-Auswurf. Jetzt normale Schrift, in Lesebreite. */
 .cta-note{font-size:var(--t-klein);color:var(--text-dim);font-weight:300;
-  max-width:34em;margin:var(--sp-13) auto 0;line-height:1.6}
+  max-width:34em;margin:var(--sp-13) 0 0;line-height:1.6}
+
+/* Die rechte Hero-Haelfte: Cockpit-Shot als Tuer zur Demo. */
+.hero-visual{position:relative;margin:0}
+.hero-mandala{position:absolute;top:-9%;right:-14%;width:88%;aspect-ratio:1;z-index:0;
+  background:url("/assets/equine-mark-1200.png") center/contain no-repeat;
+  opacity:0.07;pointer-events:none}
+.hero-aura{position:absolute;inset:-12%;z-index:0;pointer-events:none;filter:blur(28px);
+  background:radial-gradient(circle,rgba(62,207,178,0.12),transparent 62%);
+  animation:heroAura 7s ease-in-out infinite}
+@keyframes heroAura{0%,100%{opacity:0.65}50%{opacity:1}}
+@media (prefers-reduced-motion:reduce){.hero-aura{animation:none}}
+.hero-shot{position:relative;z-index:1;display:block;border:1px solid var(--border-subtle);
+  border-radius:18px;overflow:hidden;background:var(--bg-deep);
+  box-shadow:0 40px 90px -40px rgba(0,0,0,0.85),0 0 55px rgba(62,207,178,0.10);
+  transition:transform .18s,box-shadow .18s}
+.hero-shot:hover{transform:translateY(-3px);box-shadow:0 46px 100px -40px rgba(0,0,0,0.9),0 0 70px rgba(62,207,178,0.16)}
+.hero-shot img{width:100%;height:auto;display:block}
+/* Der Messbeleg der Halterin, ueberlappend — der andere Endpunkt des
+   Kreislaufs. Rein illustrativ (aria-hidden): dieselben Zahlen erklaert
+   der Messstations-Abschnitt weiter unten in Ruhe. */
+.hero-phone{position:absolute;z-index:2;left:-7%;bottom:-5%;width:32%;
+  /* Beschnitten auf den Kopf des Belegs (Kennzahlen) — das volle
+     Telefon-Bild ist 1:2,17 und hing bis in die Bildunterschrift. */
+  aspect-ratio:9/13;
+  border:1px solid var(--border-strong);border-radius:14px;overflow:hidden;
+  background:var(--bg-deep);box-shadow:0 30px 60px -28px rgba(0,0,0,0.9);pointer-events:none}
+.hero-phone img{width:100%;height:100%;object-fit:cover;object-position:top;display:block}
+/* Die Unterschrift beginnt rechts vom ueberlappenden Telefon. */
+.hero-visual figcaption{margin-top:var(--sp-21);font-size:var(--t-klein);
+  color:var(--text-dim);font-weight:300;line-height:1.6;margin-left:31%;padding-left:var(--sp-13)}
+.hero-visual figcaption b{color:var(--text-secondary);font-weight:500}
+@media(max-width:860px){
+  .hero-grid{grid-template-columns:1fr;gap:var(--sp-34)}
+  .hero-visual{max-width:430px;justify-self:center;width:100%}
+  .hero-phone{left:-3%}
+}
 /* Sections — EIN einheitlicher vertikaler Rhythmus für alle */
 section{padding-top:var(--sp-89);padding-bottom:var(--sp-89)}
 /* ⚠ ZENTRIERT WAR DER FEHLER. Gemessen: fuenf Fliesstext-Absaetze
@@ -628,19 +701,47 @@ html.rev-an .rev.in{opacity:1;transform:none}
      ══════════════════════════════════════════════════════════════════════ -->
 
 <section class="hero">
-  <div class="wrap">
+  <div class="wrap hero-grid">
+    <div class="hero-copy">
     <div class="eyebrow">CARLON Equine Visite · für Tierärztinnen und Tierärzte</div>
-    <h1>Sie sehen das Pferd, bevor Sie losfahren.</h1>
+    <!-- Die Schlagzeile ist IDENTITAET, nicht Funktion (Jan, 13.08.): sie
+         benennt, was die Praxis IST — Betreuung ueber den Besuch hinaus.
+         Die funktionale Aussage (sehen bevor fahren, Baseline, Triage)
+         traegt der Vorspann direkt darunter. Die Zeile stand schon in der
+         og:description — jetzt sagt die Seite sie auch selbst. -->
+    <h1>Betreuung, die nicht an der Stalltür endet.</h1>
+    <!-- Der Vorspann beginnt beim ANRUF — dem Moment, den jede mobile
+         Praxis kennt: entscheiden am Telefon, ohne Datengrundlage. Das
+         Produkt ist die Antwort auf genau diesen Moment. -->
     <p class="hero-sub">
-      Die Halterin misst zu Hause im Stall und schickt Ihnen die Aufnahme. Sie öffnen sie im
-      Browser und sehen, wie weit dieses Pferd von <strong>seiner eigenen</strong> Baseline
-      abweicht — bevor Sie entscheiden, wer heute dran ist.
+      Der Anruf sagt „irgendwie nicht fit". Die Messung, die Ihnen die Halterin aus dem
+      Stall schickt, sagt, wie weit dieses Pferd von <strong>seiner eigenen</strong>
+      Baseline abweicht — Sie entscheiden mit Datengrundlage, wer heute dran ist und
+      wer bis zur Kontrolle warten kann.
     </p>
     <div class="cta-row">
       <a class="cta-primary" href="/carlon-equine/app/">Cockpit mit 15&nbsp;Demo-Pferden öffnen →</a>
       <a class="btn btn-back" href="#preis">Was es kostet</a>
     </div>
     <p class="cta-note">Das Demo-Cockpit ist die vollständige Anwendung mit echten Beispielverläufen — ohne Konto, ohne Installation. Die Daten verlassen Ihre Praxis nicht.</p>
+    <!-- Die drei staerksten Argumente der Seite, above the fold — jede
+         Zeile wird weiter unten mit einem eigenen Abschnitt eingeloest. -->
+    <ul class="hero-belege">
+      <li><b>Gemessen im Stall,</b> in Ruhe — gegen die eigene Baseline dieses Pferds.</li>
+      <li><b>Ausgewertet in Ihrem Browser</b> — die Daten bleiben in der Praxis, ein AVV entfällt.</li>
+      <li><b>Abrechenbar</b> — die Ferneinschätzung führt die GOT als Ziffer&nbsp;1, den Brief als Ziffer&nbsp;89.</li>
+    </ul>
+    </div>
+    <figure class="hero-visual">
+      <span class="hero-mandala" aria-hidden="true"></span>
+      <span class="hero-aura" aria-hidden="true"></span>
+      <a class="hero-shot" href="/carlon-equine/app/" title="Demo-Cockpit öffnen">
+        <img src="assets/visite-shots/10-triage.jpg" fetchpriority="high"
+          alt="Triage-Board des Cockpits: 15 betreute Pferde nach biometrischer Dringlichkeit sortiert, sechs kritisch offen, jede Karte mit Abweichung von der eigenen Baseline"></a>
+      <span class="hero-phone" aria-hidden="true"><img src="assets/station-shots/04-beleg.jpg" alt=""></span>
+      <figcaption>Echte Ansichten, keine Attrappen: das Triage-Board der Demo, daneben der
+        Messbeleg, wie ihn die Halterin schickt. <b>Ein Klick öffnet die Anwendung.</b></figcaption>
+    </figure>
     <!-- ⚠ HIER STAND DER PREIS (bis 13.08.2026).
          Die Begruendung von damals war „qualifiziert Besucher frueh". Sie
          haelt nicht: Wer den Preis liest, BEVOR er den Wert kennt, rechnet
@@ -660,15 +761,20 @@ html.rev-an .rev.in{opacity:1;transform:none}
 <section>
   <div class="wrap">
     <div class="sec-eyebrow">Warum die Messung in den Stall gehört</div>
-    <h2>Aussagekräftig wird eine Messung dort, wo das Pferd seinen normalen Tag hat.</h2>
+    <!-- Fuer die akademische Leserin ist der Messort kein Komfort-Argument,
+         sondern Methodik: Transportstress ist ein Konfounder der Groesse
+         selbst. Genau so wird es gesagt. -->
+    <h2>Ruhe-HRV gibt es nur dort, wo Ruhe ist: im eigenen Stall.</h2>
     <p class="sec-lead">
-      Herzfrequenzvariabilität misst Erholung — und Erholung zeigt sich nur in Ruhe: in der
-      eigenen Box, zur gewohnten Zeit, ohne fremde Menschen. Die Auswertung verlangt
-      ausdrücklich <strong>mindestens sieben Minuten Ruhe in gewohnter Umgebung</strong>.
-      Verladen, Fahrt und Wartebereich verändern genau die Größe, die Sie beurteilen wollen.
+      Transport, fremde Umgebung, fremde Menschen — jeder dieser Reize verschiebt genau die
+      autonome Balance, die Sie beurteilen wollen. Der Messort ist bei der Ruhe-HRV keine
+      Nebensache, sondern Teil der Methode: Die Auswertung verlangt ausdrücklich
+      <strong>mindestens sieben Minuten Ruhe in gewohnter Umgebung</strong>. Nach Verladung
+      und Fahrt ist diese Bedingung systematisch nicht erfüllt — in der eigenen Box ist sie
+      es jeden Tag.
     </p>
     <p class="sec-lead" style="margin-top:var(--sp-21)">
-      <strong>Beim Atemwegs-Management ist das nicht nur eine Bedingung, sondern der ganze
+      <strong>Beim equinen Asthma ist das nicht nur eine Bedingung, sondern der ganze
       Punkt.</strong> Was das Pferd belastet, steht im Stall: Einstreu, Heu, Lüftung. Eine
       Messung in der Klinik nimmt ausgerechnet die Umgebung heraus, um die es geht. Zu Hause,
       wiederholt über Wochen, sehen Sie stattdessen, was Sie wirklich wissen wollen — ob die
@@ -681,10 +787,10 @@ html.rev-an .rev.in{opacity:1;transform:none}
          Aufregung durch Fremde, kein sperriges Gerät im Weg.</p>
     </div>
     <div class="usp">
-      <h3>Sie bekommen die Aufnahme, nicht den Termin</h3>
-      <p>Die Halterin schickt Ihnen eine Datei — Sie öffnen sie, wenn Sie Zeit haben. Sie
-         entscheiden danach, ob und wann ein Besuch nötig ist, und sehen vorher, wie
-         dringend.</p>
+      <h3>Aus „Können Sie mal draufschauen?" wird eine Messung</h3>
+      <p>Statt Anruf und Handyvideo schickt die Halterin eine standardisierte Aufnahme
+         samt Messprotokoll. Sie öffnen sie, wenn Sie Zeit haben — und sehen vorher,
+         wie dringend es ist.</p>
     </div>
     <div class="usp">
       <h3>Die Ferneinschätzung ist abrechenbar</h3>
@@ -867,9 +973,13 @@ html.rev-an .rev.in{opacity:1;transform:none}
              Zweck. „Beobachtungshinweis" ist der kanonische Guardrail-Wortlaut
              der Copy-CI und beschreibt praezise, was die Software tut. -->
         <h3>Atemwegs-Marker im Verlauf</h3>
-        <p>HRV-basierte Marker mit ihren Schwellen, einzeln aufgeführt. Kalibriert gegen
-           eine veröffentlichte Studie mit BAL-Referenz. Ein <strong>Beobachtungshinweis</strong>,
-           ausdrücklich keine Diagnose.</p>
+        <!-- Die Studie steht mit NAMEN da — „eine veroeffentlichte Studie"
+             ist fuer eine studierte Leserin ein rotes Tuch: welche? Die
+             Referenz traegt die App selbst (asthma.js, DOI 10.1111/evj.14414). -->
+        <p>HRV-basierte Marker mit ihren Schwellen, einzeln aufgeführt — kalibriert an
+           einer BAL-referenzierten Studie (Nyerges-Bohák 2025, Equine Veterinary
+           Journal, n = 40). Ein <strong>Beobachtungshinweis</strong>, ausdrücklich
+           keine Diagnose: Die BAL-Zytologie bleibt der Goldstandard.</p>
       </div>
       <div class="card">
         <h3>Die üblichen Ansichten, in guter Auflösung</h3>
@@ -1093,8 +1203,13 @@ html.rev-an .rev.in{opacity:1;transform:none}
            bisher ueber den toten CSS-Klassennamen `.t-netto` — auf der Seite
            selbst stand das Wort nie. B2B-Preis ohne „netto" am Betrag ist
            die Sorte Ueberraschung, die eine Rechnung spaeter erklaeren muss. -->
-      <div class="tarif-preis"><b>790&nbsp;€</b> <span>netto pro Jahr · USt. weist Stripe aus</span></div>
-      <div class="tarif-alt">oder 79&nbsp;€ monatlich · das Jahresabo entspricht 65,83&nbsp;€ im Monat</div>
+      <!-- DIE MONATSRATE FUEHRT (Jan, 13.08.): die grosse Zahl ist der
+           Anker. „790" ankert eine Jahresausgabe im Kopf, „79" einen
+           Monatsbeitrag — auch wenn das Jahresabo guenstiger ist, liest
+           sich die kleine Zahl leichter. Das Jahresabo steht als
+           Alternative darunter, mit seinem Vorteil beziffert. -->
+      <div class="tarif-preis"><b>79&nbsp;€</b> <span>netto im Monat · USt. weist Stripe aus</span></div>
+      <div class="tarif-alt">oder 790&nbsp;€ im Jahr — entspricht 65,83&nbsp;€ im Monat, zwei Monate gespart</div>
       <ul class="enthalten">
         <li>Unbegrenzt Pferde, Aufnahmen und Verläufe</li>
         <li>Alle Mitarbeitenden, alle Geräte des Betriebs</li>
@@ -1247,7 +1362,7 @@ html.rev-an .rev.in{opacity:1;transform:none}
       </div>
       <div class="card">
         <h3>Was braucht die Halterin?</h3>
-        <p>Einen handelsüblichen Brustgurt und ein Android-Gerät oder einen Rechner mit
+        <p>Einen Polar-H10-Brustgurt und ein Android-Gerät oder einen Rechner mit
            Chrome oder Edge. Auf iPhone und iPad lässt Apple Bluetooth im Browser nicht zu;
            die Seite führt dort auf ein messfähiges Gerät.</p>
       </div>
@@ -1263,6 +1378,20 @@ html.rev-an .rev.in{opacity:1;transform:none}
            Halterin erreicht uns nicht: Ihre Messstation legt eine Datei auf ihrem eigenen
            Gerät an, die sie Ihnen selbst schickt. Es gibt keinen Zwischenspeicher bei uns —
            und damit nichts, worüber ein Auftragsverarbeitungsvertrag zu schließen wäre.</p>
+      </div>
+      <div class="card">
+        <h3>Was taugt eine Messung von Laienhand?</h3>
+        <p>Jede Aufnahme bringt ihr Messprotokoll mit: Anteil auswertbarer Schlagpaare,
+           Artefaktrate, Sensor, Zeitauflösung. Eine Aufnahme, die nichts trägt, wird genau
+           so ausgewiesen — Sie deuten nie blind. Und die Rohdaten liegen bei: jeder
+           einzelne Schlagabstand.</p>
+      </div>
+      <div class="card">
+        <h3>Welche Evidenz steht hinter den Atemwegs-Markern?</h3>
+        <p>Die Marker sind an einer veröffentlichten, BAL-referenzierten Studie kalibriert
+           (Nyerges-Bohák 2025, Equine Veterinary Journal, n = 40) und werden mit ihren
+           Schwellen einzeln ausgewiesen. Die BAL-Zytologie bleibt der Goldstandard — der
+           Verlauf ersetzt sie nicht, er begründet, wann sie ansteht.</p>
       </div>
     </div>
   </div>
