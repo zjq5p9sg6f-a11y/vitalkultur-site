@@ -421,6 +421,15 @@ h2{font-family:var(--font-brand);font-weight:300;font-size:clamp(28px,3.6vw,var(
    laeuft. Ausgerechnet der Abschnitt, der das Geld nennt, sah verrutscht
    aus. Ein einzelner Tarif braucht kein Raster, er braucht eine Mitte. */
 .tarif{max-width:620px;margin:var(--sp-55) auto 0;background:var(--bg-deep);border:1px solid var(--border-subtle);border-radius:18px;padding:var(--sp-34) var(--sp-34) 28px;position:relative}
+/* Zwei Stufen nebeneinander — das Raster sitzt am eigenen Container. */
+.tarife-grid{max-width:920px;margin:var(--sp-55) auto 0;display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:var(--sp-21)}
+.tarife-grid .tarif{max-width:none;margin:0}
+.t-stufe{font-family:var(--font-mono);font-size:var(--t-mark);letter-spacing:0.2em;
+  text-transform:uppercase;color:var(--cyan);text-align:center;margin-bottom:var(--sp-13)}
+/* Der gemeinsame Fuss (Recht + Kaufweg) ist KEINE dritte Karte. */
+.tarif.tarif-fussblock{background:none;border:0;box-shadow:none;
+  padding:var(--sp-21) 0 0;max-width:720px;text-align:center}
   /* Preis als eine Zahl, gross, ohne Beiwerk — daneben nur die Einheit.
      Zwei gleich grosse Zahlen (Monat/Jahr) zwingen zum Vergleichen; hier
      fuehrt der Jahrespreis und die Alternative steht klein darunter. */
@@ -466,6 +475,17 @@ h2{font-family:var(--font-brand);font-weight:300;font-size:clamp(28px,3.6vw,var(
    hat ihn verraten. */
 .usp h3{font-size:var(--t-body);font-weight:500;color:var(--text-primary);margin:0 0 var(--sp-8);letter-spacing:-0.005em}
 .usp p{font-size:var(--t-klein);color:var(--text-secondary);line-height:1.6;font-weight:300;margin:0;max-width:42em}
+/* Beweiszahl gross — Zahlen scannen schneller als Saetze. */
+.u-zahl{font-family:var(--font-brand);font-weight:300;font-size:var(--t-h2);line-height:1;
+  color:var(--cyan);margin:var(--sp-8) 0 var(--sp-13)}
+.u-zahl span{font-size:var(--t-body);color:var(--text-dim);margin-left:2px}
+/* Evidenz-Marke: die Studien-Referenz als sichtbares Kennzeichen statt
+   nur im Fliesstext (Comet-Audit). Mono wie alle Marken der Seite. */
+.evidenz{display:inline-flex;flex-wrap:wrap;gap:var(--sp-8);margin-top:var(--sp-21)}
+.evidenz span{font-family:var(--font-mono);font-size:var(--t-mark);letter-spacing:0.06em;
+  color:var(--text-secondary);border:1px solid var(--border-subtle);border-radius:999px;
+  padding:5px 11px;white-space:nowrap}
+.evidenz span.ev-cyan{color:var(--cyan);border-color:var(--cyan-deep)}
 @media(max-width:720px){.usps{grid-template-columns:1fr}.shots.two{grid-template-columns:1fr}}
 /* Feature: grosses Bild + Text nebeneinander */
 .feature{margin-top:var(--sp-55);display:grid;grid-template-columns:1.05fr 0.95fr;gap:var(--sp-34);align-items:center}
@@ -1108,6 +1128,12 @@ html.rev-an .rev.in{opacity:1;transform:none}
       sie roh mit, steigen SDNN und RMSSD dramatisch, und die Marker, die bei
       <em>kleinen</em> Werten anschlagen, kippen ins Gegenteil.
     </p>
+    <div class="evidenz" aria-label="Evidenz der Atemwegs-Marker">
+      <span class="ev-cyan">Nyerges-Bohák 2025</span>
+      <span>Equine Veterinary Journal</span>
+      <span>n = 40 · BAL-referenziert</span>
+      <span>DOI 10.1111/evj.14414</span>
+    </div>
     <!-- Ohne .usps-Raster standen die drei Karten mit 0 px Abstand
          aufeinander — Kante an Kante, volle Seitenbreite. Dasselbe Raster
          wie in Abschnitt 2, damit die Karten-Sprache der Seite EINE ist. -->
@@ -1120,8 +1146,11 @@ html.rev-an .rev.in{opacity:1;transform:none}
     </div>
     <div class="usp">
       <!-- „eigenen" — ein Wort, das aus einer scheinbaren Studie eine
-           ehrliche interne Pruefung macht. Genau dadurch glaubwuerdiger. -->
+           ehrliche interne Pruefung macht. Genau dadurch glaubwuerdiger.
+           Die Zahl steht GROSS (Comet-Audit): der staerkste Beweis-Satz
+           der Seite stand im Absatz versteckt. -->
       <h3>Was das ausmacht — an zwanzig eigenen Ruheaufnahmen geprüft</h3>
+      <div class="u-zahl">8<span>/20</span></div>
       <p>Ohne diese Vorstufe fiel in <strong>acht von zwanzig</strong> Aufnahmen die
          Atemwegs-Einstufung anders aus, jedes Mal zu auffällig. Mit ihr: kein einziger
          Unterschied mehr zur App-Auswertung.</p>
@@ -1327,16 +1356,15 @@ html.rev-an .rev.in{opacity:1;transform:none}
       tiermedizinischen Mitarbeitenden und auf beliebig vielen Geräten dieses Betriebs.
       Es gibt <strong>keine Gebühr je Pferd, je Nutzer oder je Gerät</strong> und keine Grenze für Aufnahmen.
     </p>
+    <!-- KLINIK-STUFE VORBEREITET, BEWUSST NOCH NICHT GEZEIGT (Jan, 13.08.):
+         erst das fertige Klinik-Produkt (Branding, Kasse, Nachsorge-Flow),
+         dann die Karte. Markup/Uebersetzungen liegen in der Git-Historie,
+         die Preisquelle im Cockpit ist vorbereitet. -->
     <div class="tarif">
       <!-- „netto" steht SICHTBAR am Preis. Der Waechter t-preisseite bestand
            bisher ueber den toten CSS-Klassennamen `.t-netto` — auf der Seite
-           selbst stand das Wort nie. B2B-Preis ohne „netto" am Betrag ist
-           die Sorte Ueberraschung, die eine Rechnung spaeter erklaeren muss. -->
-      <!-- DIE MONATSRATE FUEHRT (Jan, 13.08.): die grosse Zahl ist der
-           Anker. „790" ankert eine Jahresausgabe im Kopf, „79" einen
-           Monatsbeitrag — auch wenn das Jahresabo guenstiger ist, liest
-           sich die kleine Zahl leichter. Das Jahresabo steht als
-           Alternative darunter, mit seinem Vorteil beziffert. -->
+           selbst stand das Wort nie. -->
+      <!-- DIE MONATSRATE FUEHRT (Jan, 13.08.): die grosse Zahl ist der Anker. -->
       <div class="tarif-preis"><b>79&nbsp;€</b> <span>netto im Monat · USt. weist Stripe aus</span></div>
       <div class="tarif-alt">oder 790&nbsp;€ im Jahr — entspricht 65,83&nbsp;€ im Monat, zwei Monate gespart</div>
       <ul class="enthalten">
@@ -1346,6 +1374,8 @@ html.rev-an .rev.in{opacity:1;transform:none}
         <li>Export als JSON, CSV, Kubios und FHIR&nbsp;R5</li>
         <li>Monatlich kündbar zum Ende der Abrechnungsperiode</li>
       </ul>
+    </div>
+    <div class="tarif tarif-fussblock">
       <p class="tarif-fuss">
         Das Angebot richtet sich ausschließlich an Unternehmer im Sinne des § 14 BGB.
         <strong>Wir selbst rechnen als Kleinunternehmer nach § 19 UStG ohne Umsatzsteuer ab.</strong>
@@ -1375,7 +1405,14 @@ html.rev-an .rev.in{opacity:1;transform:none}
           'data-en="Subscribe — activates immediately" data-de="Abonnieren — sofort aktiv">' +
           (de ? 'Abonnieren — sofort aktiv' : 'Subscribe — activates immediately') + '</a>';
       } else {
+        /* BETA-LOGIK STATT FRUST-MOMENT (Comet-Audit, 13.08.): der Arzt
+           sieht 79 EUR, will klicken — und las nur „Kasse noch nicht
+           offen". Jetzt bekommt die Preis-Sektion in der Beta einen
+           echten naechsten Schritt: die Gruendungspartner-Anmeldung. */
         box.innerHTML =
+          '<a class="cta-primary" href="#anmeldung" style="margin-bottom:14px" ' +
+          'data-en="Join as a founding partner ↓" data-de="Als Gründungspartner anmelden ↓">' +
+          (de ? 'Als Gründungspartner anmelden ↓' : 'Join as a founding partner ↓') + '</a>' +
           '<p class="tarif-fuss" style="margin:0" ' +
           'data-en="The checkout is not open yet — we are in beta and onboarding practices personally. ' +
           'The prices above are final and will not change for founding partners." ' +
@@ -1523,11 +1560,11 @@ html.rev-an .rev.in{opacity:1;transform:none}
 
       <div class="anm-raster">
         <label>Name<input name="name" autocomplete="name" required></label>
-        <label>Praxis oder Klinik<input name="praxis" autocomplete="organization"></label>
+        <label>Praxis oder Klinik <span>(optional)</span><input name="praxis" autocomplete="organization"></label>
         <label>E-Mail<input name="email" type="email" autocomplete="email" required></label>
         <label>Telefon <span>(falls Ihnen ein Anruf lieber ist)</span><input name="telefon" type="tel" autocomplete="tel"></label>
-        <label>Region<input name="region" placeholder="z.&nbsp;B. Ortenau, Oberbayern, Münsterland"></label>
-        <label>Etwa wie viele Pferde betreuen Sie?<input name="pferde" inputmode="numeric" placeholder="z.&nbsp;B. 180"></label>
+        <label>Region <span>(optional)</span><input name="region" placeholder="z.&nbsp;B. Ortenau, Oberbayern, Münsterland"></label>
+        <label>Etwa wie viele Pferde betreuen Sie? <span>(optional)</span><input name="pferde" inputmode="numeric" placeholder="z.&nbsp;B. 180"></label>
       </div>
       <label class="anm-weit">Was möchten Sie zuerst wissen? <span>(freiwillig)</span>
         <textarea name="nachricht" rows="3" placeholder="Eine Frage, ein Zweifel, ein Wunsch — was auch immer zuerst kommt."></textarea></label>

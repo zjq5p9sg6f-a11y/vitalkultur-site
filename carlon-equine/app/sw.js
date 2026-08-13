@@ -2,7 +2,7 @@
    App-Shell wird precached; Fonts & Leaflet lokal gebündelt (assets/) — keine externen CDNs,
    sodass die App nach dem ersten Online-Start vollständig offline läuft.
    Gesundheitsdaten liegen in IndexedDB — der SW cached nur Programm-Assets. */
-const VERSION = 'carlon-clinic-5e5121cd32';
+const VERSION = 'carlon-clinic-719b664764';
 /* ACHTUNG: JEDE Datei in CORE wird ausgeliefert, bis VERSION sich aendert.
    Zweimal in dieser Nacht passiert — einmal beim Livegang-Schalter, einmal bei
    krypto.js: Datei geaendert, Version vergessen, und der Browser lieferte
@@ -13,6 +13,14 @@ const RUNTIME = VERSION + '-runtime';
 
 const CORE = [
   'krypto.js',
+  /* 13.08. (t-messprofil-Fund): Diese drei fehlten in CORE — und CORE ist
+     zugleich der Fingerabdruck, aus dem sw-version.mjs die VERSION rechnet.
+     Eine Aenderung am Mathe-Kern (hrv-vorstufe), am Screener (asthma) oder
+     am Livegang-Schalter (live.js) bumpte die Version NIE: der Browser
+     lieferte den alten Rechenkern unbegrenzt aus dem Runtime-Cache. */
+  'hrv-vorstufe.js',
+  'asthma.js',
+  'live.js',
   'qr.js',
   'index.html',
   'landing.html',

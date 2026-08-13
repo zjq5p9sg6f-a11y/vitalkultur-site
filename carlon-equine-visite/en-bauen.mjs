@@ -256,12 +256,12 @@ tausche(`Wer in der Beta mitgestaltet, behält seinen Preis als
 tausche('> Ich bin mobil unterwegs<', '> I work ambulatory<');
 tausche('> Wir sind eine Klinik<', '> We are a clinic<');
 tausche('<label>Name<input', '<label>Name<input');
-tausche('<label>Praxis oder Klinik<input', '<label>Practice or clinic<input');
+tausche('<label>Praxis oder Klinik <span>(optional)</span><input', '<label>Practice or clinic <span>(optional)</span><input');
 tausche('<label>E-Mail<input', '<label>Email<input');
 tausche('<label>Telefon <span>(falls Ihnen ein Anruf lieber ist)</span>', '<label>Phone <span>(if you would rather be called)</span>');
-tausche('<label>Region<input', '<label>Region<input');
+tausche('<label>Region <span>(optional)</span><input', '<label>Region <span>(optional)</span><input');
 tausche('placeholder="z.&nbsp;B. Ortenau, Oberbayern, Münsterland"', 'placeholder="e.g. Ortenau, Bavaria, Münsterland"');
-tausche('<label>Etwa wie viele Pferde betreuen Sie?<input', '<label>Roughly how many horses do you look after?<input');
+tausche('<label>Etwa wie viele Pferde betreuen Sie? <span>(optional)</span><input', '<label>Roughly how many horses do you look after?<input');
 tausche('placeholder="z.&nbsp;B. 180"', 'placeholder="e.g. 180"');
 tausche('Was möchten Sie zuerst wissen? <span>(freiwillig)</span>', 'What would you like to know first? <span>(optional)</span>');
 tausche('placeholder="Eine Frage, ein Zweifel, ein Wunsch — was auch immer zuerst kommt."',
@@ -586,9 +586,9 @@ tausche(`
       Es gibt <strong>keine Gebühr je Pferd, je Nutzer oder je Gerät</strong> und keine Grenze für Aufnahmen.
     `,
         `
-      One business — one practice or one site — with all veterinary and veterinary-nursing
-      staff and on any number of that business's devices. There is <strong>no fee per horse,
-      per user or per device</strong>, and no limit on recordings.
+      One business — one practice or one site — with all veterinary staff and on any
+      number of that business's devices. There is <strong>no fee per horse, per user or
+      per device</strong> and no limit on recordings.
     `);
 /* (Der Absatz mit dem Angebot steht weiter unten in der praezisierten
    Fassung — hier waere er doppelt.) */
@@ -720,8 +720,8 @@ tausche('>Muster-Befund als PDF<', '>Sample findings report (PDF)<');
 
 
 /* Umsatzsteuer — WESSEN. Der Kern der Klaerung vom 12.08.2026. */
-tausche('<span>netto im Monat · USt. weist Stripe aus</span>',
-        '<span>net per month · VAT charged by Stripe</span>');
+tausche('<div class="tarif-preis"><b>79&nbsp;€</b> <span>netto im Monat · USt. weist Stripe aus</span></div>',
+        '<div class="tarif-preis"><b>79&nbsp;€</b> <span>net per month · VAT charged by Stripe</span></div>');
 tausche(`Das Angebot richtet sich ausschließlich an Unternehmer im Sinne des § 14 BGB.
         <strong>Wir selbst rechnen als Kleinunternehmer nach § 19 UStG ohne Umsatzsteuer ab.</strong>
         Für das Browser-Cockpit tritt <strong>Stripe als Verkäufer im eigenen Namen</strong> auf
@@ -832,6 +832,14 @@ tausche(`Aus den Ruhemessungen dieses Pferds selbst: Ab vier eigenen Aufnahmen g
 tausche('"text": "Aus den Ruhemessungen dieses Pferds selbst: Ab vier eigenen Aufnahmen gilt der Wert als individuelle Baseline. Bis dahin zeigt das Cockpit offen an, dass der Vergleichswert noch aus dem Referenz-Datensatz stammt — und wie viele eigene Aufnahmen noch fehlen. Es tut nicht so, als wüsste es schon etwas."',
         '"text": "From this horse\'s own resting recordings: from four recordings on, the value counts as an individual baseline. Until then the cockpit openly shows that the comparison value still comes from the reference dataset — and how many of the horse\'s own recordings are still missing. It does not pretend to know something it does not."');
 
+
+
+// Evidenz-Marke (Comet-Audit) — nur der uebersetzbare Chip
+tausche('<span>n = 40 · BAL-referenziert</span>', '<span>n = 40 · BAL-referenced</span>');
+tausche('aria-label="Evidenz der Atemwegs-Marker"', 'aria-label="Evidence behind the airway markers"');
+
+
+// Zwei Preis-Stufen (13.08.)
 
 if (fehlend.length) {
   console.error('\n  ✗ Der Bau bricht ab — diese Bloecke gibt es in index.html nicht (mehr):\n');
