@@ -21,7 +21,12 @@
      nach einer Messung entsteht. Wer den Link geteilt bekommt, sieht damit
      genau das, was er gleich selbst erzeugen wird.
      Erzeugt mit scripts/carlon-closed-loop/og-bauen.sh — nicht von Hand
-     gemalt, damit es reproduzierbar bleibt. -->
+     gemalt, damit es reproduzierbar bleibt.
+     BEWUSST FEST auf der deutschen Fassung: og:image lesen Crawler ohne
+     JavaScript, eine Laufzeit-Umschaltung der Sprache erreicht sie nie.
+     Die englische Fassung og-messstation-en.jpg liegt bereits im Repo —
+     sie fest einzutragen wird erst sinnvoll, wenn es eine eigene englische
+     Adresse gibt. -->
 <meta property="og:image" content="https://vitalkultur.com/carlon-equine/assets/og-messstation-de.jpg">
 <meta property="og:image:alt" content="Poincaré-Wolke einer echten Pferde-Herzratenmessung — Das ist ein Herzschlag. vitalkultur.com/messen">
 <meta property="og:image:width" content="1200">
@@ -989,6 +994,11 @@ const HAUS={ appImStore:false, appUrl:'https://carlon.app' };
       </div>
     </div>
 
+    <!-- Erneut verbinden — der haeufigste Stall-Fehlerfall (Gurt trocknet,
+         Pferd schuettelt sich) endete zwangslaeufig in einer verkuerzten
+         Aufnahme, obwohl S.device noch da war und gatt.connect() moeglich.
+         Die Copy versprach „erneut verbinden", die UI konnte es nicht. -->
+    <button class="btn hidden" id="btnReconnect" data-i18n="reconn">Gurt erneut verbinden</button>
     <button class="btn stop" id="btnStop" data-i18n="stop">Messung beenden</button>
     <div class="subactions"><button class="btn ghost" id="btnRestart" data-i18n="restart">Verwerfen und neu starten</button></div>
     <div class="hint" id="liveHint" data-i18n="liveHint">Halte das Gerät in der Nähe und lass den Bildschirm an — schläft er ein, bricht die Bluetooth-Verbindung ab.</div>
@@ -1281,6 +1291,10 @@ de:{
  horseLabel:'Name des Pferds',
  horsePh:'z. B. Mistral',
  connect:'Polar H10 verbinden',
+ /* Gezielte Anforderung der Praxis (#a=…) — ersetzt readyH1/readySub */
+ anfrageH1:'Deine Tierärztin bittet um eine Messung',
+ anfrageSub:'Sie hat gezielt um eine Messung für {x} gebeten. Gurt anlegen, Rest macht die Station.',
+ btFehler:'Bluetooth-Fehler: {x}',
  /* ── Beispielmessung ────────────────────────────────────────────────────
     Eine ECHTE Aufnahme, keine erfundenen Zahlen — Testpferd 2, Polar H10,
     24.06.2026. Sie laeuft durch dieselbe Anzeige wie eine laufende Messung,
@@ -1319,6 +1333,9 @@ de:{
  stromStill:'Seit einigen Sekunden kommen keine Herzschläge an — sitzt der Gurt noch? Elektroden nachfeuchten hilft meistens.',
  sendAbgebrochen:'Nichts verschickt — tippe erneut auf „An die Praxis senden".',
  sendFehlerDatei:'Das hat nicht geklappt — tippe auf „Als Datei speichern" und schick die Datei deiner Tierärztin wie ein Foto.',
+ reconn:'Gurt erneut verbinden', reconnAktiv:'Verbinde…',
+ reconnZurueck:'Wieder verbunden — die Lücke wird in der Aufnahme vermerkt, deine Tierärztin sieht sie mit.',
+ reconnFehl:'Noch nicht erreichbar — Gurt kurz abnehmen, Elektroden nachfeuchten, wieder anlegen und erneut tippen.',
  liveHint:'Halte das Gerät in der Nähe und lass den Bildschirm an — schläft er ein, bricht die Bluetooth-Verbindung ab.',
  /* Beleg */
  doneEyebrow:'Aufnahme abgeschlossen',
@@ -1336,6 +1353,39 @@ de:{
  pQual:'Signalgüte', pPairs:'Auswertbare Schlagpaare', pDur:'Aufnahmedauer',
  pSensor:'Sensor', pRes:'Zeitauflösung', pResV:'1/1024 s · ≈1 ms',
  send:'An die Praxis senden', save:'Als Datei speichern', again:'Neue Messung',
+ /* Sende-Status + Teilen-Texte des Dateiwegs (Regelweg) */
+ sendVorbereiten:'Bereite die Datei vor…',
+ sendGeteilt:'Datei weitergegeben', sendGespeichert:'Datei gespeichert',
+ sendGeteiltVerschl:'Nur deine Praxis kann sie öffnen — unterwegs ist sie unlesbar.',
+ sendGeteiltOffen:'Sie enthält nur die Messung deines Pferds, sonst nichts.',
+ sendDownload:'Dein Browser kann Dateien nicht direkt teilen. Die Datei liegt in deinen Downloads — schick sie deiner Tierärztin wie ein Foto.',
+ shareTitel:'Messung für die Praxis',
+ shareMsgKurz:'Hier ist die Herzfrequenz-Messung von meinem Pferd:',
+ shareMsgVerschl:'Hier ist die Herzfrequenz-Messung von meinem Pferd. Die Datei ist für deine Praxis verschlüsselt.',
+ shareMsgOffen:'Hier ist die Herzfrequenz-Messung von meinem Pferd. Öffnen mit CARLON: {x}',
+ /* Übergabe-Karte */
+ ubTitel:'Für deine Tierärztin',
+ ubText:'Sie öffnet den Link und sieht deine Messung sofort ausgewertet — ohne Konto, ohne Anmeldung, ohne etwas zu installieren.',
+ ubTeilen:'Link an meine Tierärztin schicken', ubKopieren:'Kopieren', ubKopiert:'Kopiert ✓',
+ ubFuss:'Wer diesen Link hat, kann die Messung lesen — gib ihn nur deiner Tierärztin. Er ist 30 Tage gültig; danach löscht sich die Ablage von selbst.',
+ /* Weitersagen-Karte */
+ wsTitel:'Weitersagen',
+ wsNachbarinT:'Einer Stallnachbarin zeigen',
+ wsNachbarinS:'Nur die Messstation, ohne deine Daten — sie misst dann ihr eigenes Pferd.',
+ wsKarte:'Karte teilen',
+ /* Lage-Karte. Zaehltexte als GANZE Saetze je Numerus — kein zusammen-
+    gesetztes „{n} + Restsatz", das in einer Sprache bricht. */
+ lgHeute:'heute', lgGestern:'gestern', lgVorTagen:'vor {n} Tagen',
+ lgWeiter1:'Aufnahme weitergegeben', lgWeiterN:'{n} Aufnahmen weitergegeben',
+ lgWeiterSub:'{x} · deine Tierärztin meldet sich auf ihrem üblichen Weg.',
+ lgPraxis1:'Deine Aufnahme ist bei der Praxis', lgPraxisN:'{n} Aufnahmen sind bei der Praxis',
+ lgPraxisSub:'{x} gesendet · der Befund erscheint hier, sobald deine Tierärztin ihn geschrieben hat.',
+ lgAbgeholt:'✓ Deine Tierärztin hat die Messung abgeholt',
+ lgBefundFolgt:'Der Befund erscheint hier, sobald sie ihn geschrieben hat.',
+ lgVerfallen:'Nach dreißig Tagen verfällt eine Sendung im Postfach — diese ist nicht mehr da.',
+ lgVerfallen2:'Wenn du magst, miss neu und sende noch einmal.',
+ lgOffen:'Deine Aufnahme liegt bereit, wurde aber noch nicht abgeholt.',
+ lgOffen2:'Vielleicht nutzt deine Praxis CARLON noch nicht. Der Aushang unten ist genau dafür da.',
  privacyLine:'Ende-zu-Ende verschlüsselt · kein Server kann die Messwerte lesen',
  /* Der Weg OHNE Aushang. Kein Schlüssel, also keine Verschlüsselung — und
     deshalb hier auch keine Behauptung darüber. Der Satz sagt, was wir
@@ -1398,6 +1448,9 @@ en:{
  horseLabel:'Horse’s name',
  horsePh:'e.g. Mistral',
  connect:'Connect Polar H10',
+ anfrageH1:'Your vet is asking for a recording',
+ anfrageSub:'They asked specifically for a recording of {x}. Fit the belt — the station does the rest.',
+ btFehler:'Bluetooth error: {x}',
  beispielBtn:'No belt at hand? Watch a real recording',
  beispielBand:'<b>Example recording.</b> A real recording from 24 June 2026 (Polar H10, at rest in the barn), played back at speed. Nothing is being measured right now.',
  beispielTitel:'Example recording running',
@@ -1429,6 +1482,9 @@ en:{
  stromStill:'No heartbeats have arrived for a few seconds — is the belt still snug? Re-wetting the electrodes usually helps.',
  sendAbgebrochen:'Nothing sent — tap “Send to the practice” again.',
  sendFehlerDatei:'That did not work — tap “Save as file” and send the file to your vet like a photo.',
+ reconn:'Reconnect the belt', reconnAktiv:'Connecting…',
+ reconnZurueck:'Reconnected — the gap is noted in the recording, your vet sees it too.',
+ reconnFehl:'Not reachable yet — take the belt off briefly, re-wet the electrodes, put it back on and tap again.',
  liveHint:'Keep the device nearby and leave the screen on — if it sleeps, the Bluetooth connection drops.',
  doneEyebrow:'Recording complete',
  tBeatsDone:'Heartbeats', tBeatsDoneSub:'individual beats captured',
@@ -1445,6 +1501,34 @@ en:{
  pQual:'Signal quality', pPairs:'Usable beat pairs', pDur:'Recording length',
  pSensor:'Sensor', pRes:'Time resolution', pResV:'1/1024 s · ≈1 ms',
  send:'Send to the practice', save:'Save as a file', again:'New recording',
+ sendVorbereiten:'Preparing the file…',
+ sendGeteilt:'File passed on', sendGespeichert:'File saved',
+ sendGeteiltVerschl:'Only your practice can open it — in transit it is unreadable.',
+ sendGeteiltOffen:'It contains only your horse’s measurement, nothing else.',
+ sendDownload:'Your browser can’t share files directly. The file is in your downloads — send it to your vet like a photo.',
+ shareTitel:'Recording for the practice',
+ shareMsgKurz:'Here is the heart rate recording of my horse:',
+ shareMsgVerschl:'Here is the heart rate recording of my horse. The file is encrypted for your practice.',
+ shareMsgOffen:'Here is the heart rate recording of my horse. Open it with CARLON: {x}',
+ ubTitel:'For your vet',
+ ubText:'They open the link and see your recording analysed right away — no account, no sign-in, nothing to install.',
+ ubTeilen:'Send the link to my vet', ubKopieren:'Copy', ubKopiert:'Copied ✓',
+ ubFuss:'Anyone with this link can read the recording — give it only to your vet. It is valid for 30 days; after that the deposit deletes itself.',
+ wsTitel:'Spread the word',
+ wsNachbarinT:'Show a barn neighbour',
+ wsNachbarinS:'Only the measuring station, none of your data — she then measures her own horse.',
+ wsKarte:'Share the card',
+ lgHeute:'today', lgGestern:'yesterday', lgVorTagen:'{n} days ago',
+ lgWeiter1:'Recording passed on', lgWeiterN:'{n} recordings passed on',
+ lgWeiterSub:'{x} · your vet will get back to you on their usual channel.',
+ lgPraxis1:'Your recording is with the practice', lgPraxisN:'{n} recordings are with the practice',
+ lgPraxisSub:'sent {x} · the report will appear here as soon as your vet has written it.',
+ lgAbgeholt:'✓ Your vet has picked up the recording',
+ lgBefundFolgt:'The report will appear here as soon as it has been written.',
+ lgVerfallen:'After thirty days a delivery expires in the mailbox — this one is no longer there.',
+ lgVerfallen2:'If you like, measure again and send once more.',
+ lgOffen:'Your recording is ready, but has not been picked up yet.',
+ lgOffen2:'Your practice may not be using CARLON yet. The notice below is there for exactly that.',
  privacyLine:'End-to-end encrypted · no server can read the measurements',
  freiPrivacy:'Stays on your device · only what you pass on ever leaves it',
  brauchst:['Polar H10 belt fitted and the electrode area moistened','About seven minutes of rest — shorter does not carry the assessment','No account, no app · the recording is handed over encrypted'],
@@ -3011,19 +3095,18 @@ const Verlauf={
 function uebergabeZeigen(link){
   const k=$('#uebergabeKarte'); if(!k) return;
   k.innerHTML=
-     `<h3>Für deine Tierärztin</h3>`
-    +`<p>Sie öffnet den Link und sieht deine Messung sofort ausgewertet — ohne Konto, ohne Anmeldung, ohne etwas zu installieren.</p>`
+     `<h3>${t('ubTitel')}</h3>`
+    +`<p>${t('ubText')}</p>`
     +`<div class="ub-knoepfe">`
-      +`<button class="btn" id="ubTeilen">Link an meine Tierärztin schicken</button>`
-      +`<button class="btn ghost" id="ubKopieren">Kopieren</button>`
+      +`<button class="btn" id="ubTeilen">${t('ubTeilen')}</button>`
+      +`<button class="btn ghost" id="ubKopieren">${t('ubKopieren')}</button>`
     +`</div>`
-    +`<div class="ub-fuss">Wer diesen Link hat, kann die Messung lesen — gib ihn nur deiner Tierärztin. `
-    +`Er ist 30 Tage gültig; danach löscht sich die Ablage von selbst.</div>`;
+    +`<div class="ub-fuss">${t('ubFuss')}</div>`;
   k.classList.remove('hidden');
-  const text='Hier ist die Herzfrequenz-Messung von meinem Pferd:';
+  const text=t('shareMsgKurz');
   $('#ubTeilen').addEventListener('click', async ()=>{
     if(navigator.share){
-      try{ await navigator.share({title:'Messung für die Praxis', text, url:link}); return; }catch(_){ /* abgebrochen */ }
+      try{ await navigator.share({title:t('shareTitel'), text, url:link}); return; }catch(_){ /* abgebrochen */ }
     }
     ubKopieren(link);
   });
@@ -3069,10 +3152,10 @@ async function uebergabeErzeugen(){
 function weitersagenZeigen(){
   const k=$('#weiterKarte'); if(!k) return;
   k.innerHTML=
-     `<h3>Weitersagen</h3>`
-    +`<div class="ws-zeile"><div><b>Einer Stallnachbarin zeigen</b>`
-    +`<span>Nur die Messstation, ohne deine Daten — sie misst dann ihr eigenes Pferd.</span></div>`
-    +`<button class="btn ghost" id="wsFreund">Karte teilen</button></div>`;
+     `<h3>${t('wsTitel')}</h3>`
+    +`<div class="ws-zeile"><div><b>${t('wsNachbarinT')}</b>`
+    +`<span>${t('wsNachbarinS')}</span></div>`
+    +`<button class="btn ghost" id="wsFreund">${t('wsKarte')}</button></div>`;
   k.classList.remove('hidden');
   /* NICHT selbst nachbauen: share('owner') erzeugt eine gerenderte Karte mit
      den eigenen Werten — ein sehr viel besseres Teilstueck als ein nackter
@@ -3085,7 +3168,7 @@ async function ubKopieren(link){
   try{ await navigator.clipboard.writeText(link); }
   catch(_){ const t=document.createElement('textarea'); t.value=link; document.body.appendChild(t);
             t.select(); try{document.execCommand('copy');}catch(__){} t.remove(); }
-  if(b){ const alt=b.textContent; b.textContent='Kopiert ✓'; setTimeout(()=>{b.textContent=alt;},2200); }
+  if(b){ const alt=b.textContent; b.textContent=t('ubKopiert'); setTimeout(()=>{b.textContent=alt;},2200); }
 }
 
 /* Die Lage in einem Satz — nur wenn es etwas zu sagen gibt. */
@@ -3125,7 +3208,7 @@ function lageZeigen(){
   const letzte=[...l].reverse().find(x=>x.art==='gesendet');
   if(!offen){ k.classList.add('hidden'); return; }
   const tage=letzte?Math.floor((Date.now()-new Date(letzte.zeit))/86400000):0;
-  const wann=tage<=0?'heute':tage===1?'gestern':`vor ${tage} Tagen`;
+  const wann=tage<=0?t('lgHeute'):tage===1?t('lgGestern'):t('lgVorTagen').replace('{n}',String(tage));
 
   /* OHNE POSTFACH GIBT ES KEINEN RUECKWEG — und damit darf hier auch keiner
      versprochen werden. „Der Befund erscheint hier" war wahr, solange die
@@ -3135,37 +3218,37 @@ function lageZeigen(){
      das nie kommt — und das ist schlimmer als gar keine Karte. */
   if(!POSTFACH_AN){
     k.innerHTML=`<span class="lg-punkt"></span><div>`
-      +`<b>${offen===1?'Aufnahme weitergegeben':offen+' Aufnahmen weitergegeben'}</b>`
-      +`<span id="lageText">${esc(wann)} · deine Tierärztin meldet sich auf ihrem üblichen Weg.</span></div>`;
+      +`<b>${offen===1?t('lgWeiter1'):t('lgWeiterN').replace('{n}',String(offen))}</b>`
+      +`<span id="lageText">${t('lgWeiterSub').replace('{x}',esc(wann))}</span></div>`;
     k.classList.remove('hidden');
     return;
   }
 
   k.innerHTML=`<span class="lg-punkt"></span><div>`
-    +`<b>${offen===1?'Deine Aufnahme ist bei der Praxis':offen+' Aufnahmen sind bei der Praxis'}</b>`
-    +`<span id="lageText">${esc(wann)} gesendet · der Befund erscheint hier, sobald deine Tierärztin ihn geschrieben hat.</span></div>`;
+    +`<b>${offen===1?t('lgPraxis1'):t('lgPraxisN').replace('{n}',String(offen))}</b>`
+    +`<span id="lageText">${t('lgPraxisSub').replace('{x}',esc(wann))}</span></div>`;
   k.classList.remove('hidden');
 
   /* Der Stand kommt NACH dem ersten Zeichnen. Die Karte darf nie auf ein
      Netz warten — ohne Verbindung bleibt der ehrliche Grundtext stehen. */
+  /* `el`, nicht `t`: die alte lokale Konstante `t` verschattete den
+     Uebersetzer — t('…') haette hier das DOM-Element aufgerufen. */
   if(letzte&&letzte.id) standHolen(letzte.id).then(d=>{
-    const t=document.getElementById('lageText'); if(!t||!d) return;
+    const el=document.getElementById('lageText'); if(!el||!d) return;
     if(d.stand==='abgeholt'){
       const ab=d.ab?new Date(d.ab):null;
       const wtag=ab?Math.floor((Date.now()-ab)/86400000):null;
-      const wann2=wtag===null?'':wtag<=0?' — heute':wtag===1?' — gestern':` — vor ${wtag} Tagen`;
-      t.innerHTML='<b style="color:var(--ok,#3ECFB2)">✓ Deine Tierärztin hat die Messung abgeholt</b>'+esc(wann2)
-        +'<br>Der Befund erscheint hier, sobald sie ihn geschrieben hat.';
+      const wann2=wtag===null?'':' — '+(wtag<=0?t('lgHeute'):wtag===1?t('lgGestern'):t('lgVorTagen').replace('{n}',String(wtag)));
+      el.innerHTML='<b style="color:var(--ok,#3ECFB2)">'+t('lgAbgeholt')+'</b>'+esc(wann2)
+        +'<br>'+t('lgBefundFolgt');
       k.classList.add('gut');
     } else if(d.stand==='unbekannt' && tage>=30){
-      t.innerHTML='Nach dreißig Tagen verfällt eine Sendung im Postfach — diese ist nicht mehr da.'
-        +'<br>Wenn du magst, miss neu und sende noch einmal.';
+      el.innerHTML=t('lgVerfallen')+'<br>'+t('lgVerfallen2');
     } else if(d.stand==='offen' && tage>=10){
       /* Der ehrlichste Moment der ganzen Kette: Es liegt nicht an ihr, und
          es liegt nicht an uns. Die Praxis kennt uns womoeglich noch nicht. */
-      t.innerHTML='Deine Aufnahme liegt bereit, wurde aber noch nicht abgeholt.'
-        +'<br><span style="color:var(--dim)">Vielleicht nutzt deine Praxis CARLON noch nicht. '
-        +'Der Aushang unten ist genau dafür da.</span>';
+      el.innerHTML=t('lgOffen')
+        +'<br><span style="color:var(--dim)">'+t('lgOffen2')+'</span>';
     }
   }).catch(()=>{});
 }
@@ -3295,15 +3378,15 @@ const ANFRAGE=(function(){
   if(ANFRAGE && ANFRAGE.n){
     const f=document.getElementById('horse');
     if(f && !f.value){ f.value=ANFRAGE.n; }
-    const t=document.querySelector('#vReady h1');
+    const h=document.querySelector('#vReady h1');
     /* data-i18n abnehmen, sonst setzt der Uebersetzer den Standardtext
-       gleich wieder darueber — der Anlass ginge still verloren. */
-    if(t){ t.removeAttribute('data-i18n');
-           t.textContent='Deine Tierärztin bittet um eine Messung'; }
+       gleich wieder darueber — der Anlass ginge still verloren.
+       (`h` statt `t`: die alte Konstante verschattete den Uebersetzer t().) */
+    if(h){ h.removeAttribute('data-i18n');
+           h.textContent=t('anfrageH1'); }
     const u=document.querySelector('#vReady p.sub');
     if(u){ u.removeAttribute('data-i18n');
-           u.textContent='Sie hat gezielt um eine Messung für '+ANFRAGE.n
-             +' gebeten. Gurt anlegen, Rest macht die Station.'; }
+           u.textContent=t('anfrageSub').replace('{x}',ANFRAGE.n); }
   }
 })();
 
@@ -3389,7 +3472,7 @@ $('#btnConnect').addEventListener('click', async ()=>{
     await connect(dev);
   }catch(e){
     if(e && e.name==='NotFoundError') return;      // Nutzer hat den Dialog abgebrochen
-    alert('Bluetooth-Fehler: '+(e && e.message ? e.message : e));
+    alert(t('btFehler').replace('{x}', String(e && e.message ? e.message : e)));
   }
 });
 
@@ -3507,7 +3590,37 @@ function onDrop(){
   $('#liveTitle').textContent=t('dropTitle');
   $('#liveSub').textContent=t('dropSub');
   $('#btnStop').textContent=t('dropStop');
+  /* Ab jetzt zaehlt die Luecke — und der Weg zurueck steht offen. */
+  S.abrissBeginn = S.abrissBeginn || Date.now();
+  const rb=$('#btnReconnect');
+  if(rb){ rb.classList.remove('hidden'); rb.disabled=false; rb.textContent=t('reconn'); }
 }
+
+/* Wiederverbinden am BESTEHENDEN Geraet: kein neuer Chooser, kein neues
+   Koppeln — dieselbe S.device-Referenz, Notifications neu abonniert. Die
+   Luecke wird ehrlich aufsummiert (S.abrissSek) und reist im Datensatz
+   mit, wie die Hintergrund-Luecken auch. */
+$('#btnReconnect').addEventListener('click', async ()=>{
+  if(S.stopped || !S.device) return;
+  const rb=$('#btnReconnect');
+  rb.disabled=true; rb.textContent=t('reconnAktiv');
+  try{
+    const server=await S.device.gatt.connect();
+    const svc=await server.getPrimaryService('heart_rate');
+    S.hrChar=await svc.getCharacteristic('heart_rate_measurement');
+    await S.hrChar.startNotifications();
+    S.hrChar.addEventListener('characteristicvaluechanged', onBeat);
+    if(S.abrissBeginn){ S.abrissSek=(S.abrissSek||0)+Math.round((Date.now()-S.abrissBeginn)/1000); S.abrissBeginn=null; }
+    S.letzterSchlagMs=Date.now();          /* Totmannschalter nicht sofort feuern lassen */
+    rb.classList.add('hidden');
+    $('#liveTitle').textContent=t('liveH1');
+    $('#liveSub').textContent=t('reconnZurueck');
+    $('#btnStop').textContent=t('stop');
+  }catch(e){
+    rb.disabled=false; rb.textContent=t('reconn');
+    $('#liveSub').textContent=t('reconnFehl');
+  }
+});
 
 /* ── Messung ───────────────────────────────────────────────────────────── */
 function startSession(){
@@ -4037,6 +4150,9 @@ function buildExportVoll(name,rr,m,secs){
                 Datensatz, damit die Beurteilung es beruecksichtigen kann —
                 eine stille Luecke waere schlimmer als eine gemeldete. */
              hintergrundSek:S.luecken||0,
+             /* Sekunden ohne Gurt-Verbindung nach Wiederverbinden — dieselbe
+                Ehrlichkeit wie bei den Hintergrund-Luecken. */
+             abrissSek:S.abrissSek||0,
              sensor:(S.device&&S.device.name)||null,
              sensorGeprueft:/H10/i.test(String(S.device&&S.device.name||'')),
              beltBatteryPct:S.batt, userAgent:navigator.userAgent,
@@ -4170,17 +4286,17 @@ $('#btnSend').addEventListener('click', async ()=>{
        Knopf. Sagt der Browser nein, faellt es auf Herunterladen zurueck —
        sichtbar, mit Erklaerung, nicht still. */
     if(!POSTFACH_AN && !room){
-      $('#status').textContent='Bereite die Datei vor…'; $('#pb').style.width='40%';
+      $('#status').textContent=t('sendVorbereiten'); $('#pb').style.width='40%';
       const {datei,verschluesselt}=await weggabeDatei();
       $('#pb').style.width='100%';
       const text=verschluesselt
-        ? 'Hier ist die Herzfrequenz-Messung von meinem Pferd. Die Datei ist für deine Praxis verschlüsselt.'
-        : 'Hier ist die Herzfrequenz-Messung von meinem Pferd. Öffnen mit CARLON: '
-          + (window.CARLON_KANON||new URL('index.html',location.href).toString());
+        ? t('shareMsgVerschl')
+        : t('shareMsgOffen').replace('{x}',
+            (window.CARLON_KANON||new URL('index.html',location.href).toString()));
       let geteilt=false, abgebrochen=false;
       if(navigator.canShare && navigator.canShare({files:[datei]})){
         try{
-          await navigator.share({title:'Messung für die Praxis', text, files:[datei]});
+          await navigator.share({title:t('shareTitel'), text, files:[datei]});
           geteilt=true;
         }catch(err){
           /* ⚠ WEGTIPPEN IST KEIN VERSAND. Vorher schluckte dieser catch
@@ -4200,13 +4316,11 @@ $('#btnSend').addEventListener('click', async ()=>{
       }
       if(!geteilt) dateiHerunterladen(datei);
       $('#status').innerHTML='<span class="done">✓ '
-        +(geteilt?'Datei weitergegeben':'Datei gespeichert')+'</span>'
+        +(geteilt?t('sendGeteilt'):t('sendGespeichert'))+'</span>'
         +'<div style="font-size:12px;color:var(--sec);margin-top:6px">'
         +(geteilt
-          ? (verschluesselt
-             ? 'Nur deine Praxis kann sie öffnen — unterwegs ist sie unlesbar.'
-             : 'Sie enthält nur die Messung deines Pferds, sonst nichts.')
-          : 'Dein Browser kann Dateien nicht direkt teilen. Die Datei liegt in deinen Downloads — schick sie deiner Tierärztin wie ein Foto.')
+          ? (verschluesselt ? t('sendGeteiltVerschl') : t('sendGeteiltOffen'))
+          : t('sendDownload'))
         +'</div>';
       /* Nur ein aufgeloestes share() ist ein Versand; der Download ist eine
          Kopie in den eigenen Haenden — die Lage-Karte zaehlt nur Gesendetes. */
@@ -4332,10 +4446,10 @@ $('#btnRestart').addEventListener('click',()=>{
   $('#hrRange').textContent='–'; $('#recFill').style.width='0';
   $('#hr').textContent='–'; $('#beats').textContent='0'; $('#dur').textContent='0:00';
   liveDiagrammeZuruecksetzen(); $('#qdot').className='dot';
-  $('#qtxt').textContent='Signal wird geprüft…';
-  $('#liveTitle').textContent='Messung läuft';
-  $('#liveSub').textContent='Ruhig stehen lassen. Je ruhiger das Pferd, desto aussagekräftiger die Aufnahme.';
-  $('#btnStop').textContent='Messung beenden';
+  $('#qtxt').textContent=t('sigChecking');
+  $('#liveTitle').textContent=t('liveH1');
+  $('#liveSub').textContent=t('liveSub');
+  $('#btnStop').textContent=t('stop');
   Toast_ok('Neu gestartet — der Gurt bleibt verbunden');
 });
 // Bewusst kein window.confirm: ein Browser-Dialog kann die Bluetooth-Sitzung
@@ -4635,10 +4749,20 @@ $('#btnAgain').addEventListener('click',()=>{
   $('#btnSend').disabled=false; $('#btnSend').classList.remove('hidden');
   $('#btnSave').disabled=false; $('#btnAgain').classList.add('hidden');
   liveDiagrammeZuruecksetzen(); $('#beats').textContent='0'; $('#dur').textContent='0:00';
-  $('#qdot').className='dot'; $('#qtxt').textContent='Signal wird geprüft…';
-  $('#liveTitle').textContent='Messung läuft'; $('#btnStop').textContent='Messung beenden';
+  $('#qdot').className='dot'; $('#qtxt').textContent=t('sigChecking');
+  $('#liveTitle').textContent=t('liveH1'); $('#btnStop').textContent=t('stop');
   $('.card').classList.remove('beleg');
   show('vReady');
 });
+
+/* ── OFFLINE-FUNDAMENT (Audit 13.08.) ──────────────────────────────────
+   Der Service Worker wurde nur vom Praxis-Cockpit registriert — die
+   Halterin besucht das Cockpit nie, und der Ort der Nutzung (Stall) ist
+   der Ort mit dem schlechtesten Netz. „Im Stall auf dem Startbildschirm
+   abgelegt" nuetzte ohne Shell-Cache nichts. Nach dem ersten Besuch
+   braucht Messen + Dateiweg jetzt kein Netz mehr; die VERSION-Disziplin
+   aus sw.js gilt unveraendert (sw-version.mjs leitet sie aus dem Inhalt
+   ab). Nach allem anderen registriert — die Messung haengt nie daran. */
+if('serviceWorker' in navigator){ try{ navigator.serviceWorker.register('sw.js'); }catch(e){} }
 </script>
 </html>

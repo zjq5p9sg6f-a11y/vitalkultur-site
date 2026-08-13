@@ -8661,6 +8661,10 @@ const License={
       }
       const v=await this.verify(d.lizenz);
       if(!v.valid||v.typ!=='lic') return {ok:false,grund:'Antwort nicht verwertbar'};
+      /* Rotierter Abo-Token (Selbstheilung, Audit 13.08.): laeuft der alte
+         auf sein Ende zu, schickt der Dienst bei aktivem Abo einen
+         frischen mit — nur ein VERIFIZIERTER wird uebernommen. */
+      if(d.abo){ const va=await this.verify(d.abo); if(va.valid&&va.typ==='sub') s.sub=d.abo; }
       s.key=d.lizenz; s.letztePruefung=Math.floor(Date.now()/1000); s.abgelehntSeit=null;
       State.settings.license=s; await State.saveSettings();
       await this.loadFromSettings(); Nav.render();
