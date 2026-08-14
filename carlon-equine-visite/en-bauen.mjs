@@ -230,10 +230,10 @@ tausche('Ein Preis, eine Praxis', 'One price, one practice');
 /* Ueberschrift traegt jetzt zusaetzlich den Betriebs-Bezug; weiter unten. */
 /* Ersetzt durch den praeziseren Satz weiter unten (USt. weist Stripe aus). */
 /* Die Monatsrate fuehrt (Jan, 13.08.) — die grosse Zahl ist der Anker. */
-tausche('oder 790&nbsp;€ im Jahr — entspricht 65,83&nbsp;€ im Monat, zwei Monate gespart',
-        'or €790 per year — €65.83 a month, two months saved');
+tausche('oder 1.490&nbsp;€ im Jahr — entspricht 124,17&nbsp;€ im Monat, zwei Monate gespart',
+        'or €1,490 per year — €124.17 a month, two months saved');
 tausche('Unbegrenzt Pferde, Aufnahmen und Verläufe', 'Unlimited horses, recordings and trends');
-tausche('Alle Mitarbeitenden, alle Geräte des Betriebs', 'All staff, all devices of the business');
+tausche('Ein Standort, alle Geräte — ohne Zuschlag je Gerät', 'All staff, all devices of the business');
 tausche('Befundbericht mit eigenem Briefkopf', 'Findings report on your own letterhead');
 tausche('Export als JSON, CSV, Kubios und FHIR&nbsp;R5', 'Export as JSON, CSV, Kubios and FHIR&nbsp;R5');
 tausche('Monatlich kündbar zum Ende der Abrechnungsperiode', 'Cancellable monthly, effective at the end of the billing period');
@@ -750,8 +750,26 @@ tausche('>Muster-Bericht als PDF<', '>Sample report (PDF)<');
 
 
 /* Umsatzsteuer — WESSEN. Der Kern der Klaerung vom 12.08.2026. */
-tausche('<div class="tarif-preis"><b>79&nbsp;€</b> <span>netto im Monat · USt. weist Stripe aus</span></div>',
-        '<div class="tarif-preis"><b>79&nbsp;€</b> <span>net per month · VAT charged by Stripe</span></div>');
+/* Die Nutzen-Schwelle vor dem Preis (15.08.2026). GOT-Ziffern bleiben
+   auch auf Englisch stehen — sie sind der deutsche Gebuehrenrahmen und
+   werden nicht uebersetzt, nur erklaert. */
+tausche(`<strong>Ab wann er sich trägt, rechnen Sie in einem Satz nach.</strong> Eine einzige
+      Anfahrt, die durch eine Fernkontrolle entfällt, liegt je nach Strecke in der
+      Größenordnung des halben bis ganzen Monatsbeitrags. Kommt eine abrechenbare
+      Ferneinschätzung dazu — die GOT führt die Beratung ohne Untersuchung als Ziffer&nbsp;1,
+      den Tierarztbrief als Ziffer&nbsp;89 —, trägt sich der Monat aus Leistungen, die vorher
+      gar nicht stattgefunden hätten. Vergleichbare Telemetrie im Pferdesport wird
+      <em>je Pferd</em> abgerechnet; hier zahlen Sie einmal für den Betrieb.`,
+`<strong>You can work out where it pays for itself in one sentence.</strong> A single
+      drive saved by a remote check is, depending on distance, in the range of half to a
+      full monthly fee. Add one billable remote assessment — the German fee schedule (GOT)
+      lists consultation without examination as item&nbsp;1 and the veterinary letter as
+      item&nbsp;89 — and the month is carried by work that would not have happened at all.
+      Comparable telemetry in equine sport is billed <em>per horse</em>; here you pay once
+      for the practice.`);
+
+tausche('<div class="tarif-preis"><b>149&nbsp;€</b> <span>netto im Monat · USt. weist Stripe aus</span></div>',
+        '<div class="tarif-preis"><b>149&nbsp;€</b> <span>net per month · VAT charged by Stripe</span></div>');
 tausche(`Das Angebot richtet sich ausschließlich an Unternehmer im Sinne des § 14 BGB.
         <strong>Wir selbst rechnen als Kleinunternehmer nach § 19 UStG ohne Umsatzsteuer ab.</strong>
         Für das Browser-Cockpit tritt <strong>Stripe als Verkäufer im eigenen Namen</strong> auf

@@ -8639,7 +8639,16 @@ const License={
      ein identisches Produkt. Eine Zahl, die es im Code nicht gibt, kann
      niemand versehentlich anbieten.
      Die Klinik-Antwort bleibt bis zum Mehrbenutzer-Betrieb: N Solo-Plaetze. */
-  PREIS:{ soloMonat:79, soloJahr:790, klinikMonat:199, klinikJahr:1990 },
+  /* 15.08.2026 — Praxis von 79 € auf 149 € (Jan). Begruendung steht oben:
+     die belegten Anker liegen bei 85–125 € pro PFERD (Alogo) und 149–249 €
+     pro EINZELNER Beratung (telVet); wir geben unbegrenzt Pferde. Bei 79 €
+     trug ein direkt akquirierter Kunde seine Akquisekosten erst nach 21
+     Monaten — der Deckungsbeitrag im ersten Jahr war negativ.
+     Klinik bleibt vorerst 199 €: die Stufe wird NICHT oeffentlich verkauft
+     (Cockpit zeigt „auf Anfrage"), solange Mehrbenutzer-Betrieb fehlt. Der
+     Abstand zur Praxis ist damit bewusst zu klein — er wird mit dem Produkt
+     korrigiert, nicht vorher. */
+  PREIS:{ soloMonat:149, soloJahr:1490, klinikMonat:199, klinikJahr:1990 },
   /* ABGELEITET, nicht abgeschrieben. Hier stand '79 €/Mo' als Text — direkt
      unter dem Kommentar, der „EINE Quelle für jede Preisangabe" verspricht.
      Zwei Quellen für dieselbe Zahl sind keine Quelle, sondern eine Wette
@@ -8719,6 +8728,15 @@ const License={
      Die LIVE-Links stehen seit 07.08.2026 (siehe oben). Die Testlinks
      hier tragen test_ im Pfad und werden von checkoutLink() ausserhalb von
      Beta und localhost zusaetzlich gesperrt. */
+  /* ⚠ DIESE ZAHLEN SIND ABSICHTLICH NICHT DER PREIS. Sie beschreiben, was
+     die hinterlegten Zahlungs-Links TATSAECHLICH einziehen. Seit der
+     Anhebung auf 149 € (15.08.2026) stimmen sie nicht mehr mit PREIS
+     ueberein — und genau deshalb sperrt checkoutLink() die Kasse. Das ist
+     kein Fehler, sondern der Zweck der Bindung: lieber keine Kasse als eine,
+     die 79 € einzieht, waehrend die Seite 149 € nennt.
+     ERST wenn die neuen Links am Live-Produkt existieren, wandern sie nach
+     CHECKOUT_ALL.live UND diese Betraege auf 149/1490. Wer nur eine der
+     beiden Stellen anfasst, hat die Sperre umgangen statt sie geloest. */
   CHECKOUT_BETRAG:{ month:79, year:790, clinicMonth:199, clinicYear:1990 },
   /* Die Zahlungs-Links zeigen noch auf Stripes Testumgebung. Wird die
      Beta-Sperre geloest, ohne sie zu tauschen, laeuft der Kunde durch eine
