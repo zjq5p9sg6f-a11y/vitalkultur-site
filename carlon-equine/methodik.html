@@ -1,0 +1,320 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Methoden-Dokumentation · CARLON Equine</title>
+<meta name="description" content="Sensor, Filterkette mit allen Schwellenwerten, Datenfluss, Auswerte-Tore, Quellen und Grenzen der HRV-Aufzeichnung beim Pferd. Für Einrichtungen, Ethikkommissionen und Forschungspartner.">
+<meta name="robots" content="index,follow">
+<link rel="icon" href="/assets/equine-mark-224.png">
+
+<!-- ══════════════════════════════════════════════════════════════════════
+     WARUM ES DIESES DOKUMENT GIBT
+     ─────────────────────────────────────────────────────────────────────
+     Eine Einrichtung, die mit uns arbeiten will — Klinik, Hof, Universität,
+     Ethikkommission — muss in ihrem eigenen Antrag beschreiben, WIE gemessen
+     und gerechnet wird. Genau diesen Abschnitt kann sie ohne uns nicht
+     schreiben: die Schwellenwerte stehen in unserem Code, nicht in einem
+     Handbuch. Also schreiben wir ihn.
+
+     Das ist kein Verkaufsdokument. Es nennt Zahlen, Quellen UND Grenzen,
+     einschließlich der Stellen, an denen eine Festlegung von uns stammt und
+     nicht aus der Literatur. Wer prüft, soll finden, was er sucht — auch
+     das Unbequeme.
+
+     JEDER WERT HIER WIRD BEWACHT: `t-methodik.mjs` liest die Zahlen aus
+     dieser Seite und vergleicht sie mit `app/hrv-vorstufe.js` und
+     `app/asthma.js`. Weicht eine ab, wird die Prüfstrecke rot. Ein
+     Methodenpapier, das der Code überholt hat, ist schlimmer als keines.
+     ══════════════════════════════════════════════════════════════════════ -->
+
+<style>
+:root{
+  --bg:#FFFFFF; --text:#15181A; --sec:#41494E; --dim:#5C666C; --line:#D9DFE2;
+  --akzent:#1E8C78; --akzent-hell:#E8F5F2; --warn:#8A5A00; --warn-hell:#FDF6E7;
+  --mono:ui-monospace,'SF Mono',Menlo,monospace;
+  --ui:system-ui,-apple-system,'Segoe UI',sans-serif;
+  --sp:clamp(18px,3vw,30px);
+}
+@media (prefers-color-scheme:dark){
+  :root{--bg:#0E1113;--text:#ECEFF1;--sec:#B3BCC1;--dim:#8A959B;--line:#252B2F;
+    --akzent:#3ECFB2;--akzent-hell:#12211E;--warn:#FFC46B;--warn-hell:#241C0C}
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font-family:var(--ui);line-height:1.65;
+  -webkit-font-smoothing:antialiased;padding:var(--sp);display:flex;justify-content:center}
+.blatt{width:100%;max-width:860px}
+header{border-bottom:2px solid var(--text);padding-bottom:18px;margin-bottom:30px}
+.marke{font-family:var(--mono);font-size:11px;letter-spacing:.28em;text-transform:uppercase;color:var(--akzent);font-weight:700}
+h1{font-size:clamp(24px,3.6vw,34px);letter-spacing:-.02em;margin:10px 0 6px;font-weight:650}
+.unter{color:var(--dim);font-size:15px}
+.stand{font-family:var(--mono);font-size:11.5px;color:var(--dim);margin-top:12px}
+h2{font-size:clamp(18px,2.4vw,22px);margin:38px 0 12px;padding-top:14px;border-top:1px solid var(--line);font-weight:640}
+h3{font-size:16px;margin:24px 0 8px;font-weight:640}
+p{margin:0 0 12px;color:var(--sec);max-width:70ch}
+p strong,li strong{color:var(--text)}
+ul,ol{margin:0 0 14px 22px;color:var(--sec)}
+li{margin-bottom:6px}
+a{color:var(--akzent)}
+table{width:100%;border-collapse:collapse;margin:14px 0 18px;font-size:14px}
+th,td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--dim);font-weight:700}
+td.wert{font-family:var(--mono);white-space:nowrap;color:var(--text);font-weight:600}
+td.quelle{font-size:13px;color:var(--dim)}
+.stufe{border-left:3px solid var(--akzent);padding-left:16px;margin:22px 0}
+.stufe .nr{font-family:var(--mono);font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--akzent);font-weight:700}
+.kasten{background:var(--akzent-hell);border:1px solid var(--line);border-radius:10px;padding:14px 16px;margin:18px 0}
+.kasten.warn{background:var(--warn-hell)}
+.kasten h4{font-size:14px;margin-bottom:6px;color:var(--text)}
+.kasten p{margin-bottom:0;font-size:14px}
+.eigen{display:inline-block;font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;
+  background:var(--warn-hell);color:var(--warn);border:1px solid var(--warn);border-radius:4px;padding:1px 6px;margin-left:6px;font-weight:700}
+footer{margin-top:44px;padding-top:16px;border-top:1px solid var(--line);font-size:13px;color:var(--dim)}
+.wrap{overflow-x:auto}
+@media print{
+  :root{--bg:#fff;--text:#15181A;--sec:#333;--dim:#555;--line:#CCC;--akzent:#1E8C78;--akzent-hell:#F2F8F7;--warn-hell:#FBF6EC}
+  body{padding:0;font-size:10.5pt}
+  h2{page-break-after:avoid} .stufe,table,.kasten{page-break-inside:avoid}
+  a{color:var(--text);text-decoration:none}
+  *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+}
+</style>
+</head>
+<body>
+<div class="blatt">
+
+<header>
+  <div class="marke">CARLON Equine · Equine Heart Science</div>
+  <h1>Methoden-Dokumentation</h1>
+  <div class="unter">Sensor, Filterkette, Datenfluss, Auswerte-Tore, Quellen und Grenzen der
+    Herzraten­variabilitäts-Aufzeichnung beim Pferd.</div>
+  <div class="stand">Fassung <span id="stand">2026-08-14</span> · Messprofil <code>equine-v1</code> ·
+    Für Einrichtungen, Forschungspartner und Ethikkommissionen</div>
+</header>
+
+<div class="kasten">
+  <h4>Wozu dieses Dokument</h4>
+  <p>Wer mit CARLON Equine misst und die Ergebnisse in einem Antrag, einer Studie oder einer
+  Akte beschreiben muss, braucht die Zahlen dahinter. Dieses Dokument nennt jede Filterstufe
+  mit ihrem tatsächlichen Schwellenwert, die Quelle dazu — und ausdrücklich auch die Stellen,
+  an denen ein Wert eine begründete eigene Festlegung ist und kein Literaturwert. Die Werte
+  werden bei jedem Prüflauf gegen den ausgelieferten Code verglichen.</p>
+</div>
+
+<h2>1 · Aufzeichnung</h2>
+<p>Aufgezeichnet werden <strong>RR-Intervalle</strong> — die Abstände zwischen zwei Herzschlägen
+in Millisekunden. Kein EKG-Rohsignal, keine Bild- oder Tonaufnahme, keine Standortdaten.</p>
+<div class="wrap"><table>
+  <tr><th>Größe</th><th>Wert</th><th>Anmerkung</th></tr>
+  <tr><td>Sensor</td><td class="wert">Polar H10</td><td class="quelle">EKG-basierter Brustgurt, in der HRV-Forschung breit eingesetzt</td></tr>
+  <tr><td>Übertragung</td><td class="wert">Bluetooth Low Energy</td><td class="quelle">Heart-Rate-Profil mit RR-Intervallen</td></tr>
+  <tr><td>Zeitliche Auflösung</td><td class="wert">1 ms</td><td class="quelle">Auflösung der RR-Intervalle des Gurts</td></tr>
+  <tr><td>Aufzeichnungsort</td><td class="wert">Endgerät</td><td class="quelle">Browser oder App der messenden Person; kein Server beteiligt (Abschnitt 5)</td></tr>
+</table></div>
+
+<h2>2 · Filterkette</h2>
+<p>Beim ruhenden Pferd sind Rhythmus-Besonderheiten normal, die bei einer ungefilterten
+Rechnung die Kennwerte massiv verfälschen. Die Kette läuft in fester Reihenfolge; jede Stufe
+ist unten mit ihrem tatsächlichen Schwellenwert genannt. Alle Werte gehören zum Messprofil
+<code>equine-v1</code> — es wird genau <em>ein</em> Profil mitgeliefert; für andere Tierarten
+sind die Werte unbelegt.</p>
+
+<p><em>Reihenfolge im Code:</em> Die Erkennungsstufen laufen zuerst, der Plausibilitäts-Stempel
+danach — und zwar mit Absicht: ein Intervall, das als physiologischer Block erkannt wurde, darf
+länger sein als die reguläre Obergrenze. Ein zuerst gesetzter Plausibilitätsfilter hätte genau
+diese Pausen weggeschnitten, bevor sie überhaupt als Block erkennbar wären.</p>
+
+<div class="stufe">
+  <div class="nr">Plausibilitäts-Stempel</div>
+  <h3>Offensichtlich unmögliche Intervalle verwerfen</h3>
+  <p>Ein Intervall gilt als plausibel zwischen <strong>200 ms</strong> (entspricht 300 Schlägen/min)
+  und <strong>8000 ms</strong> (7,5 Schläge/min). Jenseits von <strong>12000 ms</strong> gilt ein
+  Wert auch als Block-Kandidat als unbrauchbar.</p>
+  <p>Die obere Grenze wurde bewusst hoch gelegt: ein längstes RR über 4 s kommt bei gesunden,
+  wenig trainierten Pferden häufig vor. Eine engere Grenze würde genau die Pausen wegschneiden,
+  die physiologisch sind.<span class="eigen">eigene Festlegung</span> Ein publizierter equiner
+  Plausibilitätsbereich existiert nicht.</p>
+</div>
+
+<div class="stufe">
+  <div class="nr">Stufe 1 · T-Wellen-Zusammenführung</div>
+  <h3>Doppelt gezählte Schläge zusammenführen</h3>
+  <p>Wird eine T-Welle fälschlich als eigener Schlag erkannt, entstehen zwei zu kurze Intervalle
+  statt eines richtigen. Erkannt wird das über ein laufendes Median-Fenster
+  (<strong>300–3500 ms</strong>): Liegt ein Intervall unter dem
+  <strong>0,5-fachen</strong> des lokalen Medians und über dem absoluten Minimum von
+  <strong>100 ms</strong>, wird es mit dem folgenden zusammengeführt statt verworfen.</p>
+</div>
+
+<div class="stufe">
+  <div class="nr">Stufe 2 · Artefaktkorrektur</div>
+  <h3>Verfahren nach Lipponen &amp; Tarvainen (2019), equine angepasst</h3>
+  <p>Ein etabliertes Verfahren zur Erkennung ektoper und fehlerhafter Schläge über die
+  Verteilung der Intervall-Differenzen. Der Schwellenfaktor beträgt <strong>α = 5,2</strong>;
+  die Streuung wird über die Quartilsabweichung geschätzt, also robust gegen einzelne Ausreißer.</p>
+</div>
+
+<div class="stufe">
+  <div class="nr">Stufe 3 · AV-Block II° · der entscheidende Schritt</div>
+  <h3>Physiologische Pausen zurückgeben statt wegrechnen</h3>
+  <p>Der atrioventrikuläre Block zweiten Grades ist beim ruhenden Pferd eine
+  <em>physiologische</em> Erscheinung: ein Schlag fällt aus, das Intervall ist etwa doppelt so
+  lang. Unter Belastung verschwindet er. Erkannt wird er über das Verhältnis zum lokalen Median
+  (Fenster <strong>10 Schläge</strong>): Liegt ein Intervall zwischen dem
+  <strong>1,8-</strong> und <strong>2,2-fachen</strong> und sind die Nachbarintervalle um
+  höchstens <strong>25 %</strong> abweichend, wird es als physiologischer Block eingestuft.</p>
+  <p>Warum das entscheidend ist: Rechnet man solche Pausen roh mit, steigen RMSSD und SDNN
+  erheblich — an echten Aufnahmen wurden bis zu <strong>+130 %</strong> gemessen. Genau die
+  Marker, die bei <em>kleinen</em> Werten anschlagen, kippen dadurch ins Gegenteil.</p>
+  <p><strong>Was mit dem Block geschieht — genau:</strong> Er zählt <em>nicht</em> in die
+  Artefaktrate und damit nicht gegen die Signalgüte (weder im Zähler noch im Nenner). In der
+  bereinigten Serie wird er dennoch interpoliert wie jede andere Markierung; erhalten bleibt er
+  als eigene Kennzeichnung neben der Serie. Wer die Pausen selbst auswerten will, findet sie
+  also im Datensatz — sie stehen nur nicht in den zeitbasierten Kennwerten.</p>
+</div>
+
+<div class="stufe">
+  <div class="nr">Stufe 4 · Interpolation</div>
+  <h3>Korrekturstufen nach Kubios-Vorbild, equine skaliert</h3>
+  <p>Jedes Intervall, das eine der Stufen oben als nicht regulär markiert hat, wird über eine
+  kubische Spline-Interpolation (Catmull-Rom) durch die nächstgelegenen regulären Nachbarschläge
+  ersetzt. Es wird also nicht gelöscht, sondern geschätzt — die ursprüngliche Markierung bleibt
+  neben der Serie erhalten.</p>
+  <div class="kasten warn">
+    <h4>Genauigkeit statt Vollständigkeit</h4>
+    <p>Das Messprofil führt vier Empfindlichkeitsstufen nach Kubios-Vorbild
+    (<strong>0,4</strong> / <strong>0,6</strong> / <strong>0,9</strong> / <strong>1,2 s</strong>,
+    gegenüber humanen Werten um den Faktor 3 skaliert). Sie werden im Datensatz als
+    Profilangabe mitgeführt, <strong>steuern den Korrekturpfad in der aktuellen Fassung aber
+    nicht</strong>: korrigiert wird jeder markierte Schlag, unabhängig von der Abweichungsstärke.
+    Wir nennen das hier, weil ein Methodenteil, der eine nicht angewandte Schwelle als angewandt
+    ausgibt, an genau dieser Stelle prüfbar falsch wäre.</p>
+  </div>
+</div>
+
+<h3>Signalgüte und Riegel</h3>
+<p>Aus dem Anteil korrigierter Schläge ergibt sich die Qualitätsklasse. Zwei Riegel verhindern,
+dass aus schlechten Daten ein Ergebnis wird:</p>
+<div class="wrap"><table>
+  <tr><th>Regel</th><th>Grenze</th><th>Folge</th></tr>
+  <tr><td>Qualität „exzellent"</td><td class="wert">&lt; 1,0 %</td><td class="quelle">Anteil korrigierter Schläge<span class="eigen">eigene Festlegung</span></td></tr>
+  <tr><td>Qualität „gut"</td><td class="wert">&lt; 3,0 %</td><td class="quelle">—</td></tr>
+  <tr><td>Qualität „schlecht"</td><td class="wert">&lt; 10,0 %</td><td class="quelle">—</td></tr>
+  <tr><td>Riegel: keine nichtlinearen Kennwerte</td><td class="wert">≥ 5,0 %</td><td class="quelle">DFA, Sample-Entropie und Poincaré-Maße werden unterdrückt</td></tr>
+  <tr><td>Riegel: gar kein Ergebnis</td><td class="wert">≥ 10,0 %</td><td class="quelle">Die Aufnahme wird nicht ausgewertet</td></tr>
+</table></div>
+
+<h2>3 · Frequenzbänder</h2>
+<p>Für die Spektralanalyse gelten <strong>equine</strong> Bandgrenzen, nicht die humanen. Ein
+Pferdeherz schlägt langsamer, entsprechend liegen die Atmungs- und Regulationsanteile bei
+tieferen Frequenzen.</p>
+<div class="wrap"><table>
+  <tr><th>Band</th><th>Bereich</th><th>Quelle</th></tr>
+  <tr><td>VLF</td><td class="wert">0 – 0,01 Hz</td><td class="quelle" rowspan="3">Visser (2002); Stucke (2015, Review); Wonghanchao (2025). Bezeichnung im Datensatz: <code>Equine-Visser-2002</code></td></tr>
+  <tr><td>LF</td><td class="wert">0,01 – 0,07 Hz</td></tr>
+  <tr><td>HF</td><td class="wert">0,07 – 0,60 Hz</td></tr>
+</table></div>
+
+<h2>4 · Auswerte-Tore</h2>
+<p>Nicht jede Aufnahme trägt jede Auswertung. Wo die Datengrundlage zu klein ist, erscheint
+kein Ergebnis — auch keine vorsichtige Schätzung. Eine gerichtet falsche Zahl ist schädlicher
+als eine fehlende.</p>
+<div class="wrap"><table>
+  <tr><th>Auswertung</th><th>Mindestanforderung</th><th>Begründung</th></tr>
+  <tr><td>Atemwegs-Einordnung</td><td class="wert">≥ 420 s <span style="color:var(--dim)">und</span> ≥ 200 Schläge</td>
+      <td class="quelle">Die Schwellen stammen aus längeren Ruheaufnahmen und würden auf kurzen Messungen zu häufig anschlagen</td></tr>
+  <tr><td>Individuelle Baseline</td><td class="wert">≥ 4 eigene Aufnahmen</td>
+      <td class="quelle">Darunter wird der Vergleichswert nicht als „individuelle Baseline" bezeichnet</td></tr>
+  <tr><td>Nichtlineare Kennwerte</td><td class="wert">&lt; 5 % Artefakte</td><td class="quelle">siehe Riegel oben</td></tr>
+</table></div>
+
+<h3>Atemwegs-Einordnung: Herkunft der Schwellen</h3>
+<p>Die verwendeten Schwellen sind an <strong>Nyerges-Bohák et al. (2025)</strong> kalibriert
+(Equine Veterinary Journal, DOI <code>10.1111/evj.14414</code>, n = 40, BAL-referenziert) und
+zusätzlich Monte-Carlo-verifiziert. Kernschwellen: SDNN <strong>55 ms</strong>,
+SD2 <strong>65 ms</strong>, SD2/SD1 <strong>1,50</strong>, TINN <strong>300 ms</strong>,
+DFA-α₁ <strong>0,70</strong>, Sample-Entropie <strong>0,80</strong>.</p>
+<div class="kasten warn">
+  <h4>Grenze dieser Einordnung</h4>
+  <p>Es handelt sich um eine <strong>Einordnung von Messwerten, nicht um eine Diagnose</strong>.
+  Die bronchoalveoläre Lavage (BAL) bleibt der Goldstandard. Die Entscheidung trifft
+  ausschließlich die tierärztliche Praxis.</p>
+</div>
+
+<h2>5 · Datenfluss</h2>
+<p>Der Weg der Daten ist Teil der Methode, weil er bestimmt, wer worüber verfügt.</p>
+<ol>
+  <li>Der Gurt überträgt die RR-Intervalle per Bluetooth an das <strong>Gerät der messenden
+      Person</strong> (Browser oder App).</li>
+  <li>Die Aufnahme entsteht und bleibt <strong>auf diesem Gerät</strong>. Es gibt keinen
+      Zwischenspeicher bei uns und keinen Upload.</li>
+  <li>Zum Weitergeben entsteht eine <strong>Datei</strong>, die die messende Person selbst
+      verschickt — auf dem Weg, den sie ohnehin nutzt. Wurde die Messung über den Link einer
+      Praxis geöffnet, ist die Datei bereits für diese Praxis verschlüsselt.</li>
+  <li>Die empfangende Einrichtung liest die Datei in ihr eigenes System ein. Der vollständige
+      Datensatz liegt zusätzlich als offenes <strong>FHIR-R5-Bundle</strong> bei.</li>
+</ol>
+<p>Für eine Datenschutz-Folgenabschätzung heißt das: Zwischen der messenden Person und der
+empfangenden Einrichtung steht kein Dienst von uns. Welche personenbezogenen Angaben eine
+Aufnahme trägt, entscheidet die aufzeichnende Stelle — die Datei selbst führt keine
+Kontaktdaten mit.</p>
+
+<h2>6 · Nachvollziehbarkeit</h2>
+<p>Jeder ausgegebene Kennwert trägt einen <strong>Herkunftsvermerk</strong>: ob er von der
+aufzeichnenden App berechnet und durch die Filterkette geführt wurde, oder ob er hier aus der
+Rohserie abgeleitet ist. Fehlt der Vermerk, wird die Filterkette <em>nicht</em> behauptet —
+dann steht im Bericht ausdrücklich, dass die Werte ungefiltert sind und nicht gegen Referenzwerte
+gestellt werden dürfen.</p>
+<p>Der ausgegebene Bericht nennt in einem eigenen Abschnitt „Methode &amp; Grenzen" die
+tatsächlich gelaufene Kette samt Quellen. Rohdaten (RR-Serie) lassen sich jederzeit als
+JSON, CSV oder Kubios-kompatibel exportieren, sodass jede Rechnung unabhängig
+nachvollzogen werden kann.</p>
+
+<h2>7 · Grenzen</h2>
+<ul>
+  <li><strong>Kein Medizinprodukt.</strong> CARLON Equine ist nicht dazu bestimmt, Krankheiten
+      zu erkennen, zu überwachen, zu behandeln oder zu lindern. Keine Diagnose, keine
+      Behandlungsempfehlung. Die Verordnung (EU) 2017/745 gilt für Produkte für den menschlichen
+      Gebrauch und ist beim Pferd nicht anwendbar; wir halten die Abgrenzung dennoch ein.</li>
+  <li><strong>Kein Notfallweg.</strong> Eine zugeschickte Datei ist kein Anruf. Bei akuten
+      Beschwerden gilt, was immer gilt: unmittelbar tierärztlich handeln.</li>
+  <li><strong>Kein belastbarer Normwert.</strong> Für HRV beim Pferd existiert kein
+      allgemeingültiger Referenzbereich. Aussagekräftig ist der Vergleich gegen die eigene
+      Vorgeschichte des Tieres — nicht der Absolutwert.</li>
+  <li><strong>Bewegung begrenzt die Aussage.</strong> Die Kennwerte setzen eine ruhige,
+      möglichst stationäre Aufnahme voraus. Bewegungsartefakte werden korrigiert, aber jede
+      Korrektur ist eine Schätzung.</li>
+  <li><strong>Ein Profil, eine Tierart.</strong> Die Werte oben gelten für das Pferd. Für andere
+      Tierarten sind sie unbelegt; das Messprofil erlaubt andere Werte, empfiehlt aber keine.</li>
+  <li><strong>Umstrittene Kennwerte bleiben umstritten.</strong> Das LF/HF-Verhältnis wird
+      klassisch als sympatho-vagale Balance gelesen; diese Deutung ist wissenschaftlich
+      angefochten. Wir führen den Wert als Trend gegen die Baseline, nicht als Absolutaussage.</li>
+</ul>
+
+<h2>8 · Quellen</h2>
+<ul>
+  <li>Lipponen J. A., Tarvainen M. P. (2019): <em>A robust algorithm for heart rate variability
+      time series artefact correction using novel beat classification.</em> Journal of Medical
+      Engineering &amp; Technology.</li>
+  <li>van Loon G. (2019): <em>Cardiac arrhythmias in horses.</em> Veterinary Clinics of North
+      America: Equine Practice 35:85–102.</li>
+  <li>Visser E. K. et al. (2002): Grundlage der equinen Frequenzbänder; Übersicht bei
+      Stucke D. et al. (2015); ergänzend Wonghanchao T. et al. (2025).</li>
+  <li>Nyerges-Bohák Z. et al. (2025): Equine Veterinary Journal, DOI
+      <a href="https://doi.org/10.1111/evj.14414">10.1111/evj.14414</a>, n = 40, BAL-referenziert.</li>
+  <li>Tarvainen M. P. et al.: Kubios HRV — Vorbild für die Korrekturstufen.</li>
+  <li>Richman J. S., Moorman J. R. (2000): Sample-Entropie.</li>
+</ul>
+
+<footer>
+  <strong>CARLON Equine</strong> · Vitalkultur, Jan Rohwedder · Iffezheim, Deutschland ·
+  <a href="/carlon-equine-visite/">Praxis-Ansicht</a> ·
+  <a href="/privacy.html">Datenschutz</a> ·
+  <a href="/impressum.html">Impressum</a><br>
+  Diese Fassung beschreibt das Messprofil <code>equine-v1</code>. Alle genannten Zahlen werden
+  bei jedem Prüflauf gegen den ausgelieferten Code verglichen.
+</footer>
+
+</div>
+</body>
+</html>

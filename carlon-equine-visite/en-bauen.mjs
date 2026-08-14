@@ -487,11 +487,13 @@ tausche(`
 tausche(`AV-Block-Pausen, Bewegungs-Artefakte, unplausible Schläge — die Auswertung
          erkennt und korrigiert sie, <strong>bevor</strong> ein Kennwert entsteht. Ob
          eine Aufnahme aus der App kommt oder aus der Browser-Station: Sie bekommen
-         denselben, bereinigten Wert.`,
+         denselben, bereinigten Wert.
+         <a href="/carlon-equine/methodik.html">Jede Stufe mit ihrem Schwellenwert →</a>`,
         `AV-block pauses, motion artefacts, implausible beats — the analysis detects
          and corrects them <strong>before</strong> any metric is computed. Whether a
          recording comes from the app or from the browser station: you get the same,
-         cleaned value.`);
+         cleaned value.
+         <a href="/carlon-equine/methodik.html">Every stage with its threshold →</a>`);
 tausche(`Ungefiltert wirkt ein ruhendes Pferd systematisch auffälliger, als es ist.
          Eine Triage, die zu oft warnt, ist so wertlos wie eine, die schweigt —
          deshalb wird erst bereinigt, dann eingestuft. Damit ein auffälliges Pferd
