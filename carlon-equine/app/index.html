@@ -1961,6 +1961,13 @@ function haversine(a,b){
 function uid(){return 'x'+Math.abs(hashStr(String(performance.now())+Object.keys(DB._c||{}).length+Math.floor(performance.timeOrigin))).toString(36);}
 function hashStr(s){let h=0;for(let i=0;i<s.length;i++){h=(h<<5)-h+s.charCodeAt(i);h|=0;}return h;}
 
+/* Steht bewusst hier oben, nicht bei `Postfach` unten: `Postausgang` wird
+   VOR `Postfach` deklariert und liest die Konstante ebenfalls. Eine const,
+   die erst spaeter deklariert wird, ist bis dahin nicht bloss undefiniert,
+   sondern wirft — dieselbe Falle ist in messen.html schon einmal
+   zugeschnappt. Begruendung der Abschaltung: siehe Block bei `Postfach`. */
+const POSTFACH_AN = (typeof window!=='undefined' && window.CARLON_POSTFACH===true);
+
 /* ---------- IndexedDB layer ---------- */
 const DB = {
   _db:null, _c:{},
@@ -5968,7 +5975,7 @@ const Views={
     <div class="modal-foot">
       <button class="btn ghost" onclick="UI.closeModal()">Schließen</button>
       <button class="btn ghost" onclick="Views.mailOwner('${hid}')">Per E-Mail</button>
-      ${rec.rueckadresse
+      ${(POSTFACH_AN && rec.rueckadresse)
         ? `<button class="btn primary" onclick="Views.befundZurueck('${hid}')">Verschlüsselt zurücksenden</button>`
         : `<button class="btn primary" onclick="navigator.clipboard.writeText($('#ownerTxt').value).then(()=>Toast.show('Text kopiert','ok'))">Kopieren</button>`}
     </div>`);
@@ -7513,6 +7520,9 @@ const UI={
   },
   postStatus(){
     const p=$('#postPill'), l=$('#postLabel'); if(!p||!l) return;
+    /* Der Abruf ist abgeschaltet (POSTFACH_AN). Was lokal noch liegt, darf
+       weiter erscheinen — sonst verschwaende Altbestand lautlos. Neues kann
+       nicht mehr entstehen, also verschwindet die Pille von selbst. */
     const lg=this.postLage();
     if(!lg){ p.className='post-pill'; return; }
     l.textContent=lg.text; p.className='post-pill zeigen '+lg.art;
@@ -7559,7 +7569,7 @@ const UI={
     </div>
     <div class="modal-foot">
       ${aus.length?`<button class="btn ghost" onclick="Postausgang.senden({laut:true}).then(()=>{UI.closeModal();UI.postStatus()})">${IC.senden} Jetzt senden</button>`:''}
-      <button class="btn" onclick="Postfach.abholen({laut:true}).then(()=>UI.closeModal())">${IC.refresh} Posteingang prüfen</button>
+      ${POSTFACH_AN?`<button class="btn" onclick="Postfach.abholen({laut:true}).then(()=>UI.closeModal())">${IC.refresh} Posteingang prüfen</button>`:''}
     </div>`);
   },
   /* Der Anlass, aus dem eine Kundin überhaupt misst. Ohne ihn wartet die
@@ -8172,6 +8182,7 @@ const Postausgang={
 
   _laeuft:false,
   async senden({laut=false}={}){
+    if(!POSTFACH_AN) return {raus:0,offen:0};
     if(this._laeuft) return {raus:0,offen:this.anzahl()};
     const l=await this._alle();
     if(!l.length) return {raus:0,offen:0};
@@ -8212,10 +8223,36 @@ const Postausgang={
   },
 };
 
+/* ══ DAS POSTFACH SCHLAEFT — UND ZWAR NACHWEISLICH ══════════════════════
+   14.08.2026, Jan: „wir wollen nicht zwischenspeichern weil das rechtlich
+   und kostenmaessig mist ist ... ist nicht lean."
+
+   Bis heute stand ueber dem Zaehltext des Posteingangs der Kommentar „(das
+   Postfach schlaeft)" — der CODE aber rief `abholen()` bei JEDEM Start, bei
+   jedem Tab-Wechsel und bei jedem `online`-Ereignis. Ungated. Dabei ging
+   eine dauerhafte Pseudonym-Kennung (fach + signPub + Signatur) samt IP an
+   unseren Dienst, auch beim reinen Demo-Besuch von der Verkaufsseite.
+   Waehrend Datenschutzerklaerung, AGB und Terms an drei Stellen zusagen,
+   wir stellten „keinen Uebertragungsweg" bereit — und postfach.carlon.app
+   in keinem der Rechtstexte ueberhaupt vorkommt.
+
+   Eine schlafende Absicht ist kein schlafender Dienst. Der Schalter
+   `window.CARLON_POSTFACH` existierte laengst und stand laengst auf false
+   (live.js) — nur las ihn ausschliesslich messen.html. Jetzt liest ihn auch
+   das Cockpit.
+
+   GATE AN DER ENGSTELLE, nicht an den acht Aufrufstellen: jeder Weg zum
+   Dienst geht durch `_ruf`. Ein Gate pro Aufrufer haette beim naechsten
+   neunten Aufrufer geschwiegen. Zusaetzlich steigen `abholen`,
+   `uebergabeEmpfangen` und `Postausgang.senden` frueh aus, damit kein
+   Zustand und kein Toast entsteht, der einen Weg behauptet, den es nicht
+   gibt. Der Ersatz existiert und ist besser: der DATEIWEG. */
 const Postfach={
   DIENST:'https://postfach.carlon.app',
   _laeuft:false, _letzter:0,
   async _ruf(pfad, leib){
+    /* Die eine Tuer. Steht sie zu, kommt nichts hinaus — egal wer klopft. */
+    if(!POSTFACH_AN) return {ok:false,grund:'Postfach ist abgeschaltet'};
     const r=await fetch(this.DIENST+pfad,{method:'POST',
       headers:{'Content-Type':'application/json'}, body:JSON.stringify(leib)});
       License.ZEIT.ausAntwort(r);   // Serverzeit ernten, kostet keine Anfrage
@@ -8232,6 +8269,7 @@ const Postfach={
      Er wird sofort aus der Adresszeile entfernt, damit er nicht im
      Verlauf des Browsers stehen bleibt. */
   async uebergabeEmpfangen(){
+    if(!POSTFACH_AN) return false;
     const h=String(location.hash||'');
     const m=h.match(/(?:^#|&)uebergabe=([A-Za-z0-9_-]+)/);
     if(!m) return false;
@@ -8327,6 +8365,10 @@ const Postfach={
   offene(){ return (State.settings.eingang||[]).filter(x=>x.inhalt&&!x.importiert).length; },
   unlesbare(){ return (State.settings.eingang||[]).filter(x=>x.unlesbar).length; },
   async abholen({laut=false}={}){
+    /* VOR `Praxis.ich()` aussteigen: das legt bei fehlender Identitaet ein
+       Schluesselpaar an und persistiert es — auch im Demo-Modus. Ein
+       Besucher, der nur schauen wollte, hinterliesse sonst eine Kennung. */
+    if(!POSTFACH_AN) return {neu:0};
     if(this._laeuft) return {neu:0};
     if(!navigator.onLine){ if(laut) Toast.show('Kein Netz — der Posteingang wird beim nächsten Mal geholt','info'); return {neu:0}; }
     if(Date.now()-this._letzter<60000 && !laut) return {neu:0};
@@ -9791,7 +9833,7 @@ function showTour(){
     <div class="lead">Ein Aushang im Stall, und Ihre Kundinnen messen selbst. Die Aufnahmen kommen verschlüsselt zu Ihnen, Sie beurteilen ohne Anfahrt — und Ihre Patienten bleiben zwischen den Terminen sichtbar.</div>
     <div class="tour-steps">
       <div class="tstep"><div class="ti">${IC.qr}</div><div><b>1 · Aushang aufhängen</b><span>Ein Blatt mit QR-Code für den ganzen Stall. Ihre Kundinnen brauchen kein Konto.</span></div></div>
-      <div class="tstep"><div class="ti">${IC.postfach}</div><div><b>2 · Aufnahmen kommen an</b><span>Verschlüsselt in Ihr Postfach. Das Board sortiert nach Dringlichkeit, kritische zuerst.</span></div></div>
+      <div class="tstep"><div class="ti">${IC.postfach}</div><div><b>2 · Aufnahmen kommen an</b><span>Die Halterin schickt Ihnen die Datei — hineinziehen, fertig. Das Board sortiert nach Dringlichkeit, kritische zuerst.</span></div></div>
       <div class="tstep"><div class="ti">${IC.senden}</div><div><b>3 · Befund zurückschicken</b><span>Ohne Anfahrt. Wer rausfahren muss, bekommt die Route nach Dringlichkeit.</span></div></div>
       <div class="tstep"><div class="ti"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1v22M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg></div><div><b>4 · Abrechnen</b><span>Jeder Befund wird als offene Fern-Leistung erfasst. Satz und Ziffer bestimmen Sie.</span></div></div>
     </div>
