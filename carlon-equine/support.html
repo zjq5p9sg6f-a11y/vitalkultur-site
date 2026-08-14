@@ -70,10 +70,13 @@
     <p>Die Messstation legt am Ende eine Datei <code>CARLON_&lt;Pferd&gt;_&lt;Datum&gt;.json</code> auf deinem Gerät an — die schickst du deiner Praxis wie ein Foto, auf dem Weg, den ihr ohnehin nutzt. Sie enthält nur die Messung deines Pferds; Halter-Name und Tierarzt-Kontakte stecken nicht darin. Hat deine Praxis einen CARLON-Aushang, ist die Datei für sie versiegelt. Die Praxis öffnet sie im Browser und sieht die volle Auswertung. Sobald die App im App Store ist, teilst du den Export auch von dort mit einem Tap.</p>
   </details>
   <details><summary>Warum stellt CARLON keine Diagnose?</summary>
-    <p>CARLON Equine ist ein Forschungs- und Beobachtungs-Werkzeug, <strong>kein Medizinprodukt</strong> unter MDR oder FDA. Alle On-Screen-Flags sind Beobachtungshinweise, die eine tierärztliche Folge-Konsultation erfordern — niemals Diagnosen. So bleibt der Befund immer beim Tierarzt.</p>
+    <p>CARLON Equine ist ein Forschungs- und Beobachtungs-Werkzeug, <strong>kein Medizinprodukt</strong> unter MDR oder FDA. Alle Hinweise auf dem Bildschirm sind Beobachtungshinweise, die eine tierärztliche Folge-Konsultation erfordern — niemals Diagnosen. So bleibt der Befund immer beim Tierarzt.</p>
+  </details>
+  <details><summary>Woher kommen die Referenzbereiche?</summary>
+    <p>Zum größten Teil von uns selbst — und das steht überall dabei, wo ein solcher Wert erscheint. Für die HRV beim Pferd gibt es keinen allgemein anerkannten Normbereich; die Bereiche, gegen die CARLON vergleicht, sind begründete eigene Festlegungen und ausdrücklich als solche gekennzeichnet. Wo ein Wert wirklich aus einer Studie stammt, steht die Studie mit Namen dabei. Deshalb ist die aussagekräftigste Zahl nicht der Absolutwert, sondern die Abweichung von den <strong>eigenen früheren Messungen deines Pferds</strong>. Wie jede Stufe rechnet, steht offen in der <a href="/carlon-equine/methodik.html">Methoden-Dokumentation</a>.</p>
   </details>
   <details><summary>Kubios / eigene Analyse</summary>
-    <p>Der Export ist Kubios-kompatibel (Roh-RR als JSON und als CSV, eine Spalte <code>rr_ms</code>) und trägt einen SHA-256-Integritäts-Hash plus W3C-PROV-Provenance-Kette — reproduzierbar und audit-fest für R/Python/Kubios-Workflows.</p>
+    <p>Der Export ist Kubios-kompatibel (Roh-RR als JSON und als CSV, eine Spalte <code>rr_ms</code>) und trägt einen SHA-256-Integritäts-Hash plus W3C-PROV-Provenance-Kette. Du kannst also jede Zahl unabhängig nachrechnen und nachweisen, dass die Datei unterwegs unverändert geblieben ist — in R, Python oder Kubios.</p>
   </details>
 
   <div class="disclaimer">

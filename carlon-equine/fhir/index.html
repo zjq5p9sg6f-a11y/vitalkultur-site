@@ -1,0 +1,259 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>FHIR namespace · CARLON Equine Biometrics</title>
+<meta name="description" content="Definitions for every canonical URI carried by a CARLON Equine Biometrics FHIR bundle: identifier systems, structure definitions, the biometrics code system, the beat-label vocabulary and the conformance levels.">
+<meta name="robots" content="index,follow">
+<link rel="icon" href="/assets/equine-mark-224.png">
+
+<!-- ══════════════════════════════════════════════════════════════════════
+     WARUM ES DIESE SEITE GIBT
+     ─────────────────────────────────────────────────────────────────────
+     Jedes FHIR-Bundle, das dieses Haus verlässt, trägt kanonische Adressen
+     unter https://vitalkultur.com/carlon-equine/fhir/ . FHIR verlangt nicht,
+     dass eine `system`-URI antwortet — aber eine URI mit dem Schema https://
+     VERSPRICHT es. Wer unser Bundle prüft, schlägt genau das zuerst nach.
+     Findet er nichts, ist der erste Eindruck ein gebrochenes Versprechen.
+
+     Bis 2026-08-14 lautete die Basis https://carlon.equine/fhir/ . Die konnte
+     nie antworten: .equine ist keine delegierte Top-Level-Domain — sie steht
+     nicht in der Wurzelzone (.horse, .vet, .health gibt es; das machte den
+     Irrtum leicht). Korrigiert VOR der DOI-Vergabe, weil ein DOI die
+     Bezeichnung dauerhaft einfriert.
+
+     SPRACHE: englisch, wie die normative Fassung des Standards. FHIR, LOINC
+     und EQDS sind es, und diese Seite löst die URIs auf, die ein
+     Implementierer irgendwo auf der Welt im Bundle vor sich hat.
+
+     BEWACHT: `LogicTests/run.sh` im Repo CarlonEquine lässt keine
+     .equine-Adresse mehr in den Exportpfad zurück.
+
+     KEIN DEPLOY OHNE FREIGABE.
+     ══════════════════════════════════════════════════════════════════════ -->
+
+<style>
+:root{
+  --bg:#FFFFFF; --text:#15181A; --sec:#41494E; --dim:#5C666C; --line:#D9DFE2;
+  --akzent:#1E8C78; --akzent-hell:#E8F5F2; --warn:#8A5A00; --warn-hell:#FDF6E7;
+  --mono:ui-monospace,'SF Mono',Menlo,monospace;
+  --ui:system-ui,-apple-system,'Segoe UI',sans-serif;
+  --sp:clamp(18px,3vw,30px);
+}
+@media (prefers-color-scheme:dark){
+  :root{--bg:#0E1113;--text:#ECEFF1;--sec:#B3BCC1;--dim:#8A959B;--line:#252B2F;
+    --akzent:#3ECFB2;--akzent-hell:#12211E;--warn:#FFC46B;--warn-hell:#241C0C}
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font-family:var(--ui);line-height:1.65;
+  -webkit-font-smoothing:antialiased;padding:var(--sp);display:flex;justify-content:center}
+.blatt{width:100%;max-width:860px}
+header{border-bottom:2px solid var(--text);padding-bottom:18px;margin-bottom:30px}
+.marke{font-family:var(--mono);font-size:11px;letter-spacing:.28em;text-transform:uppercase;color:var(--akzent);font-weight:700}
+h1{font-size:clamp(24px,3.6vw,34px);letter-spacing:-.02em;margin:10px 0 6px;font-weight:650}
+.unter{color:var(--dim);font-size:15px;max-width:70ch}
+.stand{font-family:var(--mono);font-size:11.5px;color:var(--dim);margin-top:12px}
+h2{font-size:clamp(18px,2.4vw,22px);margin:38px 0 12px;padding-top:14px;border-top:1px solid var(--line);font-weight:640}
+h3{font-size:16px;margin:24px 0 8px;font-weight:640}
+p{margin:0 0 12px;color:var(--sec);max-width:70ch}
+p strong,li strong,td strong{color:var(--text)}
+ul,ol{margin:0 0 14px 22px;color:var(--sec)}
+li{margin-bottom:6px}
+a{color:var(--akzent)}
+code{font-family:var(--mono);font-size:.92em}
+.wrap{overflow-x:auto;margin:14px 0 18px}
+table{width:100%;border-collapse:collapse;font-size:14px}
+th,td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--dim);font-weight:700}
+td.wert{font-family:var(--mono);color:var(--text);font-weight:600;white-space:nowrap}
+/* KEIN nowrap auf .quelle: die Statusspalte trägt ganze Sätze und würde sonst
+   die Display-Spalte auf ein Wort pro Zeile quetschen (gemessen 14.08.). */
+td.quelle{font-size:13px;color:var(--dim)}
+th:nth-child(2),td:nth-child(2){min-width:15ch}
+.kasten{background:var(--akzent-hell);border:1px solid var(--line);border-radius:10px;padding:14px 16px;margin:18px 0}
+.kasten.warn{background:var(--warn-hell)}
+.kasten h4{font-size:14px;margin-bottom:6px;color:var(--text)}
+.kasten p{margin-bottom:0;font-size:14px}
+.uri{display:block;font-family:var(--mono);font-size:13px;color:var(--text);font-weight:600;
+  background:var(--akzent-hell);border:1px solid var(--line);border-radius:8px;
+  padding:9px 12px;margin:8px 0 10px;overflow-x:auto;white-space:nowrap}
+.basis{font-family:var(--mono);font-size:clamp(12px,2vw,15px);font-weight:650;color:var(--akzent);
+  word-break:break-all;margin-top:14px}
+footer{margin-top:44px;padding-top:18px;border-top:1px solid var(--line);font-size:13px;color:var(--dim)}
+footer p{font-size:13px;color:var(--dim)}
+</style>
+</head>
+<body>
+<div class="blatt">
+
+<header>
+  <div class="marke">CARLON Equine Biometrics</div>
+  <h1>FHIR namespace</h1>
+  <p class="unter">Every canonical URI carried by a CARLON Equine Biometrics bundle is defined on
+  this page: what the term means, and where the specification defines it normatively.</p>
+  <div class="basis">https://vitalkultur.com/carlon-equine/fhir/</div>
+  <div class="stand">Specification 0.3 (Draft) · page updated 2026-08-14 · licence CC BY 4.0</div>
+</header>
+
+<p>These URIs are <strong>identifiers</strong>. FHIR requires an <code>Observation.code.coding.system</code>,
+an <code>identifier.system</code> or a <code>meta.profile</code> entry to be a URI; it does not require the
+URI to be fetched, and no conformance rule in the specification depends on fetching anything. A URI
+carrying the <code>https://</code> scheme nevertheless <em>promises</em> resolution — so these resolve, here.</p>
+
+<div class="kasten warn">
+  <h4>If you are holding a bundle with <code>https://carlon.equine/…</code></h4>
+  <p>That is a <strong>pre-0.3-final</strong> bundle, and it is not invalid. The namespace base moved on
+  2026-08-14, because <code>.equine</code> is not a delegated top-level domain and those URIs could
+  therefore never resolve. Map the old base onto the new one segment for segment — nothing else
+  changed: no code, no structure, no meaning. Consumers <strong>MAY</strong> accept both bases;
+  producers conforming to 0.3 <strong>MUST</strong> emit only the new one. Rationale: §4.1.</p>
+</div>
+
+<h2 id="identifiers">1. Identifier systems</h2>
+<p>The namespaces a <code>Patient.identifier</code> may be qualified with, so that a recording can be
+matched onto a horse in a third-party system. A producer <strong>SHOULD</strong> emit every identifier
+it holds; a consumer <strong>MUST</strong> match on any of them. Normative: §5.1.</p>
+
+<span class="uri">https://vitalkultur.com/carlon-equine/fhir/subject</span>
+<p>The subject identifier assigned by CARLON Equine — stable for the life of the horse's record
+within this system, and meaningless outside it. It is the fallback anchor when no external
+identity is available.</p>
+
+<div class="wrap"><table>
+<thead><tr><th>Also defined by us</th><th>Meaning</th><th>Section</th></tr></thead>
+<tbody>
+<tr><td class="wert">urn:carlon:clinic-patient-id</td><td>The patient number held by the clinic or practice management system that produced or received the recording.</td><td class="quelle">§5.1</td></tr>
+<tr><td class="wert">urn:carlon:equine-passport</td><td>The identifier printed in the horse's equine passport.</td><td class="quelle">§5.1</td></tr>
+</tbody>
+</table></div>
+<p>These two are <code>urn:</code> identifiers by design: a URN makes no promise of resolution, which is
+the honest form for a namespace that has no page behind it. Bundles additionally carry the external
+systems <code>https://www.ueln.net</code> (UELN), <code>urn:iso:std:iso:11784</code> (microchip) and
+<code>https://data.fei.org</code> (FEI ID), none of which are ours to define.</p>
+
+<h2 id="structures">2. Structure definitions</h2>
+<p>What a bundle declares itself to be. Normative: §4.</p>
+
+<span class="uri">https://vitalkultur.com/carlon-equine/fhir/StructureDefinition/equine-biometrics-bundle</span>
+<p>The bundle profile. <code>Bundle.meta.profile</code> <strong>MUST</strong> include it. The profile
+requires one <code>Patient</code> (the horse), one <code>Device</code> carrying sensor <em>and</em> analysis
+provenance, and at least one <code>Observation</code>, each with a UCUM unit and a category. Normative: §4.</p>
+
+<span class="uri">https://vitalkultur.com/carlon-equine/fhir/StructureDefinition/animal-species</span>
+<p>The extension on <code>Patient</code> that states the species. FHIR R5 has no species element on
+<code>Patient</code>, and a biometrics bundle that does not say which animal it describes is not
+interpretable. Normative: §4.</p>
+
+<h2 id="codesystem">3. The biometrics code system</h2>
+<p>The vocabulary this specification contributes: the equine HRV and rhythm layer that LOINC and
+EQDS do not cover today. LOINC is used wherever an established code exists. Units are UCUM.
+Normative: §5.2.</p>
+
+<span class="uri">https://vitalkultur.com/carlon-equine/fhir/CodeSystem/equine-biometrics</span>
+
+<div class="wrap"><table>
+<thead><tr><th>Code</th><th>Display</th><th>Unit</th><th>Validation status</th></tr></thead>
+<tbody>
+<tr><td class="wert">mean-hr</td><td>Mean heart rate</td><td class="quelle">/min</td><td class="quelle">established · LOINC 8867-4</td></tr>
+<tr><td class="wert">resting-hr</td><td>Resting heart rate — the 10th percentile of the median-3 filtered series, <strong>not</strong> the minimum</td><td class="quelle">/min</td><td class="quelle">established</td></tr>
+<tr><td class="wert">peak-hr</td><td>Peak heart rate</td><td class="quelle">/min</td><td class="quelle">established</td></tr>
+<tr><td class="wert">recovery-hr-60s</td><td>Recovery heart rate, 60 s after peak</td><td class="quelle">/min</td><td class="quelle">established</td></tr>
+<tr><td class="wert">hrv-rmssd</td><td>HRV RMSSD</td><td class="quelle">ms</td><td class="quelle">established (Task Force 1996); equine ranges under validation</td></tr>
+<tr><td class="wert">hrv-sdnn</td><td>HRV SDNN</td><td class="quelle">ms</td><td class="quelle">established</td></tr>
+<tr><td class="wert">hrv-sd1</td><td>Poincaré SD1</td><td class="quelle">ms</td><td class="quelle">established (Brennan 2001)</td></tr>
+<tr><td class="wert">hrv-sd2</td><td>Poincaré SD2</td><td class="quelle">ms</td><td class="quelle">established (Brennan 2001)</td></tr>
+<tr><td class="wert">hrv-pnn50</td><td>pNN50</td><td class="quelle">%</td><td class="quelle">established</td></tr>
+<tr><td class="wert">baevsky-si-sqrt</td><td>Baevsky stress index (√)</td><td class="quelle">1</td><td class="quelle">equine-adapted, under validation</td></tr>
+<tr><td class="wert">dfa-alpha1</td><td>DFA α1</td><td class="quelle">1</td><td class="quelle">research</td></tr>
+<tr><td class="wert">deceleration-capacity</td><td>Deceleration capacity</td><td class="quelle">ms</td><td class="quelle">established in humans (Bauer 2006); equine under validation</td></tr>
+<tr><td class="wert">artifact-rate-pct</td><td>Artefact / correction rate</td><td class="quelle">%</td><td class="quelle">data quality (Lipponen–Tarvainen 2019)</td></tr>
+<tr><td class="wert">ectopic-beat-count</td><td>Ectopic beats</td><td class="quelle">1</td><td class="quelle">data quality</td></tr>
+<tr><td class="wert">motion-artifact-count</td><td>Motion artefacts</td><td class="quelle">1</td><td class="quelle">data quality</td></tr>
+<tr><td class="wert">rr-pattern-av-block-2deg</td><td>RR pattern, 2° AV-block type — <strong>overview</strong></td><td class="quelle">1</td><td class="quelle">descriptive only · ECG confirmation required · physiologically normal in the resting horse</td></tr>
+<tr><td class="wert">rr-intervals-raw</td><td>Raw RR intervals, unrounded, in recording order (§5.4)</td><td class="quelle">attachment</td><td class="quelle">source data</td></tr>
+<tr><td class="wert">rr-beat-labels</td><td>Beat classification, run-length encoded (§5.4.1)</td><td class="quelle">attachment</td><td class="quelle">descriptive only</td></tr>
+<tr><td class="wert">measurement-profile</td><td>The complete filter parameter set that produced these numbers (§5.4.3)</td><td class="quelle">attachment</td><td class="quelle">provenance</td></tr>
+<tr><td class="wert">session-duration</td><td>Recording duration</td><td class="quelle">min</td><td class="quelle">—</td></tr>
+</tbody>
+</table></div>
+
+<h3>Coherence codes (§5.5)</h3>
+<div class="wrap"><table>
+<thead><tr><th>Code</th><th>Display</th><th>Unit</th><th>Status</th></tr></thead>
+<tbody>
+<tr><td class="wert">hf-coherence</td><td>Heart-rate coherence human↔horse</td><td class="quelle">1</td><td class="quelle">under scientific validation</td></tr>
+<tr><td class="wert">sensor-sync-skew</td><td>Sensor synchronisation skew</td><td class="quelle">us</td><td class="quelle">synchronisation evidence</td></tr>
+<tr><td class="wert">paired-delta-rmssd</td><td>Δ RMSSD, paired-clean</td><td class="quelle">ms</td><td class="quelle">multi-sensor quality</td></tr>
+<tr><td class="wert">coherence-device-count</td><td>Parallel sensors (≥2 pair · &gt;2 herd)</td><td class="quelle">1</td><td class="quelle">—</td></tr>
+</tbody>
+</table></div>
+<p>Coherence here is a <strong>statistical</strong> relationship established against surrogate data. It is
+not an emotional interpretation and not a diagnosis.</p>
+
+<h2 id="beat-labels">4. The beat-label vocabulary</h2>
+<p>The labels carried inside the <code>rr-beat-labels</code> attachment, as run-length pairs
+(<code>[["N",26],["LS",1],…]</code>) positionally aligned with the raw series. The vocabulary is closed:
+a third vocabulary is not permitted, and a label carries the same meaning in every output of the
+same producer. Normative: §5.4.1.</p>
+
+<div class="wrap"><table>
+<thead><tr><th>Label</th><th>Meaning</th></tr></thead>
+<tbody>
+<tr><td class="wert">N</td><td>Normal beat.</td></tr>
+<tr><td class="wert">LS</td><td>Long–short pair.</td></tr>
+<tr><td class="wert">S</td><td>Premature beat.</td></tr>
+<tr><td class="wert">AVB</td><td>RR pattern of the second-degree AV-block type — a physiological, vagally mediated pattern and the most frequent rhythm finding in the resting horse.</td></tr>
+<tr><td class="wert">L</td><td>Long RR consistent with a <em>missed</em> R wave — an equipment observation, not a cardiac one.</td></tr>
+<tr><td class="wert">X</td><td>Discarded: a beat that enters no derived value. Never a statement about what the beat was.</td></tr>
+</tbody>
+</table></div>
+<p><code>L</code> and <code>AVB</code> both describe a long interval and <strong>MUST NOT</strong> be merged.
+A producer that cannot separate the two <strong>MUST</strong> label the beat <code>X</code> rather than
+guess — emitting <code>L</code> asserts that the distinction was actually made.</p>
+
+<h2 id="conformance">5. Conformance levels</h2>
+<p>What an implementation claims it can do. An implementation <strong>SHOULD</strong> state its level;
+a conformance claim without a stated level is meaningless. Normative: §2.1.</p>
+
+<span class="uri">https://vitalkultur.com/carlon-equine/fhir/CodeSystem/conformance-level</span>
+
+<div class="wrap"><table>
+<thead><tr><th>Code</th><th>Name</th><th>Requirement</th></tr></thead>
+<tbody>
+<tr><td class="wert">L1</td><td>Consumer</td><td>Reads a conformant bundle and ignores unknown codes without error (§7).</td></tr>
+<tr><td class="wert">L2</td><td>Producer</td><td>Emits a conformant bundle: Patient + Device + ≥1 Observation, UCUM units, declared provenance.</td></tr>
+<tr><td class="wert">L3</td><td>Verifiable Producer</td><td>L2 <strong>plus</strong> the raw RR series (§5.4), so that every derived value can be independently recomputed.</td></tr>
+</tbody>
+</table></div>
+<p>A producer that holds a classification it cannot align positionally with the raw series
+<strong>MUST</strong> declare the lower level it actually reached rather than the level it aimed at.</p>
+
+<h2 id="spec-version">6. Specification version</h2>
+<span class="uri">https://vitalkultur.com/carlon-equine/fhir/spec-version</span>
+<p>Carried as a <code>Bundle.meta.tag</code>, its code being the specification version the bundle was
+built against — e.g. <code>0.3</code>. A bundle that states its level and its version can be judged;
+one that does not has to be guessed at. Normative: §4.</p>
+
+<div class="kasten">
+  <h4>The criterion that matters</h4>
+  <p>Conformance at L3 is executable, not a prose promise: export → import → re-derive, with the raw
+  RR series bit-identical and every derived value reproducible to the published rounding precision
+  of its code (§2.2). A format that cannot survive its own round trip is a file format, not a
+  standard.</p>
+</div>
+
+<footer>
+  <p><strong>Not a diagnostic specification.</strong> This vocabulary defines how measurements
+  travel, never what they mean. It carries no reference ranges, no thresholds, no classification and
+  no risk scores; interpretation belongs to the attending veterinarian and is deliberately outside
+  its scope.</p>
+  <p>Normative document: <em>CARLON Equine Biometrics — An Open Data Standard for Equine Cardiac
+  Biometrics</em>, version 0.3 (Draft), 2026-08-14. Licensed <strong>CC BY 4.0</strong> — free to use,
+  implement, quote and extend, with attribution. Errata and code proposals: §12.1 / §12.2 of the
+  specification.</p>
+</footer>
+
+</div>
+</body>
+</html>

@@ -125,7 +125,7 @@
         sensors (e.g. Polar H10). Includes browser-based viewer at
         vitalkultur.com/carlon-equine/ for veterinarians. <strong>Not a
         medical device for human or veterinary use.</strong> All on-screen
-        markers, cutoffs and indicators are screening hints based on
+        markers, cutoffs and indicators are observation hints based on
         peer-reviewed scientific literature, never diagnoses. Clinical
         decisions remain the responsibility of the licensed treating
         veterinarian.
@@ -154,10 +154,22 @@
         interface (“Web Bluetooth”); recording and analysis run exclusively on
         the user's device. No user account is created.
       </p>
+      <!-- 14.08.2026 — this used to read: "The recording is encrypted on the
+           user's device before it is sent." Stated unconditionally, while the
+           code only honours it conditionally: with no practice key there is
+           nothing to encrypt against, and the reduced dataset applies instead
+           (section 9a (3); ARME_FELDER in messen.html). An assurance that
+           holds in the ordinary case and fails in the exception is the more
+           dangerous kind. The sentence now carries its condition. -->
       <p>
         On the user's own initiative a recording can be handed over to a
-        veterinary practice using the cockpit under 2.5. The recording is
-        encrypted on the user's device before it is sent — see section 9a.
+        veterinary practice using the cockpit under 2.5. If the station was
+        opened via that practice's poster or invitation, its public key is
+        present and the file is encrypted on the user's device before it is
+        passed on. Where no practice key is present, encryption is technically
+        impossible; the file is then limited to a <strong>reduced
+        dataset</strong> containing no details about the user as a person and
+        no identifier of their device. See section 9a.
       </p>
       <p>
         <strong>The measuring station is not a medical device</strong> under
@@ -218,14 +230,19 @@
       qualified medical professional before beginning any breathing program.
     </p>
 
-    <h3>3.2 CARLON Equine — clinical responsibility</h3>
-    <p>
-      CARLON Equine provides automated marker computation from validated
-      peer-reviewed studies. The final diagnostic interpretation, differential
-      consideration and therapeutic decision belongs exclusively to the
-      licensed treating veterinarian. This product is not a medical device
-      under MDR/FDA jurisdiction, neither for human nor veterinary medicine.
-    </p>
+    <!-- 14.08.2026 — section "3.2 CARLON Equine — clinical responsibility"
+         removed. It was the only place in either language that called the
+         underlying studies "validated"; the work behind the markers contains
+         no validation, and the wording was withdrawn in the code on the same
+         day ("validates the markers" → "describes the markers"). What was
+         left after striking that one word is already stated, and better
+         hedged, elsewhere: section 2.2 ("observation hints based on
+         peer-reviewed scientific literature, never diagnoses" · "Not a
+         medical device for human or veterinary use" · "Clinical decisions
+         remain the responsibility of the licensed treating veterinarian")
+         and section 8 (veterinary judgement remains mandatory). The German
+         § 9 never had an Equine subsection — both languages now say the
+         same thing in the same places. -->
 
     <!-- ============================================================
          IRON-MODE / COLD / HEAT — SPECIAL SAFETY

@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Specification version · CARLON Equine Biometrics</title>
+<meta name="description" content="Definition of the canonical FHIR URI https://vitalkultur.com/carlon-equine/fhir/spec-version">
+<link rel="canonical" href="https://vitalkultur.com/carlon-equine/fhir/spec-version">
+<link rel="icon" href="/assets/equine-mark-224.png">
+
+<!-- Diese Seite existiert, damit die URI, die IM BUNDLE steht, selbst antwortet
+     und nicht nur ihre Basis. Erzeugt aus scripts-Vorlage; Inhalt ist eine
+     Kurzfassung des Abschnitts auf ../ (Namensraum-Uebersicht). -->
+
+<style>
+:root{--bg:#FFFFFF;--text:#15181A;--sec:#41494E;--dim:#5C666C;--line:#D9DFE2;
+  --akzent:#1E8C78;--akzent-hell:#E8F5F2;
+  --mono:ui-monospace,'SF Mono',Menlo,monospace;
+  --ui:system-ui,-apple-system,'Segoe UI',sans-serif;--sp:clamp(18px,3vw,30px);}
+@media (prefers-color-scheme:dark){
+  :root{--bg:#0E1113;--text:#ECEFF1;--sec:#B3BCC1;--dim:#8A959B;--line:#252B2F;
+    --akzent:#3ECFB2;--akzent-hell:#12211E}
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font-family:var(--ui);line-height:1.65;
+  -webkit-font-smoothing:antialiased;padding:var(--sp);display:flex;justify-content:center}
+.blatt{width:100%;max-width:720px}
+.marke{font-family:var(--mono);font-size:11px;letter-spacing:.28em;text-transform:uppercase;color:var(--akzent);font-weight:700}
+h1{font-size:clamp(21px,3vw,28px);letter-spacing:-.02em;margin:10px 0 14px;font-weight:650}
+p{margin:0 0 12px;color:var(--sec);max-width:70ch}
+p strong{color:var(--text)}
+code{font-family:var(--mono);font-size:.92em}
+a{color:var(--akzent)}
+.uri{display:block;font-family:var(--mono);font-size:13px;color:var(--text);font-weight:600;
+  background:var(--akzent-hell);border:1px solid var(--line);border-radius:8px;
+  padding:9px 12px;margin:0 0 18px;overflow-x:auto;white-space:nowrap}
+.fuss{margin-top:32px;padding-top:16px;border-top:1px solid var(--line);font-size:13px;color:var(--dim)}
+.fuss p{font-size:13px;color:var(--dim)}
+</style>
+</head>
+<body>
+<div class="blatt">
+  <div class="marke">CARLON Equine Biometrics</div>
+  <h1>Specification version</h1>
+  <span class="uri">https://vitalkultur.com/carlon-equine/fhir/spec-version</span>
+  <p>Carried as a <code>Bundle.meta.tag</code>, its code being the specification version the bundle was built against — e.g. <code>0.3</code>. A bundle that states its level and its version can be judged; one that does not has to be guessed at.</p>
+  <p><strong>Normative definition:</strong> &sect;4 of <em>CARLON Equine Biometrics — An Open Data
+  Standard for Equine Cardiac Biometrics</em>, version 0.3 (Draft).
+  <a href="../#spec-version">All terms in this namespace &rarr;</a></p>
+  <div class="fuss">
+    <p>This URI is an <strong>identifier</strong>. FHIR does not require it to be fetched — but a URI
+    carrying the <code>https://</code> scheme promises resolution, so it resolves.
+    A bundle bearing the former base <code>https://carlon.equine/&hellip;</code> is a pre-0.3-final
+    bundle: map the base across, nothing else changed.</p>
+    <p><strong>Not diagnostic.</strong> This vocabulary defines how measurements travel, never what
+    they mean. No reference ranges, no thresholds, no risk scores. Licensed <strong>CC BY 4.0</strong>.</p>
+  </div>
+</div>
+</body>
+</html>

@@ -162,7 +162,7 @@ document.head.appendChild(s);})();</script>
      "name": "What evidence sits behind the airway markers?",
      "acceptedAnswer": {
       "@type": "Answer",
-      "text": "The markers are calibrated against a published, BAL-referenced study (Nyerges-Bohák 2025, Equine Veterinary Journal, n = 40) and are shown individually with their thresholds. BAL cytology remains the gold standard — the trend does not replace it, it substantiates when it is due."
+      "text": "The reference study is Nyerges-Bohák 2025 (Equine Veterinary Journal, n = 40): 20 horses with severe asthma, BAL-referenced, against 20 unremarkable controls. The study reports group differences and names SD2, SDNN, TINN and SD2/SD1 as the more discriminating measures — it contains no threshold value. Ours sit midway between its group means; that is our own derivation, not a value from the literature, and every threshold is listed individually. BAL cytology remains the gold standard — the trend does not replace it, it substantiates when it is due."
      }
     },
     {
@@ -870,7 +870,7 @@ html.rev-an .rev.in{opacity:1;transform:none}
 
 <!-- ── 2 · DER STRUKTURELLE VORTEIL ────────────────────────────────────
      Das stärkste Argument der ganzen Seite, und es ist kein Marketing:
-     Der Screener verlangt ≥ 7 Minuten Ruhe. Nach Verladung und Fahrt ist
+     Die Atemwegs-Auswertung verlangt ≥ 7 Minuten Ruhe. Nach Verladung und Fahrt ist
      diese Bedingung systematisch nicht erfüllt. -->
 <section>
   <div class="wrap">
@@ -1087,7 +1087,7 @@ html.rev-an .rev.in{opacity:1;transform:none}
       <div>
         <b>See the report before you decide anything.</b>
         <span>Generated from the demo library (fictitious sample data) — key values, heart-rate and HRV
-        curve, Poincaré plot, RR distribution, power spectrum after Visser (2002) and the RMSSD
+        curve, Poincaré plot, RR distribution, power spectrum in the equine frequency bands and the RMSSD
         trend across weeks, plus a "Method & limits" section naming the sources.
         The report delivers the data; the findings are made by your practice.</span>
       </div>
@@ -1114,10 +1114,13 @@ html.rev-an .rev.in{opacity:1;transform:none}
         <!-- Die Studie steht mit NAMEN da — „eine veroeffentlichte Studie"
              ist fuer eine studierte Leserin ein rotes Tuch: welche? Die
              Referenz traegt die App selbst (asthma.js, DOI 10.1111/evj.14414). -->
-        <p>HRV-based markers with their thresholds, listed individually — calibrated against
-           a BAL-referenced study (Nyerges-Bohák 2025, Equine Veterinary Journal,
-           n = 40). An <strong>observational note</strong>, explicitly not a
-           diagnosis: BAL cytology remains the gold standard.</p>
+        <p>HRV-based markers with their thresholds, listed individually. The reference study is
+           Nyerges-Bohák 2025 (Equine Veterinary Journal, n = 40): 20 horses with severe
+           asthma, BAL-referenced, against 20 unremarkable controls. It reports group
+           differences, <strong>no threshold values</strong> — ours sit midway between them
+           and are therefore our own derivation. An
+           <strong>observational note</strong>, explicitly not a diagnosis: BAL
+           cytology remains the gold standard.</p>
       </div>
       <div class="card">
         <h3>The familiar views, at proper resolution</h3>
@@ -1152,11 +1155,12 @@ html.rev-an .rev.in{opacity:1;transform:none}
     <div class="sec-eyebrow">Why the numbers hold</div>
     <h2>In horses, pauses are normal. Count them in and you measure nonsense.</h2>
     <p class="sec-lead">
-      Heart rate variability reads the balance of the autonomic nervous system — the
-      interplay of sympathetic and parasympathetic tone that shifts when the organism is
-      under strain. That is why the classification rests on the horse's own baseline;
-      only the airway markers additionally carry study-based thresholds
-      (Nyerges-Bohák 2025).
+      Heart rate variability is associated with the activity of the autonomic nervous
+      system — the interplay of sympathetic and parasympathetic tone. It is therefore not
+      a readout of a state: there is no robust normal value in the horse. That is why the
+      classification rests on the horse's own baseline. Only the airway markers carry
+      fixed thresholds in addition — and those are derived from the group means of a
+      study, not taken from it (Nyerges-Bohák 2025).
     </p>
     <p class="sec-lead" style="margin-top:var(--sp-21)">
       A resting horse shows AV-block pauses — physiological, not a finding. Count them in
@@ -1166,8 +1170,9 @@ html.rev-an .rev.in{opacity:1;transform:none}
     <div class="evidenz" aria-label="Evidence behind the airway markers">
       <span class="ev-cyan">Nyerges-Bohák 2025</span>
       <span>Equine Veterinary Journal</span>
-      <span>n = 40 · BAL-referenced</span>
+      <span>n = 40 · 20 sEA BAL-referenced vs. 20 controls</span>
       <span>DOI 10.1111/evj.14414</span>
+      <span>Thresholds: our own derivation</span>
     </div>
     <!-- Ohne .usps-Raster standen die drei Karten mit 0 px Abstand
          aufeinander — Kante an Kante, volle Seitenbreite. Dasselbe Raster
@@ -1178,7 +1183,9 @@ html.rev-an .rev.in{opacity:1;transform:none}
       <p>AV-block pauses, motion artefacts, implausible beats — the analysis detects
          and corrects them <strong>before</strong> any metric is computed. Whether a
          recording comes from the app or from the browser station: you get the same,
-         cleaned value.
+         cleaned value. And where a file demonstrably did <em>not</em> pass through
+         the chain, the report says so — those are raw values, and the report states
+         it instead of claiming a correction that never happened.
          <a href="/carlon-equine/methodik.html">Every stage with its threshold →</a></p>
     </div>
     <div class="usp">
@@ -1515,10 +1522,14 @@ html.rev-an .rev.in{opacity:1;transform:none}
       </div>
       <div class="card">
         <h3>What evidence sits behind the airway markers?</h3>
-        <p>The markers are calibrated against a published, BAL-referenced study
-           (Nyerges-Bohák 2025, Equine Veterinary Journal, n = 40) and are shown
-           individually with their thresholds. BAL cytology remains the gold standard —
-           the trend does not replace it, it substantiates when it is due.</p>
+        <p>The reference study is Nyerges-Bohák 2025 (Equine Veterinary Journal, n = 40):
+           20 horses with severe asthma, BAL-referenced, against 20 unremarkable controls.
+           The study reports group differences and names SD2, SDNN, TINN and SD2/SD1 as
+           the more discriminating measures — it contains no threshold value. Ours sit
+           midway between its group means; that is our own derivation, not a value from
+           the literature, and every threshold is listed individually. BAL cytology
+           remains the gold standard — the trend does not replace it, it substantiates
+           when it is due.</p>
       </div>
       <!-- Der Nacht-Einwand: jedes System, das Dringlichkeit einstuft,
            erzeugt potenziell die Erwartung, dass jemand hinsieht. Beide

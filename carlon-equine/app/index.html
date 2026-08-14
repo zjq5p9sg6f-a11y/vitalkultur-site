@@ -2151,7 +2151,7 @@ const Triage = {
     let forced=null;
     // ---- 1) App-eigene klinische Indikatoren (echte Exporte) ----
     const c=n.clinical||{};
-    if(c.afib && (c.afib.triggered||c.afib.exceedsCutoff)){forced='crit';flags.push('Rhythmus prüfen');reasons.push('Auffällig unregelmäßige Kurzzeit-Variabilität — Screening-Hinweis, keine Diagnose; bitte tierärztlich einordnen lassen (RMSSD trennt AF/Sinus, Broux 2018)');}
+    if(c.afib && (c.afib.triggered||c.afib.exceedsCutoff)){forced='crit';flags.push('Rhythmus prüfen');reasons.push('Auffällig unregelmäßige Kurzzeit-Variabilität — Beobachtungshinweis, keine Diagnose; bitte tierärztlich einordnen lassen (RMSSD trennt AF/Sinus, Broux 2018)');}
     if(c.colic && c.colic.triggered){
       const sev=(c.colic.severity||'').toLowerCase();
       flags.push('Kolik-Indikator');
@@ -2162,8 +2162,8 @@ const Triage = {
       else forced=forced||'watch';
     }
     if(c.asthma && c.asthma.triggered){
-      const sev=(c.asthma.severity||'').toLowerCase(); flags.push('Asthma-Screen');
-      reasons.push(`Asthma-Screening auffällig (${c.asthma.criteriaMet??'?'}/${c.asthma.criteriaTotal??'?'} Kriterien)`);
+      const sev=(c.asthma.severity||'').toLowerCase(); flags.push('Atemwege');
+      reasons.push(`Atemwegs-Beobachtung auffällig (${c.asthma.criteriaMet??'?'}/${c.asthma.criteriaTotal??'?'} Kriterien)`);
       if(sev.includes('high')||sev.includes('mod')) forced=Triage.max(forced,'elev'); else forced=Triage.max(forced,'watch');
     }
     // ---- 2) Ableitung aus Rohmetriken (kalibriert an Referenz-Kohorten) ----
@@ -2343,12 +2343,20 @@ const Triage = {
 };
 
 /* ════════════════════════════════════════════════════════════════════════
-   ASTHMA — equine-spezifisches Atemwegs-Screening auf HRV-Basis
+   ASTHMA — equine-spezifische Atemwegs-Beobachtung auf HRV-Basis
    Nutzt App-eigenen Random-Forest-Score (Nyerges-Bohák 2025) wenn vorhanden;
    sonst nur die atemwegs-relevanten Marker zeigen (SD2/SD1) — kein eigener Verdict.
    ════════════════════════════════════════════════════════════════════════ */
 const Asthma={
-  SEV:{low:{t:'niedriges Screening-Signal',c:'warn'},moderate:{t:'moderates Screening-Signal',c:'warn'},high:{t:'hohes Screening-Signal',c:'alert'}},
+  /* WORTLAUT AUS DER APP (MDR, Audit 13.08.): „Screening" bezeichnet in der
+     regulierten Medizin die systematische Reihenuntersuchung auf Krankheit
+     und legt damit eine diagnostische Zweckbestimmung nahe, die kein
+     Disclaimer zurueckholt. In der iOS-App ist das Wort als
+     Selbstbeschreibung in allen neun Sprachen entfernt; die Einstufungen
+     heissen dort Unauffaellig/Beobachten/Auffaellig (EquineAsthmaScreener-
+     Card.swift). Das Cockpit spricht ab hier dieselbe Sprache — Feld- und
+     Schema-NAMEN (asthmaScreen) bleiben, darauf matcht der Import. */
+  SEV:{low:{t:'Unauffällig',c:'warn'},moderate:{t:'Beobachten',c:'warn'},high:{t:'Auffällig',c:'alert'}},
 
   /* ── Selbst rechnen, wenn die App nichts mitgeschickt hat ──────────────
      Eine Aufnahme aus der Messstation traegt KEIN clinicalIndicators — sie
@@ -2449,13 +2457,13 @@ const Asthma={
   /* ── Der Kopf des Panels ───────────────────────────────────────────────
      Vier ehrliche Zustaende statt eines Urteils um jeden Preis:
        ausgeduennt  · die gespeicherte Reihe taugt nicht zum Rechnen
-       unzureichend · zu kurz oder zu wenige Schlaege (Screener-Riegel)
+       unzureichend · zu kurz oder zu wenige Schlaege (Riegel des Modells)
        Urteil       · mit HERKUNFT, denn eine Aussage ohne Quelle ist eine Behauptung
        nichts       · dann steht nur der Marker-Verlauf da */
   kopf(a,sev,inds){
-    if(a.ausgeduennt) return `<p style="font-size:12px;color:var(--text-dim);margin-bottom:10px">Die gespeicherte Schlagfolge dieser Aufnahme ist verdichtet — darauf lässt sich kein belastbares Atemwegs-Screening rechnen.</p>`;
-    if(a.unzureichend) return `<p style="font-size:12px;color:var(--text-dim);margin-bottom:10px">Datengrundlage zu klein — das Atemwegs-Screening braucht sieben Minuten Ruhe und 200 Schläge.</p>`;
-    if(!a.severity&&a.triggered==null) return `<p style="font-size:12px;color:var(--text-dim);margin-bottom:10px">Für diese Aufnahme liegt kein Atemwegs-Screening vor.</p>`;
+    if(a.ausgeduennt) return `<p style="font-size:12px;color:var(--text-dim);margin-bottom:10px">Die gespeicherte Schlagfolge dieser Aufnahme ist verdichtet — darauf lässt sich keine belastbare Atemwegs-Beobachtung rechnen.</p>`;
+    if(a.unzureichend) return `<p style="font-size:12px;color:var(--text-dim);margin-bottom:10px">Datengrundlage zu klein — die Atemwegs-Beobachtung braucht sieben Minuten Ruhe und 200 Schläge.</p>`;
+    if(!a.severity&&a.triggered==null) return `<p style="font-size:12px;color:var(--text-dim);margin-bottom:10px">Für diese Aufnahme liegt keine Atemwegs-Beobachtung vor.</p>`;
 
     const herkunft = a.quelle==='praxis'
       ? `in dieser Praxis aus der Aufnahme gerechnet`
@@ -2686,7 +2694,18 @@ const Importer = {
                 nonLinear:{ sd1Ms:num('hrv-sd1'), sd2Ms:num('hrv-sd2'), dfaAlpha1:num('dfa-alpha1') },
                 equineSpecific:{ avBlockCount:num('rr-pattern-av-block-2deg') } },
       quality:{ artifactRatePct:num('artifact-rate-pct') },
-      rrData: rr.map((v,i)=>({index:i,label:(labels&&labels[i])||'N',rrMs:v}))
+      /* KEIN ERFUNDENES ETIKETT. Hier stand `(labels&&labels[i])||'N'`: aus
+         „unbekannt" wurde damit „geprueft und unauffaellig" — eine Aussage,
+         die niemand getroffen hat. §5.4.1 des Standards verbietet das
+         ausdruecklich („A consuming system MUST NOT assign a default label of
+         `N`"), und zwar speziesbedingt: der AV-Block II° ist beim ruhenden
+         Pferd der haeufigste Rhythmusbefund und genau der, den eine
+         Ueberweisung tragen soll. Fehlt die Klassifikation ganz, traegt der
+         Schlag GAR KEIN Etikett (Abwesenheit = „nicht klassifiziert"); fehlt
+         sie nur an einzelnen Stellen, ist `X` das Vokabel der Spezifikation
+         fuer „nicht zuzuordnen" — geraten wird nicht. */
+      rrData: rr.map((v,i)=> labels ? {index:i,label:labels[i]||'X',rrMs:v}
+                                    : {index:i,rrMs:v})
     };
   },
   /* Die Befund-Datei traegt das Bundle als data-URI in sich. */
@@ -4481,7 +4500,11 @@ const Views={
       return `<button class="rr-chip" onclick="Views.openHorse('${h.id}')" title="${esc(h.name)}">${Views.avatar(h,22)}<span>${esc(h.name.split(/[\s(]/)[0])}</span><i class="rr-dot ${lvl}"></i></button>`;
     }).join('')}</div>`;
   },
-  keyFlag(tri){const f=(tri.flags||[]).find(x=>/Rhythmus|Kolik/.test(x))||(tri.flags||[]).find(x=>/Asthma|Signal|nachmessen/.test(x));if(!f)return'';const cls=/Rhythmus|Kolik/.test(f)?'red':'amber';return ` · <span class="chip ${cls}" style="padding:1px 6px;font-size:9px">${esc(f)}</span>`;},
+  /* „Atemweg" MUSS hier mitgesucht werden: die Fahne heisst seit dem
+     MDR-Wortlaut-Abgleich `Atemwege` statt `Asthma-Screen`. Ohne diesen
+     Zweig faende die Suche sie nicht mehr — die Fahne verschwaende
+     lautlos aus Zeile und Chip, ohne dass irgendwo ein Fehler auftaucht. */
+  keyFlag(tri){const f=(tri.flags||[]).find(x=>/Rhythmus|Kolik/.test(x))||(tri.flags||[]).find(x=>/Asthma|Atemweg|Signal|nachmessen/.test(x));if(!f)return'';const cls=/Rhythmus|Kolik/.test(f)?'red':'amber';return ` · <span class="chip ${cls}" style="padding:1px 6px;font-size:9px">${esc(f)}</span>`;},
   _suggestIdx:-1, _suggestList:[],
   updateSuggest(q){
     const box=$('#searchSuggest'); if(!box)return;
@@ -5098,7 +5121,7 @@ const Views={
               <div style="margin-top:8px;display:flex;gap:8px;align-items:center;flex-wrap:wrap">
                 <span class="tri-badge tri-${tri.level}"><span class="dot"></span>${Triage.LEVELS[tri.level].label}</span>
                 ${h.needsVisit?'<span class="chip visit">Besuch fällig</span>':''}
-                ${(tri.flags||[]).map(f=>`<span class="chip ${/Rhythmus|Kolik/.test(f)?'red':/Asthma|Signal/.test(f)?'amber':'cyan'}">${esc(f)}</span>`).join('')}
+                ${(tri.flags||[]).map(f=>`<span class="chip ${/Rhythmus|Kolik/.test(f)?'red':/Asthma|Atemweg|Signal/.test(f)?'amber':'cyan'}">${esc(f)}</span>`).join('')}
               </div>
               ${(h.owner||h.phone)?`<div class="detail-owner">
                 <span class="do-id">${IC.owner}<span class="do-txt"><b>${esc(h.owner||'Halter unbekannt')}</b><span>Halter</span></span></span>
@@ -5228,11 +5251,11 @@ const Views={
     const labels={rmssd_low:'RMSSD reduziert',sdnn_low:'SDNN reduziert',sd2_low:'SD2 reduziert',sd2_sd1_ratio_low:'SD2/SD1-Ratio reduziert',sd1_low:'SD1 reduziert'};
     const inds=a.indicators?Object.entries(a.indicators).filter(([k,v])=>v).map(([k])=>labels[k]||k):[];
     return `<div class="panel" style="margin-bottom:var(--s4)">
-      <h2 style="font-size:16px"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v7M8.5 9C6 10 5 12.5 5 15a3 3 0 006 0M15.5 9c2.5 1 3.5 3.5 3.5 6a3 3 0 01-6 0"/></svg>Atemwegs-Screening (HRV)</h2>
+      <h2 style="font-size:16px"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v7M8.5 9C6 10 5 12.5 5 15a3 3 0 006 0M15.5 9c2.5 1 3.5 3.5 3.5 6a3 3 0 01-6 0"/></svg>Atemwegs-Beobachtung (HRV)</h2>
       ${Asthma.kopf(a,sev,inds)}
       ${Asthma.verlauf(a)}
       ${a.sd2sd1Series.length>1?`<div class="chart-wrap" style="margin:0"><div class="ct"><span>SD2/SD1-Ratio · sympatho-vagale Balance</span></div>${Chart.ts(a.sd2sd1Series,{color:'var(--equine)',h:120,unit:''})}</div>`:''}
-      <div style="font-size:11px;color:var(--text-faint);margin-top:10px;font-style:italic">Equine-spezifisches HRV-Atemwegs-Screening (Nyerges-Bohák 2025 · Random-Forest · n=40 · BAL-validiert). Screening-Hinweis, keine Diagnose — klinische Abklärung (BAL) bleibt tierärztlich.</div>
+      <div style="font-size:11px;color:var(--text-faint);margin-top:10px;font-style:italic">Equine-spezifische HRV-Atemwegs-Beobachtung (Nyerges-Bohák 2025 · Random-Forest · n=40 · BAL-validiert). Beobachtungshinweis, keine Diagnose — klinische Abklärung (BAL) bleibt tierärztlich.</div>
     </div>`;
   },
   // ERST-BLICK-VERDIKT — das Erste, was der Vet sieht: großes farbiges Urteil + der EINE Grund + Kernwert + nächste Aktion.
@@ -6461,12 +6484,19 @@ const FHIR={
   beatLabels(rec){
     const src=(rec&&rec.raw&&Array.isArray(rec.raw.rrData))?rec.raw.rrData:null;
     if(!src||!src.length||typeof src[0]!=='object') return null;
-    const out=[]; let cur=null,cnt=0,seen=new Set();
+    /* Auch auf dem AUSGANG kein erfundenes `N` (§5.4.1). Ein Schlag ohne
+       Etikett ist nicht normal, er ist unklassifiziert — `X`. Traegt die
+       ganze Reihe keines, wird die Observation weggelassen: Abwesenheit
+       heisst „nicht klassifiziert", eine Reihe aus lauter X hiesse
+       „geprueft und nichts zuzuordnen". Das ist nicht dasselbe. */
+    const out=[]; let cur=null,cnt=0,seen=new Set(),ohne=0;
     for(const b of src){
-      const l=(b&&b.label)||'N'; seen.add(l);
+      const roh=b&&b.label; if(!roh) ohne++;
+      const l=roh||'X'; seen.add(l);
       if(l===cur){cnt++;} else { if(cur!==null) out.push([cur,cnt]); cur=l; cnt=1; }
     }
     if(cur!==null) out.push([cur,cnt]);
+    if(ohne===src.length) return null;
     if(seen.size<=1 && seen.has('N')) return null;
     return out;
   },
@@ -6506,25 +6536,104 @@ const FHIR={
       extension:[{url:'https://carlon.equine/fhir/StructureDefinition/animal-species',
         valueCodeableConcept:{text:'horse'}}] }});
 
+    /* ── WAS BEHAUPTET WIRD, MUSS STATTGEFUNDEN HABEN (§5.4.2) ───────────
+       Hier stand die Artefaktkorrektur FEST VERDRAHTET: Device.note nannte
+       Lipponen-Tarvainen, und jeder Kennwert trug denselben Stempel als
+       `method` — unabhaengig davon, ob je korrigiert wurde. Der Bericht auf
+       Papier unterscheidet die drei Herkunftszustaende laengst (s. `PK`/
+       `irgendRoh` in Handoff.build); das Bundle, das als einziges in ein
+       fremdes System laeuft, tat es nicht.
+
+       Gemessen am 14.08.2026 an echten Aufnahmen dieses Repos: eine aus der
+       Rohserie abgeleitete RMSSD lag 130 %, 162 % und 177 % ueber dem
+       gefilterten Wert. Wer den Stempel liest, rechnet mit dem gefilterten
+       und bekommt den rohen — §5.4.2 des Standards verlangt deshalb, dass
+       fehlende Korrektur AUSDRUECKLICH erklaert wird (`none_raw_series_v1`).
+
+       Die Filterkette liegt in hrv-vorstufe.js bereit, ist hier aber bewusst
+       NICHT auf die Kennwerte gelegt.
+
+       ⚠ HIER STAND EIN FALSCHER GRUND (bis 14.08.2026 abends). Er lautete:
+       „der Port reproduziert die RMSSD der aufzeichnenden App auf zwei von
+       vier echten Aufnahmen nicht (8,31 statt 18,27 ms · 9,31 statt 17,56 ms)".
+       Nachgemessen wurde das am selben Tag, Stufe fuer Stufe, mit einer
+       uebersetzten Fassung der kanonischen Swift-Kette daneben:
+
+         Der Port und EquineFilterPipeline.swift liefern auf ALLEN VIER
+         Aufnahmen dieselbe Zahl — bis auf die letzte Stelle. 8,3107 hier
+         wie dort, 9,3128 hier wie dort. Auch Schlagzahl, Verschmelzungen
+         und Etikettenverteilung decken sich vollstaendig.
+
+       Verglichen worden waren zwei verschiedene GROESSEN: die Kette gegen die
+       Schlagzeile des App-Exports (`metrics.timeDomain.rmssdMs`). Die
+       entsteht in EquineExportMetrics.swift nach einer anderen Vorschrift —
+       Drop-Pair: der Pausen-Schlag bleibt in der Reihe stehen, seine beiden
+       Nachbarpaare werden uebersprungen, es wird keine Bruecke gebaut. Die
+       Kette dagegen ERSETZT den Schlag (Catmull-Rom) und behaelt ihn drin.
+       Deshalb trifft der Unterschied nur RMSSD und nicht SDNN: RMSSD lebt von
+       aufeinanderfolgenden Paaren, SDNN mittelt ueber die ganze Reihe.
+
+       Der Faktor 2 kommt allerdings NICHT aus „ersetzen statt ueberspringen".
+       Nachgerechnet mit derselben Drop-Pair-Regel, aber vollstaendiger
+       Ausschlussmenge, faellt die Schlagzeile der 21-min-Aufnahme von 18,27
+       auf 8,08 ms — direkt neben die 8,31 der Kette. Die Ausschlussmenge des
+       Exports umfasst AV-Block und Lang-Kurz-Paare, aber nicht die als
+       ektopisch eingestuften Schlaege; die bleiben mit vollem Gewicht in der
+       Quadratsumme stehen. Fuenf Schlaege von 1738 tragen so den ganzen
+       Unterschied. Das ist ein Befund AN DER APP, nicht am Port — und weil er
+       eine ausgelieferte Schlagzeile bewegt, entscheidet ihn Jan, nicht diese
+       Datei.
+
+       Bewacht wird die Uebereinstimmung ab sofort von `t-vorstufe-eichung.mjs`
+       im Pruefstand: dieselbe Aufnahme durch beide Umsetzungen, feste
+       Eichwerte, Gegenprobe bei jedem Lauf.
+
+       WARUM DIE KETTE HIER TROTZDEM NICHT VERDRAHTET IST: das ist jetzt eine
+       Entscheidung, keine offene Frage mehr. Ein Bundle, das in ein fremdes
+       System laeuft, wuerde damit andere Zahlen tragen als die Datei, aus der
+       es stammt — solange App-Export und Kette zwei Schlagzeilen fuehren,
+       waere das kein Fortschritt, sondern eine dritte. Erst die eine Zahl,
+       dann verdrahten. */
+    const HERKUNFT_KEYS=['rmssd','sdnn','meanHR','sd1','sd2'];
+    const provOf=(k)=>String((m.provenance||{})[k]||'');
+    const herkunftBekannt=HERKUNFT_KEYS.some(k=>(m.provenance||{})[k]!=null);
+    const irgendRoh=HERKUNFT_KEYS.some(k=>/uncorrected$/.test(provOf(k)));
+    const METHOD_KORR='Lipponen-Tarvainen 2019 (equine-adaptiert)';
+    const METHOD_ROH='none_raw_series_v1 — keine Artefaktkorrektur, aus der Rohserie abgeleitet';
+    /* Kennwerte ohne eigenen Vermerk (pNN50) erben den Zustand der Aufnahme;
+       ist gar keiner da, wird nichts behauptet (null → kein `method`). */
+    const methodeAllgemein = !herkunftBekannt ? null : (irgendRoh ? METHOD_ROH : METHOD_KORR);
+    const methodeFuer=(k)=>{ const p=(m.provenance||{})[k];
+      if(p==null) return methodeAllgemein;
+      return /uncorrected$/.test(String(p)) ? METHOD_ROH : METHOD_KORR; };
+
     // Device — Sensor UND Methode maschinenlesbar. Der Standard dokumentiert
     // damit selbst, wie belastbar er ist.
+    const DEV_KORR='Artefakt-Korrektur nach Lipponen-Tarvainen 2019 (equine-adaptiert), durchgeführt von der aufzeichnenden App. ';
+    const DEV_ROH='KEINE Artefaktkorrektur (none_raw_series_v1): die als solche gekennzeichneten Kennwerte wurden hier aus der Rohserie abgeleitet. Beim ruhenden Pferd hebt der physiologische AV-Block II° (van Loon 2019) RMSSD erheblich an — an echten Aufnahmen +130 bis +177 %. Diese Werte nicht gegen Referenzbereiche oder eine Baseline stellen. ';
+    const DEV_UNKLAR='Für diese Aufnahme ist nicht dokumentiert, ob und wie Artefakte korrigiert wurden; es wird hier kein Verfahren behauptet. ';
     entries.push({resource:{ resourceType:'Device', id:'carlon-pipeline',
-      manufacturer:'CARLON Equine', modelNumber:'Polar H10 130 Hz + Artefakt-Pipeline',
-      note:[{text:'Artefakt-Korrektur nach Lipponen-Tarvainen 2019 (equine-adaptiert); Frequenzbänder nach Visser 2002 (nicht human); nicht-stationäre Metriken werden bewusst nicht berechnet. Kein Medizinprodukt, keine Diagnose.'}] }});
+      manufacturer:'CARLON Equine',
+      modelNumber:'Polar H10 130 Hz'+(!herkunftBekannt?'':(irgendRoh?' (ohne Artefakt-Pipeline)':' + Artefakt-Pipeline')),
+      note:[{text:(!herkunftBekannt?DEV_UNKLAR:(irgendRoh?DEV_ROH:DEV_KORR))
+        +'Frequenzbänder nach Visser 2002 (nicht human); nicht-stationäre Metriken werden bewusst nicht berechnet. Kein Medizinprodukt, keine Diagnose.'}] }});
 
-    const METHOD='Lipponen-Tarvainen 2019 (equine-adaptiert)';
-    obs('mean-hr','Mittlere Herzfrequenz',m.meanHR,'beats/minute','/min',{loinc:'8867-4'});
+    obs('mean-hr','Mittlere Herzfrequenz',m.meanHR,'beats/minute','/min',{loinc:'8867-4',method:methodeFuer('meanHR')});
     obs('resting-hr','Ruhe-Herzfrequenz',m.minHR,'beats/minute','/min');
     obs('peak-hr','Spitzen-Herzfrequenz',m.maxHR,'beats/minute','/min');
-    obs('hrv-rmssd','HRV RMSSD',m.rmssd,'ms','ms',{method:METHOD});
-    obs('hrv-sdnn','HRV SDNN',m.sdnn,'ms','ms',{method:METHOD});
-    obs('hrv-sd1','Poincaré SD1',m.sd1,'ms','ms',{method:METHOD});
-    obs('hrv-sd2','Poincaré SD2',m.sd2,'ms','ms',{method:METHOD});
-    obs('hrv-pnn50','pNN50',m.pnn50,'%','%',{method:METHOD});
+    obs('hrv-rmssd','HRV RMSSD',m.rmssd,'ms','ms',{method:methodeFuer('rmssd')});
+    obs('hrv-sdnn','HRV SDNN',m.sdnn,'ms','ms',{method:methodeFuer('sdnn')});
+    obs('hrv-sd1','Poincaré SD1',m.sd1,'ms','ms',{method:methodeFuer('sd1')});
+    obs('hrv-sd2','Poincaré SD2',m.sd2,'ms','ms',{method:methodeFuer('sd2')});
+    obs('hrv-pnn50','pNN50',m.pnn50,'%','%',{method:methodeAllgemein});
     obs('dfa-alpha1','DFA α1',m.dfa,'1','1');
-    // Datenqualitaet als survey — die Ehrlichkeit maschinenlesbar.
+    /* Datenqualitaet als survey — die Ehrlichkeit maschinenlesbar. Die Rate
+       stammt aus der Quelldatei; ob sie KORRIGIERTE oder nur AUFFAELLIGE
+       Schlaege zaehlt, haengt daran, ob korrigiert wurde. Also nicht raten. */
     obs('artifact-rate-pct','Artefakt-/Korrektur-Rate',m.artifactPct,'%','%',{category:'survey',
-      note:'Anteil korrigierter Schläge (Lipponen-Tarvainen 2019). Niedrig = hohe Signalqualität; charakterisiert die Datenqualität der Aufnahme.'});
+      note:(irgendRoh||!herkunftBekannt)
+        ? 'Von der Quelle gemeldeter Anteil auffälliger Schläge. Für diese Aufnahme ist keine Artefaktkorrektur belegt — die Rate beschreibt die Signalqualität, nicht den Anteil korrigierter Schläge.'
+        : 'Anteil korrigierter Schläge (Lipponen-Tarvainen 2019). Niedrig = hohe Signalqualität; charakterisiert die Datenqualität der Aufnahme.'});
     /* Rhythmus-MUSTER, bewusst nicht „Screening“: der Begriff bezeichnet in der
        regulierten Medizin einen systematischen Test zur Krankheits-Frueherkennung
        und legt damit eine diagnostische Zweckbestimmung nahe (extern geprueft
@@ -6554,7 +6663,13 @@ const FHIR={
         code:{coding:[{system:FHIR.CS,code:'rr-intervals-raw',display:'RR-Intervalle (Rohdaten)'}],text:'RR-Intervalle (Rohdaten)'},
         subject:{reference:'Patient/'+pid}, effectiveDateTime:when,
         device:{reference:'Device/carlon-pipeline'},
-        note:[{text:'Unbearbeitete Schlag-zu-Schlag-Intervalle in Millisekunden, JSON-Array, ungerundet. Grundlage aller abgeleiteten Kennzahlen dieses Bundles — jede davon ist daraus reproduzierbar.'}],
+        /* „reproduzierbar" ist eine Ja/Nein-Aussage und haengt am Verfahren:
+           ohne das in Device.note genannte Korrekturverfahren kommt aus
+           derselben Rohserie ein anderer Wert heraus — an echten Aufnahmen
+           bis zu +177 % bei RMSSD. Die Serie ist die GRUNDLAGE; das Rezept
+           steht daneben. Beides zusammen ist die Zusicherung, die Serie
+           allein waere eine zu grosse. */
+        note:[{text:'Unbearbeitete Schlag-zu-Schlag-Intervalle in Millisekunden, JSON-Array, ungerundet. Grundlage aller abgeleiteten Kennzahlen dieses Bundles — jede davon ist daraus reproduzierbar, wenn das in Device.note genannte Korrekturverfahren angewandt wird.'}],
         valueAttachment:{ contentType:'application/json', language:'de',
           title:'RR intervals (ms)', data:payload,
           size:(new TextEncoder().encode(json)).length }
@@ -6576,7 +6691,7 @@ const FHIR={
           code:{coding:[{system:FHIR.CS,code:'rr-beat-labels',display:'Schlag-Klassifikation (lauflaengenkodiert)'}],text:'Schlag-Klassifikation'},
           subject:{reference:'Patient/'+pid}, effectiveDateTime:when,
           device:{reference:'Device/carlon-pipeline'},
-          note:[{text:'Lauflaengen-kodierte Klassifikation je Schlag, positionsgleich zu rr-intervals-raw: [["N",26],["LS",1],…]. N = normal, LS = Lang-Kurz-Paar, S = vorzeitig, AVB = RR-Muster vom AV-Block-Typ (2°), X = verworfen. Deskriptive Musterzuordnung, keine Diagnose — Beurteilung ausschliesslich im EKG durch die Tierarztpraxis.'}],
+          note:[{text:'Lauflaengen-kodierte Klassifikation je Schlag, positionsgleich zu rr-intervals-raw: [["N",26],["LS",1],…]. N = normal, LS = Lang-Kurz-Paar, S = vorzeitig, AVB = RR-Muster vom AV-Block-Typ (2°), L = langes RR bei vermutlich ausgefallener R-Zacke, X = verworfen bzw. nicht zuzuordnen. Ein Schlag ohne Klassifikation wird nie als N ausgegeben. Deskriptive Musterzuordnung, keine Diagnose — Beurteilung ausschliesslich im EKG durch die Tierarztpraxis.'}],
           valueAttachment:{ contentType:'application/json', language:'de',
             title:'Beat labels (RLE)', data:lp,
             size:(new TextEncoder().encode(lj)).length }
@@ -6932,7 +7047,7 @@ const Report={
     if(!rec){Toast.show('Keine Aufnahme für Befund','warn');return;}
     this._hid=hid;
     const tri=rec.triage||{level:'stable',reasons:[]};
-    const suggest=(tri.reasons&&tri.reasons.length)?('Telemetrie-Screening: '+tri.reasons.slice(0,2).join('; ')+'. '):'HRV-Telemetrie im erwarteten Bereich. ';
+    const suggest=(tri.reasons&&tri.reasons.length)?('Telemetrie-Beobachtung: '+tri.reasons.slice(0,2).join('; ')+'. '):'HRV-Telemetrie im erwarteten Bereich. ';
     const s=State.settings; const fee=s.tariff||45;
     UI.modal(`<div class="modal-head"><h3>Ferneinschätzung — ${esc(h.name)}</h3><button class="closex" onclick="UI.closeModal()">${IC.x}</button></div>
     <div class="modal-body">
@@ -7007,7 +7122,7 @@ const Report={
       ${s.logo?`<div class="pr-cobrand">Telemetrie-Befund · erstellt mit CARLON EQUINE — Equine Heart Science</div>`:''}
       <h1>${esc(h.name)}</h1>
       <div class="sub">${esc(h.breed||'—')}${h.sex?' · '+esc(h.sex):''}${h.age?' · '+h.age+' Jahre':''}${h.owner?' · Besitzer: '+esc(h.owner):''}${h.stable?' · '+esc(h.stable):''}</div>
-      <div class="pr-tri ${tri.level}">Screening-Einstufung: ${Triage.LEVELS[tri.level].label}</div>
+      <div class="pr-tri ${tri.level}">Beobachtungs-Einstufung: ${Triage.LEVELS[tri.level].label}</div>
       ${base?`<div style="font-size:12px;color:#5a7080;margin-top:8px">${esc(base)}</div>`:''}
       <h2>Messwerte — ${fmtDate(rec.startedAt,true)}</h2>
       <div class="pr-stats">
@@ -9125,7 +9240,7 @@ const Cal={
         m.rmssd!=null?`RMSSD ${fmt0(m.rmssd)} · Ruhe-HF ${fmt0(m.meanHR)} bpm`:'',
         r.appt!=null?`Fester Termin ${fmtTime(r.appt)}`:`Geplante Ankunft ${fmtTime(r.arrive)}`,
         `Anfahrt ${fmt1(r.dist)} km`, navi?`Navigation: ${navi}`:'',
-        '— CARLON EQUINE · HRV-Telemetrie (Screening, keine Diagnose)'].filter(Boolean).map(esc).join('\\n');
+        '— CARLON EQUINE · HRV-Telemetrie (Beobachtung, keine Diagnose)'].filter(Boolean).map(esc).join('\\n');
       L.push('BEGIN:VEVENT','UID:'+Math.abs(hashStr(h.id+start.getTime())).toString(36)+'@carlon-equine',
         'DTSTAMP:'+this._fmt(now),'DTSTART:'+this._fmtLocal(start),'DTEND:'+this._fmtLocal(end),
         'SUMMARY:'+esc(title),'DESCRIPTION:'+desc,'LOCATION:'+esc(h.place||h.stable||''),
@@ -10072,8 +10187,8 @@ const Sprache={
     'tierärztlich einordnen',
     'engmaschig beobachten',
     'noch keine eigene Baseline',
-    'Auffällig unregelmäßige Kurzzeit-Variabilität — Screening-Hinweis, keine Diagnose; bitte tierärztlich einordnen lassen',
-    'Screening-Hinweis, keine Diagnose — klinische Abklärung (BAL) bleibt tierärztlich.',
+    'Auffällig unregelmäßige Kurzzeit-Variabilität — Beobachtungshinweis, keine Diagnose; bitte tierärztlich einordnen lassen',
+    'Beobachtungshinweis, keine Diagnose — klinische Abklärung (BAL) bleibt tierärztlich.',
     'Trainings-Domäne, keine tierärztliche Beurteilung.',
     'Orientierung für die Periodisierung — keine Leistungsdiagnostik.',
     'Orientierung, keine Leistungsdiagnostik.',
@@ -10089,8 +10204,11 @@ const Sprache={
     'Orientierung, keine Trainingsvorschrift.',
     'Adaptiert vom Humansport-Goldstandard (Plews & Buchheit). Beim Pferd experimentell, an die eigene Baseline angelegt —',
     'Aerobe Trainingsanpassung aus wiederholten Ruhe-Messungen (lineare Regression). Orientierung für die Periodisierung —',
-    'Ein validiertes Screening liefert CARLON EQUINE als Random-Forest-Score. Hier siehst du den atemwegs-relevanten Marker im Verlauf.',
-    'Atemwegs-Screening (HRV)',
+    /* Kein Treffer mehr in der Oberflaeche (14.08.2026 geprueft) — der Satz
+       wurde umgeschrieben, der Schutzeintrag blieb stehen. Bleibt als
+       Wortlaut-Reserve, traegt aber kein „Screening" mehr. */
+    'Ein validierter Beobachtungs-Marker liefert CARLON EQUINE als Random-Forest-Score. Hier siehst du den atemwegs-relevanten Marker im Verlauf.',
+    'Atemwegs-Beobachtung (HRV)',
     'Im individuellen Normbereich — die geplante Einheit inkl. höherer Intensität ist vertretbar.',
     'Alle Kernwerte im erwarteten Bereich — stabile Kontrolle, kein akuter Handlungsbedarf.'
   ],
@@ -10099,16 +10217,20 @@ const Sprache={
      Der deutsche Satz ist der Schluessel. Sortiert wie die Oberflaeche:
      Navigation, Board, Akte, Station, Karte, Verwaltung, Kauf. */
   WB:{
-    // Atemwegs-Screening — im Cockpit gerechnet (09.08.2026)
-    'Die gespeicherte Schlagfolge dieser Aufnahme ist verdichtet — darauf lässt sich kein belastbares Atemwegs-Screening rechnen.':'The stored beat sequence of this recording is condensed — no dependable airway screening can be computed from it.',
-    'Datengrundlage zu klein — das Atemwegs-Screening braucht sieben Minuten Ruhe und 200 Schläge.':'Too little data — the airway screening needs seven minutes at rest and 200 beats.',
-    'Für diese Aufnahme liegt kein Atemwegs-Screening vor.':'No airway screening is available for this recording.',
+    // Atemwegs-Beobachtung — im Cockpit gerechnet (09.08.2026)
+    'Die gespeicherte Schlagfolge dieser Aufnahme ist verdichtet — darauf lässt sich keine belastbare Atemwegs-Beobachtung rechnen.':'The stored beat sequence of this recording is condensed — no dependable airway observation can be computed from it.',
+    'Datengrundlage zu klein — die Atemwegs-Beobachtung braucht sieben Minuten Ruhe und 200 Schläge.':'Too little data — the airway observation needs seven minutes at rest and 200 beats.',
+    'Für diese Aufnahme liegt keine Atemwegs-Beobachtung vor.':'No airway observation is available for this recording.',
     'in dieser Praxis aus der Aufnahme gerechnet':'computed in this practice from the recording',
     'aus CARLON EQUINE übernommen':'taken from CARLON EQUINE',
     'unauffällig':'unremarkable', 'Signal vorhanden':'signal present',
-    'niedriges Screening-Signal':'low screening signal',
-    'moderates Screening-Signal':'moderate screening signal',
-    'hohes Screening-Signal':'high screening signal',
+    /* Einstufungen wie in der App (EquineAsthmaScreenerCard.swift):
+       Unauffällig/Beobachten/Auffällig — nie „Screening-Signal". Rechtliche
+       Abdeckung gilt PRO SPRACHE, also traegt auch die englische Fassung
+       kein „screening" mehr. */
+    'Unauffällig':'Unremarkable',
+    'Beobachten':'Observe',
+    'Auffällig':'Notable',
     'Score fällt':'Score falling', 'Score stabil':'Score stable', 'Score steigt':'Score rising',
     'Verlauf noch offen':'Trend not yet established',
     'Die Marker haben sich über das Fenster verbessert.':'The markers improved across the window.',

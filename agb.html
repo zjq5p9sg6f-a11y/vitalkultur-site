@@ -169,7 +169,7 @@
         <strong>CARLON Equine ist kein Medizinprodukt</strong> im Sinne der
         EU-MDR (2017/745) oder der FDA, weder für Human- noch für Tier­medizin.
         Alle in App und Web-Viewer dargestellten Marker und Cutoffs sind
-        <strong>Screening-Hinweise auf Basis peer-reviewter wissenschaftlicher
+        <strong>Beobachtungshinweise auf Basis peer-reviewter wissenschaftlicher
         Literatur und niemals Diagnosen</strong>. Die diagnostische Einordnung
         und Therapie-Entscheidung obliegt ausschließlich der approbierten
         behandelnden Tier­ärztin / dem behandelnden Tier­arzt.
@@ -203,12 +203,24 @@
         ausschließlich auf dem Gerät des Nutzers. Ein Nutzer­konto wird nicht
         angelegt.
       </p>
+      <!-- 14.08.2026 — hier stand: „Die Aufnahme wird dafuer vor dem Versand
+           auf dem Geraet des Nutzers verschluesselt." Unbedingt formuliert,
+           obwohl der Code es nur bedingt einloest: ohne hinterlegten
+           Praxis-Schluessel ist gegen nichts zu verschluesseln, dann greift
+           der reduzierte Datensatz (§ 12b (3), ARME_FELDER in messen.html).
+           Eine Zusicherung, die im Regelfall stimmt und im Sonderfall nicht,
+           ist im Streitfall die gefaehrlichere Sorte. Der Satz traegt jetzt
+           seine Bedingung — und der Leser erkennt, welcher Fall seiner ist. -->
       <p>
         Der Nutzer kann eine Aufnahme auf eigene Veranlassung an eine
-        Tierarzt­praxis übergeben, die das Browser-Cockpit nach § 12a nutzt. Die
-        Aufnahme wird dafür vor dem Versand auf dem Gerät des Nutzers
-        verschlüsselt. Einzelheiten, insbesondere zur Speicher­dauer, regelt
-        § 12b.
+        Tierarzt­praxis übergeben, die das Browser-Cockpit nach § 12a nutzt.
+        Ruft er die Messstation über den Aushang oder eine Einladung dieser
+        Praxis auf, liegt deren öffentlicher Schlüssel vor; die Datei wird dann
+        vor der Weitergabe auf dem Gerät des Nutzers verschlüsselt. Liegt kein
+        Praxis­schlüssel vor, ist eine Verschlüsselung technisch nicht möglich;
+        die Datei wird stattdessen auf einen <strong>reduzierten
+        Datensatz</strong> ohne Angaben zur Person des Nutzers und ohne Kennung
+        seines Endgeräts beschränkt. Einzelheiten regelt § 12b.
       </p>
       <p>
         <strong>Die Messstation ist kein Medizin­produkt</strong> im Sinne der
@@ -678,14 +690,20 @@
       werden weder die Dateien noch deren Inhalte an den Anbieter übermittelt
       (Zero-Upload).
     </p>
+    <!-- Diese Klarstellung beschrieb bis zum 14.08.2026 den Postfach-Weg
+         („Sendung an einen Zwischenspeicher des Anbieters ... dort befristet
+         vorgehalten"). Der Zwischenspeicher ist seit dem 13.08.2026 aus
+         (window.CARLON_POSTFACH = false in live.js), und § 12b sagt seither
+         das Gegenteil — im selben Dokument. Die englische Fassung (Ziffer 9)
+         war bereits richtig. Ein Vertragstext ist eine Behauptung ueber den
+         Code; hier standen zwei Behauptungen gegeneinander. -->
     <p>
       <strong>Klarstellung:</strong> Diese Zusage betrifft das Öffnen und
-      Betrachten eigener Dateien. Sie gilt <strong>nicht</strong> für die
-      Übergabe einer Aufnahme an eine Tierarzt­praxis über die Messstation
-      (§ 3.4). Dabei wird auf Veranlassung des Nutzers eine
-      <strong>verschlüsselte</strong> Sendung an einen Zwischen­speicher des
-      Anbieters übertragen und dort befristet vorgehalten; hierfür gilt
-      § 12b.
+      Betrachten eigener Dateien. Auch die Übergabe einer Aufnahme an eine
+      Tierarzt­praxis über die Messstation (§ 3.4) führt zu <strong>keiner
+      Übermittlung an den Anbieter</strong>: Die Station erzeugt eine
+      <strong>Datei auf dem Gerät des Nutzers</strong>, die dieser selbst
+      weitergibt — Einzelheiten regelt § 12b.
     </p>
     <p>
       Der Nutzer ist für die rechtmäßige Verarbeitung sämtlicher in den

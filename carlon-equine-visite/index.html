@@ -162,7 +162,7 @@ document.head.appendChild(s);})();</script>
      "name": "Welche Evidenz steht hinter den Atemwegs-Markern?",
      "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Die Marker sind an einer veröffentlichten, BAL-referenzierten Studie kalibriert (Nyerges-Bohák 2025, Equine Veterinary Journal, n = 40) und werden mit ihren Schwellen einzeln ausgewiesen. Die BAL-Zytologie bleibt der Goldstandard — der Verlauf ersetzt sie nicht, er begründet, wann sie ansteht."
+      "text": "Bezugsarbeit ist Nyerges-Bohák 2025 (Equine Veterinary Journal, n = 40): 20 Pferde mit schwerem Asthma, BAL-referenziert, gegen 20 unauffällige Kontrollen. Die Arbeit berichtet Gruppenunterschiede und nennt SD2, SDNN, TINN und SD2/SD1 als die trennstärkeren Größen — einen Schwellenwert enthält sie nicht. Unsere Schwellen liegen mittig zwischen ihren Gruppenmitteln; das ist eine eigene Ableitung, kein Literaturwert, und jede Schwelle steht einzeln da. Die BAL-Zytologie bleibt der Goldstandard — der Verlauf ersetzt sie nicht, er begründet, wann sie ansteht."
      }
     },
     {
@@ -866,7 +866,7 @@ html.rev-an .rev.in{opacity:1;transform:none}
 
 <!-- ── 2 · DER STRUKTURELLE VORTEIL ────────────────────────────────────
      Das stärkste Argument der ganzen Seite, und es ist kein Marketing:
-     Der Screener verlangt ≥ 7 Minuten Ruhe. Nach Verladung und Fahrt ist
+     Die Atemwegs-Auswertung verlangt ≥ 7 Minuten Ruhe. Nach Verladung und Fahrt ist
      diese Bedingung systematisch nicht erfüllt. -->
 <section>
   <div class="wrap">
@@ -1083,7 +1083,7 @@ html.rev-an .rev.in{opacity:1;transform:none}
       <div>
         <b>Sehen Sie den Bericht, bevor Sie irgendetwas entscheiden.</b>
         <span>Aus dem Demo-Bestand erzeugt (fiktive Beispieldaten) — Kennwerte, Puls- und HRV-Kurve,
-        Poincaré, RR-Verteilung, Leistungsspektrum nach Visser (2002) und der RMSSD-Verlauf über
+        Poincaré, RR-Verteilung, Leistungsspektrum in den equinen Bandgrenzen und der RMSSD-Verlauf über
         Wochen, dazu „Methode &amp; Grenzen" mit Quellen.
         Der Bericht liefert die Daten; den Befund macht Ihre Praxis.</span>
       </div>
@@ -1110,10 +1110,13 @@ html.rev-an .rev.in{opacity:1;transform:none}
         <!-- Die Studie steht mit NAMEN da — „eine veroeffentlichte Studie"
              ist fuer eine studierte Leserin ein rotes Tuch: welche? Die
              Referenz traegt die App selbst (asthma.js, DOI 10.1111/evj.14414). -->
-        <p>HRV-basierte Marker mit ihren Schwellen, einzeln aufgeführt — kalibriert an
-           einer BAL-referenzierten Studie (Nyerges-Bohák 2025, Equine Veterinary
-           Journal, n = 40). Ein <strong>Beobachtungshinweis</strong>, ausdrücklich
-           keine Diagnose: Die BAL-Zytologie bleibt der Goldstandard.</p>
+        <p>HRV-basierte Marker mit ihren Schwellen, einzeln aufgeführt. Bezugsarbeit ist
+           Nyerges-Bohák 2025 (Equine Veterinary Journal, n = 40): 20 Pferde mit schwerem
+           Asthma, BAL-referenziert, gegen 20 unauffällige Kontrollen. Sie berichtet
+           Gruppenunterschiede, <strong>keine Schwellenwerte</strong> — unsere liegen mittig
+           dazwischen und sind damit unsere eigene Ableitung. Ein
+           <strong>Beobachtungshinweis</strong>, ausdrücklich keine Diagnose: Die
+           BAL-Zytologie bleibt der Goldstandard.</p>
       </div>
       <div class="card">
         <h3>Die üblichen Ansichten, in guter Auflösung</h3>
@@ -1148,11 +1151,12 @@ html.rev-an .rev.in{opacity:1;transform:none}
     <div class="sec-eyebrow">Warum die Zahlen tragen</div>
     <h2>Beim Pferd sind Pausen normal. Wer sie mitrechnet, misst Unsinn.</h2>
     <p class="sec-lead">
-      Die Herzratenvariabilität liest die Balance des autonomen Nervensystems ab — das
-      Wechselspiel aus Sympathikus und Parasympathikus, das sich unter Belastung des
-      Organismus verschiebt. Für die Einstufung zählt deshalb die eigene Baseline des
-      Pferds; nur die Atemwegs-Marker tragen zusätzlich studienbasierte Schwellen
-      (Nyerges-Bohák 2025).
+      Die Herzratenvariabilität wird mit der Aktivität des autonomen Nervensystems in
+      Verbindung gebracht — dem Wechselspiel aus Sympathikus und Parasympathikus. Sie ist
+      damit kein Ablesen eines Zustands: einen belastbaren Normwert gibt es beim Pferd
+      nicht. Für die Einstufung zählt deshalb die eigene Baseline des Pferds. Nur die
+      Atemwegs-Marker tragen zusätzlich feste Schwellen — und die sind aus den
+      Gruppenmitteln einer Studie abgeleitet, nicht aus ihr übernommen (Nyerges-Bohák 2025).
     </p>
     <p class="sec-lead" style="margin-top:var(--sp-21)">
       Ein ruhendes Pferd zeigt AV-Block-Pausen — physiologisch, kein Befund. Rechnet man
@@ -1162,8 +1166,9 @@ html.rev-an .rev.in{opacity:1;transform:none}
     <div class="evidenz" aria-label="Evidenz der Atemwegs-Marker">
       <span class="ev-cyan">Nyerges-Bohák 2025</span>
       <span>Equine Veterinary Journal</span>
-      <span>n = 40 · BAL-referenziert</span>
+      <span>n = 40 · 20 sEA BAL-referenziert vs. 20 Kontrollen</span>
       <span>DOI 10.1111/evj.14414</span>
+      <span>Schwellen: eigene Ableitung</span>
     </div>
     <!-- Ohne .usps-Raster standen die drei Karten mit 0 px Abstand
          aufeinander — Kante an Kante, volle Seitenbreite. Dasselbe Raster
@@ -1174,7 +1179,9 @@ html.rev-an .rev.in{opacity:1;transform:none}
       <p>AV-Block-Pausen, Bewegungs-Artefakte, unplausible Schläge — die Auswertung
          erkennt und korrigiert sie, <strong>bevor</strong> ein Kennwert entsteht. Ob
          eine Aufnahme aus der App kommt oder aus der Browser-Station: Sie bekommen
-         denselben, bereinigten Wert.
+         denselben, bereinigten Wert. Und wenn eine Datei die Kette nachweislich
+         <em>nicht</em> durchlaufen hat, steht das im Bericht — dann sind es rohe
+         Werte, und der Bericht sagt es, statt eine Bereinigung zu behaupten.
          <a href="/carlon-equine/methodik.html">Jede Stufe mit ihrem Schwellenwert →</a></p>
     </div>
     <div class="usp">
@@ -1514,10 +1521,14 @@ html.rev-an .rev.in{opacity:1;transform:none}
       </div>
       <div class="card">
         <h3>Welche Evidenz steht hinter den Atemwegs-Markern?</h3>
-        <p>Die Marker sind an einer veröffentlichten, BAL-referenzierten Studie kalibriert
-           (Nyerges-Bohák 2025, Equine Veterinary Journal, n = 40) und werden mit ihren
-           Schwellen einzeln ausgewiesen. Die BAL-Zytologie bleibt der Goldstandard — der
-           Verlauf ersetzt sie nicht, er begründet, wann sie ansteht.</p>
+        <p>Bezugsarbeit ist Nyerges-Bohák 2025 (Equine Veterinary Journal, n = 40):
+           20 Pferde mit schwerem Asthma, BAL-referenziert, gegen 20 unauffällige
+           Kontrollen. Die Arbeit berichtet Gruppenunterschiede und nennt SD2, SDNN, TINN
+           und SD2/SD1 als die trennstärkeren Größen — einen Schwellenwert enthält sie
+           nicht. Unsere Schwellen liegen mittig zwischen ihren Gruppenmitteln; das ist
+           eine eigene Ableitung, kein Literaturwert, und jede Schwelle steht einzeln da.
+           Die BAL-Zytologie bleibt der Goldstandard — der Verlauf ersetzt sie nicht, er
+           begründet, wann sie ansteht.</p>
       </div>
       <!-- Der Nacht-Einwand: jedes System, das Dringlichkeit einstuft,
            erzeugt potenziell die Erwartung, dass jemand hinsieht. Beide

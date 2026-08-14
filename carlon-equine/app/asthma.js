@@ -12,8 +12,11 @@
  * Monte-Carlo-verifiziert (Sensitivitaet ~90 %, AUC ~0.95, Spezifitaet ~87 %).
  * Jede eigenmaechtig geaenderte Zahl macht diese Kalibrierung wertlos.
  *
- * Positionierung: starker RULE-OUT, moderater RULE-IN. Screening-Werkzeug —
+ * Positionierung: starker RULE-OUT, moderater RULE-IN. Beobachtungs-Marker —
  * die Entscheidung trifft immer die Tierarztpraxis. BAL-Zytologie bleibt Goldstandard.
+ * („Screening" ist bewusst vermieden: der Begriff bezeichnet die systematische
+ *  Reihenuntersuchung auf Krankheit und legt eine diagnostische Zweckbestimmung
+ *  nahe. Typ- und Feldnamen bleiben, darauf matchen Import und Schema.)
  */
 (function (global) {
   'use strict';
@@ -151,10 +154,16 @@
     secondary: 0.5,  // HR, LF/HF
   });
 
+  /* WORTLAUT NACHGEZOGEN AUS EquineAsthmaScreener.swift:150-154 (14.08.2026).
+     „Screener" als Selbstbeschreibung ist in der App in allen neun Sprachen
+     weg — das Wort bezeichnet in der regulierten Medizin die systematische
+     Reihenuntersuchung auf Krankheit. Diese Datei ist eine 1:1-Portierung;
+     der alte Satz war also nicht nur belastet, sondern auch abgedriftet. */
   var DISCLAIMER =
-    'Nyerges-Bohák 2025 EVJ DOI 10.1111/evj.14414 (n=40 BAL-bestätigt) validiert die PRIMÄREN ' +
-    'Marker. LF/HF + HR sind sekundäre Akut-Phase-Indikatoren (p=0.13 in der Studie). ' +
-    'Engine ist Screener, kein Diagnostikum — BAL-Zytologie bleibt Goldstandard.';
+    'Nyerges-Bohák 2025 EVJ DOI 10.1111/evj.14414 (n=40 BAL-bestätigt) beschreibt die ' +
+    'PRIMÄREN Marker. LF/HF + HR sind sekundäre Akut-Phase-Indikatoren (p=0.13 in der ' +
+    'Studie). Beobachtungs-Marker, kein Diagnostikum — die Abklärung bleibt tierärztlich, ' +
+    'BAL-Zytologie ist der Goldstandard. Herkunft und Grenzen: Methoden-Dokumentation.';
 
   var METHODOLOGY = Object.freeze([
     'nyerges_bohak_2025_evj_57_611_doi_10_1111_evj_14414_n40_bal',
@@ -250,7 +259,7 @@
     // Zweiter Riegel: die drei Kern-Metriken muessen ueberhaupt vorliegen.
     if (istNil(meanHrBpm) || istNil(rmssdMs) || istNil(dfaAlpha1)) {
       return unzureichend(
-        'Kern-Metriken fehlen — Screener braucht mindestens mean_HR, RMSSD und DFA-α₁ (≥200 beats stationäre Ruhe).',
+        'Kern-Metriken fehlen — die Marker-Auswertung braucht mindestens mean_HR, RMSSD und DFA-α₁ (≥200 beats stationäre Ruhe).',
         'Aufnahme ≥7 min Ruhe in der Box wiederholen.',
         ['insufficient_hrv_input']
       );

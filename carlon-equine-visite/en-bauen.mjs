@@ -454,14 +454,20 @@ tausche(`Anteil auswertbarer Schlagpaare, Artefaktrate, korrigierte AV-Block-Pau
            Eine Aufnahme, die nichts trägt, sagt Ihnen das — statt eine Zahl zu zeigen.`,
         `Share of usable beat pairs, artefact rate, corrected AV-block pauses.
            A recording that carries nothing tells you so — instead of showing a number.`);
-tausche(`HRV-basierte Marker mit ihren Schwellen, einzeln aufgeführt — kalibriert an
-           einer BAL-referenzierten Studie (Nyerges-Bohák 2025, Equine Veterinary
-           Journal, n = 40). Ein <strong>Beobachtungshinweis</strong>, ausdrücklich
-           keine Diagnose: Die BAL-Zytologie bleibt der Goldstandard.`,
-        `HRV-based markers with their thresholds, listed individually — calibrated against
-           a BAL-referenced study (Nyerges-Bohák 2025, Equine Veterinary Journal,
-           n = 40). An <strong>observational note</strong>, explicitly not a
-           diagnosis: BAL cytology remains the gold standard.`);
+tausche(`HRV-basierte Marker mit ihren Schwellen, einzeln aufgeführt. Bezugsarbeit ist
+           Nyerges-Bohák 2025 (Equine Veterinary Journal, n = 40): 20 Pferde mit schwerem
+           Asthma, BAL-referenziert, gegen 20 unauffällige Kontrollen. Sie berichtet
+           Gruppenunterschiede, <strong>keine Schwellenwerte</strong> — unsere liegen mittig
+           dazwischen und sind damit unsere eigene Ableitung. Ein
+           <strong>Beobachtungshinweis</strong>, ausdrücklich keine Diagnose: Die
+           BAL-Zytologie bleibt der Goldstandard.`,
+        `HRV-based markers with their thresholds, listed individually. The reference study is
+           Nyerges-Bohák 2025 (Equine Veterinary Journal, n = 40): 20 horses with severe
+           asthma, BAL-referenced, against 20 unremarkable controls. It reports group
+           differences, <strong>no threshold values</strong> — ours sit midway between them
+           and are therefore our own derivation. An
+           <strong>observational note</strong>, explicitly not a diagnosis: BAL
+           cytology remains the gold standard.`);
 tausche(`Tachogramm, Poincaré, Spektrum, DFA, Histogramm — dieselben Darstellungen wie
            in der iOS-App, im Vollbild neu gezeichnet statt hochskaliert.`,
         `Tachogram, Poincaré, spectrum, DFA, histogram — the same views as in the iOS app,
@@ -487,12 +493,16 @@ tausche(`
 tausche(`AV-Block-Pausen, Bewegungs-Artefakte, unplausible Schläge — die Auswertung
          erkennt und korrigiert sie, <strong>bevor</strong> ein Kennwert entsteht. Ob
          eine Aufnahme aus der App kommt oder aus der Browser-Station: Sie bekommen
-         denselben, bereinigten Wert.
+         denselben, bereinigten Wert. Und wenn eine Datei die Kette nachweislich
+         <em>nicht</em> durchlaufen hat, steht das im Bericht — dann sind es rohe
+         Werte, und der Bericht sagt es, statt eine Bereinigung zu behaupten.
          <a href="/carlon-equine/methodik.html">Jede Stufe mit ihrem Schwellenwert →</a>`,
         `AV-block pauses, motion artefacts, implausible beats — the analysis detects
          and corrects them <strong>before</strong> any metric is computed. Whether a
          recording comes from the app or from the browser station: you get the same,
-         cleaned value.
+         cleaned value. And where a file demonstrably did <em>not</em> pass through
+         the chain, the report says so — those are raw values, and the report states
+         it instead of claiming a correction that never happened.
          <a href="/carlon-equine/methodik.html">Every stage with its threshold →</a>`);
 tausche(`Ungefiltert wirkt ein ruhendes Pferd systematisch auffälliger, als es ist.
          Eine Triage, die zu oft warnt, ist so wertlos wie eine, die schweigt —
@@ -697,16 +707,24 @@ tausche('"text": "Jede Aufnahme bringt ihr Messprotokoll mit: Anteil auswertbare
         '"text": "Every recording carries its own measurement report: share of usable beat pairs, artefact rate, sensor, timing resolution. A recording that carries nothing is flagged as exactly that — you never interpret blind. And the raw data comes with it: every single beat interval."');
 tausche('Welche Evidenz steht hinter den Atemwegs-Markern?',
         'What evidence sits behind the airway markers?', 2);
-tausche(`Die Marker sind an einer veröffentlichten, BAL-referenzierten Studie kalibriert
-           (Nyerges-Bohák 2025, Equine Veterinary Journal, n = 40) und werden mit ihren
-           Schwellen einzeln ausgewiesen. Die BAL-Zytologie bleibt der Goldstandard — der
-           Verlauf ersetzt sie nicht, er begründet, wann sie ansteht.`,
-        `The markers are calibrated against a published, BAL-referenced study
-           (Nyerges-Bohák 2025, Equine Veterinary Journal, n = 40) and are shown
-           individually with their thresholds. BAL cytology remains the gold standard —
-           the trend does not replace it, it substantiates when it is due.`);
-tausche('"text": "Die Marker sind an einer veröffentlichten, BAL-referenzierten Studie kalibriert (Nyerges-Bohák 2025, Equine Veterinary Journal, n = 40) und werden mit ihren Schwellen einzeln ausgewiesen. Die BAL-Zytologie bleibt der Goldstandard — der Verlauf ersetzt sie nicht, er begründet, wann sie ansteht."',
-        '"text": "The markers are calibrated against a published, BAL-referenced study (Nyerges-Bohák 2025, Equine Veterinary Journal, n = 40) and are shown individually with their thresholds. BAL cytology remains the gold standard — the trend does not replace it, it substantiates when it is due."');
+tausche(`Bezugsarbeit ist Nyerges-Bohák 2025 (Equine Veterinary Journal, n = 40):
+           20 Pferde mit schwerem Asthma, BAL-referenziert, gegen 20 unauffällige
+           Kontrollen. Die Arbeit berichtet Gruppenunterschiede und nennt SD2, SDNN, TINN
+           und SD2/SD1 als die trennstärkeren Größen — einen Schwellenwert enthält sie
+           nicht. Unsere Schwellen liegen mittig zwischen ihren Gruppenmitteln; das ist
+           eine eigene Ableitung, kein Literaturwert, und jede Schwelle steht einzeln da.
+           Die BAL-Zytologie bleibt der Goldstandard — der Verlauf ersetzt sie nicht, er
+           begründet, wann sie ansteht.`,
+        `The reference study is Nyerges-Bohák 2025 (Equine Veterinary Journal, n = 40):
+           20 horses with severe asthma, BAL-referenced, against 20 unremarkable controls.
+           The study reports group differences and names SD2, SDNN, TINN and SD2/SD1 as
+           the more discriminating measures — it contains no threshold value. Ours sit
+           midway between its group means; that is our own derivation, not a value from
+           the literature, and every threshold is listed individually. BAL cytology
+           remains the gold standard — the trend does not replace it, it substantiates
+           when it is due.`);
+tausche('"text": "Bezugsarbeit ist Nyerges-Bohák 2025 (Equine Veterinary Journal, n = 40): 20 Pferde mit schwerem Asthma, BAL-referenziert, gegen 20 unauffällige Kontrollen. Die Arbeit berichtet Gruppenunterschiede und nennt SD2, SDNN, TINN und SD2/SD1 als die trennstärkeren Größen — einen Schwellenwert enthält sie nicht. Unsere Schwellen liegen mittig zwischen ihren Gruppenmitteln; das ist eine eigene Ableitung, kein Literaturwert, und jede Schwelle steht einzeln da. Die BAL-Zytologie bleibt der Goldstandard — der Verlauf ersetzt sie nicht, er begründet, wann sie ansteht."',
+        '"text": "The reference study is Nyerges-Bohák 2025 (Equine Veterinary Journal, n = 40): 20 horses with severe asthma, BAL-referenced, against 20 unremarkable controls. The study reports group differences and names SD2, SDNN, TINN and SD2/SD1 as the more discriminating measures — it contains no threshold value. Ours sit midway between its group means; that is our own derivation, not a value from the literature, and every threshold is listed individually. BAL cytology remains the gold standard — the trend does not replace it, it substantiates when it is due."');
 tausche('"text": "Die Anwendung wechselt in einen funktionsreduzierten Modus. Ihre Daten bleiben auf dem Gerät und lassen sich weiterhin öffnen und exportieren. Wir könnten sie gar nicht löschen — sie liegen bei Ihnen."',
         '"text": "The application switches to a reduced mode. Your data stays on the device and can still be opened and exported. We could not delete it — it is with you."');
 tausche('"text": "Nein. Das Cockpit läuft vollständig in Ihrem Browser, und auch die Aufnahme der Halterin erreicht uns nicht: Ihre Messstation legt eine Datei auf ihrem eigenen Gerät an, die sie Ihnen selbst schickt. Es gibt keinen Zwischenspeicher bei uns — und damit nichts, worüber ein Auftragsverarbeitungsvertrag zu schließen wäre."',
@@ -721,11 +739,11 @@ tausche('"url": "https://vitalkultur.com/carlon-equine-visite/",',
 tausche('Sehen Sie den Bericht, bevor Sie irgendetwas entscheiden.',
         'See the report before you decide anything.');
 tausche(`Aus dem Demo-Bestand erzeugt (fiktive Beispieldaten) — Kennwerte, Puls- und HRV-Kurve,
-        Poincaré, RR-Verteilung, Leistungsspektrum nach Visser (2002) und der RMSSD-Verlauf über
+        Poincaré, RR-Verteilung, Leistungsspektrum in den equinen Bandgrenzen und der RMSSD-Verlauf über
         Wochen, dazu „Methode &amp; Grenzen" mit Quellen.
         Der Bericht liefert die Daten; den Befund macht Ihre Praxis.`,
 `Generated from the demo library (fictitious sample data) — key values, heart-rate and HRV
-        curve, Poincaré plot, RR distribution, power spectrum after Visser (2002) and the RMSSD
+        curve, Poincaré plot, RR distribution, power spectrum in the equine frequency bands and the RMSSD
         trend across weeks, plus a "Method & limits" section naming the sources.
         The report delivers the data; the findings are made by your practice.`);
 tausche('>Muster-Bericht als PDF<', '>Sample report (PDF)<');
@@ -777,18 +795,20 @@ tausche(`Sie misst über Ihren Mess-Link auf Ihre Empfehlung, und die Rückmeldu
 
 // Physiologie-Lead (Warum die Zahlen tragen)
 tausche(`
-      Die Herzratenvariabilität liest die Balance des autonomen Nervensystems ab — das
-      Wechselspiel aus Sympathikus und Parasympathikus, das sich unter Belastung des
-      Organismus verschiebt. Für die Einstufung zählt deshalb die eigene Baseline des
-      Pferds; nur die Atemwegs-Marker tragen zusätzlich studienbasierte Schwellen
-      (Nyerges-Bohák 2025).
+      Die Herzratenvariabilität wird mit der Aktivität des autonomen Nervensystems in
+      Verbindung gebracht — dem Wechselspiel aus Sympathikus und Parasympathikus. Sie ist
+      damit kein Ablesen eines Zustands: einen belastbaren Normwert gibt es beim Pferd
+      nicht. Für die Einstufung zählt deshalb die eigene Baseline des Pferds. Nur die
+      Atemwegs-Marker tragen zusätzlich feste Schwellen — und die sind aus den
+      Gruppenmitteln einer Studie abgeleitet, nicht aus ihr übernommen (Nyerges-Bohák 2025).
     `,
         `
-      Heart rate variability reads the balance of the autonomic nervous system — the
-      interplay of sympathetic and parasympathetic tone that shifts when the organism is
-      under strain. That is why the classification rests on the horse's own baseline;
-      only the airway markers additionally carry study-based thresholds
-      (Nyerges-Bohák 2025).
+      Heart rate variability is associated with the activity of the autonomic nervous
+      system — the interplay of sympathetic and parasympathetic tone. It is therefore not
+      a readout of a state: there is no robust normal value in the horse. That is why the
+      classification rests on the horse's own baseline. Only the airway markers carry
+      fixed thresholds in addition — and those are derived from the group means of a
+      study, not taken from it (Nyerges-Bohák 2025).
     `);
 
 // Start-Sektion (So beginnt Ihre Praxis)
@@ -851,7 +871,9 @@ tausche('"text": "Aus den Ruhemessungen dieses Pferds selbst: Ab vier eigenen Au
 
 
 // Evidenz-Marke (Comet-Audit) — nur der uebersetzbare Chip
-tausche('<span>n = 40 · BAL-referenziert</span>', '<span>n = 40 · BAL-referenced</span>');
+tausche('<span>n = 40 · 20 sEA BAL-referenziert vs. 20 Kontrollen</span>',
+        '<span>n = 40 · 20 sEA BAL-referenced vs. 20 controls</span>');
+tausche('<span>Schwellen: eigene Ableitung</span>', '<span>Thresholds: our own derivation</span>');
 tausche('aria-label="Evidenz der Atemwegs-Marker"', 'aria-label="Evidence behind the airway markers"');
 
 

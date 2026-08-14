@@ -1,0 +1,69 @@
+{
+  "titel": "Web-Port gegen kanonische Swift-Kette — gemessen an vier echten Aufnahmen",
+  "stand": "2026-08-14",
+  "quellen": {
+    "kette_web": "carlon-equine/app/hrv-vorstufe.js (EquineFilterPipeline-Port)",
+    "kette_swift": "WimHofBreathwork/Shared/EquineFoundation/EquineFilterPipeline.swift",
+    "schlagzeile_app": "CarlonEquine/CarlonEquine/H10LongTerm/EquineExportMetrics.swift (rmssdDropPairs)"
+  },
+  "wie_es_entstand": [
+    "Anlass war ein Befund vom 14.08.2026: der Port liefere auf zwei von vier echten Aufnahmen eine andere RMSSD als die App (8,31 statt 18,27 ms · 9,31 statt 17,56 ms), waehrend SDNN ueberall auf unter 5 % stimme.",
+    "Nachgemessen wurde stufenweise: dieselbe Rohserie durch den Browser-Port und durch eine uebersetzte Fassung der Swift-Kette; verglichen wurden Schlagzahl, Verschmelzungen, Etikettenverteilung, QD90, Median, Artefaktrate, RMSSD und SDNN.",
+    "Ergebnis: die beiden UMSETZUNGEN weichen auf keiner der vier Aufnahmen ab — die Werte sind bis auf die letzte Fliesskommastelle gleich (|Δ| = 0). Zusaetzlich 120 erzeugte Reihen (n = 60 bis 3000, mit AV-Bloecken, T-Wellen-Fehlerkennungen und Bewegungsausreissern): ebenfalls ohne Abweichung.",
+    "Der Befund verglich also nicht zwei Umsetzungen, sondern zwei GROESSEN: die Kette gegen die Drop-Pair-Schlagzeile des App-Exports.",
+    "Warum es nur RMSSD trifft: RMSSD lebt von aufeinanderfolgenden Paaren, SDNN mittelt ueber die ganze Reihe. Eine Regel, die entscheidet, welche Paare zaehlen, verschiebt deshalb RMSSD stark und SDNN kaum."
+  ],
+  "lesarten": {
+    "A_roh": "RMSSD ueber die ungefilterte Rohserie",
+    "B_schlagzeile_app": "Drop-Pair, Ausschlussmenge = AV-Block + Lang-Kurz — was der App-Export als metrics.timeDomain.rmssdMs ausweist",
+    "C_droppair_vollstaendig": "dieselbe Drop-Pair-Regel, Ausschlussmenge = ALLE nicht-normalen Schlaege (also auch die ektopischen)",
+    "D_kette_droppair": "Etiketten der Filterkette, Paare uebersprungen statt Schlag ersetzt",
+    "E_kette_ersetzt": "die Filterkette wie sie laeuft: Schlag per Catmull-Rom ersetzt, in der Reihe behalten — der Wert, den Port UND Swift liefern"
+  },
+  "hinweis_zu_B": "B ist mit dem Code-Stand vom 14.08.2026 nachgerechnet. Die Zahl in der Exportdatei selbst stammt vom Aufnahmetag; bei der 1h47-Aufnahme weicht sie um 0,006 ms ab, weil die Ausschlussmenge heute 197 statt 195 Schlaege umfasst — der Klassifikator hat sich seitdem bewegt.",
+  "aufnahmen": [
+    {
+      "datei": "CARLON_MISTRAL_HRV-Session_2026-05-24T16-04-52Z_1m_n56.json",
+      "sha256_16": "dfadc29890718ed7",
+      "n": 56,
+      "A_roh": 21.394, "B_schlagzeile_app": 21.394, "C_droppair_vollstaendig": 21.394,
+      "D_kette_droppair": 21.394, "E_kette_ersetzt": 21.394,
+      "port_gleich_swift": true
+    },
+    {
+      "datei": "CARLON_MISTRAL_HRV-Session_2026-07-04T20-25-38Z_9m_n642.json",
+      "sha256_16": "f41d0b0eb1a2606c",
+      "n": 642,
+      "A_roh": 55.5266, "B_schlagzeile_app": 24.1591, "C_droppair_vollstaendig": 24.1591,
+      "D_kette_droppair": 17.5664, "E_kette_ersetzt": 24.1046,
+      "port_gleich_swift": true
+    },
+    {
+      "datei": "CARLON_MISTRAL_HRV-Session_2026-07-06T11-40-19Z_21m_n1738.json",
+      "sha256_16": "3f87bf304206499a",
+      "n": 1738,
+      "A_roh": 23.0546, "B_schlagzeile_app": 18.2734, "C_droppair_vollstaendig": 8.084,
+      "D_kette_droppair": 8.3252, "E_kette_ersetzt": 8.3107,
+      "port_gleich_swift": true
+    },
+    {
+      "datei": "CARLON_MISTRAL_HRV-Session_2026-07-15T16-57-31Z_1h47m_n10965.json",
+      "sha256_16": "821086ccf1379cc1",
+      "n": 10965,
+      "A_roh": 24.4383, "B_schlagzeile_app": 17.5536, "C_droppair_vollstaendig": 8.4003,
+      "D_kette_droppair": 9.2537, "E_kette_ersetzt": 9.3128,
+      "port_gleich_swift": true
+    }
+  ],
+  "was_daraus_folgt": [
+    "Der Port ist keine abweichende Umsetzung. Er reproduziert die kanonische Kette exakt; das bewacht ab sofort t-vorstufe-eichung.mjs mit festen Eichwerten und Gegenprobe.",
+    "Der Faktor 2 zwischen B und E stammt NICHT aus 'ersetzen statt ueberspringen'. Das zeigt der Vergleich D gegen E: auf derselben Ausschlussmenge liegen beide Wege bei der 21-min-Aufnahme 0,17 % auseinander (8,3252 gegen 8,3107).",
+    "Er stammt aus der Ausschlussmenge. B laesst die als ektopisch eingestuften Schlaege mit vollem Gewicht in der Quadratsumme stehen; wird dieselbe Regel vollstaendig angewandt (C), faellt die 21-min-Aufnahme von 18,2734 auf 8,084 ms — direkt neben die 8,3107 der Kette. Fuenf Schlaege von 1738 tragen den ganzen Unterschied.",
+    "Bei der 1-min- und der 9-min-Aufnahme sind B und C identisch (die Ausschlussmenge laesst dort nichts aus) — genau deshalb stimmten dort beide Zahlen ueberein und nur bei den anderen beiden nicht.",
+    "Offen und NICHT hier entschieden: welche der beiden Schlagzeilen die App fuehren soll. Das bewegt eine ausgelieferte Zahl in Export und Bericht und ist eine Entscheidung, keine Reparatur."
+  ],
+  "nebenbefund_zur_kette": [
+    "Bei der 9-min-Aufnahme liegt der letzte Schlag (Index 641, 488 ms) als Bewegungsartefakt etikettiert am Reihenende. Stufe 4 kann ihn nicht ersetzen, weil rechts kein normaler Nachbar mehr steht — der Schlag bleibt unveraendert in cleanRR und geht mit |ΔRR| = 419 ms in die RMSSD ein. Das ist rund die Haelfte der gesamten Quadratsumme: ohne ihn laege der Wert bei etwa 17,5 statt 24,1 ms.",
+    "Ein Schlag, der ausdruecklich als Artefakt etikettiert ist, sollte keine Kennzahl tragen. Auch das bewegt eine ausgelieferte Zahl und gehoert deshalb vor eine Entscheidung, nicht in eine stille Korrektur."
+  ]
+}

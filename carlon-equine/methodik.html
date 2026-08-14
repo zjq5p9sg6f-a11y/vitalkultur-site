@@ -200,8 +200,8 @@ dass aus schlechten Daten ein Ergebnis wird:</p>
   <tr><td>Qualität „exzellent"</td><td class="wert">&lt; 1,0 %</td><td class="quelle">Anteil korrigierter Schläge<span class="eigen">eigene Festlegung</span></td></tr>
   <tr><td>Qualität „gut"</td><td class="wert">&lt; 3,0 %</td><td class="quelle">—</td></tr>
   <tr><td>Qualität „schlecht"</td><td class="wert">&lt; 10,0 %</td><td class="quelle">—</td></tr>
-  <tr><td>Riegel: keine nichtlinearen Kennwerte</td><td class="wert">≥ 5,0 %</td><td class="quelle">DFA, Sample-Entropie und Poincaré-Maße werden unterdrückt</td></tr>
-  <tr><td>Riegel: gar kein Ergebnis</td><td class="wert">≥ 10,0 %</td><td class="quelle">Die Aufnahme wird nicht ausgewertet</td></tr>
+  <tr><td>Riegel: keine nichtlinearen Kennwerte</td><td class="wert">≥ 5,0 %</td><td class="quelle">DFA, Sample-Entropie und Poincaré-Maße werden unterdrückt<span class="eigen">eigene Festlegung</span></td></tr>
+  <tr><td>Riegel: gar kein Ergebnis</td><td class="wert">≥ 10,0 %</td><td class="quelle">Die Aufnahme wird nicht ausgewertet. Ein publizierter equiner Grenzwert für die Artefaktrate ist uns nicht bekannt; die Grenze ist bewusst konservativ gesetzt.<span class="eigen">eigene Festlegung</span></td></tr>
 </table></div>
 
 <h2>3 · Frequenzbänder</h2>
@@ -210,7 +210,7 @@ Pferdeherz schlägt langsamer, entsprechend liegen die Atmungs- und Regulationsa
 tieferen Frequenzen.</p>
 <div class="wrap"><table>
   <tr><th>Band</th><th>Bereich</th><th>Quelle</th></tr>
-  <tr><td>VLF</td><td class="wert">0 – 0,01 Hz</td><td class="quelle" rowspan="3">Visser (2002); Stucke (2015, Review); Wonghanchao (2025). Bezeichnung im Datensatz: <code>Equine-Visser-2002</code></td></tr>
+  <tr><td>VLF</td><td class="wert">0 – 0,01 Hz</td><td class="quelle" rowspan="3">Originärquelle der Bandgrenzen: <strong>Kuwahara et al. (1996)</strong>, J Auton Nerv Syst 60:43–48 (PMID 8884694). Referierend: Visser (2002); Stucke (2015, Review); Wonghanchao (2025) — sie tragen die Grenzen weiter, legen sie aber nicht fest. Die Kennung im Datensatz lautet aus historischen Gründen weiterhin <code>Equine-Visser-2002</code>.</td></tr>
   <tr><td>LF</td><td class="wert">0,01 – 0,07 Hz</td></tr>
   <tr><td>HF</td><td class="wert">0,07 – 0,60 Hz</td></tr>
 </table></div>
@@ -229,11 +229,26 @@ als eine fehlende.</p>
 </table></div>
 
 <h3>Atemwegs-Einordnung: Herkunft der Schwellen</h3>
-<p>Die verwendeten Schwellen sind an <strong>Nyerges-Bohák et al. (2025)</strong> kalibriert
-(Equine Veterinary Journal, DOI <code>10.1111/evj.14414</code>, n = 40, BAL-referenziert) und
-zusätzlich Monte-Carlo-verifiziert. Kernschwellen: SDNN <strong>55 ms</strong>,
-SD2 <strong>65 ms</strong>, SD2/SD1 <strong>1,50</strong>, TINN <strong>300 ms</strong>,
-DFA-α₁ <strong>0,70</strong>, Sample-Entropie <strong>0,80</strong>.</p>
+<p>Bezugsarbeit ist <strong>Nyerges-Bohák et al. (2025)</strong>, Equine Veterinary Journal,
+DOI <code>10.1111/evj.14414</code>. Sie vergleicht n = 40 Pferde: 20 mit
+<em>schwerem</em> equinem Asthma (sEA), BAL-referenziert, gegen 20 respiratorisch
+unauffällige Kontrollen — bei den Kontrollen wurde <strong>keine</strong> BAL durchgeführt.
+Die Arbeit berichtet Gruppenunterschiede und nennt SD2, SDNN, TINN und SD2/SD1 als die
+trennstärkeren Größen. <strong>Einen diagnostischen Schwellenwert enthält sie nicht.</strong></p>
+<p>Unsere Schwellen liegen mittig zwischen den publizierten Gruppenmitteln. Sie sind damit
+eine begründete Ableitung von uns und kein Literaturwert.<span class="eigen">eigene Festlegung</span>
+Kernschwellen: SDNN <strong>55 ms</strong>, SD2 <strong>65 ms</strong>,
+SD2/SD1 <strong>1,50</strong>, TINN <strong>300 ms</strong>, DFA-α₁ <strong>0,70</strong>,
+Sample-Entropie <strong>0,80</strong>.</p>
+<div class="kasten warn">
+  <h4>Eine Schwelle haben wir ersatzlos gestrichen</h4>
+  <p>Bis August 2026 stand hier zusätzlich ein RMSSD-Wert von 95 ms. Er war der
+  Bezugsarbeit zugeschrieben, kommt dort aber nur als <em>95-%-Konfidenzintervall</em> vor —
+  und er lag <strong>über</strong> dem Mittelwert der gesunden Kontrollgruppe derselben
+  Arbeit (86,0 ms). Eine Schwelle, die die Mehrheit der gesunden Studienpferde als auffällig
+  markiert hätte, war am eigenen Zitat widerlegbar. Sie wurde gestrichen und
+  <strong>nicht ersetzt</strong> — Gruppenmittel sind keine Schwellen.</p>
+</div>
 <div class="kasten warn">
   <h4>Grenze dieser Einordnung</h4>
   <p>Es handelt sich um eine <strong>Einordnung von Messwerten, nicht um eine Diagnose</strong>.
@@ -265,6 +280,10 @@ aufzeichnenden App berechnet und durch die Filterkette geführt wurde, oder ob e
 Rohserie abgeleitet ist. Fehlt der Vermerk, wird die Filterkette <em>nicht</em> behauptet —
 dann steht im Bericht ausdrücklich, dass die Werte ungefiltert sind und nicht gegen Referenzwerte
 gestellt werden dürfen.</p>
+<p>Das ist keine Formalie. Ein Dokument, das eine Artefaktkorrektur ausweist, die nie gelaufen
+ist, lässt rohe Werte wie geprüfte aussehen — und beim ruhenden Pferd liegen rohe und
+bereinigte Werte weit auseinander (siehe die +130 % oben). Deshalb gilt: <strong>Die
+Artefaktkorrektur wird nur dort genannt, wo sie tatsächlich stattgefunden hat.</strong></p>
 <p>Der ausgegebene Bericht nennt in einem eigenen Abschnitt „Methode &amp; Grenzen" die
 tatsächlich gelaufene Kette samt Quellen. Rohdaten (RR-Serie) lassen sich jederzeit als
 JSON, CSV oder Kubios-kompatibel exportieren, sodass jede Rechnung unabhängig
@@ -280,7 +299,11 @@ nachvollzogen werden kann.</p>
       Beschwerden gilt, was immer gilt: unmittelbar tierärztlich handeln.</li>
   <li><strong>Kein belastbarer Normwert.</strong> Für HRV beim Pferd existiert kein
       allgemeingültiger Referenzbereich. Aussagekräftig ist der Vergleich gegen die eigene
-      Vorgeschichte des Tieres — nicht der Absolutwert.</li>
+      Vorgeschichte des Tieres — nicht der Absolutwert. Wie dünn die Datenlage ist, zeigt ein
+      Beispiel: Die gesunden Kontrollpferde der oben genannten Bezugsarbeit lagen im Mittel bei
+      RMSSD 86,0 ms — unterhalb des Arbeitsbereichs, den wir selbst als „unauffällig" führen.
+      Das widerlegt unseren Bereich nicht (andere Messdauer, andere Population, n = 20), ist
+      aber der erste harte Datenpunkt dagegen. Wir führen ihn hier auf, statt ihn wegzulassen.</li>
   <li><strong>Bewegung begrenzt die Aussage.</strong> Die Kennwerte setzen eine ruhige,
       möglichst stationäre Aufnahme voraus. Bewegungsartefakte werden korrigiert, aber jede
       Korrektur ist eine Schätzung.</li>
@@ -292,19 +315,47 @@ nachvollzogen werden kann.</p>
 </ul>
 
 <h2>8 · Quellen</h2>
+<p>Getrennt nach dem, was eine Arbeit bei uns wirklich trägt. Eine Arbeit, die zum Thema
+passt, aber die zitierte Aussage nicht enthält, steht hier nicht als Beleg — sie wäre
+schädlicher als eine fehlende Quelle.</p>
+<h3>Tragen eine Zahl oder eine Klassifikation</h3>
 <ul>
+  <li>Kuwahara M. et al. (1996): <em>Assessment of autonomic nervous function by power spectral
+      analysis of heart rate variability in the horse.</em> J Auton Nerv Syst 60(1–2):43–48,
+      PMID 8884694 — Originärquelle der equinen Frequenzbänder (Abschnitt 3).</li>
+  <li>van Loon G. (2019): <em>Cardiac arrhythmias in horses.</em> Veterinary Clinics of North
+      America: Equine Practice 35:85–102 — trägt die AV-Block-Klassifikation (Abschnitt 2).</li>
+  <li>Nyerges-Bohák Z. et al. (2025): Equine Veterinary Journal, DOI
+      <a href="https://doi.org/10.1111/evj.14414">10.1111/evj.14414</a>, n = 40 (20 sEA
+      BAL-referenziert, 20 Kontrollen ohne BAL) — trägt die Gruppenunterschiede, aus denen
+      unsere Atemwegs-Schwellen abgeleitet sind, nicht die Schwellen selbst.</li>
   <li>Lipponen J. A., Tarvainen M. P. (2019): <em>A robust algorithm for heart rate variability
       time series artefact correction using novel beat classification.</em> Journal of Medical
-      Engineering &amp; Technology.</li>
-  <li>van Loon G. (2019): <em>Cardiac arrhythmias in horses.</em> Veterinary Clinics of North
-      America: Equine Practice 35:85–102.</li>
-  <li>Visser E. K. et al. (2002): Grundlage der equinen Frequenzbänder; Übersicht bei
-      Stucke D. et al. (2015); ergänzend Wonghanchao T. et al. (2025).</li>
-  <li>Nyerges-Bohák Z. et al. (2025): Equine Veterinary Journal, DOI
-      <a href="https://doi.org/10.1111/evj.14414">10.1111/evj.14414</a>, n = 40, BAL-referenziert.</li>
+      Engineering &amp; Technology — Verfahren der Artefaktkorrektur (Abschnitt 2).</li>
+  <li>Richman J. S., Moorman J. R. (2000): Sample-Entropie — Rechenverfahren.</li>
   <li>Tarvainen M. P. et al.: Kubios HRV — Vorbild für die Korrekturstufen.</li>
-  <li>Richman J. S., Moorman J. R. (2000): Sample-Entropie.</li>
 </ul>
+<h3>Methodische Übersichten — sie tragen hier keine Zahl</h3>
+<ul>
+  <li>Visser E. K. et al. (2002) sowie Wonghanchao T. et al. (2025): referieren die equinen
+      Frequenzbänder, legen sie aber nicht fest.</li>
+  <li>Stucke D. et al. (2015), Appl Anim Behav Sci 166:1–10: methodische Übersicht
+      <strong>ohne eigene Kohorte und ohne Referenzbereiche</strong>.</li>
+  <li>von Borell E. et al. (2007), Physiol Behav 92(3):293–316, PMID 17320122: Übersicht über
+      mehrere Nutztierarten <strong>ohne Speziesnormwerte</strong>.</li>
+</ul>
+<div class="kasten warn">
+  <h4>Was wir im August 2026 zurückgezogen haben</h4>
+  <p>Eine Prüfung aller Quellenangaben gegen die Primärarbeiten hat mehrere Zuschreibungen
+  nicht bestätigt. Betroffen waren unter anderem: die Herkunft der RMSSD- und SDNN-Bänder
+  (Stucke 2015, von Borell 2007, Ille 2014 — keine dieser Arbeiten trägt sie), ein
+  Ruhe-Herzfrequenz-Bereich, eine Artefaktgrenze und eine Zuverlässigkeitsangabe, deren
+  angebliche Quellen sich nicht auffinden ließen. Eine Angabe war in unserer Fassung in
+  Titel, Journal und Seitenzahl frei erfunden. Die betroffenen Zahlen sind entweder
+  gestrichen oder stehen jetzt überall dort, wo sie erscheinen, als
+  <span class="eigen">eigene Festlegung</span> — keine wurde einer Ersatzquelle
+  zugeschrieben.</p>
+</div>
 
 <footer>
   <strong>CARLON Equine</strong> · Vitalkultur, Jan Rohwedder · Iffezheim, Deutschland ·
