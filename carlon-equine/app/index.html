@@ -2637,6 +2637,11 @@ const Importer = {
         <p style="font-size:11.5px;color:var(--text-dim);margin-top:16px;max-width:400px;margin-left:auto;margin-right:auto">Derselbe Link gilt fuer alle Ihre Kundinnen — als Aushang im Stall erreicht er vierzig statt einer. Den Aushang drucken Sie ueber die Postfach-Pille.</p>
       </div>`;
     Importer._einladung={link, text};
+    /* Fehlt der Praxisname, traegt der Link ihn nicht — die Halterin sieht
+       dann CARLON statt der Praxis, und die Praxis merkt es nie. Genau das
+       Versprechen der Verkaufsseite faellt damit still aus. Also einmal
+       darauf hinweisen, ohne zu blockieren. */
+    if(!praxis) Toast.show('Tipp: Tragen Sie Ihren Praxisnamen in den Einstellungen ein — dann steht er über der Messung Ihrer Kundin','info');
     $('#impFoot').innerHTML=`<button class="btn ghost" onclick="Importer.renderDrop()">Zurück</button>`;
   },
   _einladung:null,
