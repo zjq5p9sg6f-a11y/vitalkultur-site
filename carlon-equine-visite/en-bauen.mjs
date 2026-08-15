@@ -190,6 +190,21 @@ tausche('Misst keinen Mist',
         'No junk in your numbers');
 tausche('Zu auffällig ist auch falsch',
         'Too conspicuous is wrong too');
+/* Der Beleg zur Filter-Behauptung. Zahlen bleiben Zahlen, aber das
+   Dezimalkomma wird zum Punkt — sonst liest ein englischer Leser 24,2
+   als Tausenderzahl. */
+tausche(`In einer echten Ruheaufnahme — 642 Schläge, 0,31 % Artefaktrate,
+         von der Qualitätsanzeige als <em>exzellent</em> geführt — genügen
+         <strong>zwei</strong> Schläge, ein AV-Block mit seinem kurzen Folgeschlag,
+         um die RMSSD von 24,2 auf 55,5 ms zu heben. <strong>130 % zu hoch</strong> —
+         und die Qualitätsanzeige warnt kein einziges Mal. Ein hoher Anteil
+         plausibler Schläge sagt nichts darüber, ob der Kennwert stimmt.`,
+`In a real resting recording — 642 beats, 0.31 % artefact rate, rated
+         <em>excellent</em> by the quality indicator — <strong>two</strong> beats,
+         an AV block with its short follow-on beat, are enough to lift RMSSD from
+         24.2 to 55.5 ms. <strong>130 % too high</strong> — and the quality
+         indicator never warns. A high share of plausible beats says nothing
+         about whether the metric is right.`);
 tausche('Und dort, wo es nicht reicht, sagt es das', 'And where it is not enough, it says so');
 
 // Abschnitt 4 — Verlauf

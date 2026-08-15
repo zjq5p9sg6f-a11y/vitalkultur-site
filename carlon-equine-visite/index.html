@@ -476,6 +476,9 @@ h2{font-family:var(--font-brand);font-weight:300;font-size:clamp(28px,3.6vw,var(
   grid-template-columns:repeat(auto-fit,minmax(228px,1fr))}
 /* Karte = OPAKES Grau (CI-Buch: `white 0.06-0.11` meint opak, nicht
    Weiss-mit-Alpha) auf einer Kante, die nur andeutet. */
+.beleg{margin-top:var(--sp-13);padding-left:var(--sp-13);
+  border-left:2px solid var(--border-faint);font-size:.94em;color:var(--text-secondary)}
+.beleg strong{color:var(--text)}
 .usp{background:var(--bg-surface);border:1px solid var(--border-faint);
   border-radius:17px;padding:var(--sp-21) var(--sp-21)}
 .usp .u-k{font-family:var(--font-mono);font-size:var(--t-mark);letter-spacing:0.2em;text-transform:uppercase;color:var(--cyan);margin-bottom:var(--sp-8)}
@@ -1183,6 +1186,17 @@ html.rev-an .rev.in{opacity:1;transform:none}
          <em>nicht</em> durchlaufen hat, steht das im Bericht — dann sind es rohe
          Werte, und der Bericht sagt es, statt eine Bereinigung zu behaupten.
          <a href="/carlon-equine/methodik.html">Jede Stufe mit ihrem Schwellenwert →</a></p>
+      <!-- DER BELEG ZUR BEHAUPTUNG (15.08.2026). Bewusst KEINE QA-Zahl ueber
+           unser Werkzeug (die 8/20 flog genau deshalb raus) — diese Zahl
+           beschreibt das PROBLEM, das ohne Bereinigung bleibt. Nachrechenbar:
+           app/belege/rmssd-nachrechnen.mjs rechnet 55,53 und 24,16 aus der
+           hinterlegten RR-Serie nach; die 130 % sind daraus ABGELEITET. -->
+      <p class="beleg">In einer echten Ruheaufnahme — 642 Schläge, 0,31 % Artefaktrate,
+         von der Qualitätsanzeige als <em>exzellent</em> geführt — genügen
+         <strong>zwei</strong> Schläge, ein AV-Block mit seinem kurzen Folgeschlag,
+         um die RMSSD von 24,2 auf 55,5 ms zu heben. <strong>130 % zu hoch</strong> —
+         und die Qualitätsanzeige warnt kein einziges Mal. Ein hoher Anteil
+         plausibler Schläge sagt nichts darüber, ob der Kennwert stimmt.</p>
     </div>
     <div class="usp">
       <!-- 14.08.2026 (Jan): die interne QA-Zahl (8/20) ist raus — sie las

@@ -80,3 +80,31 @@ jq '.aufnahmen[2] | {B: .B_schlagzeile_app, C: .C_droppair_vollstaendig, E: .E_k
 laeuft bei jedem Lauf durch beide Umsetzungen, gegen feste Eichwerte und mit
 Gegenprobe. Weicht eine Seite ab oder driftet dieser Beleg, faellt die
 Strecke rot.
+
+## `rmssd-roh-vs-korrigiert.json`
+
+Grundlage für den Satz auf der Visite-Seite:
+
+> „In einer echten Ruheaufnahme — 642 Schläge, 0,31 % Artefaktrate, von der
+> Qualitätsanzeige als *exzellent* geführt — genügen **zwei** Schläge, ein
+> AV-Block mit seinem kurzen Folgeschlag, um die RMSSD von 24,2 auf 55,5 ms
+> zu heben. **130 % zu hoch** — und die Qualitätsanzeige warnt kein einziges Mal."
+
+**Wie es entstand (04.07.2026):** Eine echte Ruheaufnahme, Polar H10, neun
+Minuten, 642 Schläge. Abgelegt ist nur, was die Aussage trägt: die RR-Serie in
+Millisekunden und die Etiketten der beiden nicht-normalen Schläge (Index 630
+`AVB`, 631 `LS`). **Kein Name, kein Ort, kein Zeitpunkt, keine Gerätenummer** —
+ein Wächter prüft die Schlüssel darauf.
+
+**Nachrechnen:** `node carlon-equine/app/belege/rmssd-nachrechnen.mjs`
+Das Skript rechnet beide Werte aus der Serie: roh über alle Schläge (55,53 ms)
+und korrigiert ohne das lang-kurz-**Paar** (24,16 ms). Die 130 % werden daraus
+*abgeleitet*, nicht hinterlegt. `t-belegte-zahlen.mjs` führt es bei jedem Lauf
+aus und vergleicht das Ergebnis mit dem, was auf der Seite steht — in beiden
+Sprachen.
+
+**Was der Beleg ausdrücklich NICHT zeigt:** Er ist eine einzelne Aufnahme, keine
+Studie und keine Fehlerquote. Er belegt genau eine Aussage — dass eine
+Aufnahme mit exzellenter Signalqualität einen um 130 % falschen Kennwert tragen
+kann, weil Signalqualität und Kennwert-Verlässlichkeit zwei verschiedene Dinge
+sind. Eine Häufigkeitsaussage („wie oft passiert das") lässt er nicht zu.
