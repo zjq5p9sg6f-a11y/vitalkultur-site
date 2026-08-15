@@ -190,6 +190,14 @@ tausche('Misst keinen Mist',
         'No junk in your numbers');
 tausche('Zu auffällig ist auch falsch',
         'Too conspicuous is wrong too');
+/* Das Beleg-Bild: Beschriftung fuer Vorleseprogramme und die Achse. Ein
+   aria-label in der falschen Sprache ist schlimmer als keines — es klingt
+   fuer den Vorleser wie Kauderwelsch. */
+tausche('Die Schlagabstände einer Ruheaufnahme über 642 Schläge. Die Linie verläuft ruhig um 850 Millisekunden. An einer einzigen Stelle springt sie auf 1794 Millisekunden — ein AV-Block mit seinem kurzen Folgeschlag. Diese eine Stelle hebt die RMSSD von 24,2 auf 55,5 Millisekunden.',
+        'Beat-to-beat intervals of a resting recording across 642 beats. The line runs steadily around 850 milliseconds. At a single point it jumps to 1794 milliseconds — an AV block with its short follow-on beat. That one point lifts RMSSD from 24.2 to 55.5 milliseconds.');
+tausche('<span>642 Schläge · rund 850 ms</span><span>Ausschlag 1794 ms</span>',
+        '<span>642 beats · around 850 ms</span><span>spike 1794 ms</span>');
+
 /* Der Beleg zur Filter-Behauptung. Zahlen bleiben Zahlen, aber das
    Dezimalkomma wird zum Punkt — sonst liest ein englischer Leser 24,2
    als Tausenderzahl. */
