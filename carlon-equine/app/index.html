@@ -1969,6 +1969,148 @@ function hashStr(s){let h=0;for(let i=0;i<s.length;i++){h=(h<<5)-h+s.charCodeAt(
 const POSTFACH_AN = (typeof window!=='undefined' && window.CARLON_POSTFACH===true);
 
 /* ---------- IndexedDB layer ---------- */
+/* ══════════════════════════════════════════════════════════════════════════
+   KLINIK-ORDNER — Mehrbenutzer-Betrieb OHNE Server (15.08.2026)
+   ────────────────────────────────────────────────────────────────────────
+   Das Problem: Eine Klinik hat mehrere Tierärzte, CARLON speichert im
+   Browser EINES Geräts. Der naheliegende Ausweg wäre ein Server bei uns —
+   und der kostet genau das, was das Produkt auszeichnet: keine Datenbank
+   bei uns, kein Auftragsverarbeitungsvertrag, keine Haftung für fremde
+   Patientendaten.
+
+   Der Ausweg ohne diesen Preis: Die Klinik wählt EINMAL einen Ordner, den
+   ihre Geräte ohnehin teilen — Netzlaufwerk, iCloud, ein Praxis-Share. Die
+   Daten liegen dort, also bei der Klinik, und CARLON schreibt hinein wie in
+   einen Aktenschrank. Wir sehen nichts davon; es gibt weiterhin nichts, was
+   ein AVV regeln müsste.
+
+   WARUM DAS OHNE SPERREN FUNKTIONIERT: Aufnahmen sind unveränderlich. Zwei
+   Tierärzte, die gleichzeitig arbeiten, schreiben nie dieselbe Datei —
+   jede Aufnahme trägt ihre eigene Kennung und wird genau einmal angelegt.
+   Bei Stammdaten (Pferd, Einstellungen), die sich ändern, gewinnt der
+   jüngere Stand; deshalb trägt jeder Satz einen Zeitstempel.
+
+   Der Ordner-Zugriff bleibt über Sitzungen bestehen (Handle in IndexedDB),
+   ohne dass jemand ihn täglich neu wählt. Verweigert der Browser die
+   Erlaubnis später doch, arbeitet CARLON lokal weiter und sagt es — ein
+   Werkzeug, das still aufhört zu teilen, ist gefährlicher als eines, das
+   gar nicht teilt. */
+/* HERKUNFT — wer und woran, ohne Konten und ohne Server.
+   Der Gerätename wird EINMAL vergeben und bleibt lokal; er identifiziert
+   die Station („Behandlung 2"), nicht die Person. Der Behandler kommt aus
+   den Einstellungen desselben Geräts. Beides steht nur in der Aufnahme,
+   nicht in einem Verzeichnis — es gibt weiterhin keine Nutzerverwaltung,
+   die jemand pflegen müsste. */
+const Herkunft = {
+  geraet(){
+    let g = (State.settings&&State.settings.geraeteName)||'';
+    if(!g){ g = 'Gerät '+String(Math.abs(hashStr(String(performance.timeOrigin))) % 900 + 100);
+            if(State.settings){ State.settings.geraeteName=g; State.saveSettings(); } }
+    return g;
+  },
+  jetzt(){
+    const s=State.settings||{};
+    return { behandler:(s.vetName||'').trim()||null, geraet:this.geraet(),
+             am:new Date().toISOString() };
+  },
+  /* Für die Anzeige: „Dr. Meier · Behandlung 2" — und wenn niemand
+     eingetragen ist, nur das Gerät statt einer leeren Zeile. */
+  text(e){
+    if(!e) return '';
+    return [e.behandler, e.geraet].filter(Boolean).join(' · ');
+  }
+};
+
+const Teilen = {
+  handle:null, aktiv:false, letzterFehler:null,
+  /* Nur der Klinik-Tarif. Nicht als Schranke um ein identisches Produkt,
+     sondern weil genau das der Unterschied IST: ein Betrieb mit mehreren
+     Behandlern gegenüber einer Einzelpraxis. */
+  /* Ueber License.can, nicht ueber tier() direkt: sonst gaebe es zwei Orte,
+     an denen steht, was zur Klinik gehoert — und einer davon veraltet. */
+  erlaubt(){ return typeof License!=='undefined' && License.can && License.can('sharedFolder'); },
+  moeglich(){ return typeof window.showDirectoryPicker==='function'; },
+
+  async verbinden(){
+    if(!this.erlaubt()) return {ok:false,grund:'Der geteilte Ordner gehört zum Klinik-Zugang.'};
+    if(!this.moeglich()) return {ok:false,grund:'Dieser Browser kann keine Ordner öffnen — Chrome oder Edge nötig.'};
+    try{
+      const h=await window.showDirectoryPicker({mode:'readwrite',id:'carlon-klinik'});
+      /* keyPath des settings-Stores ist `id`, nicht `key` — mit `key` wirft
+         IndexedDB beim Schreiben („key path did not yield a value"). Beim
+         ersten Verbinden waere das sofort aufgefallen; teuer waere es
+         geworden, haette ich es nicht vorher ausprobiert. */
+      await DB.put('settings',{id:'klinikOrdner',handle:h,seit:new Date().toISOString()});
+      this.handle=h; this.aktiv=true; this.letzterFehler=null;
+      const n=await this.abgleichen();
+      return {ok:true, name:h.name, gelesen:n};
+    }catch(e){ return {ok:false,grund:e&&e.name==='AbortError'?'abgebrochen':String(e&&e.message||e)}; }
+  },
+
+  /* Beim Start: gespeicherten Ordner wiederherstellen. Ohne Nachfrage nur,
+     wenn der Browser die Erlaubnis noch hält — sonst bleibt es beim lokalen
+     Betrieb, sichtbar gemacht über `letzterFehler`. */
+  async wiederaufnehmen(){
+    if(!this.erlaubt()||!this.moeglich()) return false;
+    try{
+      const s=await DB.get('settings','klinikOrdner');
+      if(!s||!s.handle) return false;
+      const p=await s.handle.queryPermission({mode:'readwrite'});
+      if(p!=='granted'){ this.letzterFehler='Der Ordner ist nicht mehr freigegeben.'; return false; }
+      this.handle=s.handle; this.aktiv=true; return true;
+    }catch(e){ this.letzterFehler=String(e&&e.message||e); return false; }
+  },
+
+  /* WAS GETEILT WIRD — und was ausdruecklich nicht.
+     `settings` bleibt GERAETELOKAL, aus zwei Gruenden. Erstens fachlich:
+     Standort und Fahrzeit gehoeren zum Geraet, nicht zum Betrieb — ein
+     gespiegelter Startpunkt wuerde jedem Kollegen die Route verderben.
+     Zweitens technisch, und das waere teuer geworden: Seit dem Verbinden
+     liegt der Ordner-Handle selbst in `settings`. Ein Handle ueberlebt
+     JSON.stringify nicht — er wuerde als `{}` in den Ordner geschrieben und
+     beim naechsten Abgleich den echten Handle jedes Geraets ueberschreiben.
+     Der Ordner haette sich damit selbst abgeklemmt. */
+  GETEILT: ['recordings','horses','consults','coherence'],
+  teilbar(store){ return this.GETEILT.indexOf(store)>=0; },
+  _name(store,obj){ return store+'__'+String(obj.id||obj.key||'ohne').replace(/[^\w.-]+/g,'-')+'.json'; },
+
+  /* Spiegeln, nicht verschieben: Der lokale Bestand bleibt vollständig.
+     Fällt der Ordner aus, arbeitet das Gerät ohne Datenverlust weiter. */
+  async schreiben(store,obj){
+    if(!this.aktiv||!this.handle||!this.teilbar(store)) return false;
+    try{
+      const d=await this.handle.getDirectoryHandle('carlon',{create:true});
+      const f=await d.getFileHandle(this._name(store,obj),{create:true});
+      const w=await f.createWritable();
+      await w.write(JSON.stringify({store,obj,stand:new Date().toISOString()}));
+      await w.close(); return true;
+    }catch(e){ this.letzterFehler=String(e&&e.message||e); return false; }
+  },
+
+  /* Einlesen, was andere Geräte abgelegt haben. Aufnahmen kommen dazu,
+     Stammdaten nur, wenn sie jünger sind als der eigene Stand. */
+  async abgleichen(){
+    if(!this.aktiv||!this.handle) return 0;
+    let neu=0;
+    try{
+      const d=await this.handle.getDirectoryHandle('carlon',{create:true});
+      for await (const [name,h] of d.entries()){
+        if(!name.endsWith('.json')||h.kind!=='file') continue;
+        try{
+          const satz=JSON.parse(await (await h.getFile()).text());
+          if(!satz||!satz.store||!satz.obj||!this.teilbar(satz.store)) continue;
+          const id=satz.obj.id||satz.obj.key;
+          const eigen=await DB.get(satz.store,id);
+          const unveraenderlich = satz.store==='recordings'||satz.store==='coherence';
+          if(eigen && (unveraenderlich || (eigen.stand||'') >= (satz.stand||''))) continue;
+          await DB.put(satz.store,satz.obj); neu++;
+        }catch(_){ /* eine kaputte Datei darf den Abgleich nicht anhalten */ }
+      }
+    }catch(e){ this.letzterFehler=String(e&&e.message||e); }
+    return neu;
+  }
+};
+
 const DB = {
   _db:null, _c:{},
   async open(){
@@ -1987,7 +2129,14 @@ const DB = {
   },
   _tx(store,mode){return this._db.transaction(store,mode).objectStore(store);},
   all(store){return new Promise((res,rej)=>{const r=this._tx(store,'readonly').getAll();r.onsuccess=()=>res(r.result);r.onerror=()=>rej(r.error);});},
-  put(store,obj){return new Promise((res,rej)=>{try{const r=this._tx(store,'readwrite').put(obj);r.onsuccess=()=>res(obj);r.onerror=()=>{if(typeof Safe!=='undefined')Safe.writeFailed(store,r.error);rej(r.error);};}catch(e){if(typeof Safe!=='undefined')Safe.writeFailed(store,e);rej(e);}});},
+  /* Der EINE Schreibpunkt — deshalb haengt der Klinik-Ordner hier und nicht
+     an fuenfzig Aufrufstellen. Der Spiegel laeuft NACH dem lokalen Erfolg und
+     ohne auf ihn zu warten: ein langsames Netzlaufwerk darf die Behandlung
+     nicht bremsen, und ein nicht erreichbarer Ordner darf keine Aufnahme
+     verlieren. Faellt er aus, merkt es `Teilen.letzterFehler`. */
+  put(store,obj){return new Promise((res,rej)=>{try{const r=this._tx(store,'readwrite').put(obj);r.onsuccess=()=>{
+    if(typeof Teilen!=='undefined'&&Teilen.aktiv){ try{ Teilen.schreiben(store,obj); }catch(_){ } }
+    res(obj);};r.onerror=()=>{if(typeof Safe!=='undefined')Safe.writeFailed(store,r.error);rej(r.error);};}catch(e){if(typeof Safe!=='undefined')Safe.writeFailed(store,e);rej(e);}});},
   del(store,id){return new Promise((res,rej)=>{try{const r=this._tx(store,'readwrite').delete(id);r.onsuccess=()=>res();r.onerror=()=>{if(typeof Safe!=='undefined')Safe.writeFailed(store,r.error);rej(r.error);};}catch(e){if(typeof Safe!=='undefined')Safe.writeFailed(store,e);rej(e);}});},
   get(store,id){return new Promise((res,rej)=>{const r=this._tx(store,'readonly').get(id);r.onsuccess=()=>res(r.result);r.onerror=()=>rej(r.error);});},
 };
@@ -2996,6 +3145,13 @@ const Importer = {
       id:recId, horseId:horse.id, startedAt:n.startedAt, durationSec:n.durationSec, beatCount:n.beatCount,
       intent:n.intent, metrics:n.metrics, triage, clinical:n.clinical, device:n.device,
       rr:n.rr.length<=2000?n.rr:n.rr.filter((_,i)=>i%Math.ceil(n.rr.length/2000)===0),
+      /* WER SIE EINGESPIELT HAT (15.08.2026). In einer Einzelpraxis ist das
+         entbehrlich — es gibt nur eine Person. Sobald mehrere Behandler auf
+         DENSELBEN Bestand schauen, ist eine Aufnahme ohne Herkunft ein
+         Zettel ohne Unterschrift: Man sieht das Ergebnis und weiss nicht,
+         wen man fragen kann. Der Gerätename kommt dazu, weil in einer Klinik
+         dasselbe Konto an mehreren Stationen laeuft. */
+      erfasstVon: Herkunft.jetzt(),
     };
     await DB.put('recordings',rec); State.recordings.push(rec);
     // Auto-Flag Besuch bei kritisch/erhöht
@@ -4289,6 +4445,14 @@ const Views={
   },
   /* ---------------- STATIONSWAND (Klinik-Tier · Wand-Monitor) ---------------- */
   station(){
+    /* ⚠ OFFENER PUNKT (15.08.2026): Dieser Sperrtext ist NICHT uebersetzt —
+       genau wie der aeltere fuer das Kohaerenz-Modul. Der faellt nur deshalb
+       nicht auf, weil Kohaerenz in beiden bezahlten Stufen enthalten ist und
+       seine Sperrseite nie erscheint. Das Cockpit hat keine t()-Funktion;
+       eine einzufuehren ist ein eigener Schritt, kein Nebenbei. Solange
+       meldet `t-sprache` diese Stelle zu Recht. */
+    if(!License.can('station')) return Views.lockedView('Stationswand',
+      'Der Wand-Monitor aller überwachten Pferde — für die Klinik, in der mehrere Behandler denselben Bestand vor Augen haben. Nach Abweichung sortiert, nicht nach Eingang. In Vet-Clinic enthalten.');
     const rankLvl={crit:3,elev:2,watch:1,stable:0};
     const mon=State.horses.filter(h=>State.latestFor(h.id)).map(h=>{
       const rec=State.latestFor(h.id);
@@ -7464,6 +7628,16 @@ const UI={
     <div class="modal-body">
       <div class="field"><label>Praxisname</label><input id="sName" value="${esc(s.clinicName)}"></div>
       <div class="field"><label>Tierarzt / Tierärztin</label><input id="sVet" value="${esc(s.vetName||'')}"></div>
+      ${Teilen.erlaubt()?`<div class="field"><label>Geteilter Klinik-Ordner ${Teilen.aktiv?'<span style="color:var(--good);font-weight:400">— verbunden</span>':'<span style="color:var(--text-dim);font-weight:400">— mehrere Behandler, ein Bestand</span>'}</label>
+        <div style="font-size:12.5px;color:var(--text-dim);line-height:1.5;margin:-4px 0 8px">
+          Wählen Sie einen Ordner, den Ihre Geräte ohnehin teilen — ein Netzlaufwerk oder ein
+          Praxis-Share. Aufnahmen liegen dann <b>bei Ihnen</b>, nicht bei uns, und jedes Gerät
+          Ihres Betriebs sieht denselben Bestand. Jedes Gerät behält zusätzlich seinen eigenen
+          vollständigen Stand — fällt der Ordner aus, arbeitet es weiter.
+        </div>
+        <button class="btn ghost" onclick="UI.klinikOrdner()">${Teilen.aktiv?'Ordner wechseln':'Ordner verbinden'}</button>
+        ${Teilen.letzterFehler?`<div style="font-size:12px;color:var(--amber);margin-top:6px">Zuletzt: ${esc(Teilen.letzterFehler)}</div>`:''}
+      </div>`:''}
       <div class="field"><label>Praxis-Logo <span style="color:var(--text-dim);font-weight:400">— erscheint auf deinen Befund-PDFs (dein Branding, nicht unseres)</span></label>
         <div class="logo-row">
           <div class="logo-prev" id="sLogoPrev">${s.logo?`<img src="${s.logo}" alt="Logo">`:'<span>kein Logo</span>'}</div>
@@ -7538,6 +7712,19 @@ const UI={
     </div>
     <div class="modal-foot"><button class="btn primary" onclick="UI.closeModal()">Verstanden</button></div>`);
   },
+  /* Der Ordner wird vom NUTZER gewaehlt — der Browser laesst uns gar nicht
+     anders. Genau das ist die Eigenschaft, die diesen Weg tragfaehig macht:
+     wir koennen nicht heimlich woanders hinschreiben, und die Klinik sieht
+     im Dateimanager jederzeit, was dort liegt. */
+  async klinikOrdner(){
+    const r=await Teilen.verbinden();
+    if(r.ok){
+      Toast.show(r.gelesen?`Ordner „${r.name}" verbunden · ${r.gelesen} Datensätze übernommen`
+                          :`Ordner „${r.name}" verbunden`,'ok');
+      if(r.gelesen){ await State.load(); }
+      this.closeModal(); this.openSettings(); Nav.refresh();
+    } else if(r.grund!=='abgebrochen'){ Toast.show(r.grund,'warn'); }
+  },
   async saveSettings(){const s=State.settings;
     s.clinicName=$('#sName').value;s.vetName=$('#sVet').value;s.originLabel=$('#sOrigin').value;
     /* Kontakt fuer den Aushang — getrimmt, damit ein versehentliches
@@ -7593,11 +7780,24 @@ const UI={
       ['month','Monatsabo',String(License.PREIS.soloMonat),'monatlich kündbar',''],
     ];
     /* Klinik-Stufe (AP3): eigener Block unter der Praxis — der Magnet ist
-       der Entlasstag (Nachsorge-Flow), nicht die Platzzahl. */
-    const kplans=[
+       der Entlasstag (Nachsorge-Flow), nicht die Platzzahl.
+
+       ⚠ SELBSTBEDIENUNG AUS, 15.08.2026. Nicht als Notbehelf, sondern als
+       Entscheidung: Die Klinik-Stufe steht seit heute bei 349 €, die
+       hinterlegten Stripe-Preise ziehen noch 199 € ein. Anzeige und Einzug
+       auseinanderlaufen zu lassen waere der teuerste Fehler dieser Flaeche —
+       CHECKOUT_BETRAG existiert genau dafuer, das zu verhindern.
+
+       Und der Weg passt ohnehin nicht: Eine Klinik mit zehn Behandlern kauft
+       kein Abo ueber einen Bezahllink. Sie will ein Gespraech, eine Rechnung
+       und einen Ansprechpartner. Der Preis steht sichtbar als Orientierung,
+       der Abschluss laeuft ueber Kontakt. Sobald die Stripe-Preise auf
+       349/3490 stehen, ist die Selbstbedienung eine Zeile weit entfernt. */
+    const KLINIK_SELBSTKAUF = false;
+    const kplans=KLINIK_SELBSTKAUF?[
       ['clinicYear','Klinik · Jahresabo',(License.PREIS.klinikJahr/12).toFixed(2).replace('.',','),`${License.PREIS.klinikJahr.toLocaleString('de-DE')} € im Jahr — zwei Monate günstiger`,''],
       ['clinicMonth','Klinik · Monatsabo',String(License.PREIS.klinikMonat),'monatlich kündbar',''],
-    ];
+    ]:[];
     // ROI-Pitch aus den eigenen Zahlen des Vets: erfasster Telemetrie-Umsatz vs. Lizenz
     const booked=(State.consults||[]).reduce((s,c)=>s+(c.fee||0),0);
     const mult=booked>0?Math.max(1,Math.round(booked/License.PREIS.soloMonat)):0;
@@ -8737,11 +8937,30 @@ const License={
      pro EINZELNER Beratung (telVet); wir geben unbegrenzt Pferde. Bei 79 €
      trug ein direkt akquirierter Kunde seine Akquisekosten erst nach 21
      Monaten — der Deckungsbeitrag im ersten Jahr war negativ.
-     Klinik bleibt vorerst 199 €: die Stufe wird NICHT oeffentlich verkauft
-     (Cockpit zeigt „auf Anfrage"), solange Mehrbenutzer-Betrieb fehlt. Der
-     Abstand zur Praxis ist damit bewusst zu klein — er wird mit dem Produkt
-     korrigiert, nicht vorher. */
-  PREIS:{ soloMonat:149, soloJahr:1490, klinikMonat:199, klinikJahr:1990 },
+     Klinik 199 -> 349 € (15.08.2026, Jan). Die Bedingung von oben ist
+     eingeloest: Der Mehrbenutzer-Betrieb steht (geteilter Klinik-Ordner),
+     die Stationswand ist jetzt wirklich Klinik-exklusiv, und jede Aufnahme
+     traegt ihren Behandler. Es ist kein identisches Produkt mehr, also darf
+     der Abstand korrigiert werden — genau wie hier angekuendigt.
+
+     WARUM 349 UND NICHT MEHR ODER WENIGER:
+     · Faktor 2,34 zur Praxis. Ein Team-Tarif unter Faktor 2 liest sich als
+       Aufschlag auf dasselbe Produkt; darueber als eigene Stufe.
+     · Belegte Vergleichsanker (an Herstellerseiten geprueft, nicht aus
+       Vergleichsportalen): Vetstoria 199-399 € je STANDORT, telVet 149-249 €
+       je EINZELNER Beratung, Alogo 85-125 € pro PFERD. Wir geben einer
+       Klinik unbegrenzte Pferde und alle Arbeitsplaetze eines Betriebs.
+     · Je Tieraerztin gerechnet: bei zehn Behandlern rund 35 €/Monat. Das
+       ist die Zahl, die im Gespraech faellt, und sie ist trivial.
+     · 349 statt 350: Schwellenpreis, ohne in die 299er-Billigzone zu
+       rutschen, in der ein Klinikeinkaeufer Qualitaet in Frage stellt.
+     · Jahr = zehn Monate, wie bei der Praxis (1490 = 10 x 149). Gleiche
+       Logik, damit niemand zwei Rabattregeln erklaeren muss.
+
+     ⚠ Die Stufe bleibt trotzdem NICHT frei kaufbar, bis die Stripe-Preise
+     auf 349/3490 stehen. CHECKOUT_BETRAG bindet Anzeige an Einzug — solange
+     dort 199 steht, wuerde eine Klinik 199 zahlen und 349 lesen. */
+  PREIS:{ soloMonat:149, soloJahr:1490, klinikMonat:349, klinikJahr:3490 },
   /* ABGELEITET, nicht abgeschrieben. Hier stand '79 €/Mo' als Text — direkt
      unter dem Kommentar, der „EINE Quelle für jede Preisangabe" verspricht.
      Zwei Quellen für dieselbe Zahl sind keine Quelle, sondern eine Wette
@@ -8751,7 +8970,12 @@ const License={
      vergebbar, deshalb steht ihr Satz hier ausgeschrieben. */
   get PRICES(){ return {
     vet_solo: this.PREIS.soloMonat+' €/Mo zzgl. MwSt.',
-    vet_clinic:'auf Anfrage', research:'auf Anfrage' }; },
+    /* Die Zahl steht da, der Kaufknopf nicht. „Auf Anfrage" allein liest
+       sich wie „wir wissen es selbst nicht" — genannt und dann besprochen
+       ist die Haltung, die zu einem Klinikpreis passt. Abgeleitet aus
+       PREIS, nicht abgeschrieben. */
+    vet_clinic: this.PREIS.klinikMonat+' €/Mo zzgl. MwSt. · auf Anfrage',
+    research:'auf Anfrage' }; },
   /* ── ZAHLUNG (Stripe) ist von BERECHTIGUNG (eigene signierte Keys) ENTKOPPELT ──
      Bewusste Architektur-Entscheidung 2026-08-06: Lemon Squeezy wurde von Stripe
      aufgekauft und migriert seine Haendler auf "Stripe Managed Payments" — die
@@ -8843,7 +9067,13 @@ const License={
      Kasse: lieber keine Kasse als eine, die 79 € einzieht, waehrend die
      Seite 149 € nennt. Am 15.08.2026 GEMEINSAM mit CHECKOUT_ALL.live
      gewandert — einzeln angefasst waere die Sperre umgangen statt geloest. */
-  CHECKOUT_BETRAG:{ month:149, year:1490, clinicMonth:199, clinicYear:1990 },
+  /* Klinik auf 349/3490 gezogen (15.08.). Die hinterlegten Stripe-LINKS
+     tragen noch 199/1990 — deshalb ist KLINIK_SELBSTKAUF aus, und nur
+     deshalb ist diese Zeile ungefaehrlich: Ohne Kaufweg kann kein Betrag
+     eingezogen werden, der von der Anzeige abweicht. Wer die Selbstbedienung
+     wieder einschaltet, MUSS vorher die Stripe-Preise anlegen — `t-klinik`
+     prueft die Bindung, `t-klinikordner` prueft, dass beides zusammenpasst. */
+  CHECKOUT_BETRAG:{ month:149, year:1490, clinicMonth:349, clinicYear:3490 },
   /* Die Zahlungs-Links zeigen noch auf Stripes Testumgebung. Wird die
      Beta-Sperre geloest, ohne sie zu tauschen, laeuft der Kunde durch eine
      Kasse, die kein Geld einzieht — und wir merken es an nichts ausser einer
@@ -8961,7 +9191,9 @@ const License={
     vet_clinic:['pdf','csv','routeHandoff','coherence','ownerFeedback',
                 'multiSeat',        // Lizenz nennt eine Platzzahl; siehe seats()
                 'nachsorge',        // Entlass-Nachsorge-Flow (13.08., s. u.)
-                'clinicBranding']   // Klinik-Name im Kopf (additiv, AP2)
+                'clinicBranding',   // Klinik-Name im Kopf (additiv, AP2)
+                'station',          // Stationswand — Wand-Monitor (15.08.)
+                'sharedFolder']     // geteilter Klinik-Ordner, Mehrbenutzer (15.08.)
   },
   /* ENTSCHIEDEN (Jan, 13.08.2026) — der offene Punkt unten ist damit
      beantwortet: Die Klinik-Stufe (jetzt 199 €/Monat, PREIS-Quelle oben)
@@ -8996,7 +9228,11 @@ const License={
     if(this.abgelaufen()) return false;
     return (this.FEATURES[this.tier()]||[]).includes(f);
   },
-  CLINIC_ONLY:['clinicBranding','multiSeat','nachsorge'],
+  /* `station` und `sharedFolder` kamen am 15.08. dazu. Beides ist kein
+     kuenstlicher Riegel um ein identisches Produkt, sondern beschreibt genau
+     den Unterschied: Eine Fahrpraxis hat keine Stationswand, weil sie keine
+     Station hat, und keinen geteilten Ordner, weil sie ein Geraet ist. */
+  CLINIC_ONLY:['clinicBranding','multiSeat','nachsorge','station','sharedFolder'],
   /* Die Platzzahl steht im Schluessel und wird ANGEZEIGT, nicht technisch
      erzwungen — ohne Server laesst sich geraeteuebergreifend nichts durchsetzen,
      und ein Schein-Schutz waere schlechter als eine klare Angabe. Sie ist eine
@@ -11008,6 +11244,17 @@ const Sprache={
       State.settings.seedNamesCleaned=true; await State.saveSettings();
     }
     await License.loadFromSettings();
+    /* NACH der Lizenz, weil der geteilte Ordner zum Klinik-Zugang gehoert —
+       davor waere `erlaubt()` immer falsch. Still: wer die Klinik oeffnet,
+       will arbeiten. Nur wenn der Ordner NICHT mehr da ist, muss es auffallen. */
+    try{
+      if(await Teilen.wiederaufnehmen()){
+        const neu=await Teilen.abgleichen();
+        if(neu){ await State.load(); Toast.show(`${neu} Aufnahme${neu===1?'':'n'} aus dem Klinik-Ordner übernommen`,'ok'); }
+      } else if(Teilen.letzterFehler && Teilen.erlaubt()){
+        Toast.show('Klinik-Ordner nicht erreichbar — dieses Gerät arbeitet vorerst allein','warn');
+      }
+    }catch(e){}
     /* Erst die Rueckkehr aus der Kasse abfangen, dann faellige Erneuerung.
        Beides still — wer die App oeffnet, will arbeiten, nicht verwalten. */
     await License.freischaltenAusRueckleitung();

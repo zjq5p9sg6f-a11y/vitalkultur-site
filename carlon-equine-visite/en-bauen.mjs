@@ -190,6 +190,20 @@ tausche('Misst keinen Mist',
         'No junk in your numbers');
 tausche('Zu auffällig ist auch falsch',
         'Too conspicuous is wrong too');
+/* Die Gurt-Frage — auf Englisch dieselbe Aussage ohne Betrag. */
+tausche(`<strong>Und der Gurt?</strong> Ein Polar&nbsp;H10 ist ein handelsübliches Gerät, überall
+      erhältlich und billiger als eine einzige Anfahrt. Wir verkaufen ihn <em>nicht</em> — damit
+      Sie ihn frei wählen und bei einem Defekt am selben Tag Ersatz haben, statt auf uns zu warten.
+      Bewährt hat sich: <strong>zwei bis drei Leihgurte in der Praxis</strong>, die Sie mitgeben;
+      Halterinnen mit mehreren Pferden schaffen sich meist selbst einen an. Ein Gurt reicht für
+      beliebig viele Pferde — er wird nur umgeschnallt.`,
+`<strong>And the belt?</strong> A Polar&nbsp;H10 is an off-the-shelf device, available everywhere
+      and cheaper than a single call-out. We do <em>not</em> sell it — so you can choose freely and
+      get same-day replacement if one fails, rather than waiting for us. What works well:
+      <strong>two or three loan belts in the practice</strong> that you hand out; owners with
+      several horses usually buy their own. One belt serves any number of horses — it simply
+      gets moved.`);
+
 /* Das Beleg-Bild: Beschriftung fuer Vorleseprogramme und die Achse. Ein
    aria-label in der falschen Sprache ist schlimmer als keines — es klingt
    fuer den Vorleser wie Kauderwelsch. */
