@@ -123,13 +123,13 @@ tausche(`Der Anruf sagt „irgendwie nicht fit". Die Messung, die Ihnen die Halt
       you decide on evidence who is up today and who can wait until the follow-up.`);
 tausche('Cockpit mit 15&nbsp;Demo-Pferden öffnen →', 'Open the cockpit with 15&nbsp;demo horses →', 2);
 tausche('>Was es kostet<', '>What it costs<');
-tausche('Das Demo-Cockpit ist die vollständige Anwendung mit echten Beispielverläufen — ohne Konto, ohne Installation. Die Daten verlassen Ihre Praxis nicht.',
-        'The demo cockpit is the complete application with real example trends — no account, no installation. The data never leaves your practice.');
+tausche('Das Demo-Cockpit ist die vollständige Anwendung mit vollständigen Beispielverläufen — ohne Konto, ohne Installation. Nichts davon verlässt Ihren Browser.',
+        'The demo cockpit is the complete application with full example trends — no account, no installation. None of it leaves your browser.');
 /* Hero-Belege + Visual (13.08.: φ-Split-Kopf) */
 tausche('<li><b>Gemessen im Stall,</b> in Ruhe — gegen die eigene Baseline dieses Pferds.</li>',
         '<li><b>Recorded in the stable,</b> at rest — against this horse’s own baseline.</li>');
-tausche('<li><b>Ausgewertet in Ihrem Browser</b> — die Daten bleiben in der Praxis, ein AVV entfällt.</li>',
-        '<li><b>Analysed in your browser</b> — the data stays in your practice, no data-processing agreement needed.</li>');
+tausche('<li><b>Ausgewertet in Ihrem Browser</b> — Patientendaten erreichen uns nicht, ein AVV mit uns entfällt.</li>',
+        '<li><b>Analysed in your browser</b> — patient data never reaches us, so no data-processing agreement with us is needed.</li>');
 tausche('<li><b>Abrechenbar</b> — die Ferneinschätzung führt die GOT als Ziffer&nbsp;1, den Brief als Ziffer&nbsp;89.</li>',
         '<li><b>Billable</b> — the German fee schedule (GOT) lists the remote assessment as item&nbsp;1, the letter as item&nbsp;89.</li>');
 tausche('title="Demo-Cockpit öffnen"', 'title="Open the demo cockpit"');
@@ -153,7 +153,7 @@ tausche('Ruhe-HRV gibt es nur dort, wo Ruhe ist: im eigenen Stall.',
 tausche('Die Ferneinschätzung ist abrechenbar', 'Remote assessment is billable');
 tausche(`Die Beratung ohne Untersuchung führt die <strong>GOT als Ziffer&nbsp;1</strong>, den
          Tierarztbrief je angefangene 15&nbsp;Minuten als <strong>Ziffer&nbsp;89</strong>. Aus
-         einem Anruf ohne Grundlage wird eine Leistung mit einer.`,
+         einem Anruf ohne Datengrundlage wird eine dokumentierte Leistung mit einer.`,
 `German veterinary fee schedule (GOT) lists advice without examination as <strong>item&nbsp;1</strong>,
          and the veterinary letter per started 15&nbsp;minutes as <strong>item&nbsp;89</strong>. A
          phone call without a basis becomes a service with one.`);
@@ -194,7 +194,7 @@ tausche('Und dort, wo es nicht reicht, sagt es das', 'And where it is not enough
 
 // Abschnitt 4 — Verlauf
 tausche('Was eine Momentaufnahme nicht kann', 'What a snapshot cannot do');
-tausche('Ein Wert sagt wenig. Sein Verlauf sagt alles.', 'The direction is the information.');
+tausche('Ein Wert sagt wenig. Erst sein Verlauf gibt ihm Kontext.', 'One value says little. Only its trend gives it context.');
 tausche('Über Wochen statt über Minuten', 'Over weeks rather than minutes');
 tausche('Nach einer Umstellung sichtbar', 'Visible after a change');
 
