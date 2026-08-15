@@ -2604,33 +2604,59 @@ const Importer = {
       else res();
     });
   },
-  receiveMode(){
-    if(typeof P2P==='undefined'){Toast.show('P2P-Modul nicht geladen','warn');return;}
-    const relayReady=P2P.RELAY&&!/example\.workers\.dev/.test(P2P.RELAY);
-    const room=P2P.roomCode();
-    const base=location.href.replace(/[^/]*(\?.*)?$/,'');
-    const link=base+'messen.html?room='+room;   // Mess-Station: direkt messen ODER Datei senden
+  /* ── EINLADEN STATT P2P (15.08.2026) ──────────────────────────────────
+     Hier stand ein Peer-to-Peer-Empfang ueber ein Signaling-Relay, das nie
+     konfiguriert wurde (`example.workers.dev`). Der Knopf erzeugte einen
+     `?room=`-Link gegen ein totes Relay und versprach dabei „Ende-zu-Ende
+     bei dir, ohne Server" — eine Zusage, die nichts einloeste. Zugleich
+     hingen die EINZIGEN WhatsApp- und Mail-Vorlagen des Cockpits an genau
+     diesem toten Weg, waehrend der funktionierende Mess-Link nur als nackte
+     URL in die Zwischenablage ging.
+     Jetzt fuehrt derselbe Knopf auf den echten Weg — mit einer Nachricht,
+     die die Halterin versteht, statt einer blanken Adresse. */
+  async receiveMode(){
+    const link = (typeof Praxis!=='undefined') ? await Praxis.einladung() : null;
+    if(!link) return;                       // gate() hat bereits erklaert, warum
+    const praxis = ((State.settings&&State.settings.clinicName)||'').trim();
+    const text = praxis
+      ? `Hallo, hier ist ${praxis}. Bitte messen Sie den Herzrhythmus Ihres Pferds einmal in Ruhe — der Link fuehrt Sie Schritt fuer Schritt durch, es dauert sieben Minuten und braucht kein Konto: ${link}`
+      : `Bitte messen Sie den Herzrhythmus Ihres Pferds einmal in Ruhe — der Link fuehrt Sie Schritt fuer Schritt durch, es dauert sieben Minuten und braucht kein Konto: ${link}`;
+    const teilbar = typeof navigator.share==='function';
     $('#impBody').innerHTML=`
       <div style="text-align:center;padding:6px 4px">
         <div style="width:52px;height:52px;border-radius:14px;background:var(--cyan-faint);border:1px solid var(--cyan-g2);color:var(--cyan);display:flex;align-items:center;justify-content:center;margin:0 auto 14px"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 12v6a2 2 0 002 2h12a2 2 0 002-2v-6M8 12l4 4 4-4M12 16V4"/></svg></div>
-        <h3 style="font-family:var(--font-brand);font-size:20px;font-weight:600;margin-bottom:6px">Aufnahme empfangen</h3>
-        <p style="font-size:13px;color:var(--text-secondary);max-width:380px;margin:0 auto 18px">Sende dem Pferdebesitzer diesen Link (z.&nbsp;B. per WhatsApp). Er kann damit <b>direkt mit dem Polar H10 messen</b> — oder eine vorhandene Datei aus der App senden. Beides kommt Ende-zu-Ende bei dir an, ohne Server.</p>
+        <h3 style="font-family:var(--font-brand);font-size:20px;font-weight:600;margin-bottom:6px">Halterin einladen</h3>
+        <p style="font-size:13px;color:var(--text-secondary);max-width:400px;margin:0 auto 18px">Schicken Sie diesen Link. Die Halterin misst damit im Browser — ohne App, ohne Konto — und die Aufnahme kommt <b>für Ihre Praxis verschlüsselt</b> zurück.</p>
         <div style="background:var(--bg-deep);border:1px solid var(--border-subtle);border-radius:var(--r-m);padding:12px 14px;font-family:var(--font-mono);font-size:12px;word-break:break-all;color:var(--cyan-strong);margin-bottom:12px">${esc(link)}</div>
         <div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap">
-          <button class="btn ghost" onclick="navigator.clipboard.writeText('${link}').then(()=>Toast.show('Link kopiert','ok'))">Link kopieren</button>
-          <a class="btn ghost" href="https://wa.me/?text=${encodeURIComponent('CARLON — hier die Herzraten-Messung deines Pferds aufnehmen und direkt an mich senden: '+link)}" target="_blank">Per WhatsApp</a>
-          <a class="btn ghost" href="mailto:?subject=CARLON%20Aufnahme%20senden&body=${encodeURIComponent('Bitte die HRV-Aufnahme hier hochladen: '+link)}">Per E-Mail</a>
+          ${teilbar?`<button class="btn primary" onclick="Importer.einladungTeilen()">Teilen</button>`:''}
+          <button class="btn ghost" onclick="Importer.einladungKopieren()">Nachricht kopieren</button>
+          <a class="btn ghost" href="https://wa.me/?text=${encodeURIComponent(text)}" target="_blank" rel="noopener">Per WhatsApp</a>
+          <a class="btn ghost" href="mailto:?subject=${encodeURIComponent('Herzrhythmus-Messung fuer Ihr Pferd')}&body=${encodeURIComponent(text)}">Per E-Mail</a>
         </div>
-        <div id="rcvStatus" style="margin-top:20px;font-size:13px;color:var(--text-secondary)"><span class="spin" style="width:16px;height:16px;display:inline-block;vertical-align:middle;margin-right:8px;border:2px solid var(--border-subtle);border-top-color:var(--cyan);border-radius:50%;animation:spin .8s linear infinite"></span>Warte auf den Besitzer…</div>
-        ${relayReady?'':'<div class="demo-ribbon" style="margin-top:16px;text-align:left"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 8v4M12 16h.01M10.3 3.9L1.8 18a2 2 0 001.7 3h16.9a2 2 0 001.7-3L13.7 3.9a2 2 0 00-3.4 0z"/></svg><div>Signaling-Relay noch nicht konfiguriert — für den Live-Empfang <b>signaling-worker.js</b> deployen und <b>P2P.RELAY</b> setzen (siehe README).</div></div>'}
+        <p style="font-size:11.5px;color:var(--text-dim);margin-top:16px;max-width:400px;margin-left:auto;margin-right:auto">Derselbe Link gilt fuer alle Ihre Kundinnen — als Aushang im Stall erreicht er vierzig statt einer. Den Aushang drucken Sie ueber die Postfach-Pille.</p>
       </div>`;
+    Importer._einladung={link, text};
     $('#impFoot').innerHTML=`<button class="btn ghost" onclick="Importer.renderDrop()">Zurück</button>`;
-    if(!relayReady)return;
-    P2P.receive(room,{onStatus:s=>{const e2=$('#rcvStatus');if(e2&&s==='connected')e2.innerHTML='Verbunden — empfange Datei…';}})
-      .then(({name,blob})=>{const f=new File([blob],name||'aufnahme.json',{type:'application/json'});this.startScan([f]);})
-      .catch(()=>{const e2=$('#rcvStatus');if(e2)e2.innerHTML='<span style="color:var(--red)">Empfang fehlgeschlagen — Relay erreichbar? Erneut versuchen.</span>';});
+  },
+  _einladung:null,
+  einladungKopieren(){
+    const e=Importer._einladung; if(!e) return;
+    /* Die NACHRICHT, nicht die nackte Adresse: eine blanke URL in WhatsApp
+       sieht aus wie Werbung und wird nicht angetippt. */
+    navigator.clipboard.writeText(e.text).then(()=>Toast.show('Nachricht kopiert — einfach einfuegen','ok'))
+      .catch(()=>Toast.show('Kopieren nicht moeglich — Link bitte markieren','warn'));
+  },
+  async einladungTeilen(){
+    const e=Importer._einladung; if(!e) return;
+    try{ await navigator.share({title:'Herzrhythmus-Messung', text:e.text}); }
+    catch(err){ if(err && err.name==='AbortError') return;
+      Importer.einladungKopieren(); }
   },
   async startScan(files){
+    /* Zaehler je Lauf zuruecksetzen — sonst waechst die Doublettenliste ueber
+       mehrere Importe hinweg und meldet beim zweiten Mal Namen vom ersten. */
+    this._doubletten=[];
     /* Kontakte zuerst abzweigen. Der Tierarzt soll nicht wissen muessen,
        welches Format sein Programm ausspuckt — er zieht die Datei ins
        Fenster, und wir erkennen, was es ist. */
@@ -2899,7 +2925,15 @@ const Importer = {
     $('#impBody').innerHTML=`<div class="imp-done">
       <div class="big">${IC.check}</div>
       <h3 style="font-family:var(--font-brand);font-size:22px;font-weight:600;margin-bottom:8px">${added} Aufnahme${added!==1?'n':''} importiert</h3>
-      <p style="color:var(--text-secondary);font-size:14px">Alles automatisch dem richtigen Pferd zugeordnet. Das Board ist aktualisiert.</p>
+      <p style="color:var(--text-secondary);font-size:14px">${(Importer._doubletten||[]).length
+        ? 'Das Board ist aktualisiert.'
+        : 'Alles automatisch dem richtigen Pferd zugeordnet. Das Board ist aktualisiert.'}</p>
+      ${(Importer._doubletten||[]).length?`<div class="demo-ribbon" style="margin-top:18px;text-align:left">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 8v4M12 16h.01M10.3 3.9L1.8 18a2 2 0 001.7 3h16.9a2 2 0 001.7-3L13.7 3.9a2 2 0 00-3.4 0z"/></svg>
+        <div><b>Neu angelegt, obwohl der Name schon existiert:</b> ${esc([...new Set(Importer._doubletten)].join(', '))}.
+        Die Aufnahme kam über den allgemeinen Aushang-Link und brachte keine Zuordnung mit.
+        Prüfen Sie, ob es dasselbe Pferd ist — für einen gemeinsamen Verlauf muss es eine Karte sein.
+        Gezielt anfordern vermeidet das.</div></div>`:''}
       ${noGeo.length?`<div class="demo-ribbon" style="margin-top:18px;text-align:left"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2C8 2 5 5 5 9c0 5 7 13 7 13s7-8 7-13c0-4-3-7-7-7z"/></svg><div>${noGeo.length} neue${noGeo.length>1?' Pferde':'s Pferd'} ohne Standort — für die Abfahrroute bitte die Adresse ergänzen.</div></div>`:''}
     </div>`;
     $('#impFoot').innerHTML=`<button class="btn ghost" onclick="Importer.renderDrop()">Weitere importieren</button><button class="btn primary" onclick="UI.closeModal()">Fertig</button>`;
@@ -2926,6 +2960,20 @@ const Importer = {
         needsVisit:false, notes:'', createdAt:new Date(n.startedAt||Date.now()).toISOString(),
       };
       await DB.put('horses',horse); State.horses.push(horse);
+      /* ── DOUBLETTE SICHTBAR MACHEN (15.08.2026) ────────────────────────
+         Kommt eine Aufnahme ueber den ALLGEMEINEN Aushang-Link (ohne die
+         gezielte Anforderung mit `#a=`), bringt sie eine eigene Kennung mit
+         — das Cockpit legt dann ein NEUES Pferd an, auch wenn „Bella" laengst
+         in der Kartei steht. Bisher fiel das niemandem auf: zwei Karteikarten,
+         zwei Verlaeufe, keine Baseline.
+         NICHT automatisch zusammenfuehren: zwei Pferde duerfen gleich heissen,
+         und ein stiller Zusammenschluss von Patientendaten waere der
+         schlimmere Fehler. Also melden und die Praxis entscheiden lassen. */
+      try{
+        const gleichnamig=State.horses.filter(h=>h.id!==horse.id
+          && String(h.name||'').trim().toLowerCase()===String(horse.name||'').trim().toLowerCase());
+        if(gleichnamig.length) Importer._doubletten=(Importer._doubletten||[]).concat(horse.name);
+      }catch(_){ }
     } else {
       // Stammdaten aktualisieren wenn neuere Aufnahme
       if(n.name && n.name!=='Unbenanntes Pferd') horse.name=n.name;
