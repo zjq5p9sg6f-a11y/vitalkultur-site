@@ -7782,18 +7782,23 @@ const UI={
     /* Klinik-Stufe (AP3): eigener Block unter der Praxis — der Magnet ist
        der Entlasstag (Nachsorge-Flow), nicht die Platzzahl.
 
-       ⚠ SELBSTBEDIENUNG AUS, 15.08.2026. Nicht als Notbehelf, sondern als
-       Entscheidung: Die Klinik-Stufe steht seit heute bei 349 €, die
-       hinterlegten Stripe-Preise ziehen noch 199 € ein. Anzeige und Einzug
-       auseinanderlaufen zu lassen waere der teuerste Fehler dieser Flaeche —
-       CHECKOUT_BETRAG existiert genau dafuer, das zu verhindern.
+       SELBSTBEDIENUNG AN, 15.08.2026 abends. Der Grund, aus dem sie tagsueber
+       aus war, ist weg: Die Stripe-Preise stehen jetzt auf 349/3490, die
+       Links ziehen denselben Betrag ein, den die Seite nennt (Preise
+       price_1U4l7L… / price_1U4l9D…, Links plink_1U4lMc… / plink_1U4lOX…,
+       beide mit AGB-Zustimmung; die alten 199/1990 sind archiviert bzw.
+       deaktiviert). Damit greift CHECKOUT_BETRAG wieder als Sperre statt als
+       Dauerzustand.
 
-       Und der Weg passt ohnehin nicht: Eine Klinik mit zehn Behandlern kauft
-       kein Abo ueber einen Bezahllink. Sie will ein Gespraech, eine Rechnung
-       und einen Ansprechpartner. Der Preis steht sichtbar als Orientierung,
-       der Abschluss laeuft ueber Kontakt. Sobald die Stripe-Preise auf
-       349/3490 stehen, ist die Selbstbedienung eine Zeile weit entfernt. */
-    const KLINIK_SELBSTKAUF = false;
+       Der Einwand von heute Mittag bleibt trotzdem richtig und ist bewusst
+       KEIN Gegenargument mehr, sondern eine Erwartung: Eine Klinik mit zehn
+       Behandlern kauft ihr Abo meist nicht ueber einen Bezahllink, sie will
+       ein Gespraech. Der Kaufweg ersetzt das Gespraech nicht — er verhindert
+       nur, dass eine kleine Klinik, die SOFORT kaufen will, an einer
+       Kontaktaufnahme haengenbleibt. Wer das wieder zumachen will, setzt
+       diese eine Zeile auf false; die Kachel faellt dann sauber auf
+       „Schluessel eingeben" zurueck, weil checkoutLink() ohne Link null gibt. */
+    const KLINIK_SELBSTKAUF = true;
     const kplans=KLINIK_SELBSTKAUF?[
       ['clinicYear','Klinik · Jahresabo',(License.PREIS.klinikJahr/12).toFixed(2).replace('.',','),`${License.PREIS.klinikJahr.toLocaleString('de-DE')} € im Jahr — zwei Monate günstiger`,''],
       ['clinicMonth','Klinik · Monatsabo',String(License.PREIS.klinikMonat),'monatlich kündbar',''],
@@ -9035,17 +9040,26 @@ const License={
          Bookmark zum Altpreis fuehrt. */
       year :'https://buy.stripe.com/28EfZh4PteS1fcG9u3gbm06',   // 1.490 €/Jahr
       month:'https://buy.stripe.com/28E3cvfu7aBLfcG0Xxgbm05',   //   149 €/Monat
-      /* Klinik-Links angelegt am 13.08.2026 (Claude im Stripe-Dashboard,
-         Jans Sitzung): beide am LIVE-Produkt prod_V1xTYl1ssi7USy,
+      /* Klinik-Links, Stand 15.08.2026 (Claude im Stripe-Dashboard, Jans
+         Sitzung): beide am LIVE-Produkt prod_V1xTYl1ssi7USy,
          Preise mit metadata.tier=vet_clinic:
-          199 €/Monat  price_1U3zB6FYqQiMtCiDkwZxWHqd · plink_1U40rE…
-        1.990 €/Jahr   price_1U40fEFYqQiMtCiDoWCnTX7y · plink_1U40xO…
+           349 €/Monat  price_1U4l7LFYqQiMtCiDQqidqhD3 · plink_1U4lMc…
+         3.490 €/Jahr   price_1U4l9DFYqQiMtCiDYbgT9jqP · plink_1U4lOX…
          Managed Payments, autom. Steuer, Steuer-ID-Feld, Namens- und
          Unternehmens-Erfassung, AGB-Zustimmung und Rueckleitung mit
          ?session_id={CHECKOUT_SESSION_ID} — identisch zu den
-         Solo-Links konfiguriert und in der Detailansicht nachgelesen. */
-      clinicMonth:'https://buy.stripe.com/14AaEXa9NeS12pU21Bgbm02',
-      clinicYear :'https://buy.stripe.com/00wfZh5Tx25f8Oi0Xxgbm03',
+         Solo-Links konfiguriert und in der Detailansicht Zeile fuer Zeile
+         gegen den 149er-Link nachgelesen.
+         Die Vorgaenger auf 199/1.990 (13.08.) sind STILLGELEGT: Links
+         deaktiviert, Preise archiviert. Beide trugen 0 Abos.
+         ⚠ Die AGB-Zustimmung laesst sich an einem bestehenden Link NICHT
+         nachruesten — wer hier je einen Link tauscht, legt einen neuen an
+         und liest die Detailansicht nach, statt zu bearbeiten.
+         ⚠ Duplizieren ist KEIN Weg: Stripes "Duplikat" klont Produkt UND
+         Preis, der Link haenge dann an einem "(Copy)"-Produkt statt an
+         prod_V1xTYl1ssi7USy. Genau so ist prod_V494j8xRT7OVbC entstanden. */
+      clinicMonth:'https://buy.stripe.com/aFa6oH81F8tD4y2fSrgbm07',
+      clinicYear :'https://buy.stripe.com/28E7sL81F11b1lQ0Xxgbm08',
     }
   },
   get CHECKOUT(){ return this.CHECKOUT_ALL[LIVE?'live':'test']; },
@@ -9067,12 +9081,13 @@ const License={
      Kasse: lieber keine Kasse als eine, die 79 € einzieht, waehrend die
      Seite 149 € nennt. Am 15.08.2026 GEMEINSAM mit CHECKOUT_ALL.live
      gewandert — einzeln angefasst waere die Sperre umgangen statt geloest. */
-  /* Klinik auf 349/3490 gezogen (15.08.). Die hinterlegten Stripe-LINKS
-     tragen noch 199/1990 — deshalb ist KLINIK_SELBSTKAUF aus, und nur
-     deshalb ist diese Zeile ungefaehrlich: Ohne Kaufweg kann kein Betrag
-     eingezogen werden, der von der Anzeige abweicht. Wer die Selbstbedienung
-     wieder einschaltet, MUSS vorher die Stripe-Preise anlegen — `t-klinik`
-     prueft die Bindung, `t-klinikordner` prueft, dass beides zusammenpasst. */
+  /* Klinik auf 349/3490 gezogen (15.08.) — und die Stripe-Links ziehen seit
+     15.08. abends DENSELBEN Betrag ein (neue Preise, neue Links, alte
+     archiviert). Anzeige und Kasse stehen damit wieder auf derselben Zahl;
+     `t-klinik` prueft die Bindung, `t-klinikordner` prueft, dass beides
+     zusammenpasst. Wer den Preis erneut bewegt, bewegt PREIS,
+     CHECKOUT_BETRAG und die Stripe-Links GEMEINSAM — einzeln angefasst ist
+     die Betragssperre umgangen, nicht geloest. */
   CHECKOUT_BETRAG:{ month:149, year:1490, clinicMonth:349, clinicYear:3490 },
   /* Die Zahlungs-Links zeigen noch auf Stripes Testumgebung. Wird die
      Beta-Sperre geloest, ohne sie zu tauschen, laeuft der Kunde durch eine
