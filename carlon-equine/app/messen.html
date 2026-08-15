@@ -336,6 +336,9 @@ p.sub{color:var(--sec);font-size:clamp(13px,1.15vw,15px);margin:0 auto clamp(var
   .ws-zeile{flex-direction:column;align-items:stretch;gap:10px}
   .ws-zeile .btn{width:100%}
 }
+.praxisband{max-width:52ch;margin:0 auto var(--s2);padding:10px 14px;border:1px solid var(--linie);
+  border-radius:12px;font-size:14px;color:var(--sec);text-align:center;line-height:1.5}
+.praxisband b{color:var(--txt);font-weight:600}
 .dach{max-width:720px;margin:var(--s5) auto var(--s4);padding:var(--s4) var(--s4) 0;
   border-top:1px solid var(--line,rgba(255,255,255,.08));
   display:flex;gap:14px;align-items:flex-start}
@@ -1220,10 +1223,41 @@ const HAUS={ appImStore:false, appUrl:'https://carlon.app' };
      Zeile, und aus dem Hinweis wird ein Weg. Bis dahin KEIN Link auf eine
      geschlossene Beta: wer im Moment groesster Neugier vor einer
      Mailto-Anmeldung landet, kommt nicht wieder. -->
+<!-- WESSEN WERKZEUG DAS IST (15.08.2026): steht der Praxisname im Link,
+     sieht die Halterin ihn — oben, vor allem anderen. Die Verkaufsseite
+     verspricht der Praxis genau das („Ihre Kundin erlebt Ihre Praxis, nicht
+     unsere Software"); eingeloest war es bisher nur auf dem gedruckten
+     Aushang. Ohne Namen im Link bleibt die Zeile leer — kein Platzhalter,
+     keine leere Flaeche. -->
+<div class="praxisband" id="praxisband" hidden></div>
 <div class="dach" id="dach"></div>
 
 <script>
 (function(){
+  /* Praxisband zuerst: es beantwortet die Frage „wo bin ich hier
+     eigentlich?" noch vor der Marke. */
+  (function(){
+    const pb=document.getElementById('praxisband');
+    if(!pb) return;
+    /* Den Namen HIER selbst aus dem Fragment lesen, nicht aus der Konstante
+       des Hauptskripts: dieser Block laeuft in einem eigenen <script> und
+       damit moeglicherweise frueher. Dieselbe Reihenfolge-Falle ist in
+       dieser Datei schon zweimal zugeschnappt (hatPraxis, POSTFACH_AN). */
+    let name='';
+    try{
+      const m=String(location.hash||'').match(/(?:^#|&)p=([^&]+)/);
+      if(m){ const n=decodeURIComponent(m[1]).trim().slice(0,60);
+             if(!/[<>{}\\]/.test(n)) name=n; }
+    }catch(_){ }
+    if(!name) return;
+    const praxisName=name;
+    const sicher=document.createElement('b');
+    sicher.textContent=praxisName;              // textContent, nie innerHTML
+    pb.appendChild(document.createTextNode('Messung für '));
+    pb.appendChild(sicher);
+    pb.appendChild(document.createTextNode(' — die Aufnahme geht an diese Praxis.'));
+    pb.hidden=false;
+  })();
   const d=document.getElementById('dach'); if(!d) return;
   /* 🔴 DAS ZEICHEN, NICHT DAS APP-ICON (09.08.2026).
      Hier stand assets/icon-512.png — das App-Icon. Es traegt per
@@ -2902,6 +2936,25 @@ async function meineIdentitaet(){
   return _ich;
 }
 const hatPraxis=!!(fach&&praxisKey);
+/* ── WESSEN WERKZEUG DIE HALTERIN GERADE BENUTZT (15.08.2026) ────────────
+   Die Verkaufsseite verspricht der Praxis: „Ihre Kundin erlebt Ihre Praxis,
+   nicht unsere Software." Auf dem gedruckten Aushang stimmte das — dort
+   steht der Name. Hier stand bisher nur CARLON. Seit der Mess-Link der
+   Hauptweg ist, fiel das Versprechen damit still aus.
+   Der Name kommt aus dem FRAGMENT (#p=) und erreicht daher keinen Server.
+   Er wird NUR angezeigt, nie gespeichert und nie in die Datei geschrieben —
+   in der Datei waere er ein Personenbezug, den die Halterin ueber WhatsApp
+   weitertraegt (siehe ARME_FELDER). */
+const praxisName=(function(){
+  try{
+    const m=String(location.hash||'').match(/(?:^#|&)p=([^&]+)/);
+    if(!m) return '';
+    const n=decodeURIComponent(m[1]).trim().slice(0,60);
+    /* Nur harmlose Zeichen anzeigen — der Wert kommt aus einer Adresse, die
+       jeder verändern kann. Kein Markup, keine Steuerzeichen. */
+    return /[<>{}\\]/.test(n) ? '' : n;
+  }catch(_){ return ''; }
+})();
 /* Frueher galt: ohne Link von der Praxis kein Senden. Damit war die
    Richtung, die uns Kunden bringt, gar nicht gebaut — ein Besitzer, der
    uns selbst findet und seiner Tierärztin etwas schicken WILL, stand vor

@@ -7631,6 +7631,30 @@ const UI={
     if(ausgang)  return {art:'wartet', text:`${ausgang} wartet auf Netz`};
     const anf=(typeof Praxis!=='undefined')?Praxis.offeneAnfragen().length:0;
     if(anf)      return {art:'wartet', text:`${anf} Messung${anf!==1?'en':''} angefordert`};
+    /* ── DER WEG ZUR ERSTEN AUFNAHME (15.08.2026) ────────────────────────
+       Bis hierher verschwand die Pille, sobald das Postfach leer war — und
+       bei einer frisch eingerichteten Praxis IST es leer. Genau dort liegen
+       aber „Messung anfordern" und „Dauer-Einladung", und sie werden sonst
+       nirgends aufgerufen. Wer heute bezahlt, fand den Weg zur ersten
+       Aufnahme also nicht: leeres Postfach → keine Pille → kein Aushang →
+       keine Halterin → keine Messung → nichts, was das Abo rechtfertigt.
+       Deshalb bleibt die Pille sichtbar, SOLANGE noch nie eingeladen wurde.
+       Sie verschwindet von selbst, sobald der erste Aushang erzeugt ist —
+       ein Hinweis, der nach getaner Arbeit stehen bleibt, wird zum Vorwurf. */
+    try{
+      const st=State.settings||{};
+      /* „Nie eingeladen" heisst: kein Aushang erzeugt UND noch nie eine
+         Aufnahme angefordert oder empfangen. Wer den Weg schon einmal
+         gegangen ist, braucht den Hinweis nicht mehr — er wuerde sonst nach
+         jeder abgearbeiteten Anforderung wieder auftauchen und damit vom
+         Wegweiser zum Nörgler. */
+      const jeGenutzt = !!st.aushangAngeboten
+                     || (st.anfragen||[]).length > 0
+                     || (st.eingang||[]).length > 0
+                     || (State.recordings||[]).length > 0;
+      if(License.isPaid() && !jeGenutzt)
+        return {art:'neu', text:'Halter einladen'};
+    }catch(_){ }
     return null;
   },
   postStatus(){
@@ -7961,7 +7985,7 @@ const UI={
         </div>
 
         <h1>Was Ihr Pferd Ihnen <em>nicht sagen kann</em></h1>
-        <div class="sub">Sein Herzrhythmus zeigt, wie gut es sich erholt. Fünf Minuten Ruhe genügen —
+        <div class="sub">Sein Herzrhythmus zeigt, wie gut es sich erholt. Sieben Minuten Ruhe genügen —
           beurteilt wird die Messung von jemandem, der Ihr Pferd kennt.</div>
 
         <div class="paar">
@@ -7972,9 +7996,9 @@ const UI={
         <div class="code">
           <div class="qrbox">${qr}</div>
           <div class="cta">
-            <div class="gross">Fünf Minuten Ruhe —<br>und Ihre Tierärztin schaut mit.</div>
+            <div class="gross">Sieben Minuten Ruhe —<br>und Ihre Tierärztin schaut mit.</div>
             <div class="klein">Kamera auf den Code. Kein Konto, keine App, kein Termin.</div>
-            <span class="zeit">5 MINUTEN · OHNE ANMELDUNG</span>
+            <span class="zeit">7 MINUTEN · OHNE ANMELDUNG</span>
           </div>
         </div>
 
@@ -8093,7 +8117,20 @@ const Praxis={
        der Stallgasse; zeigt er auf einen Tunnel oder localhost, ist er tot,
        sobald das Fenster zu ist. Siehe live.js. */
     const basis=(window.CARLON_KANON||location.href.replace(/[^/]*(\?.*)?$/,''));
-    return basis+'messen.html?fach='+encodeURIComponent(ich.fach)+'&k='+encodeURIComponent(ich.boxPub);
+    /* ── DER NAME DER PRAXIS REIST MIT (15.08.2026) ──────────────────────
+       Die Verkaufsseite verspricht der Praxis: „Ihre Kundin erlebt Ihre
+       Praxis, nicht unsere Software." Eingeloest war das nur auf dem
+       GEDRUCKTEN Aushang — der traegt den Namen. Sobald die Halterin die
+       Station oeffnete, stand dort CARLON und sonst nichts. Seit der
+       Mess-Link der Hauptweg ist (und nicht mehr der Aushang), fiel das
+       Versprechen damit ganz aus.
+       Der Name steht im FRAGMENT (#p=), nicht in der Abfrage: Fragmente
+       werden nicht an Server geschickt. Ein Praxisname ist bei einer
+       Einzelpraxis ein Personenbezug — er hat in keinem Server-Protokoll
+       etwas zu suchen, auch nicht in dem des Hosters. */
+    const praxis=((State.settings&&State.settings.clinicName)||'').trim();
+    const anhang=praxis ? '#p='+encodeURIComponent(praxis.slice(0,60)) : '';
+    return basis+'messen.html?fach='+encodeURIComponent(ich.fach)+'&k='+encodeURIComponent(ich.boxPub)+anhang;
   },
 
   /* ── MESSUNG ANFORDERN ───────────────────────────────────────────────
@@ -10162,7 +10199,10 @@ const Saat={
   still(){
     if(State.settings){ State.settings.saatStillBis=Date.now()+this.STILL_TAGE*86400000; State.saveSettings(); }
     const el=$('#saatBanner'); if(el) el.style.display='none';
-    Toast.show('Ausgeblendet — der Aushang steht in der Verwaltung','info');
+    /* Zeigte auf die Verwaltungs-Ansicht, wo es keinen solchen Knopf gibt.
+       Ein Wegweiser, der ins Leere zeigt, ist schlimmer als keiner: er
+       kostet die Suche UND das Vertrauen in den nächsten Hinweis. */
+    Toast.show('Ausgeblendet — der Aushang bleibt über die Postfach-Pille erreichbar','info');
   },
 };
 const PWA={
