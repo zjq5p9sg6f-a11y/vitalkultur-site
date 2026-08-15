@@ -8699,8 +8699,22 @@ const License={
          Der Abo-Deskriptor am Produkt lautet CARLON EQUINE VISITE und
          ueberschreibt den Konto-Deskriptor — dadurch ist der Geldstrom je
          Produkt zuzuordnen. */
-      year :'https://buy.stripe.com/5kQ5kD1Dh8tDfcG8pZgbm01',   // 790 €/Jahr
-      month:'https://buy.stripe.com/8x28wP95JbFP1lQ6hRgbm00',   //  79 €/Monat
+      /* 15.08.2026 — Praxis auf 149 € angehoben. NEUE Preise und Links am
+         SELBEN Live-Produkt prod_V1xTYl1ssi7USy (Preise sind in Stripe nach
+         der ersten Transaktion unveraenderlich — Preisaenderung heisst dort
+         immer: neuen Preis anlegen, alten Link stilllegen):
+            149 €/Monat  price_1U4V9lFYqQiMtCiDbcDpEuuT · plink_1U4VKr…
+          1.490 €/Jahr   price_1U4VB3FYqQiMtCiDbehgocAQ · plink_1U4VGo…
+         Beide mit Managed Payments (3,5 % je Transaktion — das ist der Preis
+         dafuer, dass Stripe als Merchant of Record auftritt, wie § 12a der
+         AGB zusagt), automatischer Steuer, Steuer-ID-Feld, Namens- und
+         Unternehmens-Erfassung und Rueckleitung mit der Sitzungsnummer.
+         ⚠ OFFEN am Jahres-Link: die AGB-Zustimmung ist dort noch NICHT
+         gesetzt (beim Monats-Link ja, nachgelesen in der Detailansicht).
+         Muss vor dem Verkaufsstart nachgezogen werden — bis dahin haelt
+         ohnehin die Beta-Sperre CARLON_LIVE=false. */
+      year :'https://buy.stripe.com/7sY28ra9NcJT5C69u3gbm04',   // 1.490 €/Jahr
+      month:'https://buy.stripe.com/28E3cvfu7aBLfcG0Xxgbm05',   //   149 €/Monat
       /* Klinik-Links angelegt am 13.08.2026 (Claude im Stripe-Dashboard,
          Jans Sitzung): beide am LIVE-Produkt prod_V1xTYl1ssi7USy,
          Preise mit metadata.tier=vet_clinic:
@@ -8728,16 +8742,12 @@ const License={
      Die LIVE-Links stehen seit 07.08.2026 (siehe oben). Die Testlinks
      hier tragen test_ im Pfad und werden von checkoutLink() ausserhalb von
      Beta und localhost zusaetzlich gesperrt. */
-  /* ⚠ DIESE ZAHLEN SIND ABSICHTLICH NICHT DER PREIS. Sie beschreiben, was
-     die hinterlegten Zahlungs-Links TATSAECHLICH einziehen. Seit der
-     Anhebung auf 149 € (15.08.2026) stimmen sie nicht mehr mit PREIS
-     ueberein — und genau deshalb sperrt checkoutLink() die Kasse. Das ist
-     kein Fehler, sondern der Zweck der Bindung: lieber keine Kasse als eine,
-     die 79 € einzieht, waehrend die Seite 149 € nennt.
-     ERST wenn die neuen Links am Live-Produkt existieren, wandern sie nach
-     CHECKOUT_ALL.live UND diese Betraege auf 149/1490. Wer nur eine der
-     beiden Stellen anfasst, hat die Sperre umgangen statt sie geloest. */
-  CHECKOUT_BETRAG:{ month:79, year:790, clinicMonth:199, clinicYear:1990 },
+  /* Was die hinterlegten Zahlungs-Links TATSAECHLICH einziehen — nicht der
+     Anzeigepreis. Stimmen beide nicht ueberein, sperrt checkoutLink() die
+     Kasse: lieber keine Kasse als eine, die 79 € einzieht, waehrend die
+     Seite 149 € nennt. Am 15.08.2026 GEMEINSAM mit CHECKOUT_ALL.live
+     gewandert — einzeln angefasst waere die Sperre umgangen statt geloest. */
+  CHECKOUT_BETRAG:{ month:149, year:1490, clinicMonth:199, clinicYear:1990 },
   /* Die Zahlungs-Links zeigen noch auf Stripes Testumgebung. Wird die
      Beta-Sperre geloest, ohne sie zu tauschen, laeuft der Kunde durch eine
      Kasse, die kein Geld einzieht — und wir merken es an nichts ausser einer
