@@ -2640,6 +2640,9 @@ const Importer = {
     $('#impFoot').innerHTML=`<button class="btn ghost" onclick="Importer.renderDrop()">Zurück</button>`;
   },
   _einladung:null,
+  /* Feld fest deklariert, nicht erst in startScan() erzeugt: ein Zustand,
+     den es zeitweise gar nicht gibt, ist bei jeder Abfrage ein Sonderfall. */
+  _doubletten:[],
   einladungKopieren(){
     const e=Importer._einladung; if(!e) return;
     /* Die NACHRICHT, nicht die nackte Adresse: eine blanke URL in WhatsApp
