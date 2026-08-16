@@ -1495,6 +1495,11 @@ de:{
     belegen können: die Datei entsteht hier und geht den Weg, den sie wählt. */
  freiPrivacy:'Bleibt auf deinem Gerät · verschickt wird nur, was du selbst weitergibst',
  brauchst:['Polar-H10-Gurt angelegt und die Elektrodenfläche angefeuchtet','Etwa sieben Minuten Ruhe — kürzer trägt die Auswertung nicht','Ohne Konto, ohne App · die Aufnahme wird verschlüsselt übergeben'],
+ /* Die dritte Zeile der Liste ist eine ZUSAGE und gilt nur mit Aushang. Ohne
+    Schluessel wird nichts verschluesselt, sondern der Datensatz arm gemacht —
+    „weniger hineinschreiben statt besser verschluesseln". Was hier steht, ist
+    das, was auf BEIDEN Wegen wahr ist. */
+ freiZusage:'Ohne Konto, ohne App · am Ende bekommst du eine Datei, die du selbst weitergibst',
  qrHint:'Oder mit dem Gerät scannen, das messen soll — Laptop oder Android-Tablet. Dabei verlässt nichts dein Telefon.',
  rechtLinks:'<a href="/impressum.html">Impressum</a> · <a href="/privacy.html">Datenschutz</a> · <a href="/agb.html">AGB</a>',
  /* AUSSAGE ÜBER UNS, NICHT ÜBER DIE DATEN — und das ist der ganze Trick.
@@ -1665,6 +1670,7 @@ en:{
  privacyLine:'End-to-end encrypted · no server can read the measurements',
  freiPrivacy:'Stays on your device · only what you pass on ever leaves it',
  brauchst:['Polar H10 belt fitted and the electrode area moistened','About seven minutes of rest — shorter does not carry the assessment','No account, no app · the recording is handed over encrypted'],
+ freiZusage:'No account, no app · at the end you get a file that you pass on yourself',
  qrHint:'Or scan it with the device that should measure — laptop or Android tablet. Nothing leaves your phone.',
  rechtLinks:'<a href="/impressum.html">Imprint</a> · <a href="/privacy-en.html">Privacy</a> · <a href="/terms.html">Terms</a>',
  sendRecht:'The file is created on your device and leaves it by a route you choose yourself — we never see it and store it nowhere. What this page does is set out in the <a href="/privacy-en.html">privacy policy</a>; use is governed by the <a href="/terms.html#handover">Terms</a>.',
@@ -1746,6 +1752,26 @@ function freienBesuchAnpassen(){
     const pl=document.querySelector('[data-i18n="privacyLine"]');
     const p2=t('freiPrivacy',null);
     if(pl&&p2) pl.textContent=p2;
+    /* ⚠ DIE VERGESSENE VIERTE STELLE (16.08.2026, von Jan auf der LIVE-Seite
+       gefunden). Umgeschaltet wurden Kopf, Untertitel und Datenschutzzeile —
+       die „Das brauchst du"-Liste nicht. Ihre dritte Zeile sagte weiterhin
+       „die Aufnahme wird verschlüsselt übergeben", und zwar auf genau dem
+       Weg, auf dem nicht verschlüsselt wird. Drei von vier Stellen umzustellen
+       fuehlt sich an wie erledigt; die vierte traegt die Zusage allein weiter.
+
+       Die Zeile wird ueber IHREN INHALT gefunden, nicht ueber ihre Position:
+       ein spaeteres Umsortieren der Liste wuerde sonst still die falsche
+       Zeile ersetzen. Und die beiden anderen Zeilen kommen aus `brauchst`
+       selbst — zwei Orte fuer denselben Satz laufen sonst auseinander. */
+    const ul=document.querySelector('[data-i18n-list="brauchst"]');
+    const liste=t('brauchst',null), zusage=t('freiZusage',null);
+    if(ul && Array.isArray(liste) && zusage){
+      const i=liste.findIndex(z=>/verschlüsselt|verschluesselt|encrypted|Ende-zu-Ende|end-to-end/i.test(z));
+      if(i>=0){
+        const neu=liste.slice(); neu[i]=zusage;
+        ul.innerHTML=neu.map(z=>'<li>'+z+'</li>').join('');
+      }
+    }
   }catch(e){ /* Im Zweifel bleibt der Aushang-Text stehen — nie ein leerer Kopf. */ }
 }
 function applyLang(){
