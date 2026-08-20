@@ -2222,7 +2222,48 @@ const Normalizer = {
       ...(()=>{const _sd=this.deriveSD(rr);const sd1=num(nl.sd1Ms)??num(geo.sd1Ms)??_sd.sd1;const sd2=num(nl.sd2Ms)??num(geo.sd2Ms)??_sd.sd2;return {sd1,sd2,sd2sd1:num(nl.sd2OverSd1)??num(geo.sd2sd1Ratio)??num(geo.sd2sd1)??((sd1&&sd2)?sd2/sd1:null)};})(),
       lfhf:  num(fd.lfHfRatio),
       // App liefert equineQualityScore auf 0–1-Skala → auf 0–100 normalisieren (≤1 = Bruch ×100), sonst Artefakt-Fallback
-      quality: (()=>{const _q=num(eq.equineQualityScore); if(_q!=null) return _q<=1?Math.round(_q*100):Math.round(_q); return q.artifactRatePct!=null?Math.max(0,Math.round(100-num(q.artifactRatePct)*4)):null;})(),
+      /* ── SIGNALGÜTE: die Skala wird ERKANNT, nicht geraten (20.08.2026) ──
+         Hier stand `_q<=1 ? _q*100 : _q` — die Skala wurde an der GRÖSSE des
+         Werts abgelesen. Das war ein Notbehelf für alte Aufnahmen, die den
+         Wert noch als Bruch 0–1 ablegten. Seit dem 09.07.2026 exportiert die
+         App 0–100 (`equineQualityScore: round(equineQuality*10000)/100`, im
+         Schema ausdrücklich als „0-100" vermerkt) — und genau dort kippt die
+         Regel:
+
+             equineQuality = 1 − Artefaktrate/25   (App, eine Zeile)
+             Score(0–100)  = 100 − 4 · Artefaktrate
+
+         Ab 24,75 % Artefakten liegt der Score BEI ODER UNTER 1 — und wurde von
+         der alten Regel als Bruch gelesen und mit 100 malgenommen:
+
+             24,75 % Artefakte → Score 1,0  → angezeigt 100 %
+             24,80 % Artefakte → Score 0,8  → angezeigt  80 %
+
+         Eine Aufnahme, die zu einem Viertel aus Artefakten besteht, erschien
+         der empfangenden Klinik als nahezu makellos. Die App hat dieselbe
+         Verwechslung am 09.07. auf ihrer Seite behoben („Vorher 0–1 → ein 0.96
+         las sich als Qualität 1%") — der Browser baute sie spiegelverkehrt
+         wieder auf.
+
+         DIE AUFLÖSUNG BRAUCHT KEINE SCHWELLE. Die Artefaktrate reist im selben
+         Datensatz mit, und ihr Zusammenhang mit dem Score ist exakt. Also wird
+         nicht geraten, sondern VERGLICHEN: von den zwei möglichen Lesarten
+         gewinnt die, die zur Artefaktrate passt. Das ist auch für die alten
+         0–1-Aufnahmen richtig — dort passt die andere.
+
+         Fehlt die Artefaktrate, bleibt nur die alte Regel. Das ist dann keine
+         Nachlässigkeit, sondern die ehrliche Grenze: ohne zweite Größe ist die
+         Skala aus einer Zahl allein nicht bestimmbar. */
+      quality: (()=>{
+        const _q=num(eq.equineQualityScore);
+        const _r=num(eq.adjustedArtifactRatePct) ?? num(q.artifactRatePct);
+        const _soll=_r!=null?Math.max(0,Math.min(100,100-4*_r)):null;
+        if(_q!=null){
+          if(_soll!=null) return Math.abs(_q-_soll)<=Math.abs(_q*100-_soll)?Math.round(_q):Math.round(_q*100);
+          return _q<=1?Math.round(_q*100):Math.round(_q);
+        }
+        return _soll!=null?Math.round(_soll):null;
+      })(),
       artifactPct: num(q.artifactRatePct) ?? num(eq.adjustedArtifactRatePct),
       avBlock: num(eq.avBlockCount) ?? num(q.avBlockCount) ?? 0,
       motion: eq.motionContext||sess.intent||null,
