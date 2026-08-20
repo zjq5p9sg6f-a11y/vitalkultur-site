@@ -5800,7 +5800,10 @@ const Views={
     const series=p.sessions.map(s=>({x:s.startedAt,y:s.score}));
     const tr=p.trend;
     const trText=tr?(tr.totalDelta>5?`Über ${p.sessions.length} Messungen um <b style="color:var(--good)">+${fmt0(tr.totalDelta)} Punkte</b> verbessert — messbarer Coaching-Erfolg.`:tr.totalDelta<-5?`Über den Verlauf um <b style="color:var(--red)">${fmt0(tr.totalDelta)} Punkte</b> gefallen.`:`Weitgehend stabil über den Verlauf (${tr.totalDelta>=0?'+':''}${fmt0(tr.totalDelta)}).`):'Erste Messung — Verlauf ab der zweiten Session.';
-    const plvSeries=p.sessions.map(s=>({x:s.startedAt,y:(s.plvHF||0)*100}));
+    /* 20.08.2026: `||0` zeichnete fuer Aufnahmen ohne echten PLV (v13-v19) eine
+       Linie auf NULL — das behauptet "keine Phasenkopplung", wo nur "nicht
+       enthalten" richtig ist. Fehlende Punkte werden jetzt ausgelassen. */
+    const plvSeries=p.sessions.filter(s=>s.plvHF!=null).map(s=>({x:s.startedAt,y:s.plvHF*100}));
     const chfSeries=p.sessions.map(s=>({x:s.startedAt,y:(s.cohHF||0)*100}));
     return `<div class="view">
       <div class="view-head"><div>
@@ -5907,7 +5910,12 @@ const Views={
             <h2 style="font-size:16px"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12h4l3 8 4-16 3 8h4"/></svg>Kopplungs-Metriken &amp; Signifikanz</h2>
             ${Chart.bar(c.cohHF||0,1,'var(--harmony)','Spektrale Kohärenz HF (Welch)',fmt1((c.cohHF||0)*100)+'%')}
             ${Chart.bar(c.cohLF||0,1,'var(--harmony-g)','Spektrale Kohärenz LF',fmt1((c.cohLF||0)*100)+'%')}
-            ${Chart.bar(c.plvHF||0,1,'var(--dc-human)','Phase-Locking-Value HF',fmt1((c.plvHF||0)*100)+'%')}
+            ${c.plvHF==null
+                ? `<div style="font-size:12px;color:var(--text-dim);margin:6px 0">Phase-Locking-Value HF · <b>nicht enthalten</b> — diese Aufnahme stammt aus einer Fassung vor v20, die statt des PLV einen Pearson-Proxy exportierte${c.rrPearsonProxy!=null?` (${fmt1(c.rrPearsonProxy*100)} %, KEIN Phasenmass)`:''}.</div>`
+                : Chart.bar(c.plvHF,1,'var(--dc-human)','Phase-Locking-Value HF (Lachaux 1999)',fmt1(c.plvHF*100)+'%')}
+            ${c.plvHF!=null && c.plvNullMean!=null
+                ? `<div style="font-size:11px;color:var(--text-dim);margin:4px 0 10px">Zufalls-Mittel ${fmt1(c.plvNullMean*100)} % · z ${c.plvZ!=null?fmt1(c.plvZ):'—'} · p ${c.plvP!=null?c.plvP.toFixed(3):'—'} · ${c.plvN||'?'} Zeit-Shift-Surrogate${c.plvBand?` · Band ${c.plvBand[0]}–${c.plvBand[1]} Hz`:''}<br>Der rohe PLV ist ohne diese Nullverteilung nicht deutbar: auf reinem Zufall erreicht er bei 60 s ein 95. Perzentil von 52,8 %, bei 900 s nur 14,4 %.</div>`
+                : ''}
             <div style="font-size:11px;color:var(--text-dim);margin:4px 0 14px">Prä-registrierte Nachweis-Schwelle: ${fmt1(c.threshold*100)}%</div>
             <div class="stat-row" style="margin:0">
               ${Views.stat('Surrogat-Z','',c.susyZ,c.susyZ>1.96?{text:'signifikant',cls:'good'}:{text:'n.s.',cls:'warn'},true)}
@@ -7456,7 +7464,23 @@ const Coherence={
       score: Math.round(num(cm.heartMathPairScore0to100) ?? 0),
       verdict: cm.verdict||null,
       ratioA: num(cm.heartMathRatioHorse), ratioB:num(cm.heartMathRatioHuman),
-      plvHF: num(cm.phaseLockingValueHF),
+      /* ── 20.08.2026: `plvHF` heisst jetzt, was es ist ──────────────────────
+       * Hier stand `plvHF: num(cm.phaseLockingValueHF)`. Das Feld der App war
+       * ein Pearson-Proxy und im Quelltext seit jeher als "DEPRECATED, NICHT
+       * echtes PLV" markiert — im EXPORT stand davon nichts, und diese Zeile
+       * reichte ihn unter dem Namen einer etablierten Methode weiter.
+       * Ein Feldname in einem Datensatz ist eine Quellenangabe.
+       * Ab v20 liefert die App den ECHTEN PLV (Lachaux 1999) als `plvHF`, samt
+       * Nullverteilung. Altbestaende (v13-v19) tragen ihn nicht — dort bleibt
+       * `plvHF` leer statt den Proxy auszugeben, und der Proxy erscheint unter
+       * seinem eigenen Namen. Lieber eine Luecke als ein falsches Etikett.
+       * Der Grabstein zitiert den alten Ausdruck absichtlich; `feldname_guard.sh`
+       * nimmt Kommentarzeilen aus, die mit `*` beginnen. */
+      plvHF: num(cm.plvHF),
+      plvP: num(cm.plvHFPValue), plvNullMean: num(cm.plvHFSurrogateMean),
+      plvNullSD: num(cm.plvHFSurrogateSD), plvZ: num(cm.plvHFZ),
+      plvN: num(cm.plvHFSurrogateN), plvBand: cm.plvHFBandHz||null,
+      rrPearsonProxy: num(cm.rrPearsonProxyHF) ?? num(cm.phaseLockingValueHF),
       cohHF: num(cm.spectralCoherenceHF), cohLF:num(cm.spectralCoherenceLF), threshold:num(cm.preRegisteredThresholdHF)??0.5,
       crossCorr: num(cm.crossCorrelationRR), crossLag:num(cm.crossCorrelationLagMs),
       dcAtoB: num(cm.directedCoherenceHorseToHumanHF), dcBtoA:num(cm.directedCoherenceHumanToHorseHF),
