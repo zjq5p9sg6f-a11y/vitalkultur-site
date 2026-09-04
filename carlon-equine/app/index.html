@@ -2108,6 +2108,63 @@ const Teilen = {
       }
     }catch(e){ this.letzterFehler=String(e&&e.message||e); }
     return neu;
+  },
+
+  /* ── DER NACHTRAG — was im Funkloch liegen blieb ─────────────────────
+     `schreiben()` spiegelt sofort und gibt bei Fehlschlag `false` zurueck.
+     Der lokale Bestand bleibt vollstaendig, es geht nichts verloren — das war
+     nie das Problem. Das Problem war der Weg ZURUECK: `abgleichen()` LIEST
+     nur.
+
+     Ein Behandler der Fahrpraxis, der am Stall ohne Netz misst, behielt die
+     Aufnahme auf seinem Geraet. Beim Zurueckkommen holte sie niemand nach —
+     die Zentrale sah ausgerechnet die Messungen NICHT, fuer die es die
+     Fahrpraxis gibt. Kein Fehler, kein Verlust, keine Meldung: lautlos.
+
+     Fuer den Postfach-Weg gab es den Nachholweg laengst (`Postausgang`, im
+     `online`-Ereignis). Fuer den geteilten Ordner fehlte er. Das hier ist
+     dieselbe Idee am zweiten Weg.
+
+     Nur SCHREIBEN, nie loeschen: Was im Ordner liegt und lokal fehlt, holt
+     `abgleichen()`; was lokal liegt und im Ordner fehlt, holt dieser Nachtrag.
+     Die Grenze deckelt den ersten Lauf einer grossen Praxis, damit das
+     Nachholen nicht die Oberflaeche blockiert; der naechste Lauf macht weiter. */
+  letzterNachtrag: 0,
+  async nachtragen(grenze=400){
+    if(!this.aktiv||!this.handle) return 0;
+    let n=0;
+    try{
+      const d=await this.handle.getDirectoryHandle('carlon',{create:true});
+      const vorhanden=new Set();
+      for await (const [name,h] of d.entries()){
+        if(h.kind==='file'&&name.endsWith('.json')) vorhanden.add(name);
+      }
+      for(const store of this.GETEILT){
+        let alle=[]; try{ alle=await DB.all(store); }catch(_){ continue; }
+        for(const obj of alle){
+          if(n>=grenze) break;
+          if(vorhanden.has(this._name(store,obj))) continue;
+          if(await this.schreiben(store,obj)) n++;
+        }
+        if(n>=grenze) break;
+      }
+    }catch(e){ this.letzterFehler=String(e&&e.message||e); }
+    this.letzterNachtrag=n;
+    return n;
+  },
+
+  /* Beim Netzwechsel kann der Ordner auch erst JETZT wieder da sein — dann
+     muss er zuerst wieder aufgenommen werden, sonst laeuft der Nachtrag ins
+     Leere und meldet ruhig null. */
+  async nachholenBeiNetz(){
+    try{
+      if(!this.aktiv && this.erlaubt()) await this.wiederaufnehmen();
+      if(!this.aktiv) return 0;
+      const gelesen=await this.abgleichen();
+      const geschrieben=await this.nachtragen();
+      if(gelesen){ try{ await State.load(); }catch(_){ } }
+      return geschrieben;
+    }catch(e){ return 0; }
   }
 };
 
@@ -11320,6 +11377,10 @@ const Sprache={
       if(await Teilen.wiederaufnehmen()){
         const neu=await Teilen.abgleichen();
         if(neu){ await State.load(); Toast.show(`${neu} Aufnahme${neu===1?'':'n'} aus dem Klinik-Ordner übernommen`,'ok'); }
+        /* Und in die andere Richtung: was dieses Geraet unterwegs ohne Netz
+           aufgenommen hat, liegt sonst fuer immer nur hier. */
+        const nach=await Teilen.nachtragen();
+        if(nach){ Toast.show(`${nach} eigene Aufnahme${nach===1?'':'n'} in den Klinik-Ordner nachgetragen`,'ok'); }
       } else if(Teilen.letzterFehler && Teilen.erlaubt()){
         Toast.show('Klinik-Ordner nicht erreichbar — dieses Gerät arbeitet vorerst allein','warn');
       }
@@ -11335,7 +11396,14 @@ const Sprache={
        'online' ist der wichtigste: der Moment, in dem der Wagen aus dem
        Funkloch faehrt, ist genau der Moment, in dem nachgeholt werden soll. */
     window.addEventListener('online', ()=>{
-      License.lizenzHolenWennFaellig(); Postfach.abholen(); Postausgang.senden({laut:true}); });
+      License.lizenzHolenWennFaellig(); Postfach.abholen(); Postausgang.senden({laut:true});
+      /* Der geteilte Ordner haengt am selben Funkloch wie das Postfach —
+         also holt er hier genauso nach. Ohne das blieb die Feldmessung der
+         Fahrpraxis auf dem Geraet des Behandlers liegen. */
+      (async()=>{ try{
+        const n=await Teilen.nachholenBeiNetz();
+        if(n) Toast.show(`${n} Aufnahme${n===1?'':'n'} in den Klinik-Ordner nachgetragen`,'ok');
+      }catch(_){ } })(); });
     /* Eine Übergabe hat Vorrang vor allem anderen: sie ist der Grund,
        warum diese Person die Seite ueberhaupt geoeffnet hat. */
     await Postfach.uebergabeEmpfangen();
