@@ -10459,7 +10459,25 @@ function showTour(){
       <button class="btn ghost" onclick="startWith(true)">Erst umsehen (Demo-Daten)</button>
     </div>
     <div class="privacy-note"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-      Datenschutz by Design · Ihre Praxisdaten liegen auf Ihrem Gerät. Eingesandte Messungen sind Ende-zu-Ende verschlüsselt und für uns nicht lesbar. Als Praxis bleiben Sie Verantwortlicher (Art. 4 DSGVO).</div>
+      <!-- ⚠ DIE ZUSAGE GALT NUR FÜR EINEN VON ZWEI WEGEN (Jan, 04.09.2026).
+           Hier stand: „Eingesandte Messungen sind Ende-zu-Ende verschlüsselt und
+           für uns nicht lesbar." Der erste Halbsatz stimmt nur für den
+           AUSHANG-Weg: Dort trägt der Link den Praxis-Schlüssel ('k='), und
+           'messen.html' versiegelt gegen ihn. Ohne Aushang gibt es keinen
+           Schlüssel und damit keine Verschlüsselung — und 'Importer.
+           umschlagOeffnen()' lässt eine unversiegelte Datei ausdrücklich durch
+           ('if(… !raw.umschlag) return {ok:true, raw}'). Die Praxis bekommt
+           also sehr wohl offene Aufnahmen.
+
+           Dasselbe Muster wie am 16.08. in 'messen.html', nur in einer anderen
+           Datei: Dort war es „die vergessene vierte Stelle", hier eine fünfte,
+           die niemand mitgezählt hat.
+
+           Umformuliert statt gestrichen — und dabei STÄRKER geworden: „läuft
+           nichts über einen Server von uns" gilt auf BEIDEN Wegen und ist mehr
+           wert als eine Transportverschlüsselung. Die Versiegelung bleibt, wo
+           sie tatsächlich greift, und wird als das benannt, was sie ist. -->
+      Datenschutz by Design · Ihre Praxisdaten liegen auf Ihrem Gerät. Eingesandte Messungen erreichen Sie direkt — es läuft nichts über einen Server von uns, wir können nichts lesen. Aufnahmen aus Ihrem Aushang sind zusätzlich gegen Ihren Praxis-Schlüssel versiegelt. Als Praxis bleiben Sie Verantwortlicher (Art. 4 DSGVO).</div>
   </div>`;
   document.body.appendChild(t);
 }
