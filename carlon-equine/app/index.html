@@ -2379,8 +2379,8 @@ const Normalizer = {
          Aufnahme der aktuellen Station stand damit `device: null`, still.
          `Herkunft.geraet()` kennt alle Formen; `belege/kompatibilitaet.mjs`
          haelt sie gegen den gesamten Messbestand. */
-      device: (typeof Herkunft!=='undefined' ? Herkunft.geraet(raw) : (raw.device||{}).model) || null,
-      quelle: (typeof Herkunft!=='undefined' ? Herkunft.quelle(raw) : null),
+      device: (typeof AufnahmeHerkunft!=='undefined' ? AufnahmeHerkunft.geraet(raw) : (raw.device||{}).model) || null,
+      quelle: (typeof AufnahmeHerkunft!=='undefined' ? AufnahmeHerkunft.quelle(raw) : null),
       /* Die Rueckadresse des Besitzers reiste verschluesselt in der Sendung
          mit — nur wir konnten sie lesen, der Zwischenspeicher nie. Sie ist
          der Unterschied zwischen "wir haben etwas bekommen" und "wir koennen

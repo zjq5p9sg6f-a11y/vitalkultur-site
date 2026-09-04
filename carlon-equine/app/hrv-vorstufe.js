@@ -438,6 +438,7 @@
 
   function stage4CubicSplineCorrection(rrMs, classes) {
     const corrected = rrMs.slice();
+    const unersetzt = new Set();          // was hier nicht ersetzt werden kann
     const needsCorrection = [];
     for (let i = 0; i < classes.length; i++) if (!includeInHRV(classes[i])) needsCorrection.push(i);
 
@@ -454,12 +455,50 @@
       // ABWEICHUNGSNOTIZ: Der Kommentar im Original sagt "mindestens 2 Punkte
       // noetig", die Bedingung prueft aber >= 1 je Seite. Ein Rand-Artefakt kann
       // damit linear statt kubisch korrigiert werden. Bedingung uebernommen.
-      if (!(leftIdx.length >= 1 && rightIdx.length >= 1)) continue;
+      // ── DIESES `continue` WAR STUMM (04.09.2026) ──
+      // Der Schlag behaelt seinen ROHEN Wert und sieht danach aus wie ein
+      // ersetzter. Jetzt wird er gemeldet, damit die Differenz-Kennzahlen ihn
+      // auslassen koennen. Gleiche Behebung wie in EquineFilterPipeline.swift.
+      if (!(leftIdx.length >= 1 && rightIdx.length >= 1)) { unersetzt.add(idx); continue; }
 
       const supports = leftIdx.concat(rightIdx).map((j) => ({ x: j, y: rrMs[j] }));
       corrected[idx] = cubicSplineInterpolate(idx, supports);
     }
-    return { corrected: corrected, annotations: classes };
+    return { corrected: corrected, annotations: classes, unersetzt: unersetzt };
+  }
+
+  /* ── KENNZAHLEN OHNE DIE UNERSETZTEN STELLEN ──
+     Zwilling zu `EquineFilterPipeline.rmssdOhne/pnn50Ohne/sdnnOhne`.
+     RMSSD und pNN50 lassen jedes PAAR aus, das eine solche Stelle beruehrt —
+     der Schlag wird NICHT entfernt, das schweisste seine Nachbarn zu einem
+     falschen, doppelt langen Intervall zusammen. SDNN laesst den Schlag selbst
+     aus. Bei leerer Menge rechnen alle drei wie ihre Vorbilder (Nenner n-1). */
+  function rmssdOhne(rrs, auslassen) {
+    if (!rrs || rrs.length < 2) return 0;
+    let sumSq = 0, n = 0;
+    for (let i = 1; i < rrs.length; i++) {
+      if (auslassen.has(i) || auslassen.has(i - 1)) continue;
+      const d = rrs[i] - rrs[i - 1]; sumSq += d * d; n++;
+    }
+    return n > 0 ? Math.sqrt(sumSq / n) : 0;
+  }
+  function pnn50Ohne(rrs, auslassen) {
+    if (!rrs || rrs.length < 2) return 0;
+    let treffer = 0, n = 0;
+    for (let i = 1; i < rrs.length; i++) {
+      if (auslassen.has(i) || auslassen.has(i - 1)) continue;
+      if (Math.abs(rrs[i] - rrs[i - 1]) > 50) treffer++;
+      n++;
+    }
+    return n > 0 ? (treffer / n) * 100 : 0;
+  }
+  function sdnnOhne(rrs, auslassen) {
+    if (!rrs || rrs.length < 2) return 0;
+    const werte = rrs.filter((_, i) => !auslassen.has(i));
+    if (werte.length < 2) return 0;
+    const m = werte.reduce((a, b) => a + b, 0) / werte.length;
+    let sumSq = 0; for (const v of werte) sumSq += (v - m) * (v - m);
+    return Math.sqrt(sumSq / (werte.length - 1));
   }
 
   /* ═══════════════════════════════════════════════════════════════════════
@@ -678,6 +717,9 @@
     return {
       rawCount: rrIntervalsMs.length,
       cleanRR: stage4.corrected,
+      /* Was Stufe 4 nicht ersetzen konnte — Zwilling zu
+         `PipelineResult.unersetzteIndizes` in EquineFilterPipeline.swift. */
+      unersetzteIndizes: stage4.unersetzt || new Set(),
       annotations: stage4.annotations,
       avBlockIndices: avIdx,
       ectopicIndices: ectIdx,
@@ -1180,9 +1222,13 @@
     const corrected = pipeline.cleanRR;
 
     // Stage 3: Zeitbereich
-    const rmssd = computeRMSSD(corrected);
-    const sdnn = computeSDNN(corrected);
-    const pnn50 = computePNN50(corrected);
+    // ── OHNE DIE SCHLAEGE, DIE STUFE 4 NICHT ERSETZEN KONNTE (04.09.2026) ──
+    // Gleiche Ausschlussmenge wie Analysator und Export in Swift; sonst gabelt
+    // der dritte Weg, und `LogicTests/messstation_vergleich.js` wird rot.
+    const ausgelassen = pipeline.unersetzteIndizes || new Set();
+    const rmssd = rmssdOhne(corrected, ausgelassen);
+    const sdnn = sdnnOhne(corrected, ausgelassen);
+    const pnn50 = pnn50Ohne(corrected, ausgelassen);
 
     // Stage 4: Poincaré.
     // SD2 ueber die BRENNAN-IDENTITAET SD2² = 2·SDNN² − 0,5·RMSSD² — NICHT ueber

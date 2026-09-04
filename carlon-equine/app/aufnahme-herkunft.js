@@ -58,7 +58,23 @@
     return roh.filter(x => typeof x === 'number' && x > 0);
   }
 
+  /* ── DER NAME WAR SCHON VERGEBEN (04.09.2026) ──
+     Erst hiess dieses Objekt `Herkunft`. Im Cockpit gibt es aber bereits ein
+     `const Herkunft` (Behandler-Kennzeichnung, index.html:2005) — und dessen
+     `geraet()` nimmt KEINE Argumente und liefert den Namen des BEHANDLER-
+     Geraets, notfalls einen erfundenen („Geraet 347").
+
+     `const` bindet lexikalisch und beschattet `window.Herkunft` vollstaendig:
+     Der Aufruf `Herkunft.geraet(raw)` im Normalisierer landete also still beim
+     falschen Objekt, warf NICHT, und haette den Geraetenamen des importierenden
+     Rechners als Sensor der Aufnahme eingetragen. Schlimmer als das leere Feld,
+     das behoben werden sollte — und genau die erfundene Angabe, vor der die
+     Regel oben warnt.
+
+     Aufgefallen ist es nur, weil `quelle` dort nicht existiert und deshalb
+     geworfen hat. Eine Kollision, die sich auf `geraet` beschraenkt haette,
+     waere nie aufgefallen. Darum: eindeutiger Name. */
   const API = { geraet, quelle, rrReihe };
-  global.Herkunft = API;
+  global.AufnahmeHerkunft = API;
   if (typeof module !== 'undefined' && module.exports) module.exports = API;
 })(typeof globalThis !== 'undefined' ? globalThis : this);
