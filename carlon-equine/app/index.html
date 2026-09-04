@@ -1897,6 +1897,7 @@ nav.tabs button.on{text-shadow:none}
      Ohne die Vorstufe rechnete das Cockpit auf ROHEN RR-Intervallen — bei
      40 AV-Block-Pausen RMSSD 890 statt 112 ms, und 8 von 20 Aufnahmen
      bekamen eine falsche Atemwegs-Einstufung, alle nach oben. -->
+<script src="aufnahme-herkunft.js"></script>
 <script src="hrv-vorstufe.js"></script>
 <script src="asthma.js"></script>
 <script src="krypto.js"></script>
@@ -2372,7 +2373,14 @@ const Normalizer = {
         afib:  ci.afibHint||null,
         asthma:ci.asthmaScreen||null,
       },
-      device: (raw.device||{}).model||null,
+      /* ── LAS NUR EINE VON DREI FORMEN (behoben 04.09.2026) ──
+         Hier stand `(raw.device||{}).model||null`. Die Messstation schreibt
+         seit dem 12.08. `source.sensor` statt `device.model` — fuer JEDE
+         Aufnahme der aktuellen Station stand damit `device: null`, still.
+         `Herkunft.geraet()` kennt alle Formen; `belege/kompatibilitaet.mjs`
+         haelt sie gegen den gesamten Messbestand. */
+      device: (typeof Herkunft!=='undefined' ? Herkunft.geraet(raw) : (raw.device||{}).model) || null,
+      quelle: (typeof Herkunft!=='undefined' ? Herkunft.quelle(raw) : null),
       /* Die Rueckadresse des Besitzers reiste verschluesselt in der Sendung
          mit — nur wir konnten sie lesen, der Zwischenspeicher nie. Sie ist
          der Unterschied zwischen "wir haben etwas bekommen" und "wir koennen
