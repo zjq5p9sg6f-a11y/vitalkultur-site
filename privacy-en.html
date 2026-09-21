@@ -44,7 +44,7 @@
 
   <div class="container legal">
     <h1>Privacy Policy</h1>
-    <p class="subtitle">Vitalkultur · Effective: 30 May 2026 · Version 2.0 — portfolio-wide (all iOS apps + vitalkultur.com)</p>
+    <p class="subtitle">Vitalkultur · Effective: 21 September 2026 · Version 2.1 — portfolio-wide (all iOS apps + vitalkultur.com)</p>
     <p><em>This is the English version. The
     German version at <a href="/privacy.html">vitalkultur.com/privacy.html</a>
     is the legally binding master document under EU/GDPR jurisdiction.</em></p>
@@ -65,8 +65,7 @@
         <code>/rrloggerpro/</code>, etc.)</li>
       <li><strong>iOS app CARLON Breathwork</strong> (Apple Watch + iPhone) —
         including all training modes (Box Breathing, Tummo, Coherence,
-        <strong>Iron-Mode</strong>, <strong>Cold-Exposure</strong>,
-        <strong>Heat-Exposure</strong>, Custom Patterns)</li>
+        <strong>Cold-Exposure</strong>, Custom Patterns)</li>
       <li><strong>iOS app + web viewer CARLON Equine — Heart Science</strong></li>
       <li><strong>iOS app CARLON Research</strong></li>
     </ul>
@@ -136,8 +135,8 @@
       <table>
         <thead><tr><th>Data type</th><th>Direction</th><th>Purpose</th><th>Legal basis</th></tr></thead>
         <tbody>
-          <tr><td>Heart rate (HR)</td><td>Read</td><td>Live feedback during breathing exercises, Cold-/Heat-Exposure, Iron-Mode strain monitoring</td><td>Art. 9(2)(a) + Art. 6(1)(a) GDPR</td></tr>
-          <tr><td>Heart rate variability (HRV / RMSSD)</td><td>Read</td><td>Vagal-tone trend, recovery score, Iron-Mode ANS strain</td><td>Art. 9(2)(a) + Art. 6(1)(a) GDPR</td></tr>
+          <tr><td>Heart rate (HR)</td><td>Read</td><td>Live feedback during breathing exercises and Cold-Exposure</td><td>Art. 9(2)(a) + Art. 6(1)(a) GDPR</td></tr>
+          <tr><td>Heart rate variability (HRV / RMSSD)</td><td>Read</td><td>Vagal-tone trend, recovery score</td><td>Art. 9(2)(a) + Art. 6(1)(a) GDPR</td></tr>
           <tr><td>Oxygen saturation (SpO₂)</td><td>Read</td><td>Nightly curve in the sleep and health data export</td><td>Art. 9(2)(a) + Art. 6(1)(a) GDPR</td></tr>
           <tr><td>Mindful minutes</td><td>Write</td><td>Logging completed sessions</td><td>Art. 6(1)(a) GDPR</td></tr>
         </tbody>
@@ -145,14 +144,8 @@
 
       <p><strong>Mode-specific data (local, no server):</strong></p>
       <ul>
-        <li><strong>Iron-Mode</strong> (experimental ANS strain cockpit):
-          strain indicators (HRV trend, sympathetic activation, recovery status).
-          <strong>Iron-Mode is explicitly experimental</strong>, not a validated
-          medical detector, no diagnostic function.</li>
         <li><strong>Cold-Exposure</strong>: session duration, configured temperature
           level, HR/HRV trace during exposure, Cold-Adaptation Score.</li>
-        <li><strong>Heat-Exposure</strong>: session duration, temperature level,
-          HR/HRV trace, Heat-Adaptation Score.</li>
         <li><strong>Breath sessions</strong>: pattern name, inhale/hold/exhale times,
           repetitions, retention durations, dive-reflex-detection events.</li>
         <li><strong>Custom Presets</strong>: name + breath parameters, local only.</li>
@@ -166,17 +159,15 @@
       </p>
     </div>
 
-    <!-- Safety box Cold/Heat/Iron -->
+    <!-- Safety box Cold-Exposure -->
     <div class="legal-warning">
-      <strong>⚠ Important safety and data-protection notice for Iron-Mode,
-      Cold-Exposure and Heat-Exposure:</strong> These modes address physiologically
-      demanding training zones. Anyone with <strong>cardiovascular conditions,
+      <strong>⚠ Important safety and data-protection notice for
+      Cold-Exposure:</strong> This mode addresses a physiologically
+      demanding training zone. Anyone with <strong>cardiovascular conditions,
       pregnancy, epilepsy, respiratory or psychiatric conditions</strong> should
-      consult a physician before using these modes. The app provides additional
+      consult a physician before using it. The app provides additional
       vital data (HR, HRV, SpO₂) during these sessions <em>strictly locally for
       your own information</em> and does not replace medical supervision.
-      <strong>Iron-Mode strain indicators are experimental markers, not
-      diagnostic claims.</strong>
     </div>
 
     <!-- ===== CARLON Equine ===== -->
@@ -468,7 +459,7 @@
         <tr><td>HealthKit data (Breathwork)</td><td>Local (Apple HealthKit)</td><td>Until manual deletion in iOS "Health" app</td></tr>
         <tr><td>App session data (all 3 apps)</td><td>Local (device)</td><td>Until app uninstall or manual deletion</td></tr>
         <tr><td>Custom presets / horse profiles / device roster</td><td>Local (device)</td><td>Until deletion or app uninstall</td></tr>
-        <tr><td>Iron-Mode / Cold-/Heat-Exposure session logs</td><td>Local (device)</td><td>Until deletion or app uninstall</td></tr>
+        <tr><td>Cold-Exposure session logs (and legacy recordings from the removed Iron-Mode and Heat-Exposure modes)</td><td>Local (device)</td><td>Until deletion or app uninstall</td></tr>
         <tr><td>Safety notice confirmation</td><td>Local (UserDefaults)</td><td>Until app uninstall</td></tr>
         <tr><td>Email correspondence</td><td>Email inbox</td><td>Until resolved, then max. 3 years (§§ 195, 199 BGB)</td></tr>
       </tbody>

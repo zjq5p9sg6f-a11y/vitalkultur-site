@@ -44,7 +44,7 @@
 
   <div class="container legal">
     <h1>Datenschutzerklärung</h1>
-    <p class="subtitle">Vitalkultur · Stand: 30.05.2026 · Version 2.0 — portfolio-weit (alle iOS-Apps + vitalkultur.com)</p>
+    <p class="subtitle">Vitalkultur · Stand: 21.09.2026 · Version 2.1 — portfolio-weit (alle iOS-Apps + vitalkultur.com)</p>
 
     <!-- ============================================================
          GELTUNGSBEREICH
@@ -61,8 +61,8 @@
         (<code>/breathwork/</code>, <code>/carlon-equine/</code>,
         <code>/rrloggerpro/</code> u.&nbsp;a.)</li>
       <li><strong>iOS-App CARLON Breathwork</strong> (Apple Watch + iPhone) — inkl.
-        aller Trainings-Modi (Box Breathing, Tummo, Coherence, <strong>Iron-Mode</strong>,
-        <strong>Cold-Exposure</strong>, <strong>Heat-Exposure</strong>, Custom-Patterns)</li>
+        aller Trainings-Modi (Box Breathing, Tummo, Coherence,
+        <strong>Cold-Exposure</strong>, Custom-Patterns)</li>
       <li><strong>iOS-App + Web-Viewer CARLON Equine — Heart Science</strong></li>
       <li><strong>iOS-App CARLON Research</strong></li>
     </ul>
@@ -139,8 +139,8 @@
       <table>
         <thead><tr><th>Datentyp</th><th>Richtung</th><th>Zweck</th><th>Rechtsgrundlage</th></tr></thead>
         <tbody>
-          <tr><td>Herzfrequenz (HR)</td><td>Lesen</td><td>Live-Feedback während Atem-Übungen, Cold-/Heat-Exposure, Iron-Mode-Strain-Monitoring</td><td>Art. 9 Abs. 2 lit. a + Art. 6 Abs. 1 lit. a DSGVO</td></tr>
-          <tr><td>Herzfrequenz-Variabilität (HRV / RMSSD)</td><td>Lesen</td><td>Vagaler-Tonus-Trend, Recovery-Score, Iron-Mode-ANS-Strain</td><td>Art. 9 Abs. 2 lit. a + Art. 6 Abs. 1 lit. a DSGVO</td></tr>
+          <tr><td>Herzfrequenz (HR)</td><td>Lesen</td><td>Live-Feedback während Atem-Übungen und Cold-Exposure</td><td>Art. 9 Abs. 2 lit. a + Art. 6 Abs. 1 lit. a DSGVO</td></tr>
+          <tr><td>Herzfrequenz-Variabilität (HRV / RMSSD)</td><td>Lesen</td><td>Vagaler-Tonus-Trend, Recovery-Score</td><td>Art. 9 Abs. 2 lit. a + Art. 6 Abs. 1 lit. a DSGVO</td></tr>
           <tr><td>Sauerstoffsättigung (SpO₂)</td><td>Lesen</td><td>Nächtlicher Verlauf im Schlaf- und Gesundheitsdaten-Export</td><td>Art. 9 Abs. 2 lit. a + Art. 6 Abs. 1 lit. a DSGVO</td></tr>
           <tr><td>Achtsamkeits-Minuten</td><td>Schreiben</td><td>Erfassung abgeschlossener Sessions</td><td>Art. 6 Abs. 1 lit. a DSGVO</td></tr>
         </tbody>
@@ -148,14 +148,8 @@
 
       <p><strong>Modus-spezifische Daten (lokal, kein Server):</strong></p>
       <ul>
-        <li><strong>Iron-Mode</strong> (experimenteller ANS-Strain-Cockpit):
-          Strain-Indikatoren (HRV-Trend, sympathische Aktivierung, Recovery-Status).
-          <strong>Iron-Mode ist explizit experimentell</strong>, kein validierter
-          medizinischer Detektor, keine Diagnose-Funktion.</li>
         <li><strong>Cold-Exposure</strong>: Session-Dauer, eingestellte Temperatur-Stufe,
           HR-/HRV-Verlauf während Exposition, Cold-Adaptation-Score.</li>
-        <li><strong>Heat-Exposure</strong>: Session-Dauer, Temperatur-Stufe, HR-/HRV-Verlauf,
-          Heat-Adaptation-Score.</li>
         <li><strong>Atem-Sessions</strong>: Pattern-Name, Inhale/Hold/Exhale-Zeiten,
           Wiederholungen, Retention-Dauern, dive-reflex-Detection-Events.</li>
         <li><strong>Custom Presets</strong>: Name + Atem-Parameter, ausschließlich lokal.</li>
@@ -169,17 +163,16 @@
       </p>
     </div>
 
-    <!-- Sicherheits-Box Cold/Heat/Iron -->
+    <!-- Sicherheits-Box Cold-Exposure -->
     <div class="legal-warning">
-      <strong>⚠ Wichtiger Sicherheits- und Datenschutz-Hinweis zu Iron-Mode,
-      Cold-Exposure und Heat-Exposure:</strong> Diese Modi adressieren physiologisch
-      anspruchsvolle Trainingsbereiche. Bei <strong>kardio-vaskulären Vorerkrankungen,
+      <strong>⚠ Wichtiger Sicherheits- und Datenschutz-Hinweis zu
+      Cold-Exposure:</strong> Dieser Modus adressiert einen physiologisch
+      anspruchsvollen Trainingsbereich. Bei <strong>kardio-vaskulären Vorerkrankungen,
       Schwangerschaft, Epilepsie, Atemwegs- oder psychiatrischen Erkrankungen</strong>
-      ist die Nutzung dieser Modi vor Anwendung mit ärztlichem Rat abzustimmen.
+      ist die Nutzung vor Anwendung mit ärztlichem Rat abzustimmen.
       Die App liefert während dieser Sessions zusätzliche Vital-Daten (HR, HRV,
       SpO₂) <em>ausschließlich lokal zu deiner eigenen Information</em> und ersetzt
-      keine medizinische Überwachung. Iron-Mode-Strain-Indikatoren sind
-      <strong>experimentelle Marker, keine diagnostischen Aussagen</strong>.
+      keine medizinische Überwachung.
     </div>
 
     <!-- ===== CARLON Equine ===== -->
@@ -548,7 +541,7 @@
         <tr><td>HealthKit-Daten (Breathwork)</td><td>Lokal (Apple HealthKit)</td><td>Bis zur manuellen Löschung in der iOS-App „Gesundheit"</td></tr>
         <tr><td>App-Session-Daten (alle 3 Apps)</td><td>Lokal (Gerät)</td><td>Bis zur App-Deinstallation oder manuellen Löschung</td></tr>
         <tr><td>Custom Presets / Pferd-Profile / Geräte-Roster</td><td>Lokal (Gerät)</td><td>Bis zur Löschung oder App-Deinstallation</td></tr>
-        <tr><td>Iron-Mode / Cold-/Heat-Exposure Session-Logs</td><td>Lokal (Gerät)</td><td>Bis zur Löschung oder App-Deinstallation</td></tr>
+        <tr><td>Cold-Exposure Session-Logs (sowie Alt-Aufzeichnungen aus den entfernten Modi Iron-Mode und Heat-Exposure)</td><td>Lokal (Gerät)</td><td>Bis zur Löschung oder App-Deinstallation</td></tr>
         <tr><td>Sicherheitshinweis-Bestätigung</td><td>Lokal (UserDefaults)</td><td>Bis zur App-Deinstallation</td></tr>
         <tr><td>E-Mail-Korrespondenz</td><td>E-Mail-Postfach</td><td>Bis zur Klärung, danach max. 3 Jahre (§§ 195, 199 BGB)</td></tr>
       </tbody>
