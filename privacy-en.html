@@ -103,16 +103,11 @@
       <li>Usernames, email addresses, accounts — the apps have no login</li>
     </ul>
     <p>
-      <em>Location exception — CARLON Breathwork:</em> If you grant location
-      permission, the app determines your position <strong>once</strong> at the
-      start of a session (accuracy approx. 100 m) in order to store altitude,
-      temperature, barometric pressure and humidity as environmental context for
-      that session — relevant for altitude training and weather correlation. The
-      request goes to <strong>Apple WeatherKit</strong>; only the position is
-      transmitted, <strong>no health data</strong>. No movement profile and no GPS
-      trace are stored. If you decline the permission, the app remains fully
-      functional — the environmental context simply stays empty.
-      <strong>Vitalkultur never receives this data.</strong>
+      <em>No location — CARLON Breathwork:</em> The app requests
+      <strong>no location permission</strong> and therefore cannot determine a
+      position. It calls no weather service. The temperature stored with a
+      cold-exposure session is the value you enter yourself — nothing is
+      looked up.
     </p>
     <p>
       <em>Note:</em> If iCloud Backup is enabled on your device, app data
