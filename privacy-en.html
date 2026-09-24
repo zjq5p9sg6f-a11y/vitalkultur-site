@@ -44,7 +44,7 @@
 
   <div class="container legal">
     <h1>Privacy Policy</h1>
-    <p class="subtitle">Vitalkultur · Effective: 21 September 2026 · Version 2.1 — portfolio-wide (all iOS apps + vitalkultur.com)</p>
+    <p class="subtitle">Vitalkultur · Effective: 24 September 2026 · Version 2.2 — portfolio-wide (all iOS apps + vitalkultur.com)</p>
     <p><em>This is the English version. The
     German version at <a href="/privacy.html">vitalkultur.com/privacy.html</a>
     is the legally binding master document under EU/GDPR jurisdiction.</em></p>
@@ -130,21 +130,34 @@
       <table>
         <thead><tr><th>Data type</th><th>Direction</th><th>Purpose</th><th>Legal basis</th></tr></thead>
         <tbody>
-          <tr><td>Heart rate (HR)</td><td>Read</td><td>Live feedback during breathing exercises and Cold-Exposure</td><td>Art. 9(2)(a) + Art. 6(1)(a) GDPR</td></tr>
-          <tr><td>Heart rate variability (HRV / RMSSD)</td><td>Read</td><td>Vagal-tone trend, recovery score</td><td>Art. 9(2)(a) + Art. 6(1)(a) GDPR</td></tr>
-          <tr><td>Oxygen saturation (SpO₂)</td><td>Read</td><td>Nightly curve in the sleep and health data export</td><td>Art. 9(2)(a) + Art. 6(1)(a) GDPR</td></tr>
-          <tr><td>Mindful minutes</td><td>Write</td><td>Logging completed sessions</td><td>Art. 6(1)(a) GDPR</td></tr>
+          <tr><td>Heart rate, resting heart rate, walking heart rate, heart-rate recovery after 1 minute</td><td>Read</td><td>Display during the session, session analysis, daily readiness (“Morning Readiness”)</td><td>Art. 9(2)(a) + Art. 6(1)(a) GDPR</td></tr>
+          <tr><td>Heart rate variability (SDNN; RMSSD where Apple Health provides it)</td><td>Read</td><td>Display at the end of a session, personal HRV range from your own night values</td><td>Art. 9(2)(a) + Art. 6(1)(a) GDPR</td></tr>
+          <tr><td>Heartbeat series (RR intervals)</td><td>Read</td><td>Beat-by-beat analysis</td><td>Art. 9(2)(a) + Art. 6(1)(a) GDPR</td></tr>
+          <tr><td>Oxygen saturation (SpO₂)</td><td>Read</td><td>Safety notice during sessions at low values; health data export</td><td>Art. 9(2)(a) + Art. 6(1)(a) GDPR</td></tr>
+          <tr><td>Respiratory rate, blood pressure, sleep analysis, wrist temperature, VO₂ max, date of birth</td><td>Read</td><td>Context for your sessions and daily readiness, where the values exist in Apple Health; health data export</td><td>Art. 9(2)(a) + Art. 6(1)(a) GDPR</td></tr>
+          <tr><td>Mindful minutes</td><td>Read and write</td><td>Logging completed breathing sessions, showing history</td><td>Art. 9(2)(a) + Art. 6(1)(a) GDPR</td></tr>
+          <tr><td>Workouts</td><td>Write</td><td>Every completed Watch session of at least one minute</td><td>Art. 9(2)(a) + Art. 6(1)(a) GDPR</td></tr>
+          <tr><td>Heart rate, HRV (SDNN, RMSSD), heartbeat series</td><td>Write</td><td>Storing session measurements (e.g. from a chest strap) in Apple Health</td><td>Art. 9(2)(a) + Art. 6(1)(a) GDPR</td></tr>
+          <tr><td>Only for a health data export you request: weight, BMI, steps, energy, distances, flights climbed, workouts, ECG</td><td>Read</td><td>Export to a file that you share or save yourself</td><td>Art. 9(2)(a) + Art. 6(1)(a) GDPR</td></tr>
         </tbody>
       </table>
 
       <p><strong>Mode-specific data (local, no server):</strong></p>
       <ul>
-        <li><strong>Cold-Exposure</strong>: session duration, configured temperature
-          level, HR/HRV trace during exposure, Cold-Adaptation Score.</li>
-        <li><strong>Breath sessions</strong>: pattern name, inhale/hold/exhale times,
-          repetitions, retention durations, dive-reflex-detection events.</li>
+        <li><strong>Cold sessions</strong>: duration, the temperature you enter,
+          heart-rate trace (beat by beat with a chest strap), Cold-Adaptation Score.</li>
+        <li><strong>Breathing sessions</strong>: pattern, inhale/hold/exhale times, rounds,
+          hold times, heart-rate drop during breath holds, how you felt before and after the session.</li>
         <li><strong>Custom Presets</strong>: name + breath parameters, local only.</li>
         <li><strong>Safety notice confirmation</strong>: timestamp + app version.</li>
+      </ul>
+
+      <p><strong>Other permissions (each optional, revocable at any time):</strong></p>
+      <ul>
+        <li><strong>Microphone</strong>: only for optional breathing detection. The signal is analysed live on the device to compare detected breaths with the target pattern. No audio is recorded, stored or transmitted.</li>
+        <li><strong>Bluetooth</strong>: connection to a Polar H10 or Movesense chest strap, directly with Apple Watch or iPhone (see section 7).</li>
+        <li><strong>Motion sensors</strong>: shiver detection in cold sessions and an orientation display; processed on the device only.</li>
+        <li><strong>Calendar</strong>: only if you let CARLON add your practice plan to your calendar.</li>
       </ul>
 
       <p>
@@ -354,7 +367,7 @@
       via internet or external servers.
     </p>
 
-    <h2>7. Bluetooth sensor connection (Polar H10)</h2>
+    <h2>7. Bluetooth sensor connection (Polar H10, Movesense)</h2>
     <p>
       CARLON Equine and CARLON Research use Bluetooth Low Energy (BLE) to connect
       to Polar H10 chest straps. The BLE permission is requested on first app
@@ -363,6 +376,11 @@
       any Polar-operated cloud services (Polar Flow). Vitalkultur apps use
       <strong>no Polar cloud</strong> — the H10 connection is exclusively
       direct between sensor and iPhone.
+    </p>
+    <p>
+      CARLON Breathwork connects a Polar H10 or a Movesense sensor directly to the
+      Apple Watch or the iPhone — without routing through another device and without
+      a manufacturer cloud. Heartbeat data is analysed on your devices only.
     </p>
 
     <h2>8. Website vitalkultur.com</h2>

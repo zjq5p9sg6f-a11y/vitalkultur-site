@@ -44,7 +44,7 @@
 
   <div class="container legal">
     <h1>Datenschutzerklärung</h1>
-    <p class="subtitle">Vitalkultur · Stand: 21.09.2026 · Version 2.1 — portfolio-weit (alle iOS-Apps + vitalkultur.com)</p>
+    <p class="subtitle">Vitalkultur · Stand: 24.09.2026 · Version 2.2 — portfolio-weit (alle iOS-Apps + vitalkultur.com)</p>
 
     <!-- ============================================================
          GELTUNGSBEREICH
@@ -134,21 +134,34 @@
       <table>
         <thead><tr><th>Datentyp</th><th>Richtung</th><th>Zweck</th><th>Rechtsgrundlage</th></tr></thead>
         <tbody>
-          <tr><td>Herzfrequenz (HR)</td><td>Lesen</td><td>Live-Feedback während Atem-Übungen und Cold-Exposure</td><td>Art. 9 Abs. 2 lit. a + Art. 6 Abs. 1 lit. a DSGVO</td></tr>
-          <tr><td>Herzfrequenz-Variabilität (HRV / RMSSD)</td><td>Lesen</td><td>Vagaler-Tonus-Trend, Recovery-Score</td><td>Art. 9 Abs. 2 lit. a + Art. 6 Abs. 1 lit. a DSGVO</td></tr>
-          <tr><td>Sauerstoffsättigung (SpO₂)</td><td>Lesen</td><td>Nächtlicher Verlauf im Schlaf- und Gesundheitsdaten-Export</td><td>Art. 9 Abs. 2 lit. a + Art. 6 Abs. 1 lit. a DSGVO</td></tr>
-          <tr><td>Achtsamkeits-Minuten</td><td>Schreiben</td><td>Erfassung abgeschlossener Sessions</td><td>Art. 6 Abs. 1 lit. a DSGVO</td></tr>
+          <tr><td>Herzfrequenz, Ruhepuls, Gehpuls, Herzfrequenz-Erholung nach 1 Minute</td><td>Lesen</td><td>Anzeige während der Sitzung, Sitzungsauswertung, Tagesform („Morning Readiness")</td><td>Art. 9 Abs. 2 lit. a + Art. 6 Abs. 1 lit. a DSGVO</td></tr>
+          <tr><td>Herzfrequenzvariabilität (SDNN; RMSSD, sofern Apple Health sie bereitstellt)</td><td>Lesen</td><td>Anzeige am Sitzungsende, persönliche HRV-Spanne aus deinen eigenen Nachtwerten</td><td>Art. 9 Abs. 2 lit. a + Art. 6 Abs. 1 lit. a DSGVO</td></tr>
+          <tr><td>Herzschlag-Serien (RR-Intervalle)</td><td>Lesen</td><td>Schlag-für-Schlag-Auswertung</td><td>Art. 9 Abs. 2 lit. a + Art. 6 Abs. 1 lit. a DSGVO</td></tr>
+          <tr><td>Sauerstoffsättigung (SpO₂)</td><td>Lesen</td><td>Sicherheitshinweis während Sitzungen bei niedrigen Werten; Gesundheitsdaten-Export</td><td>Art. 9 Abs. 2 lit. a + Art. 6 Abs. 1 lit. a DSGVO</td></tr>
+          <tr><td>Atemfrequenz, Blutdruck, Schlafanalyse, Handgelenktemperatur, VO₂max, Geburtsdatum</td><td>Lesen</td><td>Einordnung deiner Sitzungen und Tagesform, sofern die Werte in Apple Health vorliegen; Gesundheitsdaten-Export</td><td>Art. 9 Abs. 2 lit. a + Art. 6 Abs. 1 lit. a DSGVO</td></tr>
+          <tr><td>Achtsamkeitsminuten</td><td>Lesen und Schreiben</td><td>Abgeschlossene Atemsitzungen eintragen, Verlauf anzeigen</td><td>Art. 9 Abs. 2 lit. a + Art. 6 Abs. 1 lit. a DSGVO</td></tr>
+          <tr><td>Trainings (Workouts)</td><td>Schreiben</td><td>Jede abgeschlossene Watch-Sitzung ab einer Minute</td><td>Art. 9 Abs. 2 lit. a + Art. 6 Abs. 1 lit. a DSGVO</td></tr>
+          <tr><td>Herzfrequenz, HRV (SDNN, RMSSD), Herzschlag-Serien</td><td>Schreiben</td><td>Messwerte aus Sitzungen (z. B. mit Brustgurt) in Apple Health ablegen</td><td>Art. 9 Abs. 2 lit. a + Art. 6 Abs. 1 lit. a DSGVO</td></tr>
+          <tr><td>Nur beim Gesundheitsdaten-Export auf deine Anforderung: Gewicht, BMI, Schritte, Energieumsatz, Distanzen, Stockwerke, Trainings, EKG</td><td>Lesen</td><td>Export in eine Datei, die du selbst teilst oder speicherst</td><td>Art. 9 Abs. 2 lit. a + Art. 6 Abs. 1 lit. a DSGVO</td></tr>
         </tbody>
       </table>
 
       <p><strong>Modus-spezifische Daten (lokal, kein Server):</strong></p>
       <ul>
-        <li><strong>Cold-Exposure</strong>: Session-Dauer, eingestellte Temperatur-Stufe,
-          HR-/HRV-Verlauf während Exposition, Cold-Adaptation-Score.</li>
-        <li><strong>Atem-Sessions</strong>: Pattern-Name, Inhale/Hold/Exhale-Zeiten,
-          Wiederholungen, Retention-Dauern, dive-reflex-Detection-Events.</li>
+        <li><strong>Kälte-Sitzungen</strong>: Dauer, von dir eingegebene Temperatur,
+          Herzfrequenz-Verlauf (mit Brustgurt Schlag für Schlag), Cold-Adaptation-Score.</li>
+        <li><strong>Atemsitzungen</strong>: Muster, Ein-/Halte-/Ausatemzeiten, Runden,
+          Haltezeiten, Herzfrequenz-Abfall während der Haltephasen, dein Befinden vor und nach der Sitzung.</li>
         <li><strong>Custom Presets</strong>: Name + Atem-Parameter, ausschließlich lokal.</li>
         <li><strong>Sicherheitshinweis-Bestätigung</strong>: Zeitstempel + App-Version.</li>
+      </ul>
+
+      <p><strong>Weitere Berechtigungen (jeweils optional, jederzeit widerrufbar):</strong></p>
+      <ul>
+        <li><strong>Mikrofon</strong>: nur für die optionale Atemerkennung. Das Signal wird live auf dem Gerät ausgewertet, um erkannte Atemzüge mit der Vorgabe zu vergleichen. Es wird kein Audio aufgezeichnet, gespeichert oder übertragen.</li>
+        <li><strong>Bluetooth</strong>: Verbindung zu einem Polar-H10- oder Movesense-Brustgurt, direkt mit Apple Watch oder iPhone (siehe Abschnitt 7).</li>
+        <li><strong>Bewegungssensoren</strong>: Zittern-Erkennung in Kälte-Sitzungen und Lage-Anzeige; Auswertung ausschließlich lokal.</li>
+        <li><strong>Kalender</strong>: nur wenn du deinen Übungsplan als Termine in deinen Kalender eintragen lässt.</li>
       </ul>
 
       <p>
@@ -367,7 +380,7 @@
       eigenen Geräten</strong>. Keine Übertragung über das Internet oder externe Server.
     </p>
 
-    <h2>7. Bluetooth-Sensor-Verbindung (Polar H10)</h2>
+    <h2>7. Bluetooth-Sensor-Verbindung (Polar H10, Movesense)</h2>
     <p>
       CARLON Equine und CARLON Research nutzen Bluetooth Low Energy (BLE) zur
       Verbindung mit Polar-H10-Brustgurten. Die BLE-Berechtigung wird beim
@@ -376,6 +389,11 @@
       und eigenständiger Verantwortlicher für ggf. von Polar betriebene Cloud-Dienste
       (Polar Flow). Vitalkultur-Apps nutzen <strong>keine Polar-Cloud</strong> —
       die H10-Verbindung erfolgt ausschließlich direkt zwischen Sensor und iPhone.
+    </p>
+    <p>
+      CARLON Breathwork verbindet einen Polar H10 oder einen Movesense-Sensor direkt mit
+      der Apple Watch oder dem iPhone — ohne Umweg über ein anderes Gerät und ohne
+      Hersteller-Cloud. Die Herzschlag-Daten werden ausschließlich lokal ausgewertet.
     </p>
 
     <h2>8. Website vitalkultur.com</h2>

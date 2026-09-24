@@ -6,15 +6,15 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="theme-color" content="#030303">
-  <title>CARLON – Feel your breath. Mastered. · Haptic Breathwork for Apple Watch (Beta)</title>
-  <meta name="description" content="CARLON – haptic breathwork for Apple Watch. 16 techniques, felt through the Taptic Engine, eyes closed. Live HR &amp; HRV, research-grade with Polar H10. Now in closed beta — testers &amp; breath-coach partners welcome.">
-  <meta property="og:title" content="CARLON – Feel your breath. Mastered.">
-  <meta property="og:description" content="Haptic breathwork for Apple Watch. 16 techniques felt on your wrist, eyes closed. Live biometrics, research-grade with Polar H10. Now in closed beta.">
+  <title>CARLON Breathwork – Your breathwork lab on Apple Watch (Beta)</title>
+  <meta name="description" content="CARLON Breathwork – haptic breathing guidance for Apple Watch. 19 breathing patterns, felt on your wrist with your eyes closed. Heart rate during every session; beat by beat with Polar H10 or Movesense. Now in closed beta.">
+  <meta property="og:title" content="CARLON Breathwork – Your breathwork lab. On your wrist.">
+  <meta property="og:description" content="Haptic breathing guidance for Apple Watch. 19 breathing patterns, felt on your wrist with your eyes closed. Afterwards you see how you breathed. Now in closed beta.">
   <meta property="og:image" content="https://vitalkultur.com/assets/og-breathwork.png">
   <link rel="icon" href="/app-icon.png">
   <link rel="apple-touch-icon" href="/app-icon.png">
-  <link rel="canonical" href="https://vitalkultur.com/">
-  <meta property="og:url" content="https://vitalkultur.com/">
+  <link rel="canonical" href="https://vitalkultur.com/breathwork/">
+  <meta property="og:url" content="https://vitalkultur.com/breathwork/">
   <meta property="og:type" content="website">
   <meta name="twitter:card" content="summary_large_image">
   <script type="application/ld+json">
@@ -22,20 +22,20 @@
     "@context": "https://schema.org",
     "@type": "SoftwareApplication",
     "name": "CARLON Breathwork",
-    "slogan": "Feel your breath. Mastered.",
+    "slogan": "Your breathwork lab. On your wrist.",
     "operatingSystem": "watchOS, iOS",
     "applicationCategory": "HealthApplication",
-    "description": "16 breathing techniques with Apple Watch haptic guidance and live HRV — grounded in the physiology of slow breathing. Currently in closed beta.",
+    "description": "19 breathing patterns with haptic guidance on Apple Watch, a pattern builder and session records. Optional beat-by-beat analysis with a Polar H10 or Movesense chest strap. Currently in closed beta.",
     "creator": {
       "@type": "Organization",
       "name": "Vitalkultur",
       "url": "https://vitalkultur.com"
     },
-    "featureList": "Haptic Guidance, Double Tap, 16 Breathing Techniques, Custom Pattern Creation, Live HR Sparkline, Session RMSSD, Dive Reflex Detection, 4 Watch Complications, Siri Shortcuts, Apple Calendar, Coherence Switch, Breath Composer, Flower of Life, Focus Mode, Research Export"
+    "featureList": "Haptic Guidance, Three Haptic Levels, Double Tap, 19 Breathing Patterns, Pattern Builder, Breath Composer, Live Heart Rate, Optional On-Device Breathing Detection, Watch Complications, Siri Shortcuts, Apple Calendar, Flower of Life, Pattern Sharing, JSON/CSV/Markdown Export, Chest-Strap Analysis (Polar H10, Movesense)"
   }
   </script>
   <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"MobileApplication","name":"CARLON","operatingSystem":"watchOS, iOS","applicationCategory":"HealthApplication","description":"Haptic-guided breathwork for Apple Watch. 16 techniques. Live biometrics, research-grade with Polar H10. Currently in closed beta."}
+{"@context":"https://schema.org","@type":"MobileApplication","name":"CARLON","operatingSystem":"watchOS, iOS","applicationCategory":"HealthApplication","description":"Haptic-guided breathwork for Apple Watch. 19 breathing patterns. Heart rate during every session; beat by beat with Polar H10 or Movesense. Currently in closed beta."}
   </script>
   <!-- Analytics: GoatCounter (kostenlos, open source, DSGVO ohne Cookie-Banner)
        Dashboard: https://vitalkultur.goatcounter.com
@@ -62,12 +62,12 @@ document.head.appendChild(s);})();</script>
   <style>
     /*
      * ╔═══════════════════════════════════════════════════════════════╗
-     * ║  CARLON — Sacred Geometry Design System                      ║
+     * ║  CARLON — Geometry Design System                      ║
      * ║  "The code IS the geometry. The geometry IS the code."       ║
      * ║                                                               ║
      * ║  Every value in this file derives from natural constants:     ║
      * ║  φ (1.618033...) · Fibonacci (1,1,2,3,5,8,13,21,34,55,89)  ║
-     * ║  Schumann (7.83 Hz) · Solfeggio (396,432,528,639 Hz)       ║
+     * ║  Fibonacci spacing · φ type scale       ║
      * ║                                                               ║
      * ║  If you're reading this source code: welcome.                ║
      * ║  You found the blueprint behind the breath.                  ║
@@ -76,7 +76,7 @@ document.head.appendChild(s);})();</script>
 
     :root{
       /*
-       * ── SOLFEGGIO COLOR SYSTEM ──────────────────────────────────
+       * ── COLOR SYSTEM ──────────────────────────────────
        * Each frequency shifted 40 octaves into visible light.
        * 396 Hz × 2⁴⁰ = 435 THz ≈ 689nm (Red)
        * 432 Hz × 2⁴⁰ = 475 THz ≈ 631nm (Gold)
@@ -119,7 +119,7 @@ document.head.appendChild(s);})();</script>
        */
 
       /*
-       * ── SCHUMANN TIMING ────────────────────────────────────────
+       * ── BASE TIMING ────────────────────────────────────────
        * Earth's electromagnetic heartbeat: 7.83 Hz
        * Period: 1/7.83 = 127.71ms
        *
@@ -149,7 +149,7 @@ document.head.appendChild(s);})();</script>
     /* Grain — tactile texture at Fibonacci opacity */
     body::after{content:'';position:fixed;inset:0;opacity:.005;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.7' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");pointer-events:none;z-index:9999}
 
-    /* ═══ SACRED GEOMETRY BACKGROUND — CSS SVG patterns (reliable on all devices) ═══ */
+    /* ═══ GEOMETRY BACKGROUND — CSS SVG patterns (reliable on all devices) ═══ */
     #bgFlower{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;pointer-events:none}
 
     .sg-bg{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden}
@@ -317,12 +317,12 @@ document.head.appendChild(s);})();</script>
       position:absolute;bottom:34px;left:50%; /* F(9) from bottom */
       width:1px;height:55px; /* F(10) */
       background:linear-gradient(to bottom,transparent,rgba(62,207,178,.15));
-      animation:scrollDrift 2.68s ease-in-out infinite; /* Schumann × F(8) = 2681ms */
+      animation:scrollDrift 2.68s ease-in-out infinite; /* base × F(8) = 2681ms */
     }
     @keyframes scrollDrift{0%,100%{opacity:.1;transform:scaleY(.8)}50%{opacity:.25;transform:scaleY(1)}}
 
     /*
-     * ═══ SACRED DIVIDERS ════════════════════════════════════════
+     * ═══ DIVIDERS ════════════════════════════════════════
      * Between each section: Vesica Piscis (two overlapping circles)
      * or Seed of Life (7-circle pattern) — alternating.
      * The Vesica Piscis is φ encoded: height:width = √3:1 ≈ 1.732
@@ -377,7 +377,7 @@ document.head.appendChild(s);})();</script>
     }
     @keyframes orbFloat{0%,100%{transform:translate(0,0)}50%{transform:translate(15px,-10px)}}
 
-    /* Sacred geometry watermark textures — hidden-in-plain-sight patterns */
+    /* Geometry watermark textures — hidden-in-plain-sight patterns */
     .sg-watermark{
       position:absolute;pointer-events:none;opacity:.09;
       animation:sgDrift 45s ease-in-out infinite;
@@ -516,7 +516,7 @@ document.head.appendChild(s);})();</script>
      * ═══ AUDIO PLAYER ═══════════════════════════════════════════
      * Fixed bottom-right. Fibonacci dimensions.
      * Starts muted — user activates consciously.
-     * Schumann-timed fade-in (127.71ms × F(8) = 2.68s).
+     * Base-timed fade-in (127.71ms × F(8) = 2.68s).
      */
     /*
      * ═══ TOP BAR — Vitalkultur brand + Audio player ═══
@@ -768,31 +768,7 @@ document.head.appendChild(s);})();</script>
 </head>
 <body>
 
-<!--
-  ╔═══════════════════════════════════════════════════════════════╗
-  ║                                                               ║
-  ║   This page is a living document of Sacred Geometry.          ║
-  ║                                                               ║
-  ║   Every spacing value is a Fibonacci number.                  ║
-  ║   Every font size derives from φ (1.618033...).              ║
-  ║   Every animation timing comes from Earth's heartbeat         ║
-  ║   at 7.83 Hz (Schumann Resonance).                           ║
-  ║   Every color maps to a Solfeggio frequency                   ║
-  ║   shifted 40 octaves into visible light.                      ║
-  ║                                                               ║
-  ║   The sum of any two adjacent Fibonacci numbers               ║
-  ║   equals the next — just like your inhale + exhale            ║
-  ║   in CARLON always sum to the next Fibonacci duration.        ║
-  ║                                                               ║
-  ║   F(7)=13  F(8)=21  F(9)=34  F(10)=55  F(11)=89             ║
-  ║   φ = 1.618033988749895...                                    ║
-  ║   Schumann = 127.71ms per cycle                               ║
-  ║                                                               ║
-  ║   Crafted with obsession by Vitalkultur.                      ║
-  ║   jan@vitalkultur.com                                         ║
-  ║                                                               ║
-  ╚═══════════════════════════════════════════════════════════════╝
--->
+<!-- CARLON Breathwork · Vitalkultur · jan@vitalkultur.com -->
 
 <!-- ═══ TOP BAR — Vitalkultur + Audio ═══ -->
 <div class="top-bar">
@@ -817,7 +793,7 @@ document.head.appendChild(s);})();</script>
   </div>
 </div>
 
-<!-- ═══ SACRED GEOMETRY BACKGROUND FIELD ═══
+<!-- ═══ GEOMETRIC BACKGROUND FIELD ═══
      6 patterns: Seed of Life, Metatron's Cube, Vesica Piscis, Flower of Life, Chladni, Golden Spiral
      CSS-based SVG (reliable on all devices including iOS Safari) + Canvas overlay -->
 
@@ -855,7 +831,7 @@ document.head.appendChild(s);})();</script>
 </div>
 
 <!-- Canvas overlay for scroll-reactive parallax effect -->
-<canvas id="bgFlower" role="img" aria-label="Sacred geometry background pattern"></canvas>
+<canvas id="bgFlower" role="img" aria-label="Geometric background pattern"></canvas>
 
 <!-- ═══ FLOATING NAV PILL ═══ -->
 <nav class="nav" id="floatingNav">
@@ -876,16 +852,16 @@ document.head.appendChild(s);})();</script>
   <div class="hero-badge" data-en="Closed beta · Haptic breathwork for Apple Watch" data-de="Geschlossene Beta · Haptische Atemarbeit für die Apple Watch">Closed beta · Haptic breathwork for Apple Watch</div>
 
   <div class="flower-wrap">
-    <canvas id="flowerCanvas" role="img" aria-label="Flower of Life sacred geometry animation"></canvas>
+    <canvas id="flowerCanvas" role="img" aria-label="Animated Flower of Life"></canvas>
     <div class="flower-ci">
       <div class="ci-name">CARLON</div>
       <div class="ci-product">Breathwork</div>
-      <div class="ci-claim" data-en="Feel your breath. Mastered." data-de="Feel your breath. Mastered.">Feel your breath. Mastered.</div>
+      <div class="ci-claim" data-en="Your breathwork lab. On your wrist." data-de="Dein Atemlabor am Handgelenk.">Your breathwork lab. On your wrist.</div>
     </div>
   </div>
 
   <h1 class="hero-title" style="margin-top:13px" data-en="Breathwork you feel —<br><em>not watch.</em>" data-de="Atemarbeit, die du fühlst —<br><em>nicht ansiehst.</em>">Breathwork you feel —<br><em>not watch.</em></h1>
-  <p class="hero-sub" style="margin-top:13px;font-size:14px;color:var(--t2);max-width:500px;margin-left:auto;margin-right:auto;line-height:1.6" data-en="16 evidence-based techniques, felt through the Taptic Engine — eyes closed, no screen.<br>From the first calm breath to deep, measured stillness." data-de="16 evidenzbasierte Techniken, gefühlt durch die Taptic Engine — mit geschlossenen Augen, ohne Bildschirm.<br>Vom ersten ruhigen Atemzug bis zur tiefen, gemessenen Stille.">16 evidence-based techniques, felt through the Taptic Engine — eyes closed, no screen.<br>From the first calm breath to deep, measured stillness.</p>
+  <p class="hero-sub" style="margin-top:13px;font-size:14px;color:var(--t2);max-width:500px;margin-left:auto;margin-right:auto;line-height:1.6" data-en="19 breathing patterns, felt through the Taptic Engine — eyes closed, no screen.<br>Afterwards you see how you breathed." data-de="19 Atemmuster, gefühlt durch die Taptic Engine — mit geschlossenen Augen, ohne Bildschirm.<br>Danach siehst du, wie du geatmet hast.">19 breathing patterns, felt through the Taptic Engine — eyes closed, no screen.<br>Afterwards you see how you breathed.</p>
   <p style="margin-top:8px;font-size:11px;color:var(--t3)" data-en="Now in closed beta · testers &amp; breath-coach partners welcome" data-de="Jetzt in geschlossener Beta · Tester &amp; Atem-Coach-Partner willkommen">Now in closed beta · testers &amp; breath-coach partners welcome</p>
 
   <!-- Hero Lifestyle Image -->
@@ -1014,8 +990,8 @@ document.head.appendChild(s);})();</script>
         </article>
         <article class="gal-slide">
           <div class="gal-label" data-en="Your Music" data-de="Deine Musik">Your Music</div>
-          <img src="/carlon-music.png" alt="CARLON Watch — Apple Music natively integrated during breathing session" loading="lazy">
-          <p class="gal-desc" data-en="Apple Music natively integrated. Play your favourite relaxation music during any breathing session — controlled from your wrist." data-de="Apple Music nativ integriert. Spiel deine liebste Entspannungsmusik während jeder Atemsession — gesteuert von deinem Handgelenk.">Apple Music natively integrated. Play your favourite relaxation music during any breathing session — controlled from your wrist.</p>
+          <img src="/carlon-music.png" alt="CARLON Watch — Now Playing controls during a breathing session" loading="lazy">
+          <p class="gal-desc" data-en="Keep your own music playing. The Now Playing controls sit one swipe away — on your wrist." data-de="Deine eigene Musik läuft weiter. Die Wiedergabe-Steuerung liegt einen Wisch entfernt — an deinem Handgelenk.">Keep your own music playing. The Now Playing controls sit one swipe away — on your wrist.</p>
         </article>
       </div>
     </div>
@@ -1034,9 +1010,9 @@ document.head.appendChild(s);})();</script>
     <div class="gal-vp" tabindex="0">
       <div class="gal-track">
         <article class="gal-slide">
-          <div class="gal-label" data-en="16 Techniques" data-de="16 Techniken">16 Techniques</div>
+          <div class="gal-label" data-en="19 Patterns" data-de="19 Atemmuster">19 Patterns</div>
           <img src="/carlon-techniques.png" alt="Watch — Tummo, Coherence, Box and more" loading="lazy">
-          <p class="gal-desc" data-en="From calm to fire. Grounded in breathing physiology — evidence-based or design-inspired, always tagged." data-de="Von Ruhe bis Feuer. In der Atem-Physiologie verankert — evidenzbasiert oder design-inspiriert, immer gekennzeichnet.">From calm to fire. Grounded in breathing physiology — evidence-based or design-inspired, always tagged.</p>
+          <p class="gal-desc" data-en="From calm to fire. Where a study exists, it is named in the app — with what it tested." data-de="Von Ruhe bis Feuer. Wo es eine Studie gibt, nennt die App sie — samt dem, was sie geprüft hat.">From calm to fire. Where a study exists, it is named in the app — with what it tested.</p>
         </article>
         <article class="gal-slide">
           <div class="gal-label" data-en="Two atmospheres" data-de="Zwei Atmosphären">Two atmospheres</div>
@@ -1070,7 +1046,7 @@ document.head.appendChild(s);})();</script>
 <div class="sect rv sect-glow" style="padding-bottom:34px">
   <p class="label rv" style="color:var(--green)" data-en="Your body" data-de="Dein Körper">Your body</p>
   <h2 class="rv" style="font-size:26px;font-weight:300;letter-spacing:-.02em;margin-top:8px" data-en="Real data. <em>Not promises.</em>" data-de="Echte Daten. <em>Keine Versprechen.</em>">Real data. <em>Not promises.</em></h2>
-  <p class="rv" style="margin-top:8px;font-size:14px;color:var(--t2);max-width:520px;margin-left:auto;margin-right:auto;text-align:center;line-height:1.6" data-en="Most breathwork apps show a timer. CARLON shows what your body actually does — on your wrist and on your iPhone." data-de="Die meisten Atem-Apps zeigen einen Timer. CARLON zeigt, was dein Körper wirklich tut — an deinem Handgelenk und auf deinem iPhone.">Most breathwork apps show a timer. CARLON shows what your body actually does — on your wrist and on your iPhone.</p>
+  <p class="rv" style="margin-top:8px;font-size:14px;color:var(--t2);max-width:520px;margin-left:auto;margin-right:auto;text-align:center;line-height:1.6" data-en="CARLON keeps a record of every session — the rhythm on your wrist, the details on your iPhone." data-de="CARLON hält jede Sitzung fest — den Rhythmus an deinem Handgelenk, die Details auf deinem iPhone.">CARLON keeps a record of every session — the rhythm on your wrist, the details on your iPhone.</p>
 
   <!-- Gallery C: Biometrik Watch → iPhone -->
   <section class="gal" id="gal-bio" aria-label="Biometrics" style="margin:34px auto 0;max-width:900px">
@@ -1085,33 +1061,33 @@ document.head.appendChild(s);})();</script>
       <div class="gal-track">
         <article class="gal-slide">
           <div class="gal-label" data-en="Watch · Heart Rate" data-de="Watch · Herzfrequenz">Watch · Heart Rate</div>
-          <img src="/carlon-heartrate.png" alt="Watch — full session HR curve with dive reflex drop visible" loading="lazy">
-          <p class="gal-desc" data-en="Your heart rate drops during breath holds. The dive reflex — visible on your wrist." data-de="Deine Herzfrequenz sinkt beim Luftanhalten. Der Tauchreflex — sichtbar an deinem Handgelenk.">Your heart rate drops during breath holds. The dive reflex — visible on your wrist.</p>
+          <img src="/carlon-heartrate.png" alt="Watch — heart rate across a full session" loading="lazy">
+          <p class="gal-desc" data-en="See how your heart rate moves through each breath hold — on your wrist." data-de="Sieh, wie sich deine Herzfrequenz durch jede Haltephase bewegt — an deinem Handgelenk.">See how your heart rate moves through each breath hold — on your wrist.</p>
         </article>
         <article class="gal-slide">
           <div class="gal-label" data-en="Watch · Breath Sync" data-de="Watch · Atem-Sync">Watch · Breath Sync</div>
           <img src="/carlon-breathsync.png" alt="Watch — breath synchronicity 36%, phase, frequency, depth" loading="lazy">
-          <p class="gal-desc" data-en="Heart and breath in sync. Phase, frequency, depth — measured after every session." data-de="Herz und Atem im Gleichklang. Phase, Frequenz, Tiefe — nach jeder Session gemessen.">Heart and breath in sync. Phase, frequency, depth — measured after every session.</p>
+          <p class="gal-desc" data-en="The target rhythm beside your session. Breath by breath with breathing detection or a chest strap." data-de="Der Zielrhythmus neben deiner Sitzung. Atemzug für Atemzug mit Atemerkennung oder Brustgurt.">The target rhythm beside your session. Breath by breath with breathing detection or a chest strap.</p>
         </article>
         <article class="gal-slide">
           <div class="gal-label" data-en="Watch · Retention" data-de="Watch · Retention">Watch · Retention</div>
-          <img src="/carlon-retention.png" alt="Watch — retention R1 to R3, improving +25%" loading="lazy">
-          <p class="gal-desc" data-en="Round by round, you hold longer. +25% improvement — tracked on your wrist." data-de="Runde für Runde hältst du länger. +25% Verbesserung — an deinem Handgelenk erfasst.">Round by round, you hold longer. +25% improvement — tracked on your wrist.</p>
+          <img src="/carlon-retention.png" alt="Watch — hold times of rounds 1 to 3" loading="lazy">
+          <p class="gal-desc" data-en="Every round, every hold time recorded — compare them across sessions." data-de="Jede Runde, jede Haltezeit festgehalten — vergleiche sie über deine Sitzungen hinweg.">Every round, every hold time recorded — compare them across sessions.</p>
         </article>
         <article class="gal-slide">
           <div class="gal-label" data-en="iPhone · Heart Rate" data-de="iPhone · Herzfrequenz">iPhone · Heart Rate</div>
           <img src="/carlon-iphone-heartrate.png" alt="iPhone — full session HR curve over 3 minutes" loading="lazy">
-          <p class="gal-desc" data-en="Every heartbeat plotted. See exactly where your nervous system shifted." data-de="Jeder Herzschlag geplottet. Sieh genau, wo dein Nervensystem umgeschaltet hat.">Every heartbeat plotted. See exactly where your nervous system shifted.</p>
+          <p class="gal-desc" data-en="Your heart rate across the whole session — phase by phase." data-de="Deine Herzfrequenz über die ganze Sitzung — Phase für Phase.">Your heart rate across the whole session — phase by phase.</p>
         </article>
         <article class="gal-slide">
           <div class="gal-label" data-en="iPhone · Insights" data-de="iPhone · Einblicke">iPhone · Insights</div>
           <img src="/carlon-iphone-breathsync.png" alt="iPhone — breath sync gauges, HRV context, personal insights" loading="lazy">
-          <p class="gal-desc" data-en="Personal coaching: HRV in context, breath synchronicity, and what to do next." data-de="Persönliches Coaching: HRV im Kontext, Atem-Synchronizität und was als Nächstes zu tun ist.">Personal coaching: HRV in context, breath synchronicity, and what to do next.</p>
+          <p class="gal-desc" data-en="HRV in the context of your own range — and the signal behind every suggestion." data-de="HRV im Kontext deiner eigenen Spanne — und das Signal hinter jedem Vorschlag.">HRV in the context of your own range — and the signal behind every suggestion.</p>
         </article>
         <article class="gal-slide">
           <div class="gal-label" data-en="iPhone · Progress" data-de="iPhone · Fortschritt">iPhone · Progress</div>
           <img src="/carlon-iphone-retention.png" alt="iPhone — retention progress over 30 sessions with personal best" loading="lazy">
-          <p class="gal-desc" data-en="Every session stronger. 30-session trend, personal best, body adapting." data-de="Jede Session stärker. 30-Session-Trend, persönliche Bestleistung, der Körper passt sich an.">Every session stronger. 30-session trend, personal best, body adapting.</p>
+          <p class="gal-desc" data-en="30-session trend and personal bests — your practice over time." data-de="30-Sitzungen-Trend und persönliche Bestwerte — deine Praxis im Verlauf.">30-session trend and personal bests — your practice over time.</p>
         </article>
       </div>
     </div>
@@ -1124,7 +1100,7 @@ document.head.appendChild(s);})();</script>
 <div class="sect rv" style="padding-bottom:34px">
   <p class="label rv" data-en="The science" data-de="Die Wissenschaft">The science</p>
   <h2 class="rv" style="font-size:26px;font-weight:300;letter-spacing:-.02em;margin-top:8px" data-en="Know what <em>you breathe.</em>" data-de="Wisse, was <em>du atmest.</em>">Know what <em>you breathe.</em></h2>
-  <p class="rv" style="margin-top:8px;font-size:14px;color:var(--t2);max-width:520px;margin-left:auto;margin-right:auto;text-align:center;line-height:1.6" data-en="Every technique explained. Timings grounded in slow-breathing science where evidence exists — the rest design-inspired and labelled." data-de="Jede Technik erklärt. Timings in der Wissenschaft langsamer Atmung verankert, wo Evidenz existiert — der Rest design-inspiriert und gekennzeichnet.">Every technique explained. Timings grounded in slow-breathing science where evidence exists — the rest design-inspired and labelled.</p>
+  <p class="rv" style="margin-top:8px;font-size:14px;color:var(--t2);max-width:520px;margin-left:auto;margin-right:auto;text-align:center;line-height:1.6" data-en="Every pattern explained. Where research exists, the source sits beside the practice — and what it did and did not test." data-de="Jedes Muster erklärt. Wo es Forschung gibt, steht die Quelle neben der Übung — und was sie geprüft hat und was nicht.">Every pattern explained. Where research exists, the source sits beside the practice — and what it did and did not test.</p>
 
   <!-- Gallery D: Wissen -->
   <section class="gal" id="gal-science" aria-label="Science and knowledge" style="margin:34px auto 0;max-width:900px">
@@ -1140,12 +1116,12 @@ document.head.appendChild(s);})();</script>
         <article class="gal-slide">
           <div class="gal-label" data-en="Breathing Wiki" data-de="Atem-Wiki">Breathing Wiki</div>
           <img src="/carlon-iphone-wiki.png" alt="iPhone — Breathing Wiki: understand your breath, patterns explained" loading="lazy">
-          <p class="gal-desc" data-en="Every pattern explained — what it does, why it works, which studies back it." data-de="Jedes Muster erklärt — was es tut, warum es wirkt, welche Studien es belegen.">Every pattern explained — what it does, why it works, which studies back it.</p>
+          <p class="gal-desc" data-en="Every pattern explained — how it is done, where it comes from, which studies examined it." data-de="Jedes Muster erklärt — wie es geht, woher es kommt, welche Studien es untersucht haben.">Every pattern explained — how it is done, where it comes from, which studies examined it.</p>
         </article>
         <article class="gal-slide">
           <div class="gal-label" data-en="Your Dashboard" data-de="Dein Dashboard">Your Dashboard</div>
           <img src="/carlon-iphone-dashboard.png" alt="iPhone — HRV Today dashboard, 7-day trends, session count" loading="lazy">
-          <p class="gal-desc" data-en="HRV Today. 7-day trends. 20 sessions tracked. Your nervous system's report card." data-de="HRV heute. 7-Tage-Trends. 20 erfasste Sessions. Das Zeugnis deines Nervensystems.">HRV Today. 7-day trends. 20 sessions tracked. Your nervous system's report card.</p>
+          <p class="gal-desc" data-en="HRV today, 7-day trends and your sessions at a glance." data-de="HRV heute, 7-Tage-Trends und deine Sitzungen auf einen Blick.">HRV today, 7-day trends and your sessions at a glance.</p>
         </article>
         <article class="gal-slide">
           <div class="gal-label" data-en="Understand Retention" data-de="Retention verstehen">Understand Retention</div>
@@ -1158,15 +1134,13 @@ document.head.appendChild(s);})();</script>
 
   <!-- Research Badges -->
   <div class="result-strip rv" style="margin-top:55px">
-    <div class="result-num"><div class="big">↓</div><div class="desc" data-en="cortisol reduction<sup><a href=&quot;#ref-c&quot; style=&quot;color:var(--gold);text-decoration:none&quot;>1</a></sup>" data-de="Cortisol-Reduktion<sup><a href=&quot;#ref-c&quot; style=&quot;color:var(--gold);text-decoration:none&quot;>1</a></sup>">cortisol reduction<sup><a href="#ref-c" style="color:var(--gold);text-decoration:none">1</a></sup></div></div>
-    <div class="result-num"><div class="big">↑</div><div class="desc" data-en="HRV improvement<sup><a href=&quot;#ref-h&quot; style=&quot;color:var(--gold);text-decoration:none&quot;>2</a></sup>" data-de="HRV-Verbesserung<sup><a href=&quot;#ref-h&quot; style=&quot;color:var(--gold);text-decoration:none&quot;>2</a></sup>">HRV improvement<sup><a href="#ref-h" style="color:var(--gold);text-decoration:none">2</a></sup></div></div>
     <div class="result-num"><div class="big">~5.5</div><div class="desc" data-en="breaths/min resonance<sup><a href=&quot;#ref-r&quot; style=&quot;color:var(--gold);text-decoration:none&quot;>3</a></sup>" data-de="Atemzüge/min Resonanz<sup><a href=&quot;#ref-r&quot; style=&quot;color:var(--gold);text-decoration:none&quot;>3</a></sup>">breaths/min resonance<sup><a href="#ref-r" style="color:var(--gold);text-decoration:none">3</a></sup></div></div>
     <div class="result-num"><div class="big">111</div><div class="desc" data-en="participants<sup><a href=&quot;#ref-s&quot; style=&quot;color:var(--gold);text-decoration:none&quot;>4</a></sup>" data-de="Teilnehmende<sup><a href=&quot;#ref-s&quot; style=&quot;color:var(--gold);text-decoration:none&quot;>4</a></sup>">participants<sup><a href="#ref-s" style="color:var(--gold);text-decoration:none">4</a></sup></div></div>
   </div>
-  <div class="rv" style="margin-top:11px;text-align:center;font-size:11px;color:var(--t3);opacity:.6;max-width:520px;margin-left:auto;margin-right:auto;line-height:1.6" data-en="Observed in peer-reviewed studies of slow breathing — from the literature, not measured by the app." data-de="In peer-reviewed Studien zu langsamer Atmung beobachtet — aus der Literatur, nicht von der App gemessen.">Observed in peer-reviewed studies of slow breathing — from the literature, not measured by the app.</div>
+  <div class="rv" style="margin-top:11px;text-align:center;font-size:11px;color:var(--t3);opacity:.6;max-width:520px;margin-left:auto;margin-right:auto;line-height:1.6" data-en="Resonance rate and study size from peer-reviewed literature — not measured by the app, and no promise of an effect." data-de="Resonanzfrequenz und Studiengröße aus der peer-reviewten Literatur — nicht von der App gemessen und kein Wirkversprechen.">Resonance rate and study size from peer-reviewed literature — not measured by the app, and no promise of an effect.</div>
   <div class="rv" style="margin-top:22px;text-align:center;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--t3);opacity:.6;margin-bottom:9px" data-en="Research we build on" data-de="Forschung, auf der wir aufbauen">Research we build on</div>
   <div class="sci-badges rv" style="margin-top:0">
-    <span class="sci-badge">Stanford University</span>
+    <span class="sci-badge">Breathe (ERS)</span>
     <span class="sci-badge">Frontiers in Psychology</span>
     <span class="sci-badge">Cell Reports Medicine</span>
   </div>
@@ -1184,14 +1158,14 @@ document.head.appendChild(s);})();</script>
 <div class="sect rv" id="for-coaches" style="padding-bottom:34px">
   <p class="label rv" style="text-align:center;color:rgb(175,120,255)" data-en="For coaches &amp; trainers" data-de="Für Coaches &amp; Trainer">For coaches &amp; trainers</p>
   <h2 class="rv" style="text-align:center;font-size:26px;font-weight:300;letter-spacing:-.02em;margin-top:8px" data-en="Design the breath.<br><em>Then share it.</em>" data-de="Gestalte den Atem.<br><em>Dann teil ihn.</em>">Design the breath.<br><em>Then share it.</em></h2>
-  <p class="rv" style="max-width:560px;margin:16px auto 0;text-align:center;font-size:14px;color:var(--t2);line-height:1.7" data-en="Build a pattern for a client's evening wind-down — set the phases, the rounds, the recovery, your colour, your coaching note. Name it. Brand it. Send a link. They open it on their Watch and feel your guidance, eyes closed." data-de="Baue ein Muster für das abendliche Herunterkommen einer Klientin — leg die Phasen fest, die Runden, die Erholung, deine Farbe, deine Coaching-Notiz. Gib ihm einen Namen. Präge ihn mit deiner Marke. Schick einen Link. Sie öffnen ihn auf ihrer Watch und fühlen deine Führung, mit geschlossenen Augen.">Build a pattern for a client's evening wind-down — set the phases, the rounds, the recovery, your colour, your coaching note. Name it. Brand it. Send a link. They open it on their Watch and feel your guidance, eyes closed.</p>
+  <p class="rv" style="max-width:560px;margin:16px auto 0;text-align:center;font-size:14px;color:var(--t2);line-height:1.7" data-en="Build a pattern for a client's evening wind-down — set the phases, the rounds, the recovery, your colour, your name. Send it as a file or a link. They open it in CARLON and follow your rhythm on their Watch, eyes closed." data-de="Baue ein Muster für das abendliche Herunterkommen einer Klientin — leg die Phasen fest, die Runden, die Erholung, deine Farbe, deinen Namen. Schick es als Datei oder Link. Sie öffnet es in CARLON und folgt deinem Rhythmus auf ihrer Watch, mit geschlossenen Augen.">Build a pattern for a client's evening wind-down — set the phases, the rounds, the recovery, your colour, your name. Send it as a file or a link. They open it in CARLON and follow your rhythm on their Watch, eyes closed.</p>
   <div class="rv" style="text-align:center;margin-top:26px"><img src="/carlon-presets.png" alt="CARLON Preset Builder — design and brand custom breathing patterns" loading="lazy" width="220" height="352" style="width:100%;max-width:220px;display:inline-block;border-radius:18px;box-shadow:0 20px 60px rgba(0,0,0,.5)"></div>
   <div class="feat-rail">
     <div class="feat-card"><h5 data-en="Breath Composer" data-de="Breath Composer">Breath Composer</h5><p data-en="A 6-key timeline to compose any pattern." data-de="Eine 6-Tasten-Timeline, um jedes Muster zu komponieren.">A 6-key timeline to compose any pattern.</p></div>
     <div class="feat-card"><h5 data-en="Preset Builder" data-de="Preset Builder">Preset Builder</h5><p data-en="Phases, rounds, recovery, your colour, your coach note." data-de="Phasen, Runden, Erholung, deine Farbe, deine Coach-Notiz.">Phases, rounds, recovery, your colour, your coach note.</p></div>
-    <div class="feat-card"><h5 data-en="Share by link" data-de="Per Link teilen">Share by link</h5><p data-en="Clients open your preset in one tap — no export needed." data-de="Klienten öffnen dein Preset mit einem Tipp — kein Export nötig.">Clients open your preset in one tap — no export needed.</p></div>
-    <div class="feat-card"><h5 data-en="Programs" data-de="Programme">Programs</h5><p data-en="Chain presets into multi-session courses." data-de="Verkette Presets zu Kursen über mehrere Sessions.">Chain presets into multi-session courses.</p></div>
-    <div class="feat-card"><h5 data-en="Breathing Wiki" data-de="Atem-Wiki">Breathing Wiki</h5><p data-en="The studies behind every pattern, for your clients." data-de="Die Studien hinter jedem Muster, für deine Klienten.">The studies behind every pattern, for your clients.</p></div>
+    <div class="feat-card"><h5 data-en="Share it" data-de="Teilen">Share it</h5><p data-en="Send a file or a link — clients open your pattern in CARLON with one tap." data-de="Als Datei oder Link — Klienten öffnen dein Muster mit einem Tipp in CARLON.">Send a file or a link — clients open your pattern in CARLON with one tap.</p></div>
+    <div class="feat-card"><h5 data-en="Reports back" data-de="Berichte zurück">Reports back</h5><p data-en="Clients export a session, you import it into your coach view." data-de="Klienten exportieren eine Sitzung, du liest sie in deine Coach-Ansicht ein.">Clients export a session, you import it into your coach view.</p></div>
+    <div class="feat-card"><h5 data-en="Breathing Wiki" data-de="Atem-Wiki">Breathing Wiki</h5><p data-en="Sources and safety notes for every pattern, for your clients." data-de="Quellen und Sicherheitshinweise zu jedem Muster, für deine Klienten.">Sources and safety notes for every pattern, for your clients.</p></div>
   </div>
   <div style="text-align:center;margin-top:28px">
     <a href="mailto:jan@vitalkultur.com?subject=CARLON%20Coach%20Partner&body=Hi%20Jan%2C%20I%27m%20a%20breathwork%20coach%20%2F%20trainer%20and%20I%27d%20like%20to%20explore%20becoming%20a%20founding%20partner.%0A%0AMy%20practice%3A%20%0AWhat%20I%20teach%3A%20" class="btn btn-gold" onclick="if(window.goatcounter)goatcounter.count({path:'cta-coach-partner',event:true})" data-en="Become a founding coach partner" data-de="Werde Gründungs-Coach-Partner">Become a founding coach partner</a>
@@ -1205,13 +1179,13 @@ document.head.appendChild(s);})();</script>
 <div class="sect rv" id="for-research" style="padding-bottom:34px">
   <p class="label rv" style="text-align:center;color:#3ECFB2" data-en="For researchers" data-de="Für Forschende">For researchers</p>
   <h2 class="rv" style="text-align:center;font-size:26px;font-weight:300;letter-spacing:-.02em;margin-top:8px" data-en="Your breath,<br><em>as data.</em>" data-de="Dein Atem,<br><em>als Daten.</em>">Your breath,<br><em>as data.</em></h2>
-  <p class="rv" style="max-width:600px;margin:16px auto 0;text-align:center;font-size:14px;color:var(--t2);line-height:1.7" data-en="Add a Polar H10 and CARLON captures what your breathing does to your heart at research grade — beat-to-beat intervals, artifact-filtered, with an honest signal-source badge. Every session exportable, methodology included. Study what your breath actually does." data-de="Füg einen Polar H10 hinzu und CARLON erfasst in Research-Grade, was dein Atem mit deinem Herzen macht — Schlag-zu-Schlag-Intervalle, artefaktgefiltert, mit einem ehrlichen Signalquellen-Badge. Jede Session exportierbar, Methodik inklusive. Erforsche, was dein Atem wirklich tut.">Add a Polar H10 and CARLON captures what your breathing does to your heart at research grade — beat-to-beat intervals, artifact-filtered, with an honest signal-source badge. Every session exportable, methodology included. Study what your breath actually does.</p>
+  <p class="rv" style="max-width:600px;margin:16px auto 0;text-align:center;font-size:14px;color:var(--t2);line-height:1.7" data-en="Connect a Polar H10 or Movesense straight to your Watch — no iPhone in between. The optional CARLON Cockpit records beat-to-beat intervals, artifact-filtered, with the signal source always named. Every session exportable, methodology included." data-de="Verbinde einen Polar H10 oder Movesense direkt mit deiner Watch — ohne iPhone dazwischen. Das optionale CARLON Cockpit erfasst Schlag-zu-Schlag-Intervalle, artefaktgefiltert, und nennt immer die Signalquelle. Jede Sitzung exportierbar, Methodik inklusive.">Connect a Polar H10 or Movesense straight to your Watch — no iPhone in between. The optional CARLON Cockpit records beat-to-beat intervals, artifact-filtered, with the signal source always named. Every session exportable, methodology included.</p>
   <div class="rv" style="text-align:center;margin-top:26px"><img src="/carlon-iphone-dashboard.png" alt="CARLON research cockpit — HRV metrics and analysis" loading="lazy" width="210" height="428" style="width:100%;max-width:210px;display:inline-block;border-radius:20px;box-shadow:0 20px 60px rgba(0,0,0,.5)"></div>
   <div class="feat-rail">
-    <div class="feat-card"><h5 data-en="Polar H10, research-grade" data-de="Polar H10, Research-Grade">Polar H10, research-grade</h5><p data-en="Beat-to-beat RR, artifact filter, honest signal-source badge." data-de="Schlag-zu-Schlag-RR, Artefaktfilter, ehrliches Signalquellen-Badge.">Beat-to-beat RR, artifact filter, honest signal-source badge.</p></div>
-    <div class="feat-card"><h5 data-en="Live during sessions" data-de="Live während der Sessions">Live during sessions</h5><p data-en="Heart rate &amp; HRV on your wrist as you breathe — see the effect in real time." data-de="Herzfrequenz &amp; HRV an deinem Handgelenk beim Atmen — sieh den Effekt in Echtzeit.">Heart rate &amp; HRV on your wrist as you breathe — see the effect in real time.</p></div>
-    <div class="feat-card"><h5 data-en="Rigorous, not hyped" data-de="Seriös, nicht gehyped">Rigorous, not hyped</h5><p data-en="Established physiology — every claim tagged evidence-based or design-inspired, never marketing." data-de="Etablierte Physiologie — jede Aussage als evidenzbasiert oder design-inspiriert gekennzeichnet, nie Marketing.">Established physiology — every claim tagged evidence-based or design-inspired, never marketing.</p></div>
-    <div class="feat-card"><h5 data-en="HRV suite" data-de="HRV-Suite">HRV suite</h5><p data-en="RMSSD, Poincaré SD1/SD2, Baevsky stress index, DFA-α1." data-de="RMSSD, Poincaré SD1/SD2, Baevsky-Stress-Index, DFA-α1.">RMSSD, Poincaré SD1/SD2, Baevsky stress index, DFA-α1.</p></div>
+    <div class="feat-card"><h5 data-en="Polar H10 or Movesense" data-de="Polar H10 oder Movesense">Polar H10 or Movesense</h5><p data-en="Beat-to-beat RR straight to the Watch, artifact filter, signal source named." data-de="Schlag-zu-Schlag-RR direkt an die Watch, Artefaktfilter, Signalquelle benannt.">Beat-to-beat RR straight to the Watch, artifact filter, signal source named.</p></div>
+    <div class="feat-card"><h5 data-en="Live during sessions" data-de="Live während der Sessions">Live during sessions</h5><p data-en="Heart rate on your wrist as you breathe; with a chest strap, the beat-by-beat trace." data-de="Herzfrequenz an deinem Handgelenk beim Atmen; mit Brustgurt der Schlag-für-Schlag-Verlauf.">Heart rate on your wrist as you breathe; with a chest strap, the beat-by-beat trace.</p></div>
+    <div class="feat-card"><h5 data-en="Rigorous, not hyped" data-de="Seriös, nicht gehyped">Rigorous, not hyped</h5><p data-en="Established physiology, sources named, limits stated — no promise of an effect." data-de="Etablierte Physiologie, Quellen benannt, Grenzen genannt — kein Wirkversprechen.">Established physiology, sources named, limits stated — no promise of an effect.</p></div>
+    <div class="feat-card"><h5 data-en="HRV suite" data-de="HRV-Suite">HRV suite</h5><p data-en="With a chest strap (CARLON Cockpit): RMSSD, Poincaré SD1/SD2, DFA-α1, RSA, Baevsky index." data-de="Mit Brustgurt (CARLON Cockpit): RMSSD, Poincaré SD1/SD2, DFA-α1, RSA, Baevsky-Index.">With a chest strap (CARLON Cockpit): RMSSD, Poincaré SD1/SD2, DFA-α1, RSA, Baevsky index.</p></div>
     <div class="feat-card"><h5 data-en="Research export" data-de="Research-Export">Research export</h5><p data-en="JSON / CSV / Markdown with methodology + SHA-256 integrity." data-de="JSON / CSV / Markdown mit Methodik + SHA-256-Integrität.">JSON / CSV / Markdown with methodology + SHA-256 integrity.</p></div>
   </div>
   <p style="max-width:600px;margin:20px auto 0;text-align:center;font-size:11px;color:var(--t3);line-height:1.6" data-en="A wellness product, not a medical device. Not intended to diagnose, treat, cure or prevent any disease." data-de="Ein Wellness-Produkt, kein Medizinprodukt. Nicht dazu bestimmt, Krankheiten zu diagnostizieren, zu behandeln, zu heilen oder ihnen vorzubeugen.">A wellness product, not a medical device. Not intended to diagnose, treat, cure or prevent any disease.</p>
@@ -1234,11 +1208,11 @@ document.head.appendChild(s);})();</script>
 
   <p class="rv" style="margin-top:21px;font-size:15px;color:var(--t);max-width:550px;margin-left:auto;margin-right:auto;text-align:center;line-height:1.8" data-en="When our son Carlon was born on a January night in 2026, breathwork became more than a technique — it became the way we stayed grounded together." data-de="Als unser Sohn Carlon in einer Januarnacht 2026 geboren wurde, wurde Atemarbeit mehr als eine Technik — sie wurde die Art, wie wir gemeinsam geerdet blieben.">When our son Carlon was born on a January night in 2026, breathwork became more than a technique — it became the way we stayed grounded together.</p>
 
-  <p class="rv" style="margin-top:13px;font-size:14px;color:var(--t2);max-width:550px;margin-left:auto;margin-right:auto;text-align:center;line-height:1.8" data-en="We couldn't find an app that matched what breathing actually feels like. So we built one during night shifts — testing thousands of haptic patterns to find the perfect rhythm for every breath." data-de="Wir fanden keine App, die dem entsprach, wie sich Atmen wirklich anfühlt. Also bauten wir selbst eine in Nachtschichten — und testeten Tausende haptischer Muster, um den perfekten Rhythmus für jeden Atemzug zu finden.">We couldn't find an app that matched what breathing actually feels like. So we built one during night shifts — testing thousands of haptic patterns to find the perfect rhythm for every breath.</p>
+  <p class="rv" style="margin-top:13px;font-size:14px;color:var(--t2);max-width:550px;margin-left:auto;margin-right:auto;text-align:center;line-height:1.8" data-en="We wanted an app that feels the way breathing feels. So we built one during night shifts — testing haptic pattern after haptic pattern until each breath had its own rhythm." data-de="Wir wollten eine App, die sich anfühlt wie Atmen. Also bauten wir sie in Nachtschichten — und testeten haptisches Muster um haptisches Muster, bis jeder Atemzug seinen eigenen Rhythmus hatte.">We wanted an app that feels the way breathing feels. So we built one during night shifts — testing haptic pattern after haptic pattern until each breath had its own rhythm.</p>
 
   <p class="rv" style="margin-top:21px;font-size:14px;color:var(--t2);max-width:550px;margin-left:auto;margin-right:auto;text-align:center;line-height:1.8" data-en="One night, the family was asleep. I put CARLON on the lowest haptic level — barely there, just a whisper on my wrist. Coherence breathing, 5.5 breaths per minute. The vibration was so subtle that I had to <em>listen</em> for it. And that's exactly what pulled me out of my head. No thoughts about code. No plans for tomorrow. Just the faintest pulse, rising for inhale, falling for exhale. I fell asleep mid-session." data-de="Eines Nachts schlief die Familie. Ich stellte CARLON auf die niedrigste Haptik-Stufe — kaum spürbar, nur ein Flüstern an meinem Handgelenk. Coherence-Atmung, 5,5 Atemzüge pro Minute. Die Vibration war so fein, dass ich ihr <em>lauschen</em> musste. Und genau das holte mich aus meinem Kopf. Keine Gedanken an Code. Keine Pläne für morgen. Nur der leiseste Puls, steigend beim Einatmen, fallend beim Ausatmen. Ich schlief mitten in der Session ein.">One night, the family was asleep. I put CARLON on the lowest haptic level — barely there, just a whisper on my wrist. Coherence breathing, 5.5 breaths per minute. The vibration was so subtle that I had to <em>listen</em> for it. And that's exactly what pulled me out of my head. No thoughts about code. No plans for tomorrow. Just the faintest pulse, rising for inhale, falling for exhale. I fell asleep mid-session.</p>
 
-  <p class="rv" style="margin-top:13px;font-size:14px;color:var(--t2);max-width:550px;margin-left:auto;margin-right:auto;text-align:center;line-height:1.8" data-en="That was the moment I knew it works. Not because of the data — but because I stopped thinking and started breathing. Named after our son, because freedom is in every breath." data-de="Das war der Moment, in dem ich wusste: Es wirkt. Nicht wegen der Daten — sondern weil ich aufhörte zu denken und anfing zu atmen. Benannt nach unserem Sohn, weil Freiheit in jedem Atemzug liegt.">That was the moment I knew it works. Not because of the data — but because I stopped thinking and started breathing. Named after our son, because freedom is in every breath.</p>
+  <p class="rv" style="margin-top:13px;font-size:14px;color:var(--t2);max-width:550px;margin-left:auto;margin-right:auto;text-align:center;line-height:1.8" data-en="That was the moment I knew we were on the right track. Not because of the data — but because I stopped thinking and started breathing. Named after our son, because freedom is in every breath." data-de="Das war der Moment, in dem ich wusste: Wir sind auf dem richtigen Weg. Nicht wegen der Daten — sondern weil ich aufhörte zu denken und anfing zu atmen. Benannt nach unserem Sohn, weil Freiheit in jedem Atemzug liegt.">That was the moment I knew we were on the right track. Not because of the data — but because I stopped thinking and started breathing. Named after our son, because freedom is in every breath.</p>
 </div>
 
 <div class="breathe-space"></div>
@@ -1253,10 +1227,10 @@ document.head.appendChild(s);})();</script>
     <p style="margin-top:8px;font-size:14px;color:var(--t2)" data-en="Full access for a small group of selected testers — before CARLON goes public." data-de="Voller Zugang für eine kleine Gruppe ausgewählter Tester — bevor CARLON öffentlich wird.">Full access for a small group of selected testers — before CARLON goes public.</p>
     <ul style="list-style:none;padding:0;margin:21px auto 0;max-width:300px;text-align:left;font-size:13px;color:var(--t2);line-height:2.2">
       <li style="border-bottom:1px solid rgba(62,207,178,.06);padding:2px 0" data-en="Haptic breathing guidance — eyes closed" data-de="Haptische Atemführung — mit geschlossenen Augen">Haptic breathing guidance — eyes closed</li>
-      <li style="border-bottom:1px solid rgba(62,207,178,.06);padding:2px 0" data-en="16 science-backed techniques + create your own" data-de="16 wissenschaftlich fundierte Techniken + erstelle deine eigenen">16 science-backed techniques + create your own</li>
-      <li style="border-bottom:1px solid rgba(62,207,178,.06);padding:2px 0" data-en="Live heart rate + HRV on your wrist" data-de="Live-Herzfrequenz + HRV an deinem Handgelenk">Live heart rate + HRV on your wrist</li>
+      <li style="border-bottom:1px solid rgba(62,207,178,.06);padding:2px 0" data-en="19 breathing patterns + build your own" data-de="19 Atemmuster + bau deine eigenen">19 breathing patterns + build your own</li>
+      <li style="border-bottom:1px solid rgba(62,207,178,.06);padding:2px 0" data-en="Live heart rate on your wrist; beat by beat with a chest strap" data-de="Live-Herzfrequenz am Handgelenk; mit Brustgurt Schlag für Schlag">Live heart rate on your wrist; beat by beat with a chest strap</li>
       <li style="border-bottom:1px solid rgba(62,207,178,.06);padding:2px 0" data-en="iPhone companion with full analysis" data-de="iPhone-Begleiter mit voller Analyse">iPhone companion with full analysis</li>
-      <li style="border-bottom:1px solid rgba(62,207,178,.06);padding:2px 0" data-en="Breathing Wiki with studies behind every preset" data-de="Atem-Wiki mit Studien hinter jedem Preset">Breathing Wiki with studies behind every preset</li>
+      <li style="border-bottom:1px solid rgba(62,207,178,.06);padding:2px 0" data-en="Breathing Wiki with sources and safety notes" data-de="Atem-Wiki mit Quellen und Sicherheitshinweisen">Breathing Wiki with sources and safety notes</li>
       <li style="padding:2px 0" data-en="Siri, Calendar, Complications, and more" data-de="Siri, Kalender, Komplikationen und mehr">Siri, Calendar, Complications, and more</li>
     </ul>
 
@@ -1274,11 +1248,11 @@ document.head.appendChild(s);})();</script>
   <h2 style="font-size:26px;font-weight:300;letter-spacing:-.02em;margin-top:8px" data-en="Frequently <em>asked.</em>" data-de="Häufig <em>gefragt.</em>">Frequently <em>asked.</em></h2>
 
   <div class="faq-list" style="margin-top:34px">
-    <div class="faq-item"><div class="faq-q" onclick="this.parentElement.classList.toggle('open')" data-en="Do I need an Apple Watch?" data-de="Brauche ich eine Apple Watch?">Do I need an Apple Watch?</div><div class="faq-a" data-en="Yes — CARLON is designed as a Watch-first experience. Haptic guidance, Double Tap, and wrist-based biometrics all require it. The iPhone companion provides session history, insights, and the Breath Composer. Requires Apple Watch Series 4 or later with watchOS 11." data-de="Ja — CARLON ist als Watch-First-Erlebnis gestaltet. Haptische Führung, Double Tap und Biometrie am Handgelenk brauchen sie alle. Der iPhone-Begleiter liefert Session-Verlauf, Einblicke und den Breath Composer. Erfordert Apple Watch Series 4 oder neuer mit watchOS 11.">Yes — CARLON is designed as a Watch-first experience. Haptic guidance, Double Tap, and wrist-based biometrics all require it. The iPhone companion provides session history, insights, and the Breath Composer. Requires Apple Watch Series 4 or later with watchOS 11.</div></div>
+    <div class="faq-item"><div class="faq-q" onclick="this.parentElement.classList.toggle('open')" data-en="Do I need an Apple Watch?" data-de="Brauche ich eine Apple Watch?">Do I need an Apple Watch?</div><div class="faq-a" data-en="Yes — CARLON is Watch-first. Haptic guidance, Double Tap and heart rate during sessions all run on the Watch, without the iPhone nearby. The iPhone companion holds your history, the analysis and the Breath Composer. Requires an Apple Watch with watchOS 11 or later and an iPhone with iOS 18 or later." data-de="Ja — CARLON ist Watch-first. Haptische Führung, Double Tap und Herzfrequenz während der Sitzung laufen auf der Watch, ohne iPhone in der Nähe. Der iPhone-Begleiter hält deinen Verlauf, die Auswertung und den Breath Composer. Erfordert eine Apple Watch mit watchOS 11 oder neuer und ein iPhone mit iOS 18 oder neuer.">Yes — CARLON is Watch-first. Haptic guidance, Double Tap and heart rate during sessions all run on the Watch, without the iPhone nearby. The iPhone companion holds your history, the analysis and the Breath Composer. Requires an Apple Watch with watchOS 11 or later and an iPhone with iOS 18 or later.</div></div>
     <div class="faq-item"><div class="faq-q" onclick="this.parentElement.classList.toggle('open')" data-en="How do I get in, and what will it cost?" data-de="Wie komme ich rein, und was kostet es?">How do I get in, and what will it cost?</div><div class="faq-a" data-en="CARLON is currently in closed, invitation-only beta. Request access and we'll get back to you personally. Pricing will be announced at launch." data-de="CARLON ist aktuell in geschlossener Beta, nur auf Einladung. Frag Zugang an und wir melden uns persönlich bei dir. Der Preis wird zum Launch bekannt gegeben.">CARLON is currently in closed, invitation-only beta. Request access and we'll get back to you personally. Pricing will be announced at launch.</div></div>
-    <div class="faq-item"><div class="faq-q" onclick="this.parentElement.classList.toggle('open')" data-en="Does it work with HealthKit?" data-de="Funktioniert es mit HealthKit?">Does it work with HealthKit?</div><div class="faq-a" data-en="Yes. CARLON writes Mindful Minutes to Apple Health and captures live heart rate during sessions. You get real session RMSSD, HR sparklines, dive reflex detection, and HR Range tracking." data-de="Ja. CARLON schreibt Achtsamkeitsminuten in Apple Health und erfasst die Live-Herzfrequenz während der Sessions. Du bekommst echtes Session-RMSSD, HR-Sparklines, Tauchreflex-Erkennung und HR-Range-Tracking.">Yes. CARLON writes Mindful Minutes to Apple Health and captures live heart rate during sessions. You get real session RMSSD, HR sparklines, dive reflex detection, and HR Range tracking.</div></div>
+    <div class="faq-item"><div class="faq-q" onclick="this.parentElement.classList.toggle('open')" data-en="Does it work with HealthKit?" data-de="Funktioniert es mit HealthKit?">Does it work with HealthKit?</div><div class="faq-a" data-en="Yes. During a session the Watch records your heart rate; completed Watch sessions are saved to Apple Health as a workout, breathing sessions also as Mindful Minutes. HRV comes from Apple Health. With a Polar H10 or Movesense you get beat-by-beat data and the HRV of the session itself. CARLON sends none of it to us." data-de="Ja. Während der Sitzung erfasst die Watch deine Herzfrequenz; abgeschlossene Watch-Sitzungen landen als Training in Apple Health, Atemsitzungen zusätzlich als Achtsamkeitsminuten. Die HRV kommt aus Apple Health. Mit Polar H10 oder Movesense bekommst du Schlag-für-Schlag-Daten und die HRV der Sitzung selbst. CARLON schickt nichts davon an uns.">Yes. During a session the Watch records your heart rate; completed Watch sessions are saved to Apple Health as a workout, breathing sessions also as Mindful Minutes. HRV comes from Apple Health. With a Polar H10 or Movesense you get beat-by-beat data and the HRV of the session itself. CARLON sends none of it to us.</div></div>
     <div class="faq-item"><div class="faq-q" onclick="this.parentElement.classList.toggle('open')" data-en="Is this a medical device?" data-de="Ist das ein Medizinprodukt?">Is this a medical device?</div><div class="faq-a" data-en="No. CARLON is a non-regulated wellness app. It is not intended to diagnose, treat, cure, or prevent any disease. Always consult a physician before starting breathwork if you have cardiovascular, respiratory, or neurological conditions. Never hold your breath or breathe intensely in or near water, while driving, or standing — practise seated or lying down, and stop if you feel light-headed." data-de="Nein. CARLON ist eine nicht-regulierte Wellness-App. Sie ist nicht dazu bestimmt, Krankheiten zu diagnostizieren, zu behandeln, zu heilen oder ihnen vorzubeugen. Sprich immer mit einer Ärztin oder einem Arzt, bevor du mit Atemarbeit beginnst, wenn du Herz-Kreislauf-, Atemwegs- oder neurologische Beschwerden hast. Übe Atemanhalten oder intensive Atmung nie im oder am Wasser, beim Autofahren oder im Stehen — praktiziere im Sitzen oder Liegen und höre auf, wenn dir schwindelig wird.">No. CARLON is a non-regulated wellness app. It is not intended to diagnose, treat, cure, or prevent any disease. Always consult a physician before starting breathwork if you have cardiovascular, respiratory, or neurological conditions. Never hold your breath or breathe intensely in or near water, while driving, or standing — practise seated or lying down, and stop if you feel light-headed.</div></div>
-    <div class="faq-item"><div class="faq-q" onclick="this.parentElement.classList.toggle('open')" data-en="What makes CARLON different?" data-de="Was macht CARLON anders?">What makes CARLON different?</div><div class="faq-a" data-en="CARLON guides through haptics, not screens. You close your eyes and feel every breath. Plus: real biometrics (heart rate, HRV, breath sync) — not just a timer." data-de="CARLON führt durch Haptik, nicht durch Bildschirme. Du schließt die Augen und fühlst jeden Atemzug. Dazu: echte Biometrie (Herzfrequenz, HRV, Atem-Sync) — nicht bloß ein Timer.">CARLON guides through haptics, not screens. You close your eyes and feel every breath. Plus: real biometrics (heart rate, HRV, breath sync) — not just a timer.</div></div>
+    <div class="faq-item"><div class="faq-q" onclick="this.parentElement.classList.toggle('open')" data-en="What makes CARLON different?" data-de="Was macht CARLON anders?">What makes CARLON different?</div><div class="faq-a" data-en="CARLON guides through haptics, not the screen: you close your eyes and feel every phase. Afterwards each session is a record — pattern, timing, hold times, heart rate and how you felt before and after." data-de="CARLON führt durch Haptik, nicht über den Bildschirm: Du schließt die Augen und fühlst jede Phase. Danach ist jede Sitzung ein Protokoll — Muster, Zeiten, Haltezeiten, Herzfrequenz und wie du dich vorher und nachher gefühlt hast.">CARLON guides through haptics, not the screen: you close your eyes and feel every phase. Afterwards each session is a record — pattern, timing, hold times, heart rate and how you felt before and after.</div></div>
   </div>
 </div>
 
@@ -1338,31 +1312,6 @@ const obs=new IntersectionObserver(e=>{e.forEach(e=>{e.isIntersecting&&e.target.
 document.querySelectorAll('.rv').forEach(e=>obs.observe(e));
 const prefersReducedMotion=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-// ═══ SOLFEGGIO FREQUENCY STRIP ═══
-(function(){
-  const strip=document.getElementById('freqStrip');
-  if(!strip)return;
-  const freqs=[
-    {hz:396,color:'200,60,50',label:'Liberation'},
-    {hz:432,color:'178,148,76',label:'Harmony'},
-    {hz:528,color:'50,215,120',label:'Transformation'},
-    {hz:639,color:'135,55,225',label:'Connection'}
-  ];
-  freqs.forEach(f=>{
-    for(let i=0;i<8;i++){
-      const bar=document.createElement('div');
-      bar.className='freq-bar';
-      const h=13+Math.random()*21;
-      bar.style.height=h+'px';
-      bar.style.background=`rgba(${f.color},${.15+Math.random()*.25})`;
-      strip.appendChild(bar);
-    }
-    const gap=document.createElement('div');
-    gap.style.width='8px';
-    strip.appendChild(gap);
-  });
-})();
-
 // ═══ BACKGROUND FLOWER OF LIFE — Full viewport, parallax ═══
 // Deferred init: yields to main thread first (fixes Desktop TBT)
 (function(){
@@ -1387,7 +1336,7 @@ const prefersReducedMotion=window.matchMedia('(prefers-reduced-motion: reduce)')
     // Fade as user scrolls
     const alpha=Math.max(.02,.06*(1-progress*.5));
 
-    // Sacred Geometry patterns — layered, varied, discoverable
+    // Geometry patterns — layered, varied, discoverable
     const patterns=[
       {x:W()*.85,y:H()*.15,r:90,rot:scroll*.0002,type:'seed'},
       {x:W()*.08,y:H()*.7,r:70,rot:-scroll*.00015,type:'seed'},
@@ -1459,17 +1408,17 @@ const prefersReducedMotion=window.matchMedia('(prefers-reduced-motion: reduce)')
 /*
  * ═══ FLOWER OF LIFE ENGINE ══════════════════════════════════════
  *
- * Sacred Geometry: 19 circles arranged in the Flower of Life pattern
+ * Geometry: 19 circles arranged in the Flower of Life pattern
  * Center(1) + Ring 1(6 × 60°) + Ring 2(12 × 30° offset)
  *
- * The Flower of Life contains ALL other sacred patterns:
+ * The Flower of Life contains the other patterns:
  * - Seed of Life (inner 7 circles)
  * - Vesica Piscis (any two adjacent circles)
  * - Metatron's Cube (connecting all centers)
  * - Platonic Solids (projected from Metatron's Cube)
  * - Tree of Life (10 nodes mapped to circle intersections)
  *
- * Breath timing: 4342ms = Schumann(127.71ms) × F(9)(34)
+ * Breath timing: 4342ms = base(127.71ms) × F(9)(34)
  * This produces ~7 breaths/min — the baroreflex resonance frequency
  * where heart rate variability (HRV) reaches its peak.
  *
@@ -1683,7 +1632,7 @@ const prefersReducedMotion=window.matchMedia('(prefers-reduced-motion: reduce)')
 
 // ═══ AMBIENT AUDIO ═══
 // Two songs, alternating. Fade-out before end, crossfade to next.
-// Schumann-timed fades: 2.68s (127.71ms × F(8)=21).
+// Base-timed fades: 2.68s (127.71ms × F(8)=21).
 // Autoplay on load, fallback on first interaction.
 (function(){
   const ctrl=document.getElementById('audioCtrl');
@@ -1697,7 +1646,7 @@ const prefersReducedMotion=window.matchMedia('(prefers-reduced-motion: reduce)')
 
   let playing=false;
   let current=Math.random()<.5?0:1;
-  const fadeDuration=2680; // Schumann × F(8)
+  const fadeDuration=2680; // base × F(8)
   const fadeSteps=34; // F(9)
   const targetVolume=0.382; // φ⁻¹
   const earlyFade=13; // F(7) seconds before end → crossfade
