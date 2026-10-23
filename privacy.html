@@ -235,15 +235,29 @@
       <p><strong>Lokale Daten:</strong></p>
       <ul>
         <li>RR-Intervalle vom Polar-H10-Sensor (Online-BLE-Stream + geräteinterne Offline-Aufnahme mit späterem Sync)</li>
+        <li>Vom Movesense-Sensor: Herzschlag-Werte live sowie, falls du eine Aufnahme im Sensor startest, deren Rohdatei (EKG und Bewegungsdaten) im Ordner „Movesense-Rohdaten“ der App</li>
         <li>Session-Metadaten (Start/End-Zeitstempel, Dauer, Tags, Notizen)</li>
-        <li>Multi-Device-Roster (lokal: H10-Geräte-IDs, Aliase, Kopplungsstatus)</li>
+        <li>Multi-Device-Roster (lokal: Sensor-Geräte-IDs, Aliase, Kopplungsstatus)</li>
         <li>Exporte (Kubios-.txt, JSON, CSV) ausschließlich auf dein Gerät</li>
       </ul>
 
+      <p><strong>Apple Health (HealthKit, nur Lesen, Art. 9 DSGVO):</strong>
+        Nur wenn du zustimmst, liest CARLON Research als Kontext zu deinen Aufnahmen:
+        Herzfrequenzvariabilität (SDNN), Ruhepuls, Herzfrequenz, Schritte, aktive Energie,
+        Schlafanalyse, Trainings sowie Geh-/Lauf- und Raddistanz. CARLON Research schreibt
+        nichts in Apple Health; HealthKit-Daten verlassen dein iPhone nicht und gehen nicht
+        in Exporte ein. Widerruf jederzeit: iOS-Einstellungen → Gesundheit → Datenzugriff &amp; Geräte → CARLON Research.
+      </p>
+
+      <p><strong>iCloud-Backup (optional, standardmäßig aus):</strong>
+        Schaltest du es ein, legt die App deine Aufnahmen als Datei in deinem persönlichen
+        iCloud-Speicher ab (Apple als Anbieter, kein Vitalkultur-Server). Ausschalten
+        jederzeit in den Einstellungen der App.
+      </p>
+
       <p>
-        CARLON Research hat keine HealthKit-Integration und schreibt nichts in
-        Apple Health. Es existieren keine Vitalkultur-Server. Alle Daten und
-        Exporte verbleiben unter deiner Kontrolle.
+        Es existieren keine Vitalkultur-Server. Alle Daten und Exporte verbleiben unter
+        deiner Kontrolle.
       </p>
     </div>
 

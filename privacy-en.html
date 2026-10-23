@@ -229,15 +229,27 @@
       <p><strong>Local data:</strong></p>
       <ul>
         <li>RR intervals from Polar H10 (online BLE stream + on-device offline recording with later sync)</li>
+        <li>From the Movesense sensor: heartbeat values live and, if you start an in-sensor recording, its raw file (ECG and motion data) in the app's “Movesense-Rohdaten” folder</li>
         <li>Session metadata (start/end timestamps, duration, tags, notes)</li>
-        <li>Multi-device roster (local: H10 device IDs, aliases, pairing status)</li>
+        <li>Multi-device roster (local: sensor device IDs, aliases, pairing status)</li>
         <li>Exports (Kubios .txt, JSON, CSV) only to your device</li>
       </ul>
 
+      <p><strong>Apple Health (HealthKit, read-only, Art. 9 GDPR):</strong>
+        Only if you allow it, CARLON Research reads as context for your recordings:
+        heart rate variability (SDNN), resting heart rate, heart rate, steps, active energy,
+        sleep analysis, workouts and walking/running and cycling distance. CARLON Research
+        never writes to Apple Health; HealthKit data does not leave your iPhone and is not
+        included in exports. Revoke any time: iOS Settings → Health → Data Access &amp; Devices → CARLON Research.
+      </p>
+
+      <p><strong>iCloud backup (optional, off by default):</strong>
+        If you turn it on, the app stores your recordings as files in your personal iCloud
+        storage (Apple as provider, no Vitalkultur server). Turn it off any time in the app's settings.
+      </p>
+
       <p>
-        CARLON Research has no HealthKit integration and does not write to Apple
-        Health. There are no Vitalkultur servers. All data and exports stay
-        under your control.
+        There are no Vitalkultur servers. All data and exports stay under your control.
       </p>
     </div>
 
