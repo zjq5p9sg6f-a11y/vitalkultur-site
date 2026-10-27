@@ -14,10 +14,10 @@ iPhone app (iOS 17 or later) for HRV studies. Records beat-to-beat RR intervals 
 - Future-proof: the app stores only the original sensor data and computes every metric fresh, so improved methods apply retroactively to all past recordings (re-export to update); every export names the app version and exact method, so results can be recomputed for peer review.
 - Not a medical device; for research and wellness use. The app interface is in English.
 
-- [Product page (English)](https://vitalkultur.com/rrloggerpro/)
-- [Produktseite (Deutsch)](https://vitalkultur.com/rrloggerpro/de/)
-- [Validation dossier (PDF)](https://vitalkultur.com/rrloggerpro/CARLON-HRV-Research-Validation-Dossier.pdf)
-- [Example PDF report from a real recording](https://vitalkultur.com/rrloggerpro/CARLON-HRV-Research-Example-Report.pdf)
+- [Product page (English)](https://vitalkultur.com/hrv-research/)
+- [Produktseite (Deutsch)](https://vitalkultur.com/hrv-research/de/)
+- [Validation dossier (PDF)](https://vitalkultur.com/hrv-research/CARLON-HRV-Research-Validation-Dossier.pdf)
+- [Example PDF report from a real recording](https://vitalkultur.com/hrv-research/CARLON-HRV-Research-Example-Report.pdf)
 - [App Store](https://apps.apple.com/app/id6826010655)
 
 ## Other apps
