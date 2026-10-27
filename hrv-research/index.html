@@ -76,7 +76,7 @@ document.head.appendChild(s);})();</script>
     @font-face { font-family: 'Jost'; font-style: normal; font-weight: 100 900; font-display: swap; src: url('/fonts/jost-variable.woff2') format('woff2'); }
     :root {
       --bg: #020202; --bg2: #07090A; --card: rgba(255,255,255,0.028); --line: rgba(235,230,220,0.09); --line2: rgba(235,230,220,0.16);
-      --t: rgb(235,230,220); --t2: rgba(235,230,220,.75); --t3: rgba(235,230,220,.55); --t4: rgba(235,230,220,.35);
+      --t: rgb(235,230,220); --t2: rgba(235,230,220,.75); --t3: rgba(235,230,220,.65); --t4: rgba(235,230,220,.52);
       --stille: #3ECFB2; --glow: #6EE6C8; --deep: #148273; --mint: #A8F0E0;
       --s3: 3px; --s5: 5px; --s8: 8px; --s13: 13px; --s21: 21px; --s34: 34px; --s55: 55px; --s89: 89px; --s144: 144px;
       --maxw: 1140px; --ease: cubic-bezier(.2,.7,.2,1);
@@ -249,7 +249,7 @@ document.head.appendChild(s);})();</script>
     .gal-slide h4 { font-size: 16px; font-weight: 500; margin: var(--s21) 0 var(--s5); }
     .gal-slide p { font-size: 14px; color: var(--t3); line-height: 1.5; }
     .gal-nav { display: none; justify-content: center; align-items: center; gap: var(--s13); margin-top: var(--s21); font-size: 13px; color: var(--t3); }
-    .gal-btn { width: 38px; height: 38px; border-radius: 50%; border: 1px solid var(--line2); background: transparent; color: var(--t); cursor: pointer; font-size: 18px; }
+    .gal-btn { width: 44px; height: 44px; border-radius: 50%; border: 1px solid var(--line2); background: transparent; color: var(--t); cursor: pointer; font-size: 18px; }
     @media (max-width: 899px) { .gal-slide { opacity: .35; transform: scale(.92); } .gal-slide.is-active { opacity: 1; transform: none; } .gal-nav { display: flex; } }
     @media (min-width: 900px) { .gal-vp { overflow: visible; } .gal-track { flex-wrap: wrap; justify-content: center; padding: 0; gap: var(--s55) var(--s34); } .gal-slide { flex: 0 1 240px; } }
 
@@ -346,8 +346,25 @@ document.head.appendChild(s);})();</script>
       .fixed { grid-template-columns: 1fr; gap: var(--s21); }
       section.ch { padding-top: var(--s89); }
     }
+    .crumb b, .lang, .pill { white-space: nowrap; }
+    /* Vollbild für Bilder — Kern der Equine-/Breathwork-Lösung (27.10.2026) */
+    .zoombar img, img.zoom { cursor: zoom-in; }
+    .iz { position: fixed; inset: 0; z-index: 9999; display: flex; align-items: center; justify-content: center; background: rgba(2,2,2,.96); -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px); padding: 4vh 4vw; opacity: 0; visibility: hidden; pointer-events: none; transition: opacity .22s ease, visibility .22s ease; cursor: zoom-out; touch-action: pan-y; }
+    .iz.show { opacity: 1; visibility: visible; pointer-events: auto; }
+    .iz img { max-width: 100%; max-height: 84vh; width: auto; height: auto; border-radius: 22px; box-shadow: 0 30px 90px rgba(0,0,0,.7); transform: scale(.97); transition: transform .24s cubic-bezier(.16,1,.3,1); -webkit-user-drag: none; user-select: none; }
+    .iz.show img { transform: scale(1); }
+    .iz-nav { position: fixed; top: 50%; transform: translateY(-50%); width: 44px; height: 44px; border-radius: 50%; border: 1px solid var(--line2); background: rgba(2,2,2,.6); color: var(--t); font-size: 20px; cursor: pointer; }
+    .iz-prev { left: 16px; } .iz-next { right: 16px; }
+    .iz-info { position: fixed; bottom: calc(env(safe-area-inset-bottom, 0px) + 16px); left: 0; right: 0; text-align: center; font-size: 12px; letter-spacing: .1em; text-transform: uppercase; color: var(--t3); pointer-events: none; }
+    @media (max-width: 560px) { .iz-nav { display: none; } }
+    @media (prefers-reduced-motion: reduce) { .iz, .iz img { transition: none; } }
+    .gal { overflow-x: clip; }
+    footer a { display: inline-block; padding: 11px 0; }
     @media (max-width: 560px) {
       .crumb .home, .crumb .sep { display: none; }
+      .crumb { font-size: 12px; letter-spacing: .06em; }
+      .nav .pill { display: none; }   /* die Leiste unten trägt denselben Knopf */
+      .lang { padding: 9px 13px; }
       .checks, .who { grid-template-columns: 1fr; }
       .panel { padding: var(--s21); }
     }
@@ -380,13 +397,13 @@ document.head.appendChild(s);})();</script>
       <p class="lead" data-en="Record up to four Polar H10 or Movesense sensors at once, mark every phase with one tap, and leave with original RR data, values per phase, a methods paragraph and publication-ready figures." data-de="Bis zu vier Polar H10 oder Movesense gleichzeitig aufnehmen, jede Phase per Tipp markieren – und mit Original-RR-Daten, Werten je Phase, Methodenabsatz und publikationsfertigen Grafiken nach Hause gehen.">Record up to four Polar H10 or Movesense sensors at once, mark every phase with one tap, and leave with original RR data, values per phase, a methods paragraph and publication-ready figures.</p>
       <div class="ctas">
         <a class="btn btn-1" href="mailto:jan@vitalkultur.com?subject=CARLON%20HRV%20Research%20%E2%80%93%20beta%20access&amp;body=Hi%20Jan%2C%0A%0AI%27d%20like%20to%20test%20CARLON%20HRV%20Research.%0A%0AInstitution%20/%20lab%3A%0ASensors%20%28Polar%20H10%20/%20Movesense%29%3A%0AStudy%20or%20use%20case%3A%0AEmail%20for%20the%20TestFlight%20invitation%3A%0A%0ABest%20regards%2C%0A" data-beta><span data-en="Request beta access" data-de="Beta-Zugang anfragen">Request beta access</span> <span aria-hidden="true">→</span></a>
-        <a class="btn btn-2" href="#erleben"><span data-en="Try the app below" data-de="App unten ausprobieren">Try the app below</span> <span aria-hidden="true">↓</span></a>
+        <a class="btn btn-2" href="#erleben"><span data-en="See the app below" data-de="App unten ansehen">See the app below</span> <span aria-hidden="true">↓</span></a>
       </div>
       <div class="fine" data-en="iPhone · TestFlight beta · no account · no subscription · no server" data-de="iPhone · TestFlight-Beta · kein Konto · kein Abo · kein Server">iPhone · TestFlight beta · no account · no subscription · no server</div>
     </div>
     <div class="wrap tour" id="erleben">
       <div class="tour-txt">
-        <div class="label" data-en="Try it here" data-de="Hier ausprobieren">Try it here</div>
+        <div class="label" data-en="See it in action" data-de="So sieht es aus">See it in action</div>
         <h2 class="tour-h" data-en="The real app, <em>with a real recording.</em>" data-de="Die echte App, <em>mit einer echten Aufnahme.</em>">The real app, <em>with a real recording.</em></h2>
         <ol class="feats" data-tour-liste aria-label="What the app does">
           <li><button data-i="0"><b data-en="Up to four sensors at once" data-de="Bis zu vier Sensoren gleichzeitig">Up to four sensors at once</b><span data-en="Polar H10 and Movesense Flash record on their own – mark each phase with one tap." data-de="Polar H10 und Movesense Flash zeichnen selbst auf – jede Phase per Tipp markiert.">Polar H10 and Movesense Flash record on their own – mark each phase with one tap.</span></button><i class="fort"></i></li>
@@ -428,7 +445,7 @@ document.head.appendChild(s);})();</script>
       <div class="rv" style="max-width:780px">
         <div class="label" data-en="The sensors" data-de="Die Sensoren">The sensors</div>
         <h2 data-en="Polar H10 and Movesense Flash. <em>Electrical, beat by beat.</em>" data-de="Polar H10 und Movesense Flash. <em>Elektrisch, Schlag für Schlag.</em>">Polar H10 and Movesense Flash. <em>Electrical, beat by beat.</em></h2>
-        <p class="sub" data-en="Both read the heart's electrical signal at the chest – the standard for reliable HRV, where optical wrist and ring sensors fall short in motion. The app is tested with both, and they can run side by side in one study." data-de="Beide lesen das elektrische Signal des Herzens an der Brust – der Standard für belastbare HRV, wo optische Uhren und Ringe in Bewegung an Grenzen kommen. Die App ist mit beiden getestet, und beide laufen nebeneinander in einer Studie.">Both read the heart's electrical signal at the chest – the standard for reliable HRV, where optical wrist and ring sensors fall short in motion. The app is tested with both, and they can run side by side in one study.</p>
+        <p class="sub" data-en="Both read the heart's electrical signal at the chest – the practical standard for reliable HRV outside the lab, where optical wrist and ring sensors fall short in motion. The app is tested with both, and they can run side by side in one study." data-de="Beide lesen das elektrische Signal des Herzens an der Brust – der praktische Standard für belastbare HRV außerhalb des Labors, wo optische Uhren und Ringe in Bewegung an Grenzen kommen. Die App ist mit beiden getestet, und beide laufen nebeneinander in einer Studie.">Both read the heart's electrical signal at the chest – the practical standard for reliable HRV outside the lab, where optical wrist and ring sensors fall short in motion. The app is tested with both, and they can run side by side in one study.</p>
       </div>
       <div class="sensors rv">
         <figure class="sensor">
@@ -454,7 +471,7 @@ document.head.appendChild(s);})();</script>
           </figcaption>
         </figure>
       </div>
-      <p class="cap rv" data-en="Polar H10 validity against ECG: Gilgen-Ammann et al. 2019; Schaffarczyk et al. 2022." data-de="Validität des Polar H10 gegen EKG: Gilgen-Ammann et al. 2019; Schaffarczyk et al. 2022.">Polar H10 validity against ECG: Gilgen-Ammann et al. 2019; Schaffarczyk et al. 2022.</p>
+      <p class="cap rv" data-en="Polar H10 validity against ECG: <a href=&quot;https://doi.org/10.1007/s00421-019-04142-5&quot; rel=&quot;noopener&quot;>Gilgen-Ammann et al. 2019</a>; <a href=&quot;https://doi.org/10.3390/s22176536&quot; rel=&quot;noopener&quot;>Schaffarczyk et al. 2022</a>." data-de="Validität des Polar H10 gegen EKG: <a href=&quot;https://doi.org/10.1007/s00421-019-04142-5&quot; rel=&quot;noopener&quot;>Gilgen-Ammann et al. 2019</a>; <a href=&quot;https://doi.org/10.3390/s22176536&quot; rel=&quot;noopener&quot;>Schaffarczyk et al. 2022</a>.">Polar H10 validity against ECG: <a href="https://doi.org/10.1007/s00421-019-04142-5" rel="noopener">Gilgen-Ammann et al. 2019</a>; <a href="https://doi.org/10.3390/s22176536" rel="noopener">Schaffarczyk et al. 2022</a>.</p>
     </div>
   </section>
 
@@ -481,7 +498,7 @@ document.head.appendChild(s);})();</script>
           <h3>CARLON HRV Research</h3>
           <ul>
             <li data-en="Up to four sensors from one iPhone, read out in one go" data-de="Bis zu vier Sensoren von einem iPhone, in einem Zug ausgelesen">Up to four sensors from one iPhone, read out in one go</li>
-            <li data-en="Every recording lands with its participant and real start time" data-de="Jede Aufnahme landet bei ihrer Person, mit echter Startzeit">Every recording lands with its participant and real start time</li>
+            <li data-en="Every recording is matched to its participant, with its true start time" data-de="Jede Aufnahme wird ihrer Person zugeordnet, mit echter Startzeit">Every recording is matched to its participant, with its true start time</li>
             <li data-en="Phases marked with one tap, each with its clock time" data-de="Phasen per Tipp markiert, mit Uhrzeit">Phases marked with one tap, each with its clock time</li>
             <li data-en="A segment table with values per phase, ready for Kubios or R" data-de="Eine Segmenttabelle mit Werten je Phase, bereit für Kubios oder R">A segment table with values per phase, ready for Kubios or R</li>
             <li data-en="A methods paragraph, citation and figures in journal column widths" data-de="Methodenabsatz, Zitiervorschlag und Grafiken in Zeitschriftenbreite">A methods paragraph, citation and figures in journal column widths</li>
@@ -529,7 +546,7 @@ document.head.appendChild(s);})();</script>
             <article class="gal-slide">
               <div class="device"><video class="loop" src="assets/v14/events-tap.mp4" poster="assets/v14/events-tap-poster.jpg" muted playsinline loop preload="none" aria-label="Screen recording: tapping Rest start, Training start, Training end and Recovery start for three running recordings"></video><img class="bezel" src="assets/v14/bezel.webp" width="735" height="1500" alt=""></div>
               <h4 data-en="1 · Start and mark" data-de="1 · Starten und markieren">1 · Start and mark</h4>
-              <p data-en="Up to four sensors record to their own memory. Tap Rest, Training, Recovery as the protocol moves on." data-de="Bis zu vier Sensoren zeichnen im eigenen Speicher auf. Ruhe, Training, Erholung antippen, wie das Protokoll fortschreitet.">Up to four sensors record to their own memory. Tap Rest, Training, Recovery as the protocol moves on.</p>
+              <p data-en="Up to four sensors record to their own memory. Tap Rest start, Training start, Recovery start as your protocol progresses." data-de="Bis zu vier Sensoren zeichnen im eigenen Speicher auf. Tippe im Protokollverlauf auf Ruhe, Training und Erholung.">Up to four sensors record to their own memory. Tap Rest start, Training start, Recovery start as your protocol progresses.</p>
             </article>
             <article class="gal-slide">
               <div class="device"><img class="shot" src="assets/v14/phone-sitzung.webp" width="735" height="1500" alt="Session overview: duration, heart rate, RMSSD, SDNN, SD1/SD2, DFA alpha1, LF/HF, artifacts" loading="lazy" decoding="async"></div>
@@ -538,7 +555,7 @@ document.head.appendChild(s);})();</script>
             </article>
             <article class="gal-slide">
               <div class="device"><img class="shot" src="assets/v14/phone-dual-card.webp" width="735" height="1500" alt="Heart rate and RMSSD over the whole 100-minute session: rest, training and recovery" loading="lazy" decoding="async"></div>
-              <h4 data-en="3 · See the course" data-de="3 · Verlauf sehen">3 · See the course</h4>
+              <h4 data-en="3 · See the whole session" data-de="3 · Verlauf sehen">3 · See the whole session</h4>
               <p data-en="Heart rate and HRV together over the whole session – touch and hold for values." data-de="Puls und HRV gemeinsam über die ganze Sitzung – halten zeigt die Werte.">Heart rate and HRV together over the whole session – touch and hold for values.</p>
             </article>
             <article class="gal-slide">
@@ -547,9 +564,9 @@ document.head.appendChild(s);})();</script>
               <p data-en="Every event with its clock time – and a segment table with values per phase in the export." data-de="Jedes Ereignis mit Uhrzeit – und im Export eine Segmenttabelle mit Werten je Phase.">Every event with its clock time – and a segment table with values per phase in the export.</p>
             </article>
             <article class="gal-slide">
-              <div class="device"><img class="shot" src="assets/v14/phone-poincare-full.webp" width="735" height="1500" alt="Full-screen Poincaré plot of 11,134 intervals with SD1, SD2 and time slider" loading="lazy" decoding="async"></div>
+              <div class="device"><img class="shot" src="assets/v14/phone-poincare-full.webp" width="735" height="1500" alt="Full-screen Poincaré plot of a whole recording with SD1, SD2 and time slider" loading="lazy" decoding="async"></div>
               <h4 data-en="5 · Go deeper" data-de="5 · Tiefer gehen">5 · Go deeper</h4>
-              <p data-en="Every chart full screen, upright or sideways: Poincaré, tachogram, spectrum, DFA α1 over time – each with method and source." data-de="Jede Grafik im Vollbild, hoch oder quer: Poincaré, Tachogramm, Spektrum, DFA α1 im Verlauf – jeweils mit Methode und Quelle.">Every chart full screen, upright or sideways: Poincaré, tachogram, spectrum, DFA α1 over time – each with method and source.</p>
+              <p data-en="Every chart full screen, portrait or landscape: Poincaré, tachogram, spectrum, DFA α1 over time – each with method and source." data-de="Jede Grafik im Vollbild, hoch oder quer: Poincaré, Tachogramm, Spektrum, DFA α1 im Verlauf – jeweils mit Methode und Quelle.">Every chart full screen, portrait or landscape: Poincaré, tachogram, spectrum, DFA α1 over time – each with method and source.</p>
             </article>
             <article class="gal-slide">
               <div class="device"><img class="shot" src="assets/v14/phone-export.webp" width="735" height="1500" alt="Export options: PDF report, figures for publication, Kubios text, raw RR, complete audit export" loading="lazy" decoding="async"></div>
@@ -573,7 +590,7 @@ document.head.appendChild(s);})();</script>
         <p class="sub" data-en="Original data for your analysis – plus everything you would otherwise build by hand." data-de="Originaldaten für deine Auswertung – und alles, was du sonst von Hand bauen würdest.">Original data for your analysis – plus everything you would otherwise build by hand.</p>
       </div>
       <div class="outputs">
-        <a class="pages rv" href="CARLON-HRV-Research-Example-Report.pdf" aria-label="Open an example PDF report">
+        <a class="pages rv" href="assets/CARLON-HRV-Research-Example-Report.pdf" aria-label="Open an example PDF report">
           <img src="assets/v14/report-summary.webp" width="900" height="1273" alt="PDF report, page 1: all metrics with grades" loading="lazy" decoding="async">
           <img src="assets/v14/report-segments.webp" width="900" height="1273" alt="PDF report: segments and events" loading="lazy" decoding="async">
           <img src="assets/v14/report-methods.webp" width="900" height="1273" alt="PDF report: methods paragraph ready for a manuscript" loading="lazy" decoding="async">
@@ -593,7 +610,7 @@ document.head.appendChild(s);})();</script>
             &nbsp;&nbsp;<span class="c">… _captions.txt · _README.txt</span>
           </div>
           <div class="ctas" style="justify-content:flex-start;margin-top:var(--s34)">
-            <a class="btn btn-2" href="CARLON-HRV-Research-Example-Report.pdf"><span data-en="Open an example report (PDF)" data-de="Beispielbericht öffnen (PDF)">Open an example report (PDF)</span> <span aria-hidden="true">↗</span></a>
+            <a class="btn btn-2" href="assets/CARLON-HRV-Research-Example-Report.pdf"><span data-en="Open an example report (PDF)" data-de="Beispielbericht öffnen (PDF)">Open an example report (PDF)</span> <span aria-hidden="true">↗</span></a>
           </div>
         </div>
       </div>
@@ -605,7 +622,7 @@ document.head.appendChild(s);})();</script>
     <div class="wrap">
       <div class="rv" style="max-width:780px">
         <div class="label" data-en="Future-proof by design" data-de="Zukunftssicher gebaut">Future-proof by design</div>
-        <h2 data-en="Your recordings get better <em>with every update.</em>" data-de="Deine Aufnahmen werden <em>mit jedem Update besser.</em>">Your recordings get better <em>with every update.</em></h2>
+        <h2 data-en="Recompute with every update – <em>or cite the version you used.</em>" data-de="Mit jedem Update neu rechnen – <em>oder die Version zitieren, mit der du gerechnet hast.</em>">Recompute with every update – <em>or cite the version you used.</em></h2>
         <p class="sub" data-en="The app stores what the sensor measured – nothing else. Every metric is computed fresh from those originals, so methods can improve without your data ever being touched." data-de="Die App speichert, was der Sensor gemessen hat – sonst nichts. Jede Kennzahl wird aus diesen Originaldaten neu berechnet, so können Methoden besser werden, ohne dass deine Daten je angefasst werden.">The app stores what the sensor measured – nothing else. Every metric is computed fresh from those originals, so methods can improve without your data ever being touched.</p>
       </div>
       <div class="checks rv">
@@ -628,7 +645,7 @@ document.head.appendChild(s);})();</script>
       <p class="sub" data-en="The measure exercise science uses to follow intensity – computed in 2-minute windows every 5 seconds, as in Kubios. Windows with 5 % or more corrected beats are marked invalid, never silently dropped, and every window is a row in your CSV." data-de="Die Kennzahl, mit der die Belastungsforschung Intensität verfolgt – in 2-Minuten-Fenstern alle 5 Sekunden, wie in Kubios. Fenster mit 5 % oder mehr korrigierten Schlägen sind als ungültig markiert, nie still entfernt, und jedes Fenster ist eine Zeile in deiner CSV.">The measure exercise science uses to follow intensity – computed in 2-minute windows every 5 seconds, as in Kubios. Windows with 5 % or more corrected beats are marked invalid, never silently dropped, and every window is a row in your CSV.</p>
       <ul class="points">
         <li data-en="<b>2,854 windows</b> recomputed independently – largest deviation 7 × 10⁻¹¹." data-de="<b>2.854 Fenster</b> unabhängig nachgerechnet – größte Abweichung 7 × 10⁻¹¹."><b>2,854 windows</b> recomputed independently – largest deviation 7 × 10⁻¹¹.</li>
-        <li data-en="<b>Reliable at high heart rates:</b> a validated 30-ms floor stops normal beats from being flagged as artifacts." data-de="<b>Verlässlich bei hohem Puls:</b> eine validierte 30-ms-Untergrenze verhindert, dass normale Schläge als Artefakte gelten."><b>Reliable at high heart rates:</b> a validated 30-ms floor stops normal beats from being flagged as artifacts.</li>
+        <li data-en="<b>Reliable at high heart rates:</b> a 30-ms minimum threshold, tested on 18 series: every injected error is still caught, with far fewer false alarms on normal beats." data-de="<b>Verlässlich bei hohem Puls:</b> eine 30-ms-Untergrenze, an 18 Reihen geprüft: jeder eingestreute Fehler bleibt erkannt, normale Schläge lösen weit seltener Fehlalarme aus."><b>Reliable at high heart rates:</b> a 30-ms minimum threshold, tested on 18 series: every injected error is still caught, with far fewer false alarms on normal beats.</li>
         <li data-en="<b>Heart rate and RMSSD</b> for the same window, beside every α1 value." data-de="<b>Puls und RMSSD</b> desselben Fensters neben jedem α1-Wert."><b>Heart rate and RMSSD</b> for the same window, beside every α1 value.</li>
       </ul>
     </div>
@@ -672,7 +689,7 @@ document.head.appendChild(s);})();</script>
         <div class="panel"><h4 data-en="Sports science" data-de="Sportwissenschaft">Sports science</h4><p data-en="Several athletes per session, phases marked live, DFA α1 over time for intensity research." data-de="Mehrere Athleten pro Einheit, Phasen live markiert, DFA α1 im Verlauf für die Intensitätsforschung.">Several athletes per session, phases marked live, DFA α1 over time for intensity research.</p></div>
         <div class="panel"><h4 data-en="Theses" data-de="Abschlussarbeiten">Theses</h4><p data-en="A methods paragraph to cite, figures in journal widths, and data your supervisor can recompute." data-de="Ein Methodenabsatz zum Zitieren, Grafiken in Zeitschriftenbreite und Daten, die die Betreuung nachrechnen kann.">A methods paragraph to cite, figures in journal widths, and data your supervisor can recompute.</p></div>
         <div class="panel"><h4 data-en="Ethics boards" data-de="Ethikkommissionen">Ethics boards</h4><p data-en="No account, no server, pseudonymous IDs and an append-only audit trail for every record." data-de="Kein Konto, kein Server, pseudonyme Kennungen und ein unveränderbarer Prüfpfad für jede Aufnahme.">No account, no server, pseudonymous IDs and an append-only audit trail for every record.</p></div>
-        <div class="panel"><h4 data-en="Research labs" data-de="Forschungslabore">Research labs</h4><p data-en="A shared study folder for multi-site studies, and volume licenses through Apple School or Business Manager." data-de="Ein gemeinsamer Studienordner für Studien an mehreren Orten und Volumenlizenzen über Apple School oder Business Manager.">A shared study folder for multi-site studies, and volume licenses through Apple School or Business Manager.</p></div>
+        <div class="panel"><h4 data-en="Research labs" data-de="Forschungslabore">Research labs</h4><p data-en="Every new recording copied to a study folder you choose in the Files app – iCloud Drive or your institute&#39;s cloud – for multi-site studies; no CARLON server. Volume licenses through Apple School or Business Manager." data-de="Jede neue Aufnahme als Kopie in einem Studienordner deiner Wahl in der Dateien-App – iCloud Drive oder die Cloud deines Instituts – für Studien an mehreren Orten; kein CARLON-Server. Volumenlizenzen über Apple School oder Business Manager.">Every new recording copied to a study folder you choose in the Files app – iCloud Drive or your institute&#39;s cloud – for multi-site studies; no CARLON server. Volume licenses through Apple School or Business Manager.</p></div>
       </div>
     </div>
   </section>
@@ -843,5 +860,51 @@ document.head.appendChild(s);})();</script>
 
 </script>
 <script src="/assets/app-tour/app-tour.js" defer></script>
+<script>
+// Vollbild für Bilder: Tippen/Klick öffnet, Wischen oder ← → blättert, Klick/Esc schließt.
+// Kern der Equine-Lösung (Überblendung, Wischen, Zähler) ohne deren Modul-Menü.
+(function () {
+  try {
+    var bilder = [].slice.call(document.querySelectorAll('.device img.shot, .sensor img, .pages img'));
+    if (!bilder.length) return;
+    var de = document.documentElement.lang === 'de';
+    var ov = document.createElement('div');
+    ov.className = 'iz'; ov.setAttribute('role', 'dialog'); ov.setAttribute('aria-modal', 'true');
+    ov.innerHTML = '<img alt="" draggable="false"><button type="button" class="iz-nav iz-prev" aria-label="' + (de ? 'Vorheriges Bild' : 'Previous image') + '">‹</button><button type="button" class="iz-nav iz-next" aria-label="' + (de ? 'Nächstes Bild' : 'Next image') + '">›</button><div class="iz-info"></div>';
+    document.body.appendChild(ov);
+    var big = ov.querySelector('img'), info = ov.querySelector('.iz-info'), idx = 0, zuletzt = null;
+    function zeigen(i) {
+      idx = (i + bilder.length) % bilder.length;
+      var b = bilder[idx]; big.src = b.currentSrc || b.src; big.alt = b.alt || '';
+      info.textContent = (idx + 1) + ' / ' + bilder.length + ' · ' + (de ? 'Wischen zum Blättern · Tippen schließt' : 'Swipe to browse · tap to close');
+    }
+    function oeffnen(i) { zuletzt = document.activeElement; zeigen(i); ov.classList.add('show'); document.documentElement.style.overflow = 'hidden'; }
+    function schliessen() { ov.classList.remove('show'); document.documentElement.style.overflow = ''; if (zuletzt && zuletzt.focus) zuletzt.focus(); }
+    bilder.forEach(function (b, i) {
+      b.classList.add('zoom'); b.setAttribute('tabindex', '0'); b.setAttribute('role', 'button');
+      var sx = 0, sy = 0, bewegt = false, t0 = 0;
+      b.addEventListener('pointerdown', function (e) { sx = e.clientX; sy = e.clientY; bewegt = false; t0 = Date.now(); }, { passive: true });
+      b.addEventListener('pointermove', function (e) { if (Math.abs(e.clientX - sx) > 10 || Math.abs(e.clientY - sy) > 10) bewegt = true; }, { passive: true });
+      b.addEventListener('pointerup', function () { if (!bewegt && Date.now() - t0 < 600) oeffnen(i); }, { passive: true });
+      b.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); oeffnen(i); } });
+    });
+    ov.querySelector('.iz-prev').addEventListener('click', function (e) { e.stopPropagation(); zeigen(idx - 1); });
+    ov.querySelector('.iz-next').addEventListener('click', function (e) { e.stopPropagation(); zeigen(idx + 1); });
+    var wx = 0, wy = 0, gewischt = false;
+    ov.addEventListener('pointerdown', function (e) { wx = e.clientX; wy = e.clientY; gewischt = false; }, { passive: true });
+    ov.addEventListener('pointerup', function (e) {
+      var dx = e.clientX - wx;
+      if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(e.clientY - wy)) { gewischt = true; zeigen(idx + (dx < 0 ? 1 : -1)); }
+    }, { passive: true });
+    ov.addEventListener('click', function () { if (!gewischt) schliessen(); gewischt = false; });
+    document.addEventListener('keydown', function (e) {
+      if (!ov.classList.contains('show')) return;
+      if (e.key === 'Escape') schliessen();
+      else if (e.key === 'ArrowRight') zeigen(idx + 1);
+      else if (e.key === 'ArrowLeft') zeigen(idx - 1);
+    });
+  } catch (e) {}
+})();
+</script>
 </body>
 </html>
