@@ -206,6 +206,17 @@ document.head.appendChild(s);})();</script>
     .check { border: 1px solid var(--line); border-radius: 21px; padding: var(--s34) var(--s21); background: rgba(255,255,255,.015); }
     .check b { display: block; font-size: 34px; font-weight: 400; color: var(--t); line-height: 1.1; margin-bottom: var(--s8); font-variant-numeric: tabular-nums; }
     .check p { font-size: 15px; color: var(--t3); }
+    /* Methodenabsatz zum Kopieren (Dominanz/Begeisterung für Forschende) */
+    .methoden { margin-top: var(--s55); border: 1px solid var(--line); border-radius: 21px; padding: var(--s34); background: rgba(255,255,255,.015); grid-column: 1 / -1; }
+    .methoden h3 { font-size: clamp(22px, 2.6vw, 28px); font-weight: 500; margin-bottom: var(--s8); }
+    .methoden h3 em { font-style: normal; color: var(--stille); }
+    .methoden-text { position: relative; margin-top: var(--s21); max-height: 9.6em; overflow: hidden; font-family: ui-serif, Georgia, "Times New Roman", serif; font-size: 15px; line-height: 1.6; color: var(--t2); transition: max-height .6s var(--ease); }
+    .methoden-text { -webkit-mask-image: linear-gradient(#000 55%, transparent); mask-image: linear-gradient(#000 55%, transparent); }
+    .methoden.offen .methoden-text { max-height: 80em; }
+    .methoden.offen .methoden-text { -webkit-mask-image: none; mask-image: none; }
+    .methoden-fuss { display: flex; gap: var(--s13); align-items: center; margin-top: var(--s21); flex-wrap: wrap; }
+    .methoden-kopie { font: inherit; font-size: 15px; cursor: pointer; background: transparent; color: var(--t); border: 1px solid var(--line2); }
+    .methoden-mehr { background: none; border: 0; color: var(--stille); font: inherit; font-size: 14px; cursor: pointer; padding: 12px 6px; }
     /* Co-Creation-Zeitleiste */
     .ko { list-style: none; padding: 0; margin-top: var(--s55); display: grid; gap: 0; border-top: 1px solid var(--line); }
     .ko li { display: grid; grid-template-columns: 150px 1fr; gap: var(--s21); padding: var(--s21) 0; border-bottom: 1px solid var(--line); }
@@ -637,7 +648,7 @@ document.head.appendChild(s);})();</script>
         <div class="with">
           <h3>CARLON HRV Research</h3>
           <ul>
-            <li data-en="Up to four sensors from one iPhone, read out in one go" data-de="Bis zu vier Sensoren von einem iPhone, in einem Zug ausgelesen">Up to four sensors from one iPhone, read out in one go</li>
+            <li data-en="All sensors read out in one go, each to its participant" data-de="Alle Sensoren in einem Zug ausgelesen, jeder zu seiner Person">All sensors read out in one go, each to its participant</li>
             <li data-en="Every recording is matched to its participant, with its true start time" data-de="Jede Aufnahme wird ihrer Person zugeordnet, mit echter Startzeit">Every recording is matched to its participant, with its true start time</li>
             <li data-en="Phases marked with one tap, each with its clock time" data-de="Phasen per Tipp markiert, mit Uhrzeit">Phases marked with one tap, each with its clock time</li>
             <li data-en="A segment table with values per phase, ready for Kubios or R" data-de="Eine Segmenttabelle mit Werten je Phase, bereit für Kubios oder R">A segment table with values per phase, ready for Kubios or R</li>
@@ -681,7 +692,7 @@ document.head.appendChild(s);})();</script>
             <article class="gal-slide">
               <div class="device"><video class="loop" src="assets/v14/events-tap.mp4" poster="assets/v14/events-tap-poster.jpg" muted playsinline loop preload="metadata" aria-label="Screen recording: tapping Rest start, Training start, Training end and Recovery start for three running recordings"></video><img class="bezel" src="assets/v14/bezel.webp" width="735" height="1500" alt=""></div>
               <h4 data-en="1 · Start and mark" data-de="1 · Starten und markieren">1 · Start and mark</h4>
-              <p data-en="Up to four sensors record to their own memory. Tap Rest start, Training start, Recovery start as your protocol progresses." data-de="Bis zu vier Sensoren zeichnen im eigenen Speicher auf. Tippe im Protokollverlauf auf Ruhe, Training und Erholung.">Up to four sensors record to their own memory. Tap Rest start, Training start, Recovery start as your protocol progresses.</p>
+              <p data-en="Tap Rest start, Training start, Recovery start as your protocol progresses – one tap marks every recording." data-de="Tippe im Protokollverlauf auf Ruhe, Training und Erholung – ein Tipp markiert jede Aufnahme.">Tap Rest start, Training start, Recovery start as your protocol progresses – one tap marks every recording.</p>
             </article>
             <article class="gal-slide">
               <div class="device"><img class="shot" src="assets/v14/phone-sitzung.webp" width="735" height="1500" alt="Session overview: duration, heart rate, RMSSD, SDNN, SD1/SD2, DFA alpha1, LF/HF, artifacts" decoding="async"></div>
@@ -742,6 +753,17 @@ document.head.appendChild(s);})();</script>
             <a class="btn btn-2" href="assets/CARLON-HRV-Research-Sample-Data.zip" download><span data-en="Download sample data (ZIP, 7.5 MB)" data-de="Beispieldaten laden (ZIP, 7,5 MB)">Download sample data (ZIP, 7.5 MB)</span> <span aria-hidden="true">↓</span></a>
           </div>
           <p class="cap" data-en="A real 48-minute gym session up to 155 bpm from a Polar H10, pseudonymized and shared with consent: every export format, the PDF report and the figures – open it in Kubios, Python or R and check for yourself. CC BY 4.0." data-de="Eine echte 48-minütige Gym-Einheit bis 155 bpm mit Polar H10, pseudonymisiert und mit Einverständnis geteilt: jedes Exportformat, der PDF-Bericht und die Grafiken – in Kubios, Python oder R öffnen und selbst prüfen. CC BY 4.0.">A real 48-minute gym session up to 155 bpm from a Polar H10, pseudonymized and shared with consent: every export format, the PDF report and the figures – open it in Kubios, Python or R and check for yourself. CC BY 4.0.</p>
+        </div>
+      </div>
+      <div class="methoden rv" id="methods-paragraph">
+        <div class="methoden-kopf">
+          <h3 data-en="Your methods section, <em>already written.</em>" data-de="Dein Methodenteil, <em>schon geschrieben.</em>">Your methods section, <em>already written.</em></h3>
+          <p class="sub" data-en="Every report ends with this paragraph – every parameter, every reference, the exact app build. Here is the one for the example recording; yours carries your own values." data-de="Jeder Bericht endet mit diesem Absatz – jeder Parameter, jede Quelle, der genaue App-Build. Hier der für die Beispielaufnahme; deiner trägt deine eigenen Werte (Text auf Englisch, wie im Bericht).">Every report ends with this paragraph – every parameter, every reference, the exact app build. Here is the one for the example recording; yours carries your own values.</p>
+        </div>
+        <div class="methoden-text" tabindex="0" lang="en"><p>RR intervals were recorded with a Polar H10 (recording path not stored with this recording; RR resolution in the data: 1 ms) and processed with CARLON HRV Research, version 1.4, build 2026102704 (Rohwedder, 2026). The recording comprises 11131 RR intervals over 6015.5 s (sum of intervals), starting 2026-10-26 19:47:13 Europe/Berlin (UTC+01:00; start time source not recorded). Beats were classified with the algorithm of Lipponen and Tarvainen (2019) (α = 5.2, 91-beat windows, c₁ = 0.13, c₂ = 0.17; implementation verified beat for beat against NeuroKit2 signal_fixpeaks), with both thresholds bounded below at 30 ms so that beat-to-beat changes smaller than 30 ms, typical of exercise, are not classified as artefacts (see the app&#x27;s validation report). 0.76 % of beats were flagged. Each run of consecutive flagged intervals was replaced by equal intervals of the same total duration, their number given by whole multiples of the local rhythm where every interval of the run is one (missed beats), otherwise by the classification (one fewer per extra beat, otherwise the same, so a premature beat and its compensatory pause are averaged); normal beats were left unchanged and the duration of the recording was preserved, except for single flagged intervals without compensation, which were replaced by the mean of their neighbours. The per-beat classification and correction are included in the complete export. Mean heart rate was computed as 60 000 / mean RR over all original intervals; SDNN, RMSSD, pNN50 and the Poincaré descriptors SD1 and SD2 (Brennan et al., 2001) were computed on the corrected series. Spectral power was estimated over the whole corrected series with Welch&#x27;s method (symmetric Hann window of 256 samples = 64 s, 50 % overlap, segment mean removed, density scaling) after natural cubic-spline resampling at 4 Hz; band powers were integrated exactly at the band limits (LF 0.04–0.15 Hz, HF 0.15–0.40 Hz; Task Force, 1996). Baevsky&#x27;s stress index is reported as √SI with SI = AMo / (2 · Mo · MxDMn) (Baevsky, 1984): histogram of the corrected series with 50-ms bins on the absolute grid (…, 600–650, 650–700 ms …; Baevsky and Kubios convention); Mo = centre of the tallest bin (s), AMo = its share of beats (%), MxDMn = range of the series (s); from 10 min of recording the median over consecutive 5-min windows. Short-term fractal scaling (DFA α1) was computed over windows of 4–16 beats on the whole recording without prior detrending (Peng et al., 1995). Time-varying DFA α1 (Figure 8) followed Rogers et al. (2026): 120-s windows recomputed every 5 s on the corrected series after smoothness-priors detrending (Tarvainen et al., 2002; λ = 500, the Kubios default, as the review does not specify λ); windows with 5 % or more corrected beats were omitted, between the 3 % level with small bias and the 6 % level with proportional bias in Rogers et al. (2021) and in line with the exclusion criterion of Schaffarczyk et al. (2022). Segments (Figure 7) and the 60-s epochs of the data export use fixed time grids; a beat belongs to the window in which its interval ends. The RMSSD trace in Figure 1 uses a sliding window of 30 beats as a display aid only. The app&#x27;s computations were validated against NeuroKit2 (331 of 331 checks passed; CARLON HRV Research validation report). Original RR intervals were retained unaltered for export.</p></div>
+        <div class="methoden-fuss">
+          <button type="button" class="btn btn-2 methoden-kopie" data-ok-en="Copied ✓" data-ok-de="Kopiert ✓"><span data-en="Copy paragraph" data-de="Absatz kopieren">Copy paragraph</span></button>
+          <button type="button" class="methoden-mehr" aria-expanded="false"><span data-en="Show all" data-de="Alles zeigen">Show all</span></button>
         </div>
       </div>
     </div>
@@ -818,7 +840,7 @@ document.head.appendChild(s);})();</script>
       </div>
       <div class="who rv">
         <div class="panel"><svg class="ic" aria-hidden="true"><use href="#i-run"/></svg><h4 data-en="Sports science" data-de="Sportwissenschaft">Sports science</h4><p data-en="Several athletes per session, phases marked live, DFA α1 over time for intensity research." data-de="Mehrere Athleten pro Einheit, Phasen live markiert, DFA α1 im Verlauf für die Intensitätsforschung.">Several athletes per session, phases marked live, DFA α1 over time for intensity research.</p></div>
-        <div class="panel"><svg class="ic" aria-hidden="true"><use href="#i-lab"/></svg><h4 data-en="Research labs" data-de="Forschungslabore">Research labs</h4><p data-en="Every new recording copied to a study folder you choose in the Files app – iCloud Drive or your institute&#39;s cloud – for multi-site studies; no CARLON server. Volume licenses through Apple School or Business Manager." data-de="Jede neue Aufnahme als Kopie in einem Studienordner deiner Wahl in der Dateien-App – iCloud Drive oder die Cloud deines Instituts – für Studien an mehreren Orten; kein CARLON-Server. Volumenlizenzen über Apple School oder Business Manager.">Every new recording copied to a study folder you choose in the Files app – iCloud Drive or your institute&#39;s cloud – for multi-site studies; no CARLON server. Volume licenses through Apple School or Business Manager.</p></div>
+        <div class="panel"><svg class="ic" aria-hidden="true"><use href="#i-lab"/></svg><h4 data-en="Research labs" data-de="Forschungslabore">Research labs</h4><p data-en="Every new recording copied to a study folder you choose in the Files app – iCloud Drive or your institute's cloud – for multi-site studies. Volume licenses through Apple School or Business Manager." data-de="Jede neue Aufnahme als Kopie in einem Studienordner deiner Wahl in der Dateien-App – iCloud Drive oder die Cloud deines Instituts – für Studien an mehreren Orten. Volumenlizenzen über Apple School oder Business Manager.">Every new recording copied to a study folder you choose in the Files app – iCloud Drive or your institute's cloud – for multi-site studies. Volume licenses through Apple School or Business Manager.</p></div>
         <div class="panel"><svg class="ic" aria-hidden="true"><use href="#i-cap"/></svg><h4 data-en="Theses" data-de="Abschlussarbeiten">Theses</h4><p data-en="A methods paragraph to cite, figures in journal widths, and data your supervisor can recompute." data-de="Ein Methodenabsatz zum Zitieren, Grafiken in Zeitschriftenbreite und Daten, die die Betreuung nachrechnen kann.">A methods paragraph to cite, figures in journal widths, and data your supervisor can recompute.</p></div>
         <div class="panel"><svg class="ic" aria-hidden="true"><use href="#i-shield"/></svg><h4 data-en="Ethics boards" data-de="Ethikkommissionen">Ethics boards</h4><p data-en="No account, no CARLON server, pseudonymous IDs and an append-only audit trail for every record." data-de="Kein Konto, kein CARLON-Server, pseudonyme Kennungen und ein nur ergänzbarer Prüfpfad (append-only) für jede Aufnahme.">No account, no CARLON server, pseudonymous IDs and an append-only audit trail for every record.</p></div>
         <div class="panel"><svg class="ic" aria-hidden="true"><use href="#i-beats"/></svg><h4 data-en="Coaches &amp; personal trainers" data-de="Coaches &amp; Personal Trainer">Coaches &amp; personal trainers</h4><p data-en="Heart rate and HRV live during the session with your client – and a PDF report to hand over afterwards." data-de="Herzfrequenz und HRV live während der Einheit mit deinen Klienten – und danach ein PDF-Bericht zum Mitgeben.">Heart rate and HRV live during the session with your client – and a PDF report to hand over afterwards.</p></div>
@@ -964,6 +986,21 @@ document.head.appendChild(s);})();</script>
     up(0);
   }
   initGal('#gal-flow');
+  /* Methodenabsatz: kopieren + aufklappen */
+  (function () {
+    var m = document.getElementById('methods-paragraph'); if (!m) return;
+    var de = document.documentElement.lang === 'de', k = m.querySelector('.methoden-kopie'), w = m.querySelector('.methoden-mehr');
+    k.addEventListener('click', function () {
+      var t = m.querySelector('.methoden-text').innerText.trim(), lbl = k.querySelector('span'), alt = lbl.textContent;
+      var ok = function () { lbl.textContent = de ? k.dataset.okDe : k.dataset.okEn; setTimeout(function () { lbl.textContent = alt; }, 1800); };
+      if (navigator.clipboard) navigator.clipboard.writeText(t).then(ok, function () {}); else { var r = document.createRange(); r.selectNodeContents(m.querySelector('.methoden-text')); var sel = getSelection(); sel.removeAllRanges(); sel.addRange(r); document.execCommand('copy'); ok(); }
+    });
+    w.addEventListener('click', function () {
+      var offen = m.classList.toggle('offen'); w.setAttribute('aria-expanded', offen);
+      w.querySelector('span').textContent = offen ? (de ? 'Weniger zeigen' : 'Show less') : (de ? 'Alles zeigen' : 'Show all');
+    });
+  })();
+
   document.querySelectorAll('video.loop').forEach(function (lv) {
     if (!('IntersectionObserver' in window)) return;
     new IntersectionObserver(function (es) { es.forEach(function (e) { if (e.isIntersecting) { lv.play().catch(function () {}); } else { lv.pause(); } }); }, { threshold: 0.4 }).observe(lv);
