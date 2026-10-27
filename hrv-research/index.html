@@ -349,6 +349,9 @@ document.head.appendChild(s);})();</script>
       section.ch { padding-top: var(--s89); }
     }
     .crumb b, .lang, .pill { white-space: nowrap; }
+    /* Deko-Glows (z. B. .final::before 720 px) machten die Seite mobil 561 statt 402 px breit (Jans iPhone, 27.10.) */
+    main { overflow-x: clip; }
+    .crumb .mark { width: 24px; height: 24px; flex: none; }
     /* Vollbild für Bilder — Kern der Equine-/Breathwork-Lösung (27.10.2026) */
     .zoombar img, img.zoom { cursor: zoom-in; }
     .iz { position: fixed; inset: 0; z-index: 9999; display: flex; align-items: center; justify-content: center; background: rgba(2,2,2,.96); -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px); padding: 4vh 4vw; opacity: 0; visibility: hidden; pointer-events: none; transition: opacity .22s ease, visibility .22s ease; cursor: zoom-out; touch-action: pan-y; }
@@ -380,6 +383,7 @@ document.head.appendChild(s);})();</script>
     <div class="crumb">
       <a class="home" href="/" aria-label="vitalkultur"><img src="/assets/vitalkultur-wordmark.png" alt="vitalkultur"></a>
       <span class="sep">/</span>
+      <img class="mark" src="assets/v14/mark-48.png" width="24" height="24" alt="">
       <b>CARLON HRV Research</b>
     </div>
     <div class="nav-r">
@@ -394,7 +398,7 @@ document.head.appendChild(s);})();</script>
   <section class="hero" data-app-tour>
     <div class="wrap">
       <img class="signet" src="assets/v14/signet.png" width="477" height="686" alt="CARLON HRV Research">
-      <div class="eyebrow" data-en="iPhone app for HRV studies · Polar H10 · Movesense" data-de="iPhone-App für HRV-Studien · Polar H10 · Movesense">iPhone app for HRV studies · Polar H10 · Movesense</div>
+      <div class="eyebrow" data-en="iPhone app for HRV studies · Polar&nbsp;H10 · Movesense" data-de="iPhone-App für HRV-Studien · Polar&nbsp;H10 · Movesense">iPhone app for HRV studies · Polar&nbsp;H10 · Movesense</div>
       <h1 data-en="Your HRV study, <em>from one iPhone.</em>" data-de="Deine <span style=&quot;white-space:nowrap&quot;>HRV-Studie,</span> <em>mit einem iPhone.</em>">Your HRV study, <em>from one iPhone.</em></h1>
       <p class="lead" data-en="Record up to four Polar H10 or Movesense sensors at once, mark every phase with one tap, and leave with original RR data, values per phase, a methods paragraph and publication-ready figures." data-de="Bis zu vier Polar H10 oder Movesense gleichzeitig aufnehmen, jede Phase per Tipp markieren – und mit Original-RR-Daten, Werten je Phase, Methodenabsatz und publikationsfertigen Grafiken nach Hause gehen.">Record up to four Polar H10 or Movesense sensors at once, mark every phase with one tap, and leave with original RR data, values per phase, a methods paragraph and publication-ready figures.</p>
       <div class="ctas">
