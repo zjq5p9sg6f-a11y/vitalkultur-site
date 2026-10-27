@@ -4,7 +4,7 @@
 
 ## CARLON HRV Research
 
-iPhone app (iOS 17 or later) for HRV studies. Records beat-to-beat RR intervals from Polar H10 chest straps and Movesense Flash sensors and exports the original data for analysis in Kubios HRV, Python, R and MATLAB. One-time purchase on the App Store; no account, no subscription, no server – study data stays on the iPhone.
+iPhone app (iOS 17 or later) for HRV studies. Records beat-to-beat RR intervals from Polar H10 chest straps and Movesense Flash sensors and exports the original data for analysis in Kubios HRV, Python, R and MATLAB. In beta via Apple TestFlight (free; request access at jan@vitalkultur.com), a one-time App Store purchase at launch; no account, no subscription, no server – study data stays on the iPhone.
 
 - Up to four sensors at once from one iPhone (Polar H10 and Movesense Flash can be mixed); sensors record to their own memory and are read out together, each recording assigned to its pseudonymous participant with its real start time.
 - Event buttons mark protocol phases (ready-made sets for sports studies, breathing protocols, stress tests and sleep, or custom); exports a segment table with duration, beats, heart rate, RMSSD, SDNN and pNN50 per phase, and the events inside EDF+ and WFDB files.
@@ -18,7 +18,6 @@ iPhone app (iOS 17 or later) for HRV studies. Records beat-to-beat RR intervals 
 - [Produktseite (Deutsch)](https://vitalkultur.com/hrv-research/de/)
 - [Validation dossier (PDF)](https://vitalkultur.com/hrv-research/CARLON-HRV-Research-Validation-Dossier.pdf)
 - [Example PDF report from a real recording](https://vitalkultur.com/hrv-research/CARLON-HRV-Research-Example-Report.pdf)
-- [App Store](https://apps.apple.com/app/id6826010655)
 
 ## Other apps
 
