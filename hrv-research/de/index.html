@@ -11,12 +11,12 @@
   <meta property="og:image" content="https://vitalkultur.com/assets/og-research.png">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
-  <meta property="og:url" content="https://vitalkultur.com/hrv-research/">
+  <meta property="og:url" content="https://vitalkultur.com/hrv-research/de/">
   <meta property="og:type" content="website">
   <meta name="twitter:card" content="summary_large_image">
   <link rel="icon" href="/app-icon.png">
   <link rel="apple-touch-icon" href="/app-icon.png">
-  <link rel="canonical" href="https://vitalkultur.com/hrv-research/">
+  <link rel="canonical" href="https://vitalkultur.com/hrv-research/de/">
   <link rel="alternate" hreflang="en" href="https://vitalkultur.com/hrv-research/">
   <link rel="alternate" hreflang="de" href="https://vitalkultur.com/hrv-research/de/">
   <link rel="alternate" hreflang="x-default" href="https://vitalkultur.com/hrv-research/">
@@ -25,7 +25,7 @@
   <meta name="twitter:title" content="CARLON HRV Research — HRV-Studien-App für Polar H10 &amp; Movesense · iPhone">
   <meta name="twitter:description" content="iPhone-App für HRV-Studien: bis zu vier Polar H10 oder Movesense gleichzeitig, Aufnahme im Gurtspeicher, Ereignistasten für Protokollphasen mit Werten je Phase, DFA α1 im Verlauf und Original-RR-Exporte für Kubios, Python, R und MATLAB. 331 von 331 Prüfungen gegen NeuroKit2 und SciPy.">
   <meta name="twitter:image" content="https://vitalkultur.com/assets/og-research.png">
-  <link rel="stylesheet" href="/assets/app-tour/app-tour.css?v=2">
+  <link rel="stylesheet" href="/assets/app-tour/app-tour.css?v=3">
   <link rel="preload" href="/fonts/jost-variable.woff2" as="font" type="font/woff2" crossorigin>
   <script type="application/ld+json">
   {
@@ -206,6 +206,13 @@ document.head.appendChild(s);})();</script>
     .device > img.shot { width: 100%; height: 100%; display: block; }
     .device video, .device .poster { position: absolute; left: 5.102%; top: 2.2%; width: 89.796%; height: 95.6%; object-fit: cover; background: #000; }
     .device .bezel { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+    .device .poster { transition: opacity .3s ease; pointer-events: none; }
+    .device .poster.weg { opacity: 0; }
+    .device .lp-bg, .device canvas.lp { position: absolute; left: 5.102%; top: 2.2%; width: 89.796%; height: 95.6%; border-radius: 11% / 5%; }
+    .device canvas.lp { touch-action: pan-y; cursor: crosshair; -webkit-tap-highlight-color: transparent; -webkit-user-select: none; user-select: none; }
+    .device canvas.lp:focus-visible { outline: 2px solid var(--stille); outline-offset: 4px; }
+    #replay .device { width: min(380px, 86vw, calc((100svh - 110px) * 0.49)); }
+    .pv-hint { margin-top: var(--s21); font-size: 15px; color: var(--t2); }
     .device-glow { position: relative; }
     .device-glow::before { content: ""; position: absolute; inset: 8% -18% 0; background: radial-gradient(closest-side, rgba(62,207,178,.16), transparent 70%); z-index: -1; }
 
@@ -343,6 +350,15 @@ document.head.appendChild(s);})();</script>
       .fixed { grid-template-columns: 1fr; gap: var(--s21); }
       section.ch { padding-top: var(--s89); }
     }
+    /* Linien-Icons (CI: 1,5 px, Marken-Cyan, runde Enden) — Blickfang zwischen den Texten (Jan, 27.10.) */
+    .ic { width: 30px; height: 30px; color: var(--stille); fill: none; stroke: currentColor; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; flex: none; overflow: visible; }
+    .ic circle[fill], .ic [fill="currentColor"] { fill: currentColor; stroke: none; }
+    .proof .ic { display: block; margin: 0 auto var(--s13); width: 34px; height: 34px; opacity: .9; }
+    .check .ic, .who .panel .ic { display: block; margin-bottom: var(--s13); }
+    [data-tour-liste] button { display: grid; grid-template-columns: 30px 1fr; column-gap: var(--s13); align-items: start; }
+    [data-tour-liste] button .ic { grid-row: 1 / span 2; width: 26px; height: 26px; margin-top: 1px; opacity: .55; transition: opacity .383s; }
+    [data-tour-liste] li.on button .ic { opacity: 1; }
+    [data-tour-liste] button b, [data-tour-liste] button span { grid-column: 2; }
     .crumb b, .lang, .pill { white-space: nowrap; }
     /* Deko-Glows (z. B. .final::before 720 px) machten die Seite mobil 561 statt 402 px breit (Jans iPhone, 27.10.) */
     main { overflow-x: clip; }
@@ -378,6 +394,26 @@ document.head.appendChild(s);})();</script>
   </style>
 </head>
 <body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><defs>
+  <symbol id="i-sens" viewBox="0 0 32 32"><circle cx="6" cy="20" r="2.4"/><circle cx="12.7" cy="20" r="2.4"/><circle cx="19.3" cy="20" r="2.4"/><circle cx="26" cy="20" r="2.4"/><path d="M9.5 12.5a9 9 0 0 1 13 0M6 9a14 14 0 0 1 20 0"/></symbol>
+  <symbol id="i-check" viewBox="0 0 32 32"><circle cx="16" cy="16" r="11.5"/><path d="M10.5 16.5l3.8 3.8 7.4-8"/><path d="M16 1.8v2.4M16 27.8v2.4M1.8 16h2.4M27.8 16h2.4" opacity=".55"/></symbol>
+  <symbol id="i-files" viewBox="0 0 32 32"><path d="M10 6h10l5 5v15H10z"/><path d="M20 6v5h5"/><path d="M6.5 9.5V29h14" opacity=".55"/><path d="M13.5 16h8M13.5 19.5h8M13.5 23h5"/></symbol>
+  <symbol id="i-noserver" viewBox="0 0 32 32"><path d="M9 23.5h14.5a5 5 0 0 0 .6-10A7.5 7.5 0 0 0 9.7 12 5.8 5.8 0 0 0 9 23.5z"/><path d="M5 27L27 5"/></symbol>
+  <symbol id="i-grid" viewBox="0 0 32 32"><rect x="5" y="5" width="9.5" height="9.5" rx="2.5"/><rect x="17.5" y="5" width="9.5" height="9.5" rx="2.5"/><rect x="5" y="17.5" width="9.5" height="9.5" rx="2.5"/><rect x="17.5" y="17.5" width="9.5" height="9.5" rx="2.5"/></symbol>
+  <symbol id="i-wave" viewBox="0 0 32 32"><path d="M3 21c3-9 5-9 7 0s4 9 6-4 4-14 6-2 4 10 7 3"/><path d="M3 27h26" opacity=".55"/></symbol>
+  <symbol id="i-scatter" viewBox="0 0 32 32"><path d="M5 5v22h22" opacity=".55"/><path d="M8 24L26 6" stroke-dasharray="1.5 2.5" opacity=".55"/><circle cx="12" cy="20" r="1.3"/><circle cx="14.5" cy="16.5" r="1.3"/><circle cx="17" cy="15.5" r="1.3"/><circle cx="18.5" cy="12.5" r="1.3"/><circle cx="21.5" cy="11" r="1.3"/><ellipse cx="17" cy="15" rx="7.5" ry="3" transform="rotate(-45 17 15)"/></symbol>
+  <symbol id="i-info" viewBox="0 0 32 32"><circle cx="16" cy="16" r="11.5"/><path d="M16 14.5v8"/><circle cx="16" cy="10.2" r=".9" fill="currentColor"/></symbol>
+  <symbol id="i-doc" viewBox="0 0 32 32"><path d="M8 4h11l6 6v18H8z"/><path d="M19 4v6h6"/><path d="M12 15h9M12 19h9M12 23h6"/></symbol>
+  <symbol id="i-orig" viewBox="0 0 32 32"><path d="M3 18h5l2.5-8 4 15 3-11 2 4h9.5"/><circle cx="26" cy="18" r="1.4" fill="currentColor"/></symbol>
+  <symbol id="i-retro" viewBox="0 0 32 32"><path d="M6.5 11A11 11 0 1 1 5 16"/><path d="M5 6v5.5h5.5"/><path d="M16 10v6.5l4 2.5"/></symbol>
+  <symbol id="i-recalc" viewBox="0 0 32 32"><path d="M11 6H7v20h4M21 6h4v20h-4"/><path d="M13 13h6M13 19h6M16 10v6"/></symbol>
+  <symbol id="i-twin" viewBox="0 0 32 32"><path d="M3 12h6l2-5 3 10 2-5h13"/><path d="M3 23h6l2-5 3 10 2-5h13" opacity=".55"/></symbol>
+  <symbol id="i-beats" viewBox="0 0 32 32"><path d="M16 26.5S5 19.8 5 12.4A5.6 5.6 0 0 1 16 10a5.6 5.6 0 0 1 11 2.4c0 7.4-11 14.1-11 14.1z"/><path d="M8.5 16h4l1.8-3.5 2.6 6 1.6-2.5h5"/></symbol>
+  <symbol id="i-run" viewBox="0 0 32 32"><circle cx="16" cy="18" r="9.5"/><path d="M16 12.5v5.5l3.5 2"/><path d="M13 4.5h6M16 4.5v4"/></symbol>
+  <symbol id="i-cap" viewBox="0 0 32 32"><path d="M3 12.5L16 6l13 6.5L16 19z"/><path d="M8.5 15.5v6c2 2.2 4.5 3.3 7.5 3.3s5.5-1.1 7.5-3.3v-6"/><path d="M29 12.5v7"/></symbol>
+  <symbol id="i-shield" viewBox="0 0 32 32"><path d="M16 4l10 4v7.5c0 6.3-4.2 10.6-10 12.5C10.2 26.1 6 21.8 6 15.5V8z"/><path d="M11.5 16l3.2 3.2 6-6.4"/></symbol>
+  <symbol id="i-lab" viewBox="0 0 32 32"><path d="M12.5 4h7M13.5 4v8.5L6.8 24.6A2.3 2.3 0 0 0 8.8 28h14.4a2.3 2.3 0 0 0 2-3.4L18.5 12.5V4"/><path d="M9.5 20h13" opacity=".55"/></symbol>
+</defs></svg>
 <script>document.documentElement.classList.add('js')</script>
 
 <header class="nav">
@@ -414,12 +450,12 @@ document.head.appendChild(s);})();</script>
         <div class="label" data-en="See it in action" data-de="So sieht es aus">So sieht es aus</div>
         <h2 class="tour-h" data-en="The real app, <em>with a real recording.</em>" data-de="Die echte App, <em>mit einer echten Aufnahme.</em>">Die echte App, <em>mit einer echten Aufnahme.</em></h2>
         <ol class="feats" data-tour-liste aria-label="What the app does">
-          <li><button data-i="0"><b data-en="Up to four sensors at once" data-de="Bis zu vier Sensoren gleichzeitig">Bis zu vier Sensoren gleichzeitig</b><span data-en="Polar H10 and Movesense Flash record on their own – mark each phase with one tap." data-de="Polar H10 und Movesense Flash zeichnen selbst auf – jede Phase per Tipp markiert.">Polar H10 und Movesense Flash zeichnen selbst auf – jede Phase per Tipp markiert.</span></button><i class="fort"></i></li>
-          <li><button data-i="1"><b data-en="Every metric of a recording" data-de="Jede Kennzahl einer Aufnahme">Jede Kennzahl einer Aufnahme</b><span data-en="Time domain, Poincaré, DFA α1, spectrum and artifact share – scroll through it right here." data-de="Zeitbereich, Poincaré, DFA α1, Spektrum, Artefaktanteil – scroll selbst durch.">Zeitbereich, Poincaré, DFA α1, Spektrum, Artefaktanteil – scroll selbst durch.</span></button><i class="fort"></i></li>
-          <li><button data-i="2"><b data-en="The whole session at a glance" data-de="Die ganze Sitzung auf einen Blick">Die ganze Sitzung auf einen Blick</b><span data-en="Heart rate and HRV together – rest, training and recovery." data-de="Puls und HRV gemeinsam – Ruhe, Training und Erholung.">Puls und HRV gemeinsam – Ruhe, Training und Erholung.</span></button><i class="fort"></i></li>
-          <li><button data-i="3"><b data-en="See when the pattern changes" data-de="Sehen, wann sich das Muster ändert">Sehen, wann sich das Muster ändert</b><span data-en="A Poincaré plot with time slider and inspector, beat by beat." data-de="Ein Poincaré-Plot mit Zeitregler und Fadenkreuz, Schlag für Schlag.">Ein Poincaré-Plot mit Zeitregler und Fadenkreuz, Schlag für Schlag.</span></button><i class="fort"></i></li>
-          <li><button data-i="4"><b data-en="Every number explained" data-de="Jede Zahl erklärt">Jede Zahl erklärt</b><span data-en="What it shows, how it is computed, what to watch – and the source." data-de="Was sie zeigt, wie sie gerechnet wird, worauf zu achten ist – und die Quelle.">Was sie zeigt, wie sie gerechnet wird, worauf zu achten ist – und die Quelle.</span></button><i class="fort"></i></li>
-          <li><button data-i="5"><b data-en="Ready for your manuscript" data-de="Bereit für dein Manuskript">Bereit für dein Manuskript</b><span data-en="PDF report, publication figures, Kubios, CSV, EDF+, WFDB, JSON." data-de="PDF-Bericht, Publikationsgrafiken, Kubios, CSV, EDF+, WFDB, JSON.">PDF-Bericht, Publikationsgrafiken, Kubios, CSV, EDF+, WFDB, JSON.</span></button><i class="fort"></i></li>
+          <li><button data-i="0"><svg class="ic" aria-hidden="true"><use href="#i-sens"/></svg><b data-en="Up to four sensors at once" data-de="Bis zu vier Sensoren gleichzeitig">Bis zu vier Sensoren gleichzeitig</b><span data-en="Polar H10 and Movesense Flash record on their own – mark each phase with one tap." data-de="Polar H10 und Movesense Flash zeichnen selbst auf – jede Phase per Tipp markiert.">Polar H10 und Movesense Flash zeichnen selbst auf – jede Phase per Tipp markiert.</span></button><i class="fort"></i></li>
+          <li><button data-i="1"><svg class="ic" aria-hidden="true"><use href="#i-grid"/></svg><b data-en="Every metric of a recording" data-de="Jede Kennzahl einer Aufnahme">Jede Kennzahl einer Aufnahme</b><span data-en="Time domain, Poincaré, DFA α1, spectrum and artifact share – scroll through it right here." data-de="Zeitbereich, Poincaré, DFA α1, Spektrum, Artefaktanteil – scroll selbst durch.">Zeitbereich, Poincaré, DFA α1, Spektrum, Artefaktanteil – scroll selbst durch.</span></button><i class="fort"></i></li>
+          <li><button data-i="2"><svg class="ic" aria-hidden="true"><use href="#i-wave"/></svg><b data-en="The whole session at a glance" data-de="Die ganze Sitzung auf einen Blick">Die ganze Sitzung auf einen Blick</b><span data-en="Heart rate and HRV together – rest, training and recovery." data-de="Puls und HRV gemeinsam – Ruhe, Training und Erholung.">Puls und HRV gemeinsam – Ruhe, Training und Erholung.</span></button><i class="fort"></i></li>
+          <li><button data-i="3"><svg class="ic" aria-hidden="true"><use href="#i-scatter"/></svg><b data-en="See when the pattern changes" data-de="Sehen, wann sich das Muster ändert">Sehen, wann sich das Muster ändert</b><span data-en="A Poincaré plot with time slider and inspector, beat by beat." data-de="Ein Poincaré-Plot mit Zeitregler und Fadenkreuz, Schlag für Schlag.">Ein Poincaré-Plot mit Zeitregler und Fadenkreuz, Schlag für Schlag.</span></button><i class="fort"></i></li>
+          <li><button data-i="4"><svg class="ic" aria-hidden="true"><use href="#i-info"/></svg><b data-en="Every number explained" data-de="Jede Zahl erklärt">Jede Zahl erklärt</b><span data-en="What it shows, how it is computed, what to watch – and the source." data-de="Was sie zeigt, wie sie gerechnet wird, worauf zu achten ist – und die Quelle.">Was sie zeigt, wie sie gerechnet wird, worauf zu achten ist – und die Quelle.</span></button><i class="fort"></i></li>
+          <li><button data-i="5"><svg class="ic" aria-hidden="true"><use href="#i-doc"/></svg><b data-en="Ready for your manuscript" data-de="Bereit für dein Manuskript">Bereit für dein Manuskript</b><span data-en="PDF report, publication figures, Kubios, CSV, EDF+, WFDB, JSON." data-de="PDF-Bericht, Publikationsgrafiken, Kubios, CSV, EDF+, WFDB, JSON.">PDF-Bericht, Publikationsgrafiken, Kubios, CSV, EDF+, WFDB, JSON.</span></button><i class="fort"></i></li>
         </ol>
       </div>
       <div class="tour-phone">
@@ -439,10 +475,10 @@ document.head.appendChild(s);})();</script>
     </div>
     <div class="wrap">
       <div class="proof rv">
-        <div><b data-count="4">4</b><span data-en="sensors at once" data-de="Sensoren gleichzeitig">Sensoren gleichzeitig</span></div>
-        <div><b data-count="331" data-suffix="/331">331/331</b><span data-en="checks vs NeuroKit2 &amp; SciPy" data-de="Prüfungen gegen NeuroKit2 &amp; SciPy">Prüfungen gegen NeuroKit2 & SciPy</span></div>
-        <div><b data-count="8">8</b><span data-en="export formats, original RR untouched" data-de="Exportformate, Original-RR unverändert">Exportformate, Original-RR unverändert</span></div>
-        <div><b data-count="0">0</b><span data-en="bytes of study data to a server" data-de="Bytes Studiendaten an einen Server">Bytes Studiendaten an einen Server</span></div>
+        <div><svg class="ic" aria-hidden="true"><use href="#i-sens"/></svg><b data-count="4">4</b><span data-en="sensors at once" data-de="Sensoren gleichzeitig">Sensoren gleichzeitig</span></div>
+        <div><svg class="ic" aria-hidden="true"><use href="#i-check"/></svg><b data-count="331" data-suffix="/331">331/331</b><span data-en="checks vs NeuroKit2 &amp; SciPy" data-de="Prüfungen gegen NeuroKit2 &amp; SciPy">Prüfungen gegen NeuroKit2 & SciPy</span></div>
+        <div><svg class="ic" aria-hidden="true"><use href="#i-files"/></svg><b data-count="8">8</b><span data-en="export formats, original RR untouched" data-de="Exportformate, Original-RR unverändert">Exportformate, Original-RR unverändert</span></div>
+        <div><svg class="ic" aria-hidden="true"><use href="#i-noserver"/></svg><b data-count="0">0</b><span data-en="bytes of study data to a server" data-de="Bytes Studiendaten an einen Server">Bytes Studiendaten an einen Server</span></div>
       </div>
     </div>
   </section>
@@ -520,8 +556,9 @@ document.head.appendChild(s);})();</script>
   <section class="ch" id="replay">
     <div class="wrap demo">
       <div class="device-glow rv">
-        <div class="device">
-          <video id="pv" src="../assets/v14/poincare-replay.mp4" poster="../assets/v14/poincare-replay-poster.jpg" muted playsinline preload="metadata" aria-label="Screen recording of the app: Poincaré time slider and inspector on a 100-minute training recording"></video>
+        <div class="device" data-poincare-live="/hrv-research/assets/v14/poincare-live.json" data-start="19:47:13">
+          <img class="lp-bg" src="../assets/v14/poincare-live-bg.webp" width="1320" height="2868" alt="" aria-hidden="true">
+          <canvas class="lp" tabindex="0" role="img" aria-label="The app's Poincaré card with a real 100-minute recording. Drag the time slider to rebuild the cloud; press and hold on the cloud for the crosshair with values."></canvas>
           <img class="bezel" src="../assets/v14/bezel.webp" width="735" height="1500" alt="">
         </div>
       </div>
@@ -529,14 +566,8 @@ document.head.appendChild(s);})();</script>
         <div class="label" data-en="Real recording, real app" data-de="Echte Aufnahme, echte App">Echte Aufnahme, echte App</div>
         <h2 data-en="Watch the pattern <em>change over time.</em>" data-de="Sieh, wann sich <em>das Muster ändert.</em>">Sieh, wann sich <em>das Muster ändert.</em></h2>
         <p class="sub" data-en="A 100-minute session – rest, training, recovery – from one Polar H10. The time slider rebuilds the Poincaré cloud beat by beat; touch and hold to read any beat with its clock time." data-de="Eine 100-minütige Sitzung – Ruhe, Training, Erholung – von einem Polar H10. Der Zeitregler baut die Poincaré-Wolke Schlag für Schlag auf; halten und ziehen zeigt jeden Schlag mit Uhrzeit.">Eine 100-minütige Sitzung – Ruhe, Training, Erholung – von einem Polar H10. Der Zeitregler baut die Poincaré-Wolke Schlag für Schlag auf; halten und ziehen zeigt jeden Schlag mit Uhrzeit.</p>
-        <div class="scrub">
-          <div class="scrub-row">
-            <button class="play" id="pvPlay" aria-label="Play"><svg viewBox="0 0 16 16" id="pvIcon"><path d="M4 2.5v11l9-5.5z"/></svg></button>
-            <input class="range" id="pvRange" type="range" min="0" max="1000" value="0" aria-label="Scrub through the screen recording">
-          </div>
-          <div class="scrub-cap" data-en="Drag to scrub through the screen recording" data-de="Ziehen, um durch die Bildschirmaufnahme zu spulen">Ziehen, um durch die Bildschirmaufnahme zu spulen</div>
-        </div>
-        <p class="cap" data-en="Unedited screen recording of CARLON HRV Research. Polar H10 internal memory, 11,131 beats; shared with consent, pseudonymized." data-de="Unbearbeitete Bildschirmaufnahme von CARLON HRV Research. Interner Speicher des Polar H10, 11.131 Schläge; mit Zustimmung bereitgestellt, pseudonymisiert.">Unbearbeitete Bildschirmaufnahme von CARLON HRV Research. Interner Speicher des Polar H10, 11.131 Schläge; mit Zustimmung bereitgestellt, pseudonymisiert.</p>
+        <p class="pv-hint" data-en="Drag the time slider – the cloud builds up beat by beat. Then press and hold on the cloud: the crosshair shows each beat with its clock time." data-de="Zieh den Zeitregler – die Wolke baut sich Schlag für Schlag auf. Dann auf der Wolke halten: Das Fadenkreuz zeigt jeden Schlag mit Uhrzeit.">Zieh den Zeitregler – die Wolke baut sich Schlag für Schlag auf. Dann auf der Wolke halten: Das Fadenkreuz zeigt jeden Schlag mit Uhrzeit.</p>
+        <p class="cap" data-en="The app&#39;s Poincaré card with a real recording: Polar H10 internal memory, 100 minutes, 11,131 beats; shared with consent, pseudonymized. Background = app screen; points and SD values are the app&#39;s own pairs, drawn live." data-de="Die Poincaré-Karte der App mit einer echten Aufnahme: Polar-H10-Gurtspeicher, 100 Minuten, 11.131 Schläge; mit Einverständnis geteilt, pseudonymisiert. Hintergrund = App-Bildschirm; Punkte und SD-Werte sind die Paare der App selbst, live gezeichnet.">Die Poincaré-Karte der App mit einer echten Aufnahme: Polar-H10-Gurtspeicher, 100 Minuten, 11.131 Schläge; mit Einverständnis geteilt, pseudonymisiert. Hintergrund = App-Bildschirm; Punkte und SD-Werte sind die Paare der App selbst, live gezeichnet.</p>
       </div>
     </div>
   </section>
@@ -634,9 +665,9 @@ document.head.appendChild(s);})();</script>
         <p class="sub" data-en="The app stores what the sensor measured – nothing else. Every metric is computed fresh from those originals, so methods can improve without your data ever being touched." data-de="Die App speichert, was der Sensor gemessen hat – sonst nichts. Jede Kennzahl wird aus diesen Originaldaten neu berechnet, so können Methoden besser werden, ohne dass deine Daten je angefasst werden.">Die App speichert, was der Sensor gemessen hat – sonst nichts. Jede Kennzahl wird aus diesen Originaldaten neu berechnet, so können Methoden besser werden, ohne dass deine Daten je angefasst werden.</p>
       </div>
       <div class="checks rv">
-        <div class="check"><b data-en="Originals" data-de="Original">Original</b><p data-en="RR intervals are kept exactly as recorded – never smoothed, corrected or overwritten." data-de="RR-Intervalle bleiben genau wie erfasst – nie geglättet, korrigiert oder überschrieben.">RR-Intervalle bleiben genau wie erfasst – nie geglättet, korrigiert oder überschrieben.</p></div>
-        <div class="check"><b data-en="Retroactive" data-de="Rückwirkend">Rückwirkend</b><p data-en="An improved method applies to every recording you have ever made – open or re-export it to get the latest analysis." data-de="Eine verbesserte Methode gilt für jede Aufnahme, die du je gemacht hast – öffnen oder neu exportieren, schon ist die neueste Auswertung da.">Eine verbesserte Methode gilt für jede Aufnahme, die du je gemacht hast – öffnen oder neu exportieren, schon ist die neueste Auswertung da.</p></div>
-        <div class="check"><b data-en="Recomputable" data-de="Nachrechenbar">Nachrechenbar</b><p data-en="Every export names the app version and the exact method. Anyone can recompute it with open tools – for peer review, replication or new methods." data-de="Jeder Export nennt App-Version und genaue Methode. Jeder kann ihn mit offenen Werkzeugen nachrechnen – für Peer Review, Replikation oder neue Verfahren.">Jeder Export nennt App-Version und genaue Methode. Jeder kann ihn mit offenen Werkzeugen nachrechnen – für Peer Review, Replikation oder neue Verfahren.</p></div>
+        <div class="check"><svg class="ic" aria-hidden="true"><use href="#i-orig"/></svg><b data-en="Originals" data-de="Original">Original</b><p data-en="RR intervals are kept exactly as recorded – never smoothed, corrected or overwritten." data-de="RR-Intervalle bleiben genau wie erfasst – nie geglättet, korrigiert oder überschrieben.">RR-Intervalle bleiben genau wie erfasst – nie geglättet, korrigiert oder überschrieben.</p></div>
+        <div class="check"><svg class="ic" aria-hidden="true"><use href="#i-retro"/></svg><b data-en="Retroactive" data-de="Rückwirkend">Rückwirkend</b><p data-en="An improved method applies to every recording you have ever made – open or re-export it to get the latest analysis." data-de="Eine verbesserte Methode gilt für jede Aufnahme, die du je gemacht hast – öffnen oder neu exportieren, schon ist die neueste Auswertung da.">Eine verbesserte Methode gilt für jede Aufnahme, die du je gemacht hast – öffnen oder neu exportieren, schon ist die neueste Auswertung da.</p></div>
+        <div class="check"><svg class="ic" aria-hidden="true"><use href="#i-recalc"/></svg><b data-en="Recomputable" data-de="Nachrechenbar">Nachrechenbar</b><p data-en="Every export names the app version and the exact method. Anyone can recompute it with open tools – for peer review, replication or new methods." data-de="Jeder Export nennt App-Version und genaue Methode. Jeder kann ihn mit offenen Werkzeugen nachrechnen – für Peer Review, Replikation oder neue Verfahren.">Jeder Export nennt App-Version und genaue Methode. Jeder kann ihn mit offenen Werkzeugen nachrechnen – für Peer Review, Replikation oder neue Verfahren.</p></div>
       </div>
     </div>
   </section>
@@ -668,9 +699,9 @@ document.head.appendChild(s);})();</script>
         <p class="sub" data-en="Each metric is recomputed by an independent reference with the same definition and parameters. The dossier names every check, every tolerance – and every error we found and fixed along the way." data-de="Jede Kennzahl wird von einer unabhängigen Referenz mit derselben Definition und denselben Parametern nachgerechnet. Das Dossier nennt jede Prüfung, jede Toleranz – und jeden Fehler, den wir dabei gefunden und behoben haben.">Jede Kennzahl wird von einer unabhängigen Referenz mit derselben Definition und denselben Parametern nachgerechnet. Das Dossier nennt jede Prüfung, jede Toleranz – und jeden Fehler, den wir dabei gefunden und behoben haben.</p>
       </div>
       <div class="checks rv">
-        <div class="check"><b>331/331</b><p data-en="checks passed against NeuroKit2, SciPy and Task Force definitions" data-de="Prüfungen bestanden gegen NeuroKit2, SciPy und Task-Force-Definitionen">Prüfungen bestanden gegen NeuroKit2, SciPy und Task-Force-Definitionen</p></div>
-        <div class="check"><b>18/18</b><p data-en="series with artifact detection identical to NeuroKit2, beat by beat" data-de="Reihen mit Artefakterkennung identisch zu NeuroKit2, Schlag für Schlag">Reihen mit Artefakterkennung identisch zu NeuroKit2, Schlag für Schlag</p></div>
-        <div class="check"><b>20,431</b><p data-en="beats in synthetic test vectors and real Polar H10 / Movesense recordings" data-de="Schläge in synthetischen Testvektoren und echten Polar-H10-/Movesense-Aufnahmen">Schläge in synthetischen Testvektoren und echten Polar-H10-/Movesense-Aufnahmen</p></div>
+        <div class="check"><svg class="ic" aria-hidden="true"><use href="#i-check"/></svg><b>331/331</b><p data-en="checks passed against NeuroKit2, SciPy and Task Force definitions" data-de="Prüfungen bestanden gegen NeuroKit2, SciPy und Task-Force-Definitionen">Prüfungen bestanden gegen NeuroKit2, SciPy und Task-Force-Definitionen</p></div>
+        <div class="check"><svg class="ic" aria-hidden="true"><use href="#i-twin"/></svg><b>18/18</b><p data-en="series with artifact detection identical to NeuroKit2, beat by beat" data-de="Reihen mit Artefakterkennung identisch zu NeuroKit2, Schlag für Schlag">Reihen mit Artefakterkennung identisch zu NeuroKit2, Schlag für Schlag</p></div>
+        <div class="check"><svg class="ic" aria-hidden="true"><use href="#i-beats"/></svg><b>20,431</b><p data-en="beats in synthetic test vectors and real Polar H10 / Movesense recordings" data-de="Schläge in synthetischen Testvektoren und echten Polar-H10-/Movesense-Aufnahmen">Schläge in synthetischen Testvektoren und echten Polar-H10-/Movesense-Aufnahmen</p></div>
       </div>
       <div class="fixed rv">
         <h3 data-en="Found and fixed – in the open" data-de="Gefunden und behoben – offen dokumentiert">Gefunden und behoben – offen dokumentiert</h3>
@@ -694,10 +725,10 @@ document.head.appendChild(s);})();</script>
         <h2 data-en="People who need <em>clean RR data.</em>" data-de="Alle, die <em>saubere RR-Daten</em> brauchen.">Alle, die <em>saubere RR-Daten</em> brauchen.</h2>
       </div>
       <div class="who rv">
-        <div class="panel"><h4 data-en="Sports science" data-de="Sportwissenschaft">Sportwissenschaft</h4><p data-en="Several athletes per session, phases marked live, DFA α1 over time for intensity research." data-de="Mehrere Athleten pro Einheit, Phasen live markiert, DFA α1 im Verlauf für die Intensitätsforschung.">Mehrere Athleten pro Einheit, Phasen live markiert, DFA α1 im Verlauf für die Intensitätsforschung.</p></div>
-        <div class="panel"><h4 data-en="Theses" data-de="Abschlussarbeiten">Abschlussarbeiten</h4><p data-en="A methods paragraph to cite, figures in journal widths, and data your supervisor can recompute." data-de="Ein Methodenabsatz zum Zitieren, Grafiken in Zeitschriftenbreite und Daten, die die Betreuung nachrechnen kann.">Ein Methodenabsatz zum Zitieren, Grafiken in Zeitschriftenbreite und Daten, die die Betreuung nachrechnen kann.</p></div>
-        <div class="panel"><h4 data-en="Ethics boards" data-de="Ethikkommissionen">Ethikkommissionen</h4><p data-en="No account, no server, pseudonymous IDs and an append-only audit trail for every record." data-de="Kein Konto, kein Server, pseudonyme Kennungen und ein unveränderbarer Prüfpfad für jede Aufnahme.">Kein Konto, kein Server, pseudonyme Kennungen und ein unveränderbarer Prüfpfad für jede Aufnahme.</p></div>
-        <div class="panel"><h4 data-en="Research labs" data-de="Forschungslabore">Forschungslabore</h4><p data-en="Every new recording copied to a study folder you choose in the Files app – iCloud Drive or your institute&#39;s cloud – for multi-site studies; no CARLON server. Volume licenses through Apple School or Business Manager." data-de="Jede neue Aufnahme als Kopie in einem Studienordner deiner Wahl in der Dateien-App – iCloud Drive oder die Cloud deines Instituts – für Studien an mehreren Orten; kein CARLON-Server. Volumenlizenzen über Apple School oder Business Manager.">Jede neue Aufnahme als Kopie in einem Studienordner deiner Wahl in der Dateien-App – iCloud Drive oder die Cloud deines Instituts – für Studien an mehreren Orten; kein CARLON-Server. Volumenlizenzen über Apple School oder Business Manager.</p></div>
+        <div class="panel"><svg class="ic" aria-hidden="true"><use href="#i-run"/></svg><h4 data-en="Sports science" data-de="Sportwissenschaft">Sportwissenschaft</h4><p data-en="Several athletes per session, phases marked live, DFA α1 over time for intensity research." data-de="Mehrere Athleten pro Einheit, Phasen live markiert, DFA α1 im Verlauf für die Intensitätsforschung.">Mehrere Athleten pro Einheit, Phasen live markiert, DFA α1 im Verlauf für die Intensitätsforschung.</p></div>
+        <div class="panel"><svg class="ic" aria-hidden="true"><use href="#i-cap"/></svg><h4 data-en="Theses" data-de="Abschlussarbeiten">Abschlussarbeiten</h4><p data-en="A methods paragraph to cite, figures in journal widths, and data your supervisor can recompute." data-de="Ein Methodenabsatz zum Zitieren, Grafiken in Zeitschriftenbreite und Daten, die die Betreuung nachrechnen kann.">Ein Methodenabsatz zum Zitieren, Grafiken in Zeitschriftenbreite und Daten, die die Betreuung nachrechnen kann.</p></div>
+        <div class="panel"><svg class="ic" aria-hidden="true"><use href="#i-shield"/></svg><h4 data-en="Ethics boards" data-de="Ethikkommissionen">Ethikkommissionen</h4><p data-en="No account, no server, pseudonymous IDs and an append-only audit trail for every record." data-de="Kein Konto, kein Server, pseudonyme Kennungen und ein unveränderbarer Prüfpfad für jede Aufnahme.">Kein Konto, kein Server, pseudonyme Kennungen und ein unveränderbarer Prüfpfad für jede Aufnahme.</p></div>
+        <div class="panel"><svg class="ic" aria-hidden="true"><use href="#i-lab"/></svg><h4 data-en="Research labs" data-de="Forschungslabore">Forschungslabore</h4><p data-en="Every new recording copied to a study folder you choose in the Files app – iCloud Drive or your institute&#39;s cloud – for multi-site studies; no CARLON server. Volume licenses through Apple School or Business Manager." data-de="Jede neue Aufnahme als Kopie in einem Studienordner deiner Wahl in der Dateien-App – iCloud Drive oder die Cloud deines Instituts – für Studien an mehreren Orten; kein CARLON-Server. Volumenlizenzen über Apple School oder Business Manager.">Jede neue Aufnahme als Kopie in einem Studienordner deiner Wahl in der Dateien-App – iCloud Drive oder die Cloud deines Instituts – für Studien an mehreren Orten; kein CARLON-Server. Volumenlizenzen über Apple School oder Business Manager.</p></div>
       </div>
     </div>
   </section>
@@ -802,22 +833,6 @@ document.head.appendChild(s);})();</script>
     els.forEach(function (e) { io.observe(e); });
   } else { els.forEach(function (e) { e.classList.add('in'); }); }
 
-  /* Poincaré-Bildschirmaufnahme: abspielen, spulen */
-  var v = document.getElementById('pv'), r = document.getElementById('pvRange'), b = document.getElementById('pvPlay'), ic = document.getElementById('pvIcon');
-  if (v && r && b) {
-    var setIcon = function () { var on = !v.paused; ic.innerHTML = on ? '<path d="M4 2.5h3v11H4zM9 2.5h3v11H9z"/>' : '<path d="M4 2.5v11l9-5.5z"/>'; b.setAttribute('aria-label', on ? 'Pause' : 'Play'); };
-    var sync = function () { if (v.duration) { var p = v.currentTime / v.duration; r.value = Math.round(p * 1000); r.style.setProperty('--p', (p * 100).toFixed(1) + '%'); } };
-    v.addEventListener('timeupdate', sync); v.addEventListener('play', setIcon); v.addEventListener('pause', setIcon);
-    v.addEventListener('ended', function () { setTimeout(function () { v.currentTime = 0; v.play(); }, 1600); });
-    b.addEventListener('click', function () { if (v.paused) v.play(); else v.pause(); });
-    r.addEventListener('input', function () { v.pause(); if (v.duration) { v.currentTime = r.value / 1000 * v.duration; r.style.setProperty('--p', (r.value / 10) + '%'); } });
-    var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if (!reduce && 'IntersectionObserver' in window) {
-      var vo = new IntersectionObserver(function (es) { es.forEach(function (e) { if (e.isIntersecting) { if (!v.dataset.gestartet) { v.dataset.gestartet = '1'; v.play().catch(function () {}); } } else if (!v.paused) { v.pause(); v.dataset.gestartet = ''; } }); }, { threshold: 0.5 });
-      vo.observe(v);
-    }
-  }
-
   /* Galerie (Kanon Breathwork initGal) */
   function initGal(sel) {
     var s = document.querySelector(sel); if (!s) return;
@@ -854,7 +869,8 @@ document.head.appendChild(s);})();</script>
   })();
 
 </script>
-<script src="/assets/app-tour/app-tour.js?v=2" defer></script>
+<script src="/assets/app-tour/app-tour.js?v=3" defer></script>
+<script src="/assets/poincare-live/poincare-live.js?v=1" defer></script>
 <script>
 // Vollbild für Bilder: Tippen/Klick öffnet, Wischen oder ← → blättert, Klick/Esc schließt.
 // Kern der Equine-Lösung (Überblendung, Wischen, Zähler) ohne deren Modul-Menü.
