@@ -23,5 +23,10 @@
  "poincare": {
   "art": "video",
   "kb": 4382
+ },
+ "export": {
+  "art": "scroll",
+  "hoehe_px": 2868,
+  "naehte": []
  }
 }

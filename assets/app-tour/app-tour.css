@@ -41,23 +41,17 @@
 @supports (height: 1dvh) { .at-voll .at-device { width: min(88vw, calc(84dvh * 0.49)); } }
 .at-voll .at-voll-btn { top: -16px; right: -16px; bottom: auto; }
 
-/* Erklärungen im Bild (27.10.2026, Jan: „eingeblendete Erklärungen für max Überzeugung"): Leuchtpunkt am Element,
-   Etikett daneben, zeitlich zur Station. Kein backdrop-filter — die Videos darunter malen jedes Bild neu. */
-.at-call { position: absolute; left: var(--x); top: var(--y); z-index: 3; pointer-events: none; opacity: 0; transform: scale(.85); transition: opacity .4s ease, transform .55s cubic-bezier(.2,.9,.25,1); }
-.at-call.zeigen { opacity: 1; transform: none; }
-.at-call::before { content: ""; position: absolute; width: 11px; height: 11px; margin: -5.5px 0 0 -5.5px; border-radius: 50%; background: #3ecfb2; box-shadow: 0 0 0 3px rgba(62,207,178,.28), 0 0 16px rgba(62,207,178,.75); }
-.at-call.zeigen::after { content: ""; position: absolute; width: 11px; height: 11px; margin: -5.5px 0 0 -5.5px; border-radius: 50%; border: 1.5px solid rgba(62,207,178,.9); animation: atRing 1.6s cubic-bezier(.2,.7,.3,1) infinite; }
-@keyframes atRing { from { transform: scale(1); opacity: .9; } to { transform: scale(3.2); opacity: 0; } }
-.at-call span { position: absolute; font: 600 clamp(10.5px, 3.3cqw, 13px)/1.25 -apple-system, system-ui, "Helvetica Neue", sans-serif; letter-spacing: -.005em; color: #fff; width: max-content; max-width: 66cqw; white-space: normal; text-wrap: balance;
-  padding: 6px 10px 6.5px; border-radius: 11px; background: linear-gradient(rgba(40,46,45,.96), rgba(22,26,26,.96)); border: .5px solid rgba(255,255,255,.24);
-  box-shadow: 0 10px 26px rgba(0,0,0,.6), inset 0 .5px 0 rgba(255,255,255,.3); }
-.at-call[data-seite="r"] span { left: 14px; top: 0; transform: translateY(-50%); }
-.at-call[data-seite="l"] span { right: 14px; top: 0; transform: translateY(-50%); }
-.at-call[data-seite="o"] span { bottom: 14px; left: 0; transform: translateX(-50%); }
-.at-call[data-seite="u"] span { top: 14px; left: 0; transform: translateX(-50%); }
-.at-call[data-seite="ur"] span { top: 14px; left: -12px; }
-.at-call[data-seite="ul"] span { top: 14px; right: -12px; }
-.at-call[data-seite="or"] span { bottom: 14px; left: -12px; }
-.at-call[data-seite="ol"] span { bottom: 14px; right: -12px; }
-.at-screen { container-type: inline-size; }
-@media (prefers-reduced-motion: reduce) { .at-call { transition: opacity .2s; } .at-call.zeigen::after { animation: none; } }
+/* Erklärungen der WEBSITE, nicht der App (27.10.2026, Jan: Punkte/Kästen in Markenfarbe wirkten wie App-Elemente):
+   Scheinwerfer — der App-Bildschirm wird abgedunkelt, nur der erklärte Bereich bleibt hell (feiner weißer Rahmen);
+   der Text steht UNTER dem Gerät in der Schrift der Seite. Kein backdrop-filter (Videos darunter malen jedes Bild neu). */
+.at-call { display: none; }
+.at-spot { position: absolute; z-index: 3; pointer-events: none; opacity: 0; border-radius: 14px;
+  box-shadow: 0 0 0 200vmax rgba(0,0,0,.52), inset 0 0 0 1px rgba(255,255,255,.7), 0 0 22px rgba(255,255,255,.14);
+  transition: opacity .45s ease, left .7s cubic-bezier(.2,.9,.25,1), top .7s cubic-bezier(.2,.9,.25,1), width .7s cubic-bezier(.2,.9,.25,1), height .7s cubic-bezier(.2,.9,.25,1); }
+.at-spot.zeigen { opacity: 1; }
+.at-cap { position: absolute; left: 50%; top: calc(100% + 18px); width: min(125%, 88vw); transform: translate(-50%, 6px); text-align: center; pointer-events: none;
+  font-size: 17px; line-height: 1.35; font-weight: 500; letter-spacing: -.005em; color: var(--t, #f2f2f2); opacity: 0; transition: opacity .4s ease, transform .5s cubic-bezier(.2,.9,.25,1); }
+.at-cap.zeigen { opacity: 1; transform: translate(-50%, 0); }
+.at-cap::before { content: ""; display: block; width: 1px; height: 12px; margin: 0 auto 8px; background: linear-gradient(rgba(255,255,255,0), rgba(255,255,255,.55)); }
+.tour-phone .at-device, .at-voll .at-device { margin-bottom: 64px; }
+@media (prefers-reduced-motion: reduce) { .at-spot, .at-cap { transition: opacity .2s; } }
