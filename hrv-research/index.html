@@ -267,10 +267,13 @@ document.head.appendChild(s);})();</script>
 
     /* Galerie (Kanon: Breathwork gal-*) */
     .gal { margin-top: var(--s55); }
-    .gal-vp { overflow-x: auto; overflow-y: hidden; scroll-snap-type: x proximity; scroll-behavior: smooth; -webkit-overflow-scrolling: touch; scrollbar-width: none; overscroll-behavior-x: contain; touch-action: pan-x; }   /* Kanon Breathwork (CSS + Skript 1:1) */
+    /* Wischleiste wie App Store / Fotos (27.10., Pro-Max-Prüfstand): IMMER einrasten (mandatory — proximity blieb 154 px daneben stehen),
+       randlos über die ganze Bildschirmbreite, Endabstände als echte Flex-Elemente (Safari zählt Padding am Ende nicht mit),
+       kein touch-action: senkrecht über der Galerie muss die Seite scrollen */
+    .gal-vp { overflow-x: auto; overflow-y: hidden; scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch; scrollbar-width: none; overscroll-behavior-x: contain; margin: 0 calc(50% - 50vw); }
     .gal-vp::-webkit-scrollbar { display: none; }
-    .gal-track { display: flex; gap: var(--s34); padding: 0 calc(50% - min(40vw, 140px)) var(--s13); }
-    .gal-track::after { content: ""; flex: 0 0 6px; }   /* Safari: Endabstand zählt erst mit Element — sonst kommt das letzte Bild nicht in die Mitte */
+    .gal-track { display: flex; gap: var(--s34); padding: 0 0 var(--s13); }
+    .gal-track::before, .gal-track::after { content: ""; flex: 0 0 calc(50vw - min(40vw, 140px) - var(--s34)); }
     .gal-slide { flex: 0 0 min(80vw, 280px); scroll-snap-align: center; scroll-snap-stop: always; text-align: center; transition: opacity .383s var(--ease), transform .383s var(--ease); }
     .gal-slide .device { width: 100%; }
     .gal-slide h4 { font-size: 16px; font-weight: 500; margin: var(--s21) 0 var(--s5); }
@@ -278,7 +281,7 @@ document.head.appendChild(s);})();</script>
     .gal-nav { display: none; justify-content: center; align-items: center; gap: var(--s13); margin-top: var(--s21); font-size: 13px; color: var(--t3); }
     .gal-btn { width: 44px; height: 44px; border-radius: 50%; border: 1px solid var(--line2); background: transparent; color: var(--t); cursor: pointer; font-size: 18px; }
     @media (max-width: 899px) { .gal-slide { opacity: .35; transform: scale(.92); } .gal-slide.is-active { opacity: 1; transform: none; } .gal-nav { display: flex; } }
-    @media (min-width: 900px) { .gal-track::after { display: none; } .gal-vp { overflow: visible; } .gal-track { flex-wrap: wrap; justify-content: center; padding: 0; gap: var(--s55) var(--s34); } .gal-slide { flex: 0 1 240px; } }
+    @media (min-width: 900px) { .gal-track::before, .gal-track::after { display: none; } .gal-vp { overflow: visible; margin: 0; scroll-snap-type: none; } .gal-track { flex-wrap: wrap; justify-content: center; padding: 0; gap: var(--s55) var(--s34); } .gal-slide { flex: 0 1 240px; } }
 
     /* Ergebnisse: PDF-Seiten + Dateien */
     .outputs { display: grid; grid-template-columns: 1.15fr .85fr; gap: var(--s55); align-items: start; margin-top: var(--s55); }
@@ -391,7 +394,6 @@ document.head.appendChild(s);})();</script>
     .iz-info { position: fixed; bottom: calc(env(safe-area-inset-bottom, 0px) + 16px); left: 0; right: 0; text-align: center; font-size: 12px; letter-spacing: .1em; text-transform: uppercase; color: var(--t3); pointer-events: none; }
     @media (max-width: 560px) { .iz-nav { display: none; } }
     @media (prefers-reduced-motion: reduce) { .iz, .iz img { transition: none; } }
-    .gal { overflow-x: clip; }
     footer a { display: inline-block; padding: 11px 0; }
     @media (max-width: 560px) {
       .crumb .home, .crumb .sep { display: none; }
@@ -889,10 +891,13 @@ document.head.appendChild(s);})();</script>
     var s = document.querySelector(sel); if (!s) return;
     var vp = s.querySelector('.gal-vp'), slides = [].slice.call(s.querySelectorAll('.gal-slide')), meta = s.querySelector('.gal-meta'), a = 0;
     var up = function (i) { a = i; slides.forEach(function (x, j) { x.classList.toggle('is-active', j === i); }); if (meta) meta.textContent = (i + 1) + ' / ' + slides.length; };
-    if ('IntersectionObserver' in window) {
-      var io = new IntersectionObserver(function (es) { es.forEach(function (e) { if (e.isIntersecting && e.intersectionRatio > .5) up(slides.indexOf(e.target)); }); }, { root: vp, threshold: [.5] });
-      slides.forEach(function (x) { io.observe(x); });
-    }
+    // Aktiv = das Bild, dessen Mitte der Bildschirmmitte am nächsten ist — dasselbe Maß, nach dem der Browser einrastet
+    var pl = false, waehle = function () {
+      pl = false; var c = vp.getBoundingClientRect().left + vp.clientWidth / 2, b = 0, bd = 1e9;
+      slides.forEach(function (x, j) { var r = x.getBoundingClientRect(), dd = Math.abs(r.left + r.width / 2 - c); if (dd < bd) { bd = dd; b = j; } });
+      if (b !== a) up(b);
+    };
+    vp.addEventListener('scroll', function () { if (!pl) { pl = true; requestAnimationFrame(waehle); } }, { passive: true });
     var geh = function (i) { i = Math.max(0, Math.min(slides.length - 1, i)); slides[i].scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' }); };
     s.querySelector('.gal-prev').onclick = function () { geh(a - 1); };
     s.querySelector('.gal-next').onclick = function () { geh(a + 1); };
