@@ -9,12 +9,22 @@
   <meta property="og:title" content="CARLON HRV Research — your HRV study, from one iPhone">
   <meta property="og:description" content="Up to four Polar H10 or Movesense sensors at once. Phase markers, values per phase, DFA α1 over time, original RR data for Kubios, Python and R. Validated against NeuroKit2.">
   <meta property="og:image" content="https://vitalkultur.com/assets/og-research.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
   <meta property="og:url" content="https://vitalkultur.com/rrloggerpro/">
   <meta property="og:type" content="website">
   <meta name="twitter:card" content="summary_large_image">
   <link rel="icon" href="/app-icon.png">
   <link rel="apple-touch-icon" href="/app-icon.png">
   <link rel="canonical" href="https://vitalkultur.com/rrloggerpro/">
+  <link rel="alternate" hreflang="en" href="https://vitalkultur.com/rrloggerpro/">
+  <link rel="alternate" hreflang="de" href="https://vitalkultur.com/rrloggerpro/de/">
+  <link rel="alternate" hreflang="x-default" href="https://vitalkultur.com/rrloggerpro/">
+  <meta property="og:locale" content="en_US">
+  <meta property="og:locale:alternate" content="de_DE">
+  <meta name="twitter:title" content="CARLON HRV Research — your HRV study, from one iPhone">
+  <meta name="twitter:description" content="Up to four Polar H10 or Movesense sensors at once, phase markers, values per phase, DFA α1 over time, original RR data for Kubios, Python and R.">
+  <meta name="twitter:image" content="https://vitalkultur.com/assets/og-research.png">
   <link rel="stylesheet" href="/assets/app-tour/app-tour.css">
   <link rel="preload" href="/fonts/jost-variable.woff2" as="font" type="font/woff2" crossorigin>
   <script type="application/ld+json">
@@ -45,6 +55,8 @@
           {"@type": "Question", "name": "Can I use the data in Kubios HRV?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. The CSV carries the exact settings for the Kubios custom text import in its header, and the app also writes a Kubios text file and FIT. RR intervals are exported exactly as recorded, without smoothing or correction."}},
           {"@type": "Question", "name": "How do I get HRV values for each phase of my protocol?", "acceptedAnswer": {"@type": "Answer", "text": "Tap an event button at each phase change, for example rest, training and recovery. The app exports a segment table with duration, beats, heart rate, RMSSD, SDNN and pNN50 for each phase, and writes the events into EDF+ and WFDB files."}},
           {"@type": "Question", "name": "How is the app validated?", "acceptedAnswer": {"@type": "Answer", "text": "Every metric is compared with independent reference implementations (NeuroKit2, SciPy, Task Force definitions) on 18 RR series with 20,431 beats: 331 of 331 checks passed. Artefact detection matches NeuroKit2 beat by beat. The version-specific validation dossier lists every check and every error found and fixed."}},
+          {"@type": "Question", "name": "Do older recordings benefit from app updates?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. The app stores only the original sensor data and computes every metric fresh from it, so an improved method applies to all past recordings. Re-export to get the latest analysis; earlier exports name the app version that produced them."}},
+          {"@type": "Question", "name": "Can reviewers recompute the results?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. Every export contains the original RR intervals, each beat's artifact flag and correction, the app version and the exact method of every metric; anyone can recompute the values with open tools such as NeuroKit2 or SciPy."}},
           {"@type": "Question", "name": "Does any study data leave the iPhone?", "acceptedAnswer": {"@type": "Answer", "text": "No. There is no account and no server; recordings stay on the researcher's iPhone and in its regular backup. Participants are managed under pseudonymous IDs."}},
           {"@type": "Question", "name": "Is CARLON HRV Research a medical device?", "acceptedAnswer": {"@type": "Answer", "text": "No. It is a research and wellness tool and does not diagnose or treat any condition."}},
           {"@type": "Question", "name": "What does it cost?", "acceptedAnswer": {"@type": "Answer", "text": "A one-time purchase of 99.99 EUR on the App Store, with no subscription and no per-participant fees. Institutions can buy licenses in volume through Apple School Manager or Apple Business Manager."}}
@@ -297,6 +309,29 @@ document.head.appendChild(s);})();</script>
       .feats { max-width: none; }
       .sensors { grid-template-columns: 1fr; }
     }
+
+    /* Kinobühne */
+    .kino { position: relative; margin-top: var(--s144); }
+    .kino img { width: 100%; height: auto; display: block; }
+    .kino::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, var(--bg) 0%, transparent 14%, transparent 62%, var(--bg) 100%); pointer-events: none; }
+    .kino-txt { position: relative; z-index: 2; margin-top: -9vw; }
+    @media (max-width: 700px) { .kino-txt { margin-top: -14vw; } }
+    /* Passt es? */
+    .fit { display: grid; grid-template-columns: 1fr 1fr; gap: var(--s21); margin-top: var(--s55); }
+    .fit h3, .kubios h3 { font-size: 18px; font-weight: 500; margin-bottom: var(--s13); }
+    .fit ul { list-style: none; display: grid; gap: var(--s13); }
+    .fit li { padding-left: var(--s21); position: relative; color: var(--t2); font-size: 15.5px; }
+    .fit li::before { content: "✓"; position: absolute; left: 0; color: var(--stille); font-size: 14px; }
+    .fit .nicht li::before { content: "–"; color: var(--t4); }
+    .kubios { border-color: rgba(62,207,178,.28); }
+    .kubios p { color: var(--t2); font-size: 16px; }
+    @media (max-width: 900px) { .fit { grid-template-columns: 1fr; } }
+    /* Feste Leiste auf dem Handy */
+    .sticky-cta { position: fixed; left: 12px; right: 12px; bottom: calc(12px + env(safe-area-inset-bottom)); z-index: 30; display: none; align-items: center; justify-content: space-between; gap: 13px; padding: 10px 10px 10px 18px; border-radius: 99px; background: rgba(10,14,14,.82); backdrop-filter: blur(18px) saturate(140%); -webkit-backdrop-filter: blur(18px) saturate(140%); border: 1px solid var(--line2); transform: translateY(140%); transition: transform .51s var(--ease); }
+    .sticky-cta b { display: block; font-size: 14px; font-weight: 500; }
+    .sticky-cta small { display: block; font-size: 12px; color: var(--t3); }
+    .sticky-cta.zeigen { transform: none; }
+    @media (max-width: 760px) { .sticky-cta { display: flex; } footer { padding-bottom: 96px; } }
 
     /* Einblenden */
     .js .rv { opacity: 0; transform: translateY(21px); transition: opacity .766s var(--ease), transform .766s var(--ease); }
@@ -566,6 +601,35 @@ document.head.appendChild(s);})();</script>
     </div>
   </section>
 
+  <!-- 5a · Zukunftssicher: Rohdaten bleiben, Auswertung wird besser -->
+  <section class="ch" id="future-proof">
+    <div class="wrap">
+      <div class="rv" style="max-width:780px">
+        <div class="label" data-en="Future-proof by design" data-de="Zukunftssicher gebaut">Future-proof by design</div>
+        <h2 data-en="Your recordings get better <em>with every update.</em>" data-de="Deine Aufnahmen werden <em>mit jedem Update besser.</em>">Your recordings get better <em>with every update.</em></h2>
+        <p class="sub" data-en="The app stores what the sensor measured – nothing else. Every metric is computed fresh from those originals, so methods can improve without your data ever being touched." data-de="Die App speichert, was der Sensor gemessen hat – sonst nichts. Jede Kennzahl wird aus diesen Originaldaten neu berechnet, so können Methoden besser werden, ohne dass deine Daten je angefasst werden.">The app stores what the sensor measured – nothing else. Every metric is computed fresh from those originals, so methods can improve without your data ever being touched.</p>
+      </div>
+      <div class="checks rv">
+        <div class="check"><b data-en="Originals" data-de="Original">Originals</b><p data-en="RR intervals are kept exactly as recorded – never smoothed, corrected or overwritten." data-de="RR-Intervalle bleiben genau wie erfasst – nie geglättet, korrigiert oder überschrieben.">RR intervals are kept exactly as recorded – never smoothed, corrected or overwritten.</p></div>
+        <div class="check"><b data-en="Retroactive" data-de="Rückwirkend">Retroactive</b><p data-en="An improved method applies to every recording you have ever made – open or re-export it to get the latest analysis." data-de="Eine verbesserte Methode gilt für jede Aufnahme, die du je gemacht hast – öffnen oder neu exportieren, schon ist die neueste Auswertung da.">An improved method applies to every recording you have ever made – open or re-export it to get the latest analysis.</p></div>
+        <div class="check"><b data-en="Recomputable" data-de="Nachrechenbar">Recomputable</b><p data-en="Every export names the app version and the exact method. Anyone can recompute it with open tools – for peer review, replication or new methods." data-de="Jeder Export nennt App-Version und genaue Methode. Jeder kann ihn mit offenen Werkzeugen nachrechnen – für Peer Review, Replikation oder neue Verfahren.">Every export names the app version and the exact method. Anyone can recompute it with open tools – for peer review, replication or new methods.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5b · Wissenschaft sichtbar: Datenkunst aus der echten Aufnahme -->
+  <section class="kino" id="science-art" aria-labelledby="kino-h">
+    <picture>
+      <source media="(max-width: 700px)" srcset="assets/v14/science-ribbon-mobil.webp">
+      <img src="assets/v14/science-ribbon.webp" width="2400" height="1250" alt="A real 100-minute Polar H10 recording rendered on 72 DFA scales as a ribbon of light, with markers at rest, training start, training end and recovery" loading="lazy" decoding="async">
+    </picture>
+    <div class="wrap kino-txt rv">
+      <div class="label" data-en="Science you can see" data-de="Wissenschaft zum Sehen">Science you can see</div>
+      <h2 id="kino-h" data-en="One recording. <em>Seventy-two scales.</em>" data-de="Eine Aufnahme. <em>Zweiundsiebzig Skalen.</em>">One recording. <em>Seventy-two scales.</em></h2>
+      <p class="sub" data-en="Each thread is the same 100-minute heartbeat profile seen at one DFA scale, from 4 to 128 beats – the way DFA α1 looks at a recording. Its shade is the measured α1; the marks are the real phases. Nothing here is decoration." data-de="Jeder Faden ist dasselbe 100-minütige Herzschlagprofil, gesehen auf einer DFA-Skala von 4 bis 128 Schlägen – so, wie DFA α1 eine Aufnahme betrachtet. Seine Tönung ist das gemessene α1; die Marken sind die echten Phasen. Nichts davon ist Dekoration.">Each thread is the same 100-minute heartbeat profile seen at one DFA scale, from 4 to 128 beats – the way DFA α1 looks at a recording. Its shade is the measured α1; the marks are the real phases. Nothing here is decoration.</p>
+    </div>
+  </section>
+
   <!-- 6 · Nachweis -->
   <section class="ch" id="validated">
     <div class="wrap">
@@ -584,7 +648,7 @@ document.head.appendChild(s);})();</script>
         <ol>
           <li data-en="An independent external audit with a blind package of injected errors – its findings fixed and listed in the dossier." data-de="Ein unabhängiges externes Audit mit einem Blindpaket eingestreuter Fehler – seine Befunde behoben und im Dossier aufgeführt.">An independent external audit with a blind package of injected errors – its findings fixed and listed in the dossier.</li>
           <li data-en="At high heart rates, standard artifact thresholds flag normal beats; a validated 30-ms floor keeps every real error and cuts false alarms by 98%." data-de="Bei hohem Puls markieren die Standardschwellen normale Schläge; eine validierte 30-ms-Untergrenze behält jeden echten Fehler und senkt Fehlalarme um 98 %.">At high heart rates, standard artifact thresholds flag normal beats; a validated 30-ms floor keeps every real error and cuts false alarms by 98%.</li>
-          <li data-en="A field recording from a study partner showed the correction adding beats at fast heart-rate changes; fixed the same day, with a test built from that sequence." data-de="Eine Feldaufnahme eines Studienpartners zeigte, dass die Korrektur bei schnellen Pulswechseln Schläge hinzufügte; noch am selben Tag behoben, mit einem Test aus genau dieser Folge.">A field recording from a study partner showed the correction adding beats at fast heart-rate changes; fixed the same day, with a test built from that sequence.</li>
+          <li data-en="Two field recordings from study partners exposed edge cases in the beat correction – fast heart-rate changes, and missed beats the classifier labelled ectopic. Both fixed within a day, each with a test built from the real sequence." data-de="Zwei Feldaufnahmen von Studienpartnern zeigten Grenzfälle der Schlagkorrektur – schnelle Pulswechsel und Aussetzer, die der Klassifikator als ektopisch einordnete. Beide binnen eines Tages behoben, jeweils mit einem Test aus der echten Folge.">Two field recordings from study partners exposed edge cases in the beat correction – fast heart-rate changes, and missed beats the classifier labelled ectopic. Both fixed within a day, each with a test built from the real sequence.</li>
         </ol>
       </div>
       <div class="ctas rv" style="justify-content:flex-start;margin-top:var(--s55)">
@@ -609,6 +673,31 @@ document.head.appendChild(s);})();</script>
     </div>
   </section>
 
+  <!-- 7b · Passt es? (ehrlich) -->
+  <section class="ch" id="fit">
+    <div class="wrap">
+      <div class="rv" style="max-width:760px">
+        <div class="label" data-en="Is it right for you?" data-de="Passt es zu dir?">Is it right for you?</div>
+        <h2 data-en="Made for one job. <em>Done properly.</em>" data-de="Für eine Aufgabe gebaut. <em>Und die richtig.</em>">Made for one job. <em>Done properly.</em></h2>
+      </div>
+      <div class="fit rv">
+        <div class="panel">
+          <h3 data-en="A perfect fit if you" data-de="Passt perfekt, wenn du">A perfect fit if you</h3>
+          <ul>
+            <li data-en="record RR intervals with Polar H10 or Movesense Flash" data-de="RR-Intervalle mit Polar H10 oder Movesense Flash aufnimmst">record RR intervals with Polar H10 or Movesense Flash</li>
+            <li data-en="run sessions with several participants and protocol phases" data-de="Einheiten mit mehreren Personen und Protokollphasen durchführst">run sessions with several participants and protocol phases</li>
+            <li data-en="analyse in Kubios, Python, R or MATLAB and want clean, documented input" data-de="in Kubios, Python, R oder MATLAB auswertest und saubere, dokumentierte Daten willst">analyse in Kubios, Python, R or MATLAB and want clean, documented input</li>
+            <li data-en="need to show an ethics board or supervisor exactly what was done" data-de="einer Ethikkommission oder Betreuung genau zeigen musst, was gemacht wurde">need to show an ethics board or supervisor exactly what was done</li>
+          </ul>
+        </div>
+        <div class="panel kubios">
+        <h3 data-en="Works alongside Kubios" data-de="Ergänzt Kubios">Works alongside Kubios</h3>
+        <p data-en="CARLON HRV Research records, organises and documents; Kubios HRV remains a reference for analysis. The CSV carries the exact settings for Kubios' custom text import, so your recordings open there without manual editing – and the app's own metrics are there as a cross-check." data-de="CARLON HRV Research nimmt auf, ordnet und dokumentiert; Kubios HRV bleibt eine Referenz für die Auswertung. Die CSV trägt die genauen Einstellungen für den Textimport von Kubios, deine Aufnahmen öffnen sich dort ohne Nacharbeit – und die Kennzahlen der App stehen als Gegenprobe bereit.">CARLON HRV Research records, organises and documents; Kubios HRV remains a reference for analysis. The CSV carries the exact settings for Kubios' custom text import, so your recordings open there without manual editing – and the app's own metrics are there as a cross-check.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <!-- 8 · Fragen -->
   <section class="ch" id="faq">
     <div class="wrap">
@@ -620,6 +709,8 @@ document.head.appendChild(s);})();</script>
         <details><summary data-en="Can I use the data in Kubios HRV?" data-de="Kann ich die Daten in Kubios HRV nutzen?">Can I use the data in Kubios HRV?</summary><p data-en="Yes. The CSV carries the exact settings for the Kubios custom text import in its header; the app also writes a Kubios text file and FIT. RR intervals are exported exactly as recorded." data-de="Ja. Die CSV trägt die genauen Einstellungen für den Textimport von Kubios im Kopf; dazu schreibt die App eine Kubios-Textdatei und FIT. Die RR-Intervalle werden genau so exportiert, wie sie erfasst wurden.">Yes. The CSV carries the exact settings for the Kubios custom text import in its header; the app also writes a Kubios text file and FIT. RR intervals are exported exactly as recorded.</p></details>
         <details><summary data-en="How do I get values for each phase?" data-de="Wie bekomme ich Werte je Phase?">How do I get values for each phase?</summary><p data-en="Tap an event button at each phase change. The segment table lists duration, beats, heart rate, RMSSD, SDNN and pNN50 for every phase between two events, computed with the same validated code as the rest of the app." data-de="Bei jedem Phasenwechsel eine Ereignistaste tippen. Die Segmenttabelle nennt Dauer, Schläge, Puls, RMSSD, SDNN und pNN50 für jede Phase zwischen zwei Ereignissen, gerechnet mit demselben validierten Code wie die übrige App.">Tap an event button at each phase change. The segment table lists duration, beats, heart rate, RMSSD, SDNN and pNN50 for every phase between two events, computed with the same validated code as the rest of the app.</p></details>
         <details><summary data-en="How is the app validated?" data-de="Wie ist die App validiert?">How is the app validated?</summary><p data-en="Every metric is compared with independent reference implementations (NeuroKit2, SciPy, Task Force definitions) on 18 RR series with 20,431 beats: 331 of 331 checks passed. Artifact detection matches NeuroKit2 beat by beat. The version-specific dossier lists every check and every error found and fixed." data-de="Jede Kennzahl wird mit unabhängigen Referenzen (NeuroKit2, SciPy, Task-Force-Definitionen) an 18 RR-Reihen mit 20.431 Schlägen verglichen: 331 von 331 Prüfungen bestanden. Die Artefakterkennung stimmt Schlag für Schlag mit NeuroKit2 überein. Das versionsbezogene Dossier nennt jede Prüfung und jeden gefundenen und behobenen Fehler.">Every metric is compared with independent reference implementations (NeuroKit2, SciPy, Task Force definitions) on 18 RR series with 20,431 beats: 331 of 331 checks passed. Artifact detection matches NeuroKit2 beat by beat. The version-specific dossier lists every check and every error found and fixed.</p></details>
+        <details><summary data-en="Do older recordings benefit from updates?" data-de="Profitieren ältere Aufnahmen von Updates?">Do older recordings benefit from updates?</summary><p data-en="Yes. The app stores only the original sensor data and computes every metric fresh from it, so an improved method applies to all past recordings. Open or re-export a recording to get the latest analysis; files you exported earlier stay unchanged and name the app version that produced them." data-de="Ja. Die App speichert nur die Original-Sensordaten und berechnet jede Kennzahl daraus neu – eine verbesserte Methode gilt also für alle früheren Aufnahmen. Öffne oder exportiere eine Aufnahme erneut, um die neueste Auswertung zu erhalten; früher exportierte Dateien bleiben unverändert und nennen die App-Version, die sie erzeugt hat.">Yes. The app stores only the original sensor data and computes every metric fresh from it, so an improved method applies to all past recordings. Open or re-export a recording to get the latest analysis; files you exported earlier stay unchanged and name the app version that produced them.</p></details>
+        <details><summary data-en="Can reviewers recompute the results?" data-de="Können Gutachter die Ergebnisse nachrechnen?">Can reviewers recompute the results?</summary><p data-en="Yes. Every export contains the original RR intervals, each beat's artifact flag and correction, the app version and the exact method of every metric. With open tools such as NeuroKit2 or SciPy, anyone can recompute the values – the validation dossier shows how." data-de="Ja. Jeder Export enthält die Original-RR-Intervalle, Markierung und Korrektur jedes Schlags, die App-Version und die genaue Methode jeder Kennzahl. Mit offenen Werkzeugen wie NeuroKit2 oder SciPy kann jeder die Werte nachrechnen – das Validierungsdossier zeigt, wie.">Yes. Every export contains the original RR intervals, each beat's artifact flag and correction, the app version and the exact method of every metric. With open tools such as NeuroKit2 or SciPy, anyone can recompute the values – the validation dossier shows how.</p></details>
         <details><summary data-en="Does any data leave the iPhone?" data-de="Verlassen Daten das iPhone?">Does any data leave the iPhone?</summary><p data-en="No. There is no account and no server. Recordings stay on your iPhone and in its regular backup, and go only where you export them." data-de="Nein. Es gibt kein Konto und keinen Server. Aufnahmen bleiben auf deinem iPhone und in seiner normalen Sicherung und gehen nur dorthin, wohin du sie exportierst.">No. There is no account and no server. Recordings stay on your iPhone and in its regular backup, and go only where you export them.</p></details>
         <details><summary data-en="Is there an Android version?" data-de="Gibt es eine Android-Version?">Is there an Android version?</summary><p data-en="No – CARLON HRV Research runs on iPhone with iOS 17 or later. The exported files open on any platform." data-de="Nein – CARLON HRV Research läuft auf dem iPhone mit iOS 17 oder neuer. Die exportierten Dateien öffnen sich auf jeder Plattform.">No – CARLON HRV Research runs on iPhone with iOS 17 or later. The exported files open on any platform.</p></details>
         <details><summary data-en="Is it a medical device?" data-de="Ist es ein Medizinprodukt?">Is it a medical device?</summary><p data-en="No. It is a research and wellness tool and does not diagnose or treat any condition." data-de="Nein. Es ist ein Werkzeug für Forschung und Wellness und erkennt, diagnostiziert oder behandelt keine Erkrankungen.">No. It is a research and wellness tool and does not diagnose or treat any condition.</p></details>
@@ -643,6 +734,11 @@ document.head.appendChild(s);})();</script>
   </section>
 </main>
 
+<div class="sticky-cta" id="stickyCta" aria-hidden="true">
+  <span><b>CARLON HRV Research</b><small data-en="One purchase · iPhone" data-de="Einmal kaufen · iPhone">One purchase · iPhone</small></span>
+  <a class="pill" href="https://apps.apple.com/app/id6826010655" data-en="App Store" data-de="App Store">App Store</a>
+</div>
+
 <footer>
   <div class="wrap">
     <a href="/" aria-label="vitalkultur"><img src="/assets/vitalkultur-wordmark.png" alt="vitalkultur" style="height:26px;width:auto;opacity:.8"></a>
@@ -659,11 +755,8 @@ document.head.appendChild(s);})();</script>
 
 <script>
 (function () {
-  function detect() {
-    try { var s = localStorage.getItem('vk.lang'); if (s === 'en' || s === 'de') return s; } catch (e) {}
-    return (navigator.language || 'en').toLowerCase().indexOf('de') === 0 ? 'de' : 'en';
-  }
-  var lang = detect();
+  // Sprache = Adresse (/rrloggerpro/ englisch, /rrloggerpro/de/ deutsch) — beide statisch für Suchmaschinen.
+  var lang = document.documentElement.lang === 'de' ? 'de' : 'en';
   function apply() {
     document.documentElement.lang = lang;
     document.querySelectorAll('[data-en]').forEach(function (el) { var t = el.getAttribute('data-' + lang); if (t != null) el.innerHTML = t; });
@@ -671,7 +764,19 @@ document.head.appendChild(s);})();</script>
     var p = document.querySelector('.price'); if (p) p.firstChild.nodeValue = lang === 'de' ? '99,99 €' : '€99.99';
     var priv = document.querySelector('footer a[href^="/privacy"]'); if (priv) priv.setAttribute('href', lang === 'de' ? '/privacy.html' : '/privacy-en.html');
   }
-  document.getElementById('langToggle').addEventListener('click', function () { lang = lang === 'en' ? 'de' : 'en'; try { localStorage.setItem('vk.lang', lang); } catch (e) {} apply(); });
+  document.getElementById('langToggle').addEventListener('click', function () {
+    try { localStorage.setItem('vk.lang', lang === 'en' ? 'de' : 'en'); } catch (e) {}
+    location.href = lang === 'en' ? '/rrloggerpro/de/' + location.hash : '/rrloggerpro/' + location.hash;
+  });
+  /* Feste App-Store-Leiste: erscheint nach dem Hero, verschwindet am Seitenende */
+  (function () {
+    var bar = document.getElementById('stickyCta'), hero = document.querySelector('.hero'), fuss = document.querySelector('.final');
+    if (!bar || !hero || !('IntersectionObserver' in window)) return;
+    var heroSicht = true, fussSicht = false;
+    var up = function () { var z = !heroSicht && !fussSicht; bar.classList.toggle('zeigen', z); bar.setAttribute('aria-hidden', z ? 'false' : 'true'); };
+    new IntersectionObserver(function (e) { heroSicht = e[0].isIntersecting; up(); }, { threshold: 0.05 }).observe(hero.querySelector('.ctas') || hero);
+    if (fuss) new IntersectionObserver(function (e) { fussSicht = e[0].isIntersecting; up(); }, { threshold: 0.1 }).observe(fuss);
+  })();
   apply();
 
   /* Einblenden */

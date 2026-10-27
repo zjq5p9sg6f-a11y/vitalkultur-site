@@ -1,0 +1,31 @@
+# vitalkultur
+
+> vitalkultur builds the CARLON apps: CARLON HRV Research (iPhone app for heart rate variability studies with Polar H10 and Movesense), CARLON Breathwork (Apple Watch and iPhone) and CARLON Equine (heart rate variability for horses). Based in Germany. Contact: jan@vitalkultur.com.
+
+## CARLON HRV Research
+
+iPhone app (iOS 17 or later) for HRV studies. Records beat-to-beat RR intervals from Polar H10 chest straps and Movesense Flash sensors and exports the original data for analysis in Kubios HRV, Python, R and MATLAB. One-time purchase on the App Store; no account, no subscription, no server – study data stays on the iPhone.
+
+- Up to four sensors at once from one iPhone (Polar H10 and Movesense Flash can be mixed); sensors record to their own memory and are read out together, each recording assigned to its pseudonymous participant with its real start time.
+- Event buttons mark protocol phases (ready-made sets for sports studies, breathing protocols, stress tests and sleep, or custom); exports a segment table with duration, beats, heart rate, RMSSD, SDNN and pNN50 per phase, and the events inside EDF+ and WFDB files.
+- Exports: CSV (with the exact settings for the Kubios custom text import in its header), Kubios text, FIT, EDF+, WFDB, JSON with append-only audit trail (SHA-256 hash chain) and W3C PROV, PDF report with a methods paragraph and citation, every figure as vector PDF and 300-dpi PNG in journal column widths. RR intervals are exported exactly as recorded; artifact flags and corrections are listed beside them beat by beat.
+- Metrics: RMSSD, SDNN, pNN50, Poincaré SD1/SD2, DFA α1 (also over time: 120-s windows every 5 s, smoothness-priors detrending λ = 500), HRV triangular index, TINN, sample entropy, LF/HF (Task Force bands), Baevsky stress index. Artifact detection: Lipponen & Tarvainen (2019) with a validated 30-ms threshold floor for high heart rates.
+- Validation: every metric recomputed by independent references (NeuroKit2, SciPy, Task Force definitions) on 18 RR series with 20,431 beats – 331 of 331 checks passed; artifact detection identical to NeuroKit2 beat by beat; the DFA α1 time course checked window by window (2,854 windows, largest deviation 7·10⁻¹¹). Version-specific validation dossier available.
+- Future-proof: the app stores only the original sensor data and computes every metric fresh, so improved methods apply retroactively to all past recordings (re-export to update); every export names the app version and exact method, so results can be recomputed for peer review.
+- Not a medical device; for research and wellness use. The app interface is in English.
+
+- [Product page (English)](https://vitalkultur.com/rrloggerpro/)
+- [Produktseite (Deutsch)](https://vitalkultur.com/rrloggerpro/de/)
+- [Validation dossier (PDF)](https://vitalkultur.com/rrloggerpro/CARLON-HRV-Research-Validation-Dossier.pdf)
+- [Example PDF report from a real recording](https://vitalkultur.com/rrloggerpro/CARLON-HRV-Research-Example-Report.pdf)
+- [App Store](https://apps.apple.com/app/id6826010655)
+
+## Other apps
+
+- [CARLON Breathwork](https://vitalkultur.com/breathwork/): breathing practice for Apple Watch and iPhone.
+- [CARLON Equine](https://vitalkultur.com/carlon-equine/): heart rate variability for horses.
+
+## Policies
+
+- [Privacy](https://vitalkultur.com/privacy-en.html)
+- [Support](https://vitalkultur.com/support.html)
