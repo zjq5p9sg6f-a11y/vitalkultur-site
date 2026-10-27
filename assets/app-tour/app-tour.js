@@ -31,6 +31,8 @@
     var cur = -1, t0 = 0, sichtbar = true, nutzer = -1e9, halt = null, scrollAuto = null;
     var dauer = function (i) { return (parseFloat(scrs[i].dataset.dauer) || 6) * 1000; };
     var video = function (i) { return scrs[i] && scrs[i].querySelector('video'); };
+    // Erklärungen im Bild: data-ab/data-bis in Sekunden ab Stationsbeginn (läuft mit der Pause mit)
+    var calls = scrs.map(function (s) { return [].slice.call(s.querySelectorAll('.at-call')); });
 
     function zeige(i, vomNutzer) {
       i = (i + scrs.length) % scrs.length;
@@ -38,6 +40,7 @@
       var alt = video(cur); if (alt) alt.pause();
       cur = i; t0 = performance.now(); halt = null;
       scrs.forEach(function (s, j) { s.classList.toggle('on', j === i); });
+      calls.forEach(function (cs) { cs.forEach(function (c) { c.classList.remove('zeigen'); }); });
       items.forEach(function (li, j) { li.classList.toggle('on', j === i); var f = li.querySelector('.fort'); if (f) f.style.setProperty('--fort', '0%'); });
       var v = video(i);
       if (v) { try { v.currentTime = 0; } catch (e) {} v.playbackRate = parseFloat(scrs[i].dataset.rate) || 1; v.play().catch(function () {}); }
@@ -52,6 +55,8 @@
         var pausiert = reduce || !sichtbar || now - nutzer < 14000;
         if (pausiert) { if (halt === null) halt = now - t0; t0 = now - halt; } else { halt = null; }
         var p = Math.min(1, (now - t0) / d);
+        var sek = reduce ? 1 : p * d / 1000;
+        calls[cur].forEach(function (c) { var an = sek >= parseFloat(c.dataset.ab) && sek < parseFloat(c.dataset.bis); if (an !== c.classList.contains('zeigen')) c.classList.toggle('zeigen', an); });
         var f = items[cur] && items[cur].querySelector('.fort'); if (f) f.style.setProperty('--fort', (p * 100).toFixed(1) + '%');
         var sc = scrs[cur].querySelector('.at-scroller');
         if (sc && scrollAuto !== null && !reduce) {
