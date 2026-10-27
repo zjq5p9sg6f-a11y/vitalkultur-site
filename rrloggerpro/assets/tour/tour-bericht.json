@@ -1,0 +1,27 @@
+{
+ "sensors": {
+  "art": "video",
+  "kb": 644
+ },
+ "session": {
+  "art": "scroll",
+  "hoehe_px": 15247,
+  "naehte": [
+   0.0,
+   0.0,
+   0.0,
+   0.0,
+   0.0,
+   0.0,
+   0.0,
+   0.0,
+   0.0,
+   0.0,
+   0.0
+  ]
+ },
+ "poincare": {
+  "art": "video",
+  "kb": 3532
+ }
+}

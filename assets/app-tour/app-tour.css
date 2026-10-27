@@ -1,0 +1,29 @@
+/* App-Tour — Gerät + Liste (vitalkultur, 27.10.2026). Farben über --at-akzent je Marke. */
+[data-app-tour] { --at-akzent: #3ECFB2; --at-text: rgb(235,230,220); --at-ease: cubic-bezier(.2,.7,.2,1); }
+
+/* Gerät: Apples Gehäuse über dem Bildschirmfenster (gemessen: 75/66 px in 1470 × 3000) */
+.at-device { position: relative; width: min(360px, 78vw); aspect-ratio: 1470 / 3000; filter: drop-shadow(0 34px 55px rgba(0,0,0,.6)); }
+.at-screen { position: absolute; left: 5.102%; top: 2.2%; width: 89.796%; height: 95.6%; overflow: hidden; background: #000; border-radius: 11% / 5%; touch-action: pan-y; }
+.at-bezel { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+.at-scr { position: absolute; inset: 0; opacity: 0; transform: scale(1.015); transition: opacity .638s var(--at-ease), transform .638s var(--at-ease); pointer-events: none; }
+.at-scr.on { opacity: 1; transform: none; pointer-events: auto; }
+.at-scr > img, .at-scr > video { width: 100%; height: 100%; object-fit: cover; display: block; }
+.at-scroll .at-head { position: absolute; top: 0; left: 0; width: 100%; height: auto; z-index: 2; }
+.at-scroll .at-scroller { position: absolute; inset: 0; overflow-y: auto; overscroll-behavior: contain; scrollbar-width: none; }
+.at-scroll .at-scroller::-webkit-scrollbar { display: none; }
+.at-scroll .at-scroller img { width: 100%; height: auto; display: block; }
+
+/* Liste: Zeile klappt auf, Fortschritt als Linie */
+[data-tour-liste] { list-style: none; display: grid; gap: 2px; margin: 0; padding: 0; }
+[data-tour-liste] li { position: relative; }
+[data-tour-liste] button { all: unset; box-sizing: border-box; display: block; width: 100%; cursor: pointer; padding: 13px 21px; border-radius: 13px; transition: background .383s var(--at-ease); }
+[data-tour-liste] button:hover { background: rgba(255,255,255,.025); }
+[data-tour-liste] button:focus-visible { outline: 2px solid var(--at-akzent); outline-offset: 2px; }
+[data-tour-liste] b { display: block; font-weight: 500; font-size: 17px; color: rgba(235,230,220,.55); transition: color .383s var(--at-ease); }
+[data-tour-liste] span { display: block; font-size: 14.5px; color: rgba(235,230,220,.75); max-height: 0; opacity: 0; overflow: hidden; transition: max-height .51s var(--at-ease), opacity .51s var(--at-ease), margin .51s var(--at-ease); }
+[data-tour-liste] .fort { position: absolute; left: 21px; right: 21px; bottom: 6px; height: 2px; border-radius: 2px; background: rgba(235,230,220,.08); overflow: hidden; opacity: 0; transition: opacity .383s; }
+[data-tour-liste] .fort::after { content: ""; position: absolute; inset: 0; width: var(--fort, 0%); background: var(--at-akzent); }
+[data-tour-liste] li.on button { background: rgba(62,207,178,.06); }
+[data-tour-liste] li.on b { color: var(--at-text); }
+[data-tour-liste] li.on span { max-height: 64px; opacity: 1; margin-top: 3px; }
+[data-tour-liste] li.on .fort { opacity: 1; }
