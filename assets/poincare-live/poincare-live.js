@@ -24,7 +24,7 @@
  */
 (function () {
   var W = 1320, H = 2868;
-  var P = { x0: 180, x1: 1259, y0: 752, y1: 1765, r: 24 };       // Plotfläche
+  var P = { x0: 180, x1: 1224, y0: 720, y1: 1765, r: 24 };       // Plotfläche — am Hintergrund vermessen (27.10.: 1259/752 ließen den Zoom rechts über die Karte und oben das Original stehen)
   var SX = 0.8380, SY = 0.8384, X0 = 249, Y0 = 1695;              // 0 ms → (249, 1695); 1000 ms → (1087, 856,5)
   var KNOPF = { x0: 664, x1: 1065, y0: 1931, y1: 2003, b: 110 };
   var SPUR = { x0: 615, x1: 1121, y0: 1957, y1: 1975 };
@@ -114,7 +114,7 @@
       var haupt = neben * 4;
       var msX0 = (P.x0 - X0 - ox) / pxMs, msX1 = (P.x1 - X0 - ox) / pxMs;
       var msY0 = (Y0 + oy - P.y1) / (SY * z), msY1 = (Y0 + oy - P.y0) / (SY * z);
-      g.fillStyle = KARTE; g.fillRect(56, P.y0 - 14, P.x0 - 58, P.y1 - P.y0 + 30); g.fillRect(P.x0 - 40, P.y1 + 2, P.x1 - P.x0 + 80, 48);
+      g.fillStyle = KARTE; g.fillRect(64, P.y0 - 14, P.x0 - 66, P.y1 - P.y0 + 30); g.fillRect(64, P.y1 + 2, 1254 - 64, 48);   // nur innerhalb der Karte (62…1257)
       g.save(); rund(P.x0, P.y0, P.x1 - P.x0, P.y1 - P.y0, P.r); g.fillStyle = '#0e0e0e'; g.fill(); g.clip();
       var m;
       for (m = Math.ceil(msX0 / neben) * neben; m <= msX1; m += neben) {
