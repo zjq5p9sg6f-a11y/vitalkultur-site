@@ -86,6 +86,34 @@
         if (v) { if (sichtbar) v.play().catch(function () {}); else v.pause(); }
       }); }, { threshold: 0.3 }).observe(root.querySelector('.at-device') || root);
     }
+    // Vollbild (27.10.2026, Jan: „geht nicht auf Vollbild“): das Gerät selbst wandert in eine
+    // Ebene über der Seite — Tour, Wischen und Scrollen laufen dort weiter; Klick daneben/Esc schließt.
+    var dev = root.querySelector('.at-device');
+    if (dev) {
+      var de = document.documentElement.lang === 'de', platz = null, ebene = null;
+      var AUF = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg>';
+      var ZU = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>';
+      var knopf = document.createElement('button');
+      knopf.type = 'button'; knopf.className = 'at-voll-btn';
+      var beschriften = function () { var g = !!ebene; knopf.innerHTML = g ? ZU : AUF; knopf.setAttribute('aria-label', g ? (de ? 'Vollbild schließen' : 'Close full screen') : (de ? 'Vollbild' : 'Full screen')); };
+      var weiter = function () { var v = video(cur); if (v) v.play().catch(function () {}); };
+      var zu = function () {
+        if (!ebene) return;
+        platz.parentNode.replaceChild(dev, platz); ebene.remove(); ebene = null;
+        document.documentElement.style.overflow = ''; beschriften(); weiter(); knopf.focus();
+      };
+      var auf = function () {
+        platz = document.createComment('at-device'); dev.parentNode.insertBefore(platz, dev);
+        ebene = document.createElement('div'); ebene.className = 'at-voll';
+        ebene.setAttribute('role', 'dialog'); ebene.setAttribute('aria-modal', 'true');
+        ebene.addEventListener('click', function (e) { if (e.target === ebene) zu(); });
+        document.body.appendChild(ebene); ebene.appendChild(dev);
+        document.documentElement.style.overflow = 'hidden'; nutzer = performance.now(); beschriften(); weiter(); knopf.focus();
+      };
+      knopf.addEventListener('click', function (e) { e.stopPropagation(); if (ebene) zu(); else auf(); });
+      document.addEventListener('keydown', function (e) { if (e.key === 'Escape') zu(); });
+      beschriften(); dev.appendChild(knopf);
+    }
     zeige(0, false);
     requestAnimationFrame(tick);
   }

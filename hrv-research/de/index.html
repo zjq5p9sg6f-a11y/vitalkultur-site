@@ -25,7 +25,7 @@
   <meta name="twitter:title" content="CARLON HRV Research — HRV-Studien-App für Polar H10 &amp; Movesense · iPhone">
   <meta name="twitter:description" content="iPhone-App für HRV-Studien: bis zu vier Polar H10 oder Movesense gleichzeitig, Aufnahme im Gurtspeicher, Ereignistasten für Protokollphasen mit Werten je Phase, DFA α1 im Verlauf und Original-RR-Exporte für Kubios, Python, R und MATLAB. 331 von 331 Prüfungen gegen NeuroKit2 und SciPy.">
   <meta name="twitter:image" content="https://vitalkultur.com/assets/og-research.png">
-  <link rel="stylesheet" href="/assets/app-tour/app-tour.css">
+  <link rel="stylesheet" href="/assets/app-tour/app-tour.css?v=2">
   <link rel="preload" href="/fonts/jost-variable.woff2" as="font" type="font/woff2" crossorigin>
   <script type="application/ld+json">
   {
@@ -328,11 +328,6 @@ document.head.appendChild(s);})();</script>
     .kubios p { color: var(--t2); font-size: 16px; }
     @media (max-width: 900px) { .fit { grid-template-columns: 1fr; } }
     /* Feste Leiste auf dem Handy */
-    .sticky-cta { position: fixed; left: 12px; right: 12px; bottom: calc(12px + env(safe-area-inset-bottom)); z-index: 30; display: none; align-items: center; justify-content: space-between; gap: 13px; padding: 10px 10px 10px 18px; border-radius: 99px; background: rgba(10,14,14,.82); backdrop-filter: blur(18px) saturate(140%); -webkit-backdrop-filter: blur(18px) saturate(140%); border: 1px solid var(--line2); transform: translateY(140%); transition: transform .51s var(--ease); }
-    .sticky-cta b { display: block; font-size: 14px; font-weight: 500; }
-    .sticky-cta small { display: block; font-size: 12px; color: var(--t3); }
-    .sticky-cta.zeigen { transform: none; }
-    @media (max-width: 760px) { .sticky-cta { display: flex; } footer { padding-bottom: 96px; } }
 
     /* Einblenden */
     .js .rv { opacity: 0; transform: translateY(21px); transition: opacity .766s var(--ease), transform .766s var(--ease); }
@@ -367,10 +362,17 @@ document.head.appendChild(s);})();</script>
     footer a { display: inline-block; padding: 11px 0; }
     @media (max-width: 560px) {
       .crumb .home, .crumb .sep { display: none; }
-      .crumb { font-size: 12px; letter-spacing: .06em; }
-      .nav .pill { display: none; }   /* die Leiste unten trägt denselben Knopf */
-      .lang { padding: 9px 13px; }
-      .checks, .who { grid-template-columns: 1fr; }
+      .crumb { font-size: 11px; letter-spacing: .05em; gap: var(--s8); }
+      .nav-r { gap: var(--s8); }
+      .nav .pill { font-size: 12px; padding: 6px 12px; }
+      /* Sprachschalter zeigt mobil nur die andere Sprache */
+      .lang { font-size: 0; padding: 9px 12px; }
+      .lang span { font-size: 12px; }
+      .lang span.on { display: none; }
+      /* Wisch-Leisten statt Stapel (Jan, 27.10.): die nächste Karte schaut an — wie im App Store */
+      .checks, .who, .sensors { --rail-pad: clamp(21px, 5vw, 55px); display: flex; grid-template-columns: none; overflow-x: auto; scroll-snap-type: x mandatory; scroll-padding: 0 var(--rail-pad, 21px); gap: var(--s13); margin-left: calc(-1 * var(--rail-pad, 21px)); margin-right: calc(-1 * var(--rail-pad, 21px)); padding: 0 var(--rail-pad, 21px) var(--s8); scrollbar-width: none; -webkit-overflow-scrolling: touch; overscroll-behavior-x: contain; }
+      .checks::-webkit-scrollbar, .who::-webkit-scrollbar, .sensors::-webkit-scrollbar { display: none; }
+      .checks > *, .who > *, .sensors > * { flex: 0 0 84%; scroll-snap-align: start; }
       .panel { padding: var(--s21); }
     }
   </style>
@@ -761,10 +763,6 @@ document.head.appendChild(s);})();</script>
   </section>
 </main>
 
-<div class="sticky-cta" id="stickyCta" aria-hidden="true">
-  <span><b>CARLON HRV Research</b><small data-en="Beta · iPhone" data-de="Beta · iPhone">Beta · iPhone</small></span>
-  <a class="pill" href="mailto:jan@vitalkultur.com?subject=CARLON%20HRV%20Research%20%E2%80%93%20beta%20access&amp;body=Hi%20Jan%2C%0A%0AI%27d%20like%20to%20test%20CARLON%20HRV%20Research.%0A%0AInstitution%20/%20lab%3A%0ASensors%20%28Polar%20H10%20/%20Movesense%29%3A%0AStudy%20or%20use%20case%3A%0AEmail%20for%20the%20TestFlight%20invitation%3A%0A%0ABest%20regards%2C%0A" data-beta data-en="Beta access" data-de="Beta-Zugang">Beta-Zugang</a>
-</div>
 
 <footer>
   <div class="wrap">
@@ -795,15 +793,6 @@ document.head.appendChild(s);})();</script>
     try { localStorage.setItem('vk.lang', lang === 'en' ? 'de' : 'en'); } catch (e) {}
     location.href = lang === 'en' ? '/hrv-research/de/' + location.hash : '/hrv-research/' + location.hash;
   });
-  /* Feste App-Store-Leiste: erscheint nach dem Hero, verschwindet am Seitenende */
-  (function () {
-    var bar = document.getElementById('stickyCta'), hero = document.querySelector('.hero'), fuss = document.querySelector('.final');
-    if (!bar || !hero || !('IntersectionObserver' in window)) return;
-    var heroSicht = true, fussSicht = false;
-    var up = function () { var z = !heroSicht && !fussSicht; bar.classList.toggle('zeigen', z); bar.setAttribute('aria-hidden', z ? 'false' : 'true'); };
-    new IntersectionObserver(function (e) { heroSicht = e[0].isIntersecting; up(); }, { threshold: 0.05 }).observe(hero.querySelector('.ctas') || hero);
-    if (fuss) new IntersectionObserver(function (e) { fussSicht = e[0].isIntersecting; up(); }, { threshold: 0.1 }).observe(fuss);
-  })();
   apply();
 
   /* Einblenden */
@@ -865,7 +854,7 @@ document.head.appendChild(s);})();</script>
   })();
 
 </script>
-<script src="/assets/app-tour/app-tour.js" defer></script>
+<script src="/assets/app-tour/app-tour.js?v=2" defer></script>
 <script>
 // Vollbild für Bilder: Tippen/Klick öffnet, Wischen oder ← → blättert, Klick/Esc schließt.
 // Kern der Equine-Lösung (Überblendung, Wischen, Zähler) ohne deren Modul-Menü.
