@@ -97,7 +97,7 @@ document.head.appendChild(s);})();</script>
     .signet { position: relative; height: auto; width: clamp(150px, 20vw, 210px); margin: 0 auto var(--s34); animation: atem 8.684s ease-in-out infinite; }
     @keyframes atem { 0%,100% { filter: drop-shadow(0 0 18px rgba(62,207,178,.25)); transform: scale(1); } 50% { filter: drop-shadow(0 0 34px rgba(110,230,200,.45)); transform: scale(1.012); } }
     .eyebrow { font-size: 12px; letter-spacing: .382em; text-transform: uppercase; color: var(--stille); margin-bottom: var(--s21); }
-    h1 { font-size: clamp(42px, 7.2vw, 76px); line-height: 1.04; font-weight: 500; letter-spacing: -0.02em; margin: 0 auto var(--s21); max-width: 14ch; }
+    h1 { font-size: clamp(42px, 7.2vw, 76px); line-height: 1.04; font-weight: 500; letter-spacing: -0.02em; margin: 0 auto var(--s21); max-width: 17ch; }
     h1 em, h2 em { font-style: normal; color: var(--stille); }
     .lead { font-size: clamp(18px, 2.1vw, 21px); color: var(--t2); max-width: 620px; margin: 0 auto var(--s34); font-weight: 400; }
     .ctas { display: flex; gap: var(--s13); justify-content: center; flex-wrap: wrap; }
@@ -269,11 +269,9 @@ document.head.appendChild(s);})();</script>
 
 
     /* Hero-Tour (Layout; Gerät + Liste aus /assets/app-tour/app-tour.css) */
-    .tour-hero { text-align: left; padding: var(--s55) 0 var(--s34); }
-    .tour { display: grid; grid-template-columns: 1fr 420px; gap: var(--s55); align-items: center; }
-    .tour-txt h1 { margin: 0 0 var(--s21); max-width: 18ch; text-wrap: balance; font-size: clamp(42px, 5.4vw, 68px); }
-    .tour-txt .eyebrow { margin-bottom: var(--s13); }
-    .signet-s { width: 44px; height: auto; margin-bottom: var(--s21); filter: drop-shadow(0 0 13px rgba(62,207,178,.35)); }
+    .tour { display: grid; grid-template-columns: 1fr 420px; gap: var(--s55); align-items: center; text-align: left; margin-top: var(--s89); }
+    .tour-h { font-size: clamp(28px, 3.4vw, 40px); max-width: 16ch; }
+    h1 { text-wrap: balance; }
     .feats { margin: var(--s21) 0 var(--s34); max-width: 560px; }
     .tour-phone { position: relative; justify-self: center; }
     .tour-phone::before { content: ""; position: absolute; inset: 6% -26% 4%; background: radial-gradient(closest-side, rgba(62,207,178,.2), transparent 72%); z-index: -1; animation: atem 8.684s ease-in-out infinite; }
@@ -339,13 +337,23 @@ document.head.appendChild(s);})();</script>
 </header>
 
 <main>
-  <!-- 1 · Hero: die App virtuell erleben -->
-  <section class="hero tour-hero" data-app-tour>
-    <div class="wrap tour">
+  <!-- 1 · Hero: Marke zuerst, darunter die App zum Erleben -->
+  <section class="hero" data-app-tour>
+    <div class="wrap">
+      <img class="signet" src="assets/v14/signet.png" width="477" height="686" alt="CARLON HRV Research">
+      <div class="eyebrow" data-en="iPhone app for HRV studies · Polar H10 · Movesense" data-de="iPhone-App für HRV-Studien · Polar H10 · Movesense">iPhone app for HRV studies · Polar H10 · Movesense</div>
+      <h1 data-en="Your HRV study, <em>from one iPhone.</em>" data-de="Deine <span style=&quot;white-space:nowrap&quot;>HRV-Studie,</span> <em>mit einem iPhone.</em>">Your HRV study, <em>from one iPhone.</em></h1>
+      <p class="lead" data-en="Record up to four Polar H10 or Movesense sensors at once, mark every phase with one tap, and leave with original RR data, values per phase, a methods paragraph and publication-ready figures." data-de="Bis zu vier Polar H10 oder Movesense gleichzeitig aufnehmen, jede Phase per Tipp markieren – und mit Original-RR-Daten, Werten je Phase, Methodenabsatz und publikationsfertigen Grafiken nach Hause gehen.">Record up to four Polar H10 or Movesense sensors at once, mark every phase with one tap, and leave with original RR data, values per phase, a methods paragraph and publication-ready figures.</p>
+      <div class="ctas">
+        <a class="btn btn-1" href="https://apps.apple.com/app/id6826010655"><span data-en="View on the App Store" data-de="Im App Store ansehen">View on the App Store</span> <span aria-hidden="true">→</span></a>
+        <a class="btn btn-2" href="#erleben"><span data-en="Try the app below" data-de="App unten ausprobieren">Try the app below</span> <span aria-hidden="true">↓</span></a>
+      </div>
+      <div class="fine" data-en="One purchase · no account · no subscription · no server" data-de="Einmal kaufen · kein Konto · kein Abo · kein Server">One purchase · no account · no subscription · no server</div>
+    </div>
+    <div class="wrap tour" id="erleben">
       <div class="tour-txt">
-        <img class="signet-s" src="assets/v14/signet.png" width="477" height="686" alt="">
-        <div class="eyebrow" data-en="iPhone app for HRV studies · Polar H10 · Movesense" data-de="iPhone-App für HRV-Studien · Polar H10 · Movesense">iPhone app for HRV studies · Polar H10 · Movesense</div>
-        <h1 data-en="Your HRV study, <em>from one iPhone.</em>" data-de="Deine <span style=&quot;white-space:nowrap&quot;>HRV-Studie,</span> <em>mit einem iPhone.</em>">Your HRV study, <em>from one iPhone.</em></h1>
+        <div class="label" data-en="Try it here" data-de="Hier ausprobieren">Try it here</div>
+        <h2 class="tour-h" data-en="The real app, <em>with a real recording.</em>" data-de="Die echte App, <em>mit einer echten Aufnahme.</em>">The real app, <em>with a real recording.</em></h2>
         <ol class="feats" data-tour-liste aria-label="What the app does">
           <li><button data-i="0"><b data-en="Up to four sensors at once" data-de="Bis zu vier Sensoren gleichzeitig">Up to four sensors at once</b><span data-en="Polar H10 and Movesense Flash record on their own – mark each phase with one tap." data-de="Polar H10 und Movesense Flash zeichnen selbst auf – jede Phase per Tipp markiert.">Polar H10 and Movesense Flash record on their own – mark each phase with one tap.</span></button><i class="fort"></i></li>
           <li><button data-i="1"><b data-en="Every metric of a recording" data-de="Jede Kennzahl einer Aufnahme">Every metric of a recording</b><span data-en="Time domain, Poincaré, DFA α1, spectrum and artifact share – scroll through it right here." data-de="Zeitbereich, Poincaré, DFA α1, Spektrum, Artefaktanteil – scroll selbst durch.">Time domain, Poincaré, DFA α1, spectrum and artifact share – scroll through it right here.</span></button><i class="fort"></i></li>
@@ -354,11 +362,6 @@ document.head.appendChild(s);})();</script>
           <li><button data-i="4"><b data-en="Every number explained" data-de="Jede Zahl erklärt">Every number explained</b><span data-en="What it shows, how it is computed, what to watch – and the source." data-de="Was sie zeigt, wie sie gerechnet wird, worauf zu achten ist – und die Quelle.">What it shows, how it is computed, what to watch – and the source.</span></button><i class="fort"></i></li>
           <li><button data-i="5"><b data-en="Ready for your manuscript" data-de="Bereit für dein Manuskript">Ready for your manuscript</b><span data-en="PDF report, publication figures, Kubios, CSV, EDF+, WFDB, JSON." data-de="PDF-Bericht, Publikationsgrafiken, Kubios, CSV, EDF+, WFDB, JSON.">PDF report, publication figures, Kubios, CSV, EDF+, WFDB, JSON.</span></button><i class="fort"></i></li>
         </ol>
-        <div class="ctas" style="justify-content:flex-start">
-          <a class="btn btn-1" href="https://apps.apple.com/app/id6826010655"><span data-en="View on the App Store" data-de="Im App Store ansehen">View on the App Store</span> <span aria-hidden="true">→</span></a>
-          <a class="btn btn-2" href="CARLON-HRV-Research-Example-Report.pdf"><span data-en="Example report (PDF)" data-de="Beispielbericht (PDF)">Example report (PDF)</span></a>
-        </div>
-        <div class="fine" style="text-align:left" data-en="One purchase · no account · no subscription · no server" data-de="Einmal kaufen · kein Konto · kein Abo · kein Server">One purchase · no account · no subscription · no server</div>
       </div>
       <div class="tour-phone">
         <div class="at-device" id="tourDevice">
