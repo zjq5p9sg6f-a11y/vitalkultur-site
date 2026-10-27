@@ -14,8 +14,8 @@
   <meta property="og:url" content="https://vitalkultur.com/hrv-research/de/">
   <meta property="og:type" content="website">
   <meta name="twitter:card" content="summary_large_image">
-  <link rel="icon" href="/app-icon.png">
-  <link rel="apple-touch-icon" href="/app-icon.png">
+  <link rel="icon" href="/assets/research-app-icon-112.png">
+  <link rel="apple-touch-icon" href="/assets/research-app-icon-224.png">
   <link rel="canonical" href="https://vitalkultur.com/hrv-research/de/">
   <link rel="alternate" hreflang="en" href="https://vitalkultur.com/hrv-research/">
   <link rel="alternate" hreflang="de" href="https://vitalkultur.com/hrv-research/de/">
@@ -40,9 +40,15 @@
         "url": "https://vitalkultur.com/hrv-research/",
         "audience": {"@type": "Audience", "audienceType": "HRV researchers, sports scientists, students writing a thesis, research labs"},
         "description": "Records beat-to-beat RR intervals from Polar H10 chest straps and Movesense Flash sensors, up to four at once and in the sensor's own memory; marks protocol phases with event buttons and exports values per phase; computes DFA alpha1 over time; exports the original RR data as CSV, Kubios text, FIT, EDF+, WFDB and JSON with audit trail and W3C PROV. Computations checked against NeuroKit2 and SciPy (331 of 331 checks). Not a medical device.",
-        "featureList": ["Up to four Polar H10 or Movesense Flash sensors at once", "Recording in the strap's internal memory", "Event buttons for protocol phases with segment and event tables", "DFA alpha1 over time (2-minute windows every 5 s)", "Original RR export: CSV, Kubios text, FIT, EDF+, WFDB, JSON", "PDF report with methods paragraph; figures as vector PDF and 300-dpi PNG", "No account, no server"],
+        "featureList": ["Up to four Polar H10 or Movesense Flash sensors at once", "Recording in the strap's internal memory", "Event buttons for protocol phases with segment and event tables", "DFA alpha1 over time (2-minute windows every 5 s)", "Original RR export: CSV, Kubios text, FIT, EDF+, WFDB, JSON", "PDF report with methods paragraph; figures as vector PDF and 300-dpi PNG", "No account, no CARLON server"],
         "softwareHelp": "https://vitalkultur.com/hrv-research/CARLON-HRV-Research-Validation-Dossier.pdf",
         "brand": {"@type": "Brand", "name": "CARLON", "description": "App line by vitalkultur"},
+        "softwareVersion": "1.4",
+        "dateModified": "2026-10-27",
+        "inLanguage": "en",
+        "image": "https://vitalkultur.com/assets/research-app-icon-224.png",
+        "screenshot": ["https://vitalkultur.com/hrv-research/assets/v14/phone-sitzung.webp", "https://vitalkultur.com/hrv-research/assets/v14/phone-dual-card.webp", "https://vitalkultur.com/hrv-research/assets/v14/phone-export.webp"],
+        "author": {"@type": "Person", "name": "Jan Rohwedder", "jobTitle": "Founder, developer"},
         "creator": {"@type": "Organization", "name": "vitalkultur", "url": "https://vitalkultur.com", "email": "jan@vitalkultur.com"}
       },
       {
@@ -57,7 +63,7 @@
           {"@type": "Question", "name": "How is the app validated?", "acceptedAnswer": {"@type": "Answer", "text": "Every metric is compared with independent reference implementations (NeuroKit2, SciPy, Task Force definitions) on 18 RR series with 20,431 beats: 331 of 331 checks passed (metric comparisons plus artifact, threshold and rhythm checks). Artefact detection matches NeuroKit2 beat by beat. The version-specific validation dossier lists every check and every error found and fixed."}},
           {"@type": "Question", "name": "Do older recordings benefit from app updates?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. The app stores only the original sensor data and computes every metric fresh from it, so an improved method applies to all past recordings. Re-export to get the latest analysis; earlier exports name the app version that produced them."}},
           {"@type": "Question", "name": "Can reviewers recompute the results?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. Every export contains the original RR intervals, each beat's artifact flag and correction, the app version and the exact method of every metric; anyone can recompute the values with open tools such as NeuroKit2 or SciPy."}},
-          {"@type": "Question", "name": "Does any study data leave the iPhone?", "acceptedAnswer": {"@type": "Answer", "text": "No. There is no account and no server; recordings stay on the researcher's iPhone and in its regular backup. Participants are managed under pseudonymous IDs."}},
+          {"@type": "Question", "name": "Does any study data leave the iPhone?", "acceptedAnswer": {"@type": "Answer", "text": "Only where the researcher sends it: an export, a study folder of their choice, or the iPhone's own backup. There is no account and no CARLON server – nothing reaches vitalkultur. Participants are managed under pseudonymous IDs."}},
           {"@type": "Question", "name": "Is CARLON HRV Research a medical device?", "acceptedAnswer": {"@type": "Answer", "text": "No. It is a research and wellness tool and does not diagnose or treat any condition."}},
           {"@type": "Question", "name": "What does it cost?", "acceptedAnswer": {"@type": "Answer", "text": "During the beta, access is by invitation through Apple TestFlight. At launch it becomes a one-time purchase on the App Store, with no subscription and no per-participant fees. Institutions can buy licenses in volume through Apple School Manager or Apple Business Manager."}}
         ]
