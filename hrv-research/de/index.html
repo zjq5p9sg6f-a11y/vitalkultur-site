@@ -296,6 +296,8 @@ document.head.appendChild(s);})();</script>
     .sensor-ph { height: 240px; display: grid; place-items: center; background: radial-gradient(closest-side, rgba(62,207,178,.12), transparent 75%), #050707; }
     .sensor-ph span { font-size: 13px; letter-spacing: .382em; text-transform: uppercase; color: var(--t4); }
     .sensor figcaption { padding: var(--s21) var(--s34) var(--s34); }
+    .sensor:not(:has(> img)) { justify-content: center; }
+    .sensor:not(:has(> img)) figcaption { padding: var(--s34); }
     .sensor h3 { font-size: 21px; font-weight: 500; margin-bottom: var(--s13); }
     .sensor ul { list-style: none; display: grid; gap: var(--s8); }
     .sensor li { color: var(--t2); font-size: 15px; padding-left: var(--s21); position: relative; }
@@ -460,7 +462,6 @@ document.head.appendChild(s);})();</script>
           </figcaption>
         </figure>
         <figure class="sensor" id="movesenseCard">
-          <div class="sensor-ph" aria-hidden="true"><span>Movesense Flash</span></div>
           <figcaption>
             <h3>Movesense Flash</h3>
             <ul>
