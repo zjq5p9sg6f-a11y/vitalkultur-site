@@ -11,12 +11,12 @@
   <meta property="og:image" content="https://vitalkultur.com/assets/og-research.png">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
-  <meta property="og:url" content="https://vitalkultur.com/hrv-research/de/">
+  <meta property="og:url" content="https://vitalkultur.com/hrv-research/">
   <meta property="og:type" content="website">
   <meta name="twitter:card" content="summary_large_image">
   <link rel="icon" href="/app-icon.png">
   <link rel="apple-touch-icon" href="/app-icon.png">
-  <link rel="canonical" href="https://vitalkultur.com/hrv-research/de/">
+  <link rel="canonical" href="https://vitalkultur.com/hrv-research/">
   <link rel="alternate" hreflang="en" href="https://vitalkultur.com/hrv-research/">
   <link rel="alternate" hreflang="de" href="https://vitalkultur.com/hrv-research/de/">
   <link rel="alternate" hreflang="x-default" href="https://vitalkultur.com/hrv-research/">
@@ -165,6 +165,7 @@ document.head.appendChild(s);})();</script>
 
     /* Prüfung */
     .checks { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--s21); margin-top: var(--s55); }
+    .check { border: 1px solid var(--line); border-radius: 21px; padding: var(--s34) var(--s21); background: rgba(255,255,255,.015); }
     .check b { display: block; font-size: 34px; font-weight: 400; color: var(--t); line-height: 1.1; margin-bottom: var(--s8); font-variant-numeric: tabular-nums; }
     .check p { font-size: 15px; color: var(--t3); }
     .fixed { margin-top: var(--s55); border-top: 1px solid var(--line); padding-top: var(--s34); display: grid; grid-template-columns: 1fr 2fr; gap: var(--s55); }
@@ -248,17 +249,18 @@ document.head.appendChild(s);})();</script>
 
     /* Galerie (Kanon: Breathwork gal-*) */
     .gal { margin-top: var(--s55); }
-    .gal-vp { overflow-x: auto; overflow-y: hidden; scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch; scrollbar-width: none; overscroll-behavior-x: contain; touch-action: pan-x pan-y; }
+    .gal-vp { overflow-x: auto; overflow-y: hidden; scroll-snap-type: x proximity; scroll-behavior: smooth; -webkit-overflow-scrolling: touch; scrollbar-width: none; overscroll-behavior-x: contain; touch-action: pan-x pan-y; }   /* wie Breathwork: natives Ausrollen, weiches Einrasten */
     .gal-vp::-webkit-scrollbar { display: none; }
-    .gal-track { display: flex; gap: var(--s34); padding: 0 calc(50% - 130px) var(--s13); }
-    .gal-slide { flex: 0 0 260px; scroll-snap-align: center; scroll-snap-stop: always; text-align: center; transition: opacity .383s var(--ease), transform .383s var(--ease); }
+    .gal-track { display: flex; gap: var(--s34); padding: 0 calc(50% - min(40vw, 140px)) var(--s13); }
+    .gal-track::after { content: ""; flex: 0 0 1px; }   /* Safari: Endabstand zählt erst mit Element — sonst kommt das letzte Bild nicht in die Mitte */
+    .gal-slide { flex: 0 0 min(80vw, 280px); scroll-snap-align: center; text-align: center; transition: opacity .383s var(--ease), transform .383s var(--ease); }
     .gal-slide .device { width: 100%; }
     .gal-slide h4 { font-size: 16px; font-weight: 500; margin: var(--s21) 0 var(--s5); }
     .gal-slide p { font-size: 14px; color: var(--t3); line-height: 1.5; }
     .gal-nav { display: none; justify-content: center; align-items: center; gap: var(--s13); margin-top: var(--s21); font-size: 13px; color: var(--t3); }
     .gal-btn { width: 44px; height: 44px; border-radius: 50%; border: 1px solid var(--line2); background: transparent; color: var(--t); cursor: pointer; font-size: 18px; }
     @media (max-width: 899px) { .gal-slide { opacity: .35; transform: scale(.92); } .gal-slide.is-active { opacity: 1; transform: none; } .gal-nav { display: flex; } }
-    @media (min-width: 900px) { .gal-vp { overflow: visible; } .gal-track { flex-wrap: wrap; justify-content: center; padding: 0; gap: var(--s55) var(--s34); } .gal-slide { flex: 0 1 240px; } }
+    @media (min-width: 900px) { .gal-track::after { display: none; } .gal-vp { overflow: visible; } .gal-track { flex-wrap: wrap; justify-content: center; padding: 0; gap: var(--s55) var(--s34); } .gal-slide { flex: 0 1 240px; } }
 
     /* Ergebnisse: PDF-Seiten + Dateien */
     .outputs { display: grid; grid-template-columns: 1.15fr .85fr; gap: var(--s55); align-items: start; margin-top: var(--s55); }
@@ -269,9 +271,6 @@ document.head.appendChild(s);})();</script>
     .pages img:nth-child(3) { left: 42%; top: 40px; transform: rotate(4deg); z-index: 1; }
     .pages:hover img:nth-child(1) { transform: rotate(-7deg) translateX(-13px); }
     .pages:hover img:nth-child(3) { transform: rotate(6deg) translateX(13px); }
-    .files { font-family: ui-monospace, "SF Mono", Menlo, monospace; font-size: 12.5px; color: var(--t2); background: rgba(255,255,255,.02); border: 1px solid var(--line); border-radius: 13px; padding: var(--s21); line-height: 1.9; overflow-x: auto; white-space: nowrap; }
-    .files .d { color: var(--stille); }
-    .files .c { color: var(--t4); }
     .out-list { list-style: none; display: grid; gap: var(--s21); margin-bottom: var(--s34); }
     .out-list li { display: grid; grid-template-columns: 89px 1fr; gap: var(--s13); align-items: baseline; }
     .out-list b { font-size: 13px; letter-spacing: .06em; color: var(--stille); font-weight: 500; }
@@ -438,12 +437,12 @@ document.head.appendChild(s);})();</script>
       <img class="signet" src="../assets/v14/signet.png" width="477" height="686" alt="CARLON HRV Research">
       <div class="eyebrow" data-en="iPhone app for HRV studies · Polar&nbsp;H10 · Movesense" data-de="iPhone-App für HRV-Studien · Polar&nbsp;H10 · Movesense">iPhone-App für HRV-Studien · Polar H10 · Movesense</div>
       <h1 data-en="Your HRV study, <em>from one iPhone.</em>" data-de="Deine <span style=&quot;white-space:nowrap&quot;>HRV-Studie,</span> <em>mit einem iPhone.</em>">Deine <span style="white-space:nowrap">HRV-Studie,</span> <em>mit einem iPhone.</em></h1>
-      <p class="lead" data-en="Record up to four Polar H10 or Movesense sensors at once, mark every phase with one tap, and leave with original RR data, values per phase, a methods paragraph and publication-ready figures." data-de="Bis zu vier Polar H10 oder Movesense gleichzeitig aufnehmen, jede Phase per Tipp markieren – und mit Original-RR-Daten, Werten je Phase, Methodenabsatz und publikationsfertigen Grafiken nach Hause gehen.">Bis zu vier Polar H10 oder Movesense gleichzeitig aufnehmen, jede Phase per Tipp markieren – und mit Original-RR-Daten, Werten je Phase, Methodenabsatz und publikationsfertigen Grafiken nach Hause gehen.</p>
+      <p class="lead" data-en="Up to four Polar H10 or Movesense sensors record in their own memory – the iPhone can stay in the bag. Mark every phase with one tap and leave with original RR data, values per phase, a methods paragraph and publication-ready figures." data-de="Bis zu vier Polar H10 oder Movesense zeichnen im eigenen Speicher auf – das iPhone kann in der Tasche bleiben. Jede Phase per Tipp markieren und mit Original-RR-Daten, Werten je Phase, Methodenabsatz und publikationsfertigen Grafiken nach Hause gehen.">Bis zu vier Polar H10 oder Movesense zeichnen im eigenen Speicher auf – das iPhone kann in der Tasche bleiben. Jede Phase per Tipp markieren und mit Original-RR-Daten, Werten je Phase, Methodenabsatz und publikationsfertigen Grafiken nach Hause gehen.</p>
       <div class="ctas">
         <a class="btn btn-1" href="mailto:jan@vitalkultur.com?subject=CARLON%20HRV%20Research%20%E2%80%93%20beta%20access&amp;body=Hi%20Jan%2C%0A%0AI%27d%20like%20to%20test%20CARLON%20HRV%20Research.%0A%0AInstitution%20/%20lab%3A%0ASensors%20%28Polar%20H10%20/%20Movesense%29%3A%0AStudy%20or%20use%20case%3A%0AEmail%20for%20the%20TestFlight%20invitation%3A%0A%0ABest%20regards%2C%0A" data-beta><span data-en="Request beta access" data-de="Beta-Zugang anfragen">Beta-Zugang anfragen</span> <span aria-hidden="true">→</span></a>
         <a class="btn btn-2" href="#erleben"><span data-en="See the app below" data-de="App unten ansehen">App unten ansehen</span> <span aria-hidden="true">↓</span></a>
       </div>
-      <div class="fine" data-en="iPhone · TestFlight beta · no account · no subscription · no server" data-de="iPhone · TestFlight-Beta · kein Konto · kein Abo · kein Server">iPhone · TestFlight-Beta · kein Konto · kein Abo · kein Server</div>
+      <div class="fine" data-en="Recorded in the sensor · computed on your iPhone · no account · no server" data-de="Im Sensor aufgezeichnet · auf deinem iPhone gerechnet · kein Konto · kein Server">Im Sensor aufgezeichnet · auf deinem iPhone gerechnet · kein Konto · kein Server</div>
     </div>
     <div class="wrap tour" id="erleben">
       <div class="tour-txt">
@@ -631,8 +630,8 @@ document.head.appendChild(s);})();</script>
       <div class="outputs">
         <a class="pages rv" href="../assets/CARLON-HRV-Research-Example-Report.pdf" aria-label="Open an example PDF report">
           <img src="../assets/v14/report-summary.webp" width="900" height="1273" alt="PDF report, page 1: all metrics with grades" loading="lazy" decoding="async">
-          <img src="../assets/v14/report-segments.webp" width="900" height="1273" alt="PDF report: segments and events" loading="lazy" decoding="async">
-          <img src="../assets/v14/report-methods.webp" width="900" height="1273" alt="PDF report: methods paragraph ready for a manuscript" loading="lazy" decoding="async">
+          <img src="../assets/v14/report-timeseries.webp" width="900" height="1273" alt="PDF report: heart rate and RMSSD over the whole session, RR tachogram with flagged beats" loading="lazy" decoding="async">
+          <img src="../assets/v14/report-poincare-time.webp" width="900" height="1273" alt="PDF report: Poincaré plot per protocol phase with SD1/SD2" loading="lazy" decoding="async">
         </a>
         <div class="rv">
           <ul class="out-list">
@@ -640,14 +639,6 @@ document.head.appendChild(s);})();</script>
             <li><b data-en="Figures" data-de="Grafiken">Grafiken</b><span data-en="Every figure as vector PDF and 300-dpi PNG in single- and double-column width, with captions – named so they sort themselves." data-de="Jede Grafik als Vektor-PDF und 300-dpi-PNG in ein- und zweispaltiger Breite, mit Bildunterschriften – so benannt, dass sie sich selbst sortieren.">Jede Grafik als Vektor-PDF und 300-dpi-PNG in ein- und zweispaltiger Breite, mit Bildunterschriften – so benannt, dass sie sich selbst sortieren.</span></li>
             <li><b data-en="Data" data-de="Daten">Daten</b><span data-en="Original RR as CSV with Kubios import settings, Kubios text, FIT, EDF+, WFDB and JSON with audit trail – plus segment and event tables." data-de="Original-RR als CSV mit Kubios-Importeinstellungen, Kubios-Text, FIT, EDF+, WFDB und JSON mit Prüfpfad – dazu Segment- und Ereignistabellen.">Original-RR als CSV mit Kubios-Importeinstellungen, Kubios-Text, FIT, EDF+, WFDB und JSON mit Prüfpfad – dazu Segment- und Ereignistabellen.</span></li>
           </ul>
-          <div class="files" aria-label="Example file names of the figure bundle">
-            <span class="d">P-02_2026-10-26_1947_figures/</span><br>
-            &nbsp;&nbsp;P-02_2026-10-26_1947_fig01_heart-rate-rmssd_175mm.pdf<br>
-            &nbsp;&nbsp;P-02_2026-10-26_1947_fig01_heart-rate-rmssd_175mm.png<br>
-            &nbsp;&nbsp;P-02_2026-10-26_1947_fig03_poincare_85mm.pdf<br>
-            &nbsp;&nbsp;P-02_2026-10-26_1947_fig06_rmssd-sdnn-segments_85mm.png<br>
-            &nbsp;&nbsp;<span class="c">… _captions.txt · _README.txt</span>
-          </div>
           <div class="ctas" style="justify-content:flex-start;margin-top:var(--s34)">
             <a class="btn btn-2" href="../assets/CARLON-HRV-Research-Example-Report.pdf"><span data-en="Open an example report (PDF)" data-de="Beispielbericht öffnen (PDF)">Beispielbericht öffnen (PDF)</span> <span aria-hidden="true">↗</span></a>
           </div>
@@ -870,7 +861,7 @@ document.head.appendChild(s);})();</script>
 
 </script>
 <script src="/assets/app-tour/app-tour.js?v=3" defer></script>
-<script src="/assets/poincare-live/poincare-live.js?v=1" defer></script>
+<script src="/assets/poincare-live/poincare-live.js?v=2" defer></script>
 <script>
 // Vollbild für Bilder: Tippen/Klick öffnet, Wischen oder ← → blättert, Klick/Esc schließt.
 // Kern der Equine-Lösung (Überblendung, Wischen, Zähler) ohne deren Modul-Menü.
@@ -893,6 +884,7 @@ document.head.appendChild(s);})();</script>
     function schliessen() { ov.classList.remove('show'); document.documentElement.style.overflow = ''; if (zuletzt && zuletzt.focus) zuletzt.focus(); }
     bilder.forEach(function (b, i) {
       b.classList.add('zoom'); b.setAttribute('tabindex', '0'); b.setAttribute('role', 'button');
+      var link = b.closest('a'); if (link) link.addEventListener('click', function (e) { e.preventDefault(); });   // Fächer: vergrößern statt PDF (eigener Knopf darunter)
       var sx = 0, sy = 0, bewegt = false, t0 = 0;
       b.addEventListener('pointerdown', function (e) { sx = e.clientX; sy = e.clientY; bewegt = false; t0 = Date.now(); }, { passive: true });
       b.addEventListener('pointermove', function (e) { if (Math.abs(e.clientX - sx) > 10 || Math.abs(e.clientY - sy) > 10) bewegt = true; }, { passive: true });
