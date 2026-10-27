@@ -74,6 +74,8 @@
     var start = (dev.dataset.start || '00:00:00').split(':').map(Number);
     var d = null, f = 0, fZiel = 0, kreuz = null, genutzt = false;
     var z = 1, ox = 0, oy = 0;                                     // Ansicht (Zoom, Verschiebung in Pixeln)
+    // Während Pinch/Verschieben: fertiges Wolkenbild nur transformieren (wie Karten), danach scharf neu (27.10.: Jan „Ranzoomen nicht geil")
+    var geste = false, gesteUhr = null, basis = null, basisSicht = null;
     var aktiv = 0, aktivZiel = 0;
 
     var VX = function (ms) { return X0 + ms * SX * z + ox; };
@@ -145,6 +147,12 @@
       var n = sichtbar(), i, sicht = z + '|' + ox + '|' + oy + '|' + cv.width;
       if (gezoomt()) raster();
       // Wolke: eigene Ebene, beim Vorwärtsziehen kommen nur die neuen Punkte dazu
+      if (sicht !== wolkeSicht && geste && basis) {
+        var sk = z / basisSicht.z, tx = X0 - sk * X0 - sk * basisSicht.ox + ox, ty = Y0 - sk * Y0 - sk * basisSicht.oy + oy;
+        g.save(); rund(P.x0, P.y0, P.x1 - P.x0, P.y1 - P.y0, P.r); g.clip();
+        g.translate(tx, ty); g.scale(sk, sk); g.drawImage(basis, P.x0, P.y0, PW, PH); g.restore();
+        return rest(n);
+      }
       if (sicht !== wolkeSicht) { wg.save(); wg.setTransform(1, 0, 0, 1, 0, 0); wg.clearRect(0, 0, wolke.width, wolke.height); wg.restore(); wolkeN = 0; wolkeSicht = sicht; stand = []; }
       if (n < wolkeN) {                                              // zurück: nächster Schnappschuss darunter
         var j = Math.min(stand.length - 1, Math.floor(n / SCHRITT));
@@ -152,7 +160,7 @@
         if (j >= 0) wg.drawImage(stand[j], 0, 0);
         wg.restore(); wolkeN = j >= 0 ? j * SCHRITT : 0;
       }
-      var bis = Math.min(n, wolkeN + 600);                         // Budget je Bild: Knopf bleibt flüssig, die Wolke holt in Folgebildern auf
+      var bis = Math.min(n, wolkeN + (wolkeN === 0 ? n : 1500));   // neue Ansicht: alles in EINEM Pfad; beim Spulen Budget je Bild
       if (bis < n) neu();
       if (bis > wolkeN) {
         wg.save(); rund(P.x0, P.y0, PW, PH, P.r, wg); wg.clip();   // Pfad auf DER Ebene, die schneidet (27.10.: leere Wolke)
@@ -172,6 +180,10 @@
       }
       if (!stand[0]) { stand[0] = document.createElement('canvas'); stand[0].width = wolke.width; stand[0].height = wolke.height; }
       g.drawImage(wolke, P.x0, P.y0, PW, PH);
+      rest(n);
+    }
+    function rest(n) {
+      var i;
       g.save(); rund(P.x0, P.y0, P.x1 - P.x0, P.y1 - P.y0, P.r); g.clip();
       if (f < 0.9995) {                                             // jüngste Schläge hell, Ring am aktuellen
         g.fillStyle = 'rgba(255,255,255,.85)';
@@ -281,17 +293,39 @@
     var setzeF = function (px) { fZiel = Math.max(0, Math.min(1, (px - KNOPF.x0) / (KNOPF.x1 - KNOPF.x0))); if (fZiel > 0.995) fZiel = 1; kreuz = null; zieheF(); };
 
     // Zoom um einen Bildpunkt, Verschiebung in Grenzen (die Wolke bleibt erreichbar)
+    // Die Wolke darf nie aus dem Bild rutschen (27.10.: zweites Aufziehen zeigte leeres Raster):
+    // liegt kein SICHTBARER Schlag nahe der Bildmitte, rückt die Ansicht zum nächsten heran
     var begrenzen = function () {
       if (z <= 1.001) { z = 1; ox = 0; oy = 0; return; }
-      ox = Math.max(351 - 1005 * z, Math.min(651 - 209.5 * z, ox));
-      oy = Math.max(209.6 * z - 445, Math.min(1006 * z - 445, oy));
+      var cx = (P.x0 + P.x1) / 2, cy = (P.y0 + P.y1) / 2;
+      var mx = (cx - X0 - ox) / (SX * z), my = (Y0 + oy - cy) / (SY * z);
+      var hx = (P.x1 - P.x0) / 2 / (SX * z) * 0.6, hy = (P.y1 - P.y0) / 2 / (SY * z) * 0.6;
+      var n = sichtbar(), best = 0, bd = 1e18, i, dx, dy, q;
+      for (i = 0; i < n; i++) { dx = (d.x[i] - mx) / hx; dy = (d.y[i] - my) / hy; q = dx * dx + dy * dy; if (q < bd) { bd = q; best = i; } }
+      if (bd > 0.09) {                                              // Mitte leer: zum Schwerpunkt der Schläge um den nächsten
+        var sx = 0, sy = 0, k2 = 0, bx = d.x[best], by = d.y[best];
+        for (i = 0; i < n; i++) { dx = (d.x[i] - bx) / hx; dy = (d.y[i] - by) / hy; if (dx * dx + dy * dy < 1) { sx += d.x[i]; sy += d.y[i]; k2++; } }
+        var gx = sx / k2, gy = sy / k2, rx = hx * 0.3, ry = hy * 0.3;
+        mx = Math.max(gx - rx, Math.min(gx + rx, mx)); my = Math.max(gy - ry, Math.min(gy + ry, my));
+      }
+      ox = cx - X0 - mx * SX * z; oy = cy - Y0 + my * SY * z;
     };
     var zoomUm = function (px, py, nz) {
       nz = Math.max(1, Math.min(12, nz));
       var mx = (px - X0 - ox) / (SX * z), my = (Y0 + oy - py) / (SY * z);
-      z = nz; ox = px - X0 - mx * SX * z; oy = py - Y0 + my * SY * z; begrenzen(); neu();
+      gesteAn(); z = nz; ox = px - X0 - mx * SX * z; oy = py - Y0 + my * SY * z; begrenzen(); neu();
     };
-    var zurueck = function () { z = 1; ox = 0; oy = 0; neu(); };
+    var zurueck = function () { z = 1; ox = 0; oy = 0; geste = false; neu(); };
+    var gesteAn = function () {                                     // Wolkenbild der aktuellen Ansicht einfrieren
+      clearTimeout(gesteUhr);
+      if (!geste) {
+        geste = true;
+        if (!basis) basis = document.createElement('canvas');
+        basis.width = wolke.width; basis.height = wolke.height; basis.getContext('2d').drawImage(wolke, 0, 0);
+        basisSicht = { z: z, ox: ox, oy: oy };
+      }
+      gesteUhr = setTimeout(function () { geste = false; neu(); }, 160);   // Ruhe → scharf neu zeichnen
+    };
 
     // ── Coach-Marks wie Apple: Sprechblase am Element + Berührungspunkt, weiche Bögen ──
     var T = de
@@ -364,7 +398,7 @@
       if (e.pointerType === 'touch') return;
       var p = punkt(e.clientX, e.clientY);
       if (modus === 'regler') { setzeF(p[0]); return; }
-      if (modus === 'pan') { ox = panStart[2] + p[0] - panStart[0]; oy = panStart[3] + p[1] - panStart[1]; begrenzen(); neu(); return; }
+      if (modus === 'pan') { gesteAn(); ox = panStart[2] + p[0] - panStart[0]; oy = panStart[3] + p[1] - panStart[1]; begrenzen(); neu(); return; }
       if (imPlot(p)) { if (!genutzt && e.movementX * e.movementX + e.movementY * e.movementY > 4) nutzerDa(); if (genutzt) { kreuz = nahe(p[0], p[1]); neu(); } cv.style.cursor = gezoomt() ? 'grab' : 'crosshair'; }
       else { cv.style.cursor = imRegler(p) ? 'ew-resize' : 'default'; if (kreuz !== null && genutzt) { kreuz = null; neu(); } }
     });
@@ -378,8 +412,9 @@
       e.preventDefault(); nutzerDa(); zoomUm(p[0], p[1], z * Math.exp(-e.deltaY * 0.012));
     }, { passive: false });
     var gz = 1, gp = null;                                            // Safari macOS: Pinch als GestureEvent
-    cv.addEventListener('gesturestart', function (e) { e.preventDefault(); gz = z; gp = punkt(e.clientX, e.clientY); nutzerDa(); });
-    cv.addEventListener('gesturechange', function (e) { e.preventDefault(); if (gp && imPlot(gp)) zoomUm(gp[0], gp[1], gz * e.scale); });
+    var beruehrung = 'ontouchstart' in window;
+    cv.addEventListener('gesturestart', function (e) { e.preventDefault(); if (beruehrung) return; gz = z; gp = punkt(e.clientX, e.clientY); nutzerDa(); });
+    cv.addEventListener('gesturechange', function (e) { e.preventDefault(); if (beruehrung) return; if (gp && imPlot(gp)) zoomUm(gp[0], gp[1], gz * e.scale); });
 
     // ── Finger: Regler sofort; Wolke erst nach kurzem Halten; zwei Finger = verschieben + Zoom ──
     var halte = null, tx = 0, ty = 0, zweiStart = null, tippZeit = 0, bewegt = false;
@@ -401,7 +436,7 @@
         e.preventDefault();
         var m = mitte(e.touches), s = zweiStart;
         var mx = (s.c[0] - X0 - s.ox) / (SX * s.z), my = (Y0 + s.oy - s.c[1]) / (SY * s.z);
-        z = Math.max(1, Math.min(12, s.z * abstand(e.touches) / s.a));
+        gesteAn(); z = Math.max(1, Math.min(12, s.z * abstand(e.touches) / s.a));
         ox = m[0] - X0 - mx * SX * z; oy = m[1] - Y0 + my * SY * z; begrenzen(); neu(); return;
       }
       var t = e.touches[0];

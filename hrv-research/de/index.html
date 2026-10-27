@@ -49,6 +49,7 @@
         "@type": "FAQPage",
         "mainEntity": [
           {"@type": "Question", "name": "Which sensors does CARLON HRV Research support?", "acceptedAnswer": {"@type": "Answer", "text": "Polar H10 chest straps (live and internal memory) and Movesense Flash sensors (live and in-sensor recording). The app is tested with these two sensors."}},
+          {"@type": "Question", "name": "How long can a sensor record on its own?", "acceptedAnswer": {"@type": "Answer", "text": "Polar H10: about 20 hours of beat-to-beat RR intervals in the strap, one recording per strap. Movesense Flash: about 11 hours of ECG at 256 Hz plus motion in its 128 MB memory. The iPhone only needs to be nearby to start and to read out."}},
           {"@type": "Question", "name": "Does CARLON HRV Research work with Movesense?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. Movesense Flash sensors stream heartbeats live and record in the sensor itself; the app also saves Movesense raw ECG and 9-axis motion data as CSV. Movesense and Polar H10 can run side by side in one study."}},
           {"@type": "Question", "name": "How many sensors can record at the same time?", "acceptedAnswer": {"@type": "Answer", "text": "Up to four sensors at once from one iPhone. They record to their own memory and are read out together afterwards, each recording assigned to its participant with its real start time."}},
           {"@type": "Question", "name": "Can I use the data in Kubios HRV?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. The CSV carries the exact settings for the Kubios custom text import in its header, and the app also writes a Kubios text file and FIT. RR intervals are exported exactly as recorded, without smoothing or correction."}},
@@ -164,6 +165,21 @@ document.head.appendChild(s);})();</script>
     .chip { font-size: 13px; letter-spacing: .06em; padding: 6px 14px; border-radius: 99px; border: 1px solid var(--line2); color: var(--t2); }
 
     /* Prüfung */
+    /* Gurtspeicher — eigener Abschnitt (27.10.: Jan „Kaufgrund, darf nicht fehlen") */
+    .mem-bild { margin: var(--s55) auto 0; max-width: 760px; }
+    .mem-bild svg { width: 100%; height: auto; display: block; overflow: visible; }
+    .mem-bild .schlag { stroke-dasharray: 60 420; animation: memFluss 1.6s cubic-bezier(.45,0,.55,1) infinite; }
+    @keyframes memFluss { from { stroke-dashoffset: 60; } to { stroke-dashoffset: -280; } }
+    .mem-bild .puls { transform-box: fill-box; transform-origin: center; animation: memPuls 1.6s ease-out infinite; }
+    @keyframes memPuls { 0% { transform: scale(1); opacity: .55; } 100% { transform: scale(1.6); opacity: 0; } }
+    @media (prefers-reduced-motion: reduce) { .mem-bild .schlag, .mem-bild .puls { animation: none; } }
+    .mem-zahlen .check h3 { font-size: 15px; font-weight: 600; color: var(--t2); margin-bottom: var(--s8); letter-spacing: .01em; }
+    .mem-vorteile { list-style: none; padding: 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--s34); margin-top: var(--s55); }
+    .mem-vorteile li { display: grid; grid-template-columns: auto 1fr; gap: 4px var(--s13); }
+    .mem-vorteile .ic { grid-row: 1 / span 2; width: 28px; height: 28px; }
+    .mem-vorteile b { font-weight: 600; color: var(--t); font-size: 16px; }
+    .mem-vorteile span { color: var(--t3); font-size: 15px; }
+    @media (max-width: 900px) { .mem-vorteile { grid-template-columns: 1fr; gap: var(--s21); } }
     .checks { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--s21); margin-top: var(--s55); }
     .check { border: 1px solid var(--line); border-radius: 21px; padding: var(--s34) var(--s21); background: rgba(255,255,255,.015); }
     .check b { display: block; font-size: 34px; font-weight: 400; color: var(--t); line-height: 1.1; margin-bottom: var(--s8); font-variant-numeric: tabular-nums; }
@@ -347,7 +363,7 @@ document.head.appendChild(s);})();</script>
       .proof { grid-template-columns: repeat(2, 1fr); }
       .proof div:nth-child(2) { border-right: 0; }
       .proof div:nth-child(-n+2) { border-bottom: 1px solid var(--line); }
-      .checks, .who { grid-template-columns: 1fr 1fr; }
+      .who { grid-template-columns: 1fr 1fr; }   /* .checks bleibt 3-spaltig: 2+1 liess eine Karte allein (iPad, 27.10.) */
       .fixed { grid-template-columns: 1fr; gap: var(--s21); }
       section.ch { padding-top: var(--s89); }
     }
@@ -413,6 +429,8 @@ document.head.appendChild(s);})();</script>
   <symbol id="i-run" viewBox="0 0 32 32"><circle cx="16" cy="18" r="9.5"/><path d="M16 12.5v5.5l3.5 2"/><path d="M13 4.5h6M16 4.5v4"/></symbol>
   <symbol id="i-cap" viewBox="0 0 32 32"><path d="M3 12.5L16 6l13 6.5L16 19z"/><path d="M8.5 15.5v6c2 2.2 4.5 3.3 7.5 3.3s5.5-1.1 7.5-3.3v-6"/><path d="M29 12.5v7"/></symbol>
   <symbol id="i-shield" viewBox="0 0 32 32"><path d="M16 4l10 4v7.5c0 6.3-4.2 10.6-10 12.5C10.2 26.1 6 21.8 6 15.5V8z"/><path d="M11.5 16l3.2 3.2 6-6.4"/></symbol>
+  <symbol id="i-chip" viewBox="0 0 32 32"><rect x="8" y="8" width="16" height="16" rx="3"/><rect x="12.5" y="12.5" width="7" height="7" rx="1.2" opacity=".55"/><path d="M12 4v4M16 4v4M20 4v4M12 24v4M16 24v4M20 24v4M4 12h4M4 16h4M4 20h4M24 12h4M24 16h4M24 20h4"/></symbol>
+  <symbol id="i-nolink" viewBox="0 0 32 32"><path d="M10.5 9.5l11 9-5.5 4.5V5l5.5 4.5-11 9"/><path d="M5 27L27 5" opacity=".55"/></symbol>
   <symbol id="i-lab" viewBox="0 0 32 32"><path d="M12.5 4h7M13.5 4v8.5L6.8 24.6A2.3 2.3 0 0 0 8.8 28h14.4a2.3 2.3 0 0 0 2-3.4L18.5 12.5V4"/><path d="M9.5 20h13" opacity=".55"/></symbol>
 </defs></svg>
 <script>document.documentElement.classList.add('js')</script>
@@ -484,6 +502,45 @@ document.head.appendChild(s);})();</script>
     </div>
   </section>
 
+  <!-- 1a · Gurtspeicher: Kaufgrund Nr. 1 -->
+  <section class="ch" id="memory">
+    <div class="wrap">
+      <div class="rv" style="max-width:780px">
+        <div class="label" data-en="Recorded in the sensor" data-de="Im Sensor aufgezeichnet">Im Sensor aufgezeichnet</div>
+        <h2 data-en="The strap records. <em>Not the phone.</em>" data-de="Der Gurt zeichnet auf. <em>Nicht das Handy.</em>">Der Gurt zeichnet auf. <em>Nicht das Handy.</em></h2>
+        <p class="sub" data-en="Polar H10 and Movesense Flash write every beat into their own memory. Start on the iPhone – then it can stay behind: in the locker, at the side of the track, out of Bluetooth range. Afterwards the app reads out up to four sensors together, each with its real start time." data-de="Polar H10 und Movesense Flash schreiben jeden Schlag in ihren eigenen Speicher. Am iPhone starten – danach darf es zurückbleiben: im Spind, am Rand der Bahn, außer Bluetooth-Reichweite. Danach liest die App bis zu vier Sensoren gemeinsam aus, jeden mit seiner echten Startzeit.">Polar H10 und Movesense Flash schreiben jeden Schlag in ihren eigenen Speicher. Am iPhone starten – danach darf es zurückbleiben: im Spind, am Rand der Bahn, außer Bluetooth-Reichweite. Danach liest die App bis zu vier Sensoren gemeinsam aus, jeden mit seiner echten Startzeit.</p>
+      </div>
+      <figure class="mem-bild rv" aria-hidden="true">
+        <svg viewBox="0 0 760 210" fill="none" stroke-linecap="round" stroke-linejoin="round">
+          <defs><linearGradient id="memGurt" x1="0" x2="1"><stop offset="0" stop-color="#3ecfb2" stop-opacity="0"/><stop offset=".5" stop-color="#3ecfb2" stop-opacity=".35"/><stop offset="1" stop-color="#3ecfb2" stop-opacity="0"/></linearGradient></defs>
+          <path d="M20 112h330" stroke="url(#memGurt)" stroke-width="16"/>
+          <path d="M40 112h18l7-22 9 44 7-34 5 12h16l7-22 9 44 7-34 5 12h16l7-22 9 44 7-34 5 12h16l7-22 9 44 7-34 5 12h40" stroke="#3ecfb2" stroke-width="2" opacity=".35"/>
+          <path class="schlag" d="M40 112h18l7-22 9 44 7-34 5 12h16l7-22 9 44 7-34 5 12h16l7-22 9 44 7-34 5 12h16l7-22 9 44 7-34 5 12h40" stroke="#bff5ea" stroke-width="2.5"/>
+          <circle class="puls" cx="300" cy="112" r="40" stroke="#3ecfb2" stroke-width="1.5"/>
+          <rect x="262" y="78" width="76" height="68" rx="20" fill="#0b1413" stroke="#3ecfb2" stroke-width="2"/>
+          <rect x="284" y="98" width="32" height="28" rx="5" stroke="#3ecfb2" stroke-width="1.5" opacity=".8"/>
+          <path d="M291 98v-5M300 98v-5M309 98v-5M291 131v-5M300 131v-5M309 131v-5" stroke="#3ecfb2" stroke-width="1.5" opacity=".8"/>
+          <text x="300" y="180" text-anchor="middle" fill="#9aa3a1" font-size="17" letter-spacing="2" font-family="-apple-system,system-ui,sans-serif" data-en="SENSOR MEMORY" data-de="SENSORSPEICHER">SENSORSPEICHER</text>
+          <path d="M360 112h260" stroke="#5c6664" stroke-width="1.5" stroke-dasharray="2 9" opacity=".7"/>
+          <path d="M478 96l20 32M498 96l-20 32" stroke="#5c6664" stroke-width="1.5" opacity=".9"/>
+          <g opacity=".5"><rect x="652" y="58" width="62" height="118" rx="15" stroke="#9aa3a1" stroke-width="1.5"/><rect x="673" y="66" width="20" height="5" rx="2.5" fill="#9aa3a1"/></g>
+          <text x="683" y="200" text-anchor="middle" fill="#6f7876" font-size="17" letter-spacing="2" font-family="-apple-system,system-ui,sans-serif" data-en="IPHONE · OPTIONAL" data-de="IPHONE · OPTIONAL">IPHONE · OPTIONAL</text>
+        </svg>
+      </figure>
+      <div class="checks mem-zahlen rv">
+        <div class="check"><svg class="ic" aria-hidden="true"><use href="#i-chip"/></svg><b>≈ 20 h</b><h3>Polar H10</h3><p data-en="Beat-to-beat RR intervals in the strap's own memory. One recording per strap, read out afterwards." data-de="Schlag-für-Schlag-RR-Intervalle im eigenen Speicher des Gurts. Eine Aufnahme je Gurt, danach ausgelesen.">Schlag-für-Schlag-RR-Intervalle im eigenen Speicher des Gurts. Eine Aufnahme je Gurt, danach ausgelesen.</p></div>
+        <div class="check"><svg class="ic" aria-hidden="true"><use href="#i-chip"/></svg><b>≈ 11 h</b><h3>Movesense Flash · 128 MB</h3><p data-en="Raw ECG at 256 Hz plus motion in the sensor itself; the app derives RR from the ECG when reading out." data-de="Roh-EKG mit 256 Hz plus Bewegung im Sensor selbst; RR leitet die App beim Auslesen aus dem EKG ab.">Roh-EKG mit 256 Hz plus Bewegung im Sensor selbst; RR leitet die App beim Auslesen aus dem EKG ab.</p></div>
+        <div class="check"><svg class="ic" aria-hidden="true"><use href="#i-sens"/></svg><b>4</b><h3 data-en="Sensors, read out together" data-de="Sensoren, gemeinsam ausgelesen">Sensoren, gemeinsam ausgelesen</h3><p data-en="Each recording lands with its participant and its real start time – no manual alignment." data-de="Jede Aufnahme landet bei ihrer Person, mit echter Startzeit – kein Ausrichten von Hand.">Jede Aufnahme landet bei ihrer Person, mit echter Startzeit – kein Ausrichten von Hand.</p></div>
+      </div>
+      <ul class="mem-vorteile rv">
+        <li><svg class="ic" aria-hidden="true"><use href="#i-nolink"/></svg><b data-en="No radio gaps in the data" data-de="Keine Funklöcher in den Daten">Keine Funklöcher in den Daten</b><span data-en="Live Bluetooth drops beats when people move, turn or walk away. The sensor's memory doesn't depend on the link." data-de="Live-Bluetooth verliert Schläge, wenn Menschen sich bewegen, drehen oder weggehen. Der Sensorspeicher hängt nicht an der Verbindung.">Live-Bluetooth verliert Schläge, wenn Menschen sich bewegen, drehen oder weggehen. Der Sensorspeicher hängt nicht an der Verbindung.</span></li>
+        <li><svg class="ic" aria-hidden="true"><use href="#i-run"/></svg><b data-en="Sleep, training, field days" data-de="Schlaf, Training, Feldtage">Schlaf, Training, Feldtage</b><span data-en="Overnight, on the track or through a whole field day – nobody has to watch a screen." data-de="Über Nacht, auf der Bahn oder einen ganzen Feldtag lang – niemand muss auf einen Bildschirm schauen.">Über Nacht, auf der Bahn oder einen ganzen Feldtag lang – niemand muss auf einen Bildschirm schauen.</span></li>
+        <li><svg class="ic" aria-hidden="true"><use href="#i-shield"/></svg><b data-en="From sensor to iPhone. Nowhere else." data-de="Vom Sensor aufs iPhone. Sonst nirgendwohin.">Vom Sensor aufs iPhone. Sonst nirgendwohin.</b><span data-en="Read out over Bluetooth, computed on the iPhone. No account, no cloud." data-de="Per Bluetooth ausgelesen, auf dem iPhone gerechnet. Kein Konto, keine Cloud.">Per Bluetooth ausgelesen, auf dem iPhone gerechnet. Kein Konto, keine Cloud.</span></li>
+      </ul>
+      <p class="cap rv" data-en="Capacities: Polar H10 stores RR intervals offline for up to about 20 h (<a href=&quot;https://pmc.ncbi.nlm.nih.gov/articles/PMC12379770/&quot; rel=&quot;noopener&quot;>Krummenacher et al. 2025</a>); Polar's 30 h refer to heart rate once per second. Movesense Flash: 128 MB (manufacturer); about 11 h with the app's ECG 256 Hz + motion 52 Hz setting." data-de="Kapazitäten: Polar H10 speichert RR-Intervalle offline bis etwa 20 h (<a href=&quot;https://pmc.ncbi.nlm.nih.gov/articles/PMC12379770/&quot; rel=&quot;noopener&quot;>Krummenacher et al. 2025</a>); Polars 30 h gelten für die Herzfrequenz einmal pro Sekunde. Movesense Flash: 128 MB (Hersteller); rund 11 h mit der App-Einstellung EKG 256 Hz + Bewegung 52 Hz.">Kapazitäten: Polar H10 speichert RR-Intervalle offline bis etwa 20 h (<a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC12379770/" rel="noopener">Krummenacher et al. 2025</a>); Polars 30 h gelten für die Herzfrequenz einmal pro Sekunde. Movesense Flash: 128 MB (Hersteller); rund 11 h mit der App-Einstellung EKG 256 Hz + Bewegung 52 Hz.</p>
+    </div>
+  </section>
+
   <!-- 1b · Sensoren -->
   <section class="ch" id="sensors">
     <div class="wrap">
@@ -499,7 +556,7 @@ document.head.appendChild(s);})();</script>
             <h3>Polar H10</h3>
             <ul>
               <li data-en="Live RR at 1/1024 s resolution" data-de="Live-RR mit 1/1024 s Auflösung">Live-RR mit 1/1024 s Auflösung</li>
-              <li data-en="Records in its own memory – read out later" data-de="Zeichnet im eigenen Speicher auf – später auslesen">Zeichnet im eigenen Speicher auf – später auslesen</li>
+              <li data-en="≈ 20 h beat to beat in its own memory – read out later" data-de="≈ 20 h Schlag für Schlag im eigenen Speicher – später auslesen">≈ 20 h Schlag für Schlag im eigenen Speicher – später auslesen</li>
               <li data-en="Validated against ECG in peer-reviewed studies" data-de="In Peer-Review-Studien gegen EKG validiert">In Peer-Review-Studien gegen EKG validiert</li>
             </ul>
           </figcaption>
@@ -509,7 +566,7 @@ document.head.appendChild(s);})();</script>
           <figcaption>
             <h3>Movesense Flash</h3>
             <ul>
-              <li data-en="Live heartbeats or recording in the sensor itself" data-de="Herzschläge live und Aufnahme im Sensor">Herzschläge live und Aufnahme im Sensor</li>
+              <li data-en="Live, or ≈ 11 h of ECG + motion in its 128 MB memory" data-de="Live oder ≈ 11 h EKG + Bewegung im 128-MB-Speicher">Live oder ≈ 11 h EKG + Bewegung im 128-MB-Speicher</li>
               <li data-en="Raw ECG and 9-axis motion data as CSV" data-de="Roh-EKG und 9-Achsen-Bewegungsdaten als CSV">Roh-EKG und 9-Achsen-Bewegungsdaten als CSV</li>
               <li data-en="Runs alongside Polar H10 in the same session" data-de="In derselben Einheit mit Polar H10 kombinierbar">In derselben Einheit mit Polar H10 kombinierbar</li>
             </ul>
@@ -758,6 +815,7 @@ document.head.appendChild(s);})();</script>
       <div class="faq rv">
         <details><summary data-en="Which sensors are supported?" data-de="Welche Sensoren werden unterstützt?">Welche Sensoren werden unterstützt?</summary><p data-en="Polar H10 chest straps (live and internal memory) and Movesense Flash sensors (live and in-sensor recording). The app is tested with these two sensors." data-de="Polar-H10-Brustgurte (live und interner Speicher) und Movesense-Flash-Sensoren (live und Aufnahme im Sensor). Mit diesen beiden ist die App getestet.">Polar-H10-Brustgurte (live und interner Speicher) und Movesense-Flash-Sensoren (live und Aufnahme im Sensor). Mit diesen beiden ist die App getestet.</p></details>
         <details><summary data-en="Does it work with Movesense?" data-de="Funktioniert die App mit Movesense?">Funktioniert die App mit Movesense?</summary><p data-en="Yes. Movesense Flash sensors stream heartbeats live and record in the sensor itself; the app also saves Movesense raw ECG and 9-axis motion data (accelerometer, gyroscope, magnetometer) as CSV. Movesense and Polar H10 can run side by side in one study." data-de="Ja. Movesense-Flash-Sensoren übertragen Herzschläge live und zeichnen im Sensor selbst auf; dazu speichert die App Roh-EKG und 9-Achsen-Bewegungsdaten (Beschleunigung, Drehrate, Magnetfeld) von Movesense als CSV. Movesense und Polar H10 laufen nebeneinander in einer Studie.">Ja. Movesense-Flash-Sensoren übertragen Herzschläge live und zeichnen im Sensor selbst auf; dazu speichert die App Roh-EKG und 9-Achsen-Bewegungsdaten (Beschleunigung, Drehrate, Magnetfeld) von Movesense als CSV. Movesense und Polar H10 laufen nebeneinander in einer Studie.</p></details>
+        <details><summary data-en="How long can a sensor record on its own?" data-de="Wie lange zeichnet ein Sensor allein auf?">Wie lange zeichnet ein Sensor allein auf?</summary><p data-en="Polar H10: about 20 hours of beat-to-beat RR intervals in the strap, one recording per strap. Movesense Flash: about 11 hours of ECG at 256 Hz plus motion in its 128 MB memory. The iPhone only needs to be nearby to start and to read out." data-de="Polar H10: rund 20 Stunden Schlag-für-Schlag-RR im Gurt, eine Aufnahme je Gurt. Movesense Flash: rund 11 Stunden EKG mit 256 Hz plus Bewegung im 128-MB-Speicher. Das iPhone muss nur zum Starten und Auslesen in der Nähe sein.">Polar H10: rund 20 Stunden Schlag-für-Schlag-RR im Gurt, eine Aufnahme je Gurt. Movesense Flash: rund 11 Stunden EKG mit 256 Hz plus Bewegung im 128-MB-Speicher. Das iPhone muss nur zum Starten und Auslesen in der Nähe sein.</p></details>
         <details><summary data-en="How many sensors can record at once?" data-de="Wie viele Sensoren zeichnen gleichzeitig auf?">Wie viele Sensoren zeichnen gleichzeitig auf?</summary><p data-en="Up to four from one iPhone. They record to their own memory and are read out together afterwards; each recording is assigned to its participant with its real start time." data-de="Bis zu vier von einem iPhone. Sie zeichnen im eigenen Speicher auf und werden danach gemeinsam ausgelesen; jede Aufnahme wird ihrer Person mit echter Startzeit zugeordnet.">Bis zu vier von einem iPhone. Sie zeichnen im eigenen Speicher auf und werden danach gemeinsam ausgelesen; jede Aufnahme wird ihrer Person mit echter Startzeit zugeordnet.</p></details>
         <details><summary data-en="Can I use the data in Kubios HRV?" data-de="Kann ich die Daten in Kubios HRV nutzen?">Kann ich die Daten in Kubios HRV nutzen?</summary><p data-en="Yes. The CSV carries the exact settings for the Kubios custom text import in its header; the app also writes a Kubios text file and FIT. RR intervals are exported exactly as recorded." data-de="Ja. Die CSV trägt die genauen Einstellungen für den Textimport von Kubios im Kopf; dazu schreibt die App eine Kubios-Textdatei und FIT. Die RR-Intervalle werden genau so exportiert, wie sie erfasst wurden.">Ja. Die CSV trägt die genauen Einstellungen für den Textimport von Kubios im Kopf; dazu schreibt die App eine Kubios-Textdatei und FIT. Die RR-Intervalle werden genau so exportiert, wie sie erfasst wurden.</p></details>
         <details><summary data-en="How do I get values for each phase?" data-de="Wie bekomme ich Werte je Phase?">Wie bekomme ich Werte je Phase?</summary><p data-en="Tap an event button at each phase change. The segment table lists duration, beats, heart rate, RMSSD, SDNN and pNN50 for every phase between two events, computed with the same validated code as the rest of the app." data-de="Bei jedem Phasenwechsel eine Ereignistaste tippen. Die Segmenttabelle nennt Dauer, Schläge, Puls, RMSSD, SDNN und pNN50 für jede Phase zwischen zwei Ereignissen, gerechnet mit demselben validierten Code wie die übrige App.">Bei jedem Phasenwechsel eine Ereignistaste tippen. Die Segmenttabelle nennt Dauer, Schläge, Puls, RMSSD, SDNN und pNN50 für jede Phase zwischen zwei Ereignissen, gerechnet mit demselben validierten Code wie die übrige App.</p></details>
@@ -863,7 +921,7 @@ document.head.appendChild(s);})();</script>
 
 </script>
 <script src="/assets/app-tour/app-tour.js?v=3" defer></script>
-<script src="/assets/poincare-live/poincare-live.js?v=8" defer></script>
+<script src="/assets/poincare-live/poincare-live.js?v=12" defer></script>
 <script>
 // Vollbild für Bilder: Tippen/Klick öffnet, Wischen oder ← → blättert, Klick/Esc schließt.
 // Kern der Equine-Lösung (Überblendung, Wischen, Zähler) ohne deren Modul-Menü.
