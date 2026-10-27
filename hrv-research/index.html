@@ -25,7 +25,7 @@
   <meta name="twitter:title" content="CARLON HRV Research — your HRV study, from one iPhone">
   <meta name="twitter:description" content="Up to four Polar H10 or Movesense sensors at once, phase markers, values per phase, DFA α1 over time, original RR data for Kubios, Python and R.">
   <meta name="twitter:image" content="https://vitalkultur.com/assets/og-research.png">
-  <link rel="stylesheet" href="/assets/app-tour/app-tour.css?v=3">
+  <link rel="stylesheet" href="/assets/app-tour/app-tour.css?v=4">
   <link rel="preload" href="/fonts/jost-variable.woff2" as="font" type="font/woff2" crossorigin>
   <script type="application/ld+json">
   {
@@ -105,8 +105,8 @@ document.head.appendChild(s);})();</script>
     /* Hero */
     .hero { position: relative; text-align: center; padding: var(--s89) 0 var(--s55); overflow: hidden; }
     .hero::before { content: ""; position: absolute; inset: -20% -10% auto; height: 760px; background: radial-gradient(closest-side, rgba(62,207,178,0.16), rgba(62,207,178,0.05) 55%, transparent 75%); pointer-events: none; }
-    .signet { position: relative; height: auto; width: clamp(150px, 20vw, 210px); margin: 0 auto var(--s34); animation: atem 8.684s ease-in-out infinite; }
-    @keyframes atem { 0%,100% { filter: drop-shadow(0 0 18px rgba(62,207,178,.25)); transform: scale(1); } 50% { filter: drop-shadow(0 0 34px rgba(110,230,200,.45)); transform: scale(1.012); } }
+    .signet { position: relative; height: auto; width: clamp(150px, 20vw, 210px); margin: 0 auto var(--s34); filter: drop-shadow(0 0 26px rgba(62,207,178,.35)); animation: atem 8.684s ease-in-out infinite; }
+    @keyframes atem { 0%,100% { transform: scale(1); } 50% { transform: scale(1.012); } }   /* nur transform — ein animierter Filter rechnet jedes Bild neu */
     .eyebrow { font-size: 12px; letter-spacing: .382em; text-transform: uppercase; color: var(--stille); margin-bottom: var(--s21); }
     h1 { font-size: clamp(42px, 7.2vw, 76px); line-height: 1.04; font-weight: 500; letter-spacing: -0.02em; margin: 0 auto var(--s21); max-width: 17ch; }
     h1 em, h2 em { font-style: normal; color: var(--stille); }
@@ -203,7 +203,9 @@ document.head.appendChild(s);})();</script>
 
 
     /* Gerät: echtes Apple-Gehäuse über echtem App-Bild */
-    .device { position: relative; width: min(300px, 68vw); aspect-ratio: 1470 / 3000; margin: 0 auto; filter: drop-shadow(0 34px 55px rgba(0,0,0,.6)); }
+    .device { position: relative; width: min(300px, 68vw); aspect-ratio: 1470 / 3000; margin: 0 auto; isolation: isolate; }
+    /* Schatten als eigene, ruhende Ebene — filter:drop-shadow am Gerät rechnete bei JEDEM Leinwand-/Videobild 55 px Unschärfe neu (27.10.: Regler ruckelte) */
+    .device::before { content: ""; position: absolute; inset: .7% 2% .8%; border-radius: 18.4% / 8.8%; box-shadow: 0 34px 55px rgba(0,0,0,.6); z-index: -1; pointer-events: none; }
     .device > img.shot { width: 100%; height: 100%; display: block; }
     .device video, .device .poster { position: absolute; left: 5.102%; top: 2.2%; width: 89.796%; height: 95.6%; object-fit: cover; background: #000; }
     .device .bezel { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
@@ -249,11 +251,11 @@ document.head.appendChild(s);})();</script>
 
     /* Galerie (Kanon: Breathwork gal-*) */
     .gal { margin-top: var(--s55); }
-    .gal-vp { overflow-x: auto; overflow-y: hidden; scroll-snap-type: x proximity; scroll-behavior: smooth; -webkit-overflow-scrolling: touch; scrollbar-width: none; overscroll-behavior-x: contain; touch-action: pan-x pan-y; }   /* wie Breathwork: natives Ausrollen, weiches Einrasten */
+    .gal-vp { overflow-x: auto; overflow-y: hidden; scroll-snap-type: x proximity; scroll-behavior: smooth; -webkit-overflow-scrolling: touch; scrollbar-width: none; overscroll-behavior-x: contain; touch-action: pan-x; }   /* Kanon Breathwork (CSS + Skript 1:1) */
     .gal-vp::-webkit-scrollbar { display: none; }
     .gal-track { display: flex; gap: var(--s34); padding: 0 calc(50% - min(40vw, 140px)) var(--s13); }
-    .gal-track::after { content: ""; flex: 0 0 1px; }   /* Safari: Endabstand zählt erst mit Element — sonst kommt das letzte Bild nicht in die Mitte */
-    .gal-slide { flex: 0 0 min(80vw, 280px); scroll-snap-align: center; text-align: center; transition: opacity .383s var(--ease), transform .383s var(--ease); }
+    .gal-track::after { content: ""; flex: 0 0 6px; }   /* Safari: Endabstand zählt erst mit Element — sonst kommt das letzte Bild nicht in die Mitte */
+    .gal-slide { flex: 0 0 min(80vw, 280px); scroll-snap-align: center; scroll-snap-stop: always; text-align: center; transition: opacity .383s var(--ease), transform .383s var(--ease); }
     .gal-slide .device { width: 100%; }
     .gal-slide h4 { font-size: 16px; font-weight: 500; margin: var(--s21) 0 var(--s5); }
     .gal-slide p { font-size: 14px; color: var(--t3); line-height: 1.5; }
@@ -582,32 +584,32 @@ document.head.appendChild(s);})();</script>
         <div class="gal-vp" tabindex="0">
           <div class="gal-track">
             <article class="gal-slide">
-              <div class="device"><video class="loop" src="assets/v14/events-tap.mp4" poster="assets/v14/events-tap-poster.jpg" muted playsinline loop preload="none" aria-label="Screen recording: tapping Rest start, Training start, Training end and Recovery start for three running recordings"></video><img class="bezel" src="assets/v14/bezel.webp" width="735" height="1500" alt=""></div>
+              <div class="device"><video class="loop" src="assets/v14/events-tap.mp4" poster="assets/v14/events-tap-poster.jpg" muted playsinline loop preload="metadata" aria-label="Screen recording: tapping Rest start, Training start, Training end and Recovery start for three running recordings"></video><img class="bezel" src="assets/v14/bezel.webp" width="735" height="1500" alt=""></div>
               <h4 data-en="1 · Start and mark" data-de="1 · Starten und markieren">1 · Start and mark</h4>
               <p data-en="Up to four sensors record to their own memory. Tap Rest start, Training start, Recovery start as your protocol progresses." data-de="Bis zu vier Sensoren zeichnen im eigenen Speicher auf. Tippe im Protokollverlauf auf Ruhe, Training und Erholung.">Up to four sensors record to their own memory. Tap Rest start, Training start, Recovery start as your protocol progresses.</p>
             </article>
             <article class="gal-slide">
-              <div class="device"><img class="shot" src="assets/v14/phone-sitzung.webp" width="735" height="1500" alt="Session overview: duration, heart rate, RMSSD, SDNN, SD1/SD2, DFA alpha1, LF/HF, artifacts" loading="lazy" decoding="async"></div>
+              <div class="device"><img class="shot" src="assets/v14/phone-sitzung.webp" width="735" height="1500" alt="Session overview: duration, heart rate, RMSSD, SDNN, SD1/SD2, DFA alpha1, LF/HF, artifacts" decoding="async"></div>
               <h4 data-en="2 · Read out" data-de="2 · Auslesen">2 · Read out</h4>
               <p data-en="All sensors in one go. Each recording arrives with its participant, real start time and every metric." data-de="Alle Sensoren in einem Zug. Jede Aufnahme kommt mit ihrer Person, echter Startzeit und allen Kennzahlen an.">All sensors in one go. Each recording arrives with its participant, real start time and every metric.</p>
             </article>
             <article class="gal-slide">
-              <div class="device"><img class="shot" src="assets/v14/phone-dual-card.webp" width="735" height="1500" alt="Heart rate and RMSSD over the whole 100-minute session: rest, training and recovery" loading="lazy" decoding="async"></div>
+              <div class="device"><img class="shot" src="assets/v14/phone-dual-card.webp" width="735" height="1500" alt="Heart rate and RMSSD over the whole 100-minute session: rest, training and recovery" decoding="async"></div>
               <h4 data-en="3 · See the whole session" data-de="3 · Verlauf sehen">3 · See the whole session</h4>
               <p data-en="Heart rate and HRV together over the whole session – touch and hold for values." data-de="Puls und HRV gemeinsam über die ganze Sitzung – halten zeigt die Werte.">Heart rate and HRV together over the whole session – touch and hold for values.</p>
             </article>
             <article class="gal-slide">
-              <div class="device"><img class="shot" src="assets/v14/phone-ereignisse.webp" width="735" height="1500" alt="Events with clock time: rest start, training start, training end, recovery start" loading="lazy" decoding="async"></div>
+              <div class="device"><img class="shot" src="assets/v14/phone-ereignisse.webp" width="735" height="1500" alt="Events with clock time: rest start, training start, training end, recovery start" decoding="async"></div>
               <h4 data-en="4 · Phases with clock time" data-de="4 · Phasen mit Uhrzeit">4 · Phases with clock time</h4>
               <p data-en="Every event with its clock time – and a segment table with values per phase in the export." data-de="Jedes Ereignis mit Uhrzeit – und im Export eine Segmenttabelle mit Werten je Phase.">Every event with its clock time – and a segment table with values per phase in the export.</p>
             </article>
             <article class="gal-slide">
-              <div class="device"><img class="shot" src="assets/v14/phone-poincare-full.webp" width="735" height="1500" alt="Full-screen Poincaré plot of a whole recording with SD1, SD2 and time slider" loading="lazy" decoding="async"></div>
+              <div class="device"><img class="shot" src="assets/v14/phone-poincare-full.webp" width="735" height="1500" alt="Full-screen Poincaré plot of a whole recording with SD1, SD2 and time slider" decoding="async"></div>
               <h4 data-en="5 · Go deeper" data-de="5 · Tiefer gehen">5 · Go deeper</h4>
               <p data-en="Every chart full screen, portrait or landscape: Poincaré, tachogram, spectrum, DFA α1 over time – each with method and source." data-de="Jede Grafik im Vollbild, hoch oder quer: Poincaré, Tachogramm, Spektrum, DFA α1 im Verlauf – jeweils mit Methode und Quelle.">Every chart full screen, portrait or landscape: Poincaré, tachogram, spectrum, DFA α1 over time – each with method and source.</p>
             </article>
             <article class="gal-slide">
-              <div class="device"><img class="shot" src="assets/v14/phone-export.webp" width="735" height="1500" alt="Export options: PDF report, figures for publication, Kubios text, raw RR, complete audit export" loading="lazy" decoding="async"></div>
+              <div class="device"><img class="shot" src="assets/v14/phone-export.webp" width="735" height="1500" alt="Export options: PDF report, figures for publication, Kubios text, raw RR, complete audit export" decoding="async"></div>
               <h4 data-en="6 · Export" data-de="6 · Exportieren">6 · Export</h4>
               <p data-en="PDF report, figures for publication, Kubios, CSV, EDF+, WFDB, JSON – shared from the iPhone." data-de="PDF-Bericht, Grafiken zur Veröffentlichung, Kubios, CSV, EDF+, WFDB, JSON – direkt vom iPhone geteilt.">PDF report, figures for publication, Kubios, CSV, EDF+, WFDB, JSON – shared from the iPhone.</p>
             </article>
@@ -824,19 +826,19 @@ document.head.appendChild(s);})();</script>
     els.forEach(function (e) { io.observe(e); });
   } else { els.forEach(function (e) { e.classList.add('in'); }); }
 
-  /* Galerie (Kanon Breathwork initGal) */
+  /* Galerie — Kanon Breathwork initGal 1:1 (27.10.: eigene Abwandlung mit 60-%-Schwelle ließ Bilder dunkel stehen) */
   function initGal(sel) {
     var s = document.querySelector(sel); if (!s) return;
     var vp = s.querySelector('.gal-vp'), slides = [].slice.call(s.querySelectorAll('.gal-slide')), meta = s.querySelector('.gal-meta'), a = 0;
     var up = function (i) { a = i; slides.forEach(function (x, j) { x.classList.toggle('is-active', j === i); }); if (meta) meta.textContent = (i + 1) + ' / ' + slides.length; };
-    var go = function (i) { i = Math.max(0, Math.min(slides.length - 1, i)); vp.scrollTo({ left: slides[i].offsetLeft - vp.offsetWidth / 2 + slides[i].offsetWidth / 2, behavior: 'smooth' }); };
     if ('IntersectionObserver' in window) {
-      var io = new IntersectionObserver(function (es) { es.forEach(function (e) { if (e.isIntersecting && e.intersectionRatio > .6) up(slides.indexOf(e.target)); }); }, { root: vp, threshold: [.6] });
+      var io = new IntersectionObserver(function (es) { es.forEach(function (e) { if (e.isIntersecting && e.intersectionRatio > .5) up(slides.indexOf(e.target)); }); }, { root: vp, threshold: [.5] });
       slides.forEach(function (x) { io.observe(x); });
     }
-    s.querySelector('.gal-prev').onclick = function () { go(a - 1); };
-    s.querySelector('.gal-next').onclick = function () { go(a + 1); };
-    vp.addEventListener('keydown', function (e) { if (e.key === 'ArrowLeft') { e.preventDefault(); go(a - 1); } if (e.key === 'ArrowRight') { e.preventDefault(); go(a + 1); } });
+    var geh = function (i) { i = Math.max(0, Math.min(slides.length - 1, i)); slides[i].scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' }); };
+    s.querySelector('.gal-prev').onclick = function () { geh(a - 1); };
+    s.querySelector('.gal-next').onclick = function () { geh(a + 1); };
+    vp.addEventListener('keydown', function (e) { if (e.key === 'ArrowLeft') { e.preventDefault(); geh(a - 1); } if (e.key === 'ArrowRight') { e.preventDefault(); geh(a + 1); } });
     up(0);
   }
   initGal('#gal-flow');
@@ -861,7 +863,7 @@ document.head.appendChild(s);})();</script>
 
 </script>
 <script src="/assets/app-tour/app-tour.js?v=3" defer></script>
-<script src="/assets/poincare-live/poincare-live.js?v=2" defer></script>
+<script src="/assets/poincare-live/poincare-live.js?v=8" defer></script>
 <script>
 // Vollbild für Bilder: Tippen/Klick öffnet, Wischen oder ← → blättert, Klick/Esc schließt.
 // Kern der Equine-Lösung (Überblendung, Wischen, Zähler) ohne deren Modul-Menü.
