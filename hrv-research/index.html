@@ -1,9 +1,848 @@
 <!DOCTYPE html>
-<html lang="en"><head><meta charset="UTF-8">
-<title>CARLON HRV Research</title>
-<meta name="robots" content="noindex, follow">
-<link rel="canonical" href="https://carlon.app/research/">
-<meta http-equiv="refresh" content="0; url=https://carlon.app/research/">
-<script>location.replace("https://carlon.app/research/" + location.hash);</script>
-<style>body{background:#020202;color:#ebe6dc;font-family:-apple-system,sans-serif;display:grid;place-items:center;min-height:100vh;margin:0}a{color:#3ECFB2}</style>
-</head><body><p>CARLON HRV Research lives at <a href="https://carlon.app/research/">carlon.app/research/</a></p></body></html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#020202">
+  <title>CARLON HRV Research — HRV study app for Polar H10 &amp; Movesense Flash · iPhone</title>
+  <meta name="description" content="iPhone app for HRV studies: up to four Polar H10 or Movesense sensors at once, recording in the strap's memory, event buttons for protocol phases with values per phase, DFA α1 over time, and original RR exports for Kubios, Python, R and MATLAB. 331 of 331 checks against NeuroKit2 and SciPy.">
+  <meta property="og:title" content="CARLON HRV Research — your HRV study, from one iPhone">
+  <meta property="og:description" content="Up to four Polar H10 or Movesense sensors at once. Phase markers, values per phase, DFA α1 over time, original RR data for Kubios, Python and R. Validated against NeuroKit2.">
+  <meta property="og:image" content="https://vitalkultur.com/assets/og-research.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:url" content="https://vitalkultur.com/hrv-research/">
+  <meta property="og:type" content="website">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" href="/app-icon.png">
+  <link rel="apple-touch-icon" href="/app-icon.png">
+  <link rel="canonical" href="https://vitalkultur.com/hrv-research/">
+  <link rel="alternate" hreflang="en" href="https://vitalkultur.com/hrv-research/">
+  <link rel="alternate" hreflang="de" href="https://vitalkultur.com/hrv-research/de/">
+  <link rel="alternate" hreflang="x-default" href="https://vitalkultur.com/hrv-research/">
+  <meta property="og:locale" content="en_US">
+  <meta property="og:locale:alternate" content="de_DE">
+  <meta name="twitter:title" content="CARLON HRV Research — your HRV study, from one iPhone">
+  <meta name="twitter:description" content="Up to four Polar H10 or Movesense sensors at once, phase markers, values per phase, DFA α1 over time, original RR data for Kubios, Python and R.">
+  <meta name="twitter:image" content="https://vitalkultur.com/assets/og-research.png">
+  <link rel="stylesheet" href="/assets/app-tour/app-tour.css">
+  <link rel="preload" href="/fonts/jost-variable.woff2" as="font" type="font/woff2" crossorigin>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "SoftwareApplication",
+        "name": "CARLON HRV Research",
+        "operatingSystem": "iOS 17 or later",
+        "applicationCategory": "HealthApplication",
+        "applicationSubCategory": "Heart rate variability research",
+        "url": "https://vitalkultur.com/hrv-research/",
+        "downloadUrl": "https://apps.apple.com/app/id6826010655",
+        "offers": {"@type": "Offer", "price": "99.99", "priceCurrency": "EUR", "category": "one-time purchase"},
+        "audience": {"@type": "Audience", "audienceType": "HRV researchers, sports scientists, students writing a thesis, research labs"},
+        "description": "Records beat-to-beat RR intervals from Polar H10 chest straps and Movesense Flash sensors, up to four at once and in the sensor's own memory; marks protocol phases with event buttons and exports values per phase; computes DFA alpha1 over time; exports the original RR data as CSV, Kubios text, FIT, EDF+, WFDB and JSON with audit trail and W3C PROV. Computations checked against NeuroKit2 and SciPy (331 of 331 checks). Not a medical device.",
+        "featureList": ["Up to four Polar H10 or Movesense Flash sensors at once", "Recording in the strap's internal memory", "Event buttons for protocol phases with segment and event tables", "DFA alpha1 over time (2-minute windows every 5 s)", "Original RR export: CSV, Kubios text, FIT, EDF+, WFDB, JSON", "PDF report with methods paragraph; figures as vector PDF and 300-dpi PNG", "No account, no server"],
+        "softwareHelp": "https://vitalkultur.com/hrv-research/CARLON-HRV-Research-Validation-Dossier.pdf",
+        "creator": {"@type": "Organization", "name": "vitalkultur", "url": "https://vitalkultur.com", "email": "jan@vitalkultur.com"}
+      },
+      {
+        "@type": "FAQPage",
+        "mainEntity": [
+          {"@type": "Question", "name": "Which sensors does CARLON HRV Research support?", "acceptedAnswer": {"@type": "Answer", "text": "Polar H10 chest straps (live and internal memory) and Movesense Flash sensors (live and in-sensor recording). The app is tested with these two sensors."}},
+          {"@type": "Question", "name": "Does CARLON HRV Research work with Movesense?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. Movesense Flash sensors stream heartbeats live and record in the sensor itself; the app also saves Movesense raw ECG and 9-axis motion data as CSV. Movesense and Polar H10 can run side by side in one study."}},
+          {"@type": "Question", "name": "How many sensors can record at the same time?", "acceptedAnswer": {"@type": "Answer", "text": "Up to four sensors at once from one iPhone. They record to their own memory and are read out together afterwards, each recording assigned to its participant with its real start time."}},
+          {"@type": "Question", "name": "Can I use the data in Kubios HRV?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. The CSV carries the exact settings for the Kubios custom text import in its header, and the app also writes a Kubios text file and FIT. RR intervals are exported exactly as recorded, without smoothing or correction."}},
+          {"@type": "Question", "name": "How do I get HRV values for each phase of my protocol?", "acceptedAnswer": {"@type": "Answer", "text": "Tap an event button at each phase change, for example rest, training and recovery. The app exports a segment table with duration, beats, heart rate, RMSSD, SDNN and pNN50 for each phase, and writes the events into EDF+ and WFDB files."}},
+          {"@type": "Question", "name": "How is the app validated?", "acceptedAnswer": {"@type": "Answer", "text": "Every metric is compared with independent reference implementations (NeuroKit2, SciPy, Task Force definitions) on 18 RR series with 20,431 beats: 331 of 331 checks passed. Artefact detection matches NeuroKit2 beat by beat. The version-specific validation dossier lists every check and every error found and fixed."}},
+          {"@type": "Question", "name": "Do older recordings benefit from app updates?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. The app stores only the original sensor data and computes every metric fresh from it, so an improved method applies to all past recordings. Re-export to get the latest analysis; earlier exports name the app version that produced them."}},
+          {"@type": "Question", "name": "Can reviewers recompute the results?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. Every export contains the original RR intervals, each beat's artifact flag and correction, the app version and the exact method of every metric; anyone can recompute the values with open tools such as NeuroKit2 or SciPy."}},
+          {"@type": "Question", "name": "Does any study data leave the iPhone?", "acceptedAnswer": {"@type": "Answer", "text": "No. There is no account and no server; recordings stay on the researcher's iPhone and in its regular backup. Participants are managed under pseudonymous IDs."}},
+          {"@type": "Question", "name": "Is CARLON HRV Research a medical device?", "acceptedAnswer": {"@type": "Answer", "text": "No. It is a research and wellness tool and does not diagnose or treat any condition."}},
+          {"@type": "Question", "name": "What does it cost?", "acceptedAnswer": {"@type": "Answer", "text": "A one-time purchase of 99.99 EUR on the App Store, with no subscription and no per-participant fees. Institutions can buy licenses in volume through Apple School Manager or Apple Business Manager."}}
+        ]
+      }
+    ]
+  }
+  </script>
+  <!-- GoatCounter — cookiefrei. count.js wertet DNT NICHT aus (Herstellerentscheidung),
+     deshalb laden wir es bei Do-Not-Track / Global Privacy Control gar nicht erst.
+     Erst dadurch stimmt die Opt-out-Zusage in der Datenschutzerklaerung. -->
+<script>(function(){var d=navigator.doNotTrack||window.doNotTrack||navigator.msDoNotTrack;
+if(d=='1'||d=='yes'||navigator.globalPrivacyControl===true)return;
+var s=document.createElement('script');s.async=true;s.src='//gc.zgo.at/count.js';
+s.setAttribute('data-goatcounter','https://vitalkultur.goatcounter.com/count');
+document.head.appendChild(s);})();</script>
+  <style>
+    @font-face { font-family: 'Jost'; font-style: normal; font-weight: 100 900; font-display: swap; src: url('/fonts/jost-variable.woff2') format('woff2'); }
+    :root {
+      --bg: #020202; --bg2: #07090A; --card: rgba(255,255,255,0.028); --line: rgba(235,230,220,0.09); --line2: rgba(235,230,220,0.16);
+      --t: rgb(235,230,220); --t2: rgba(235,230,220,.75); --t3: rgba(235,230,220,.55); --t4: rgba(235,230,220,.35);
+      --stille: #3ECFB2; --glow: #6EE6C8; --deep: #148273; --mint: #A8F0E0;
+      --s3: 3px; --s5: 5px; --s8: 8px; --s13: 13px; --s21: 21px; --s34: 34px; --s55: 55px; --s89: 89px; --s144: 144px;
+      --maxw: 1140px; --ease: cubic-bezier(.2,.7,.2,1);
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
+    body { background: var(--bg); color: var(--t); font-family: 'Jost', -apple-system, system-ui, sans-serif; font-size: 17px; line-height: 1.618; -webkit-font-smoothing: antialiased; overflow-x: hidden; }
+    a { color: inherit; text-decoration: none; }
+    img { display: block; max-width: 100%; height: auto; }
+    .demo > *, .outputs > *, .split > *, .compare > *, .proof > * { min-width: 0; }
+    .wrap { max-width: var(--maxw); margin: 0 auto; padding: 0 clamp(21px, 5vw, 55px); }
+
+    /* Navigation */
+    .nav { position: sticky; top: 0; z-index: 20; backdrop-filter: saturate(140%) blur(18px); -webkit-backdrop-filter: saturate(140%) blur(18px); background: rgba(2,2,2,0.72); border-bottom: 1px solid var(--line); }
+    .nav .wrap { display: flex; align-items: center; justify-content: space-between; height: 55px; }
+    .crumb { display: flex; align-items: center; gap: var(--s13); font-size: 13px; letter-spacing: .1em; text-transform: uppercase; color: var(--t3); }
+    .crumb img { height: 26px; width: auto; opacity: .85; }
+    .crumb .sep { color: var(--t4); }
+    .crumb b { color: var(--t); font-weight: 500; }
+    .nav-r { display: flex; align-items: center; gap: var(--s13); }
+    .lang { background: none; border: 1px solid var(--line2); color: var(--t3); font: inherit; font-size: 12px; letter-spacing: .1em; padding: 5px 13px; border-radius: 99px; cursor: pointer; }
+    .lang .on { color: var(--t); }
+    .pill { font-size: 13px; letter-spacing: .06em; padding: 7px 16px; border-radius: 99px; background: var(--stille); color: #021210; font-weight: 600; transition: background .255s var(--ease); }
+    .pill:hover { background: var(--glow); }
+
+    /* Hero */
+    .hero { position: relative; text-align: center; padding: var(--s89) 0 var(--s55); overflow: hidden; }
+    .hero::before { content: ""; position: absolute; inset: -20% -10% auto; height: 760px; background: radial-gradient(closest-side, rgba(62,207,178,0.16), rgba(62,207,178,0.05) 55%, transparent 75%); pointer-events: none; }
+    .signet { position: relative; height: auto; width: clamp(150px, 20vw, 210px); margin: 0 auto var(--s34); animation: atem 8.684s ease-in-out infinite; }
+    @keyframes atem { 0%,100% { filter: drop-shadow(0 0 18px rgba(62,207,178,.25)); transform: scale(1); } 50% { filter: drop-shadow(0 0 34px rgba(110,230,200,.45)); transform: scale(1.012); } }
+    .eyebrow { font-size: 12px; letter-spacing: .382em; text-transform: uppercase; color: var(--stille); margin-bottom: var(--s21); }
+    h1 { font-size: clamp(42px, 7.2vw, 76px); line-height: 1.04; font-weight: 500; letter-spacing: -0.02em; margin: 0 auto var(--s21); max-width: 17ch; }
+    h1 em, h2 em { font-style: normal; color: var(--stille); }
+    .lead { font-size: clamp(18px, 2.1vw, 21px); color: var(--t2); max-width: 620px; margin: 0 auto var(--s34); font-weight: 400; }
+    .ctas { display: flex; gap: var(--s13); justify-content: center; flex-wrap: wrap; }
+    .btn { display: inline-flex; align-items: center; gap: var(--s8); padding: 13px 26px; border-radius: 99px; font-size: 16px; font-weight: 500; transition: all .255s var(--ease); }
+    .btn-1 { background: var(--stille); color: #021210; font-weight: 600; box-shadow: 0 8px 34px rgba(62,207,178,.25); }
+    .btn-1:hover { background: var(--glow); transform: translateY(-1px); }
+    .btn-2 { border: 1px solid var(--line2); color: var(--t); }
+    .btn-2:hover { border-color: var(--stille); color: var(--glow); }
+    .fine { margin-top: var(--s21); font-size: 13px; color: var(--t4); letter-spacing: .06em; }
+
+    /* Zahlenleiste */
+    .proof { display: grid; grid-template-columns: repeat(4, 1fr); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); margin-top: var(--s55); }
+    .proof div { padding: var(--s34) var(--s13); text-align: center; border-right: 1px solid var(--line); }
+    .proof div:last-child { border-right: 0; }
+    .proof b { display: block; font-size: clamp(30px, 4vw, 42px); font-weight: 400; letter-spacing: -0.01em; color: var(--t); line-height: 1.1; font-variant-numeric: tabular-nums; }
+    .proof span { font-size: 13px; color: var(--t3); letter-spacing: .04em; }
+
+    /* Kapitel */
+    section.ch { padding: var(--s144) 0 0; }
+    .label { font-size: 12px; letter-spacing: .382em; text-transform: uppercase; color: var(--stille); margin-bottom: var(--s13); }
+    h2 { font-size: clamp(32px, 4.6vw, 52px); line-height: 1.08; font-weight: 500; letter-spacing: -0.015em; margin-bottom: var(--s21); }
+    .sub { font-size: 18px; color: var(--t2); max-width: 560px; }
+    .split { display: grid; grid-template-columns: 1.05fr .95fr; gap: var(--s89); align-items: center; }
+    .split.rev .txt { order: 2; }
+    .points { list-style: none; margin-top: var(--s34); display: grid; gap: var(--s21); }
+    .points li { padding-left: var(--s34); position: relative; color: var(--t2); font-size: 16px; }
+    .points li::before { content: ""; position: absolute; left: 0; top: .72em; width: 13px; height: 1px; background: var(--stille); }
+    .points b { color: var(--t); font-weight: 500; }
+    .phone { justify-self: center; position: relative; }
+    .phone::after { content: ""; position: absolute; inset: 10% -12% -6%; z-index: -1; background: radial-gradient(closest-side, rgba(62,207,178,.14), transparent 70%); }
+    .phone img { width: min(340px, 72vw); height: auto; border-radius: 34px; border: 1px solid var(--line); box-shadow: 0 34px 89px rgba(0,0,0,.6); }
+
+    /* Datenkarten */
+    .panel { background: linear-gradient(180deg, rgba(255,255,255,.035), rgba(255,255,255,.012)); border: 1px solid var(--line); border-radius: 21px; padding: var(--s34); }
+    .panel h3 { font-size: 14px; letter-spacing: .1em; text-transform: uppercase; color: var(--t3); font-weight: 500; margin-bottom: var(--s21); }
+    table.seg { width: 100%; border-collapse: collapse; font-size: 15px; font-variant-numeric: tabular-nums; }
+    table.seg th { text-align: right; font-weight: 500; color: var(--t3); font-size: 12px; letter-spacing: .06em; text-transform: uppercase; padding: 0 0 var(--s13); }
+    table.seg th:first-child, table.seg td:first-child { text-align: left; }
+    table.seg td { text-align: right; padding: var(--s13) 0; border-top: 1px solid var(--line); color: var(--t2); }
+    table.seg td:first-child { color: var(--t); }
+    table.seg .dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: var(--s8); vertical-align: middle; }
+    .cap { font-size: 13px; color: var(--t4); margin-top: var(--s21); line-height: 1.5; }
+    .a1-chart { width: 100%; height: auto; margin-top: var(--s8); }
+    .a1-chart .a1 { fill: none; stroke: url(#a1g); stroke-width: 2.2; stroke-linejoin: round; }
+    .a1-chart .hr { fill: none; stroke: rgba(235,230,220,.16); stroke-width: 1.3; }
+    .a1-chart .ref { stroke: rgba(235,230,220,.28); stroke-dasharray: 3 5; }
+    .a1-chart text { fill: rgba(235,230,220,.45); font: 12px Jost, sans-serif; }
+    .legend { display: flex; gap: var(--s21); font-size: 13px; color: var(--t3); margin-top: var(--s8); }
+    .legend i { display: inline-block; width: 21px; height: 2px; vertical-align: middle; margin-right: var(--s8); }
+
+    /* Formate */
+    .chips { display: flex; flex-wrap: wrap; gap: var(--s8); margin-top: var(--s34); }
+    .chip { font-size: 13px; letter-spacing: .06em; padding: 6px 14px; border-radius: 99px; border: 1px solid var(--line2); color: var(--t2); }
+
+    /* Prüfung */
+    .checks { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--s21); margin-top: var(--s55); }
+    .check b { display: block; font-size: 34px; font-weight: 400; color: var(--t); line-height: 1.1; margin-bottom: var(--s8); font-variant-numeric: tabular-nums; }
+    .check p { font-size: 15px; color: var(--t3); }
+    .fixed { margin-top: var(--s55); border-top: 1px solid var(--line); padding-top: var(--s34); display: grid; grid-template-columns: 1fr 2fr; gap: var(--s55); }
+    .fixed h3 { font-size: 21px; font-weight: 500; }
+    .fixed ol { list-style: none; counter-reset: f; display: grid; gap: var(--s13); }
+    .fixed li { counter-increment: f; position: relative; padding-left: var(--s34); color: var(--t2); font-size: 15px; }
+    .fixed li::before { content: counter(f, decimal-leading-zero); position: absolute; left: 0; color: var(--stille); font-size: 13px; top: .15em; font-variant-numeric: tabular-nums; }
+
+    /* Zielgruppen */
+    .who { display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--s21); margin-top: var(--s55); }
+    .who .panel { padding: var(--s21) var(--s21) var(--s34); }
+    .who h4 { font-size: 18px; font-weight: 500; margin-bottom: var(--s8); }
+    .who p { font-size: 15px; color: var(--t3); }
+
+    /* FAQ */
+    .faq { margin-top: var(--s55); border-top: 1px solid var(--line); }
+    .faq details { border-bottom: 1px solid var(--line); }
+    .faq summary { list-style: none; cursor: pointer; padding: var(--s21) 0; font-size: 18px; font-weight: 500; display: flex; justify-content: space-between; gap: var(--s21); }
+    .faq summary::-webkit-details-marker { display: none; }
+    .faq summary::after { content: "+"; color: var(--stille); font-weight: 300; font-size: 24px; line-height: 1; transition: transform .255s var(--ease); }
+    .faq details[open] summary::after { transform: rotate(45deg); }
+    .faq details p { color: var(--t2); padding: 0 0 var(--s21); max-width: 760px; font-size: 16px; }
+
+    /* Schluss */
+    .final { text-align: center; padding: var(--s144) 0 var(--s89); position: relative; }
+    .final::before { content: ""; position: absolute; left: 50%; top: 40%; width: 720px; height: 420px; transform: translate(-50%,-50%); background: radial-gradient(closest-side, rgba(62,207,178,.13), transparent 70%); pointer-events: none; }
+    .price { font-size: clamp(46px, 6vw, 68px); font-weight: 400; letter-spacing: -0.02em; margin: var(--s13) 0 var(--s8); }
+    .price small { font-size: 18px; color: var(--t3); letter-spacing: .04em; margin-left: var(--s8); }
+    .legal { max-width: 760px; margin: var(--s55) auto 0; font-size: 13px; color: var(--t4); line-height: 1.6; }
+
+    footer { border-top: 1px solid var(--line); padding: var(--s34) 0 var(--s55); font-size: 13px; color: var(--t4); }
+    footer .wrap { display: flex; justify-content: space-between; gap: var(--s21); flex-wrap: wrap; align-items: center; }
+    footer nav { display: flex; gap: var(--s21); flex-wrap: wrap; }
+    footer a:hover { color: var(--t); }
+
+
+    /* Gerät: echtes Apple-Gehäuse über echtem App-Bild */
+    .device { position: relative; width: min(300px, 68vw); aspect-ratio: 1470 / 3000; margin: 0 auto; filter: drop-shadow(0 34px 55px rgba(0,0,0,.6)); }
+    .device > img.shot { width: 100%; height: 100%; display: block; }
+    .device video, .device .poster { position: absolute; left: 5.102%; top: 2.2%; width: 89.796%; height: 95.6%; object-fit: cover; background: #000; }
+    .device .bezel { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+    .device-glow { position: relative; }
+    .device-glow::before { content: ""; position: absolute; inset: 8% -18% 0; background: radial-gradient(closest-side, rgba(62,207,178,.16), transparent 70%); z-index: -1; }
+
+    /* Vorführung: Poincaré mit Zeitregler */
+    .demo { display: grid; grid-template-columns: .9fr 1.1fr; gap: var(--s89); align-items: center; }
+    .scrub { margin-top: var(--s34); max-width: 420px; }
+    .scrub-row { display: flex; align-items: center; gap: var(--s13); }
+    .play { flex: none; width: 44px; height: 44px; border-radius: 50%; border: 1px solid var(--line2); background: rgba(62,207,178,.08); color: var(--t); cursor: pointer; display: grid; place-items: center; transition: all .255s var(--ease); }
+    .play:hover { border-color: var(--stille); background: rgba(62,207,178,.16); }
+    .play svg { width: 16px; height: 16px; fill: currentColor; }
+    input.range { -webkit-appearance: none; appearance: none; flex: 1; height: 34px; background: transparent; cursor: ew-resize; }
+    input.range::-webkit-slider-runnable-track { height: 3px; border-radius: 3px; background: linear-gradient(90deg, var(--stille) var(--p, 0%), rgba(235,230,220,.16) var(--p, 0%)); }
+    input.range::-moz-range-track { height: 3px; border-radius: 3px; background: rgba(235,230,220,.16); }
+    input.range::-moz-range-progress { height: 3px; background: var(--stille); }
+    input.range::-webkit-slider-thumb { -webkit-appearance: none; width: 21px; height: 21px; margin-top: -9px; border-radius: 50%; background: var(--t); box-shadow: 0 0 0 5px rgba(62,207,178,.22); }
+    input.range::-moz-range-thumb { width: 21px; height: 21px; border: 0; border-radius: 50%; background: var(--t); }
+    .scrub-cap { font-size: 13px; color: var(--t4); margin-top: var(--s8); padding-left: 57px; }
+    .steps { list-style: none; display: grid; gap: var(--s13); margin-top: var(--s34); counter-reset: s; }
+    .steps li { counter-increment: s; display: grid; grid-template-columns: 34px 1fr; gap: var(--s8); color: var(--t2); font-size: 16px; }
+    .steps li::before { content: counter(s); width: 26px; height: 26px; border-radius: 50%; border: 1px solid var(--line2); color: var(--stille); font-size: 13px; display: grid; place-items: center; margin-top: 1px; }
+
+    /* Vorher / mit CARLON */
+    .compare { display: grid; grid-template-columns: 1fr 1fr; gap: 0; margin-top: var(--s55); border: 1px solid var(--line); border-radius: 21px; overflow: hidden; }
+    .compare > div { padding: var(--s34); }
+    .compare .before { background: rgba(255,255,255,.012); border-right: 1px solid var(--line); }
+    .compare .with { background: linear-gradient(180deg, rgba(62,207,178,.07), rgba(62,207,178,.02)); }
+    .compare h3 { font-size: 13px; letter-spacing: .1em; text-transform: uppercase; font-weight: 500; margin-bottom: var(--s21); }
+    .compare .before h3 { color: var(--t3); } .compare .with h3 { color: var(--stille); }
+    .compare ul { list-style: none; display: grid; gap: var(--s13); }
+    .compare li { font-size: 16px; color: var(--t2); padding-left: var(--s21); position: relative; }
+    .compare .before li::before { content: "–"; position: absolute; left: 0; color: var(--t4); }
+    .compare .with li::before { content: "✓"; position: absolute; left: 0; color: var(--stille); font-size: 14px; }
+
+    /* Galerie (Kanon: Breathwork gal-*) */
+    .gal { margin-top: var(--s55); }
+    .gal-vp { overflow-x: auto; overflow-y: hidden; scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch; scrollbar-width: none; overscroll-behavior-x: contain; touch-action: pan-x pan-y; }
+    .gal-vp::-webkit-scrollbar { display: none; }
+    .gal-track { display: flex; gap: var(--s34); padding: 0 calc(50% - 130px) var(--s13); }
+    .gal-slide { flex: 0 0 260px; scroll-snap-align: center; scroll-snap-stop: always; text-align: center; transition: opacity .383s var(--ease), transform .383s var(--ease); }
+    .gal-slide .device { width: 100%; }
+    .gal-slide h4 { font-size: 16px; font-weight: 500; margin: var(--s21) 0 var(--s5); }
+    .gal-slide p { font-size: 14px; color: var(--t3); line-height: 1.5; }
+    .gal-nav { display: none; justify-content: center; align-items: center; gap: var(--s13); margin-top: var(--s21); font-size: 13px; color: var(--t3); }
+    .gal-btn { width: 38px; height: 38px; border-radius: 50%; border: 1px solid var(--line2); background: transparent; color: var(--t); cursor: pointer; font-size: 18px; }
+    @media (max-width: 899px) { .gal-slide { opacity: .35; transform: scale(.92); } .gal-slide.is-active { opacity: 1; transform: none; } .gal-nav { display: flex; } }
+    @media (min-width: 900px) { .gal-vp { overflow: visible; } .gal-track { flex-wrap: wrap; justify-content: center; padding: 0; gap: var(--s55) var(--s34); } .gal-slide { flex: 0 1 240px; } }
+
+    /* Ergebnisse: PDF-Seiten + Dateien */
+    .outputs { display: grid; grid-template-columns: 1.15fr .85fr; gap: var(--s55); align-items: start; margin-top: var(--s55); }
+    .pages { position: relative; display: block; aspect-ratio: 1 / 0.98; }
+    .pages img { position: absolute; width: 58%; border-radius: 6px; box-shadow: 0 21px 55px rgba(0,0,0,.55); border: 1px solid rgba(255,255,255,.08); transition: transform .51s var(--ease); background: #fff; }
+    .pages img:nth-child(1) { left: 0; top: 34px; transform: rotate(-5deg); }
+    .pages img:nth-child(2) { left: 21%; top: 8px; transform: rotate(-1deg); z-index: 2; }
+    .pages img:nth-child(3) { left: 42%; top: 40px; transform: rotate(4deg); z-index: 1; }
+    .pages:hover img:nth-child(1) { transform: rotate(-7deg) translateX(-13px); }
+    .pages:hover img:nth-child(3) { transform: rotate(6deg) translateX(13px); }
+    .files { font-family: ui-monospace, "SF Mono", Menlo, monospace; font-size: 12.5px; color: var(--t2); background: rgba(255,255,255,.02); border: 1px solid var(--line); border-radius: 13px; padding: var(--s21); line-height: 1.9; overflow-x: auto; white-space: nowrap; }
+    .files .d { color: var(--stille); }
+    .files .c { color: var(--t4); }
+    .out-list { list-style: none; display: grid; gap: var(--s21); margin-bottom: var(--s34); }
+    .out-list li { display: grid; grid-template-columns: 89px 1fr; gap: var(--s13); align-items: baseline; }
+    .out-list b { font-size: 13px; letter-spacing: .06em; color: var(--stille); font-weight: 500; }
+    .out-list span { color: var(--t2); font-size: 15px; }
+
+    @media (max-width: 900px) {
+      .demo, .outputs { grid-template-columns: 1fr; gap: var(--s55); }
+      .compare { grid-template-columns: 1fr; }
+      .compare .before { border-right: 0; border-bottom: 1px solid var(--line); }
+      .scrub-cap { padding-left: 0; }
+    }
+    @media (max-width: 560px) { .compare > div { padding: var(--s21); } }
+
+
+    /* Hero-Tour (Layout; Gerät + Liste aus /assets/app-tour/app-tour.css) */
+    .tour { display: grid; grid-template-columns: 1fr 420px; gap: var(--s55); align-items: center; text-align: left; margin-top: var(--s89); }
+    .tour-h { font-size: clamp(28px, 3.4vw, 40px); max-width: 16ch; }
+    h1 { text-wrap: balance; }
+    .feats { margin: var(--s21) 0 var(--s34); max-width: 560px; }
+    .tour-phone { position: relative; justify-self: center; }
+    .tour-phone::before { content: ""; position: absolute; inset: 6% -26% 4%; background: radial-gradient(closest-side, rgba(62,207,178,.2), transparent 72%); z-index: -1; animation: atem 8.684s ease-in-out infinite; }
+    .at-scroll .at-scroller { padding-top: 31.8%; }
+    .tour-hint { text-align: center; font-size: 13px; color: var(--t4); margin-top: var(--s21); }
+
+    /* Sensoren */
+    .sensors { display: grid; grid-template-columns: 1.35fr 1fr; gap: var(--s21); margin-top: var(--s55); }
+    .sensor { margin: 0; border: 1px solid var(--line); border-radius: 21px; overflow: hidden; background: rgba(255,255,255,.015); display: flex; flex-direction: column; }
+    .sensor > img { width: 100%; height: 240px; object-fit: cover; object-position: 50% 40%; }
+    .sensor-ph { height: 240px; display: grid; place-items: center; background: radial-gradient(closest-side, rgba(62,207,178,.12), transparent 75%), #050707; }
+    .sensor-ph span { font-size: 13px; letter-spacing: .382em; text-transform: uppercase; color: var(--t4); }
+    .sensor figcaption { padding: var(--s21) var(--s34) var(--s34); }
+    .sensor h3 { font-size: 21px; font-weight: 500; margin-bottom: var(--s13); }
+    .sensor ul { list-style: none; display: grid; gap: var(--s8); }
+    .sensor li { color: var(--t2); font-size: 15px; padding-left: var(--s21); position: relative; }
+    .sensor li::before { content: ""; position: absolute; left: 0; top: .72em; width: 8px; height: 1px; background: var(--stille); }
+
+    @media (max-width: 960px) {
+      .tour { grid-template-columns: 1fr; gap: var(--s34); }
+      .tour-phone { order: -1; }
+      .tour-txt { text-align: left; }
+      .feats { max-width: none; }
+      .sensors { grid-template-columns: 1fr; }
+    }
+
+    /* Kinobühne */
+    .kino { position: relative; margin-top: var(--s144); }
+    .kino img { width: 100%; height: auto; display: block; }
+    .kino::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, var(--bg) 0%, transparent 14%, transparent 62%, var(--bg) 100%); pointer-events: none; }
+    .kino-txt { position: relative; z-index: 2; margin-top: -9vw; }
+    @media (max-width: 700px) { .kino-txt { margin-top: -14vw; } }
+    /* Passt es? */
+    .fit { display: grid; grid-template-columns: 1fr 1fr; gap: var(--s21); margin-top: var(--s55); }
+    .fit h3, .kubios h3 { font-size: 18px; font-weight: 500; margin-bottom: var(--s13); }
+    .fit ul { list-style: none; display: grid; gap: var(--s13); }
+    .fit li { padding-left: var(--s21); position: relative; color: var(--t2); font-size: 15.5px; }
+    .fit li::before { content: "✓"; position: absolute; left: 0; color: var(--stille); font-size: 14px; }
+    .fit .nicht li::before { content: "–"; color: var(--t4); }
+    .kubios { border-color: rgba(62,207,178,.28); }
+    .kubios p { color: var(--t2); font-size: 16px; }
+    @media (max-width: 900px) { .fit { grid-template-columns: 1fr; } }
+    /* Feste Leiste auf dem Handy */
+    .sticky-cta { position: fixed; left: 12px; right: 12px; bottom: calc(12px + env(safe-area-inset-bottom)); z-index: 30; display: none; align-items: center; justify-content: space-between; gap: 13px; padding: 10px 10px 10px 18px; border-radius: 99px; background: rgba(10,14,14,.82); backdrop-filter: blur(18px) saturate(140%); -webkit-backdrop-filter: blur(18px) saturate(140%); border: 1px solid var(--line2); transform: translateY(140%); transition: transform .51s var(--ease); }
+    .sticky-cta b { display: block; font-size: 14px; font-weight: 500; }
+    .sticky-cta small { display: block; font-size: 12px; color: var(--t3); }
+    .sticky-cta.zeigen { transform: none; }
+    @media (max-width: 760px) { .sticky-cta { display: flex; } footer { padding-bottom: 96px; } }
+
+    /* Einblenden */
+    .js .rv { opacity: 0; transform: translateY(21px); transition: opacity .766s var(--ease), transform .766s var(--ease); }
+    .js .rv.in { opacity: 1; transform: none; }
+    @media (prefers-reduced-motion: reduce) { .signet { animation: none; } .js .rv { opacity: 1; transform: none; transition: none; } html { scroll-behavior: auto; } }
+
+    @media (max-width: 900px) {
+      .split { grid-template-columns: 1fr; gap: var(--s55); }
+      .proof { grid-template-columns: repeat(2, 1fr); }
+      .proof div:nth-child(2) { border-right: 0; }
+      .proof div:nth-child(-n+2) { border-bottom: 1px solid var(--line); }
+      .checks, .who { grid-template-columns: 1fr 1fr; }
+      .fixed { grid-template-columns: 1fr; gap: var(--s21); }
+      section.ch { padding-top: var(--s89); }
+    }
+    @media (max-width: 560px) {
+      .crumb .home, .crumb .sep { display: none; }
+      .checks, .who { grid-template-columns: 1fr; }
+      .panel { padding: var(--s21); }
+    }
+  </style>
+</head>
+<body>
+<script>document.documentElement.classList.add('js')</script>
+
+<header class="nav">
+  <div class="wrap">
+    <div class="crumb">
+      <a class="home" href="/" aria-label="vitalkultur"><img src="/assets/vitalkultur-wordmark.png" alt="vitalkultur"></a>
+      <span class="sep">/</span>
+      <b>CARLON HRV Research</b>
+    </div>
+    <div class="nav-r">
+      <button class="lang" id="langToggle" title="Deutsch / English"><span data-l="en" class="on">EN</span> · <span data-l="de">DE</span></button>
+      <a class="pill" href="https://apps.apple.com/app/id6826010655">App Store</a>
+    </div>
+  </div>
+</header>
+
+<main>
+  <!-- 1 · Hero: Marke zuerst, darunter die App zum Erleben -->
+  <section class="hero" data-app-tour>
+    <div class="wrap">
+      <img class="signet" src="assets/v14/signet.png" width="477" height="686" alt="CARLON HRV Research">
+      <div class="eyebrow" data-en="iPhone app for HRV studies · Polar H10 · Movesense" data-de="iPhone-App für HRV-Studien · Polar H10 · Movesense">iPhone app for HRV studies · Polar H10 · Movesense</div>
+      <h1 data-en="Your HRV study, <em>from one iPhone.</em>" data-de="Deine <span style=&quot;white-space:nowrap&quot;>HRV-Studie,</span> <em>mit einem iPhone.</em>">Your HRV study, <em>from one iPhone.</em></h1>
+      <p class="lead" data-en="Record up to four Polar H10 or Movesense sensors at once, mark every phase with one tap, and leave with original RR data, values per phase, a methods paragraph and publication-ready figures." data-de="Bis zu vier Polar H10 oder Movesense gleichzeitig aufnehmen, jede Phase per Tipp markieren – und mit Original-RR-Daten, Werten je Phase, Methodenabsatz und publikationsfertigen Grafiken nach Hause gehen.">Record up to four Polar H10 or Movesense sensors at once, mark every phase with one tap, and leave with original RR data, values per phase, a methods paragraph and publication-ready figures.</p>
+      <div class="ctas">
+        <a class="btn btn-1" href="https://apps.apple.com/app/id6826010655"><span data-en="View on the App Store" data-de="Im App Store ansehen">View on the App Store</span> <span aria-hidden="true">→</span></a>
+        <a class="btn btn-2" href="#erleben"><span data-en="Try the app below" data-de="App unten ausprobieren">Try the app below</span> <span aria-hidden="true">↓</span></a>
+      </div>
+      <div class="fine" data-en="One purchase · no account · no subscription · no server" data-de="Einmal kaufen · kein Konto · kein Abo · kein Server">One purchase · no account · no subscription · no server</div>
+    </div>
+    <div class="wrap tour" id="erleben">
+      <div class="tour-txt">
+        <div class="label" data-en="Try it here" data-de="Hier ausprobieren">Try it here</div>
+        <h2 class="tour-h" data-en="The real app, <em>with a real recording.</em>" data-de="Die echte App, <em>mit einer echten Aufnahme.</em>">The real app, <em>with a real recording.</em></h2>
+        <ol class="feats" data-tour-liste aria-label="What the app does">
+          <li><button data-i="0"><b data-en="Up to four sensors at once" data-de="Bis zu vier Sensoren gleichzeitig">Up to four sensors at once</b><span data-en="Polar H10 and Movesense Flash record on their own – mark each phase with one tap." data-de="Polar H10 und Movesense Flash zeichnen selbst auf – jede Phase per Tipp markiert.">Polar H10 and Movesense Flash record on their own – mark each phase with one tap.</span></button><i class="fort"></i></li>
+          <li><button data-i="1"><b data-en="Every metric of a recording" data-de="Jede Kennzahl einer Aufnahme">Every metric of a recording</b><span data-en="Time domain, Poincaré, DFA α1, spectrum and artifact share – scroll through it right here." data-de="Zeitbereich, Poincaré, DFA α1, Spektrum, Artefaktanteil – scroll selbst durch.">Time domain, Poincaré, DFA α1, spectrum and artifact share – scroll through it right here.</span></button><i class="fort"></i></li>
+          <li><button data-i="2"><b data-en="The whole session at a glance" data-de="Die ganze Sitzung auf einen Blick">The whole session at a glance</b><span data-en="Heart rate and HRV together – rest, training and recovery." data-de="Puls und HRV gemeinsam – Ruhe, Training und Erholung.">Heart rate and HRV together – rest, training and recovery.</span></button><i class="fort"></i></li>
+          <li><button data-i="3"><b data-en="See when the pattern changes" data-de="Sehen, wann sich das Muster ändert">See when the pattern changes</b><span data-en="A Poincaré plot with time slider and inspector, beat by beat." data-de="Ein Poincaré-Plot mit Zeitregler und Fadenkreuz, Schlag für Schlag.">A Poincaré plot with time slider and inspector, beat by beat.</span></button><i class="fort"></i></li>
+          <li><button data-i="4"><b data-en="Every number explained" data-de="Jede Zahl erklärt">Every number explained</b><span data-en="What it shows, how it is computed, what to watch – and the source." data-de="Was sie zeigt, wie sie gerechnet wird, worauf zu achten ist – und die Quelle.">What it shows, how it is computed, what to watch – and the source.</span></button><i class="fort"></i></li>
+          <li><button data-i="5"><b data-en="Ready for your manuscript" data-de="Bereit für dein Manuskript">Ready for your manuscript</b><span data-en="PDF report, publication figures, Kubios, CSV, EDF+, WFDB, JSON." data-de="PDF-Bericht, Publikationsgrafiken, Kubios, CSV, EDF+, WFDB, JSON.">PDF report, publication figures, Kubios, CSV, EDF+, WFDB, JSON.</span></button><i class="fort"></i></li>
+        </ol>
+      </div>
+      <div class="tour-phone">
+        <div class="at-device" id="tourDevice">
+          <div class="at-screen" id="tourScreen">
+<div class="at-scr" data-dauer="12" data-rate="1.4"><video src="assets/tour/sensors.mp4" poster="assets/tour/sensors-poster.webp" muted playsinline preload="metadata" aria-label="App: three recordings running, tapping the event buttons"></video></div>
+<div class="at-scr at-scroll" data-dauer="10"><img class="at-head" src="assets/tour/session-head.webp" alt=""><div class="at-scroller" tabindex="0"><img src="assets/tour/session-scroll.webp" alt="The full session screen: all metrics, heart rate and HRV, Poincaré, tachogram, spectrum, DFA alpha1, data quality, events and export" loading="lazy" decoding="async"></div></div>
+<div class="at-scr" data-dauer="6"><img src="assets/tour/dual.webp" alt="Heart rate and RMSSD over a 100-minute session" loading="lazy" decoding="async"></div>
+<div class="at-scr" data-dauer="15" data-rate="2"><video src="assets/tour/poincare.mp4" poster="assets/tour/poincare-poster.webp" muted playsinline preload="metadata" aria-label="App: Poincaré time slider and inspector"></video></div>
+<div class="at-scr" data-dauer="6"><img src="assets/tour/explain.webp" alt="Explanation sheet for RMSSD: what it shows, how it is computed, what to keep in mind, source" loading="lazy" decoding="async"></div>
+<div class="at-scr" data-dauer="6"><img src="assets/tour/export.webp" alt="Export options: PDF report, figures for publication, Kubios, raw RR, scientific, complete" loading="lazy" decoding="async"></div>
+          </div>
+          <img class="at-bezel" src="/assets/app-tour/iphone-18-pro-max-black.webp" width="735" height="1500" alt="">
+        </div>
+        <div class="tour-hint" id="tourHint" data-en="Real app, real recording – tap the list or swipe the phone" data-de="Echte App, echte Aufnahme – Liste antippen oder am iPhone wischen">Real app, real recording – tap the list or swipe the phone</div>
+      </div>
+    </div>
+    <div class="wrap">
+      <div class="proof rv">
+        <div><b data-count="4">4</b><span data-en="sensors at once" data-de="Sensoren gleichzeitig">sensors at once</span></div>
+        <div><b data-count="331" data-suffix="/331">331/331</b><span data-en="checks vs NeuroKit2 &amp; SciPy" data-de="Prüfungen gegen NeuroKit2 &amp; SciPy">checks vs NeuroKit2 &amp; SciPy</span></div>
+        <div><b data-count="8">8</b><span data-en="export formats, original RR untouched" data-de="Exportformate, Original-RR unverändert">export formats, original RR untouched</span></div>
+        <div><b data-count="0">0</b><span data-en="bytes of study data to a server" data-de="Bytes Studiendaten an einen Server">bytes of study data to a server</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 1b · Sensoren -->
+  <section class="ch" id="sensors">
+    <div class="wrap">
+      <div class="rv" style="max-width:780px">
+        <div class="label" data-en="The sensors" data-de="Die Sensoren">The sensors</div>
+        <h2 data-en="Polar H10 and Movesense Flash. <em>Electrical, beat by beat.</em>" data-de="Polar H10 und Movesense Flash. <em>Elektrisch, Schlag für Schlag.</em>">Polar H10 and Movesense Flash. <em>Electrical, beat by beat.</em></h2>
+        <p class="sub" data-en="Both read the heart's electrical signal at the chest – the standard for reliable HRV, where optical wrist and ring sensors fall short in motion. The app is tested with both, and they can run side by side in one study." data-de="Beide lesen das elektrische Signal des Herzens an der Brust – der Standard für belastbare HRV, wo optische Uhren und Ringe in Bewegung an Grenzen kommen. Die App ist mit beiden getestet, und beide laufen nebeneinander in einer Studie.">Both read the heart's electrical signal at the chest – the standard for reliable HRV, where optical wrist and ring sensors fall short in motion. The app is tested with both, and they can run side by side in one study.</p>
+      </div>
+      <div class="sensors rv">
+        <figure class="sensor">
+          <img src="/assets/polar-h10-human.jpg" width="1600" height="496" alt="Polar H10 chest strap worn on the torso" loading="lazy" decoding="async">
+          <figcaption>
+            <h3>Polar H10</h3>
+            <ul>
+              <li data-en="Live RR at 1/1024 s resolution" data-de="Live-RR mit 1/1024 s Auflösung">Live RR at 1/1024 s resolution</li>
+              <li data-en="Records in its own memory – read out later" data-de="Zeichnet im eigenen Speicher auf – später auslesen">Records in its own memory – read out later</li>
+              <li data-en="Validated against ECG in peer-reviewed studies" data-de="In Peer-Review-Studien gegen EKG validiert">Validated against ECG in peer-reviewed studies</li>
+            </ul>
+          </figcaption>
+        </figure>
+        <figure class="sensor" id="movesenseCard">
+          <div class="sensor-ph" aria-hidden="true"><span>Movesense Flash</span></div>
+          <figcaption>
+            <h3>Movesense Flash</h3>
+            <ul>
+              <li data-en="Live heartbeats or recording in the sensor itself" data-de="Herzschläge live und Aufnahme im Sensor">Live heartbeats or recording in the sensor itself</li>
+              <li data-en="Raw ECG and 9-axis motion data as CSV" data-de="Roh-EKG und 9-Achsen-Bewegungsdaten als CSV">Raw ECG and 9-axis motion data as CSV</li>
+              <li data-en="Runs alongside Polar H10 in the same session" data-de="In derselben Einheit mit Polar H10 kombinierbar">Runs alongside Polar H10 in the same session</li>
+            </ul>
+          </figcaption>
+        </figure>
+      </div>
+      <p class="cap rv" data-en="Polar H10 validity against ECG: Gilgen-Ammann et al. 2019; Schaffarczyk et al. 2022." data-de="Validität des Polar H10 gegen EKG: Gilgen-Ammann et al. 2019; Schaffarczyk et al. 2022.">Polar H10 validity against ECG: Gilgen-Ammann et al. 2019; Schaffarczyk et al. 2022.</p>
+    </div>
+  </section>
+
+  <!-- 2 · Nutzen: Zeit -->
+  <section class="ch" id="time">
+    <div class="wrap">
+      <div class="rv" style="max-width:760px">
+        <div class="label" data-en="Where your time goes" data-de="Wo deine Zeit bleibt">Where your time goes</div>
+        <h2 data-en="Less handling. <em>More study.</em>" data-de="Weniger Handarbeit. <em>Mehr Studie.</em>">Less handling. <em>More study.</em></h2>
+        <p class="sub" data-en="The measurement takes an hour. The work around it often takes longer – this is what the app takes off your hands." data-de="Die Messung dauert eine Stunde. Die Arbeit drumherum oft länger – die nimmt dir die App ab.">The measurement takes an hour. The work around it often takes longer – this is what the app takes off your hands.</p>
+      </div>
+      <div class="compare rv">
+        <div class="before">
+          <h3 data-en="Without" data-de="Ohne">Without</h3>
+          <ul>
+            <li data-en="One phone or strap app per participant" data-de="Ein Handy oder eine Gurt-App pro Proband">One phone or strap app per participant</li>
+            <li data-en="Files copied out, renamed, matched to people by hand" data-de="Dateien herauskopieren, umbenennen, von Hand Personen zuordnen">Files copied out, renamed, matched to people by hand</li>
+            <li data-en="Start times and phase changes noted on paper and retyped" data-de="Startzeiten und Phasenwechsel auf Papier notiert und abgetippt">Start times and phase changes noted on paper and retyped</li>
+            <li data-en="Each phase cut out in a spreadsheet before analysis" data-de="Jede Phase vor der Auswertung in einer Tabelle ausgeschnitten">Each phase cut out in a spreadsheet before analysis</li>
+            <li data-en="Methods text and figures written and drawn from scratch" data-de="Methodentext und Grafiken von Grund auf geschrieben und gezeichnet">Methods text and figures written and drawn from scratch</li>
+          </ul>
+        </div>
+        <div class="with">
+          <h3>CARLON HRV Research</h3>
+          <ul>
+            <li data-en="Up to four sensors from one iPhone, read out in one go" data-de="Bis zu vier Sensoren von einem iPhone, in einem Zug ausgelesen">Up to four sensors from one iPhone, read out in one go</li>
+            <li data-en="Every recording lands with its participant and real start time" data-de="Jede Aufnahme landet bei ihrer Person, mit echter Startzeit">Every recording lands with its participant and real start time</li>
+            <li data-en="Phases marked with one tap, each with its clock time" data-de="Phasen per Tipp markiert, mit Uhrzeit">Phases marked with one tap, each with its clock time</li>
+            <li data-en="A segment table with values per phase, ready for Kubios or R" data-de="Eine Segmenttabelle mit Werten je Phase, bereit für Kubios oder R">A segment table with values per phase, ready for Kubios or R</li>
+            <li data-en="A methods paragraph, citation and figures in journal column widths" data-de="Methodenabsatz, Zitiervorschlag und Grafiken in Zeitschriftenbreite">A methods paragraph, citation and figures in journal column widths</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3 · Vorführung mit echten Daten -->
+  <section class="ch" id="replay">
+    <div class="wrap demo">
+      <div class="device-glow rv">
+        <div class="device">
+          <video id="pv" src="assets/v14/poincare-replay.mp4" poster="assets/v14/poincare-replay-poster.jpg" muted playsinline preload="metadata" aria-label="Screen recording of the app: Poincaré time slider and inspector on a 100-minute training recording"></video>
+          <img class="bezel" src="assets/v14/bezel.webp" width="735" height="1500" alt="">
+        </div>
+      </div>
+      <div class="txt rv">
+        <div class="label" data-en="Real recording, real app" data-de="Echte Aufnahme, echte App">Real recording, real app</div>
+        <h2 data-en="Watch the pattern <em>change over time.</em>" data-de="Sieh, wann sich <em>das Muster ändert.</em>">Watch the pattern <em>change over time.</em></h2>
+        <p class="sub" data-en="A 100-minute session – rest, training, recovery – from one Polar H10. The time slider rebuilds the Poincaré cloud beat by beat; touch and hold to read any beat with its clock time." data-de="Eine 100-minütige Sitzung – Ruhe, Training, Erholung – von einem Polar H10. Der Zeitregler baut die Poincaré-Wolke Schlag für Schlag auf; halten und ziehen zeigt jeden Schlag mit Uhrzeit.">A 100-minute session – rest, training, recovery – from one Polar H10. The time slider rebuilds the Poincaré cloud beat by beat; touch and hold to read any beat with its clock time.</p>
+        <div class="scrub">
+          <div class="scrub-row">
+            <button class="play" id="pvPlay" aria-label="Play"><svg viewBox="0 0 16 16" id="pvIcon"><path d="M4 2.5v11l9-5.5z"/></svg></button>
+            <input class="range" id="pvRange" type="range" min="0" max="1000" value="0" aria-label="Scrub through the screen recording">
+          </div>
+          <div class="scrub-cap" data-en="Drag to scrub through the screen recording" data-de="Ziehen, um durch die Bildschirmaufnahme zu spulen">Drag to scrub through the screen recording</div>
+        </div>
+        <p class="cap" data-en="Unedited screen recording of CARLON HRV Research. Polar H10 internal memory, 11,131 beats; shared with consent, pseudonymized." data-de="Unbearbeitete Bildschirmaufnahme von CARLON HRV Research. Interner Speicher des Polar H10, 11.131 Schläge; mit Zustimmung bereitgestellt, pseudonymisiert.">Unedited screen recording of CARLON HRV Research. Polar H10 internal memory, 11,131 beats; shared with consent, pseudonymized.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4 · Ablauf -->
+  <section class="ch" id="workflow">
+    <div class="wrap">
+      <div class="rv" style="max-width:760px">
+        <div class="label" data-en="How a session runs" data-de="So läuft eine Einheit">How a session runs</div>
+        <h2 data-en="Start, mark, read out. <em>Done.</em>" data-de="Starten, markieren, auslesen. <em>Fertig.</em>">Start, mark, read out. <em>Done.</em></h2>
+      </div>
+      <section class="gal" id="gal-flow" aria-label="App screens">
+        <div class="gal-vp" tabindex="0">
+          <div class="gal-track">
+            <article class="gal-slide">
+              <div class="device"><video class="loop" src="assets/v14/events-tap.mp4" poster="assets/v14/events-tap-poster.jpg" muted playsinline loop preload="none" aria-label="Screen recording: tapping Rest start, Training start, Training end and Recovery start for three running recordings"></video><img class="bezel" src="assets/v14/bezel.webp" width="735" height="1500" alt=""></div>
+              <h4 data-en="1 · Start and mark" data-de="1 · Starten und markieren">1 · Start and mark</h4>
+              <p data-en="Up to four sensors record to their own memory. Tap Rest, Training, Recovery as the protocol moves on." data-de="Bis zu vier Sensoren zeichnen im eigenen Speicher auf. Ruhe, Training, Erholung antippen, wie das Protokoll fortschreitet.">Up to four sensors record to their own memory. Tap Rest, Training, Recovery as the protocol moves on.</p>
+            </article>
+            <article class="gal-slide">
+              <div class="device"><img class="shot" src="assets/v14/phone-sitzung.webp" width="735" height="1500" alt="Session overview: duration, heart rate, RMSSD, SDNN, SD1/SD2, DFA alpha1, LF/HF, artifacts" loading="lazy" decoding="async"></div>
+              <h4 data-en="2 · Read out" data-de="2 · Auslesen">2 · Read out</h4>
+              <p data-en="All sensors in one go. Each recording arrives with its participant, real start time and every metric." data-de="Alle Sensoren in einem Zug. Jede Aufnahme kommt mit ihrer Person, echter Startzeit und allen Kennzahlen an.">All sensors in one go. Each recording arrives with its participant, real start time and every metric.</p>
+            </article>
+            <article class="gal-slide">
+              <div class="device"><img class="shot" src="assets/v14/phone-dual-card.webp" width="735" height="1500" alt="Heart rate and RMSSD over the whole 100-minute session: rest, training and recovery" loading="lazy" decoding="async"></div>
+              <h4 data-en="3 · See the course" data-de="3 · Verlauf sehen">3 · See the course</h4>
+              <p data-en="Heart rate and HRV together over the whole session – touch and hold for values." data-de="Puls und HRV gemeinsam über die ganze Sitzung – halten zeigt die Werte.">Heart rate and HRV together over the whole session – touch and hold for values.</p>
+            </article>
+            <article class="gal-slide">
+              <div class="device"><img class="shot" src="assets/v14/phone-ereignisse.webp" width="735" height="1500" alt="Events with clock time: rest start, training start, training end, recovery start" loading="lazy" decoding="async"></div>
+              <h4 data-en="4 · Phases with clock time" data-de="4 · Phasen mit Uhrzeit">4 · Phases with clock time</h4>
+              <p data-en="Every event with its clock time – and a segment table with values per phase in the export." data-de="Jedes Ereignis mit Uhrzeit – und im Export eine Segmenttabelle mit Werten je Phase.">Every event with its clock time – and a segment table with values per phase in the export.</p>
+            </article>
+            <article class="gal-slide">
+              <div class="device"><img class="shot" src="assets/v14/phone-poincare-full.webp" width="735" height="1500" alt="Full-screen Poincaré plot of 11,134 intervals with SD1, SD2 and time slider" loading="lazy" decoding="async"></div>
+              <h4 data-en="5 · Go deeper" data-de="5 · Tiefer gehen">5 · Go deeper</h4>
+              <p data-en="Every chart full screen, upright or sideways: Poincaré, tachogram, spectrum, DFA α1 over time – each with method and source." data-de="Jede Grafik im Vollbild, hoch oder quer: Poincaré, Tachogramm, Spektrum, DFA α1 im Verlauf – jeweils mit Methode und Quelle.">Every chart full screen, upright or sideways: Poincaré, tachogram, spectrum, DFA α1 over time – each with method and source.</p>
+            </article>
+            <article class="gal-slide">
+              <div class="device"><img class="shot" src="assets/v14/phone-export.webp" width="735" height="1500" alt="Export options: PDF report, figures for publication, Kubios text, raw RR, complete audit export" loading="lazy" decoding="async"></div>
+              <h4 data-en="6 · Export" data-de="6 · Exportieren">6 · Export</h4>
+              <p data-en="PDF report, figures for publication, Kubios, CSV, EDF+, WFDB, JSON – shared from the iPhone." data-de="PDF-Bericht, Grafiken zur Veröffentlichung, Kubios, CSV, EDF+, WFDB, JSON – direkt vom iPhone geteilt.">PDF report, figures for publication, Kubios, CSV, EDF+, WFDB, JSON – shared from the iPhone.</p>
+            </article>
+          </div>
+        </div>
+        <div class="gal-nav"><button class="gal-btn gal-prev" aria-label="Previous">‹</button><span class="gal-meta">1 / 6</span><button class="gal-btn gal-next" aria-label="Next">›</button></div>
+      </section>
+      <p class="cap rv" style="text-align:center" data-en="Screens from the app with real recordings. The app interface is in English." data-de="Bildschirme der App mit echten Aufnahmen. Die App-Oberfläche ist auf Englisch.">Screens from the app with real recordings. The app interface is in English.</p>
+    </div>
+  </section>
+
+  <!-- 5 · Ergebnisse -->
+  <section class="ch" id="outputs">
+    <div class="wrap">
+      <div class="rv" style="max-width:760px">
+        <div class="label" data-en="What you take home" data-de="Was du mitnimmst">What you take home</div>
+        <h2 data-en="From recording <em>to manuscript.</em>" data-de="Von der Aufnahme <em>zum Manuskript.</em>">From recording <em>to manuscript.</em></h2>
+        <p class="sub" data-en="Original data for your analysis – plus everything you would otherwise build by hand." data-de="Originaldaten für deine Auswertung – und alles, was du sonst von Hand bauen würdest.">Original data for your analysis – plus everything you would otherwise build by hand.</p>
+      </div>
+      <div class="outputs">
+        <a class="pages rv" href="CARLON-HRV-Research-Example-Report.pdf" aria-label="Open an example PDF report">
+          <img src="assets/v14/report-summary.webp" width="900" height="1273" alt="PDF report, page 1: all metrics with grades" loading="lazy" decoding="async">
+          <img src="assets/v14/report-segments.webp" width="900" height="1273" alt="PDF report: segments and events" loading="lazy" decoding="async">
+          <img src="assets/v14/report-methods.webp" width="900" height="1273" alt="PDF report: methods paragraph ready for a manuscript" loading="lazy" decoding="async">
+        </a>
+        <div class="rv">
+          <ul class="out-list">
+            <li><b data-en="PDF report" data-de="PDF-Bericht">PDF report</b><span data-en="Eight pages with your institution's logo: every metric, time series, Poincaré over time, segments, a methods paragraph to copy and the provenance of the data." data-de="Acht Seiten mit Logo deiner Einrichtung: alle Kennzahlen, Zeitreihen, Poincaré im Zeitverlauf, Segmente, ein Methodenabsatz zum Übernehmen und die Herkunft der Daten.">Eight pages with your institution's logo: every metric, time series, Poincaré over time, segments, a methods paragraph to copy and the provenance of the data.</span></li>
+            <li><b data-en="Figures" data-de="Grafiken">Figures</b><span data-en="Every figure as vector PDF and 300-dpi PNG in single- and double-column width, with captions – named so they sort themselves." data-de="Jede Grafik als Vektor-PDF und 300-dpi-PNG in ein- und zweispaltiger Breite, mit Bildunterschriften – so benannt, dass sie sich selbst sortieren.">Every figure as vector PDF and 300-dpi PNG in single- and double-column width, with captions – named so they sort themselves.</span></li>
+            <li><b data-en="Data" data-de="Daten">Data</b><span data-en="Original RR as CSV with Kubios import settings, Kubios text, FIT, EDF+, WFDB and JSON with audit trail – plus segment and event tables." data-de="Original-RR als CSV mit Kubios-Importeinstellungen, Kubios-Text, FIT, EDF+, WFDB und JSON mit Prüfpfad – dazu Segment- und Ereignistabellen.">Original RR as CSV with Kubios import settings, Kubios text, FIT, EDF+, WFDB and JSON with audit trail – plus segment and event tables.</span></li>
+          </ul>
+          <div class="files" aria-label="Example file names of the figure bundle">
+            <span class="d">P-02_2026-10-26_1947_figures/</span><br>
+            &nbsp;&nbsp;P-02_2026-10-26_1947_fig01_heart-rate-rmssd_175mm.pdf<br>
+            &nbsp;&nbsp;P-02_2026-10-26_1947_fig01_heart-rate-rmssd_175mm.png<br>
+            &nbsp;&nbsp;P-02_2026-10-26_1947_fig03_poincare_85mm.pdf<br>
+            &nbsp;&nbsp;P-02_2026-10-26_1947_fig06_rmssd-sdnn-segments_85mm.png<br>
+            &nbsp;&nbsp;<span class="c">… _captions.txt · _README.txt</span>
+          </div>
+          <div class="ctas" style="justify-content:flex-start;margin-top:var(--s34)">
+            <a class="btn btn-2" href="CARLON-HRV-Research-Example-Report.pdf"><span data-en="Open an example report (PDF)" data-de="Beispielbericht öffnen (PDF)">Open an example report (PDF)</span> <span aria-hidden="true">↗</span></a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5a · Zukunftssicher: Rohdaten bleiben, Auswertung wird besser -->
+  <section class="ch" id="future-proof">
+    <div class="wrap">
+      <div class="rv" style="max-width:780px">
+        <div class="label" data-en="Future-proof by design" data-de="Zukunftssicher gebaut">Future-proof by design</div>
+        <h2 data-en="Your recordings get better <em>with every update.</em>" data-de="Deine Aufnahmen werden <em>mit jedem Update besser.</em>">Your recordings get better <em>with every update.</em></h2>
+        <p class="sub" data-en="The app stores what the sensor measured – nothing else. Every metric is computed fresh from those originals, so methods can improve without your data ever being touched." data-de="Die App speichert, was der Sensor gemessen hat – sonst nichts. Jede Kennzahl wird aus diesen Originaldaten neu berechnet, so können Methoden besser werden, ohne dass deine Daten je angefasst werden.">The app stores what the sensor measured – nothing else. Every metric is computed fresh from those originals, so methods can improve without your data ever being touched.</p>
+      </div>
+      <div class="checks rv">
+        <div class="check"><b data-en="Originals" data-de="Original">Originals</b><p data-en="RR intervals are kept exactly as recorded – never smoothed, corrected or overwritten." data-de="RR-Intervalle bleiben genau wie erfasst – nie geglättet, korrigiert oder überschrieben.">RR intervals are kept exactly as recorded – never smoothed, corrected or overwritten.</p></div>
+        <div class="check"><b data-en="Retroactive" data-de="Rückwirkend">Retroactive</b><p data-en="An improved method applies to every recording you have ever made – open or re-export it to get the latest analysis." data-de="Eine verbesserte Methode gilt für jede Aufnahme, die du je gemacht hast – öffnen oder neu exportieren, schon ist die neueste Auswertung da.">An improved method applies to every recording you have ever made – open or re-export it to get the latest analysis.</p></div>
+        <div class="check"><b data-en="Recomputable" data-de="Nachrechenbar">Recomputable</b><p data-en="Every export names the app version and the exact method. Anyone can recompute it with open tools – for peer review, replication or new methods." data-de="Jeder Export nennt App-Version und genaue Methode. Jeder kann ihn mit offenen Werkzeugen nachrechnen – für Peer Review, Replikation oder neue Verfahren.">Every export names the app version and the exact method. Anyone can recompute it with open tools – for peer review, replication or new methods.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5b · Wissenschaft sichtbar: Datenkunst aus der echten Aufnahme -->
+  <section class="kino" id="science-art" aria-labelledby="kino-h">
+    <picture>
+      <source media="(max-width: 700px)" srcset="assets/v14/science-ribbon-mobil.webp">
+      <img src="assets/v14/science-ribbon.webp" width="2400" height="1250" alt="DFA α1 across a real 100-minute Polar H10 session with rest, training and recovery" loading="lazy" decoding="async">
+    </picture>
+    <div class="wrap kino-txt rv">
+      <div class="label" data-en="For exercise research" data-de="Für die Belastungsforschung">For exercise research</div>
+      <h2 id="kino-h" data-en="DFA α1 over time. <em>Checked window by window.</em>" data-de="DFA α1 im Verlauf. <em>Fenster für Fenster geprüft.</em>">DFA α1 over time. <em>Checked window by window.</em></h2>
+      <p class="sub" data-en="The measure exercise science uses to follow intensity – computed in 2-minute windows every 5 seconds, as in Kubios. Windows with 5 % or more corrected beats are marked invalid, never silently dropped, and every window is a row in your CSV." data-de="Die Kennzahl, mit der die Belastungsforschung Intensität verfolgt – in 2-Minuten-Fenstern alle 5 Sekunden, wie in Kubios. Fenster mit 5 % oder mehr korrigierten Schlägen sind als ungültig markiert, nie still entfernt, und jedes Fenster ist eine Zeile in deiner CSV.">The measure exercise science uses to follow intensity – computed in 2-minute windows every 5 seconds, as in Kubios. Windows with 5 % or more corrected beats are marked invalid, never silently dropped, and every window is a row in your CSV.</p>
+      <ul class="points">
+        <li data-en="<b>2,854 windows</b> recomputed independently – largest deviation 7 × 10⁻¹¹." data-de="<b>2.854 Fenster</b> unabhängig nachgerechnet – größte Abweichung 7 × 10⁻¹¹."><b>2,854 windows</b> recomputed independently – largest deviation 7 × 10⁻¹¹.</li>
+        <li data-en="<b>Reliable at high heart rates:</b> a validated 30-ms floor stops normal beats from being flagged as artifacts." data-de="<b>Verlässlich bei hohem Puls:</b> eine validierte 30-ms-Untergrenze verhindert, dass normale Schläge als Artefakte gelten."><b>Reliable at high heart rates:</b> a validated 30-ms floor stops normal beats from being flagged as artifacts.</li>
+        <li data-en="<b>Heart rate and RMSSD</b> for the same window, beside every α1 value." data-de="<b>Puls und RMSSD</b> desselben Fensters neben jedem α1-Wert."><b>Heart rate and RMSSD</b> for the same window, beside every α1 value.</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- 6 · Nachweis -->
+  <section class="ch" id="validated">
+    <div class="wrap">
+      <div class="rv" style="max-width:760px">
+        <div class="label" data-en="Validated" data-de="Validiert">Validated</div>
+        <h2 data-en="Every number, <em>checked.</em>" data-de="Jede Zahl, <em>geprüft.</em>">Every number, <em>checked.</em></h2>
+        <p class="sub" data-en="Each metric is recomputed by an independent reference with the same definition and parameters. The dossier names every check, every tolerance – and every error we found and fixed along the way." data-de="Jede Kennzahl wird von einer unabhängigen Referenz mit derselben Definition und denselben Parametern nachgerechnet. Das Dossier nennt jede Prüfung, jede Toleranz – und jeden Fehler, den wir dabei gefunden und behoben haben.">Each metric is recomputed by an independent reference with the same definition and parameters. The dossier names every check, every tolerance – and every error we found and fixed along the way.</p>
+      </div>
+      <div class="checks rv">
+        <div class="check"><b>331/331</b><p data-en="checks passed against NeuroKit2, SciPy and Task Force definitions" data-de="Prüfungen bestanden gegen NeuroKit2, SciPy und Task-Force-Definitionen">checks passed against NeuroKit2, SciPy and Task Force definitions</p></div>
+        <div class="check"><b>18/18</b><p data-en="series with artifact detection identical to NeuroKit2, beat by beat" data-de="Reihen mit Artefakterkennung identisch zu NeuroKit2, Schlag für Schlag">series with artifact detection identical to NeuroKit2, beat by beat</p></div>
+        <div class="check"><b>20,431</b><p data-en="beats in synthetic test vectors and real Polar H10 / Movesense recordings" data-de="Schläge in synthetischen Testvektoren und echten Polar-H10-/Movesense-Aufnahmen">beats in synthetic test vectors and real Polar H10 / Movesense recordings</p></div>
+      </div>
+      <div class="fixed rv">
+        <h3 data-en="Found and fixed – in the open" data-de="Gefunden und behoben – offen dokumentiert">Found and fixed – in the open</h3>
+        <ol>
+          <li data-en="An independent external audit with a blind package of injected errors – its findings fixed and listed in the dossier." data-de="Ein unabhängiges externes Audit mit einem Blindpaket eingestreuter Fehler – seine Befunde behoben und im Dossier aufgeführt.">An independent external audit with a blind package of injected errors – its findings fixed and listed in the dossier.</li>
+          <li data-en="At high heart rates, standard artifact thresholds flag normal beats; a validated 30-ms floor keeps every real error and cuts false alarms by 98%." data-de="Bei hohem Puls markieren die Standardschwellen normale Schläge; eine validierte 30-ms-Untergrenze behält jeden echten Fehler und senkt Fehlalarme um 98 %.">At high heart rates, standard artifact thresholds flag normal beats; a validated 30-ms floor keeps every real error and cuts false alarms by 98%.</li>
+          <li data-en="Two field recordings from study partners exposed edge cases in the beat correction – fast heart-rate changes, and missed beats the classifier labelled ectopic. Both fixed within a day, each with a test built from the real sequence." data-de="Zwei Feldaufnahmen von Studienpartnern zeigten Grenzfälle der Schlagkorrektur – schnelle Pulswechsel und Aussetzer, die der Klassifikator als ektopisch einordnete. Beide binnen eines Tages behoben, jeweils mit einem Test aus der echten Folge.">Two field recordings from study partners exposed edge cases in the beat correction – fast heart-rate changes, and missed beats the classifier labelled ectopic. Both fixed within a day, each with a test built from the real sequence.</li>
+        </ol>
+      </div>
+      <div class="ctas rv" style="justify-content:flex-start;margin-top:var(--s55)">
+        <a class="btn btn-2" href="CARLON-HRV-Research-Validation-Dossier.pdf"><span data-en="Read the validation dossier (PDF)" data-de="Validierungsdossier lesen (PDF)">Read the validation dossier (PDF)</span> <span aria-hidden="true">↗</span></a>
+      </div>
+    </div>
+  </section>
+
+  <!-- 7 · Für wen -->
+  <section class="ch" id="who">
+    <div class="wrap">
+      <div class="rv" style="max-width:720px">
+        <div class="label" data-en="Built for" data-de="Gebaut für">Built for</div>
+        <h2 data-en="People who need <em>clean RR data.</em>" data-de="Alle, die <em>saubere RR-Daten</em> brauchen.">People who need <em>clean RR data.</em></h2>
+      </div>
+      <div class="who rv">
+        <div class="panel"><h4 data-en="Sports science" data-de="Sportwissenschaft">Sports science</h4><p data-en="Several athletes per session, phases marked live, DFA α1 over time for intensity research." data-de="Mehrere Athleten pro Einheit, Phasen live markiert, DFA α1 im Verlauf für die Intensitätsforschung.">Several athletes per session, phases marked live, DFA α1 over time for intensity research.</p></div>
+        <div class="panel"><h4 data-en="Theses" data-de="Abschlussarbeiten">Theses</h4><p data-en="A methods paragraph to cite, figures in journal widths, and data your supervisor can recompute." data-de="Ein Methodenabsatz zum Zitieren, Grafiken in Zeitschriftenbreite und Daten, die die Betreuung nachrechnen kann.">A methods paragraph to cite, figures in journal widths, and data your supervisor can recompute.</p></div>
+        <div class="panel"><h4 data-en="Ethics boards" data-de="Ethikkommissionen">Ethics boards</h4><p data-en="No account, no server, pseudonymous IDs and an append-only audit trail for every record." data-de="Kein Konto, kein Server, pseudonyme Kennungen und ein unveränderbarer Prüfpfad für jede Aufnahme.">No account, no server, pseudonymous IDs and an append-only audit trail for every record.</p></div>
+        <div class="panel"><h4 data-en="Research labs" data-de="Forschungslabore">Research labs</h4><p data-en="A shared study folder for multi-site studies, and volume licenses through Apple School or Business Manager." data-de="Ein gemeinsamer Studienordner für Studien an mehreren Orten und Volumenlizenzen über Apple School oder Business Manager.">A shared study folder for multi-site studies, and volume licenses through Apple School or Business Manager.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 7b · Passt es? (ehrlich) -->
+  <section class="ch" id="fit">
+    <div class="wrap">
+      <div class="rv" style="max-width:760px">
+        <div class="label" data-en="Is it right for you?" data-de="Passt es zu dir?">Is it right for you?</div>
+        <h2 data-en="Made for one job. <em>Done properly.</em>" data-de="Für eine Aufgabe gebaut. <em>Und die richtig.</em>">Made for one job. <em>Done properly.</em></h2>
+      </div>
+      <div class="fit rv">
+        <div class="panel">
+          <h3 data-en="A perfect fit if you" data-de="Passt perfekt, wenn du">A perfect fit if you</h3>
+          <ul>
+            <li data-en="record RR intervals with Polar H10 or Movesense Flash" data-de="RR-Intervalle mit Polar H10 oder Movesense Flash aufnimmst">record RR intervals with Polar H10 or Movesense Flash</li>
+            <li data-en="run sessions with several participants and protocol phases" data-de="Einheiten mit mehreren Personen und Protokollphasen durchführst">run sessions with several participants and protocol phases</li>
+            <li data-en="analyse in Kubios, Python, R or MATLAB and want clean, documented input" data-de="in Kubios, Python, R oder MATLAB auswertest und saubere, dokumentierte Daten willst">analyse in Kubios, Python, R or MATLAB and want clean, documented input</li>
+            <li data-en="need to show an ethics board or supervisor exactly what was done" data-de="einer Ethikkommission oder Betreuung genau zeigen musst, was gemacht wurde">need to show an ethics board or supervisor exactly what was done</li>
+          </ul>
+        </div>
+        <div class="panel kubios">
+        <h3 data-en="Works alongside Kubios" data-de="Ergänzt Kubios">Works alongside Kubios</h3>
+        <p data-en="CARLON HRV Research records, organises and documents; Kubios HRV remains a reference for analysis. The CSV carries the exact settings for Kubios' custom text import, so your recordings open there without manual editing – and the app's own metrics are there as a cross-check." data-de="CARLON HRV Research nimmt auf, ordnet und dokumentiert; Kubios HRV bleibt eine Referenz für die Auswertung. Die CSV trägt die genauen Einstellungen für den Textimport von Kubios, deine Aufnahmen öffnen sich dort ohne Nacharbeit – und die Kennzahlen der App stehen als Gegenprobe bereit.">CARLON HRV Research records, organises and documents; Kubios HRV remains a reference for analysis. The CSV carries the exact settings for Kubios' custom text import, so your recordings open there without manual editing – and the app's own metrics are there as a cross-check.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 8 · Fragen -->
+  <section class="ch" id="faq">
+    <div class="wrap">
+      <div class="rv"><div class="label">FAQ</div><h2 data-en="Questions, <em>answered.</em>" data-de="Fragen, <em>beantwortet.</em>">Questions, <em>answered.</em></h2></div>
+      <div class="faq rv">
+        <details><summary data-en="Which sensors are supported?" data-de="Welche Sensoren werden unterstützt?">Which sensors are supported?</summary><p data-en="Polar H10 chest straps (live and internal memory) and Movesense Flash sensors (live and in-sensor recording). The app is tested with these two sensors." data-de="Polar-H10-Brustgurte (live und interner Speicher) und Movesense-Flash-Sensoren (live und Aufnahme im Sensor). Mit diesen beiden ist die App getestet.">Polar H10 chest straps (live and internal memory) and Movesense Flash sensors (live and in-sensor recording). The app is tested with these two sensors.</p></details>
+        <details><summary data-en="Does it work with Movesense?" data-de="Funktioniert die App mit Movesense?">Does it work with Movesense?</summary><p data-en="Yes. Movesense Flash sensors stream heartbeats live and record in the sensor itself; the app also saves Movesense raw ECG and 9-axis motion data (accelerometer, gyroscope, magnetometer) as CSV. Movesense and Polar H10 can run side by side in one study." data-de="Ja. Movesense-Flash-Sensoren übertragen Herzschläge live und zeichnen im Sensor selbst auf; dazu speichert die App Roh-EKG und 9-Achsen-Bewegungsdaten (Beschleunigung, Drehrate, Magnetfeld) von Movesense als CSV. Movesense und Polar H10 laufen nebeneinander in einer Studie.">Yes. Movesense Flash sensors stream heartbeats live and record in the sensor itself; the app also saves Movesense raw ECG and 9-axis motion data (accelerometer, gyroscope, magnetometer) as CSV. Movesense and Polar H10 can run side by side in one study.</p></details>
+        <details><summary data-en="How many sensors can record at once?" data-de="Wie viele Sensoren zeichnen gleichzeitig auf?">How many sensors can record at once?</summary><p data-en="Up to four from one iPhone. They record to their own memory and are read out together afterwards; each recording is assigned to its participant with its real start time." data-de="Bis zu vier von einem iPhone. Sie zeichnen im eigenen Speicher auf und werden danach gemeinsam ausgelesen; jede Aufnahme wird ihrer Person mit echter Startzeit zugeordnet.">Up to four from one iPhone. They record to their own memory and are read out together afterwards; each recording is assigned to its participant with its real start time.</p></details>
+        <details><summary data-en="Can I use the data in Kubios HRV?" data-de="Kann ich die Daten in Kubios HRV nutzen?">Can I use the data in Kubios HRV?</summary><p data-en="Yes. The CSV carries the exact settings for the Kubios custom text import in its header; the app also writes a Kubios text file and FIT. RR intervals are exported exactly as recorded." data-de="Ja. Die CSV trägt die genauen Einstellungen für den Textimport von Kubios im Kopf; dazu schreibt die App eine Kubios-Textdatei und FIT. Die RR-Intervalle werden genau so exportiert, wie sie erfasst wurden.">Yes. The CSV carries the exact settings for the Kubios custom text import in its header; the app also writes a Kubios text file and FIT. RR intervals are exported exactly as recorded.</p></details>
+        <details><summary data-en="How do I get values for each phase?" data-de="Wie bekomme ich Werte je Phase?">How do I get values for each phase?</summary><p data-en="Tap an event button at each phase change. The segment table lists duration, beats, heart rate, RMSSD, SDNN and pNN50 for every phase between two events, computed with the same validated code as the rest of the app." data-de="Bei jedem Phasenwechsel eine Ereignistaste tippen. Die Segmenttabelle nennt Dauer, Schläge, Puls, RMSSD, SDNN und pNN50 für jede Phase zwischen zwei Ereignissen, gerechnet mit demselben validierten Code wie die übrige App.">Tap an event button at each phase change. The segment table lists duration, beats, heart rate, RMSSD, SDNN and pNN50 for every phase between two events, computed with the same validated code as the rest of the app.</p></details>
+        <details><summary data-en="How is the app validated?" data-de="Wie ist die App validiert?">How is the app validated?</summary><p data-en="Every metric is compared with independent reference implementations (NeuroKit2, SciPy, Task Force definitions) on 18 RR series with 20,431 beats: 331 of 331 checks passed. Artifact detection matches NeuroKit2 beat by beat. The version-specific dossier lists every check and every error found and fixed." data-de="Jede Kennzahl wird mit unabhängigen Referenzen (NeuroKit2, SciPy, Task-Force-Definitionen) an 18 RR-Reihen mit 20.431 Schlägen verglichen: 331 von 331 Prüfungen bestanden. Die Artefakterkennung stimmt Schlag für Schlag mit NeuroKit2 überein. Das versionsbezogene Dossier nennt jede Prüfung und jeden gefundenen und behobenen Fehler.">Every metric is compared with independent reference implementations (NeuroKit2, SciPy, Task Force definitions) on 18 RR series with 20,431 beats: 331 of 331 checks passed. Artifact detection matches NeuroKit2 beat by beat. The version-specific dossier lists every check and every error found and fixed.</p></details>
+        <details><summary data-en="Do older recordings benefit from updates?" data-de="Profitieren ältere Aufnahmen von Updates?">Do older recordings benefit from updates?</summary><p data-en="Yes. The app stores only the original sensor data and computes every metric fresh from it, so an improved method applies to all past recordings. Open or re-export a recording to get the latest analysis; files you exported earlier stay unchanged and name the app version that produced them." data-de="Ja. Die App speichert nur die Original-Sensordaten und berechnet jede Kennzahl daraus neu – eine verbesserte Methode gilt also für alle früheren Aufnahmen. Öffne oder exportiere eine Aufnahme erneut, um die neueste Auswertung zu erhalten; früher exportierte Dateien bleiben unverändert und nennen die App-Version, die sie erzeugt hat.">Yes. The app stores only the original sensor data and computes every metric fresh from it, so an improved method applies to all past recordings. Open or re-export a recording to get the latest analysis; files you exported earlier stay unchanged and name the app version that produced them.</p></details>
+        <details><summary data-en="Can reviewers recompute the results?" data-de="Können Gutachter die Ergebnisse nachrechnen?">Can reviewers recompute the results?</summary><p data-en="Yes. Every export contains the original RR intervals, each beat's artifact flag and correction, the app version and the exact method of every metric. With open tools such as NeuroKit2 or SciPy, anyone can recompute the values – the validation dossier shows how." data-de="Ja. Jeder Export enthält die Original-RR-Intervalle, Markierung und Korrektur jedes Schlags, die App-Version und die genaue Methode jeder Kennzahl. Mit offenen Werkzeugen wie NeuroKit2 oder SciPy kann jeder die Werte nachrechnen – das Validierungsdossier zeigt, wie.">Yes. Every export contains the original RR intervals, each beat's artifact flag and correction, the app version and the exact method of every metric. With open tools such as NeuroKit2 or SciPy, anyone can recompute the values – the validation dossier shows how.</p></details>
+        <details><summary data-en="Does any data leave the iPhone?" data-de="Verlassen Daten das iPhone?">Does any data leave the iPhone?</summary><p data-en="No. There is no account and no server. Recordings stay on your iPhone and in its regular backup, and go only where you export them." data-de="Nein. Es gibt kein Konto und keinen Server. Aufnahmen bleiben auf deinem iPhone und in seiner normalen Sicherung und gehen nur dorthin, wohin du sie exportierst.">No. There is no account and no server. Recordings stay on your iPhone and in its regular backup, and go only where you export them.</p></details>
+        <details><summary data-en="Is there an Android version?" data-de="Gibt es eine Android-Version?">Is there an Android version?</summary><p data-en="No – CARLON HRV Research runs on iPhone with iOS 17 or later. The exported files open on any platform." data-de="Nein – CARLON HRV Research läuft auf dem iPhone mit iOS 17 oder neuer. Die exportierten Dateien öffnen sich auf jeder Plattform.">No – CARLON HRV Research runs on iPhone with iOS 17 or later. The exported files open on any platform.</p></details>
+        <details><summary data-en="Is it a medical device?" data-de="Ist es ein Medizinprodukt?">Is it a medical device?</summary><p data-en="No. It is a research and wellness tool and does not diagnose or treat any condition." data-de="Nein. Es ist ein Werkzeug für Forschung und Wellness und erkennt, diagnostiziert oder behandelt keine Erkrankungen.">No. It is a research and wellness tool and does not diagnose or treat any condition.</p></details>
+        <details><summary data-en="What does it cost?" data-de="Was kostet sie?">What does it cost?</summary><p data-en="A one-time purchase on the App Store – no subscription, no per-participant fees. Institutions can buy licenses in volume through Apple School Manager or Apple Business Manager." data-de="Ein einmaliger Kauf im App Store – kein Abo, keine Gebühren pro Proband. Einrichtungen kaufen Lizenzen in Stückzahl über Apple School Manager oder Apple Business Manager.">A one-time purchase on the App Store – no subscription, no per-participant fees. Institutions can buy licenses in volume through Apple School Manager or Apple Business Manager.</p></details>
+      </div>
+    </div>
+  </section>
+
+  <!-- 9 · Kauf -->
+  <section class="final">
+    <div class="wrap rv">
+      <div class="label" data-en="One purchase" data-de="Einmal kaufen">One purchase</div>
+      <div class="price">€99.99<small data-en="one-time" data-de="einmalig">one-time</small></div>
+      <p class="lead" data-en="Everything above, for every study you run. No subscription, no per-participant fees, no account." data-de="Alles oben, für jede Studie, die du machst. Kein Abo, keine Gebühren pro Proband, kein Konto.">Everything above, for every study you run. No subscription, no per-participant fees, no account.</p>
+      <div class="ctas">
+        <a class="btn btn-1" href="https://apps.apple.com/app/id6826010655"><span data-en="View on the App Store" data-de="Im App Store ansehen">View on the App Store</span> <span aria-hidden="true">→</span></a>
+        <a class="btn btn-2" href="mailto:jan@vitalkultur.com?subject=CARLON%20HRV%20Research"><span data-en="Questions? Write to us" data-de="Fragen? Schreib uns">Questions? Write to us</span></a>
+      </div>
+      <p class="legal" data-en="For research and wellness use. Not a medical device. Polar H10, Movesense and Kubios are trademarks of their respective owners; CARLON HRV Research is an independent app and not affiliated with them." data-de="Für Forschung und Wellness. Kein Medizinprodukt. Polar H10, Movesense und Kubios sind Marken ihrer jeweiligen Inhaber; CARLON HRV Research ist eine unabhängige App und nicht mit ihnen verbunden.">For research and wellness use. Not a medical device. Polar H10, Movesense and Kubios are trademarks of their respective owners; CARLON HRV Research is an independent app and not affiliated with them.</p>
+    </div>
+  </section>
+</main>
+
+<div class="sticky-cta" id="stickyCta" aria-hidden="true">
+  <span><b>CARLON HRV Research</b><small data-en="One purchase · iPhone" data-de="Einmal kaufen · iPhone">One purchase · iPhone</small></span>
+  <a class="pill" href="https://apps.apple.com/app/id6826010655" data-en="App Store" data-de="App Store">App Store</a>
+</div>
+
+<footer>
+  <div class="wrap">
+    <a href="/" aria-label="vitalkultur"><img src="/assets/vitalkultur-wordmark.png" alt="vitalkultur" style="height:26px;width:auto;opacity:.8"></a>
+    <nav>
+      <a href="/breathwork/">CARLON Breathwork</a>
+      <a href="/carlon-equine/">CARLON Equine</a>
+      <a href="/privacy-en.html" data-en="Privacy" data-de="Datenschutz">Privacy</a>
+      <a href="/support.html">Support</a>
+      <a href="/impressum.html">Impressum</a>
+    </nav>
+    <span>© 2024–2026 vitalkultur · jan@vitalkultur.com</span>
+  </div>
+</footer>
+
+<script>
+(function () {
+  // Sprache = Adresse (/hrv-research/ englisch, /hrv-research/de/ deutsch) — beide statisch für Suchmaschinen.
+  var lang = document.documentElement.lang === 'de' ? 'de' : 'en';
+  function apply() {
+    document.documentElement.lang = lang;
+    document.querySelectorAll('[data-en]').forEach(function (el) { var t = el.getAttribute('data-' + lang); if (t != null) el.innerHTML = t; });
+    document.querySelectorAll('#langToggle [data-l]').forEach(function (s) { s.classList.toggle('on', s.getAttribute('data-l') === lang); });
+    var p = document.querySelector('.price'); if (p) p.firstChild.nodeValue = lang === 'de' ? '99,99 €' : '€99.99';
+    var priv = document.querySelector('footer a[href^="/privacy"]'); if (priv) priv.setAttribute('href', lang === 'de' ? '/privacy.html' : '/privacy-en.html');
+  }
+  document.getElementById('langToggle').addEventListener('click', function () {
+    try { localStorage.setItem('vk.lang', lang === 'en' ? 'de' : 'en'); } catch (e) {}
+    location.href = lang === 'en' ? '/hrv-research/de/' + location.hash : '/hrv-research/' + location.hash;
+  });
+  /* Feste App-Store-Leiste: erscheint nach dem Hero, verschwindet am Seitenende */
+  (function () {
+    var bar = document.getElementById('stickyCta'), hero = document.querySelector('.hero'), fuss = document.querySelector('.final');
+    if (!bar || !hero || !('IntersectionObserver' in window)) return;
+    var heroSicht = true, fussSicht = false;
+    var up = function () { var z = !heroSicht && !fussSicht; bar.classList.toggle('zeigen', z); bar.setAttribute('aria-hidden', z ? 'false' : 'true'); };
+    new IntersectionObserver(function (e) { heroSicht = e[0].isIntersecting; up(); }, { threshold: 0.05 }).observe(hero.querySelector('.ctas') || hero);
+    if (fuss) new IntersectionObserver(function (e) { fussSicht = e[0].isIntersecting; up(); }, { threshold: 0.1 }).observe(fuss);
+  })();
+  apply();
+
+  /* Einblenden */
+  var els = document.querySelectorAll('.rv');
+  if ('IntersectionObserver' in window) {
+    var io = new IntersectionObserver(function (es) { es.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } }); }, { rootMargin: '0px 0px -8% 0px' });
+    els.forEach(function (e) { io.observe(e); });
+  } else { els.forEach(function (e) { e.classList.add('in'); }); }
+
+  /* Poincaré-Bildschirmaufnahme: abspielen, spulen */
+  var v = document.getElementById('pv'), r = document.getElementById('pvRange'), b = document.getElementById('pvPlay'), ic = document.getElementById('pvIcon');
+  if (v && r && b) {
+    var setIcon = function () { var on = !v.paused; ic.innerHTML = on ? '<path d="M4 2.5h3v11H4zM9 2.5h3v11H9z"/>' : '<path d="M4 2.5v11l9-5.5z"/>'; b.setAttribute('aria-label', on ? 'Pause' : 'Play'); };
+    var sync = function () { if (v.duration) { var p = v.currentTime / v.duration; r.value = Math.round(p * 1000); r.style.setProperty('--p', (p * 100).toFixed(1) + '%'); } };
+    v.addEventListener('timeupdate', sync); v.addEventListener('play', setIcon); v.addEventListener('pause', setIcon);
+    v.addEventListener('ended', function () { setTimeout(function () { v.currentTime = 0; v.play(); }, 1600); });
+    b.addEventListener('click', function () { if (v.paused) v.play(); else v.pause(); });
+    r.addEventListener('input', function () { v.pause(); if (v.duration) { v.currentTime = r.value / 1000 * v.duration; r.style.setProperty('--p', (r.value / 10) + '%'); } });
+    var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (!reduce && 'IntersectionObserver' in window) {
+      var vo = new IntersectionObserver(function (es) { es.forEach(function (e) { if (e.isIntersecting) { if (!v.dataset.gestartet) { v.dataset.gestartet = '1'; v.play().catch(function () {}); } } else if (!v.paused) { v.pause(); v.dataset.gestartet = ''; } }); }, { threshold: 0.5 });
+      vo.observe(v);
+    }
+  }
+
+  /* Galerie (Kanon Breathwork initGal) */
+  function initGal(sel) {
+    var s = document.querySelector(sel); if (!s) return;
+    var vp = s.querySelector('.gal-vp'), slides = [].slice.call(s.querySelectorAll('.gal-slide')), meta = s.querySelector('.gal-meta'), a = 0;
+    var up = function (i) { a = i; slides.forEach(function (x, j) { x.classList.toggle('is-active', j === i); }); if (meta) meta.textContent = (i + 1) + ' / ' + slides.length; };
+    var go = function (i) { i = Math.max(0, Math.min(slides.length - 1, i)); vp.scrollTo({ left: slides[i].offsetLeft - vp.offsetWidth / 2 + slides[i].offsetWidth / 2, behavior: 'smooth' }); };
+    if ('IntersectionObserver' in window) {
+      var io = new IntersectionObserver(function (es) { es.forEach(function (e) { if (e.isIntersecting && e.intersectionRatio > .6) up(slides.indexOf(e.target)); }); }, { root: vp, threshold: [.6] });
+      slides.forEach(function (x) { io.observe(x); });
+    }
+    s.querySelector('.gal-prev').onclick = function () { go(a - 1); };
+    s.querySelector('.gal-next').onclick = function () { go(a + 1); };
+    vp.addEventListener('keydown', function (e) { if (e.key === 'ArrowLeft') { e.preventDefault(); go(a - 1); } if (e.key === 'ArrowRight') { e.preventDefault(); go(a + 1); } });
+    up(0);
+  }
+  initGal('#gal-flow');
+  document.querySelectorAll('video.loop').forEach(function (lv) {
+    if (!('IntersectionObserver' in window)) return;
+    new IntersectionObserver(function (es) { es.forEach(function (e) { if (e.isIntersecting) { lv.play().catch(function () {}); } else { lv.pause(); } }); }, { threshold: 0.4 }).observe(lv);
+  });
+})();
+
+  /* Zahlen zählen hoch */
+  (function () {
+    var bs = document.querySelectorAll('.proof b[data-count]');
+    if (!bs.length || !('IntersectionObserver' in window)) return;
+    if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    var io = new IntersectionObserver(function (es) { es.forEach(function (e) {
+      if (!e.isIntersecting) return; io.unobserve(e.target);
+      var el = e.target, ziel = +el.dataset.count, suf = el.dataset.suffix || '', t0 = performance.now();
+      (function lauf(now) { var p = Math.min(1, (now - t0) / 1277), q = 1 - Math.pow(1 - p, 3); el.textContent = Math.round(ziel * q) + suf; if (p < 1) requestAnimationFrame(lauf); })(t0);
+    }); }, { threshold: 0.6 });
+    bs.forEach(function (b) { io.observe(b); });
+  })();
+
+</script>
+<script src="/assets/app-tour/app-tour.js" defer></script>
+</body>
+</html>
