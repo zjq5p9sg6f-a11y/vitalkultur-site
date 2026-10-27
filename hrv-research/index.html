@@ -206,6 +206,14 @@ document.head.appendChild(s);})();</script>
     .check { border: 1px solid var(--line); border-radius: 21px; padding: var(--s34) var(--s21); background: rgba(255,255,255,.015); }
     .check b { display: block; font-size: 34px; font-weight: 400; color: var(--t); line-height: 1.1; margin-bottom: var(--s8); font-variant-numeric: tabular-nums; }
     .check p { font-size: 15px; color: var(--t3); }
+    /* Co-Creation-Zeitleiste */
+    .ko { list-style: none; padding: 0; margin-top: var(--s55); display: grid; gap: 0; border-top: 1px solid var(--line); }
+    .ko li { display: grid; grid-template-columns: 96px 1fr; gap: var(--s21); padding: var(--s21) 0; border-bottom: 1px solid var(--line); }
+    .ko time { font-family: ui-monospace, "SF Mono", Menlo, monospace; font-size: 13px; color: var(--stille); padding-top: 3px; }
+    .ko .frage { color: var(--t3); font-size: 15px; margin: 0; }
+    .ko .antwort { color: var(--t); font-size: 17px; margin: 4px 0 0; }
+    .ko .dauer { display: inline-block; margin-top: 8px; font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: var(--stille); border: 1px solid rgba(62,207,178,.35); border-radius: 99px; padding: 3px 10px; }
+    @media (max-width: 600px) { .ko li { grid-template-columns: 1fr; gap: 6px; } }
     .fixed { margin-top: var(--s55); border-top: 1px solid var(--line); padding-top: var(--s34); display: grid; grid-template-columns: 1fr 2fr; gap: var(--s55); }
     .fixed h3 { font-size: 21px; font-weight: 500; }
     .fixed ol { list-style: none; counter-reset: f; display: grid; gap: var(--s13); }
@@ -494,7 +502,7 @@ document.head.appendChild(s);})();</script>
         <h2 class="tour-h" data-en="The real app, <em>with a real recording.</em>" data-de="Die echte App, <em>mit einer echten Aufnahme.</em>">The real app, <em>with a real recording.</em></h2>
         <ol class="feats" data-tour-liste aria-label="What the app does">
           <li><button data-i="0"><svg class="ic" aria-hidden="true"><use href="#i-wave"/></svg><b data-en="The whole session at a glance" data-de="Die ganze Sitzung auf einen Blick">The whole session at a glance</b><span data-en="Heart rate and HRV together – rest, training and recovery." data-de="Herzfrequenz und HRV gemeinsam – Ruhe, Training und Erholung.">Heart rate and HRV together – rest, training and recovery.</span></button><i class="fort"></i></li>
-          <li><button data-i="1"><svg class="ic" aria-hidden="true"><use href="#i-sens"/></svg><b data-en="Up to four sensors at once" data-de="Bis zu vier Sensoren gleichzeitig">Up to four sensors at once</b><span data-en="Polar H10 and Movesense Flash record on their own – mark each phase with one tap." data-de="Polar H10 und Movesense Flash zeichnen selbst auf – jede Phase per Tipp markiert.">Polar H10 and Movesense Flash record on their own – mark each phase with one tap.</span></button><i class="fort"></i></li>
+          <li><button data-i="1"><svg class="ic" aria-hidden="true"><use href="#i-sens"/></svg><b data-en="Up to four sensors at once" data-de="Bis zu vier Sensoren gleichzeitig">Up to four sensors at once</b><span data-en="Polar H10 and Movesense Flash record on their own – one tap marks the phase in every recording." data-de="Polar H10 und Movesense Flash zeichnen selbst auf – ein Tipp markiert die Phase in jeder Aufnahme.">Polar H10 and Movesense Flash record on their own – one tap marks the phase in every recording.</span></button><i class="fort"></i></li>
           <li><button data-i="2"><svg class="ic" aria-hidden="true"><use href="#i-grid"/></svg><b data-en="Every metric of a recording" data-de="Jede Kennzahl einer Aufnahme">Every metric of a recording</b><span data-en="Time domain, Poincaré, DFA α1, spectrum and artifact share – scroll through it right here." data-de="Zeitbereich, Poincaré, DFA α1, Spektrum, Artefaktanteil – scroll selbst durch.">Time domain, Poincaré, DFA α1, spectrum and artifact share – scroll through it right here.</span></button><i class="fort"></i></li>
           <li><button data-i="3"><svg class="ic" aria-hidden="true"><use href="#i-scatter"/></svg><b data-en="See when the pattern changes" data-de="Sehen, wann sich das Muster ändert">See when the pattern changes</b><span data-en="A Poincaré plot with time slider and inspector, beat by beat." data-de="Ein Poincaré-Plot mit Zeitregler und Fadenkreuz, Schlag für Schlag.">A Poincaré plot with time slider and inspector, beat by beat.</span></button><i class="fort"></i></li>
           <li><button data-i="4"><svg class="ic" aria-hidden="true"><use href="#i-info"/></svg><b data-en="Every number explained" data-de="Jede Zahl erklärt">Every number explained</b><span data-en="What it shows, how it is computed, what to watch – and the source." data-de="Was sie zeigt, wie sie gerechnet wird, worauf zu achten ist – und die Quelle.">What it shows, how it is computed, what to watch – and the source.</span></button><i class="fort"></i></li>
@@ -866,6 +874,23 @@ document.head.appendChild(s);})();</script>
   </section>
 
   <!-- 9 · Kauf -->
+  <!-- Co-Creation: belegt durch Mail-Zeitstempel + Commits (23./24.10.2026); ohne Namen -->
+  <section class="ch" id="built-with-testers">
+    <div class="wrap">
+      <div class="rv" style="max-width:760px">
+        <div class="label" data-en="Built with its first studies" data-de="Mit den ersten Studien gebaut">Built with its first studies</div>
+        <h2 data-en="Testers ask. <em>The next build answers.</em>" data-de="Tester fragen. <em>Der nächste Build antwortet.</em>">Testers ask. <em>The next build answers.</em></h2>
+        <p class="sub" data-en="The beta runs in real studies. What testers report goes straight into the app – often the same day." data-de="Die Beta läuft in echten Studien. Was Tester melden, geht direkt in die App – oft am selben Tag.">The beta runs in real studies. What testers report goes straight into the app – often the same day.</p>
+      </div>
+      <ol class="ko rv">
+          <li><time data-en="Origin" data-de="Ursprung">Origin</time><div><p class="frage" data-en="In our horse-HRV app, a tester asked to mark a phase across several recordings at once." data-de="In unserer Pferde-HRV-App bat eine Testerin darum, eine Phase in mehreren Aufnahmen zugleich zu markieren.">In our horse-HRV app, a tester asked to mark a phase across several recordings at once.</p><p class="antwort" data-en="→ Group phase markers: one tap marks the phase in every running recording." data-de="→ Gruppen-Phasenmarker: ein Tipp markiert die Phase in jeder laufenden Aufnahme.">→ Group phase markers: one tap marks the phase in every running recording.</p><span class="dauer" data-en="now in Research" data-de="jetzt in Research">now in Research</span></div></li>
+          <li><time data-en="23 Oct" data-de="23. Okt.">23 Oct</time><div><p class="frage" data-en="A thesis protocol: seated rest, coach-led training, seated recovery." data-de="Ein Protokoll für eine Abschlussarbeit: Ruhe im Sitzen, Training mit Coach, Erholung im Sitzen.">A thesis protocol: seated rest, coach-led training, seated recovery.</p><p class="antwort" data-en="→ The group phase markers came to Research, with a segment table of values per phase." data-de="→ Die Gruppen-Phasenmarker kamen in Research, mit einer Segmenttabelle der Werte je Phase.">→ The group phase markers came to Research, with a segment table of values per phase.</p><span class="dauer" data-en="same day" data-de="am selben Tag">same day</span></div></li>
+          <li><time data-en="24 Oct" data-de="24. Okt.">24 Oct</time><div><p class="frage" data-en="After a strap-memory read-out, the start time was 10 minutes off." data-de="Nach dem Auslesen des Gurtspeichers lag die Startzeit 10 Minuten daneben.">After a strap-memory read-out, the start time was 10 minutes off.</p><p class="antwort" data-en="→ Fixed: start and stop time are kept and written to every export." data-de="→ Behoben: Start- und Stoppzeit bleiben erhalten und stehen in jedem Export.">→ Fixed: start and stop time are kept and written to every export.</p><span class="dauer" data-en="within the hour" data-de="binnen einer Stunde">within the hour</span></div></li>
+          <li><time data-en="24 Oct" data-de="24. Okt.">24 Oct</time><div><p class="frage" data-en="A university IT advisor asked whether EDF export is available." data-de="Ein IT-Berater der Hochschule fragte, ob es einen EDF-Export gibt.">A university IT advisor asked whether EDF export is available.</p><p class="antwort" data-en="→ EDF+, plus FIT and WFDB for PhysioNet – in TestFlight the same evening." data-de="→ EDF+, dazu FIT und WFDB für PhysioNet – am selben Abend in TestFlight.">→ EDF+, plus FIT and WFDB for PhysioNet – in TestFlight the same evening.</p><span class="dauer" data-en="same evening" data-de="am selben Abend">same evening</span></div></li>
+      </ol>
+    </div>
+  </section>
+
   <section class="final">
     <div class="wrap rv">
       <div class="label" data-en="Before the App Store launch" data-de="Vor dem Start im App Store">Before the App Store launch</div>
