@@ -69,6 +69,9 @@ if '"downloadUrl"' not in s:
     ersetze("Kauf-Angebot", r'("@type": "SoftwareApplication",)',
             r'\1\n        "downloadUrl": "' + STORE + r'",\n        "offers": {"@type": "Offer", "price": "99.99", '
             r'"priceCurrency": "EUR", "category": "one-time purchase"},', 1)
+# 6. Smart App Banner (Kampagnenpapier 28.10.): native Store-Leiste in Safari, erst ab Starttag
+if 'name="apple-itunes-app"' not in s:
+    ersetze("Smart App Banner", r'(<meta name="viewport"[^>]*>)', r'\1\n  <meta name="apple-itunes-app" content="app-id=6826010655">', 1)
 rest = re.findall(r"beta|TestFlight", s)
 llms = LLMS.read_text(encoding="utf-8")
 llms_neu = re.sub(r"In beta via Apple TestFlight \([^)]*\), a one-time App Store purchase at launch;",
