@@ -335,9 +335,9 @@
           zoom: [maus ? 'Pinch to zoom' : 'Pinch to zoom', maus ? 'Double-click to reset' : 'Double-tap to reset'] };
     var tipp = document.createElement('div'); tipp.className = 'lp-tipp'; tipp.setAttribute('aria-hidden', 'true');
     var finger = document.createElement('div'); finger.className = 'lp-finger'; finger.setAttribute('aria-hidden', 'true');
-    dev.appendChild(tipp); dev.appendChild(finger);
+    var finger2 = finger.cloneNode(); dev.appendChild(tipp); dev.appendChild(finger); dev.appendChild(finger2);
     var prozent = function (cx, cy) { return [(5.102 + 89.796 * cx / W) + '%', (2.2 + 95.6 * cy / H) + '%']; };
-    var setzeFinger = function (cx, cy) { var q = prozent(cx, cy); finger.style.left = q[0]; finger.style.top = q[1]; };
+    var setzeFinger = function (cx, cy, el) { var q = prozent(cx, cy); el = el || finger; el.style.left = q[0]; el.style.top = q[1]; };
     var zeigeTipp = function (t, cx, cy) {
       tipp.classList.remove('zeigen');
       setTimeout(function () { tipp.innerHTML = t[0] + '<small>' + t[1] + '</small>'; var q = prozent(cx, cy); tipp.style.left = q[0]; tipp.style.top = q[1]; tipp.classList.add('zeigen'); }, 120);
@@ -369,9 +369,36 @@
               zeigeTipp(T.halt, zx, zy - 40);
               spaeter(function () {
                 animiere(1900, function (e) { var i = Math.min(n - 1, ziel + Math.round(e * 70)); kreuz = i; setzeFinger(VX(d.x[i]), VY(d.y[i])); neu(); }, function () {
-                  finger.classList.remove('druck', 'halten', 'an'); tipp.classList.remove('zeigen');
-                  spaeter(function () { zeigeTipp(T.zoom, (P.x0 + P.x1) / 2, P.y0 + 150); }, 500);
-                  spaeter(function () { tipp.classList.remove('zeigen'); }, 3400);
+                  finger.classList.remove('druck', 'halten', 'an'); tipp.classList.remove('zeigen'); kreuz = null; neu();
+                  // Zoom vorführen (28.10., Jan: „zwei Punkte für zwei Finger, dann sieht der Betrachter alles,
+                  // was er machen kann“): zwei Finger ziehen auf der Wolke auseinander, die Ansicht zoomt mit;
+                  // danach Doppeltipp → weich zurück. Eigene Berührung bricht wie immer sofort ab.
+                  var cx = VX(d.x[ziel]), cy = VY(d.y[ziel]), zz = 2.3;
+                  var paar = function (a) { setzeFinger(cx - a, cy + a, finger); setzeFinger(cx + a, cy - a, finger2); };
+                  spaeter(function () {
+                    paar(55); finger.classList.add('an'); finger2.classList.add('an');
+                    zeigeTipp(T.zoom, (P.x0 + P.x1) / 2, P.y0 + 150);
+                    spaeter(function () {
+                      finger.classList.add('druck'); finger2.classList.add('druck');
+                      animiere(1500, function (e) { paar(55 + 175 * e); zoomUm(cx, cy, 1 + (zz - 1) * e); }, function () {
+                        spaeter(function () {
+                          finger.classList.remove('druck', 'an'); finger2.classList.remove('druck', 'an');
+                          spaeter(function () {                      // Doppeltipp: zweimal kurz drücken, dann zurück
+                            setzeFinger((P.x0 + P.x1) / 2, (P.y0 + P.y1) / 2); finger.classList.add('an');
+                            spaeter(function () { finger.classList.add('druck'); }, 250);
+                            spaeter(function () { finger.classList.remove('druck'); }, 400);
+                            spaeter(function () { finger.classList.add('druck'); }, 550);
+                            spaeter(function () {
+                              finger.classList.remove('druck');
+                              var z0 = z; animiere(700, function (e) { zoomUm(cx, cy, z0 + (1 - z0) * e); }, function () {
+                                zurueck(); finger.classList.remove('an'); tipp.classList.remove('zeigen');
+                              });
+                            }, 700);
+                          }, 450);
+                        }, 900);
+                      });
+                    }, 450);
+                  }, 600);
                 });
               }, 450);
             });
@@ -382,7 +409,7 @@
     var erinnern = function () { zeigeTipp(T.zieh, knopfX(), 1925); spaeter(function () { tipp.classList.remove('zeigen'); }, 2600); };
     var nutzerDa = function () {
       if (genutzt) return; genutzt = true;
-      uhren.forEach(clearTimeout); tipp.classList.remove('zeigen'); finger.classList.remove('an', 'druck', 'halten');
+      uhren.forEach(clearTimeout); tipp.classList.remove('zeigen'); finger.classList.remove('an', 'druck', 'halten'); finger2.classList.remove('an', 'druck');
     };
 
     // ── Maus/Stift ──
