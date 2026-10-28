@@ -376,6 +376,7 @@ document.head.appendChild(s);})();</script>
     @media (max-width: 960px) {
       .tour { grid-template-columns: 1fr; gap: var(--s34); }
       .tour-phone { order: -1; }
+      .tour-phone .at-device { margin-left: auto; margin-right: auto; }   /* 28.10. (Jan): Hinweis darunter machte den Block breit, das iPhone stand links */
       .tour-txt { text-align: left; }
       .feats { max-width: none; }
       .sensors { grid-template-columns: 1fr; }
@@ -389,6 +390,12 @@ document.head.appendChild(s);})();</script>
     /* iPhone (28.10., Jan: „beim iPhone etwas runter gerutscht“): das Mobil-Bild hat oben 22 % Schwarz und endet bei 87 % —
        weniger Abstand darüber, Text erst UNTER dem Band statt 14vw hinein. iPad/Desktop unverändert. */
     @media (max-width: 700px) { .kino { margin-top: var(--s55); } .kino-txt { margin-top: -3vw; } }
+    /* iPhone (28.10., Jan: „etwas groß, man übersieht den Text darunter“): Gerät + Bildunterschrift + Hinweis passen
+       zusammen in die SICHTBARE Höhe (dvh, mit Safari-Leisten) — vorher svh = ohne Leisten, Gerät füllte den Schirm. */
+    @media (max-width: 700px) {
+      .tour-phone .at-device { width: min(300px, 70vw, calc((100vh - 250px) * 0.49)); }
+      @supports (height: 1dvh) { .tour-phone .at-device { width: min(300px, 70vw, calc((100dvh - 250px) * 0.49)); } }
+    }
     /* Passt es? */
     .fit { display: grid; grid-template-columns: 1fr 1fr; gap: var(--s21); margin-top: var(--s55); }
     .fit h3, .kubios h3 { font-size: 18px; font-weight: 500; margin-bottom: var(--s13); }
@@ -623,7 +630,7 @@ if (!location.hash) {
           </figcaption>
         </figure>
         <figure class="sensor" id="movesenseCard">
-          <img src="../assets/v14/movesense-flash-900.webp" srcset="../assets/v14/movesense-flash-900.webp 900w, assets/v14/movesense-flash-1600.webp 1600w" sizes="(max-width: 900px) 92vw, 440px" width="900" height="500" alt="Movesense Flash sensor clipped onto its chest strap" loading="lazy" decoding="async" style="object-position:50% 50%">
+          <img src="../assets/v14/movesense-flash-900.webp" srcset="../assets/v14/movesense-flash-900.webp 900w, ../assets/v14/movesense-flash-1600.webp 1600w" sizes="(max-width: 900px) 92vw, 440px" width="900" height="500" alt="Movesense Flash sensor clipped onto its chest strap" loading="lazy" decoding="async" style="object-position:50% 50%">
           <figcaption>
             <h3>Movesense Flash</h3>
             <ul>
