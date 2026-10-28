@@ -384,7 +384,9 @@ document.head.appendChild(s);})();</script>
     .kino img { width: 100%; height: auto; display: block; }
     .kino::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, var(--bg) 0%, transparent 14%, transparent 62%, var(--bg) 100%); pointer-events: none; }
     .kino-txt { position: relative; z-index: 2; margin-top: -9vw; }
-    @media (max-width: 700px) { .kino-txt { margin-top: -14vw; } }
+    /* iPhone (28.10., Jan: „beim iPhone etwas runter gerutscht“): das Mobil-Bild hat oben 22 % Schwarz und endet bei 87 % —
+       weniger Abstand darüber, Text erst UNTER dem Band statt 14vw hinein. iPad/Desktop unverändert. */
+    @media (max-width: 700px) { .kino { margin-top: var(--s55); } .kino-txt { margin-top: -3vw; } }
     /* Passt es? */
     .fit { display: grid; grid-template-columns: 1fr 1fr; gap: var(--s21); margin-top: var(--s55); }
     .fit h3, .kubios h3 { font-size: 18px; font-weight: 500; margin-bottom: var(--s13); }
@@ -1035,13 +1037,18 @@ document.head.appendChild(s);})();</script>
     ov.className = 'iz'; ov.setAttribute('role', 'dialog'); ov.setAttribute('aria-modal', 'true');
     ov.innerHTML = '<img alt="" draggable="false"><button type="button" class="iz-nav iz-prev" aria-label="' + (de ? 'Vorheriges Bild' : 'Previous image') + '">‹</button><button type="button" class="iz-nav iz-next" aria-label="' + (de ? 'Nächstes Bild' : 'Next image') + '">›</button><div class="iz-info"></div>';
     document.body.appendChild(ov);
-    var big = ov.querySelector('img'), info = ov.querySelector('.iz-info'), idx = 0, zuletzt = null;
+    var big = ov.querySelector('img'), info = ov.querySelector('.iz-info'), idx = 0, zuletzt = null, reihe = bilder;
+    // Eine Reihe = die Bilder DES Abschnitts, aus dem geöffnet wurde (28.10., Jan: „swipt alle Inhalte durch
+    // statt nur die Bilder der Reihe“). Vorher: alle Bilder der Seite in einer Liste.
+    function reiheVon(b) { var sek = b.closest('section') || document.body; return bilder.filter(function (x) { return sek.contains(x); }); }
     function zeigen(i) {
-      idx = (i + bilder.length) % bilder.length;
-      var b = bilder[idx]; big.src = b.currentSrc || b.src; big.alt = b.alt || '';
-      info.textContent = (idx + 1) + ' / ' + bilder.length + ' · ' + (de ? 'Wischen zum Blättern · Tippen schließt' : 'Swipe to browse · tap to close');
+      idx = (i + reihe.length) % reihe.length;
+      var b = reihe[idx]; big.src = b.currentSrc || b.src; big.alt = b.alt || '';
+      var mehr = reihe.length > 1;
+      ov.querySelector('.iz-prev').hidden = ov.querySelector('.iz-next').hidden = !mehr;
+      info.textContent = (mehr ? (idx + 1) + ' / ' + reihe.length + ' · ' + (de ? 'Wischen zum Blättern · ' : 'Swipe to browse · ') : '') + (de ? 'Tippen schließt' : 'tap to close');
     }
-    function oeffnen(i) { zuletzt = document.activeElement; zeigen(i); ov.classList.add('show'); document.documentElement.style.overflow = 'hidden'; }
+    function oeffnen(b) { zuletzt = document.activeElement; reihe = reiheVon(b); zeigen(reihe.indexOf(b)); ov.classList.add('show'); document.documentElement.style.overflow = 'hidden'; }
     function schliessen() { ov.classList.remove('show'); document.documentElement.style.overflow = ''; if (zuletzt && zuletzt.focus) zuletzt.focus(); }
     bilder.forEach(function (b, i) {
       b.classList.add('zoom'); b.setAttribute('tabindex', '0'); b.setAttribute('role', 'button');
@@ -1049,8 +1056,8 @@ document.head.appendChild(s);})();</script>
       var sx = 0, sy = 0, bewegt = false, t0 = 0;
       b.addEventListener('pointerdown', function (e) { sx = e.clientX; sy = e.clientY; bewegt = false; t0 = Date.now(); }, { passive: true });
       b.addEventListener('pointermove', function (e) { if (Math.abs(e.clientX - sx) > 10 || Math.abs(e.clientY - sy) > 10) bewegt = true; }, { passive: true });
-      b.addEventListener('pointerup', function () { if (!bewegt && Date.now() - t0 < 600) oeffnen(i); }, { passive: true });
-      b.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); oeffnen(i); } });
+      b.addEventListener('pointerup', function () { if (!bewegt && Date.now() - t0 < 600) oeffnen(b); }, { passive: true });
+      b.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); oeffnen(b); } });
     });
     ov.querySelector('.iz-prev').addEventListener('click', function (e) { e.stopPropagation(); zeigen(idx - 1); });
     ov.querySelector('.iz-next').addEventListener('click', function (e) { e.stopPropagation(); zeigen(idx + 1); });
@@ -1058,7 +1065,7 @@ document.head.appendChild(s);})();</script>
     ov.addEventListener('pointerdown', function (e) { wx = e.clientX; wy = e.clientY; gewischt = false; }, { passive: true });
     ov.addEventListener('pointerup', function (e) {
       var dx = e.clientX - wx;
-      if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(e.clientY - wy)) { gewischt = true; zeigen(idx + (dx < 0 ? 1 : -1)); }
+      if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(e.clientY - wy)) { gewischt = true; if (reihe.length > 1) zeigen(idx + (dx < 0 ? 1 : -1)); }
     }, { passive: true });
     ov.addEventListener('click', function () { if (!gewischt) schliessen(); gewischt = false; });
     document.addEventListener('keydown', function (e) {
