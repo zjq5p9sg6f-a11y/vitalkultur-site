@@ -557,6 +557,13 @@ footer nav a:hover { color: var(--accent); }
 }
 .legal tr:last-child td { border-bottom: none; }
 .legal tr:hover td { background: rgba(255,255,255,0.02); }
+/* Prüfstand 29.10.2026: lange Spaltenköpfe (RECHTSGRUNDLAGE, DATENKATEGORIE) schoben die
+   Tabelle auf 440-pt-iPhones bis 642 pt breit. Trennen statt seitwärts scrollen. */
+.legal th, .legal td { overflow-wrap: anywhere; hyphens: auto; }
+@media (max-width: 600px) {
+  .legal th, .legal td { padding: 8px 6px; }
+  .legal th { letter-spacing: 0; }
+}
 
 /* ═══════════════════════════════════════ */
 /* RESPONSIVE                              */
