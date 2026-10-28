@@ -478,7 +478,16 @@ document.head.appendChild(s);})();</script>
   <symbol id="i-nolink" viewBox="0 0 32 32"><path d="M10.5 9.5l11 9-5.5 4.5V5l5.5 4.5-11 9"/><path d="M5 27L27 5" opacity=".55"/></symbol>
   <symbol id="i-lab" viewBox="0 0 32 32"><path d="M12.5 4h7M13.5 4v8.5L6.8 24.6A2.3 2.3 0 0 0 8.8 28h14.4a2.3 2.3 0 0 0 2-3.4L18.5 12.5V4"/><path d="M9.5 20h13" opacity=".55"/></symbol>
 </defs></svg>
-<script>document.documentElement.classList.add('js')</script>
+<script>document.documentElement.classList.add('js');
+// Öffnen beginnt oben (28.10., Jan): Safari stellt beim Neuladen die alte Scrollposition wieder her.
+// Ohne Anker im Link immer an den Anfang; Links mit #Abschnitt springen weiter gezielt.
+try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; } catch (e) {}
+if (!location.hash) {
+  window.scrollTo(0, 0);
+  var vkSelbst = false, vkMerk = function () { vkSelbst = true; };   // hat der Nutzer schon gescrollt, reißt das Laden ihn nicht zurück
+  addEventListener('touchstart', vkMerk, { once: true, passive: true }); addEventListener('wheel', vkMerk, { once: true, passive: true }); addEventListener('keydown', vkMerk, { once: true });
+  addEventListener('load', function () { if (!vkSelbst && !location.hash) window.scrollTo(0, 0); });
+}</script>
 
 <header class="nav">
   <div class="wrap">
