@@ -39,7 +39,11 @@
 /* Sichtbare Höhe (dvh) — svh war in Browsern mit eingeblendeten Leisten zu groß (Jan, 16 Pro Max) */
 .at-voll .at-device { width: min(88vw, calc(84vh * 0.49)); }
 @supports (height: 1dvh) { .at-voll .at-device { width: min(88vw, calc(84dvh * 0.49)); } }
-.at-voll .at-voll-btn { top: -16px; right: -16px; bottom: auto; }
+/* Vollbild-Schließen wie Apple (28.10., Jan: „Knopf nicht schön“): klein, ruhig, in der Bildschirmecke statt auf
+   der Geräteecke. .at-voll füllt den Bildschirm, ist also der Bezug für position: fixed (backdrop-filter). */
+.at-voll .at-voll-btn { position: fixed; top: calc(env(safe-area-inset-top, 0px) + 14px); right: calc(env(safe-area-inset-right, 0px) + 14px);
+  bottom: auto; width: 36px; height: 36px; background: rgba(235,230,220,.12); border: none; color: rgba(235,230,220,.9); }
+.at-voll .at-voll-btn svg { width: 15px; height: 15px; }
 
 /* Erklärungen der WEBSITE, nicht der App (27.10.2026, Jan: Punkte/Kästen in Markenfarbe wirkten wie App-Elemente):
    Scheinwerfer — der App-Bildschirm wird abgedunkelt, nur der erklärte Bereich bleibt hell (feiner weißer Rahmen);

@@ -25,7 +25,7 @@
   <meta name="twitter:title" content="CARLON HRV Research — your HRV study, from one iPhone">
   <meta name="twitter:description" content="Up to four Polar H10 or Movesense Flash sensors at once, phase markers, values per phase, DFA α1 over time, original RR data for Kubios, Python and R.">
   <meta name="twitter:image" content="https://vitalkultur.com/assets/og-research.png">
-  <link rel="stylesheet" href="/assets/app-tour/app-tour.css?v=6">
+  <link rel="stylesheet" href="/assets/app-tour/app-tour.css?v=7">
   <link rel="preload" href="/fonts/jost-variable.woff2" as="font" type="font/woff2" crossorigin>
   <script type="application/ld+json">
   {
@@ -394,7 +394,8 @@ document.head.appendChild(s);})();</script>
        zusammen in die SICHTBARE Höhe (dvh, mit Safari-Leisten) — vorher svh = ohne Leisten, Gerät füllte den Schirm. */
     @media (max-width: 700px) {
       .tour-phone .at-device { width: min(300px, 70vw, calc((100vh - 250px) * 0.49)); }
-      @supports (height: 1dvh) { .tour-phone .at-device { width: min(300px, 70vw, calc((100dvh - 250px) * 0.49)); } }
+      /* svh = kleinste sichtbare Höhe (Leisten eingeblendet) — STABIL. dvh änderte sich beim Scrollen, das Gerät sprang (28.10.) */
+      @supports (height: 1svh) { .tour-phone .at-device { width: min(300px, 70vw, calc((100svh - 250px) * 0.49)); } }
     }
     /* Passt es? */
     .fit { display: grid; grid-template-columns: 1fr 1fr; gap: var(--s21); margin-top: var(--s55); }
