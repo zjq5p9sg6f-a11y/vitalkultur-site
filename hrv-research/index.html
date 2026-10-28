@@ -213,6 +213,8 @@ document.head.appendChild(s);})();</script>
     .methoden-text { position: relative; margin-top: var(--s21); max-height: 9.6em; overflow: hidden; font-family: ui-serif, Georgia, "Times New Roman", serif; font-size: 15px; line-height: 1.6; color: var(--t2); transition: max-height .6s var(--ease); }
     .methoden-text { -webkit-mask-image: linear-gradient(#000 55%, transparent); mask-image: linear-gradient(#000 55%, transparent); }
     .methoden.offen .methoden-text { max-height: 80em; }
+    .methoden-text p + p { margin-top: .9em; }   /* Ethik-Baustein: vier Absätze (28.10.) */
+    .methoden + .methoden { margin-top: var(--s34); }
     .methoden.offen .methoden-text { -webkit-mask-image: none; mask-image: none; }
     .methoden-fuss { display: flex; gap: var(--s13); align-items: center; margin-top: var(--s21); flex-wrap: wrap; }
     .methoden-kopie { font: inherit; font-size: 15px; cursor: pointer; background: transparent; color: var(--t); border: 1px solid var(--line2); }
@@ -776,6 +778,18 @@ if (!location.hash) {
           <button type="button" class="btn btn-2 methoden-kopie" data-ok-en="Copied ✓" data-ok-de="Kopiert ✓"><span data-en="Copy paragraph" data-de="Absatz kopieren">Copy paragraph</span></button>
           <button type="button" class="methoden-mehr" aria-expanded="false"><span data-en="Show all" data-de="Alles zeigen">Show all</span></button>
         </div>
+
+      </div>
+      <div class="methoden rv" id="ethics-paragraph">
+        <div class="methoden-kopf">
+          <h3 data-en="Your ethics application – <em>data protection already worded.</em>" data-de="Dein Ethikantrag – <em>Datenschutz schon formuliert.</em>">Your ethics application – <em>data protection already worded.</em></h3>
+          <p class="sub" data-en="Copy it into the data protection section of your application and adapt it to your study. It describes only what the app does." data-de="Kopiere ihn in den Datenschutzteil deines Antrags und passe ihn an deine Studie an. Er beschreibt nur, was die App tut.">Copy it into the data protection section of your application and adapt it to your study. It describes only what the app does.</p>
+        </div>
+        <div class="methoden-text" tabindex="0"><p data-en="<b>Recording and storage.</b> RR intervals are recorded with CARLON HRV Research (iOS app) from Polar H10 or Movesense Flash chest sensors via Bluetooth, live or in the sensor’s internal memory with later read-out; until read-out, such a recording remains on the sensor. Data are stored only locally on the study iPhone. The app has no user account, no server of its own and no analytics or advertising services. Data leave the device only through an explicit export by the study team (iOS share sheet) to a destination the team chooses, e.g. institutional storage. Recordings are part of the device’s regular iPhone backup." data-de="<b>Aufzeichnung und Speicherung.</b> RR-Intervalle werden mit CARLON HRV Research (iOS-App) von Polar-H10- oder Movesense-Flash-Brustsensoren über Bluetooth aufgezeichnet, live oder im internen Speicher des Sensors mit späterem Auslesen; bis zum Auslesen verbleibt eine solche Aufnahme auf dem Sensor. Die Daten werden ausschließlich lokal auf dem Studien-iPhone gespeichert. Die App hat kein Benutzerkonto, keinen eigenen Server und keine Analyse- oder Werbedienste. Die Daten verlassen das Gerät nur durch einen ausdrücklichen Export durch das Studienteam (iOS-Teilen-Menü) an ein vom Team gewähltes Ziel, z. B. einen Speicher der Einrichtung. Die Aufnahmen sind Teil der regulären iPhone-Sicherung des Geräts."><b>Recording and storage.</b> RR intervals are recorded with CARLON HRV Research (iOS app) from Polar H10 or Movesense Flash chest sensors via Bluetooth, live or in the sensor’s internal memory with later read-out; until read-out, such a recording remains on the sensor. Data are stored only locally on the study iPhone. The app has no user account, no server of its own and no analytics or advertising services. Data leave the device only through an explicit export by the study team (iOS share sheet) to a destination the team chooses, e.g. institutional storage. Recordings are part of the device’s regular iPhone backup.</p><p data-en="<b>Pseudonymisation.</b> Participants are entered under a study code chosen by the team (e.g. P-01). On export, the participant can be replaced by a stable pseudonym (ANON- followed by eight hexadecimal characters, derived from an internal identifier with SHA-256). The key linking code and person is kept by the study team outside the app. The data are therefore pseudonymised, not anonymised. Free-text notes are exported as entered; the study team decides what they contain." data-de="<b>Pseudonymisierung.</b> Teilnehmende werden unter einem vom Team gewählten Studiencode angelegt (z. B. P-01). Beim Export kann der Code durch ein stabiles Pseudonym ersetzt werden (ANON- gefolgt von acht Hexadezimalzeichen, mit SHA-256 aus einer internen Kennung abgeleitet). Die Zuordnungsliste von Code und Person führt das Studienteam außerhalb der App. Die Daten sind damit pseudonymisiert, nicht anonymisiert. Freitext-Notizen werden so exportiert, wie sie eingegeben wurden; was sie enthalten, entscheidet das Studienteam."><b>Pseudonymisation.</b> Participants are entered under a study code chosen by the team (e.g. P-01). On export, the participant can be replaced by a stable pseudonym (ANON- followed by eight hexadecimal characters, derived from an internal identifier with SHA-256). The key linking code and person is kept by the study team outside the app. The data are therefore pseudonymised, not anonymised. Free-text notes are exported as entered; the study team decides what they contain.</p><p data-en="<b>Integrity and deletion.</b> Original RR intervals are stored unchanged; corrections are kept separately. Changes are logged in a tamper-evident audit trail following ALCOA+ principles. Recordings can be deleted in the app at any time (GDPR Art. 17)." data-de="<b>Integrität und Löschung.</b> Die Original-RR-Intervalle werden unverändert gespeichert; Korrekturen werden getrennt geführt. Änderungen werden in einem manipulationssicheren Prüfpfad nach ALCOA+-Grundsätzen protokolliert. Aufnahmen lassen sich in der App jederzeit löschen (DSGVO Art. 17)."><b>Integrity and deletion.</b> Original RR intervals are stored unchanged; corrections are kept separately. Changes are logged in a tamper-evident audit trail following ALCOA+ principles. Recordings can be deleted in the app at any time (GDPR Art. 17).</p><p data-en="<b>Classification.</b> The app is a research tool, not a medical device, and is not used for diagnosis or treatment." data-de="<b>Einordnung.</b> Die App ist ein Forschungswerkzeug, kein Medizinprodukt, und wird nicht zur Diagnose oder Behandlung eingesetzt."><b>Classification.</b> The app is a research tool, not a medical device, and is not used for diagnosis or treatment.</p></div>
+        <div class="methoden-fuss">
+          <button type="button" class="btn btn-2 methoden-kopie" data-ok-en="Copied ✓" data-ok-de="Kopiert ✓"><span data-en="Copy text block" data-de="Textbaustein kopieren">Copy text block</span></button>
+          <button type="button" class="methoden-mehr" aria-expanded="false"><span data-en="Show all" data-de="Alles zeigen">Show all</span></button>
+        </div>
       </div>
     </div>
   </section>
@@ -999,7 +1013,7 @@ if (!location.hash) {
   initGal('#gal-flow');
   /* Methodenabsatz: kopieren + aufklappen */
   (function () {
-    var m = document.getElementById('methods-paragraph'); if (!m) return;
+    document.querySelectorAll('.methoden').forEach(function (m) {
     var de = document.documentElement.lang === 'de', k = m.querySelector('.methoden-kopie'), w = m.querySelector('.methoden-mehr');
     k.addEventListener('click', function () {
       var t = m.querySelector('.methoden-text').innerText.trim(), lbl = k.querySelector('span'), alt = lbl.textContent;
@@ -1009,6 +1023,7 @@ if (!location.hash) {
     w.addEventListener('click', function () {
       var offen = m.classList.toggle('offen'); w.setAttribute('aria-expanded', offen);
       w.querySelector('span').textContent = offen ? (de ? 'Weniger zeigen' : 'Show less') : (de ? 'Alles zeigen' : 'Show all');
+    });
     });
   })();
 
