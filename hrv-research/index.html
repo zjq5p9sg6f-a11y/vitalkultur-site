@@ -440,13 +440,16 @@ document.head.appendChild(s);})();</script>
     .zoombar img, img.zoom { cursor: zoom-in; }
     .iz { position: fixed; inset: 0; z-index: 9999; display: flex; align-items: center; justify-content: center; background: rgba(2,2,2,.96); -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px); padding: 4vh 4vw; opacity: 0; visibility: hidden; pointer-events: none; transition: opacity .22s ease, visibility .22s ease; cursor: zoom-out; touch-action: pan-y; }
     .iz.show { opacity: 1; visibility: visible; pointer-events: auto; }
-    .iz img { max-width: 100%; max-height: 84vh; width: auto; height: auto; border-radius: 22px; box-shadow: 0 30px 90px rgba(0,0,0,.7); transform: scale(.97); transition: transform .24s cubic-bezier(.16,1,.3,1); -webkit-user-drag: none; user-select: none; }
-    .iz.show img { transform: scale(1); }
+    .iz > img { max-width: 100%; max-height: 84vh; width: auto; height: auto; border-radius: 22px; box-shadow: 0 30px 90px rgba(0,0,0,.7); transform: scale(.97); transition: transform .24s cubic-bezier(.16,1,.3,1); -webkit-user-drag: none; user-select: none; }
+    .iz.show > img { transform: scale(1); }
+    .iz > img[hidden], .iz-geraet[hidden] { display: none; }   /* Standbild ODER Gerät, nie beides */
+    .iz-geraet { width: min(92vw, calc(84vh * 735 / 1500)); pointer-events: none; }
+    .iz-geraet .device { width: 100%; margin: 0; }
     .iz-nav { position: fixed; top: 50%; transform: translateY(-50%); width: 44px; height: 44px; border-radius: 50%; border: 1px solid var(--line2); background: rgba(2,2,2,.6); color: var(--t); font-size: 20px; cursor: pointer; }
     .iz-prev { left: 16px; } .iz-next { right: 16px; }
     .iz-info { position: fixed; bottom: calc(env(safe-area-inset-bottom, 0px) + 16px); left: 0; right: 0; text-align: center; font-size: 12px; letter-spacing: .1em; text-transform: uppercase; color: var(--t3); pointer-events: none; }
     @media (max-width: 560px) { .iz-nav { display: none; } }
-    @media (prefers-reduced-motion: reduce) { .iz, .iz img { transition: none; } }
+    @media (prefers-reduced-motion: reduce) { .iz, .iz > img { transition: none; } }
     footer a { display: inline-block; padding: 11px 0; }
     @media (max-width: 560px) {
       .crumb .home, .crumb .sep { display: none; }
@@ -1062,34 +1065,41 @@ if (!location.hash) {
 // Kern der Equine-Lösung (Überblendung, Wischen, Zähler) ohne deren Modul-Menü.
 (function () {
   try {
-    var bilder = [].slice.call(document.querySelectorAll('.device img.shot, .sensor img, .pages img'));
+    var bilder = [].slice.call(document.querySelectorAll('.device img.shot, .device video.loop, .sensor img, .pages img'));   // Videos gehören zur Reihe (28.10., Jan: „animiertes iPhone geht nicht als Vollbild“)
     if (!bilder.length) return;
     var de = document.documentElement.lang === 'de';
     var ov = document.createElement('div');
     ov.className = 'iz'; ov.setAttribute('role', 'dialog'); ov.setAttribute('aria-modal', 'true');
-    ov.innerHTML = '<img alt="" draggable="false"><button type="button" class="iz-nav iz-prev" aria-label="' + (de ? 'Vorheriges Bild' : 'Previous image') + '">‹</button><button type="button" class="iz-nav iz-next" aria-label="' + (de ? 'Nächstes Bild' : 'Next image') + '">›</button><div class="iz-info"></div>';
+    ov.innerHTML = '<img alt="" draggable="false"><div class="iz-geraet" hidden></div><button type="button" class="iz-nav iz-prev" aria-label="' + (de ? 'Vorheriges Bild' : 'Previous image') + '">‹</button><button type="button" class="iz-nav iz-next" aria-label="' + (de ? 'Nächstes Bild' : 'Next image') + '">›</button><div class="iz-info"></div>';
     document.body.appendChild(ov);
-    var big = ov.querySelector('img'), info = ov.querySelector('.iz-info'), idx = 0, zuletzt = null, reihe = bilder;
+    var big = ov.querySelector('img'), geraet = ov.querySelector('.iz-geraet'), film = null, info = ov.querySelector('.iz-info'), idx = 0, zuletzt = null, reihe = bilder;
     // Eine Reihe = die Bilder DES Abschnitts, aus dem geöffnet wurde (28.10., Jan: „swipt alle Inhalte durch
     // statt nur die Bilder der Reihe“). Vorher: alle Bilder der Seite in einer Liste.
     function reiheVon(b) { var sek = b.closest('section') || document.body; return bilder.filter(function (x) { return sek.contains(x); }); }
     function zeigen(i) {
       idx = (i + reihe.length) % reihe.length;
-      var b = reihe[idx]; big.src = b.currentSrc || b.src; big.alt = b.alt || '';
+      var b = reihe[idx], istFilm = b.tagName === 'VIDEO';
+      big.hidden = istFilm; geraet.hidden = !istFilm;
+      if (film) { film.pause(); film = null; } geraet.innerHTML = '';
+      if (istFilm) {   // das ganze Gerät (Video + Rahmen) — die Standbilder tragen den Rahmen im Bild
+        var kopie = b.closest('.device').cloneNode(true); geraet.appendChild(kopie);
+        film = kopie.querySelector('video'); film.muted = true; film.currentTime = b.currentTime || 0; film.play().catch(function () {});
+      } else { big.src = b.currentSrc || b.src; big.alt = b.alt || ''; }
       var mehr = reihe.length > 1;
       ov.querySelector('.iz-prev').hidden = ov.querySelector('.iz-next').hidden = !mehr;
       info.textContent = (mehr ? (idx + 1) + ' / ' + reihe.length + ' · ' + (de ? 'Wischen zum Blättern · ' : 'Swipe to browse · ') : '') + (de ? 'Tippen schließt' : 'tap to close');
     }
     function oeffnen(b) { zuletzt = document.activeElement; reihe = reiheVon(b); zeigen(reihe.indexOf(b)); ov.classList.add('show'); document.documentElement.style.overflow = 'hidden'; }
-    function schliessen() { ov.classList.remove('show'); document.documentElement.style.overflow = ''; if (zuletzt && zuletzt.focus) zuletzt.focus(); }
+    function schliessen() { if (film) film.pause(); ov.classList.remove('show'); document.documentElement.style.overflow = ''; if (zuletzt && zuletzt.focus) zuletzt.focus(); }
     bilder.forEach(function (b, i) {
-      b.classList.add('zoom'); b.setAttribute('tabindex', '0'); b.setAttribute('role', 'button');
-      var link = b.closest('a'); if (link) link.addEventListener('click', function (e) { e.preventDefault(); });   // Fächer: vergrößern statt PDF (eigener Knopf darunter)
+      var t = b.tagName === 'VIDEO' ? b.closest('.device') : b;   // über dem Video liegt das Rahmenbild und fängt den Tipp
+      t.classList.add('zoom'); t.setAttribute('tabindex', '0'); t.setAttribute('role', 'button');
+      var link = t.closest('a'); if (link) link.addEventListener('click', function (e) { e.preventDefault(); });   // Fächer: vergrößern statt PDF (eigener Knopf darunter)
       var sx = 0, sy = 0, bewegt = false, t0 = 0;
-      b.addEventListener('pointerdown', function (e) { sx = e.clientX; sy = e.clientY; bewegt = false; t0 = Date.now(); }, { passive: true });
-      b.addEventListener('pointermove', function (e) { if (Math.abs(e.clientX - sx) > 10 || Math.abs(e.clientY - sy) > 10) bewegt = true; }, { passive: true });
-      b.addEventListener('pointerup', function () { if (!bewegt && Date.now() - t0 < 600) oeffnen(b); }, { passive: true });
-      b.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); oeffnen(b); } });
+      t.addEventListener('pointerdown', function (e) { sx = e.clientX; sy = e.clientY; bewegt = false; t0 = Date.now(); }, { passive: true });
+      t.addEventListener('pointermove', function (e) { if (Math.abs(e.clientX - sx) > 10 || Math.abs(e.clientY - sy) > 10) bewegt = true; }, { passive: true });
+      t.addEventListener('pointerup', function () { if (!bewegt && Date.now() - t0 < 600) oeffnen(b); }, { passive: true });
+      t.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); oeffnen(b); } });
     });
     ov.querySelector('.iz-prev').addEventListener('click', function (e) { e.stopPropagation(); zeigen(idx - 1); });
     ov.querySelector('.iz-next').addEventListener('click', function (e) { e.stopPropagation(); zeigen(idx + 1); });
