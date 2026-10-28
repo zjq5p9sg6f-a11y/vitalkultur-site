@@ -47,7 +47,7 @@ ersetze("Preis", r'<div class="price" data-en="[^"]*[Bb]eta[^"]*" data-de="[^"]*
         '<div class="price">€99.99<small data-en="one-time" data-de="einmalig">one-time</small></div>')
 ersetze("Preis-Text", r'(?<=</div>\n)( *)<p class="lead" data-en="[^"]*TestFlight[^"]*" data-de="[^"]*">.*?</p>',
         r'\1<p class="lead" data-en="Everything above, for every study you run. No subscription, no per-participant fees, no account." '
-        'data-de="Alles oben, für jede Studie, die du machst. Kein Abo, keine Gebühren pro Proband, kein Konto.">'
+        'data-de="Alles oben, für jede Studie, die Sie durchführen. Kein Abo, keine Gebühren pro Proband, kein Konto.">'
         'Everything above, for every study you run. No subscription, no per-participant fees, no account.</p>')
 # 4. Kleingedrucktes + Fußleiste
 ersetze("Kleingedrucktes", r'<div class="fine" data-en="iPhone · TestFlight beta[^"]*" data-de="[^"]*">[^<]*</div>',
