@@ -41,6 +41,7 @@
     }
     var zeigeCall = function (c) {
       if (c === aktivCall || !spot) return; aktivCall = c;
+      root.classList.toggle('at-erklaert', !!c);                  // Bildtext ersetzt den Hinweis unter dem Gerät
       if (!c) { spot.classList.remove('zeigen'); cap.classList.remove('zeigen'); return; }
       var r = c.dataset.r.split(' ').map(Number);
       spot.style.left = r[0] + '%'; spot.style.top = r[1] + '%'; spot.style.width = (r[2] - r[0]) + '%'; spot.style.height = (r[3] - r[1]) + '%';
@@ -81,8 +82,19 @@
         var f = items[cur] && items[cur].querySelector('.fort'); if (f) f.style.setProperty('--fort', (p * 100).toFixed(1) + '%');
         var sc = scrs[cur].querySelector('.at-scroller');
         if (sc && scrollAuto !== null && !reduce) {
-          var q = Math.min(1, (now - scrollAuto) / (d * 0.92)), e = q < .5 ? 2 * q * q : 1 - Math.pow(-2 * q + 2, 2) / 2;
-          sc.scrollTop = e * (sc.scrollHeight - sc.clientHeight);
+          // In Schritten wie ein Daumen (29.10.2026, Jan: „quälend langsam“): zügig eine Dreiviertel-Seite weiter,
+          // kurz stehen lassen, weiter – statt die ganze Station lang gleichmäßig zu kriechen.
+          var hoehe = sc.scrollHeight - sc.clientHeight, hub = sc.clientHeight * 0.72;
+          if (hoehe > 0) {
+            var schritte = Math.max(1, Math.ceil(hoehe / hub)), takt = Math.min(1900, (d * 0.86 - 600) / schritte);
+            var t = now - scrollAuto - 600, k = Math.floor(t / takt), r = (t - k * takt) / 520;
+            if (t < 0) { sc.scrollTop = 0; }
+            else {
+              var von = Math.min(hoehe, k * hub), nach = Math.min(hoehe, (k + 1) * hub), q = Math.min(1, r);
+              var e = 1 - Math.pow(1 - q, 3);
+              sc.scrollTop = von + (nach - von) * e;
+            }
+          }
         }
         beimTakt.forEach(function (f) { f(cur, sek, pausiert, now); });
         if (!pausiert && !gesperrt && p >= 1) zeige(cur + 1, false);
