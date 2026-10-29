@@ -342,15 +342,16 @@
       tipp.classList.remove('zeigen');
       setTimeout(function () { tipp.innerHTML = t[0] + '<small>' + t[1] + '</small>'; var q = prozent(cx, cy); tipp.style.left = q[0]; tipp.style.top = q[1]; tipp.classList.add('zeigen'); }, 120);
     };
-    var uhren = [];
+    var uhren = [], lauf = 0;                                       // lauf: jede neue Vorführung beendet die alte
     var spaeter = function (fn, ms) { uhren.push(setTimeout(fn, ms)); };
     var weich = function (q) { return q < .5 ? 4 * q * q * q : 1 - Math.pow(-2 * q + 2, 3) / 2; };   // ease-in-out (kubisch)
     var animiere = function (dauerMs, schritt, fertig) {
-      var t0 = performance.now();
-      var lauf = function (now) { if (genutzt) return; var q = Math.min(1, (now - t0) / dauerMs); schritt(weich(q)); if (q < 1) requestAnimationFrame(lauf); else if (fertig) fertig(); };
-      requestAnimationFrame(lauf);
+      var t0 = performance.now(), g = lauf;
+      var takt = function (now) { if (genutzt || g !== lauf) return; var q = Math.min(1, (now - t0) / dauerMs); schritt(weich(q)); if (q < 1) requestAnimationFrame(takt); else if (fertig) fertig(); };
+      requestAnimationFrame(takt);
     };
     var knopfX = function () { return KNOPF.x0 + f * (KNOPF.x1 - KNOPF.x0); };
+    var vorlauf = 1000;
     var vorfuehren = function () {
       if (genutzt) return;
       setzeFinger(knopfX(), 1967);
@@ -404,7 +405,7 @@
             });
           }, 250);
         });
-      }, 1000);
+      }, vorlauf);
     };
     var erinnern = function () { zeigeTipp(T.zieh, knopfX(), 1925); spaeter(function () { tipp.classList.remove('zeigen'); }, 2600); };
     var nutzerDa = function () {
@@ -448,15 +449,15 @@
     var mitte = function (t) { return punkt((t[0].clientX + t[1].clientX) / 2, (t[0].clientY + t[1].clientY) / 2); };
     var abstand = function (t) { var dx = t[0].clientX - t[1].clientX, dy = t[0].clientY - t[1].clientY; return Math.sqrt(dx * dx + dy * dy); };
     cv.addEventListener('touchstart', function (e) {
-      nutzerDa();
       if (e.touches.length === 2) {
+        nutzerDa();
         clearTimeout(halte); if (modus === 'regler') fasse(false); modus = 'zwei'; kreuz = null;
         zweiStart = { c: mitte(e.touches), a: abstand(e.touches), z: z, ox: ox, oy: oy };
         e.preventDefault(); return;
       }
       var t = e.touches[0], p = punkt(t.clientX, t.clientY); tx = t.clientX; ty = t.clientY; bewegt = false;
-      if (imRegler(p)) { modus = 'regler'; fasse(true); setzeF(p[0]); e.preventDefault(); }
-      else if (imPlot(p)) { clearTimeout(halte); halte = setTimeout(function () { modus = 'kreuz'; kreuz = nahe(p[0], p[1]); neu(); if (navigator.vibrate) navigator.vibrate(8); }, 220); }
+      if (imRegler(p)) { nutzerDa(); modus = 'regler'; fasse(true); setzeF(p[0]); e.preventDefault(); }
+      else if (imPlot(p)) { clearTimeout(halte); halte = setTimeout(function () { nutzerDa(); modus = 'kreuz'; kreuz = nahe(p[0], p[1]); neu(); if (navigator.vibrate) navigator.vibrate(8); }, 220); }
     }, { passive: false });
     cv.addEventListener('touchmove', function (e) {
       if (modus === 'zwei' && e.touches.length === 2) {
@@ -499,6 +500,27 @@
       // In der App-Tour ist die Karte eine Station: vorführen erst, wenn sie die aktive ist (29.10.2026)
       var station = dev.classList.contains('at-scr');
       var aktivStation = function () { return !station || dev.classList.contains('on'); };
+      if (station) {
+        // Tour-Station (29.10.2026, Jan: „startet beim Poincaré nicht so geil wie bei den anderen Karten“):
+        // bei jedem Ankommen frisch – leere Wolke, Ziehen beginnt sofort; beim Verlassen anhalten.
+        vorlauf = 450;
+        var warAn = false;
+        var stoppen = function () {
+          lauf++; uhren.forEach(clearTimeout); uhren = [];
+          tipp.classList.remove('zeigen'); finger.classList.remove('an', 'druck', 'halten'); finger2.classList.remove('an', 'druck'); fasse(false);
+        };
+        var wechsel = function () {
+          var an = dev.classList.contains('on');
+          if (an === warAn) return; warAn = an;
+          stoppen();
+          if (!an) return;
+          genutzt = false; f = fZiel = reduce ? 1 : 0; kreuz = null; zurueck();
+          if (!reduce) spaeter(vorfuehren, 250);
+        };
+        if ('MutationObserver' in window) new MutationObserver(wechsel).observe(dev, { attributes: true, attributeFilter: ['class'] });
+        wechsel();
+        return;
+      }
       var anstossen = function () {
         if (!imBild || genutzt || !aktivStation()) return;
         if (erstes && !reduce) { erstes = false; setTimeout(function () { if (aktivStation()) vorfuehren(); else erstes = true; }, 500); }
