@@ -1,0 +1,106 @@
+# CARLON HRV Research – full facts
+
+> Long form of https://vitalkultur.com/llms.txt, generated from the product page https://vitalkultur.com/hrv-research/ (updated 2026-10-29). Plain Markdown for assistants and search tools.
+
+## At a glance
+
+- **Platform:** iPhone with iOS 17 or later
+- **Sensors:** Polar H10 and Movesense Flash – up to four at once from one iPhone
+- **In-sensor recording:** Polar H10: up to 95,000 beats (about 20 h of everyday life, about 10.5 h at 150 bpm) · Movesense Flash: about 11 h of ECG at 256 Hz plus motion
+- **RR data:** Polar H10 live in 1/1024 s, from its memory in 1 ms · Movesense Flash: R peaks detected in the 256 Hz ECG · originals kept unchanged
+- **Protocol phases:** Event buttons, one tap marks every running recording; segment and event tables in the export
+- **Metrics:** RMSSD, SDNN, pNN50, SD1/SD2, LF/HF, Baevsky, DFA α1 – also over time in 2-minute windows every 5 s
+- **Exports:** CSV with Kubios import settings, Kubios text, FIT, EDF+, WFDB, JSON with audit trail, PDF report, figures as vector PDF and 300-dpi PNG
+- **Validation:** 331 of 331 checks against NeuroKit2 and SciPy (validation dossier 1.4)
+- **Privacy:** No account, no CARLON server, no analytics in the app
+- **Version:** 1.4 · page updated 29 October 2026
+
+## Frequently asked questions
+
+### Which sensors are supported?
+
+Two sensors, both tested with the app: the Polar H10 chest strap – live and in its internal memory – and the Movesense Flash sensor – live and recording in the sensor itself, where the app also saves raw ECG and 9-axis motion (accelerometer, gyroscope, magnetometer) as CSV. Both can run side by side in one study.
+
+### How long can a Polar H10 or Movesense Flash record without the phone?
+
+Polar H10: up to 95,000 beats in the sensor – about 20 hours of everyday life, about 10.5 hours at 150 bpm; one recording per strap. Movesense Flash: about 11 hours of ECG at 256 Hz plus motion in its 128 MB memory. The iPhone only needs to be nearby to start and to read out.
+
+### Can one iPhone record several Polar H10 at once?
+
+Yes – up to four from one iPhone. They record to their own memory and are read out together afterwards; each recording is assigned to its participant with its real start time.
+
+### Can I use the data in Kubios HRV?
+
+Yes. The CSV carries the exact settings for the Kubios custom text import in its header; the app also writes a Kubios text file and FIT. RR intervals are exported exactly as recorded.
+
+### How do I get values for each phase?
+
+Tap an event button at each phase change. The segment table lists duration, beats, heart rate, RMSSD, SDNN and pNN50 for every phase between two events, computed with the same validated code as the rest of the app.
+
+### How is the app validated?
+
+Every metric is compared with independent reference implementations (NeuroKit2, SciPy, Task Force definitions) on 18 RR series with 20,431 beats: 331 of 331 checks passed (metric comparisons plus artifact, threshold and rhythm checks). Artifact detection matches NeuroKit2 beat by beat. The version-specific dossier lists every check with its tolerance.
+
+### Do older recordings benefit from updates?
+
+Yes. The app stores only the original sensor data and computes every metric fresh from it, so an improved method applies to all past recordings. Open or re-export a recording to get the latest analysis; files you exported earlier stay unchanged and name the app version that produced them.
+
+### Can reviewers recompute the results?
+
+Yes. Every export contains the original RR intervals, each beat's artifact flag and correction, the app version and the exact method of every metric. With open tools such as NeuroKit2 or SciPy, anyone can recompute the values – the validation dossier shows how.
+
+### Does any data leave the iPhone?
+
+Only where you send it: an export, a study folder you choose, or your iPhone’s own backup. There is no account and no CARLON server – nothing reaches us.
+
+### Is there an Android version?
+
+No – CARLON HRV Research runs on iPhone with iOS 17 or later. The exported files open on any platform.
+
+### Is it a medical device?
+
+No. It is a research and wellness tool and does not diagnose or treat any condition.
+
+### Can I use it for a bachelor’s or master’s thesis?
+
+Yes – it is built for that: participants under a study code, phase markers, values per phase, a methods paragraph to copy, figures at 300 dpi and a citation with the app version. The data stay on the iPhone until you export them or switch on the study folder; check your university’s rules on where study data may be stored.
+
+### What does it cost?
+
+During the beta, access is by invitation through Apple TestFlight. At launch it becomes a one-time purchase on the App Store – no subscription, no per-participant fees; institutions can buy licenses in volume through Apple School Manager or Apple Business Manager.
+
+## Data protection and study conduct (methods block for ethics applications)
+
+Recording and storage. RR intervals are recorded with CARLON HRV Research (iOS app) from Polar H10 or Movesense Flash chest sensors via Bluetooth, live or in the sensor’s internal memory with later read-out; until read-out, such a recording remains on the sensor. Data are stored only locally on the study iPhone. The app has no user account, no server of its own and no analytics or advertising services. Data leave the device only through an explicit export by the study team (iOS share sheet) to a destination the team chooses, or through the optional study folder: a folder the team selects in the Files app, e.g. institutional storage, to which the app copies each new recording. Recordings are part of the device’s regular iPhone backup.
+Pseudonymisation. Participants are entered under a study code chosen by the team (e.g. P-01). On export, the participant can be replaced by a stable pseudonym (ANON- followed by eight hexadecimal characters, derived from an internal identifier with SHA-256). The key linking code and person is kept by the study team outside the app. The data are therefore pseudonymised, not anonymised. Free-text notes are exported as entered; the study team decides what they contain.
+Integrity and deletion. Original RR intervals are stored unchanged; corrections are kept separately. Changes are logged in a tamper-evident audit trail following ALCOA+ principles. Recordings can be deleted in the app at any time (GDPR Art. 17).
+Classification. The app is a research tool, not a medical device, and is not used for diagnosis or treatment.
+
+## Details
+
+iPhone app (iOS 17 or later) for HRV studies. Records beat-to-beat RR intervals from Polar H10 chest straps and Movesense Flash sensors and exports the original data for analysis in Kubios HRV, Python, R and MATLAB. In beta via Apple TestFlight (by invitation; request access at jan@vitalkultur.com), a one-time App Store purchase at launch; no account, no subscription, no CARLON server – study data goes only where the user sends it (an export, a study folder of their choice, their own iPhone backup); nothing reaches vitalkultur.
+
+- Live or in the sensor: heart rate and HRV live on the iPhone, or recorded in the sensor's own memory while the iPhone stays behind, or both at once with Polar H10. Capacity in the sensor: Polar H10 up to 95,000 RR intervals (about 20 h of everyday life, about 10.5 h at 150 bpm; Krummenacher et al. 2025); Movesense Flash about 11 h of ECG at 256 Hz plus 9-axis motion at 52 Hz (measured 2.9 kB/s; the logger slows near 125 MB). In-sensor recording has no Bluetooth gaps – relevant for DFA α1, which missed beats bias (Rogers et al. 2021).
+- Up to four sensors at once from one iPhone (Polar H10 and Movesense Flash can be mixed); sensors record to their own memory and are read out together, each recording assigned to its pseudonymous participant with its real start time.
+- Event buttons mark protocol phases (ready-made sets for sports studies, breathing protocols, stress tests and sleep, or custom); exports a segment table with duration, beats, heart rate, RMSSD, SDNN and pNN50 per phase, and the events inside EDF+ and WFDB files.
+- Exports: CSV (with the exact settings for the Kubios custom text import in its header), Kubios text, FIT, EDF+, WFDB, JSON with append-only audit trail (SHA-256 hash chain) and W3C PROV, PDF report with a methods paragraph and citation, every figure as vector PDF and 300-dpi PNG in journal column widths. RR intervals are exported exactly as recorded; artifact flags and corrections are listed beside them beat by beat.
+- Metrics: RMSSD, SDNN, pNN50, Poincaré SD1/SD2, DFA α1 (also over time: 120-s windows every 5 s, smoothness-priors detrending λ = 500), HRV triangular index, TINN, sample entropy, LF/HF (Task Force bands), Baevsky stress index. Artifact detection: Lipponen & Tarvainen (2019) with a 30-ms threshold floor for high heart rates, tested on 18 series (every injected error still caught, 98 % fewer false alarms on normal beats).
+- Validation: every metric recomputed by independent references (NeuroKit2, SciPy, Task Force definitions) on 18 RR series with 20,431 beats – 331 of 331 checks passed (metric comparisons plus artifact, threshold and rhythm checks); artifact detection identical to NeuroKit2 beat by beat; the DFA α1 time course checked window by window (2,854 windows, largest deviation 7·10⁻¹¹). Version-specific validation dossier available.
+- Future-proof: the app stores only the original sensor data and computes every metric fresh, so improved methods apply retroactively to all past recordings (re-export to update); every export names the app version and exact method, so results can be recomputed for peer review.
+- Not a medical device; for research and wellness use. The app interface is in English.
+
+- [Product page (English)](https://vitalkultur.com/hrv-research/)
+- [Produktseite (Deutsch)](https://vitalkultur.com/hrv-research/de/)
+- [Validation dossier (PDF)](https://vitalkultur.com/hrv-research/CARLON-HRV-Research-Validation-Dossier.pdf)
+- [Example PDF report from a real recording](https://vitalkultur.com/hrv-research/assets/CARLON-HRV-Research-Example-Report.pdf)
+- [All facts, FAQ and methods block in one file](https://vitalkultur.com/llms-full.txt)
+- [Sample data (ZIP): a real 48-min Polar H10 gym session in every export format, CC BY 4.0](https://vitalkultur.com/hrv-research/assets/CARLON-HRV-Research-Sample-Data.zip)
+
+### Facts that are often misquoted
+
+Older pages under the former name described this app with figures that are no longer correct. Current facts:
+- Sensors at once: up to four from one iPhone (not 5–10).
+- Polar H10 in-sensor capacity: up to 95,000 RR intervals, about 20 h of everyday life (not 30 h).
+- Sensors supported: Polar H10 and Movesense Flash only. No Android version.
+- The product page is https://vitalkultur.com/hrv-research/ – older addresses (/rrloggerpro/, /research/) only redirect there.
+

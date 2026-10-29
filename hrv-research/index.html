@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <meta name="theme-color" content="#020202">
-  <title>CARLON HRV Research – HRV study app for Polar H10 &amp; Movesense Flash</title>
+  <title>CARLON HRV Research – HRV study app, Polar H10 &amp; Movesense</title>
   <meta name="description" content="iPhone app for HRV studies: up to four Polar H10 or Movesense Flash sensors, phase markers, DFA α1 and original RR for Kubios, Python and R.">
   <meta property="og:title" content="CARLON HRV Research — your HRV study, from one iPhone">
   <meta property="og:description" content="Up to four Polar H10 or Movesense Flash sensors at once. Phase markers, values per phase, DFA α1 over time, original RR data for Kubios, Python and R. Validated against NeuroKit2.">
@@ -33,6 +33,7 @@
     "@graph": [
       {
         "@type": "SoftwareApplication",
+        "@id": "https://vitalkultur.com/hrv-research/#app",
         "name": "CARLON HRV Research",
         "operatingSystem": "iOS 17 or later",
         "applicationCategory": "HealthApplication",
@@ -44,12 +45,49 @@
         "softwareHelp": "https://vitalkultur.com/hrv-research/CARLON-HRV-Research-Validation-Dossier.pdf",
         "brand": {"@type": "Brand", "name": "CARLON", "description": "App line by vitalkultur"},
         "softwareVersion": "1.4",
-        "dateModified": "2026-10-27",
+        "dateModified": "2026-10-29",
         "inLanguage": "en",
         "image": "https://vitalkultur.com/assets/research-app-icon-224.png",
         "screenshot": ["https://vitalkultur.com/hrv-research/assets/v14/phone-sitzung.webp", "https://vitalkultur.com/hrv-research/assets/v14/phone-dual-card.webp", "https://vitalkultur.com/hrv-research/assets/v14/export-formats.webp"],
-        "author": {"@type": "Person", "name": "Jan Rohwedder", "jobTitle": "Founder, developer"},
-        "creator": {"@type": "Organization", "name": "vitalkultur", "url": "https://vitalkultur.com", "email": "jan@vitalkultur.com"}
+        "author": {"@id": "https://vitalkultur.com/#jan"},
+        "creator": {"@id": "https://vitalkultur.com/#org"},
+        "publisher": {"@id": "https://vitalkultur.com/#org"}
+      },
+      {
+        "@type": "Organization", "@id": "https://vitalkultur.com/#org",
+        "name": "vitalkultur", "url": "https://vitalkultur.com/", "email": "jan@vitalkultur.com",
+        "logo": "https://vitalkultur.com/assets/vitalkultur-wordmark.png",
+        "founder": {"@id": "https://vitalkultur.com/#jan"}
+      },
+      {
+        "@type": "Person", "@id": "https://vitalkultur.com/#jan",
+        "name": "Jan Rohwedder", "jobTitle": "Founder and developer",
+        "worksFor": {"@id": "https://vitalkultur.com/#org"}
+      },
+      {
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          {"@type": "ListItem", "position": 1, "name": "vitalkultur", "item": "https://vitalkultur.com/"},
+          {"@type": "ListItem", "position": 2, "name": "CARLON HRV Research", "item": "https://vitalkultur.com/hrv-research/"}
+        ]
+      },
+      {
+        "@type": "VideoObject",
+        "name": "Poincaré plot over time – CARLON HRV Research",
+        "description": "Screen recording of the iPhone app: the time slider rebuilds the Poincaré plot of a real Polar H10 session.",
+        "thumbnailUrl": "https://vitalkultur.com/hrv-research/assets/tour/poincare-poster.webp",
+        "contentUrl": "https://vitalkultur.com/hrv-research/assets/tour/poincare-v2.mp4",
+        "uploadDate": "2026-10-27",
+        "about": {"@id": "https://vitalkultur.com/hrv-research/#app"}
+      },
+      {
+        "@type": "TechArticle",
+        "headline": "CARLON HRV Research – Validation and Methods Dossier 1.4",
+        "url": "https://vitalkultur.com/hrv-research/CARLON-HRV-Research-Validation-Dossier.pdf",
+        "encodingFormat": "application/pdf",
+        "author": {"@id": "https://vitalkultur.com/#jan"},
+        "publisher": {"@id": "https://vitalkultur.com/#org"},
+        "about": {"@id": "https://vitalkultur.com/hrv-research/#app"}
       },
       {
         "@type": "Dataset",
@@ -62,9 +100,11 @@
       {
         "@type": "FAQPage",
         "mainEntity": [
+          {"@type": "Question", "name": "Is there an Android version?", "acceptedAnswer": {"@type": "Answer", "text": "No – CARLON HRV Research runs on iPhone with iOS 17 or later. The exported files open on any platform."}},
+          {"@type": "Question", "name": "Can I use it for a bachelor’s or master’s thesis?", "acceptedAnswer": {"@type": "Answer", "text": "Yes – it is built for that: participants under a study code, phase markers, values per phase, a methods paragraph to copy, figures at 300 dpi and a citation with the app version. The data stay on the iPhone until you export them or switch on the study folder; check your university’s rules on where study data may be stored."}},
           {"@type": "Question", "name": "Which sensors does CARLON HRV Research support?", "acceptedAnswer": {"@type": "Answer", "text": "Two sensors, both tested with the app: the Polar H10 chest strap – live and in its internal memory – and the Movesense Flash sensor – live and recording in the sensor itself, where the app also saves raw ECG and 9-axis motion as CSV. Both can run side by side in one study."}},
-          {"@type": "Question", "name": "How long can a sensor record on its own?", "acceptedAnswer": {"@type": "Answer", "text": "Polar H10: up to 95,000 beats in the sensor – about 20 hours of everyday life, about 10.5 hours at 150 bpm; one recording per strap. Movesense Flash: about 11 hours of ECG at 256 Hz plus motion in its 128 MB memory. The iPhone only needs to be nearby to start and to read out."}},
-          {"@type": "Question", "name": "How many sensors can record at the same time?", "acceptedAnswer": {"@type": "Answer", "text": "Up to four sensors at once from one iPhone. They record to their own memory and are read out together afterwards, each recording assigned to its participant with its real start time."}},
+          {"@type": "Question", "name": "How long can a Polar H10 or Movesense Flash record without the phone?", "acceptedAnswer": {"@type": "Answer", "text": "Polar H10: up to 95,000 beats in the sensor – about 20 hours of everyday life, about 10.5 hours at 150 bpm; one recording per strap. Movesense Flash: about 11 hours of ECG at 256 Hz plus motion in its 128 MB memory. The iPhone only needs to be nearby to start and to read out."}},
+          {"@type": "Question", "name": "Can one iPhone record several Polar H10 at once?", "acceptedAnswer": {"@type": "Answer", "text": "Yes – up to four sensors at once from one iPhone. They record to their own memory and are read out together afterwards, each recording assigned to its participant with its real start time."}},
           {"@type": "Question", "name": "Can I use the data in Kubios HRV?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. The CSV carries the exact settings for the Kubios custom text import in its header, and the app also writes a Kubios text file and FIT. RR intervals are exported exactly as recorded, without smoothing or correction."}},
           {"@type": "Question", "name": "How do I get HRV values for each phase of my protocol?", "acceptedAnswer": {"@type": "Answer", "text": "Tap an event button at each phase change, for example rest, training and recovery. The app exports a segment table with duration, beats, heart rate, RMSSD, SDNN and pNN50 for each phase, and writes the events into EDF+ and WFDB files."}},
           {"@type": "Question", "name": "How is the app validated?", "acceptedAnswer": {"@type": "Answer", "text": "Every metric is compared with independent reference implementations (NeuroKit2, SciPy, Task Force definitions) on 18 RR series with 20,431 beats: 331 of 331 checks passed (metric comparisons plus artifact, threshold and rhythm checks). Artefact detection matches NeuroKit2 beat by beat. The version-specific validation dossier lists every check with its tolerance."}},
@@ -226,6 +266,11 @@ document.head.appendChild(s);})();</script>
     .ko .frage { color: var(--t3); font-size: 15px; margin: 0; }
     .ko .antwort { color: var(--t); font-size: 17px; margin: 4px 0 0; }
     .ko .dauer { display: inline-block; margin-top: 8px; font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: var(--stille); border: 1px solid rgba(62,207,178,.35); border-radius: 99px; padding: 3px 10px; }
+    .glance { width: 100%; max-width: 900px; margin-top: var(--s34); border-collapse: collapse; border-top: 1px solid var(--line); }
+    .glance th, .glance td { text-align: left; vertical-align: top; padding: 14px 0; border-bottom: 1px solid var(--line); }
+    .glance th { width: 190px; padding-right: var(--s21); font-size: 12px; font-weight: 500; letter-spacing: .08em; text-transform: uppercase; color: var(--stille); padding-top: 17px; }
+    .glance td { color: var(--t2); font-size: 16px; line-height: 1.5; }
+    @media (max-width: 600px) { .glance th, .glance td { display: block; width: auto; } .glance th { padding: 14px 0 2px; border-bottom: 0; } .glance td { padding-top: 0; } }
     @media (max-width: 600px) { .ko li { grid-template-columns: 1fr; gap: 6px; } }
     .fixed { margin-top: var(--s55); border-top: 1px solid var(--line); padding-top: var(--s34); display: grid; grid-template-columns: 1fr 2fr; gap: var(--s55); }
     .fixed h3 { font-size: 21px; font-weight: 500; }
@@ -505,7 +550,7 @@ if (!location.hash) {
 <header class="nav">
   <div class="wrap">
     <div class="crumb">
-      <a class="home" href="/" aria-label="vitalkultur"><img src="/assets/vitalkultur-wordmark.png" alt="vitalkultur"></a>
+      <a class="home" href="/" aria-label="vitalkultur"><img src="/assets/vitalkultur-wordmark.png" width="609" height="156" alt="vitalkultur"></a>
       <span class="sep">/</span>
       <img class="mark" src="assets/v14/mark-48.png" width="24" height="24" alt="">
       <b>CARLON HRV Research</b>
@@ -534,7 +579,7 @@ if (!location.hash) {
     <div class="wrap tour" id="erleben">
       <div class="tour-txt">
         <div class="label" data-en="See it in action" data-de="So sieht es aus">See it in action</div>
-        <h2 class="tour-h" data-en="The real app, <em>with a real recording.</em>" data-de="Die echte App, <em>mit einer echten Aufnahme.</em>">The real app, <em>with a real recording.</em></h2>
+        <h2 class="tour-h" data-en="The HRV study app, <em>with a real recording.</em>" data-de="Die HRV-Studien-App, <em>mit einer echten Aufnahme.</em>">The HRV study app, <em>with a real recording.</em></h2>
         <ol class="feats" data-tour-liste aria-label="What the app does">
           <li><button data-i="0"><svg class="ic" aria-hidden="true"><use href="#i-wave"/></svg><b data-en="The whole session at a glance" data-de="Die ganze Sitzung auf einen Blick">The whole session at a glance</b><span data-en="Heart rate and HRV together – rest, training and recovery." data-de="Herzfrequenz und HRV gemeinsam – Ruhe, Training und Erholung.">Heart rate and HRV together – rest, training and recovery.</span></button><i class="fort"></i></li>
           <li><button data-i="1"><svg class="ic" aria-hidden="true"><use href="#i-sens"/></svg><b data-en="Up to four sensors at once" data-de="Bis zu vier Sensoren gleichzeitig">Up to four sensors at once</b><span data-en="Polar H10 and Movesense Flash record on their own – one tap marks the phase in every recording." data-de="Polar H10 und Movesense Flash zeichnen selbst auf – ein Tipp markiert die Phase in jeder Aufnahme.">Polar H10 and Movesense Flash record on their own – one tap marks the phase in every recording.</span></button><i class="fort"></i></li>
@@ -566,6 +611,30 @@ if (!location.hash) {
         <div><svg class="ic" aria-hidden="true"><use href="#i-files"/></svg><b>8</b><span data-en="export formats, original RR untouched" data-de="Exportformate, Original-RR unverändert">export formats, original RR untouched</span></div>
         <div><svg class="ic" aria-hidden="true"><use href="#i-noserver"/></svg><b>0</b><span data-en="bytes to us · no CARLON server, no account" data-de="Bytes an uns · kein CARLON-Server, kein Konto">bytes to us · no CARLON server, no account</span></div>
       </div>
+    </div>
+  </section>
+
+  <!-- Auf einen Blick: zitierfähige Fakten als echte Tabelle (Suchmaschinen, KI-Assistenten) -->
+  <section class="ch" id="at-a-glance">
+    <div class="wrap">
+      <div class="rv" style="max-width:760px">
+        <div class="label" data-en="At a glance" data-de="Auf einen Blick">At a glance</div>
+        <h2 data-en="CARLON HRV Research <em>in ten lines.</em>" data-de="CARLON HRV Research <em>in zehn Zeilen.</em>">CARLON HRV Research <em>in ten lines.</em></h2>
+      </div>
+      <table class="glance rv">
+        <tbody>
+          <tr><th scope="row" data-en="Platform" data-de="Plattform">Platform</th><td data-en="iPhone with iOS 17 or later" data-de="iPhone mit iOS 17 oder neuer">iPhone with iOS 17 or later</td></tr>
+          <tr><th scope="row" data-en="Sensors" data-de="Sensoren">Sensors</th><td data-en="Polar H10 and Movesense Flash – up to four at once from one iPhone" data-de="Polar H10 und Movesense Flash – bis zu vier gleichzeitig mit einem iPhone">Polar H10 and Movesense Flash – up to four at once from one iPhone</td></tr>
+          <tr><th scope="row" data-en="In-sensor recording" data-de="Aufnahme im Sensor">In-sensor recording</th><td data-en="Polar H10: up to 95,000 beats (about 20 h of everyday life, about 10.5 h at 150 bpm) · Movesense Flash: about 11 h of ECG at 256 Hz plus motion" data-de="Polar H10: bis zu 95.000 Schläge (etwa 20 h Alltag, etwa 10,5 h bei 150 bpm) · Movesense Flash: rund 11 h EKG mit 256 Hz plus Bewegung">Polar H10: up to 95,000 beats (about 20 h of everyday life, about 10.5 h at 150 bpm) · Movesense Flash: about 11 h of ECG at 256 Hz plus motion</td></tr>
+          <tr><th scope="row" data-en="RR data" data-de="RR-Daten">RR data</th><td data-en="Polar H10 live in 1/1024 s, from its memory in 1 ms · Movesense Flash: R peaks detected in the 256 Hz ECG · originals kept unchanged" data-de="Polar H10 live in 1/1024 s, aus dem Speicher in 1 ms · Movesense Flash: R-Zacken aus dem 256-Hz-EKG · Originale bleiben unverändert">Polar H10 live in 1/1024 s, from its memory in 1 ms · Movesense Flash: R peaks detected in the 256 Hz ECG · originals kept unchanged</td></tr>
+          <tr><th scope="row" data-en="Protocol phases" data-de="Protokollphasen">Protocol phases</th><td data-en="Event buttons, one tap marks every running recording; segment and event tables in the export" data-de="Ereignistasten, ein Tipp markiert jede laufende Aufnahme; Segment- und Ereignistabelle im Export">Event buttons, one tap marks every running recording; segment and event tables in the export</td></tr>
+          <tr><th scope="row" data-en="Metrics" data-de="Kennzahlen">Metrics</th><td data-en="RMSSD, SDNN, pNN50, SD1/SD2, LF/HF, Baevsky, DFA α1 – also over time in 2-minute windows every 5 s" data-de="RMSSD, SDNN, pNN50, SD1/SD2, LF/HF, Baevsky, DFA α1 – auch im Verlauf in 2-Minuten-Fenstern alle 5 s">RMSSD, SDNN, pNN50, SD1/SD2, LF/HF, Baevsky, DFA α1 – also over time in 2-minute windows every 5 s</td></tr>
+          <tr><th scope="row" data-en="Exports" data-de="Exporte">Exports</th><td data-en="CSV with Kubios import settings, Kubios text, FIT, EDF+, WFDB, JSON with audit trail, PDF report, figures as vector PDF and 300-dpi PNG" data-de="CSV mit Kubios-Importeinstellungen, Kubios-Text, FIT, EDF+, WFDB, JSON mit Prüfpfad, PDF-Bericht, Grafiken als Vektor-PDF und 300-dpi-PNG">CSV with Kubios import settings, Kubios text, FIT, EDF+, WFDB, JSON with audit trail, PDF report, figures as vector PDF and 300-dpi PNG</td></tr>
+          <tr><th scope="row" data-en="Validation" data-de="Validierung">Validation</th><td data-en="331 of 331 checks against NeuroKit2 and SciPy (validation dossier 1.4)" data-de="331 von 331 Prüfungen gegen NeuroKit2 und SciPy (Validierungsdossier 1.4)">331 of 331 checks against NeuroKit2 and SciPy (validation dossier 1.4)</td></tr>
+          <tr><th scope="row" data-en="Privacy" data-de="Datenschutz">Privacy</th><td data-en="No account, no CARLON server, no analytics in the app" data-de="Kein Konto, kein CARLON-Server, keine Analyse in der App">No account, no CARLON server, no analytics in the app</td></tr>
+          <tr><th scope="row" data-en="Version" data-de="Version">Version</th><td data-en="1.4 · page updated 29 October 2026" data-de="1.4 · Seite aktualisiert am 29. Oktober 2026">1.4 · page updated 29 October 2026</td></tr>
+        </tbody>
+      </table>
     </div>
   </section>
 
@@ -655,7 +724,7 @@ if (!location.hash) {
     <div class="wrap">
       <div class="rv" style="max-width:760px">
         <div class="label" data-en="Where your time goes" data-de="Wo Ihre Zeit bleibt">Where your time goes</div>
-        <h2 data-en="Less handling. <em>More study.</em>" data-de="Weniger Handarbeit. <em>Mehr Studie.</em>">Less handling. <em>More study.</em></h2>
+        <h2 data-en="Up to four participants, one iPhone. <em>Less handling.</em>" data-de="Bis zu vier Personen, ein iPhone. <em>Weniger Handarbeit.</em>">Up to four participants, one iPhone. <em>Less handling.</em></h2>
         <p class="sub" data-en="The measurement takes an hour. The work around it often takes longer – this is what the app takes off your hands." data-de="Die Messung dauert eine Stunde. Die Arbeit drumherum oft länger – die nimmt Ihnen die App ab.">The measurement takes an hour. The work around it often takes longer – this is what the app takes off your hands.</p>
       </div>
       <div class="compare rv">
@@ -756,7 +825,7 @@ if (!location.hash) {
     <div class="wrap">
       <div class="rv" style="max-width:760px">
         <div class="label" data-en="What you take home" data-de="Was Sie mitnehmen">What you take home</div>
-        <h2 data-en="From recording <em>to manuscript.</em>" data-de="Von der Aufnahme <em>zum Manuskript.</em>">From recording <em>to manuscript.</em></h2>
+        <h2 data-en="HRV report, figures and Kubios export. <em>From recording to manuscript.</em>" data-de="HRV-Bericht, Grafiken und Kubios-Export. <em>Von der Aufnahme zum Manuskript.</em>">HRV report, figures and Kubios export. <em>From recording to manuscript.</em></h2>
         <p class="sub" data-en="Original data for your analysis – plus everything you would otherwise build by hand." data-de="Originaldaten für Ihre Auswertung – und alles, was Sie sonst von Hand bauen würden.">Original data for your analysis – plus everything you would otherwise build by hand.</p>
       </div>
       <div class="outputs">
@@ -845,7 +914,7 @@ if (!location.hash) {
     <div class="wrap">
       <div class="rv" style="max-width:760px">
         <div class="label" data-en="Validated" data-de="Validiert">Validated</div>
-        <h2 data-en="Every number, <em>checked.</em>" data-de="Jede Zahl, <em>geprüft.</em>">Every number, <em>checked.</em></h2>
+        <h2 data-en="Validated against NeuroKit2 and SciPy. <em>Every number checked.</em>" data-de="Gegen NeuroKit2 und SciPy validiert. <em>Jede Zahl geprüft.</em>">Validated against NeuroKit2 and SciPy. <em>Every number checked.</em></h2>
         <p class="sub" data-en="Each metric is recomputed by an independent reference with the same definition and parameters. The dossier names every check and every tolerance." data-de="Jede Kennzahl wird von einer unabhängigen Referenz mit derselben Definition und denselben Parametern nachgerechnet. Das Dossier nennt jede Prüfung und jede Toleranz.">Each metric is recomputed by an independent reference with the same definition and parameters. The dossier names every check and every tolerance.</p>
       </div>
       <div class="checks rv">
@@ -890,16 +959,16 @@ if (!location.hash) {
     <div class="wrap">
       <div class="rv" style="max-width:760px">
         <div class="label" data-en="Is it right for you?" data-de="Passt es zu Ihnen?">Is it right for you?</div>
-        <h2 data-en="Made for one job. <em>Done properly.</em>" data-de="Für eine Aufgabe gebaut. <em>Und die richtig.</em>">Made for one job. <em>Done properly.</em></h2>
+        <h2 data-en="CARLON HRV Research and Kubios HRV. <em>Made for one job, done properly.</em>" data-de="CARLON HRV Research und Kubios HRV. <em>Für eine Aufgabe gebaut, und die richtig.</em>">CARLON HRV Research and Kubios HRV. <em>Made for one job, done properly.</em></h2>
       </div>
       <div class="fit rv">
         <div class="panel">
           <h3 data-en="A perfect fit if you" data-de="Passt perfekt, wenn Sie">A perfect fit if you</h3>
           <ul>
-            <li data-en="record RR intervals with Polar H10 or Movesense Flash" data-de="RR-Intervalle mit Polar H10 oder Movesense Flash aufnimmst">record RR intervals with Polar H10 or Movesense Flash</li>
-            <li data-en="run sessions with several participants and protocol phases" data-de="Einheiten mit mehreren Personen und Protokollphasen durchführst">run sessions with several participants and protocol phases</li>
-            <li data-en="analyse in Kubios, Python, R or MATLAB and want clean, documented input" data-de="in Kubios, Python, R oder MATLAB auswertest und saubere, dokumentierte Daten willst">analyse in Kubios, Python, R or MATLAB and want clean, documented input</li>
-            <li data-en="need to show an ethics board or supervisor exactly what was done" data-de="einer Ethikkommission oder Betreuung genau zeigen musst, was gemacht wurde">need to show an ethics board or supervisor exactly what was done</li>
+            <li data-en="record RR intervals with Polar H10 or Movesense Flash" data-de="RR-Intervalle mit Polar H10 oder Movesense Flash aufnehmen">record RR intervals with Polar H10 or Movesense Flash</li>
+            <li data-en="run sessions with several participants and protocol phases" data-de="Einheiten mit mehreren Personen und Protokollphasen durchführen">run sessions with several participants and protocol phases</li>
+            <li data-en="analyse in Kubios, Python, R or MATLAB and want clean, documented input" data-de="in Kubios, Python, R oder MATLAB auswerten und saubere, dokumentierte Daten wollen">analyse in Kubios, Python, R or MATLAB and want clean, documented input</li>
+            <li data-en="need to show an ethics board or supervisor exactly what was done" data-de="einer Ethikkommission oder Betreuung genau zeigen müssen, was gemacht wurde">need to show an ethics board or supervisor exactly what was done</li>
           </ul>
         </div>
         <div class="panel kubios">
@@ -913,11 +982,11 @@ if (!location.hash) {
   <!-- 8 · Fragen -->
   <section class="ch" id="faq">
     <div class="wrap">
-      <div class="rv"><div class="label">FAQ</div><h2 data-en="Questions, <em>answered.</em>" data-de="Fragen, <em>beantwortet.</em>">Questions, <em>answered.</em></h2></div>
+      <div class="rv"><div class="label">FAQ</div><h2 data-en="Recording HRV with Polar H10 and Movesense: <em>questions, answered.</em>" data-de="HRV-Aufnahme mit Polar H10 und Movesense: <em>Fragen, beantwortet.</em>">Recording HRV with Polar H10 and Movesense: <em>questions, answered.</em></h2></div>
       <div class="faq rv">
         <details><summary data-en="Which sensors are supported?" data-de="Welche Sensoren werden unterstützt?">Which sensors are supported?</summary><p data-en="Two sensors, both tested with the app: the Polar H10 chest strap – live and in its internal memory – and the Movesense Flash sensor – live and recording in the sensor itself, where the app also saves raw ECG and 9-axis motion (accelerometer, gyroscope, magnetometer) as CSV. Both can run side by side in one study." data-de="Zwei Sensoren, beide mit der App getestet: der Polar-H10-Brustgurt – live und im internen Speicher – und der Movesense-Flash-Sensor – live und mit Aufnahme im Sensor selbst; dazu speichert die App Roh-EKG und 9-Achsen-Bewegung (Beschleunigung, Drehrate, Magnetfeld) als CSV. Beide laufen auch nebeneinander in einer Studie.">Two sensors, both tested with the app: the Polar H10 chest strap – live and in its internal memory – and the Movesense Flash sensor – live and recording in the sensor itself, where the app also saves raw ECG and 9-axis motion (accelerometer, gyroscope, magnetometer) as CSV. Both can run side by side in one study.</p></details>
-        <details><summary data-en="How long can a sensor record on its own?" data-de="Wie lange zeichnet ein Sensor allein auf?">How long can a sensor record on its own?</summary><p data-en="Polar H10: up to 95,000 beats in the sensor – about 20 hours of everyday life, about 10.5 hours at 150 bpm; one recording per strap. Movesense Flash: about 11 hours of ECG at 256 Hz plus motion in its 128 MB memory. The iPhone only needs to be nearby to start and to read out." data-de="Polar H10: bis zu 95.000 Schläge im Sensor – etwa 20 Stunden Alltag, etwa 10,5 Stunden bei 150 bpm; eine Aufnahme je Gurt. Movesense Flash: rund 11 Stunden EKG mit 256 Hz plus Bewegung im 128-MB-Speicher. Das iPhone muss nur zum Starten und Auslesen in der Nähe sein.">Polar H10: up to 95,000 beats in the sensor – about 20 hours of everyday life, about 10.5 hours at 150 bpm; one recording per strap. Movesense Flash: about 11 hours of ECG at 256 Hz plus motion in its 128 MB memory. The iPhone only needs to be nearby to start and to read out.</p></details>
-        <details><summary data-en="How many sensors can record at once?" data-de="Wie viele Sensoren zeichnen gleichzeitig auf?">How many sensors can record at once?</summary><p data-en="Up to four from one iPhone. They record to their own memory and are read out together afterwards; each recording is assigned to its participant with its real start time." data-de="Bis zu vier von einem iPhone. Sie zeichnen im eigenen Speicher auf und werden danach gemeinsam ausgelesen; jede Aufnahme wird ihrer Person mit echter Startzeit zugeordnet.">Up to four from one iPhone. They record to their own memory and are read out together afterwards; each recording is assigned to its participant with its real start time.</p></details>
+        <details><summary data-en="How long can a Polar H10 or Movesense Flash record without the phone?" data-de="Wie lange zeichnen Polar H10 und Movesense Flash ohne Handy auf?">How long can a Polar H10 or Movesense Flash record without the phone?</summary><p data-en="Polar H10: up to 95,000 beats in the sensor – about 20 hours of everyday life, about 10.5 hours at 150 bpm; one recording per strap. Movesense Flash: about 11 hours of ECG at 256 Hz plus motion in its 128 MB memory. The iPhone only needs to be nearby to start and to read out." data-de="Polar H10: bis zu 95.000 Schläge im Sensor – etwa 20 Stunden Alltag, etwa 10,5 Stunden bei 150 bpm; eine Aufnahme je Gurt. Movesense Flash: rund 11 Stunden EKG mit 256 Hz plus Bewegung im 128-MB-Speicher. Das iPhone muss nur zum Starten und Auslesen in der Nähe sein.">Polar H10: up to 95,000 beats in the sensor – about 20 hours of everyday life, about 10.5 hours at 150 bpm; one recording per strap. Movesense Flash: about 11 hours of ECG at 256 Hz plus motion in its 128 MB memory. The iPhone only needs to be nearby to start and to read out.</p></details>
+        <details><summary data-en="Can one iPhone record several Polar H10 at once?" data-de="Kann ein iPhone mehrere Polar H10 gleichzeitig aufzeichnen?">Can one iPhone record several Polar H10 at once?</summary><p data-en="Yes – up to four from one iPhone. They record to their own memory and are read out together afterwards; each recording is assigned to its participant with its real start time." data-de="Ja – bis zu vier von einem iPhone. Sie zeichnen im eigenen Speicher auf und werden danach gemeinsam ausgelesen; jede Aufnahme wird ihrer Person mit echter Startzeit zugeordnet.">Yes – up to four from one iPhone. They record to their own memory and are read out together afterwards; each recording is assigned to its participant with its real start time.</p></details>
         <details><summary data-en="Can I use the data in Kubios HRV?" data-de="Kann ich die Daten in Kubios HRV nutzen?">Can I use the data in Kubios HRV?</summary><p data-en="Yes. The CSV carries the exact settings for the Kubios custom text import in its header; the app also writes a Kubios text file and FIT. RR intervals are exported exactly as recorded." data-de="Ja. Die CSV trägt die genauen Einstellungen für den Textimport von Kubios im Kopf; dazu schreibt die App eine Kubios-Textdatei und FIT. Die RR-Intervalle werden genau so exportiert, wie sie erfasst wurden.">Yes. The CSV carries the exact settings for the Kubios custom text import in its header; the app also writes a Kubios text file and FIT. RR intervals are exported exactly as recorded.</p></details>
         <details><summary data-en="How do I get values for each phase?" data-de="Wie bekomme ich Werte je Phase?">How do I get values for each phase?</summary><p data-en="Tap an event button at each phase change. The segment table lists duration, beats, heart rate, RMSSD, SDNN and pNN50 for every phase between two events, computed with the same validated code as the rest of the app." data-de="Bei jedem Phasenwechsel eine Ereignistaste tippen. Die Segmenttabelle nennt Dauer, Schläge, Herzfrequenz, RMSSD, SDNN und pNN50 für jede Phase zwischen zwei Ereignissen, gerechnet mit demselben validierten Code wie die übrige App.">Tap an event button at each phase change. The segment table lists duration, beats, heart rate, RMSSD, SDNN and pNN50 for every phase between two events, computed with the same validated code as the rest of the app.</p></details>
         <details><summary data-en="How is the app validated?" data-de="Wie ist die App validiert?">How is the app validated?</summary><p data-en="Every metric is compared with independent reference implementations (NeuroKit2, SciPy, Task Force definitions) on 18 RR series with 20,431 beats: 331 of 331 checks passed (metric comparisons plus artifact, threshold and rhythm checks). Artifact detection matches NeuroKit2 beat by beat. The version-specific dossier lists every check with its tolerance." data-de="Jede Kennzahl wird mit unabhängigen Referenzen (NeuroKit2, SciPy, Task-Force-Definitionen) an 18 RR-Reihen mit 20.431 Schlägen verglichen: 331 von 331 Prüfungen bestanden (Kennzahl-Vergleiche plus Artefakt-, Schwellen- und Rhythmusprüfungen). Die Artefakterkennung stimmt Schlag für Schlag mit NeuroKit2 überein. Das versionsbezogene Dossier nennt jede Prüfung mit ihrer Toleranz.">Every metric is compared with independent reference implementations (NeuroKit2, SciPy, Task Force definitions) on 18 RR series with 20,431 beats: 331 of 331 checks passed (metric comparisons plus artifact, threshold and rhythm checks). Artifact detection matches NeuroKit2 beat by beat. The version-specific dossier lists every check with its tolerance.</p></details>
@@ -926,6 +995,7 @@ if (!location.hash) {
         <details><summary data-en="Does any data leave the iPhone?" data-de="Verlassen Daten das iPhone?">Does any data leave the iPhone?</summary><p data-en="Only where you send it: an export, a study folder you choose, or your iPhone’s own backup. There is no account and no CARLON server – nothing reaches us." data-de="Nur dorthin, wohin Sie sie schicken: ein Export, ein Studienordner Ihrer Wahl oder die eigene Sicherung Ihres iPhones. Es gibt kein Konto und keinen CARLON-Server – bei uns kommt nichts an.">Only where you send it: an export, a study folder you choose, or your iPhone’s own backup. There is no account and no CARLON server – nothing reaches us.</p></details>
         <details><summary data-en="Is there an Android version?" data-de="Gibt es eine Android-Version?">Is there an Android version?</summary><p data-en="No – CARLON HRV Research runs on iPhone with iOS 17 or later. The exported files open on any platform." data-de="Nein – CARLON HRV Research läuft auf dem iPhone mit iOS 17 oder neuer. Die exportierten Dateien öffnen sich auf jeder Plattform.">No – CARLON HRV Research runs on iPhone with iOS 17 or later. The exported files open on any platform.</p></details>
         <details><summary data-en="Is it a medical device?" data-de="Ist es ein Medizinprodukt?">Is it a medical device?</summary><p data-en="No. It is a research and wellness tool and does not diagnose or treat any condition." data-de="Nein. Es ist ein Werkzeug für Forschung und Wellness und erkennt, diagnostiziert oder behandelt keine Erkrankungen.">No. It is a research and wellness tool and does not diagnose or treat any condition.</p></details>
+        <details><summary data-en="Can I use it for a bachelor’s or master’s thesis?" data-de="Kann ich sie für eine Bachelor- oder Masterarbeit nutzen?">Can I use it for a bachelor’s or master’s thesis?</summary><p data-en="Yes – it is built for that: participants under a study code, phase markers, values per phase, a methods paragraph to copy, figures at 300 dpi and a citation with the app version. The data stay on the iPhone until you export them or switch on the study folder; check your university’s rules on where study data may be stored." data-de="Ja – genau dafür ist sie gebaut: Teilnehmende unter einem Studiencode, Phasenmarker, Werte je Phase, ein Methodenabsatz zum Übernehmen, Grafiken mit 300 dpi und ein Zitiervorschlag mit App-Version. Die Daten bleiben auf dem iPhone, bis Sie sie exportieren oder den Studienordner einschalten; klären Sie, wo Ihre Hochschule Studiendaten speichern lässt.">Yes – it is built for that: participants under a study code, phase markers, values per phase, a methods paragraph to copy, figures at 300 dpi and a citation with the app version. The data stay on the iPhone until you export them or switch on the study folder; check your university’s rules on where study data may be stored.</p></details>
         <details><summary data-en="What does it cost?" data-de="Was kostet sie?">What does it cost?</summary><p data-en="During the beta, access is by invitation through Apple TestFlight. At launch it becomes a one-time purchase on the App Store – no subscription, no per-participant fees; institutions can buy licenses in volume through Apple School Manager or Apple Business Manager." data-de="Während der Beta gibt es Zugang auf Einladung über Apples TestFlight. Zum Start wird sie ein einmaliger Kauf im App Store – kein Abo, keine Gebühren pro Proband; Einrichtungen kaufen Lizenzen in Stückzahl über Apple School Manager oder Apple Business Manager.">During the beta, access is by invitation through Apple TestFlight. At launch it becomes a one-time purchase on the App Store – no subscription, no per-participant fees; institutions can buy licenses in volume through Apple School Manager or Apple Business Manager.</p></details>
       </div>
     </div>
@@ -968,7 +1038,7 @@ if (!location.hash) {
 
 <footer>
   <div class="wrap">
-    <a href="/" aria-label="vitalkultur"><img src="/assets/vitalkultur-wordmark.png" alt="vitalkultur" style="height:26px;width:auto;opacity:.8"></a>
+    <a href="/" aria-label="vitalkultur"><img src="/assets/vitalkultur-wordmark.png" width="609" height="156" alt="vitalkultur" style="height:26px;width:auto;opacity:.8"></a>
     <nav>
       <a href="/breathwork/">CARLON Breathwork</a>
       <a href="/carlon-equine/">CARLON Equine</a>
