@@ -561,6 +561,7 @@ document.head.appendChild(s);})();</script>
     @media (prefers-reduced-motion: reduce) { .iz, .iz > img { transition: none; } }
     /* Tipp aufs animierte iPhone: das Gehäusebild nimmt ihn an – iOS-Safari gibt Tipps auf <video> nicht weiter */
     .device.zoom .bezel { pointer-events: auto; cursor: zoom-in; -webkit-user-drag: none; user-select: none; -webkit-touch-callout: none; }
+    .zoom, .zoom img { -webkit-user-drag: none; user-select: none; -webkit-touch-callout: none; -webkit-tap-highlight-color: transparent; }
     footer a { display: inline-block; padding: 11px 0; }
     @media (max-width: 560px) {
       .crumb { font-size: 11px; letter-spacing: .05em; gap: var(--s8); }
@@ -1225,10 +1226,15 @@ if (!location.hash) {
       var t = b.tagName === 'VIDEO' ? b.closest('.device') : b;   // über dem Video liegt das Rahmenbild und fängt den Tipp (CSS: .device.zoom .bezel)
       t.classList.add('zoom'); t.setAttribute('tabindex', '0'); t.setAttribute('role', 'button');
       var link = t.closest('a'); if (link) link.addEventListener('click', function (e) { e.preventDefault(); });   // Fächer: vergrößern statt PDF (eigener Knopf darunter)
-      var sx = 0, sy = 0, bewegt = false, t0 = 0;
-      t.addEventListener('pointerdown', function (e) { sx = e.clientX; sy = e.clientY; bewegt = false; t0 = Date.now(); }, { passive: true });
-      t.addEventListener('pointermove', function (e) { if (Math.abs(e.clientX - sx) > 10 || Math.abs(e.clientY - sy) > 10) bewegt = true; }, { passive: true });
-      t.addEventListener('pointerup', function () { if (!bewegt && Date.now() - t0 < 600) oeffnen(b); }, { passive: true });
+      // Öffnen auf „click“ (29.10.2026, Jan: „musste mehrfach tippen, die Bilder zitterten“): im wischbaren
+      // Karussell bricht iOS die Berührung beim kleinsten Verrutschen als Wischen ab (pointercancel) – „click“
+      // kommt dagegen genau bei einem Tipp. Hat sich das Karussell während der Berührung bewegt, war es Wischen.
+      var vp = t.closest('.gal-vp'), lage = 0;
+      t.addEventListener('pointerdown', function () { lage = vp ? vp.scrollLeft : 0; }, { passive: true });
+      t.addEventListener('click', function (e) {
+        if (vp && Math.abs(vp.scrollLeft - lage) > 6) return;
+        e.preventDefault(); oeffnen(b);
+      });
       t.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); oeffnen(b); } });
     });
     ov.querySelector('.iz-zu').addEventListener('click', function (e) { e.stopPropagation(); schliessen(); });
