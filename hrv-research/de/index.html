@@ -1254,9 +1254,27 @@ try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; 
     var ziel = document.getElementById(a.getAttribute('href').slice(1));
     if (!ziel) return;
     e.preventDefault();
-    ziel.scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'start' });
+    springe(ziel);
     if (location.hash) history.replaceState(null, '', location.pathname + location.search);
   });
+  /* Sprung auf den TITEL des Ziels, 34 px unter der Kopfleiste – und nach der Fahrt nachmessen (29.10.2026, Jan:
+     „Workflow tippen, Seite stoppt davor“): scrollIntoView rechnet das Ziel nur einmal; klappt unterwegs die
+     Safari-Leiste ein oder lädt ein Bild, endet die Fahrt zu früh. Bis zu drei Korrekturen, bis es auf 3 px stimmt. */
+  function springe(ziel) {
+    var ruhig = matchMedia('(prefers-reduced-motion: reduce)').matches, nav = document.querySelector('.nav');
+    var marke = ziel.querySelector('.label, h1, h2') || ziel;
+    var soll = function () { return Math.max(0, Math.round(marke.getBoundingClientRect().top + scrollY - (nav ? nav.offsetHeight : 0) - 34)); };
+    var runde = 0, letztY = -1, still = 0, selbst = false, halt = function () { selbst = true; };
+    ['touchstart', 'wheel', 'keydown'].forEach(function (ev) { addEventListener(ev, halt, { once: true, passive: true }); });   // wer selbst scrollt, wird nicht zurückgezogen
+    scrollTo({ top: soll(), behavior: ruhig ? 'auto' : 'smooth' });
+    (function pruefe() {
+      if (Math.abs(scrollY - letztY) > 0.5) { letztY = scrollY; still = 0; } else still++;
+      if (selbst) return;
+      if (still < 8) return requestAnimationFrame(pruefe);          // Fahrt läuft noch (8 ruhige Bilder ≈ 130 ms)
+      var y = soll();
+      if (Math.abs(scrollY - y) > 3 && runde++ < 3) { scrollTo({ top: y, behavior: ruhig || Math.abs(scrollY - y) < 120 ? 'auto' : 'smooth' }); still = 0; letztY = -1; requestAnimationFrame(pruefe); }
+    })();
+  }
   /* Methodenabsatz: kopieren + aufklappen */
   (function () {
     document.querySelectorAll('.methoden').forEach(function (m) {
