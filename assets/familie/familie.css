@@ -1,0 +1,62 @@
+/* CARLON-Familie – eine Leiste über allen Produktseiten (29.10.2026, Jan: „wer von der Hauptseite alle Apps ansehen
+   will, kommt schlecht wieder auf die Übersicht … geniales Konzept“). Muster der Apple-Seiten: oben die Familie,
+   darunter die Produktleiste. Die Familienleiste weicht beim Lesen nach oben aus und kommt beim Zurückscrollen
+   wieder; die Kopfleiste der Seite rückt mit (top: var(--vkf-sicht)). Bauteil: familie.js. */
+:root { --vkf-h: 44px; --vkf-sicht: var(--vkf-h); }
+.vkf-platz { height: var(--vkf-h); }
+.vkf { position: fixed; top: 0; left: 0; right: 0; z-index: 1000; height: var(--vkf-h);
+  font-family: 'Jost', -apple-system, BlinkMacSystemFont, system-ui, sans-serif; font-size: 12px; line-height: 1; letter-spacing: .04em;
+  color: rgba(235,230,220,.6); background: rgba(8,9,9,.8); border-bottom: 1px solid rgba(235,230,220,.07);
+  -webkit-backdrop-filter: saturate(150%) blur(20px); backdrop-filter: saturate(150%) blur(20px);
+  transition: transform .34s cubic-bezier(.4,0,.2,1); -webkit-font-smoothing: antialiased; }
+.vkf.weg { transform: translateY(-101%); }
+.vkf * { box-sizing: border-box; }
+.vkf a { color: inherit; text-decoration: none; -webkit-tap-highlight-color: transparent; }
+.vkf a:focus-visible, .vkf button:focus-visible { outline: 2px solid #3ecfb2; outline-offset: 2px; border-radius: 6px; }
+.vkf-in { max-width: var(--vkf-max, 1240px); height: 100%; margin: 0 auto; padding: 0 var(--vkf-rand, clamp(16px, 4vw, 34px)); display: flex; align-items: center; gap: 21px; }
+.vkf-marke { display: flex; align-items: center; height: 100%; margin-right: auto; opacity: .8; transition: opacity .2s; }
+.vkf-marke:hover { opacity: 1; }
+.vkf-marke img { height: 20px; width: auto; display: block; }
+.vkf-apps { display: flex; align-items: center; gap: 2px; list-style: none; margin: 0; padding: 0; }
+.vkf-apps a { display: flex; align-items: center; gap: 8px; height: 32px; padding: 0 11px; border-radius: 99px; white-space: nowrap; transition: color .2s, background .2s; }
+.vkf-apps a:hover { color: rgba(235,230,220,.95); }
+.vkf-apps a[aria-current] { color: rgba(235,230,220,.95); background: rgba(235,230,220,.07); }
+.vkf-apps img { width: 18px; height: 18px; border-radius: 5px; display: block; }
+.vkf-alle { padding-left: 21px; border-left: 1px solid rgba(235,230,220,.12); white-space: nowrap; transition: color .2s; }
+.vkf-alle:hover { color: rgba(235,230,220,.95); }
+.vkf-alle::after { content: " →"; }
+.vkf-knopf, .vkf-tafel, .vkf-dimm { display: none; }
+
+@media (max-width: 860px) {
+  .vkf-apps, .vkf-alle { display: none; }
+  .vkf-knopf { display: inline-flex; align-items: center; gap: 7px; height: 44px; padding: 0 2px 0 13px; background: none; border: 0; color: inherit;
+    font: inherit; letter-spacing: .1em; text-transform: uppercase; cursor: pointer; -webkit-tap-highlight-color: transparent; }
+  .vkf-knopf svg { width: 11px; height: 11px; transition: transform .3s cubic-bezier(.4,0,.2,1); }
+  .vkf.offen .vkf-knopf { color: rgba(235,230,220,.95); }
+  .vkf.offen .vkf-knopf svg { transform: rotate(180deg); }
+  .vkf-tafel { display: block; position: absolute; top: 100%; left: 0; right: 0; max-height: calc(100dvh - var(--vkf-h)); overflow-y: auto;
+    padding: 8px var(--vkf-rand, clamp(16px, 4vw, 34px)) 21px; background: #070808; border-bottom: 1px solid rgba(235,230,220,.08);
+    opacity: 0; visibility: hidden; transform: translateY(-6px); transition: opacity .3s, transform .3s cubic-bezier(.4,0,.2,1), visibility .3s; }
+  .vkf.offen .vkf-tafel { opacity: 1; visibility: visible; transform: none; }
+  .vkf-tafel ul { list-style: none; margin: 0; padding: 0; }
+  .vkf-tafel li + li { border-top: 1px solid rgba(235,230,220,.07); }
+  .vkf-tafel li a { display: grid; grid-template-columns: 44px 1fr auto; align-items: center; gap: 0 14px; padding: 13px 0; }
+  .vkf-tafel li img { width: 44px; height: 44px; border-radius: 10px; grid-area: 1 / 1 / 3 / 2; }
+  .vkf-tafel .name { font-size: 16px; letter-spacing: .01em; color: rgba(235,230,220,.95); align-self: end; grid-area: 1 / 2; }
+  .vkf-tafel .was { font-size: 13px; letter-spacing: .01em; line-height: 1.35; color: rgba(235,230,220,.5); align-self: start; padding-top: 4px; grid-area: 2 / 2; }
+  .vkf-tafel .hier { grid-area: 1 / 3 / 3 / 4; font-size: 10px; letter-spacing: .12em; text-transform: uppercase; color: #3ecfb2; }
+  .vkf-tafel .uebersicht { display: flex; justify-content: space-between; align-items: center; margin-top: 8px; padding: 15px 0 0;
+    border-top: 1px solid rgba(235,230,220,.12); font-size: 14px; letter-spacing: .02em; color: rgba(235,230,220,.95); }
+  .vkf-tafel .uebersicht span { color: #3ecfb2; }
+  .vkf-tafel .browser { margin: 13px 0 0; font-size: 12px; line-height: 1.5; color: rgba(235,230,220,.42); }
+  .vkf-tafel .browser a { color: rgba(235,230,220,.7); }
+  .vkf-dimm { display: block; position: fixed; inset: 0; z-index: 999; background: rgba(0,0,0,.5); opacity: 0; visibility: hidden; transition: opacity .3s, visibility .3s; }
+  .vkf-dimm.an { opacity: 1; visibility: visible; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .vkf, .vkf-tafel, .vkf-dimm, .vkf-knopf svg { transition: none; }
+}
+/* Jede Seite darf Breite und Rand ihrer Kopfleiste nennen (--vkf-max, --vkf-rand), damit die Marke über der Marke steht */
+/* Kopfleiste der Seite rückt mit: sitzt unter der Familienleiste, solange diese zu sehen ist */
+[data-vkf-folgt] { top: var(--vkf-sicht) !important; transition: top .34s cubic-bezier(.4,0,.2,1); }
+@media (prefers-reduced-motion: reduce) { [data-vkf-folgt] { transition: none; } }

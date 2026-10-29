@@ -78,6 +78,7 @@ document.head.appendChild(s);})();</script>
 
   /* Spacing — Fibonacci */
   --s-1: 4px; --s-2: 8px; --s-3: 13px; --s-4: 21px;
+  --vkf-max: 1400px; --vkf-rand: 34px;   /* Familienleiste fluchtet mit der Kopfleiste */
   --s-5: 34px; --s-6: 55px; --s-7: 89px; --s-8: 144px;
 
   /* Type */
@@ -4672,6 +4673,7 @@ html.js-reveal .reveal.in { opacity: 1 !important; transform: none !important; t
   #langToggleBtn { min-height: 40px; white-space: nowrap; display: inline-flex; align-items: center; justify-content: center; padding: 0 10px; }
   /* Nav-Brand kompakt: „CARLON EQUINE" + Tagline je in einer Zeile, kein hässlicher Umbruch */
   .nav-inner { padding: 10px 14px; }
+  :root { --vkf-rand: 14px; }
   .wordmark-logo { width: 40px; height: 40px; margin-right: 4px; }
   .wordmark { gap: 8px; }
   .wordmark-text .brand { font-size: 14px; letter-spacing: 0.13em; white-space: nowrap; }
@@ -4679,8 +4681,10 @@ html.js-reveal .reveal.in { opacity: 1 !important; transform: none !important; t
   .demo-button:active, #langToggleBtn:active, .demo-preview-cta a.primary:active { opacity: .72; transform: scale(.98); }
 }
 </style>
+<link rel="stylesheet" href="/assets/familie/familie.css?v=2">
 </head>
 <body>
+<script src="/assets/familie/familie.js?v=2"></script>
 
 <!-- Hollywood-Loader Overlay (display:none default, JS aktiviert).
      Zelebriert die ~150ms Compute-Zeit bei jedem Demo/File-Load:
@@ -4700,7 +4704,7 @@ html.js-reveal .reveal.in { opacity: 1 !important; transform: none !important; t
 <div class="bg-scanlines"></div>
 <div class="bg-vignette"></div>
 
-<nav>
+<nav data-vkf-folgt>
   <div class="nav-inner">
     <div class="wordmark" id="homeBtn" title="Back to start">
       <div class="wordmark-logo"></div>

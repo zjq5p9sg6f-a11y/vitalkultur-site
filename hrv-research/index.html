@@ -134,6 +134,7 @@ document.head.appendChild(s);})();</script>
       --t: rgb(235,230,220); --t2: rgba(235,230,220,.75); --t3: rgba(235,230,220,.65); --t4: rgba(235,230,220,.52);
       --stille: #3ECFB2; --glow: #6EE6C8; --deep: #148273; --mint: #A8F0E0;
       --s3: 3px; --s5: 5px; --s8: 8px; --s13: 13px; --s21: 21px; --s34: 34px; --s55: 55px; --s89: 89px; --s144: 144px;
+      --vkf-max: 1140px; --vkf-rand: clamp(21px, 5vw, 55px);   /* Familienleiste fluchtet mit der Kopfleiste */
       --maxw: 1140px; --ease: cubic-bezier(.2,.7,.2,1);
     }
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -652,8 +653,10 @@ document.head.appendChild(s);})();</script>
       .panel { padding: var(--s21); }
     }
   </style>
+<link rel="stylesheet" href="/assets/familie/familie.css?v=2">
 </head>
 <body>
+<script src="/assets/familie/familie.js?v=2"></script>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><defs>
   <symbol id="i-sens" viewBox="0 0 32 32"><circle cx="6" cy="20" r="2.4"/><circle cx="12.7" cy="20" r="2.4"/><circle cx="19.3" cy="20" r="2.4"/><circle cx="26" cy="20" r="2.4"/><path d="M9.5 12.5a9 9 0 0 1 13 0M6 9a14 14 0 0 1 20 0"/></symbol>
   <symbol id="i-check" viewBox="0 0 32 32"><circle cx="16" cy="16" r="11.5"/><path d="M10.5 16.5l3.8 3.8 7.4-8"/><path d="M16 1.8v2.4M16 27.8v2.4M1.8 16h2.4M27.8 16h2.4" opacity=".55"/></symbol>
@@ -696,7 +699,7 @@ try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; 
   addEventListener('pageshow', function (e) { if (e.persisted && !selbst) window.scrollTo(0, 0); });
 })();</script>
 
-<header class="nav">
+<header class="nav" data-vkf-folgt>
   <div class="wrap">
     <div class="crumb">
       <img class="mark" src="assets/v14/mark-48.png" width="24" height="24" alt="">

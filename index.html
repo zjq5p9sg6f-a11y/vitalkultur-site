@@ -189,6 +189,7 @@ document.head.appendChild(s);})();</script>
     }
 
     /* Product grid */
+    .products-section { scroll-margin-top: 34px; }
     .products-section {
       max-width: var(--maxw); margin: 60px auto 0;
       padding: 0 32px;
@@ -272,6 +273,10 @@ document.head.appendChild(s);})();</script>
       font-family: var(--font-mono, ui-monospace, monospace);
       color: var(--cyan); white-space: nowrap;
     }
+    /* iPhone (29.10.2026): ungebrochen war die Pfeilkette 453 px breit und die Startseite wackelte seitlich;
+       das Leuchten hinter der Überschrift (110 %) ragte ebenfalls hinaus – main schneidet es ab wie auf der Research-Seite */
+    @media (max-width: 520px) { .pair-bridge .pb-flow { white-space: normal; } }
+    main { overflow-x: clip; }
     .product-card.rrlogger {
       --accent: var(--teal); --accent-soft: var(--teal-soft); --accent-glow-color: var(--teal-glow);
       --accent-glow: radial-gradient(70% 90% at 50% -10%, rgba(62,207,178,0.14), transparent 70%);
@@ -510,7 +515,7 @@ document.head.appendChild(s);})();</script>
        data-de="Apps für Herz, Atem und equine HRV — so gebaut, dass die dahinterliegende Forschung etwas wird, das du fühlen, entscheiden und handeln kannst. Unabhängig, lokal-first, ehrlich bei jeder Zahl.">Apps for heart, breath and equine HRV — built so the underlying research is something you can feel, decide on, and act on. Independent, local-first, honest with every number.</p>
   </section>
 
-  <section class="products-section">
+  <section class="products-section" id="apps">
     <div class="products-eyebrow" data-en="One engine · one ecosystem" data-de="Eine Engine · ein Ökosystem">Eine Engine · ein Ökosystem</div>
     <p class="products-intro" style="max-width:660px;margin:6px auto 30px;text-align:center;font-size:15px;line-height:1.65;color:var(--muted,#8a94a6)" data-en="Three apps, one foundation — the same research-grade HRV engine behind each: Polar H10, local on your devices, honest with every number. From human breath on the wrist (<strong style='color:var(--text,#e8eef5);font-weight:500'>Breathwork</strong>) to a horse's heart biometry (<strong style='color:var(--text,#e8eef5);font-weight:500'>Equine</strong>) to raw RR intervals for science (<strong style='color:var(--text,#e8eef5);font-weight:500'>Research</strong>): one platform, the same measurement rigour in every domain." data-de="Drei Apps, ein Fundament — hinter jeder dieselbe forschungsnahe HRV-Engine: Polar H10, lokal auf deinen Geräten, ehrlich bei jeder Zahl. Vom menschlichen Atem am Handgelenk (<strong style='color:var(--text,#e8eef5);font-weight:500'>Breathwork</strong>) über die Herzbiometrie des Pferds (<strong style='color:var(--text,#e8eef5);font-weight:500'>Equine</strong>) bis zu Roh-RR-Intervallen für die Forschung (<strong style='color:var(--text,#e8eef5);font-weight:500'>Research</strong>): eine Plattform, dieselbe Messgenauigkeit in jeder Domäne.">Drei Apps, ein Fundament — hinter jeder dieselbe forschungsnahe HRV-Engine: Polar H10, lokal auf deinen Geräten, ehrlich bei jeder Zahl. Vom menschlichen Atem am Handgelenk (<strong style="color:var(--text,#e8eef5);font-weight:500">Breathwork</strong>) über die Herzbiometrie des Pferds (<strong style="color:var(--text,#e8eef5);font-weight:500">Equine</strong>) bis zu Roh-RR-Intervallen für die Forschung (<strong style="color:var(--text,#e8eef5);font-weight:500">Research</strong>): eine Plattform, dieselbe Messgenauigkeit in jeder Domäne.</p>
     <div class="products">
