@@ -84,16 +84,24 @@
         if (sc && scrollAuto !== null && !reduce) {
           // In Schritten wie ein Daumen (29.10.2026, Jan: „quälend langsam“): zügig eine Dreiviertel-Seite weiter,
           // kurz stehen lassen, weiter – statt die ganze Station lang gleichmäßig zu kriechen.
-          var hoehe = sc.scrollHeight - sc.clientHeight, hub = sc.clientHeight * 0.72;
+          var hoehe = sc.scrollHeight - sc.clientHeight;
           if (hoehe > 0) {
-            var schritte = Math.max(1, Math.ceil(hoehe / hub)), takt = Math.min(1900, (d * 0.86 - 600) / schritte);
-            var t = now - scrollAuto - 600, k = Math.floor(t / takt), r = (t - k * takt) / 520;
-            if (t < 0) { sc.scrollTop = 0; }
-            else {
-              var von = Math.min(hoehe, k * hub), nach = Math.min(hoehe, (k + 1) * hub), q = Math.min(1, r);
-              var e = 1 - Math.pow(1 - q, 3);
-              sc.scrollTop = von + (nach - von) * e;
+            // Haltestellen = Kartenanfänge in der Langaufnahme (data-stopps, Pixel bei data-stopp-breite):
+            // jede Karte steht oben bündig still, dann weich zur nächsten (29.10.2026, Jan: „wirkt willkürlich“).
+            // Ohne Haltestellen: Dreiviertel-Seite je Schritt.
+            var st = scrs[cur], bild = sc.querySelector('img'), punkte;
+            if (st.dataset.stopps && bild) {
+              var f = bild.clientWidth / (parseFloat(st.dataset.stoppBreite) || bild.naturalWidth || 1);
+              punkte = st.dataset.stopps.split(' ').map(function (y) { return Math.min(hoehe, Math.max(0, parseFloat(y) * f - 4)); });
+            } else {
+              var hub = sc.clientHeight * 0.72; punkte = [];
+              for (var y = 0; y < hoehe + hub; y += hub) punkte.push(Math.min(hoehe, y));
             }
+            var takt = Math.min(2200, (d * 0.94 - 600) / Math.max(1, punkte.length - 1));
+            var t = now - scrollAuto - 600, k = Math.max(0, Math.floor(t / takt)), q = Math.min(1, Math.max(0, (t - k * takt) / 560));
+            var von = punkte[Math.min(k, punkte.length - 1)], nach = punkte[Math.min(k + 1, punkte.length - 1)];
+            var e = q < .5 ? 4 * q * q * q : 1 - Math.pow(-2 * q + 2, 3) / 2;
+            sc.scrollTop = t < 0 ? 0 : von + (nach - von) * e;
           }
         }
         beimTakt.forEach(function (f) { f(cur, sek, pausiert, now); });
@@ -180,7 +188,7 @@
         var h = sc.scrollHeight - sc.clientHeight; if (h <= 0) return;
         var q = sc.clientHeight / sc.scrollHeight; balken.style.height = Math.max(8, q * 100) + '%';
         balken.style.top = (sc.scrollTop / h) * (100 - Math.max(8, q * 100)) + '%';
-        if (sc.scrollTop / h > 0.92) mehr.classList.add('weg');
+        if (sc.scrollTop > 40) mehr.classList.add('weg');   // sobald es sich bewegt, ist der Hinweis erfüllt
       };
       sc.addEventListener('scroll', lage, { passive: true });
       ['wheel', 'touchstart', 'pointerdown'].forEach(function (ev) { sc.addEventListener(ev, function () { mehr.classList.add('weg'); }, { passive: true }); });
