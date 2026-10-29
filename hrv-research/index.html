@@ -516,18 +516,32 @@ document.head.appendChild(s);})();</script>
     .crumb .mark { width: 24px; height: 24px; flex: none; }
     /* Vollbild für Bilder — Kern der Equine-/Breathwork-Lösung (27.10.2026) */
     .zoombar img, img.zoom { cursor: zoom-in; }
-    .iz { position: fixed; inset: 0; z-index: 9999; display: flex; align-items: center; justify-content: center; background: rgba(2,2,2,.96); -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px); padding: 4vh 4vw; opacity: 0; visibility: hidden; pointer-events: none; transition: opacity .22s ease, visibility .22s ease; cursor: zoom-out; touch-action: pan-y; }
+    /* Vollbild (29.10.2026, Jan: Video-iPhone öffnete nicht, Hinweistext überlappte das iPhone): Inhalt und Zähler
+       teilen sich den Schirm in einer Spalte – nichts liegt mehr übereinander; Schließen sichtbar oben rechts. */
+    .iz { position: fixed; inset: 0; z-index: 9999; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px;
+      padding: calc(env(safe-area-inset-top, 0px) + 58px) 16px calc(env(safe-area-inset-bottom, 0px) + 18px);
+      background: rgba(2,2,2,.96); -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px); opacity: 0; visibility: hidden; pointer-events: none; transition: opacity .22s ease, visibility .22s; }
     .iz.show { opacity: 1; visibility: visible; pointer-events: auto; }
-    .iz > img { max-width: 100%; max-height: 84vh; width: auto; height: auto; border-radius: 22px; box-shadow: 0 30px 90px rgba(0,0,0,.7); transform: scale(.97); transition: transform .24s cubic-bezier(.16,1,.3,1); -webkit-user-drag: none; user-select: none; }
+    .iz > img { max-width: 100%; max-height: calc(100vh - 150px); width: auto; height: auto; border-radius: 22px; box-shadow: 0 30px 90px rgba(0,0,0,.7); transform: scale(.97); transition: transform .24s cubic-bezier(.16,1,.3,1); -webkit-user-drag: none; user-select: none; }
+    @supports (height: 1dvh) { .iz > img { max-height: calc(100dvh - 150px - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px)); } }
     .iz.show > img { transform: scale(1); }
     .iz > img[hidden], .iz-geraet[hidden] { display: none; }   /* Standbild ODER Gerät, nie beides */
-    .iz-geraet { width: min(92vw, calc(84vh * 735 / 1500)); pointer-events: none; }
+    .iz-geraet { width: min(92vw, calc((100vh - 150px) * 735 / 1500)); pointer-events: none; flex: none; }
+    @supports (height: 1dvh) { .iz-geraet { width: min(92vw, calc((100dvh - 150px - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px)) * 735 / 1500)); } }
     .iz-geraet .device { width: 100%; margin: 0; }
     .iz-nav { position: fixed; top: 50%; transform: translateY(-50%); width: 44px; height: 44px; border-radius: 50%; border: 1px solid var(--line2); background: rgba(2,2,2,.6); color: var(--t); font-size: 20px; cursor: pointer; }
     .iz-prev { left: 16px; } .iz-next { right: 16px; }
-    .iz-info { position: fixed; bottom: calc(env(safe-area-inset-bottom, 0px) + 16px); left: 0; right: 0; text-align: center; font-size: 12px; letter-spacing: .1em; text-transform: uppercase; color: var(--t3); pointer-events: none; }
+    .iz-zu { position: fixed; top: calc(env(safe-area-inset-top, 0px) + 12px); right: calc(env(safe-area-inset-right, 0px) + 14px); width: 36px; height: 36px; border-radius: 50%; border: 0;
+      background: rgba(235,230,220,.12); color: rgba(235,230,220,.9); display: grid; place-items: center; cursor: pointer; }
+    .iz-zu svg { width: 15px; height: 15px; }
+    .iz-info { flex: none; display: flex; flex-direction: column; align-items: center; gap: 8px; pointer-events: none; }
+    .iz-punkte { display: flex; gap: 6px; } .iz-punkte i { width: 6px; height: 6px; border-radius: 3px; background: rgba(235,230,220,.25); transition: width .3s var(--ease), background .3s; }
+    .iz-punkte i.an { width: 18px; background: var(--stille); }
+    .iz-tipp { font-size: 12px; letter-spacing: .06em; color: var(--t3); transition: opacity .6s ease; } .iz-tipp.weg { opacity: 0; }
     @media (max-width: 560px) { .iz-nav { display: none; } }
     @media (prefers-reduced-motion: reduce) { .iz, .iz > img { transition: none; } }
+    /* Tipp aufs animierte iPhone: das Gehäusebild nimmt ihn an – iOS-Safari gibt Tipps auf <video> nicht weiter */
+    .device.zoom .bezel { pointer-events: auto; cursor: zoom-in; -webkit-user-drag: none; user-select: none; -webkit-touch-callout: none; }
     footer a { display: inline-block; padding: 11px 0; }
     @media (max-width: 560px) {
       .crumb { font-size: 11px; letter-spacing: .05em; gap: var(--s8); }
@@ -1173,9 +1187,12 @@ if (!location.hash) {
     var de = document.documentElement.lang === 'de';
     var ov = document.createElement('div');
     ov.className = 'iz'; ov.setAttribute('role', 'dialog'); ov.setAttribute('aria-modal', 'true');
-    ov.innerHTML = '<img alt="" draggable="false"><div class="iz-geraet" hidden></div><button type="button" class="iz-nav iz-prev" aria-label="' + (de ? 'Vorheriges Bild' : 'Previous image') + '">‹</button><button type="button" class="iz-nav iz-next" aria-label="' + (de ? 'Nächstes Bild' : 'Next image') + '">›</button><div class="iz-info"></div>';
+    ov.innerHTML = '<img alt="" draggable="false"><div class="iz-geraet" hidden></div><button type="button" class="iz-nav iz-prev" aria-label="' + (de ? 'Vorheriges Bild' : 'Previous image') + '">‹</button><button type="button" class="iz-nav iz-next" aria-label="' + (de ? 'Nächstes Bild' : 'Next image') + '">›</button>'
+      + '<button type="button" class="iz-zu" aria-label="' + (de ? 'Schließen' : 'Close') + '"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button>'
+      + '<div class="iz-info"><div class="iz-punkte"></div><div class="iz-tipp"></div></div>';
     document.body.appendChild(ov);
     var big = ov.querySelector('img'), geraet = ov.querySelector('.iz-geraet'), film = null, info = ov.querySelector('.iz-info'), idx = 0, zuletzt = null, reihe = bilder;
+    var punkte = ov.querySelector('.iz-punkte'), tipp = ov.querySelector('.iz-tipp'), tippUhr = null;
     // Eine Reihe = die Bilder DES Abschnitts, aus dem geöffnet wurde (28.10., Jan: „swipt alle Inhalte durch
     // statt nur die Bilder der Reihe“). Vorher: alle Bilder der Seite in einer Liste.
     function reiheVon(b) { var sek = b.closest('section') || document.body; return bilder.filter(function (x) { return sek.contains(x); }); }
@@ -1190,12 +1207,18 @@ if (!location.hash) {
       } else { big.src = b.currentSrc || b.src; big.alt = b.alt || ''; }
       var mehr = reihe.length > 1;
       ov.querySelector('.iz-prev').hidden = ov.querySelector('.iz-next').hidden = !mehr;
-      info.textContent = (mehr ? (idx + 1) + ' / ' + reihe.length + ' · ' + (de ? 'Wischen zum Blättern · ' : 'Swipe to browse · ') : '') + (de ? 'Tippen schließt' : 'tap to close');
+      punkte.innerHTML = mehr ? reihe.map(function (_, j) { return '<i' + (j === idx ? ' class="an"' : '') + '></i>'; }).join('') : '';
+      punkte.setAttribute('aria-label', (idx + 1) + ' / ' + reihe.length);
     }
-    function oeffnen(b) { zuletzt = document.activeElement; reihe = reiheVon(b); zeigen(reihe.indexOf(b)); ov.classList.add('show'); document.documentElement.style.overflow = 'hidden'; }
+    function oeffnen(b) {
+      zuletzt = document.activeElement; reihe = reiheVon(b); zeigen(reihe.indexOf(b)); ov.classList.add('show'); document.documentElement.style.overflow = 'hidden';
+      // Hinweis nur kurz: wer es einmal gesehen hat, braucht ihn nicht als Dauertext unter dem Bild
+      tipp.textContent = (reihe.length > 1 ? (de ? 'Wischen zum Blättern · ' : 'Swipe to browse · ') : '') + (de ? 'Tippen schließt' : 'Tap to close');
+      tipp.classList.remove('weg'); clearTimeout(tippUhr); tippUhr = setTimeout(function () { tipp.classList.add('weg'); }, 2600);
+    }
     function schliessen() { if (film) film.pause(); ov.classList.remove('show'); document.documentElement.style.overflow = ''; if (zuletzt && zuletzt.focus) zuletzt.focus(); }
     bilder.forEach(function (b, i) {
-      var t = b.tagName === 'VIDEO' ? b.closest('.device') : b;   // über dem Video liegt das Rahmenbild und fängt den Tipp
+      var t = b.tagName === 'VIDEO' ? b.closest('.device') : b;   // über dem Video liegt das Rahmenbild und fängt den Tipp (CSS: .device.zoom .bezel)
       t.classList.add('zoom'); t.setAttribute('tabindex', '0'); t.setAttribute('role', 'button');
       var link = t.closest('a'); if (link) link.addEventListener('click', function (e) { e.preventDefault(); });   // Fächer: vergrößern statt PDF (eigener Knopf darunter)
       var sx = 0, sy = 0, bewegt = false, t0 = 0;
@@ -1204,6 +1227,7 @@ if (!location.hash) {
       t.addEventListener('pointerup', function () { if (!bewegt && Date.now() - t0 < 600) oeffnen(b); }, { passive: true });
       t.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); oeffnen(b); } });
     });
+    ov.querySelector('.iz-zu').addEventListener('click', function (e) { e.stopPropagation(); schliessen(); });
     ov.querySelector('.iz-prev').addEventListener('click', function (e) { e.stopPropagation(); zeigen(idx - 1); });
     ov.querySelector('.iz-next').addEventListener('click', function (e) { e.stopPropagation(); zeigen(idx + 1); });
     var wx = 0, wy = 0, gewischt = false;
