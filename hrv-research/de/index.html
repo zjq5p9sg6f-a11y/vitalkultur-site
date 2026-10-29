@@ -173,6 +173,13 @@ document.head.appendChild(s);})();</script>
     .btn-2 { border: 1px solid var(--line2); color: var(--t); }
     .btn-2:hover { border-color: var(--stille); color: var(--glow); }
     .fine { margin-top: var(--s21); font-size: 13px; color: var(--t4); letter-spacing: .06em; }
+    /* Belegzeile im Hero (29.10.2026, Kano: die Basismerkmale Validierung, Kubios, Datenschutz gehören in den ersten Blick) */
+    .belege { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-top: var(--s21); }
+    .beleg { display: inline-flex; align-items: center; gap: 8px; padding: 8px 14px 8px 11px; border-radius: 999px; border: 1px solid var(--line2);
+      background: rgba(255,255,255,.025); color: var(--t2); font-size: 13.5px; text-decoration: none; transition: border-color .3s, color .3s, background .3s; }
+    .beleg:hover { border-color: rgba(62,207,178,.5); color: var(--t); background: rgba(62,207,178,.06); }
+    .beleg .ic { width: 17px; height: 17px; stroke-width: 1.8; }
+    @media (max-width: 420px) { .beleg { font-size: 13px; padding: 7px 12px 7px 10px; } }
 
     /* Zahlenleiste */
     .proof { display: grid; grid-template-columns: repeat(4, 1fr); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); margin-top: var(--s55); }
@@ -625,12 +632,12 @@ if (!location.hash) {
       <img class="signet" src="../assets/v14/signet.png" width="477" height="686" alt="CARLON HRV Research">
       <div class="eyebrow" data-en="iPhone app for HRV studies · Polar&nbsp;H10 · Movesense&nbsp;Flash" data-de="iPhone-App für HRV-Studien · Polar&nbsp;H10 · Movesense&nbsp;Flash">iPhone-App für HRV-Studien · Polar H10 · Movesense Flash</div>
       <h1 data-en="Your HRV study, <em>from one iPhone.</em>" data-de="Ihre <span style=&quot;white-space:nowrap&quot;>HRV-Studie,</span> <em>mit einem iPhone.</em>">Ihre <span style="white-space:nowrap">HRV-Studie,</span> <em>mit einem iPhone.</em></h1>
-      <p class="lead" data-en="Up to four Polar H10 or Movesense Flash sensors record in their own memory – the iPhone doesn’t need to be there. Mark each phase with one tap and leave with original RR data, values per phase and publication-ready figures." data-de="Bis zu vier Polar H10 oder Movesense Flash zeichnen im eigenen Speicher auf – das iPhone darf zurückbleiben. Jede Phase per Tipp markieren – am Ende haben Sie Original-RR-Daten, Werte je Phase und publikationsfertige Grafiken.">Bis zu vier Polar H10 oder Movesense Flash zeichnen im eigenen Speicher auf – das iPhone darf zurückbleiben. Jede Phase per Tipp markieren – am Ende haben Sie Original-RR-Daten, Werte je Phase und publikationsfertige Grafiken.</p>
+      <p class="lead" data-en="Up to four Polar H10 or Movesense Flash sensors record in their own memory – the iPhone can stay behind. One tap marks each phase. You leave with original RR data, values per phase, publication-ready figures and a methods paragraph to paste." data-de="Bis zu vier Polar H10 oder Movesense Flash zeichnen im eigenen Speicher auf – das iPhone darf zurückbleiben. Ein Tipp markiert jede Phase. Am Ende haben Sie Original-RR-Daten, Werte je Phase, publikationsfertige Grafiken und einen Methodenabsatz zum Einfügen.">Bis zu vier Polar H10 oder Movesense Flash zeichnen im eigenen Speicher auf – das iPhone darf zurückbleiben. Ein Tipp markiert jede Phase. Am Ende haben Sie Original-RR-Daten, Werte je Phase, publikationsfertige Grafiken und einen Methodenabsatz zum Einfügen.</p>
       <div class="ctas">
         <a class="btn btn-1" href="mailto:jan@vitalkultur.com?subject=CARLON%20HRV%20Research%20%E2%80%93%20beta%20access&amp;body=Hi%20Jan%2C%0A%0AI%27d%20like%20to%20test%20CARLON%20HRV%20Research.%0A%0AInstitution%20/%20lab%3A%0ASensors%20%28Polar%20H10%20/%20Movesense%29%3A%0AStudy%20or%20use%20case%3A%0AEmail%20for%20the%20TestFlight%20invitation%3A%0A%0ABest%20regards%2C%0A" data-beta><span data-en="Request beta access" data-de="Beta-Zugang anfragen">Beta-Zugang anfragen</span> <span aria-hidden="true">→</span></a>
         <a class="btn btn-2" href="#erleben"><span data-en="See the app below" data-de="App unten ansehen">App unten ansehen</span> <span aria-hidden="true">↓</span></a>
       </div>
-      <div class="fine" data-en="Live on screen or recorded in the sensor · computed on your iPhone · no account · no CARLON server" data-de="Live auf dem Bildschirm oder im Sensor aufgezeichnet · auf Ihrem iPhone gerechnet · kein Konto · kein CARLON-Server">Live auf dem Bildschirm oder im Sensor aufgezeichnet · auf Ihrem iPhone gerechnet · kein Konto · kein CARLON-Server</div>
+      <div class="belege" aria-label="Proof"><a class="beleg" href="#validated"><svg class="ic" aria-hidden="true"><use href="#i-check"/></svg><span data-en="331/331 checks against NeuroKit2" data-de="331/331 Prüfungen gegen NeuroKit2">331/331 Prüfungen gegen NeuroKit2</span></a><a class="beleg" href="#outputs"><svg class="ic" aria-hidden="true"><use href="#i-files"/></svg><span data-en="Kubios-ready export" data-de="Kubios-fertiger Export">Kubios-fertiger Export</span></a><a class="beleg" href="#faq"><svg class="ic" aria-hidden="true"><use href="#i-noserver"/></svg><span data-en="No account · no server" data-de="Kein Konto · kein Server">Kein Konto · kein Server</span></a></div>
     </div>
     <div class="wrap tour" id="erleben">
       <div class="tour-txt">
