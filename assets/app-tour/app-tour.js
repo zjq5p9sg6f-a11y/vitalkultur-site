@@ -18,7 +18,8 @@
  *   </div>
  *
  * Verhalten: läuft von selbst (Fortschrittsbalken je Station), Klick auf eine Zeile oder
- * Wischen am iPhone übernimmt; nach 14 s ohne Eingriff läuft sie weiter. Videos spielen mit
+ * Wischen am iPhone übernimmt – dann bleibt die Tour stehen, bis der Besucher auf Abspielen tippt
+ * (29.10.2026, Jan: „in Ruhe ansehen“; vorher lief sie nach 14 s von selbst weiter). Videos spielen mit
  * data-rate, halten das letzte Bild. Scroll-Stationen scrollen selbst, bis der Nutzer
  * hineingreift. Unsichtbar = Pause. prefers-reduced-motion = kein Selbstlauf.
  */
@@ -28,7 +29,16 @@
     var items = [].slice.call(root.querySelectorAll('[data-tour-liste] > li'));
     if (!scrs.length) return;
     var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    var cur = -1, t0 = 0, sichtbar = true, nutzer = -1e9, halt = null, scrollAuto = null;
+    var cur = -1, t0 = 0, sichtbar = true, halt = null, scrollAuto = null, auto = true, schwebt = false;
+    var deT = document.documentElement.lang === 'de', autoKnopf = null;
+    // Wer eingreift, übernimmt: die Tour schaltet nicht mehr selbst weiter, bis „Abspielen“ getippt wird.
+    var uebernimm = function () { if (!auto) return; auto = false; root.classList.add('at-angehalten'); autoBeschriften(); };
+    var autoBeschriften = function () {
+      if (!autoKnopf) return;
+      autoKnopf.innerHTML = auto ? '<svg viewBox="0 0 24 24" fill="currentColor"><rect x="6.5" y="5" width="3.6" height="14" rx="1"/><rect x="13.9" y="5" width="3.6" height="14" rx="1"/></svg>'
+                                 : '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5.6v12.8a.8.8 0 0 0 1.2.7l10.1-6.4a.8.8 0 0 0 0-1.4L9.2 4.9a.8.8 0 0 0-1.2.7z"/></svg>';
+      autoKnopf.setAttribute('aria-label', auto ? (deT ? 'Tour anhalten' : 'Pause tour') : (deT ? 'Tour abspielen' : 'Play tour'));
+    };
     var beimZeigen = [], beimTakt = [];                           // Stations-Bausteine (Spickzettel, Scroll-Hinweis)
     var dauer = function (i) { return (parseFloat(scrs[i].dataset.dauer) || 6) * 1000; };
     var video = function (i) { return scrs[i] && scrs[i].querySelector('video'); };
@@ -65,7 +75,7 @@
       // Auch nach einem Tipp in der Liste selbst scrollen (29.10.: „man erkennt nicht, dass man scrollen kann“) —
       // die eigene Berührung des Scrollers hält es sofort an.
       if (sc) { sc.scrollTop = 0; scrollAuto = performance.now(); }
-      if (vomNutzer) nutzer = performance.now();
+      if (vomNutzer) uebernimm();
       beimZeigen.forEach(function (f) { f(i); });
     }
 
@@ -74,7 +84,7 @@
         var d = dauer(cur);
         // Die Uhr der Station hält nur an, wenn die Tour nicht zu sehen ist. Wer bedient, sperrt bloß das
         // WEITERSCHALTEN (29.10.2026: nach einem Tipp in der Liste standen Vorführung und Bildtexte 14 s still).
-        var pausiert = reduce || !sichtbar, gesperrt = now - nutzer < 14000;
+        var pausiert = reduce || !sichtbar;
         if (pausiert) { if (halt === null) halt = now - t0; t0 = now - halt; } else { halt = null; }
         var p = Math.min(1, (now - t0) / d);
         var sek = reduce ? 1 : p * d / 1000;
@@ -105,7 +115,7 @@
           }
         }
         beimTakt.forEach(function (f) { f(cur, sek, pausiert, now); });
-        if (!pausiert && !gesperrt && p >= 1) zeige(cur + 1, false);
+        if (!pausiert && auto && !schwebt && p >= 1) zeige(cur + 1, false);   // Maus über der Karte: nicht weiterschalten
       }
       requestAnimationFrame(tick);
     }
@@ -114,11 +124,14 @@
     scrs.forEach(function (s, j) {
       var sc = s.querySelector('.at-scroller');
       if (sc) ['wheel', 'touchstart', 'pointerdown', 'keydown'].forEach(function (ev) {
-        sc.addEventListener(ev, function () { scrollAuto = null; nutzer = performance.now(); }, { passive: true });
+        sc.addEventListener(ev, function () { scrollAuto = null; uebernimm(); }, { passive: true });
       });
       var lp = s.querySelector('canvas.lp');                       // wer die Karte bedient, hält die Tour an
       if (lp) ['pointerdown', 'pointermove', 'touchstart', 'touchmove', 'wheel', 'keydown'].forEach(function (ev) {
-        lp.addEventListener(ev, function (e) { if (ev !== 'pointermove' || e.buttons || e.pointerType === 'mouse') nutzer = performance.now(); }, { passive: true });
+        lp.addEventListener(ev, function (e) { if (ev !== 'pointermove' || e.buttons) uebernimm(); }, { passive: true });
+      });
+      if (lp) ['pointerenter', 'pointerleave'].forEach(function (ev) {
+        lp.addEventListener(ev, function (e) { if (e.pointerType === 'mouse') schwebt = ev === 'pointerenter'; });
       });
       var v = video(j);
       if (v) v.addEventListener('ended', function () { try { v.currentTime = Math.max(0, v.duration - 0.05); } catch (e) {} });
@@ -169,11 +182,18 @@
         ebene.setAttribute('role', 'dialog'); ebene.setAttribute('aria-modal', 'true');
         ebene.addEventListener('click', function (e) { if (e.target === ebene) zu(); });
         document.body.appendChild(ebene); ebene.appendChild(dev);
-        document.documentElement.style.overflow = 'hidden'; nutzer = performance.now(); beschriften(); weiter(); knopf.focus({ preventScroll: true });
+        document.documentElement.style.overflow = 'hidden'; beschriften(); weiter(); knopf.focus({ preventScroll: true });
       };
       knopf.addEventListener('click', function (e) { e.stopPropagation(); if (ebene) zu(); else auf(); });
       document.addEventListener('keydown', function (e) { if (e.key === 'Escape') zu(); });
       beschriften(); dev.appendChild(knopf);
+      // Abspielen/Anhalten über dem Vollbild-Knopf – sichtbar, wer die Tour führt
+      autoKnopf = document.createElement('button'); autoKnopf.type = 'button'; autoKnopf.className = 'at-voll-btn at-auto-btn';
+      autoKnopf.addEventListener('click', function (e) {
+        e.stopPropagation(); auto = !auto; root.classList.toggle('at-angehalten', !auto); autoBeschriften();
+        if (auto && performance.now() - t0 >= dauer(cur)) zeige(cur + 1, false);
+      });
+      autoBeschriften(); if (!reduce) dev.appendChild(autoKnopf);   // ohne Bewegung läuft die Tour nie selbst – kein Knopf, der das Gegenteil verspricht
     }
     // ── Scroll-Stationen: Leiste + Hinweis „Scrollen“, damit erkennbar ist, dass es weitergeht ──
     var deL = document.documentElement.lang === 'de';
