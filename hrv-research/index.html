@@ -464,6 +464,7 @@ document.head.appendChild(s);})();</script>
     .sensor-ph { height: 240px; display: grid; place-items: center; background: radial-gradient(closest-side, rgba(62,207,178,.12), transparent 75%), #050707; }
     .sensor-ph span { font-size: 13px; letter-spacing: .382em; text-transform: uppercase; color: var(--t4); }
     .sensor figcaption { padding: var(--s13) 0 0; }
+    .sensor-quelle { margin-top: var(--s13); }   /* Quelle steht beim Polar, nicht unter dem Movesense (29.10., Jan: Verwechslungsgefahr) */
     .sensor:not(:has(> img)) { justify-content: center; }
     .sensor:not(:has(> img)) figcaption { padding: var(--s34); }
     .sensor h3 { font-size: 21px; font-weight: 500; margin-bottom: var(--s13); }
@@ -586,7 +587,10 @@ document.head.appendChild(s);})();</script>
       .checks, .who, .sensors { --rail-pad: clamp(21px, 5vw, 55px); display: flex; grid-template-columns: none; overflow-x: auto; scroll-snap-type: x mandatory; scroll-padding: 0 var(--rail-pad, 21px); gap: var(--s13); margin-left: calc(-1 * var(--rail-pad, 21px)); margin-right: calc(-1 * var(--rail-pad, 21px)); padding: 0 var(--rail-pad, 21px) var(--s8); scrollbar-width: none; -webkit-overflow-scrolling: touch; overscroll-behavior-x: contain; }
       .checks::-webkit-scrollbar, .who::-webkit-scrollbar, .sensors::-webkit-scrollbar { display: none; }
       .checks > *, .who > *, .sensors > * { flex: 0 0 84%; scroll-snap-align: start; }
-      .sensors { display: grid; grid-template-columns: 1fr; overflow: visible; margin: var(--s34) 0 0; padding: 0; gap: var(--s34); }   /* Sensoren ohne Kasten: untereinander statt Wischreihe */
+      .sensors { display: grid; grid-template-columns: 1fr; overflow: visible; margin: var(--s34) 0 0; padding: 0; gap: 0; }   /* Sensoren ohne Kasten: untereinander statt Wischreihe */
+      /* Nähe ordnet zu (29.10., Jan: „gequetscht, Polar wirkt wie Teil des Movesense“): Bild und Text eng, zwischen den Sensoren Luft + Haarlinie */
+      .sensor + .sensor { margin-top: var(--s55); padding-top: var(--s34); border-top: 1px solid var(--line); }
+      .sensor figcaption { padding-top: 0; }
       .sensors > * { flex: none; }
       .panel { padding: var(--s21); }
     }
@@ -787,6 +791,7 @@ try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; 
               <li data-en="Up to 95,000 beats in its own memory – read out later" data-de="Bis zu 95.000 Schläge im eigenen Speicher – später auslesen">Up to 95,000 beats in its own memory – read out later</li>
               <li data-en="Validated against ECG in peer-reviewed studies" data-de="In Peer-Review-Studien gegen EKG validiert">Validated against ECG in peer-reviewed studies</li>
             </ul>
+            <p class="cap sensor-quelle" data-en="Polar H10 validity against ECG: <a href=&quot;https://doi.org/10.1007/s00421-019-04142-5&quot; rel=&quot;noopener&quot;>Gilgen-Ammann et al. 2019</a>; <a href=&quot;https://doi.org/10.3390/s22176536&quot; rel=&quot;noopener&quot;>Schaffarczyk et al. 2022</a>." data-de="Validität des Polar H10 gegen EKG: <a href=&quot;https://doi.org/10.1007/s00421-019-04142-5&quot; rel=&quot;noopener&quot;>Gilgen-Ammann et al. 2019</a>; <a href=&quot;https://doi.org/10.3390/s22176536&quot; rel=&quot;noopener&quot;>Schaffarczyk et al. 2022</a>.">Polar H10 validity against ECG: <a href="https://doi.org/10.1007/s00421-019-04142-5" rel="noopener">Gilgen-Ammann et al. 2019</a>; <a href="https://doi.org/10.3390/s22176536" rel="noopener">Schaffarczyk et al. 2022</a>.</p>
           </figcaption>
         </figure>
         <figure class="sensor" id="movesenseCard">
@@ -802,7 +807,6 @@ try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; 
           </figcaption>
         </figure>
       </div>
-      <p class="cap rv" data-en="Polar H10 validity against ECG: <a href=&quot;https://doi.org/10.1007/s00421-019-04142-5&quot; rel=&quot;noopener&quot;>Gilgen-Ammann et al. 2019</a>; <a href=&quot;https://doi.org/10.3390/s22176536&quot; rel=&quot;noopener&quot;>Schaffarczyk et al. 2022</a>." data-de="Validität des Polar H10 gegen EKG: <a href=&quot;https://doi.org/10.1007/s00421-019-04142-5&quot; rel=&quot;noopener&quot;>Gilgen-Ammann et al. 2019</a>; <a href=&quot;https://doi.org/10.3390/s22176536&quot; rel=&quot;noopener&quot;>Schaffarczyk et al. 2022</a>.">Polar H10 validity against ECG: <a href="https://doi.org/10.1007/s00421-019-04142-5" rel="noopener">Gilgen-Ammann et al. 2019</a>; <a href="https://doi.org/10.3390/s22176536" rel="noopener">Schaffarczyk et al. 2022</a>.</p>
     </div>
   </section>
 
