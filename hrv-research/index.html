@@ -611,15 +611,23 @@ document.head.appendChild(s);})();</script>
   <symbol id="i-lab" viewBox="0 0 32 32"><path d="M12.5 4h7M13.5 4v8.5L6.8 24.6A2.3 2.3 0 0 0 8.8 28h14.4a2.3 2.3 0 0 0 2-3.4L18.5 12.5V4"/><path d="M9.5 20h13" opacity=".55"/></symbol>
 </defs></svg>
 <script>document.documentElement.classList.add('js');
-// Öffnen beginnt oben (28.10., Jan): Safari stellt beim Neuladen die alte Scrollposition wieder her.
-// Ohne Anker im Link immer an den Anfang; Links mit #Abschnitt springen weiter gezielt.
+// Öffnen beginnt oben (28.10., Jan; verschärft 29.10.: „lädt noch bei FAQ“). Ein Anker zählt nur, wenn der
+// Besucher von einer ANDEREN Seite herkommt. Neu laden, wiederhergestellter Tab, Lesezeichen oder Verlauf
+// mit altem #faq beginnen oben, und der Anker verschwindet aus der Adresse.
 try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; } catch (e) {}
-if (!location.hash) {
+(function () {
+  var von = '';
+  try { von = document.referrer ? new URL(document.referrer).pathname : ''; } catch (e) {}
+  var nav = (performance.getEntriesByType && performance.getEntriesByType('navigation')[0] || {}).type;
+  var fremd = von && von.replace(/de\/$/, '') !== location.pathname.replace(/de\/$/, '');
+  if (location.hash && fremd && nav === 'navigate') return;
+  if (location.hash) try { history.replaceState(null, '', location.pathname + location.search); } catch (e) {}
   window.scrollTo(0, 0);
-  var vkSelbst = false, vkMerk = function () { vkSelbst = true; };   // hat der Nutzer schon gescrollt, reißt das Laden ihn nicht zurück
-  addEventListener('touchstart', vkMerk, { once: true, passive: true }); addEventListener('wheel', vkMerk, { once: true, passive: true }); addEventListener('keydown', vkMerk, { once: true });
-  addEventListener('load', function () { if (!vkSelbst && !location.hash) window.scrollTo(0, 0); });
-}</script>
+  var selbst = false, merk = function () { selbst = true; };   // hat der Nutzer schon gescrollt, reißt das Laden ihn nicht zurück
+  addEventListener('touchstart', merk, { once: true, passive: true }); addEventListener('wheel', merk, { once: true, passive: true }); addEventListener('keydown', merk, { once: true });
+  addEventListener('load', function () { if (!selbst) window.scrollTo(0, 0); });
+  addEventListener('pageshow', function (e) { if (e.persisted && !selbst) window.scrollTo(0, 0); });
+})();</script>
 
 <header class="nav">
   <div class="wrap">
