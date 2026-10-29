@@ -208,7 +208,7 @@ document.head.appendChild(s);})();</script>
     table.seg td { text-align: right; padding: var(--s13) 0; border-top: 1px solid var(--line); color: var(--t2); }
     table.seg td:first-child { color: var(--t); }
     table.seg .dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: var(--s8); vertical-align: middle; }
-    .cap { font-size: 13px; color: var(--t4); margin-top: var(--s21); line-height: 1.5; }
+    .cap { font-size: 13px; color: var(--t3); margin-top: var(--s21); line-height: 1.55; }
     .a1-chart { width: 100%; height: auto; margin-top: var(--s8); }
     .a1-chart .a1 { fill: none; stroke: url(#a1g); stroke-width: 2.2; stroke-linejoin: round; }
     .a1-chart .hr { fill: none; stroke: rgba(235,230,220,.16); stroke-width: 1.3; }
@@ -442,7 +442,7 @@ document.head.appendChild(s);})();</script>
     .tour-hint { text-align: center; font-size: 13px; color: var(--t4); margin-top: var(--s21); }
 
     /* Sensoren */
-    .sensors { display: grid; grid-template-columns: 1.35fr 1fr; gap: var(--s21); margin-top: var(--s55); }
+    .sensors { display: grid; grid-template-columns: 1fr 1fr; gap: var(--s21); margin-top: var(--s55); }
     .sensor { margin: 0; border: 1px solid var(--line); border-radius: 21px; overflow: hidden; background: rgba(255,255,255,.015); display: flex; flex-direction: column; }
     .sensor > img { width: 100%; height: auto; aspect-ratio: 2 / 1; object-fit: cover; display: block; }   /* beide Bilder 2:1, Sensor im Bild (29.10.) */
     .sensor-ph { height: 240px; display: grid; place-items: center; background: radial-gradient(closest-side, rgba(62,207,178,.12), transparent 75%), #050707; }
@@ -464,7 +464,7 @@ document.head.appendChild(s);})();</script>
       .tour-phone .at-device { margin-left: auto; margin-right: auto; }   /* 28.10. (Jan): Hinweis darunter machte den Block breit, das iPhone stand links */
       .tour-txt { text-align: left; }
       .feats { max-width: none; }
-      .sensors { grid-template-columns: 1fr; }
+      .sensors { grid-template-columns: 1fr 1fr; }   /* Tablet: nebeneinander – einspaltig wurde das Polar-Bild riesig und weich (29.10.) */
     }
 
     /* Kinobühne */
@@ -1066,7 +1066,7 @@ if (!location.hash) {
         <a class="btn btn-1" href="mailto:jan@vitalkultur.com?subject=CARLON%20HRV%20Research%20%E2%80%93%20beta%20access&amp;body=Hi%20Jan%2C%0A%0AI%27d%20like%20to%20test%20CARLON%20HRV%20Research.%0A%0AInstitution%20/%20lab%3A%0ASensors%20%28Polar%20H10%20/%20Movesense%29%3A%0AStudy%20or%20use%20case%3A%0AEmail%20for%20the%20TestFlight%20invitation%3A%0A%0ABest%20regards%2C%0A" data-beta><span data-en="Request beta access" data-de="Beta-Zugang anfragen">Request beta access</span> <span aria-hidden="true">→</span></a>
         <a class="btn btn-2" href="mailto:jan@vitalkultur.com?subject=CARLON%20HRV%20Research"><span data-en="Questions? Write to Jan" data-de="Fragen? Schreiben Sie Jan">Questions? Write to Jan</span></a>
       </div>
-      <p class="cap" style="text-align:center" data-en="No mail app on this computer? Write to jan@vitalkultur.com – Jan answers every request personally." data-de="Kein Mailprogramm auf diesem Rechner? Schreiben Sie an jan@vitalkultur.com – Jan beantwortet jede Anfrage persönlich.">No mail app on this computer? Write to jan@vitalkultur.com – Jan answers every request personally.</p>
+      <p class="cap" style="text-align:center" data-en="Prefer to write directly? jan@vitalkultur.com – Jan answers every request personally." data-de="Lieber direkt schreiben? jan@vitalkultur.com – Jan beantwortet jede Anfrage persönlich.">Prefer to write directly? jan@vitalkultur.com – Jan answers every request personally.</p>
       <p class="cap" style="text-align:center" data-en="Page updated 29 Oct 2026 · app 1.4 (build 2026102801) · validation dossier 1.4" data-de="Seite aktualisiert am 29.10.2026 · App 1.4 (Build 2026102801) · Validierungsdossier 1.4">Page updated 29 Oct 2026 · app 1.4 (build 2026102801) · validation dossier 1.4</p>
       <p class="legal" data-en="For research and wellness use. Not a medical device. Polar H10, Movesense and Kubios are trademarks of their respective owners; CARLON HRV Research is an independent app and not affiliated with them." data-de="Für Forschung und Wellness. Kein Medizinprodukt. Polar H10, Movesense und Kubios sind Marken ihrer jeweiligen Inhaber; CARLON HRV Research ist eine unabhängige App und nicht mit ihnen verbunden.">For research and wellness use. Not a medical device. Polar H10, Movesense and Kubios are trademarks of their respective owners; CARLON HRV Research is an independent app and not affiliated with them.</p>
     </div>
