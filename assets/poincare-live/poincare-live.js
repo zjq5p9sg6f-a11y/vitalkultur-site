@@ -495,12 +495,17 @@
       d = j; f = fZiel = reduce ? 1 : 0; groesse(); zeichnen(); cv.classList.add('bereit');
       if ('ResizeObserver' in window) new ResizeObserver(groesse).observe(cv); else window.addEventListener('resize', groesse);
       if (!('IntersectionObserver' in window)) return;
-      var erstes = true;
-      new IntersectionObserver(function (es) {
-        if (!es[0].isIntersecting || genutzt) return;
-        if (erstes && !reduce) { erstes = false; setTimeout(vorfuehren, 500); }
+      var erstes = true, imBild = false;
+      // In der App-Tour ist die Karte eine Station: vorführen erst, wenn sie die aktive ist (29.10.2026)
+      var station = dev.classList.contains('at-scr');
+      var aktivStation = function () { return !station || dev.classList.contains('on'); };
+      var anstossen = function () {
+        if (!imBild || genutzt || !aktivStation()) return;
+        if (erstes && !reduce) { erstes = false; setTimeout(function () { if (aktivStation()) vorfuehren(); else erstes = true; }, 500); }
         else erinnern();                                            // beim erneuten Vorbeiscrollen kurz erinnern
-      }, { threshold: 0.6 }).observe(cv);
+      };
+      new IntersectionObserver(function (es) { imBild = es[0].isIntersecting; anstossen(); }, { threshold: 0.6 }).observe(cv);
+      if (station && 'MutationObserver' in window) new MutationObserver(anstossen).observe(dev, { attributes: true, attributeFilter: ['class'] });
     }).catch(function () {});
   }
   function alle() { [].forEach.call(document.querySelectorAll('[data-poincare-live]'), init); }

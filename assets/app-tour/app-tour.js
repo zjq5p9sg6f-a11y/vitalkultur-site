@@ -89,13 +89,20 @@
       if (sc) ['wheel', 'touchstart', 'pointerdown', 'keydown'].forEach(function (ev) {
         sc.addEventListener(ev, function () { scrollAuto = null; nutzer = performance.now(); }, { passive: true });
       });
+      var lp = s.querySelector('canvas.lp');                       // wer die Karte bedient, hält die Tour an
+      if (lp) ['pointerdown', 'pointermove', 'touchstart', 'touchmove', 'wheel', 'keydown'].forEach(function (ev) {
+        lp.addEventListener(ev, function (e) { if (ev !== 'pointermove' || e.buttons || e.pointerType === 'mouse') nutzer = performance.now(); }, { passive: true });
+      });
       var v = video(j);
       if (v) v.addEventListener('ended', function () { try { v.currentTime = Math.max(0, v.duration - 0.05); } catch (e) {} });
     });
     var screen = root.querySelector('.at-screen'), sx = 0, sy = 0;
     if (screen) {
-      screen.addEventListener('touchstart', function (e) { sx = e.touches[0].clientX; sy = e.touches[0].clientY; }, { passive: true });
+      // Bedienbare Fläche (Poincaré live): Ziehen dort ist Bedienung, kein Wischen zur nächsten Station
+      var bedient = false;
+      screen.addEventListener('touchstart', function (e) { bedient = !!(e.target.closest && e.target.closest('canvas.lp')); sx = e.touches[0].clientX; sy = e.touches[0].clientY; }, { passive: true });
       screen.addEventListener('touchend', function (e) {
+        if (bedient) return;
         var dx = e.changedTouches[0].clientX - sx, dy = e.changedTouches[0].clientY - sy;
         if (Math.abs(dx) > 40 && Math.abs(dx) > Math.abs(dy) * 1.4) zeige(cur + (dx < 0 ? 1 : -1), true);
       }, { passive: true });
