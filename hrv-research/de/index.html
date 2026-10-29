@@ -375,16 +375,21 @@ document.head.appendChild(s);})();</script>
     .steps li::before { content: counter(s); width: 26px; height: 26px; border-radius: 50%; border: 1px solid var(--line2); color: var(--stille); font-size: 13px; display: grid; place-items: center; margin-top: 1px; }
 
     /* Vorher / mit CARLON */
-    .compare { display: grid; grid-template-columns: 1fr 1fr; gap: 0; margin-top: var(--s55); border: 1px solid var(--line); border-radius: 21px; overflow: hidden; }
-    .compare > div { padding: var(--s34); }
-    .compare .before { background: rgba(255,255,255,.012); border-right: 1px solid var(--line); }
-    .compare .with { background: linear-gradient(180deg, rgba(62,207,178,.07), rgba(62,207,178,.02)); }
-    .compare h3 { font-size: 13px; letter-spacing: .1em; text-transform: uppercase; font-weight: 500; margin-bottom: var(--s21); }
-    .compare .before h3 { color: var(--t3); } .compare .with h3 { color: var(--stille); }
-    .compare ul { list-style: none; display: grid; gap: var(--s13); }
-    .compare li { font-size: 16px; color: var(--t2); padding-left: var(--s21); position: relative; }
-    .compare .before li::before { content: "–"; position: absolute; left: 0; color: var(--t4); }
-    .compare .with li::before { content: "✓"; position: absolute; left: 0; color: var(--stille); font-size: 14px; }
+    /* Vergleich paarweise (29.10.2026, Jan: „sieht nicht gut aus, vor allem auf dem iPhone“): jedes „Ohne“ steht
+       neben seinem „Mit“; auf dem iPhone eine Karte je Paar mit Übergangspfeil. */
+    .compare { margin-top: var(--s55); display: grid; gap: 10px; }
+    .cmp-kopf, .cmp-zeile { display: grid; grid-template-columns: 1fr 34px 1fr; align-items: center; gap: var(--s13); }
+    .cmp-kopf { padding: 0 var(--s21) 4px; font-size: 12px; letter-spacing: .14em; text-transform: uppercase; font-weight: 600; }
+    .cmp-kopf .vorher { color: var(--t4); } .cmp-kopf .nachher { grid-column: 3; color: var(--stille); }
+    .cmp-zeile { padding: 18px var(--s21); border-radius: 18px; border: 1px solid var(--line);
+      background: linear-gradient(90deg, rgba(255,255,255,.012) 0 50%, rgba(62,207,178,.055) 50% 100%); }
+    .cmp-zeile p { margin: 0; font-size: 16px; line-height: 1.45; position: relative; padding-left: 28px; }
+    .cmp-zeile .vorher { color: var(--t3); }
+    .cmp-zeile .nachher { color: var(--t); }
+    .cmp-zeile p::before { content: ""; position: absolute; left: 0; top: .2em; width: 18px; height: 18px; border-radius: 50%; }
+    .cmp-zeile .vorher::before { background: rgba(235,230,220,.07) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 18 18'%3E%3Cpath d='M6.2 6.2l5.6 5.6M11.8 6.2l-5.6 5.6' stroke='%23999' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E") center / 18px no-repeat; }
+    .cmp-zeile .nachher::before { background: rgba(62,207,178,.16) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 18 18'%3E%3Cpath d='M5.3 9.3l2.4 2.4 5-5.2' fill='none' stroke='%233ECFB2' stroke-width='1.7' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center / 18px no-repeat; }
+    .cmp-pfeil { width: 22px; height: 22px; justify-self: center; fill: none; stroke: var(--stille); stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; opacity: .7; }
 
     /* Galerie (Kanon: Breathwork gal-*) */
     .gal { margin-top: var(--s55); }
@@ -420,11 +425,12 @@ document.head.appendChild(s);})();</script>
 
     @media (max-width: 900px) {
       .demo, .outputs { grid-template-columns: 1fr; gap: var(--s55); }
-      .compare { grid-template-columns: 1fr; }
-      .compare .before { border-right: 0; border-bottom: 1px solid var(--line); }
+      .cmp-kopf { display: none; }
+      .cmp-zeile { grid-template-columns: 1fr; gap: 10px; padding: 18px 18px 19px; background: linear-gradient(180deg, rgba(255,255,255,.014), rgba(62,207,178,.06)); }
+      .cmp-pfeil { transform: rotate(90deg); justify-self: start; margin-left: -2px; width: 20px; height: 20px; }
+      .cmp-zeile .vorher { font-size: 15px; }
       .scrub-cap { padding-left: 0; }
     }
-    @media (max-width: 560px) { .compare > div { padding: var(--s21); } }
 
 
     /* Hero-Tour (Layout; Gerät + Liste aus /assets/app-tour/app-tour.css) */
@@ -440,7 +446,7 @@ document.head.appendChild(s);})();</script>
     /* Sensoren */
     .sensors { display: grid; grid-template-columns: 1.35fr 1fr; gap: var(--s21); margin-top: var(--s55); }
     .sensor { margin: 0; border: 1px solid var(--line); border-radius: 21px; overflow: hidden; background: rgba(255,255,255,.015); display: flex; flex-direction: column; }
-    .sensor > img { width: 100%; height: 240px; object-fit: cover; object-position: 50% 40%; }
+    .sensor > img { width: 100%; height: auto; aspect-ratio: 2 / 1; object-fit: cover; display: block; }   /* beide Bilder 2:1, Sensor im Bild (29.10.) */
     .sensor-ph { height: 240px; display: grid; place-items: center; background: radial-gradient(closest-side, rgba(62,207,178,.12), transparent 75%), #050707; }
     .sensor-ph span { font-size: 13px; letter-spacing: .382em; text-transform: uppercase; color: var(--t4); }
     .sensor figcaption { padding: var(--s21) var(--s34) var(--s34); }
@@ -449,7 +455,10 @@ document.head.appendChild(s);})();</script>
     .sensor h3 { font-size: 21px; font-weight: 500; margin-bottom: var(--s13); }
     .sensor ul { list-style: none; display: grid; gap: var(--s8); }
     .sensor li { color: var(--t2); font-size: 15px; padding-left: var(--s21); position: relative; }
-    .sensor li::before { content: ""; position: absolute; left: 0; top: .72em; width: 8px; height: 1px; background: var(--stille); }
+    .sensor ul { gap: 11px; }
+    .sensor li { padding-left: 26px; line-height: 1.5; }
+    .sensor li::before { content: ""; position: absolute; left: 2px; top: .48em; width: 14px; height: 14px; border-radius: 50%;
+      background: radial-gradient(circle at 50% 50%, var(--stille) 0 3px, rgba(62,207,178,.16) 3.5px 7px, transparent 7.5px); }
 
     @media (max-width: 960px) {
       .tour { grid-template-columns: 1fr; gap: var(--s34); }
@@ -737,7 +746,7 @@ if (!location.hash) {
       </div>
       <div class="sensors rv">
         <figure class="sensor">
-          <img src="/assets/polar-h10-human.jpg" width="1600" height="496" alt="Polar H10 chest strap worn on the torso" loading="lazy" decoding="async">
+          <img src="../assets/v14/polar-h10-strap.webp" width="904" height="452" alt="Hands fastening a Polar H10 sensor to its chest strap" loading="lazy" decoding="async">
           <figcaption>
             <h3>Polar H10</h3>
             <ul>
@@ -748,7 +757,7 @@ if (!location.hash) {
           </figcaption>
         </figure>
         <figure class="sensor" id="movesenseCard">
-          <img src="../assets/v14/movesense-flash-900.webp" srcset="../assets/v14/movesense-flash-900.webp 900w, ../assets/v14/movesense-flash-1600.webp 1600w" sizes="(max-width: 900px) 92vw, 440px" width="900" height="500" alt="Movesense Flash sensor clipped onto its chest strap" loading="lazy" decoding="async" style="object-position:50% 50%">
+          <img src="../assets/v14/movesense-flash-2x1.webp" width="1200" height="600" alt="Movesense Flash sensor clipped onto its chest strap" loading="lazy" decoding="async">
           <figcaption>
             <h3>Movesense Flash</h3>
             <ul>
@@ -773,26 +782,12 @@ if (!location.hash) {
         <p class="sub" data-en="The measurement takes an hour. The work around it often takes longer – this is what the app takes off your hands." data-de="Die Messung dauert eine Stunde. Die Arbeit drumherum oft länger – die nimmt Ihnen die App ab.">Die Messung dauert eine Stunde. Die Arbeit drumherum oft länger – die nimmt Ihnen die App ab.</p>
       </div>
       <div class="compare rv">
-        <div class="before">
-          <h3 data-en="Without" data-de="Ohne">Ohne</h3>
-          <ul>
-            <li data-en="One phone or strap app per participant" data-de="Ein Handy oder eine Gurt-App pro Proband">Ein Handy oder eine Gurt-App pro Proband</li>
-            <li data-en="Files copied out, renamed, matched to people by hand" data-de="Dateien herauskopieren, umbenennen, von Hand Personen zuordnen">Dateien herauskopieren, umbenennen, von Hand Personen zuordnen</li>
-            <li data-en="Start times and phase changes noted on paper and retyped" data-de="Startzeiten und Phasenwechsel auf Papier notiert und abgetippt">Startzeiten und Phasenwechsel auf Papier notiert und abgetippt</li>
-            <li data-en="Each phase cut out in a spreadsheet before analysis" data-de="Jede Phase vor der Auswertung in einer Tabelle ausgeschnitten">Jede Phase vor der Auswertung in einer Tabelle ausgeschnitten</li>
-            <li data-en="Methods text and figures written and drawn from scratch" data-de="Methodentext und Grafiken von Grund auf geschrieben und gezeichnet">Methodentext und Grafiken von Grund auf geschrieben und gezeichnet</li>
-          </ul>
-        </div>
-        <div class="with">
-          <h3>CARLON HRV Research</h3>
-          <ul>
-            <li data-en="All sensors read out in one go, each to its participant" data-de="Alle Sensoren in einem Zug ausgelesen, jeder zu seiner Person">Alle Sensoren in einem Zug ausgelesen, jeder zu seiner Person</li>
-            <li data-en="Every recording is matched to its participant, with its true start time" data-de="Jede Aufnahme wird ihrer Person zugeordnet, mit echter Startzeit">Jede Aufnahme wird ihrer Person zugeordnet, mit echter Startzeit</li>
-            <li data-en="Phases marked with one tap, each with its clock time" data-de="Phasen per Tipp markiert, mit Uhrzeit">Phasen per Tipp markiert, mit Uhrzeit</li>
-            <li data-en="A segment table with values per phase, ready for Kubios or R" data-de="Eine Segmenttabelle mit Werten je Phase, bereit für Kubios oder R">Eine Segmenttabelle mit Werten je Phase, bereit für Kubios oder R</li>
-            <li data-en="A methods paragraph, citation and figures in journal column widths" data-de="Methodenabsatz, Zitiervorschlag und Grafiken in Zeitschriftenbreite">Methodenabsatz, Zitiervorschlag und Grafiken in Zeitschriftenbreite</li>
-          </ul>
-        </div>
+        <div class="cmp-kopf" aria-hidden="true"><span class="vorher" data-en="Without" data-de="Ohne">Ohne</span><span class="nachher">CARLON HRV Research</span></div>
+        <div class="cmp-zeile"><p class="vorher" data-en="One phone or strap app per participant" data-de="Ein Handy oder eine Gurt-App pro Proband">Ein Handy oder eine Gurt-App pro Proband</p><svg class="cmp-pfeil" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h13M13 6l6 6-6 6"/></svg><p class="nachher" data-en="All sensors read out in one go, each to its participant" data-de="Alle Sensoren in einem Zug ausgelesen, jeder zu seiner Person">Alle Sensoren in einem Zug ausgelesen, jeder zu seiner Person</p></div>
+        <div class="cmp-zeile"><p class="vorher" data-en="Files copied out, renamed, matched to people by hand" data-de="Dateien herauskopieren, umbenennen, von Hand Personen zuordnen">Dateien herauskopieren, umbenennen, von Hand Personen zuordnen</p><svg class="cmp-pfeil" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h13M13 6l6 6-6 6"/></svg><p class="nachher" data-en="Every recording is matched to its participant, with its true start time" data-de="Jede Aufnahme wird ihrer Person zugeordnet, mit echter Startzeit">Jede Aufnahme wird ihrer Person zugeordnet, mit echter Startzeit</p></div>
+        <div class="cmp-zeile"><p class="vorher" data-en="Start times and phase changes noted on paper and retyped" data-de="Startzeiten und Phasenwechsel auf Papier notiert und abgetippt">Startzeiten und Phasenwechsel auf Papier notiert und abgetippt</p><svg class="cmp-pfeil" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h13M13 6l6 6-6 6"/></svg><p class="nachher" data-en="Phases marked with one tap, each with its clock time" data-de="Phasen per Tipp markiert, mit Uhrzeit">Phasen per Tipp markiert, mit Uhrzeit</p></div>
+        <div class="cmp-zeile"><p class="vorher" data-en="Each phase cut out in a spreadsheet before analysis" data-de="Jede Phase vor der Auswertung in einer Tabelle ausgeschnitten">Jede Phase vor der Auswertung in einer Tabelle ausgeschnitten</p><svg class="cmp-pfeil" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h13M13 6l6 6-6 6"/></svg><p class="nachher" data-en="A segment table with values per phase, ready for Kubios or R" data-de="Eine Segmenttabelle mit Werten je Phase, bereit für Kubios oder R">Eine Segmenttabelle mit Werten je Phase, bereit für Kubios oder R</p></div>
+        <div class="cmp-zeile"><p class="vorher" data-en="Methods text and figures written and drawn from scratch" data-de="Methodentext und Grafiken von Grund auf geschrieben und gezeichnet">Methodentext und Grafiken von Grund auf geschrieben und gezeichnet</p><svg class="cmp-pfeil" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h13M13 6l6 6-6 6"/></svg><p class="nachher" data-en="A methods paragraph, citation and figures in journal column widths" data-de="Methodenabsatz, Zitiervorschlag und Grafiken in Zeitschriftenbreite">Methodenabsatz, Zitiervorschlag und Grafiken in Zeitschriftenbreite</p></div>
       </div>
     </div>
   </section>
