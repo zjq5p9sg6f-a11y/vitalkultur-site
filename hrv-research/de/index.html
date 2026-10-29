@@ -485,6 +485,13 @@ document.head.appendChild(s);})();</script>
     .kino img { width: 100%; height: auto; display: block; }
     .kino::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, var(--bg) 0%, transparent 14%, transparent 62%, var(--bg) 100%); pointer-events: none; }
     .kino-txt { position: relative; z-index: 2; margin-top: -9vw; }
+    /* α1-Karte aus der echten Aufnahme neben dem Text (29.10.2026, Jan: Grafik der App fehlte) */
+    .kino-txt { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, .85fr); column-gap: 56px; align-items: start; }
+    .kino-txt > :not(.a1-karte) { grid-column: 1; }
+    .a1-karte { grid-column: 2; grid-row: 1 / span 6; margin: 40px 0 0; }
+    .a1-karte img { width: 100%; height: auto; display: block; border-radius: 22px; box-shadow: 0 30px 70px rgba(0,0,0,.5), 0 0 0 1px rgba(255,255,255,.08); }
+    .a1-karte figcaption { margin-top: 14px; font-size: 13px; line-height: 1.55; opacity: .72; }
+    @media (max-width: 900px) { .kino-txt { grid-template-columns: 1fr; } .a1-karte { grid-column: 1; grid-row: auto; margin-top: 32px; max-width: 440px; } }
     /* iPhone (28.10., Jan: „beim iPhone etwas runter gerutscht“): das Mobil-Bild hat oben 22 % Schwarz und endet bei 87 % —
        weniger Abstand darüber, Text erst UNTER dem Band statt 14vw hinein. iPad/Desktop unverändert. */
     @media (max-width: 700px) { .kino { margin-top: var(--s55); } .kino-txt { margin-top: -3vw; } }
@@ -803,26 +810,6 @@ if (!location.hash) {
     </div>
   </section>
 
-  <!-- 3 · Vorführung mit echten Daten -->
-  <section class="ch" id="replay">
-    <div class="wrap demo">
-      <div class="device-glow rv">
-        <div class="device" data-poincare-live="/hrv-research/assets/v14/poincare-live.json" data-start="19:47:13">
-          <img decoding="async" loading="lazy" class="lp-bg" src="../assets/v14/poincare-live-bg.webp" width="1320" height="2868" alt="" aria-hidden="true">
-          <canvas class="lp" tabindex="0" role="img" aria-label="The app's Poincaré card with a real 100-minute recording. Drag the time slider to rebuild the cloud; press and hold on the cloud for the crosshair with values."></canvas>
-          <img decoding="async" loading="lazy" class="bezel" src="../assets/v14/bezel.webp" width="735" height="1500" alt="">
-        </div>
-      </div>
-      <div class="txt rv">
-        <div class="label" data-en="Real recording, real app" data-de="Echte Aufnahme, echte App">Echte Aufnahme, echte App</div>
-        <h2 data-en="Watch the pattern <em>change over time.</em>" data-de="Sehen Sie, wann sich <em>das Muster ändert.</em>">Sehen Sie, wann sich <em>das Muster ändert.</em></h2>
-        <p class="sub" data-en="A 100-minute session – rest, training, recovery – from one Polar H10. The time slider rebuilds the Poincaré cloud beat by beat; touch and hold to read any beat with its clock time." data-de="Eine 100-minütige Sitzung – Ruhe, Training, Erholung – von einem Polar H10. Der Zeitregler baut die Poincaré-Wolke Schlag für Schlag auf; halten und ziehen zeigt jeden Schlag mit Uhrzeit.">Eine 100-minütige Sitzung – Ruhe, Training, Erholung – von einem Polar H10. Der Zeitregler baut die Poincaré-Wolke Schlag für Schlag auf; halten und ziehen zeigt jeden Schlag mit Uhrzeit.</p>
-        <p class="pv-hint" data-en="Drag the time slider – the cloud builds up beat by beat. Then press and hold on the cloud: the crosshair shows each beat with its clock time." data-de="Ziehen Sie den Zeitregler – die Wolke baut sich Schlag für Schlag auf. Dann auf der Wolke halten: Das Fadenkreuz zeigt jeden Schlag mit Uhrzeit.">Ziehen Sie den Zeitregler – die Wolke baut sich Schlag für Schlag auf. Dann auf der Wolke halten: Das Fadenkreuz zeigt jeden Schlag mit Uhrzeit.</p>
-        <p class="cap" data-en="The app&#39;s Poincaré card with a real recording: Polar H10 internal memory, 100 minutes, 11,131 beats. Background = app screen; points and SD values are the app&#39;s own pairs, drawn live." data-de="Die Poincaré-Karte der App mit einer echten Aufnahme: Polar-H10-Sensorspeicher, 100 Minuten, 11.131 Schläge. Hintergrund = App-Bildschirm; Punkte und SD-Werte sind die Paare der App selbst, live gezeichnet.">Die Poincaré-Karte der App mit einer echten Aufnahme: Polar-H10-Sensorspeicher, 100 Minuten, 11.131 Schläge. Hintergrund = App-Bildschirm; Punkte und SD-Werte sind die Paare der App selbst, live gezeichnet.</p>
-      </div>
-    </div>
-  </section>
-
   <!-- 4 · Ablauf -->
   <section class="ch" id="workflow">
     <div class="wrap">
@@ -925,18 +912,22 @@ if (!location.hash) {
     </div>
   </section>
 
-  <!-- 5a · Zukunftssicher: Rohdaten bleiben, Auswertung wird besser -->
-  <section class="ch" id="future-proof">
-    <div class="wrap">
-      <div class="rv" style="max-width:780px">
-        <div class="label" data-en="Future-proof by design" data-de="Zukunftssicher gebaut">Zukunftssicher gebaut</div>
-        <h2 data-en="Recompute with every update – <em>or cite the version you used.</em>" data-de="Mit jedem Update neu rechnen – <em>oder die Version zitieren, mit der Sie gerechnet haben.</em>">Mit jedem Update neu rechnen – <em>oder die Version zitieren, mit der Sie gerechnet haben.</em></h2>
-        <p class="sub" data-en="The app stores what the sensor measured – nothing else. Every metric is computed fresh from those originals, so methods can improve without your data ever being touched." data-de="Die App speichert, was der Sensor gemessen hat – sonst nichts. Jede Kennzahl wird aus diesen Originaldaten neu berechnet, so können Methoden besser werden, ohne dass Ihre Daten je angefasst werden.">Die App speichert, was der Sensor gemessen hat – sonst nichts. Jede Kennzahl wird aus diesen Originaldaten neu berechnet, so können Methoden besser werden, ohne dass Ihre Daten je angefasst werden.</p>
+  <!-- 3 · Vorführung mit echten Daten -->
+  <section class="ch" id="replay">
+    <div class="wrap demo">
+      <div class="device-glow rv">
+        <div class="device" data-poincare-live="/hrv-research/assets/v14/poincare-live.json" data-start="19:47:13">
+          <img decoding="async" loading="lazy" class="lp-bg" src="../assets/v14/poincare-live-bg.webp" width="1320" height="2868" alt="" aria-hidden="true">
+          <canvas class="lp" tabindex="0" role="img" aria-label="The app's Poincaré card with a real 100-minute recording. Drag the time slider to rebuild the cloud; press and hold on the cloud for the crosshair with values."></canvas>
+          <img decoding="async" loading="lazy" class="bezel" src="../assets/v14/bezel.webp" width="735" height="1500" alt="">
+        </div>
       </div>
-      <div class="checks rv">
-        <div class="check"><svg class="ic" aria-hidden="true"><use href="#i-orig"/></svg><b data-en="Originals" data-de="Original">Original</b><p data-en="RR intervals are kept exactly as recorded – never smoothed, corrected or overwritten." data-de="RR-Intervalle bleiben genau wie erfasst – nie geglättet, korrigiert oder überschrieben.">RR-Intervalle bleiben genau wie erfasst – nie geglättet, korrigiert oder überschrieben.</p></div>
-        <div class="check"><svg class="ic" aria-hidden="true"><use href="#i-retro"/></svg><b data-en="Retroactive" data-de="Rückwirkend">Rückwirkend</b><p data-en="An improved method applies to every recording you have ever made – open or re-export it to get the latest analysis." data-de="Eine verbesserte Methode gilt für jede Aufnahme, die Sie je gemacht haben – öffnen oder neu exportieren, schon ist die neueste Auswertung da.">Eine verbesserte Methode gilt für jede Aufnahme, die Sie je gemacht haben – öffnen oder neu exportieren, schon ist die neueste Auswertung da.</p></div>
-        <div class="check"><svg class="ic" aria-hidden="true"><use href="#i-recalc"/></svg><b data-en="Recomputable" data-de="Nachrechenbar">Nachrechenbar</b><p data-en="Every export names the app version and the exact method. Anyone can recompute it with open tools – for peer review, replication or new methods." data-de="Jeder Export nennt App-Version und genaue Methode. Jeder kann ihn mit offenen Werkzeugen nachrechnen – für Peer Review, Replikation oder neue Verfahren.">Jeder Export nennt App-Version und genaue Methode. Jeder kann ihn mit offenen Werkzeugen nachrechnen – für Peer Review, Replikation oder neue Verfahren.</p></div>
+      <div class="txt rv">
+        <div class="label" data-en="Real recording, real app" data-de="Echte Aufnahme, echte App">Echte Aufnahme, echte App</div>
+        <h2 data-en="Watch the pattern <em>change over time.</em>" data-de="Sehen Sie, wann sich <em>das Muster ändert.</em>">Sehen Sie, wann sich <em>das Muster ändert.</em></h2>
+        <p class="sub" data-en="A 100-minute session – rest, training, recovery – from one Polar H10. The time slider rebuilds the Poincaré cloud beat by beat; touch and hold to read any beat with its clock time." data-de="Eine 100-minütige Sitzung – Ruhe, Training, Erholung – von einem Polar H10. Der Zeitregler baut die Poincaré-Wolke Schlag für Schlag auf; halten und ziehen zeigt jeden Schlag mit Uhrzeit.">Eine 100-minütige Sitzung – Ruhe, Training, Erholung – von einem Polar H10. Der Zeitregler baut die Poincaré-Wolke Schlag für Schlag auf; halten und ziehen zeigt jeden Schlag mit Uhrzeit.</p>
+        <p class="pv-hint" data-en="Drag the time slider – the cloud builds up beat by beat. Then press and hold on the cloud: the crosshair shows each beat with its clock time." data-de="Ziehen Sie den Zeitregler – die Wolke baut sich Schlag für Schlag auf. Dann auf der Wolke halten: Das Fadenkreuz zeigt jeden Schlag mit Uhrzeit.">Ziehen Sie den Zeitregler – die Wolke baut sich Schlag für Schlag auf. Dann auf der Wolke halten: Das Fadenkreuz zeigt jeden Schlag mit Uhrzeit.</p>
+        <p class="cap" data-en="The app&#39;s Poincaré card with a real recording: Polar H10 internal memory, 100 minutes, 11,131 beats. Background = app screen; points and SD values are the app&#39;s own pairs, drawn live." data-de="Die Poincaré-Karte der App mit einer echten Aufnahme: Polar-H10-Sensorspeicher, 100 Minuten, 11.131 Schläge. Hintergrund = App-Bildschirm; Punkte und SD-Werte sind die Paare der App selbst, live gezeichnet.">Die Poincaré-Karte der App mit einer echten Aufnahme: Polar-H10-Sensorspeicher, 100 Minuten, 11.131 Schläge. Hintergrund = App-Bildschirm; Punkte und SD-Werte sind die Paare der App selbst, live gezeichnet.</p>
       </div>
     </div>
   </section>
@@ -957,6 +948,10 @@ if (!location.hash) {
         <li data-en="<b>Reliable at high heart rates:</b> artifact thresholds with a 30-ms floor, so normal beat-to-beat steps during exercise are not flagged (details under Validation)." data-de="<b>Verlässlich bei hoher Herzfrequenz:</b> Artefakt-Schwellen mit 30-ms-Untergrenze, damit normale Schlag-zu-Schlag-Schritte unter Belastung nicht markiert werden (Details unter Validierung)."><b>Verlässlich bei hoher Herzfrequenz:</b> Artefakt-Schwellen mit 30-ms-Untergrenze, damit normale Schlag-zu-Schlag-Schritte unter Belastung nicht markiert werden (Details unter Validierung).</li>
         <li data-en="<b>Heart rate and RMSSD</b> for the same window, beside every α1 value." data-de="<b>Herzfrequenz und RMSSD</b> desselben Fensters neben jedem α1-Wert."><b>Herzfrequenz und RMSSD</b> desselben Fensters neben jedem α1-Wert.</li>
       </ul>
+      <figure class="a1-karte" id="alpha1-app">
+        <img src="../assets/v14/app-alpha1.webp" width="660" height="655" alt="DFA alpha1 card in CARLON HRV Research: alpha1 course over a 100-minute session with rest, training and recovery markers" loading="lazy" decoding="async">
+        <figcaption data-en="In the app: α1 for every window of a real 100-minute Polar H10 session, with the phase markers set during recording. Intermittent training, so α1 does not fall steadily as in a ramp test." data-de="In der App: α1 für jedes Fenster einer echten 100-minütigen Polar-H10-Sitzung, mit den während der Aufnahme gesetzten Phasenmarken. Intervall-Training, deshalb fällt α1 nicht stetig wie im Stufentest.">In der App: α1 für jedes Fenster einer echten 100-minütigen Polar-H10-Sitzung, mit den während der Aufnahme gesetzten Phasenmarken. Intervall-Training, deshalb fällt α1 nicht stetig wie im Stufentest.</figcaption>
+      </figure>
     </div>
   </section>
 
@@ -984,6 +979,22 @@ if (!location.hash) {
       <div class="ctas rv" style="justify-content:flex-start;margin-top:var(--s55)">
         <a class="btn btn-2" href="/hrv-research/validation/"><span data-en="Read the validation dossier" data-de="Validierungsdossier lesen">Validierungsdossier lesen</span> <span aria-hidden="true">→</span></a>
         <a class="btn btn-2" href="../CARLON-HRV-Research-Validation-Dossier.pdf" download><span data-en="Dossier as PDF" data-de="Dossier als PDF">Dossier als PDF</span> <span aria-hidden="true">↓</span></a>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5a · Zukunftssicher: Rohdaten bleiben, Auswertung wird besser -->
+  <section class="ch" id="future-proof">
+    <div class="wrap">
+      <div class="rv" style="max-width:780px">
+        <div class="label" data-en="Future-proof by design" data-de="Zukunftssicher gebaut">Zukunftssicher gebaut</div>
+        <h2 data-en="Recompute with every update – <em>or cite the version you used.</em>" data-de="Mit jedem Update neu rechnen – <em>oder die Version zitieren, mit der Sie gerechnet haben.</em>">Mit jedem Update neu rechnen – <em>oder die Version zitieren, mit der Sie gerechnet haben.</em></h2>
+        <p class="sub" data-en="The app stores what the sensor measured – nothing else. Every metric is computed fresh from those originals, so methods can improve without your data ever being touched." data-de="Die App speichert, was der Sensor gemessen hat – sonst nichts. Jede Kennzahl wird aus diesen Originaldaten neu berechnet, so können Methoden besser werden, ohne dass Ihre Daten je angefasst werden.">Die App speichert, was der Sensor gemessen hat – sonst nichts. Jede Kennzahl wird aus diesen Originaldaten neu berechnet, so können Methoden besser werden, ohne dass Ihre Daten je angefasst werden.</p>
+      </div>
+      <div class="checks rv">
+        <div class="check"><svg class="ic" aria-hidden="true"><use href="#i-orig"/></svg><b data-en="Originals" data-de="Original">Original</b><p data-en="RR intervals are kept exactly as recorded – never smoothed, corrected or overwritten." data-de="RR-Intervalle bleiben genau wie erfasst – nie geglättet, korrigiert oder überschrieben.">RR-Intervalle bleiben genau wie erfasst – nie geglättet, korrigiert oder überschrieben.</p></div>
+        <div class="check"><svg class="ic" aria-hidden="true"><use href="#i-retro"/></svg><b data-en="Retroactive" data-de="Rückwirkend">Rückwirkend</b><p data-en="An improved method applies to every recording you have ever made – open or re-export it to get the latest analysis." data-de="Eine verbesserte Methode gilt für jede Aufnahme, die Sie je gemacht haben – öffnen oder neu exportieren, schon ist die neueste Auswertung da.">Eine verbesserte Methode gilt für jede Aufnahme, die Sie je gemacht haben – öffnen oder neu exportieren, schon ist die neueste Auswertung da.</p></div>
+        <div class="check"><svg class="ic" aria-hidden="true"><use href="#i-recalc"/></svg><b data-en="Recomputable" data-de="Nachrechenbar">Nachrechenbar</b><p data-en="Every export names the app version and the exact method. Anyone can recompute it with open tools – for peer review, replication or new methods." data-de="Jeder Export nennt App-Version und genaue Methode. Jeder kann ihn mit offenen Werkzeugen nachrechnen – für Peer Review, Replikation oder neue Verfahren.">Jeder Export nennt App-Version und genaue Methode. Jeder kann ihn mit offenen Werkzeugen nachrechnen – für Peer Review, Replikation oder neue Verfahren.</p></div>
       </div>
     </div>
   </section>
@@ -1031,6 +1042,23 @@ if (!location.hash) {
     </div>
   </section>
 
+  <!-- Co-Creation: belegt durch Mail-Zeitstempel + Commits (23./24.10.2026); ohne Namen -->
+  <section class="ch" id="built-with-testers">
+    <div class="wrap">
+      <div class="rv" style="max-width:760px">
+        <div class="label" data-en="Built with its first studies" data-de="Mit den ersten Studien gebaut">Mit den ersten Studien gebaut</div>
+        <h2 data-en="Built with testers. <em>Less handling for everyone.</em>" data-de="Mit Testern gebaut. <em>Weniger Handarbeit für alle.</em>">Mit Testern gebaut. <em>Weniger Handarbeit für alle.</em></h2>
+        <p class="sub" data-en="Testers told us where the work piles up in their studies. We built the answer with them – and now it saves every study the same steps." data-de="Tester haben uns gezeigt, wo sich in ihren Studien die Arbeit staut. Die Lösung haben wir mit ihnen gebaut – jetzt spart sie jeder Studie dieselben Schritte.">Tester haben uns gezeigt, wo sich in ihren Studien die Arbeit staut. Die Lösung haben wir mit ihnen gebaut – jetzt spart sie jeder Studie dieselben Schritte.</p>
+      </div>
+      <ol class="ko rv">
+          <li><time data-en="From group testing" data-de="Aus Gruppenmessungen">Aus Gruppenmessungen</time><div><p class="frage" data-en="Before: every recording marked by hand – or phase times on paper, aligned afterwards." data-de="Vorher: jede Aufnahme von Hand markieren – oder Phasenzeiten auf Papier, später abgleichen.">Vorher: jede Aufnahme von Hand markieren – oder Phasenzeiten auf Papier, später abgleichen.</p><p class="antwort" data-en="→ Now: group phase markers – one tap marks the phase in every running recording." data-de="→ Jetzt: Gruppen-Phasenmarker – ein Tipp markiert die Phase in jeder laufenden Aufnahme.">→ Jetzt: Gruppen-Phasenmarker – ein Tipp markiert die Phase in jeder laufenden Aufnahme.</p><span class="dauer" data-en="1 tap instead of 4" data-de="1 Tipp statt 4">1 Tipp statt 4</span></div></li>
+          <li><time data-en="From a thesis study" data-de="Aus einer Abschlussarbeit">Aus einer Abschlussarbeit</time><div><p class="frage" data-en="Before: export the RR data, then cut rest, training and recovery by hand in a spreadsheet – per participant." data-de="Vorher: RR-Daten exportieren, dann Ruhe, Training und Erholung von Hand in einer Tabelle schneiden – pro Person.">Vorher: RR-Daten exportieren, dann Ruhe, Training und Erholung von Hand in einer Tabelle schneiden – pro Person.</p><p class="antwort" data-en="→ Now: the segment table – heart rate, RMSSD, SDNN and pNN50 for every section between two markers, ready for the results table." data-de="→ Jetzt: die Segmenttabelle – Herzfrequenz, RMSSD, SDNN und pNN50 für jeden Abschnitt zwischen zwei Markern, fertig für die Ergebnistabelle.">→ Jetzt: die Segmenttabelle – Herzfrequenz, RMSSD, SDNN und pNN50 für jeden Abschnitt zwischen zwei Markern, fertig für die Ergebnistabelle.</p><span class="dauer" data-en="no spreadsheet step" data-de="kein Tabellenschritt">kein Tabellenschritt</span></div></li>
+          <li><time data-en="From a study protocol" data-de="Aus einem Studienprotokoll">Aus einem Studienprotokoll</time><div><p class="frage" data-en="Before: read phase times off the clock for the paper case report form, then convert them into Kubios sample offsets by hand." data-de="Vorher: Phasenzeiten für den Prüfbogen von der Uhr ablesen und danach von Hand in Kubios-Abschnitte umrechnen.">Vorher: Phasenzeiten für den Prüfbogen von der Uhr ablesen und danach von Hand in Kubios-Abschnitte umrechnen.</p><p class="antwort" data-en="→ Now: the event and segment tables – every marker with clock time and seconds from start, every section between two markers with start, end and duration. The timing section of the form and the Kubios samples come straight from the export." data-de="→ Jetzt: die Ereignis- und Segmenttabelle – jeder Marker mit Uhrzeit und Sekunden ab Start, jeder Abschnitt zwischen zwei Markern mit Beginn, Ende und Dauer. Den Zeitteil des Bogens und die Kubios-Abschnitte liefert der Export.">→ Jetzt: die Ereignis- und Segmenttabelle – jeder Marker mit Uhrzeit und Sekunden ab Start, jeder Abschnitt zwischen zwei Markern mit Beginn, Ende und Dauer. Den Zeitteil des Bogens und die Kubios-Abschnitte liefert der Export.</p><span class="dauer" data-en="no clock arithmetic" data-de="kein Umrechnen">kein Umrechnen</span></div></li>
+          <li><time data-en="From a university IT team" data-de="Aus einer Hochschul-IT">Aus einer Hochschul-IT</time><div><p class="frage" data-en="Before: convert the export before the institute’s tools can read it." data-de="Vorher: den Export umwandeln, bevor die Werkzeuge des Instituts ihn lesen.">Vorher: den Export umwandeln, bevor die Werkzeuge des Instituts ihn lesen.</p><p class="antwort" data-en="→ Now: EDF+ with the phase markers inside, plus FIT and WFDB for PhysioNet – straight from the iPhone." data-de="→ Jetzt: EDF+ mit den Phasenmarkern darin, dazu FIT und WFDB für PhysioNet – direkt vom iPhone.">→ Jetzt: EDF+ mit den Phasenmarkern darin, dazu FIT und WFDB für PhysioNet – direkt vom iPhone.</p><span class="dauer" data-en="no converter" data-de="kein Konverter">kein Konverter</span></div></li>
+      </ol>
+    </div>
+  </section>
+
   <!-- 8 · Fragen -->
   <section class="ch" id="faq">
     <div class="wrap">
@@ -1054,23 +1082,6 @@ if (!location.hash) {
   </section>
 
   <!-- 9 · Kauf -->
-  <!-- Co-Creation: belegt durch Mail-Zeitstempel + Commits (23./24.10.2026); ohne Namen -->
-  <section class="ch" id="built-with-testers">
-    <div class="wrap">
-      <div class="rv" style="max-width:760px">
-        <div class="label" data-en="Built with its first studies" data-de="Mit den ersten Studien gebaut">Mit den ersten Studien gebaut</div>
-        <h2 data-en="Built with testers. <em>Less handling for everyone.</em>" data-de="Mit Testern gebaut. <em>Weniger Handarbeit für alle.</em>">Mit Testern gebaut. <em>Weniger Handarbeit für alle.</em></h2>
-        <p class="sub" data-en="Testers told us where the work piles up in their studies. We built the answer with them – and now it saves every study the same steps." data-de="Tester haben uns gezeigt, wo sich in ihren Studien die Arbeit staut. Die Lösung haben wir mit ihnen gebaut – jetzt spart sie jeder Studie dieselben Schritte.">Tester haben uns gezeigt, wo sich in ihren Studien die Arbeit staut. Die Lösung haben wir mit ihnen gebaut – jetzt spart sie jeder Studie dieselben Schritte.</p>
-      </div>
-      <ol class="ko rv">
-          <li><time data-en="From group testing" data-de="Aus Gruppenmessungen">Aus Gruppenmessungen</time><div><p class="frage" data-en="Before: every recording marked by hand – or phase times on paper, aligned afterwards." data-de="Vorher: jede Aufnahme von Hand markieren – oder Phasenzeiten auf Papier, später abgleichen.">Vorher: jede Aufnahme von Hand markieren – oder Phasenzeiten auf Papier, später abgleichen.</p><p class="antwort" data-en="→ Now: group phase markers – one tap marks the phase in every running recording." data-de="→ Jetzt: Gruppen-Phasenmarker – ein Tipp markiert die Phase in jeder laufenden Aufnahme.">→ Jetzt: Gruppen-Phasenmarker – ein Tipp markiert die Phase in jeder laufenden Aufnahme.</p><span class="dauer" data-en="1 tap instead of 4" data-de="1 Tipp statt 4">1 Tipp statt 4</span></div></li>
-          <li><time data-en="From a thesis study" data-de="Aus einer Abschlussarbeit">Aus einer Abschlussarbeit</time><div><p class="frage" data-en="Before: export the RR data, then cut rest, training and recovery by hand in a spreadsheet – per participant." data-de="Vorher: RR-Daten exportieren, dann Ruhe, Training und Erholung von Hand in einer Tabelle schneiden – pro Person.">Vorher: RR-Daten exportieren, dann Ruhe, Training und Erholung von Hand in einer Tabelle schneiden – pro Person.</p><p class="antwort" data-en="→ Now: the segment table – heart rate, RMSSD, SDNN and pNN50 for every section between two markers, ready for the results table." data-de="→ Jetzt: die Segmenttabelle – Herzfrequenz, RMSSD, SDNN und pNN50 für jeden Abschnitt zwischen zwei Markern, fertig für die Ergebnistabelle.">→ Jetzt: die Segmenttabelle – Herzfrequenz, RMSSD, SDNN und pNN50 für jeden Abschnitt zwischen zwei Markern, fertig für die Ergebnistabelle.</p><span class="dauer" data-en="no spreadsheet step" data-de="kein Tabellenschritt">kein Tabellenschritt</span></div></li>
-          <li><time data-en="From a study protocol" data-de="Aus einem Studienprotokoll">Aus einem Studienprotokoll</time><div><p class="frage" data-en="Before: read phase times off the clock for the paper case report form, then convert them into Kubios sample offsets by hand." data-de="Vorher: Phasenzeiten für den Prüfbogen von der Uhr ablesen und danach von Hand in Kubios-Abschnitte umrechnen.">Vorher: Phasenzeiten für den Prüfbogen von der Uhr ablesen und danach von Hand in Kubios-Abschnitte umrechnen.</p><p class="antwort" data-en="→ Now: the event and segment tables – every marker with clock time and seconds from start, every section between two markers with start, end and duration. The timing section of the form and the Kubios samples come straight from the export." data-de="→ Jetzt: die Ereignis- und Segmenttabelle – jeder Marker mit Uhrzeit und Sekunden ab Start, jeder Abschnitt zwischen zwei Markern mit Beginn, Ende und Dauer. Den Zeitteil des Bogens und die Kubios-Abschnitte liefert der Export.">→ Jetzt: die Ereignis- und Segmenttabelle – jeder Marker mit Uhrzeit und Sekunden ab Start, jeder Abschnitt zwischen zwei Markern mit Beginn, Ende und Dauer. Den Zeitteil des Bogens und die Kubios-Abschnitte liefert der Export.</p><span class="dauer" data-en="no clock arithmetic" data-de="kein Umrechnen">kein Umrechnen</span></div></li>
-          <li><time data-en="From a university IT team" data-de="Aus einer Hochschul-IT">Aus einer Hochschul-IT</time><div><p class="frage" data-en="Before: convert the export before the institute’s tools can read it." data-de="Vorher: den Export umwandeln, bevor die Werkzeuge des Instituts ihn lesen.">Vorher: den Export umwandeln, bevor die Werkzeuge des Instituts ihn lesen.</p><p class="antwort" data-en="→ Now: EDF+ with the phase markers inside, plus FIT and WFDB for PhysioNet – straight from the iPhone." data-de="→ Jetzt: EDF+ mit den Phasenmarkern darin, dazu FIT und WFDB für PhysioNet – direkt vom iPhone.">→ Jetzt: EDF+ mit den Phasenmarkern darin, dazu FIT und WFDB für PhysioNet – direkt vom iPhone.</p><span class="dauer" data-en="no converter" data-de="kein Konverter">kein Konverter</span></div></li>
-      </ol>
-    </div>
-  </section>
-
   <section class="final">
     <div class="wrap rv">
       <div class="label" data-en="Before the App Store launch" data-de="Vor dem Start im App Store">Vor dem Start im App Store</div>
@@ -1194,7 +1205,7 @@ if (!location.hash) {
   })();
 
 </script>
-<script src="/assets/app-tour/app-tour.js?v=12" defer></script>
+<script src="/assets/app-tour/app-tour.js?v=13" defer></script>
 <script src="/assets/poincare-live/poincare-live.js?v=15" defer></script>
 <script>
 // Vollbild für Bilder: Tippen/Klick öffnet, Wischen oder ← → blättert, Klick/Esc schließt.
@@ -1235,7 +1246,7 @@ if (!location.hash) {
       tipp.textContent = (reihe.length > 1 ? (de ? 'Wischen zum Blättern · ' : 'Swipe to browse · ') : '') + (de ? 'Tippen schließt' : 'Tap to close');
       tipp.classList.remove('weg'); clearTimeout(tippUhr); tippUhr = setTimeout(function () { tipp.classList.add('weg'); }, 2600);
     }
-    function schliessen() { if (film) film.pause(); ov.classList.remove('show'); document.documentElement.style.overflow = ''; if (zuletzt && zuletzt.focus) zuletzt.focus({ preventScroll: true }) zuletzt.focus(); }
+    function schliessen() { if (film) film.pause(); ov.classList.remove('show'); document.documentElement.style.overflow = ''; if (zuletzt && zuletzt.focus) zuletzt.focus({ preventScroll: true }); }
     bilder.forEach(function (b, i) {
       var t = b.tagName === 'VIDEO' ? b.closest('.device') : b;   // über dem Video liegt das Rahmenbild und fängt den Tipp (CSS: .device.zoom .bezel)
       t.classList.add('zoom'); t.setAttribute('tabindex', '0'); t.setAttribute('role', 'button');

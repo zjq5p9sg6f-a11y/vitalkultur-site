@@ -161,7 +161,7 @@
       var zu = function () {
         if (!ebene) return;
         platz.parentNode.replaceChild(dev, platz); ebene.remove(); ebene = null;
-        document.documentElement.style.overflow = ''; beschriften(); weiter(); knopf.focus();
+        document.documentElement.style.overflow = ''; beschriften(); weiter(); knopf.focus({ preventScroll: true });
       };
       var auf = function () {
         platz = document.createComment('at-device'); dev.parentNode.insertBefore(platz, dev);
@@ -169,7 +169,7 @@
         ebene.setAttribute('role', 'dialog'); ebene.setAttribute('aria-modal', 'true');
         ebene.addEventListener('click', function (e) { if (e.target === ebene) zu(); });
         document.body.appendChild(ebene); ebene.appendChild(dev);
-        document.documentElement.style.overflow = 'hidden'; nutzer = performance.now(); beschriften(); weiter(); knopf.focus();
+        document.documentElement.style.overflow = 'hidden'; nutzer = performance.now(); beschriften(); weiter(); knopf.focus({ preventScroll: true });
       };
       knopf.addEventListener('click', function (e) { e.stopPropagation(); if (ebene) zu(); else auf(); });
       document.addEventListener('keydown', function (e) { if (e.key === 'Escape') zu(); });
