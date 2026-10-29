@@ -279,6 +279,7 @@ document.head.appendChild(s);})();</script>
     .ko .dauer { display: inline-block; margin-top: 8px; font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: var(--stille); border: 1px solid rgba(62,207,178,.35); border-radius: 99px; padding: 3px 10px; }
     /* Auf einen Blick als Datenblatt (29.10.2026, Jan: „auf dem iPhone über Apple-Niveau, mit SVG auflockern“).
        Bleibt eine <table> – Suchmaschinen und llms-full.txt lesen th/td; das Raster macht CSS daraus. */
+    html { scroll-padding-top: 72px; }   /* Sprungziele nicht unter der festen Kopfzeile */
     .glance { display: block; width: 100%; margin-top: var(--s34); border: 0; }
     .glance tbody { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--s13); }
     .glance tr { position: relative; display: grid; grid-template-columns: 48px 1fr; grid-template-areas: "ic th" "ic td"; column-gap: var(--s21); align-content: start;
@@ -1144,6 +1145,19 @@ if (!location.hash) {
     up(0);
   }
   initGal('#gal-flow');
+
+  /* Sprünge innerhalb der Seite ohne Anker in der Adresse (29.10.2026, Jan: „startet beim Öffnen bei FAQ“):
+     ein Tipp auf einen Belegchip schrieb #faq in die Adresse, beim nächsten Öffnen begann die Seite dort.
+     Links von außen mit Anker funktionieren weiter. */
+  document.addEventListener('click', function (e) {
+    var a = e.target.closest && e.target.closest('a[href^="#"]');
+    if (!a || e.defaultPrevented || e.metaKey || e.ctrlKey) return;
+    var ziel = document.getElementById(a.getAttribute('href').slice(1));
+    if (!ziel) return;
+    e.preventDefault();
+    ziel.scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'start' });
+    if (location.hash) history.replaceState(null, '', location.pathname + location.search);
+  });
   /* Methodenabsatz: kopieren + aufklappen */
   (function () {
     document.querySelectorAll('.methoden').forEach(function (m) {
@@ -1221,7 +1235,7 @@ if (!location.hash) {
       tipp.textContent = (reihe.length > 1 ? (de ? 'Wischen zum Blättern · ' : 'Swipe to browse · ') : '') + (de ? 'Tippen schließt' : 'Tap to close');
       tipp.classList.remove('weg'); clearTimeout(tippUhr); tippUhr = setTimeout(function () { tipp.classList.add('weg'); }, 2600);
     }
-    function schliessen() { if (film) film.pause(); ov.classList.remove('show'); document.documentElement.style.overflow = ''; if (zuletzt && zuletzt.focus) zuletzt.focus(); }
+    function schliessen() { if (film) film.pause(); ov.classList.remove('show'); document.documentElement.style.overflow = ''; if (zuletzt && zuletzt.focus) zuletzt.focus({ preventScroll: true }) zuletzt.focus(); }
     bilder.forEach(function (b, i) {
       var t = b.tagName === 'VIDEO' ? b.closest('.device') : b;   // über dem Video liegt das Rahmenbild und fängt den Tipp (CSS: .device.zoom .bezel)
       t.classList.add('zoom'); t.setAttribute('tabindex', '0'); t.setAttribute('role', 'button');
