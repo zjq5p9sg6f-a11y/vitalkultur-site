@@ -21,6 +21,7 @@ iPhone app (iOS 17 or later) for HRV studies. Records beat-to-beat RR intervals 
 - [Example PDF report from a real recording](https://vitalkultur.com/hrv-research/assets/CARLON-HRV-Research-Example-Report.pdf)
 - [All facts, FAQ and methods block in one file](https://vitalkultur.com/llms-full.txt)
 - [Sample data (ZIP): a real 48-min Polar H10 gym session in every export format, CC BY 4.0](https://vitalkultur.com/hrv-research/assets/CARLON-HRV-Research-Sample-Data.zip)
+- [Example report (PDF) of the same session, build 2026102801](https://vitalkultur.com/hrv-research/assets/CARLON-HRV-Research-Example-Report.pdf)
 
 ### Facts that are often misquoted
 
