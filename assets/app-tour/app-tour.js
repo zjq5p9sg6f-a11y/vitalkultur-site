@@ -29,6 +29,7 @@
     if (!scrs.length) return;
     var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     var cur = -1, t0 = 0, sichtbar = true, nutzer = -1e9, halt = null, scrollAuto = null;
+    var beimZeigen = [], beimTakt = [];                           // Stations-Bausteine (Spickzettel, Scroll-Hinweis)
     var dauer = function (i) { return (parseFloat(scrs[i].dataset.dauer) || 6) * 1000; };
     var video = function (i) { return scrs[i] && scrs[i].querySelector('video'); };
     // Erklärungen im Bild: data-ab/data-bis in Sekunden ab Stationsbeginn (läuft mit der Pause mit)
@@ -60,14 +61,19 @@
       var v = video(i);
       if (v) { try { v.currentTime = 0; } catch (e) {} v.playbackRate = parseFloat(scrs[i].dataset.rate) || 1; v.play().catch(function () {}); }
       var sc = scrs[i].querySelector('.at-scroller');
-      if (sc) { sc.scrollTop = 0; scrollAuto = vomNutzer ? null : performance.now(); }
+      // Auch nach einem Tipp in der Liste selbst scrollen (29.10.: „man erkennt nicht, dass man scrollen kann“) —
+      // die eigene Berührung des Scrollers hält es sofort an.
+      if (sc) { sc.scrollTop = 0; scrollAuto = performance.now(); }
       if (vomNutzer) nutzer = performance.now();
+      beimZeigen.forEach(function (f) { f(i); });
     }
 
     function tick(now) {
       if (cur >= 0) {
         var d = dauer(cur);
-        var pausiert = reduce || !sichtbar || now - nutzer < 14000;
+        // Die Uhr der Station hält nur an, wenn die Tour nicht zu sehen ist. Wer bedient, sperrt bloß das
+        // WEITERSCHALTEN (29.10.2026: nach einem Tipp in der Liste standen Vorführung und Bildtexte 14 s still).
+        var pausiert = reduce || !sichtbar, gesperrt = now - nutzer < 14000;
         if (pausiert) { if (halt === null) halt = now - t0; t0 = now - halt; } else { halt = null; }
         var p = Math.min(1, (now - t0) / d);
         var sek = reduce ? 1 : p * d / 1000;
@@ -78,7 +84,8 @@
           var q = Math.min(1, (now - scrollAuto) / (d * 0.92)), e = q < .5 ? 2 * q * q : 1 - Math.pow(-2 * q + 2, 2) / 2;
           sc.scrollTop = e * (sc.scrollHeight - sc.clientHeight);
         }
-        if (!pausiert && p >= 1) zeige(cur + 1, false);
+        beimTakt.forEach(function (f) { f(cur, sek, pausiert, now); });
+        if (!pausiert && !gesperrt && p >= 1) zeige(cur + 1, false);
       }
       requestAnimationFrame(tick);
     }
@@ -98,11 +105,18 @@
     });
     var screen = root.querySelector('.at-screen'), sx = 0, sy = 0;
     if (screen) {
-      // Bedienbare Fläche (Poincaré live): Ziehen dort ist Bedienung, kein Wischen zur nächsten Station
-      var bedient = false;
-      screen.addEventListener('touchstart', function (e) { bedient = !!(e.target.closest && e.target.closest('canvas.lp')); sx = e.touches[0].clientX; sy = e.touches[0].clientY; }, { passive: true });
+      // Poincaré live (29.10.2026): nur der Zeitregler, Halten-und-Ziehen (Fadenkreuz) und zwei Finger sind
+      // Bedienung. Ein schnelles Wischen über die Karte wechselt weiter die Station — vorher sperrte die
+      // bildschirmfüllende Karte das Wischen ganz (Jan: „kann nicht mehr weiter swipen“).
+      var bedient = false, tStart = 0, mehrfinger = false;
+      screen.addEventListener('touchstart', function (e) {
+        tStart = performance.now(); mehrfinger = e.touches.length > 1; sx = e.touches[0].clientX; sy = e.touches[0].clientY;
+        var cv = e.target.closest && e.target.closest('canvas.lp');
+        if (cv) { var b = cv.getBoundingClientRect(), ry = (sy - b.top) / b.height; bedient = ry > 1880 / 2868 && ry < 2060 / 2868; } else bedient = false;
+      }, { passive: true });
+      screen.addEventListener('touchmove', function (e) { if (e.touches.length > 1) mehrfinger = true; }, { passive: true });
       screen.addEventListener('touchend', function (e) {
-        if (bedient) return;
+        if (bedient || mehrfinger || performance.now() - tStart > 450) return;
         var dx = e.changedTouches[0].clientX - sx, dy = e.changedTouches[0].clientY - sy;
         if (Math.abs(dx) > 40 && Math.abs(dx) > Math.abs(dy) * 1.4) zeige(cur + (dx < 0 ? 1 : -1), true);
       }, { passive: true });
@@ -141,6 +155,67 @@
       document.addEventListener('keydown', function (e) { if (e.key === 'Escape') zu(); });
       beschriften(); dev.appendChild(knopf);
     }
+    // ── Scroll-Stationen: Leiste + Hinweis „Scrollen“, damit erkennbar ist, dass es weitergeht ──
+    var deL = document.documentElement.lang === 'de';
+    scrs.forEach(function (st) {
+      var sc = st.querySelector('.at-scroller'); if (!sc) return;
+      var leiste = document.createElement('div'); leiste.className = 'at-leiste'; leiste.innerHTML = '<i></i>'; leiste.setAttribute('aria-hidden', 'true');
+      var mehr = document.createElement('div'); mehr.className = 'at-mehr'; mehr.setAttribute('aria-hidden', 'true');
+      mehr.innerHTML = '<svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M3 4.5l3 3 3-3"/></svg>' + (deL ? 'Scrollen' : 'Scroll');
+      st.appendChild(leiste); st.appendChild(mehr);
+      var balken = leiste.firstChild;
+      var lage = function () {
+        var h = sc.scrollHeight - sc.clientHeight; if (h <= 0) return;
+        var q = sc.clientHeight / sc.scrollHeight; balken.style.height = Math.max(8, q * 100) + '%';
+        balken.style.top = (sc.scrollTop / h) * (100 - Math.max(8, q * 100)) + '%';
+        if (sc.scrollTop / h > 0.92) mehr.classList.add('weg');
+      };
+      sc.addEventListener('scroll', lage, { passive: true });
+      ['wheel', 'touchstart', 'pointerdown'].forEach(function (ev) { sc.addEventListener(ev, function () { mehr.classList.add('weg'); }, { passive: true }); });
+      beimZeigen.push(function (i) { if (scrs[i] === st) { mehr.classList.remove('weg'); setTimeout(lage, 50); } });
+    });
+
+    // ── Spickzettel-Station: der Finger tippt geprüfte Beispiel-Kacheln an, das echte Erklärblatt der App fährt herein ──
+    scrs.forEach(function (st, si) {
+      if (!st.classList.contains('at-spick')) return;
+      var blatt = st.querySelector('.at-blatt'), dimm = st.querySelector('.at-dimm');
+      var kacheln = [].slice.call(st.querySelectorAll('.at-kachel'));
+      var finger = document.createElement('div'); finger.className = 'at-finger'; finger.setAttribute('aria-hidden', 'true'); st.appendChild(finger);
+      var demo = (st.dataset.demo || '').split(' ').filter(Boolean).map(function (x) {
+        var m = x.split('@'), t = m[1].split('-'); return { id: m[0], ab: parseFloat(t[0]), bis: parseFloat(t[1]) };
+      });
+      var kachel = function (id) { return kacheln.filter(function (k) { return k.dataset.id === id; })[0]; };
+      var offenId = null, selbst = false;
+      var auf = function (k) {
+        if (!k) return; blatt.src = k.dataset.blatt;
+        blatt.alt = (deL ? 'Erklärblatt der App: ' : 'App explanation sheet: ') + k.dataset.id.toUpperCase();
+        offenId = k.dataset.id; st.classList.add('offen');
+      };
+      var zu = function () { offenId = null; st.classList.remove('offen'); };
+      var ruf = function (an) { var k = kachel(demo.length ? demo[0].id : ''); if (k) k.classList.toggle('ruf', an); };
+      // Reine Vorführung an geprüften Beispielen (Jan 29.10.: nicht jede Kachel antippbar machen).
+      beimZeigen.push(function (i) {
+        zu(); finger.classList.remove('an', 'druck');
+        if (i === si) { selbst = false; demo.forEach(function (d) { var k = kachel(d.id); if (k) new Image().src = k.dataset.blatt; }); }
+        ruf(i === si);
+      });
+      beimTakt.push(function (i, sek, pausiert) {
+        if (i !== si || selbst || reduce) return;
+        var soll = null, f = null;
+        demo.forEach(function (d) {
+          if (sek >= d.ab && sek < d.bis) soll = d.id;
+          if (sek >= d.ab - 0.8 && sek < d.ab + 0.3) f = d;
+        });
+        if (f) {
+          var k = kachel(f.id);
+          finger.style.left = (parseFloat(k.style.left) + parseFloat(k.style.width) / 2) + '%';
+          finger.style.top = (parseFloat(k.style.top) + parseFloat(k.style.height) / 2) + '%';
+          finger.classList.add('an'); finger.classList.toggle('druck', sek >= f.ab - 0.18);
+        } else finger.classList.remove('an', 'druck');
+        if (soll !== offenId) { if (soll) { ruf(false); auf(kachel(soll)); } else zu(); }
+      });
+    });
+
     zeige(0, false);
     requestAnimationFrame(tick);
   }
