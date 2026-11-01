@@ -1732,6 +1732,20 @@ document.querySelectorAll('[data-karussell]').forEach(function (k) {
 })();
 </script>
 <script>
+/* Stromsparmodus (01.11.2026, Jan: „im Hero-Karussell klappen die Animationen noch nicht zuverlässig – Kälte: am Ende kommen die
+   Vitalwerte nicht“): iOS verweigert dann jedes Abspielen ohne Berührung, die Uhr blieb beim Vorschaubild stehen. Jede Berührung
+   (auch ein Wisch) gibt alle noch gesperrten Filme frei – WebKit merkt sich die Freigabe je Film. Was gerade zu sehen sein soll,
+   läuft sofort; alles andere wird nur freigegeben und gleich wieder angehalten. */
+(function () {
+  function imBild(v) { var r = v.getBoundingClientRect(); return r.bottom > 0 && r.top < innerHeight && r.right > 0 && r.left < innerWidth; }
+  function soll(v) { var d = v.closest('.k-dia'); if (d) return d.classList.contains('an') && imBild(v);
+    var s = v.closest('.at-scr'); return (!s || s.classList.contains('on')) && imBild(v); }
+  function frei() { [].forEach.call(document.querySelectorAll('video'), function (v) { if (v.__frei || !v.paused) { v.__frei = true; return; }
+    v.__frei = true; var p = v.play(); if (!soll(v)) v.pause(); else if (p && p.catch) p.catch(function () { v.__frei = false; }); }); }
+  ['touchend', 'click', 'keydown'].forEach(function (t) { document.addEventListener(t, frei, { capture: true, passive: true }); });
+})();
+</script>
+<script>
 /* Zielgruppen-Umschalter (Tabs) – #tummo, #schlaf, #kohaerenz öffnen die passende Seite */
 (function () {
   var tabs = [].slice.call(document.querySelectorAll('.praxis-tabs [role="tab"]')); if (!tabs.length) return;
