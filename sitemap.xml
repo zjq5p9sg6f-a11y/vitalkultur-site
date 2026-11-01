@@ -5,6 +5,17 @@
   </url>
   <url>
     <loc>https://vitalkultur.com/breathwork/</loc>
+    <lastmod>2026-11-01</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://vitalkultur.com/breathwork/"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://vitalkultur.com/breathwork/de/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vitalkultur.com/breathwork/"/>
+  </url>
+  <url>
+    <loc>https://vitalkultur.com/breathwork/de/</loc>
+    <lastmod>2026-11-01</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://vitalkultur.com/breathwork/"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://vitalkultur.com/breathwork/de/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vitalkultur.com/breathwork/"/>
   </url>
   <!-- Presse-Kit Breathwork: indexierbar, bewusst nicht im Menü (Material für Redaktionen / Apple-Nominierung). -->
   <url>

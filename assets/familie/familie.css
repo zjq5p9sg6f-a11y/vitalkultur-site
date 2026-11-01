@@ -9,7 +9,9 @@
   color: rgba(235,230,220,.6); background: rgba(8,9,9,.8); border-bottom: 1px solid rgba(235,230,220,.07);
   -webkit-backdrop-filter: saturate(150%) blur(20px); backdrop-filter: saturate(150%) blur(20px);
   transition: transform .34s cubic-bezier(.4,0,.2,1); -webkit-font-smoothing: antialiased; }
-.vkf.weg { transform: translateY(-101%); }
+/* Zustandsname mit Präfix (31.10.2026): die Breathwork-Seite hatte eine eigene .weg-Regel (position: relative) –
+   die Leiste fiel in den Seitenfluss und schob beim Zurückscrollen alles um 44 px. */
+.vkf.vkf-weg { transform: translateY(-101%); }
 .vkf * { box-sizing: border-box; }
 .vkf a { color: inherit; text-decoration: none; -webkit-tap-highlight-color: transparent; }
 .vkf a:focus-visible, .vkf button:focus-visible { outline: 2px solid #3ecfb2; outline-offset: 2px; border-radius: 6px; }
@@ -58,5 +60,7 @@
 }
 /* Jede Seite darf Breite und Rand ihrer Kopfleiste nennen (--vkf-max, --vkf-rand), damit die Marke über der Marke steht */
 /* Kopfleiste der Seite rückt mit: sitzt unter der Familienleiste, solange diese zu sehen ist */
-[data-vkf-folgt] { top: var(--vkf-sicht) !important; transition: top .34s cubic-bezier(.4,0,.2,1); }
+/* Nur optisch verschieben, nie das Layout (31.10.2026, Jan: „beim Zurückscrollen springt die Seite“): `top` änderte bei jedem
+   Ein-/Ausblenden die Seitenhöhe um 44 px (gemessen am iPhone), Safari hat keine Scroll-Verankerung – der Inhalt sprang. */
+[data-vkf-folgt] { top: var(--vkf-h) !important; translate: 0 calc(var(--vkf-sicht) - var(--vkf-h)); transition: translate .34s cubic-bezier(.4,0,.2,1); }
 @media (prefers-reduced-motion: reduce) { [data-vkf-folgt] { transition: none; } }

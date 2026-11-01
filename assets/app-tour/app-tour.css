@@ -89,3 +89,13 @@
 .at-scroll .at-mehr.weg { opacity: 0; }
 @keyframes atMehr { 0%, 100% { transform: translateY(-1px); } 50% { transform: translateY(2px); } }
 @media (prefers-reduced-motion: reduce) { .at-spick .at-blatt { transition: none; } .at-spick .at-kachel.ruf::after, .at-scroll .at-mehr svg { animation: none; } }
+
+/* Uhr statt iPhone (29.10.2026, Breathwork): Apples Ultra-3-Gehäuse 600 × 960, Displayloch 89/223–511/737 gemessen
+   (dasselbe Loch wie in den Store-Bildern). Bildschirm leicht größer als das Loch – das Gehäuse deckt die Kante. */
+.at-device.at-uhr { width: min(330px, 74vw, calc((100svh - 160px) * 0.625)); aspect-ratio: 600 / 960; }
+.at-device.at-uhr::before { inset: 17% 7% 17% 6%; border-radius: 28% / 18%; box-shadow: 0 34px 70px rgba(0,0,0,.65); }
+.at-uhr .at-screen { left: 14.6%; top: 23.05%; width: 70.8%; height: 53.9%; border-radius: 19% / 15.6%; }
+.at-uhr .at-voll-btn { right: -40px; bottom: 30%; }   /* neben die Krone, nicht darauf */
+.at-uhr .at-auto-btn { bottom: calc(30% + 54px); }
+.at-voll .at-device.at-uhr { width: min(88vw, calc(84vh * 0.625)); }
+@supports (height: 1dvh) { .at-voll .at-device.at-uhr { width: min(88vw, calc(84dvh * 0.625)); } }

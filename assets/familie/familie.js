@@ -75,7 +75,7 @@
   var sichtbar = true, letztY = scrollY, hoch = 0, ruhe = 0, H = 44;
   function zeige(v) {
     if (v === sichtbar) return;
-    sichtbar = v; leiste.classList.toggle('weg', !v);
+    sichtbar = v; leiste.classList.toggle('vkf-weg', !v);
     document.documentElement.style.setProperty('--vkf-sicht', v ? 'var(--vkf-h)' : '0px');
   }
   document.addEventListener('click', function (e) {
