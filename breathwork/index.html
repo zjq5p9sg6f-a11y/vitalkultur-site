@@ -491,7 +491,7 @@ document.head.appendChild(s);})();</script>
       /* app-tour.css gibt .at-screen „touch-action: pan-y“ – ein Wisch, der auf dem Schirm begann, blieb stehen (31.10., Prüfstand) */
       .k-story .at-screen { touch-action: pan-x pan-y; }
       /* Kein Zoom in den Schirm (31.10.2026, Jan: „Builder zu groß eingepasst“ – 8 % schnitten Zurück-Knopf und Infotext ab) */
-      .k-satz { position: relative; max-width: 34em; margin: 0 auto; padding: var(--s13) 16px 0; text-align: center; }
+      .k-satz { position: relative; max-width: 34em; margin: 0 auto; padding: var(--s13) 16px 0; text-align: center; touch-action: pan-y; }
       .k-satz > * { opacity: calc(1 - 2.2 * var(--af, 0)); transform: translateX(calc(var(--f, 0) * var(--eb, 40px) * -1)); will-change: transform, opacity; }
       .k-satz .gurt { display: table; margin: 0 auto var(--s13); --eb: 24px; }
       .k-satz h3 { font-size: 28px; line-height: 1.22; letter-spacing: -.012em; font-weight: 300; text-wrap: balance; max-width: 22ch; margin: 0 auto; --eb: 56px; }
@@ -963,11 +963,11 @@ document.head.appendChild(s);})();</script>
       </div>
       <div class="story-texte">
         <div class="schritt" data-i="0"><span class="nr">01</span><h3 data-en="Your watch breathes with you." data-de="Die Uhr atmet mit dir.">Your watch breathes with you.</h3><p data-en="The flower grows as you breathe in and sinks as you breathe out, and each phase taps your wrist differently. Swipe to see the rhythm as a curve." data-de="Die Blume wächst beim Einatmen und sinkt beim Ausatmen, und jede Phase tippt anders ans Handgelenk. Ein Wisch zeigt den Takt als Kurve.">The flower grows as you breathe in and sinks as you breathe out, and each phase taps your wrist differently. Swipe to see the rhythm as a curve.</p></div>
-        <div class="schritt" data-i="1"><span class="nr">02</span><h3 data-en="19 ways to breathe. Yours come first." data-de="19 Arten zu atmen. Deine stehen oben.">19 ways to breathe. Yours come first.</h3><p data-en="Swipe a technique to the left and tap the heart: it springs up to your favourites, and your watch confirms it with a tap on your wrist. Swipe it to the right to read what is behind it." data-de="Wisch eine Technik nach links und tipp aufs Herz: Sie springt hoch zu deinen Favoriten, und die Uhr bestätigt es mit einem Tipp am Handgelenk. Nach rechts gewischt erzählt sie, was dahintersteckt.">Swipe a technique to the left and tap the heart: it springs up to your favourites, and your watch confirms it with a tap on your wrist. Swipe it to the right to read what is behind it.</p></div>
-        <div class="schritt" data-i="2"><span class="nr">03</span><h3 data-en="Your own pattern, built on your wrist." data-de="Dein eigenes Muster, am Handgelenk gebaut.">Your own pattern, built on your wrist.</h3><p data-en="In, hold, out, hold: set every phase to the second and choose how firmly the watch taps. Name and note travel with it when you share it." data-de="Ein, halten, aus, halten: Du stellst jede Phase auf die Sekunde ein und wählst, wie kräftig die Uhr tippt. Name und Infotext reisen mit, wenn du es teilst.">In, hold, out, hold: set every phase to the second and choose how firmly the watch taps. Name and note travel with it when you share it.</p></div>
-        <div class="schritt" data-i="3"><span class="nr">04</span><h3 data-en="Every heartbeat, fully analysed." data-de="Jeder Herzschlag, ganz ausgewertet.">Every heartbeat, fully analysed.</h3><p data-en="With a chest strap, the watch shows the whole HRV analysis after the session: RMSSD and SDNN, Poincaré plot, stress index, DFA α1, tachogram and power spectrum." data-de="Mit Brustgurt zeigt dir die Uhr nach der Sitzung die ganze HRV-Auswertung: RMSSD und SDNN, Poincaré-Diagramm, Stressindex, DFA α1, Tachogramm und Leistungsspektrum.">With a chest strap, the watch shows the whole HRV analysis after the session: RMSSD and SDNN, Poincaré plot, stress index, DFA α1, tachogram and power spectrum.</p></div>
-        <div class="schritt" data-i="4"><span class="nr">05</span><h3 data-en="After every session: everything on your wrist." data-de="Nach jeder Sitzung: alles am Handgelenk.">After every session: everything on your wrist.</h3><p data-en="Duration, rounds, every hold, your breath against the pattern – turn the Digital Crown and the whole analysis scrolls past." data-de="Dauer, Runden, jeder Halt, dein Atem gegen die Vorgabe – dreh die Digital Crown, und die ganze Auswertung zieht an dir vorbei.">Duration, rounds, every hold, your breath against the pattern – turn the Digital Crown and the whole analysis scrolls past.</p></div>
-        <div class="schritt" data-i="5"><span class="nr">06</span><h3 data-en="Cold water, live on your wrist" data-de="Kaltes Wasser, live am Handgelenk">Cold water, live on your wrist</h3><p data-en="Pulse 83. Then the cold water. Above 100 within 20 seconds, back to 90 a minute later – beat by beat from the chest strap, live on your watch." data-de="Puls 83. Dann das kalte Wasser. Nach 20 Sekunden über 100, eine Minute später wieder 90 – Schlag für Schlag vom Brustgurt, live auf deiner Uhr.">Pulse 83. Then the cold water. Above 100 within 20 seconds, back to 90 a minute later – beat by beat from the chest strap, live on your watch.</p><span class="zeitraffer" data-en="Time-lapse" data-de="Zeitraffer">Time-lapse</span></div>
+        <div class="schritt" data-i="1"><span class="nr">02</span><h3 data-en="19 techniques. One for every moment." data-de="19 Techniken. Für jeden Moment.">19 techniques. One for every moment.</h3><p data-en="Energise with Tummo and Fire, focus with Box and Coherence, wind down with 4-7-8 and Bhramari – each timed to the tenth of a second, with its sources and safety notes." data-de="Aktivieren mit Tummo und Feuer, fokussieren mit Box und Kohärenz, herunterkommen mit 4-7-8 und Bhramari – jede auf die Zehntelsekunde getaktet, mit Quellen und Sicherheitshinweisen.">Energise with Tummo and Fire, focus with Box and Coherence, wind down with 4-7-8 and Bhramari – each timed to the tenth of a second, with its sources and safety notes.</p></div>
+        <div class="schritt" data-i="2"><span class="nr">03</span><h3 data-en="Your own pattern, built on your wrist." data-de="Dein eigenes Muster, am Handgelenk gebaut.">Your own pattern, built on your wrist.</h3><p data-en="In, hold, out, hold: set every phase to the second, give it a name and a note – and share it with anyone who breathes with CARLON." data-de="Ein, halten, aus, halten: Stell jede Phase auf die Sekunde ein, gib ihm einen Namen und eine Notiz – und teil es mit allen, die mit CARLON atmen.">In, hold, out, hold: set every phase to the second, give it a name and a note – and share it with anyone who breathes with CARLON.</p></div>
+        <div class="schritt" data-i="3"><span class="nr">04</span><h3 data-en="Every heartbeat, fully analysed." data-de="Jeder Herzschlag, ganz ausgewertet.">Every heartbeat, fully analysed.</h3><p data-en="With a chest strap, CARLON shows you the whole HRV analysis after the session: RMSSD and SDNN, Poincaré plot, stress index, DFA α1, tachogram and power spectrum." data-de="Mit Brustgurt zeigt dir CARLON nach der Sitzung die ganze HRV-Auswertung: RMSSD und SDNN, Poincaré-Diagramm, Stressindex, DFA α1, Tachogramm und Leistungsspektrum.">With a chest strap, CARLON shows you the whole HRV analysis after the session: RMSSD and SDNN, Poincaré plot, stress index, DFA α1, tachogram and power spectrum.</p></div>
+        <div class="schritt" data-i="4"><span class="nr">05</span><h3 data-en="After every session: everything on your wrist." data-de="Nach jeder Sitzung: alles am Handgelenk.">After every session: everything on your wrist.</h3><p data-en="Duration, rounds and every hold – plus a curve that shows how closely your breath followed the Tummo pattern. Turn the Digital Crown and the whole analysis scrolls past." data-de="Dauer, Runden und jeder Halt – dazu die Kurve, wie genau dein Atem dem Tummo-Atemmuster gefolgt ist. Dreh die Digital Crown, und die ganze Auswertung zieht an dir vorbei.">Duration, rounds and every hold – plus a curve that shows how closely your breath followed the Tummo pattern. Turn the Digital Crown and the whole analysis scrolls past.</p></div>
+        <div class="schritt" data-i="5"><span class="nr">06</span><h3 data-en="Every cold plunge, tracked." data-de="Jeder Kältegang, erfasst.">Every cold plunge, tracked.</h3><p data-en="One tap starts your cold session, and pulse and HRV run live while you are in the water. Afterwards you see your cold shock, how fast you settle – and whether it gets smaller from plunge to plunge." data-de="Ein Tipp startet den Kältegang, Puls und HRV laufen live mit, solange du im Wasser bist. Danach siehst du deinen Kälteschock, wie schnell du zur Ruhe kommst – und ob er von Gang zu Gang kleiner wird.">One tap starts your cold session, and pulse and HRV run live while you are in the water. Afterwards you see your cold shock, how fast you settle – and whether it gets smaller from plunge to plunge.</p><span class="zeitraffer" data-en="Time-lapse" data-de="Zeitraffer">Time-lapse</span></div>
       </div>
     </div>
   </section>
@@ -1467,11 +1467,13 @@ window.vkHaptik = (function () {
    Karte 01 (atem) und Box-Atmung (01.11.2026, Jan: „zwischen Blume und Atemkurve selbst hin und her wechseln“). */
 function seitenFilm(schirm, v, weiter) {
   var z = v.getAttribute('data-seiten').split(' ').map(Number), B0 = z[0], B1 = z[1], K0 = z[2], K1 = z[3], Z0 = z[4], Z1 = z[5];
-  var seite = 0, an = false, raf = 0, wechsel = false;
+  var seite = 0, an = false, raf = 0, wechsel = false, hand = false, E = 0.07;   // E: vor dem Ende umschalten – sonst blitzt das erste Bild des Wischs (Zucken)
   schirm.classList.add('seiten-schirm'); v.loop = false; v.removeAttribute('loop');
+  // Von selbst (01.11.2026, Jan: „der automatisch animierte Wechsel zwischen Blume und Atemwelle … zuckt nur“): ein ganzer Atemzug
+  // Blume, dann der echte Wisch zur Kurve, ein Durchgang Kurve, Wisch zurück – bis jemand die Uhr berührt, dann führt die Hand.
   function takt() { if (!an) return; var t = v.currentTime;
-    if (seite === 0 && !wechsel && t >= B1) v.currentTime = B0;
-    if (seite === 1 && t >= K1) v.currentTime = K0;
+    if (seite === 0 && !wechsel && t >= B1 - E) { if (hand) v.currentTime = B0; else { blaettern(1); raf = requestAnimationFrame(takt); return; } }
+    if (seite === 1 && !wechsel && t >= K1 - E) { if (hand) v.currentTime = K0; else { blaettern(0); raf = requestAnimationFrame(takt); return; } }
     if (wechsel && seite === 1 && t >= K0) wechsel = false;
     // Der Rückweg endet am Filmende (Box): ist das Video ein paar ms kürzer als Z1, stand der Film dort still und die Blume
     // atmete nicht mehr (01.11.2026, Jan: „hört die Flower of Life auf zu atmen … nicht zuverlässig“) – Ende zählt als Ziel.
@@ -1483,18 +1485,19 @@ function seitenFilm(schirm, v, weiter) {
   // Geste: Finger über Touch (waagerecht übernehmen wir selbst, sonst bricht Safari als Scroll ab), Maus über Pointer
   var x0 = null, y0 = 0, meins = false;
   function ende(dx, dy) {
+    hand = true;
     if (Math.abs(dx) < 8 && Math.abs(dy) < 8) { blaettern(1 - seite); return; }
     if (Math.abs(dx) < 30 || Math.abs(dx) < Math.abs(dy)) return;
     if (dx < 0) { if (seite === 0) blaettern(1); else if (weiter) weiter(); }
     else if (seite === 1) blaettern(0); }
   schirm.addEventListener('touchstart', function (e) { var t = e.touches[0]; x0 = t.clientX; y0 = t.clientY; meins = false; }, { passive: true });
   schirm.addEventListener('touchmove', function (e) { if (x0 === null) return; var t = e.touches[0], dx = t.clientX - x0, dy = t.clientY - y0;
-    if (meins || (Math.abs(dx) > 6 && Math.abs(dx) > Math.abs(dy))) { meins = true; e.preventDefault(); } }, { passive: false });
+    if (meins || (Math.abs(dx) > 6 && Math.abs(dx) > Math.abs(dy))) { meins = true; hand = true; e.preventDefault(); } }, { passive: false });
   schirm.addEventListener('touchend', function (e) { if (x0 === null) return; var t = e.changedTouches[0]; ende(t.clientX - x0, t.clientY - y0); x0 = null; e.preventDefault(); }, { passive: false });
   schirm.addEventListener('touchcancel', function () { x0 = null; });
   schirm.addEventListener('pointerdown', function (e) { if (e.pointerType === 'mouse') { x0 = e.clientX; y0 = e.clientY; } });
   schirm.addEventListener('pointerup', function (e) { if (e.pointerType === 'mouse' && x0 !== null) { ende(e.clientX - x0, e.clientY - y0); x0 = null; } });
-  return function (spiel) { an = spiel; cancelAnimationFrame(raf);
+  return function (spiel) { an = spiel; cancelAnimationFrame(raf); if (!spiel) hand = false;   // wieder im Bild: wieder von selbst
     if (spiel) { if (v.currentTime < B0 && seite === 0 && !wechsel) v.currentTime = B0; v.play().catch(function () {}); raf = requestAnimationFrame(takt); } else v.pause(); };
 }
 (function () {
@@ -1527,6 +1530,23 @@ function seitenFilm(schirm, v, weiter) {
     var st = document.createElement('div'); st.className = 'k-steuer';
     st.innerHTML = '<button type="button" class="k-pfeil" data-r="-1" aria-label="' + (de ? 'Zurück' : 'Previous') + '">‹</button><div class="k-punkte"></div><button type="button" class="k-pfeil" data-r="1" aria-label="' + (de ? 'Weiter' : 'Next') + '">›</button>';
     k.appendChild(bahn); k.appendChild(satz); k.appendChild(st);
+    /* Auch der Text unter der Uhr wischt das Karussell (01.11.2026, Jan: „man kann nur auf den Bildern swipen, auf dem Textblock
+       nicht … sonst stockt es“). Der Finger schiebt die Bahn mit, beim Loslassen rastet die nächste Karte ein. */
+    (function () {
+      var x0 = null, y0 = 0, s0 = 0, meins = false;
+      function karten() { return [].slice.call(bahn.children); }
+      function ziel(i) { var c = karten(), x = c[Math.max(0, Math.min(c.length - 1, i))];
+        bahn.style.scrollSnapType = ''; bahn.scrollTo({ left: x.offsetLeft + x.offsetWidth / 2 - bahn.clientWidth / 2, behavior: 'smooth' }); }
+      function jetzt() { var c = karten(), m = s0 + bahn.clientWidth / 2, best = 0, d = 1e9;
+        c.forEach(function (x, j) { var a = Math.abs(x.offsetLeft + x.offsetWidth / 2 - m); if (a < d) { d = a; best = j; } }); return best; }
+      satz.addEventListener('touchstart', function (e) { var t = e.touches[0]; x0 = t.clientX; y0 = t.clientY; s0 = bahn.scrollLeft; meins = false; }, { passive: true });
+      satz.addEventListener('touchmove', function (e) { if (x0 === null) return; var t = e.touches[0], dx = t.clientX - x0, dy = t.clientY - y0;
+        if (!meins && Math.abs(dx) > 8 && Math.abs(dx) > Math.abs(dy)) { meins = true; bahn.style.scrollSnapType = 'none'; }
+        if (meins) { e.preventDefault(); bahn.scrollLeft = s0 - dx; } }, { passive: false });
+      function los(e) { if (x0 === null) return; var t = e.changedTouches[0], dx = t.clientX - x0; x0 = null;
+        if (!meins) return; meins = false; var i = jetzt(); ziel(Math.abs(dx) > 40 ? i + (dx < 0 ? 1 : -1) : i); }
+      satz.addEventListener('touchend', los, { passive: true }); satz.addEventListener('touchcancel', los, { passive: true });
+    })();
     raster.parentNode.insertBefore(k, raster.nextSibling);
     function inhalt(s) { var g = s.querySelector('.gurt'), z = s.querySelector('.zeitraffer');
       var j = sch.indexOf(s) + 1;
@@ -1542,7 +1562,10 @@ function seitenFilm(schirm, v, weiter) {
       if (i !== gezeigt) { gezeigt = i; satz.innerHTML = inhalt(sch[i]); }
       satz.style.setProperty('--f', f.toFixed(4)); satz.style.setProperty('--af', Math.abs(f).toFixed(4)); }
     bahn.addEventListener('scroll', function () { if (!rq) rq = requestAnimationFrame(folge); }, { passive: true });
-    addEventListener('resize', messe); messe(); if (document.fonts && document.fonts.ready) document.fonts.ready.then(messe);
+    // Nur auf echte Breitenänderung reagieren (01.11.2026, Jan: „beim Runterscrollen springen die Uhren und der Text leicht nach rechts“):
+    // Safari löst beim Ein-/Ausfahren der Adressleiste resize aus – Höhe ändert sich, Breite nicht.
+    var breiteK = innerWidth;
+    addEventListener('resize', function () { if (innerWidth === breiteK) return; breiteK = innerWidth; messe(); }); messe(); if (document.fonts && document.fonts.ready) document.fonts.ready.then(messe);
     /* Film nur auf der Karte in der Mitte, und nur solange das Karussell zu sehen ist */
     var sicht = false, akt = 0, vids = [].map.call(bahn.children, function (f) { return f.querySelector('video'); });
     function spiele() { [].forEach.call(bahn.children, function (f, j) { if (f.__seiten) f.__seiten(sicht && j === akt); });
@@ -1608,7 +1631,8 @@ document.querySelectorAll('[data-karussell]').forEach(function (k) {
   }
   var rq = 0; bahn.addEventListener('scroll', function () { if (!rq) rq = requestAnimationFrame(function () { rq = 0; mitte(); }); }, { passive: true });
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(mitte);
-  addEventListener('resize', mitte);
+  var breiteM = innerWidth;   // nur echte Breitenänderung (Adressleiste ändert nur die Höhe)
+  addEventListener('resize', function () { if (innerWidth === breiteM) return; breiteM = innerWidth; mitte(); });
   function zu(i) { var x = dias[Math.max(0, Math.min(dias.length - 1, i))]; bahn.scrollTo({ left: x.offsetLeft + x.offsetWidth / 2 - bahn.clientWidth / 2, behavior: 'smooth' }); }
   pf.forEach(function (b) { b.addEventListener('click', function () { zu(aktiv + Number(b.dataset.r)); }); });
   dias.forEach(function (d, j) { d.addEventListener('click', function () { if (j !== aktiv) zu(j); }); });
