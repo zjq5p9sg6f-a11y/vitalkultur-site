@@ -600,6 +600,8 @@ document.head.appendChild(s);})();</script>
     .k-punkte { display: flex; gap: 8px; }
     .k-punkte i { width: 6px; height: 6px; border-radius: 3px; background: rgba(235,230,220,.28); transition: width .4s var(--ease), background .4s var(--ease); }
     .k-punkte i.an { width: 18px; background: var(--t); }
+    .k-halt { width: 32px; height: 32px; margin-left: 4px; border-radius: 50%; border: 1px solid var(--line2); background: rgba(235,230,220,.06); color: var(--t2); font: inherit; font-size: 11px; letter-spacing: -1px; line-height: 1; cursor: pointer; display: grid; place-items: center; }
+    @media (hover: none) { .k-steuer { position: relative; } .k-halt { position: absolute; right: 16px; top: 50%; transform: translateY(-50%); margin: 0; } }
     .k-pfeil { width: 36px; height: 36px; border-radius: 50%; border: 1px solid var(--line2); background: rgba(235,230,220,.06); color: var(--t); font: inherit; font-size: 18px; line-height: 1; cursor: pointer; display: none; place-items: center; }
     .k-pfeil:disabled { opacity: .3; cursor: default; }
     @media (hover: hover) and (pointer: fine) { .k-pfeil { display: grid; } }
@@ -1675,7 +1677,7 @@ function seitenFilm(schirm, v, weiter) {
         if (n2) bahn.scrollTo({ left: bahn.scrollLeft + n2.offsetLeft - f.offsetLeft, behavior: 'smooth' }); }); });
     var satz = document.createElement('div'); satz.className = 'k-satz';
     var st = document.createElement('div'); st.className = 'k-steuer';
-    st.innerHTML = '<button type="button" class="k-pfeil" data-r="-1" aria-label="' + (de ? 'Zurück' : 'Previous') + '">‹</button><div class="k-punkte"></div><button type="button" class="k-pfeil" data-r="1" aria-label="' + (de ? 'Weiter' : 'Next') + '">›</button>';
+    st.innerHTML = '<button type="button" class="k-pfeil" data-r="-1" aria-label="' + (de ? 'Zurück' : 'Previous') + '">‹</button><div class="k-punkte"></div><button type="button" class="k-pfeil" data-r="1" aria-label="' + (de ? 'Weiter' : 'Next') + '">›</button><button type="button" class="k-halt" data-filme-schalter aria-pressed="false"></button>';
     k.appendChild(bahn); k.appendChild(satz); k.appendChild(st);
     /* Auch der Text unter der Uhr wischt das Karussell (01.11.2026, Jan: „man kann nur auf den Bildern swipen, auf dem Textblock
        nicht … sonst stockt es“). Der Finger schiebt die Bahn mit, beim Loslassen rastet die nächste Karte ein. */
@@ -1879,6 +1881,28 @@ document.querySelectorAll('[data-karussell]').forEach(function (k) {
    Vitalwerte nicht“): iOS verweigert dann jedes Abspielen ohne Berührung, die Uhr blieb beim Vorschaubild stehen. Jede Berührung
    (auch ein Wisch) gibt alle noch gesperrten Filme frei – WebKit merkt sich die Freigabe je Film. Was gerade zu sehen sein soll,
    läuft sofort; alles andere wird nur freigegeben und gleich wieder angehalten. */
+/* Filme anhalten (01.11.2026, WCAG 2.2.2 „Pause, Stop, Hide“): Die Uhren-Filme starten von selbst und laufen in Schleife –
+   der Knopf ❚❚ in jedem Karussell hält ALLE Filme der Seite an und startet sie wieder. Bei „Bewegung reduzieren“ starten sie
+   gar nicht erst (Vorschaubild steht), bis man sie selbst einschaltet. Die Wahl gilt auch beim nächsten Besuch. */
+(function () {
+  var root = document.documentElement, de = root.lang === 'de', aus = false, wahl = null;
+  try { wahl = localStorage.getItem('vk-filme'); } catch (e) {}
+  aus = wahl === 'aus' || (wahl !== 'an' && matchMedia('(prefers-reduced-motion: reduce)').matches);
+  var echt = HTMLMediaElement.prototype.play;
+  HTMLMediaElement.prototype.play = function () { return root.classList.contains('filme-aus') ? Promise.resolve() : echt.apply(this, arguments); };
+  function sichtbar(v) { var r = v.getBoundingClientRect(); if (!(r.bottom > 0 && r.top < innerHeight && r.right > 0 && r.left < innerWidth)) return false;
+    var d = v.closest('.k-dia'); if (d) return d.classList.contains('an'); var s = v.closest('.at-scr'); return !s || s.classList.contains('on'); }
+  function setze(x, merken) { aus = x; root.classList.toggle('filme-aus', x);
+    [].forEach.call(document.querySelectorAll('[data-filme-schalter]'), function (b) {
+      b.setAttribute('aria-pressed', x ? 'true' : 'false'); b.textContent = x ? '▶' : '❚❚';
+      var t = de ? (x ? 'Filme abspielen' : 'Filme anhalten') : (x ? 'Play videos' : 'Pause videos'); b.setAttribute('aria-label', t); b.title = t; });
+    if (merken) try { localStorage.setItem('vk-filme', x ? 'aus' : 'an'); } catch (e) {}
+    if (x) [].forEach.call(document.querySelectorAll('video'), function (v) { v.pause(); });
+    else { [].forEach.call(document.querySelectorAll('video'), function (v) { if (sichtbar(v)) { var p = v.play(); if (p && p.catch) p.catch(function () {}); } });
+      document.dispatchEvent(new CustomEvent('vk-frei')); } }
+  document.addEventListener('click', function (e) { var b = e.target.closest && e.target.closest('[data-filme-schalter]'); if (b) setze(!aus, true); });
+  setze(aus, false);
+})();
 (function () {
   function imBild(v) { var r = v.getBoundingClientRect(); return r.bottom > 0 && r.top < innerHeight && r.right > 0 && r.left < innerWidth; }
   function soll(v) { var d = v.closest('.k-dia'); if (d) return d.classList.contains('an') && imBild(v);
