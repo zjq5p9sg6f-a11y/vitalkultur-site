@@ -128,6 +128,9 @@ document.head.appendChild(s);})();</script>
     h1 em, h2 em, h3 em { font-style: normal; color: var(--stille); }
     .lead { font-size: clamp(18px, 2vw, 21px); line-height: 1.5; font-weight: 300; color: var(--t2); max-width: 540px; margin-bottom: var(--s34); }
     .ctas { display: flex; gap: var(--s13); flex-wrap: wrap; }
+    .k-dia .at-scr { background: center / cover no-repeat; }
+    .k-dia .at-scr > video { transition: opacity .25s linear; }
+    .k-dia .at-scr > video.wartet { opacity: 0; }
     .cta-hinweis { font-size: .82rem; opacity: .68; max-width: 34em; margin-top: var(--s13); }
     .teilen-cta { justify-content: center; margin-top: var(--s34); }
     .hero-fuss .cta-hinweis, .teilen-cta + .cta-hinweis, .eb-preis { text-align: center; margin-left: auto; margin-right: auto; }
@@ -1579,9 +1582,18 @@ function seitenFilm(schirm, v, weiter) {
     addEventListener('resize', function () { if (innerWidth === breiteK) return; breiteK = innerWidth; messe(); }); messe(); if (document.fonts && document.fonts.ready) document.fonts.ready.then(messe);
     /* Film nur auf der Karte in der Mitte, und nur solange das Karussell zu sehen ist */
     var sicht = false, akt = 0, vids = [].map.call(bahn.children, function (f) { return f.querySelector('video'); });
-    function spiele() { [].forEach.call(bahn.children, function (f, j) { if (f.__seiten) f.__seiten(sicht && j === akt); });
+    /* Nie schwarz (01.11.2026, Jan: „bei zurück swipen kann das Bild aus der Watch verschwinden“): iOS malt nach Pause + Zurückspulen
+       kein Bild, wenn es das Abspielen verweigert (Stromsparmodus) oder den Decoder freigegeben hat. Das Vorschaubild liegt deshalb
+       immer hinter dem Film; der Film wird erst sichtbar, wenn wirklich ein Bild gemalt ist. */
+    vids.forEach(function (v) { if (v && v.poster) v.parentNode.style.backgroundImage = 'url(' + v.poster + ')'; });
+    function bildDa(v) { v.classList.remove('wartet'); }
+    function wartet(v) { v.classList.add('wartet');
+      if (v.requestVideoFrameCallback) v.requestVideoFrameCallback(function () { bildDa(v); });
+      else v.addEventListener('playing', function () { bildDa(v); }, { once: true }); }
+    function spiele() { [].forEach.call(bahn.children, function (f, j) { if (!f.__seiten) return; var an = sicht && j === akt;
+        if (an && vids[j] && vids[j].paused) wartet(vids[j]); f.__seiten(an); });
       vids.forEach(function (v, j) { if (!v || bahn.children[j].__seiten || v.hasAttribute('data-scrub')) return;
-      if (sicht && j === akt) { if (v.paused) { try { v.currentTime = 0; } catch (e) {} v.preload = 'auto'; v.play().catch(function () {}); } } else v.pause(); }); }
+      if (sicht && j === akt) { if (v.paused) { wartet(v); try { v.currentTime = 0; } catch (e) {} v.preload = 'auto'; v.play().catch(function () {}); } } else v.pause(); }); }
     k.addEventListener('k-wahl', function (e) { akt = e.detail; spiele(); });
     if ('IntersectionObserver' in window) new IntersectionObserver(function (es) {
       sicht = es[0].isIntersecting; spiele();
