@@ -60,11 +60,12 @@ FAQ_EN = ("A one-time purchase on the App Store – no subscription, no per-part
           "licenses in volume through Apple School Manager or Apple Business Manager.")
 FAQ_DE = ("Ein einmaliger Kauf im App Store – kein Abo, keine Gebühren pro Proband. Einrichtungen kaufen Lizenzen "
           "in größerer Zahl über Apple School Manager oder Apple Business Manager.")
-ersetze("FAQ sichtbar", r'(<summary data-en="What does it cost\?" data-de="Was kostet sie\?">[^<]*</summary>)<p data-en="During the beta[^"]*" data-de="[^"]*">.*?</p>',
+ersetze("FAQ sichtbar", r'(<summary data-en="What does it[\s\xa0]cost\?" data-de="Was kostet[\s\xa0]sie\?">[^<]*</summary>)<p data-en="During the beta[^"]*" data-de="[^"]*">.*?</p>',
         lambda m: f'{m.group(1)}<p data-en="{FAQ_EN}" data-de="{FAQ_DE}">{FAQ_EN}</p>')
+# FAQ-Markup erzeugt der Bau (werkzeuge/faq-ld.py) aus der sichtbaren FAQ – hier nur noch ein Fallback
 ersetze("FAQ Schema", r'("name": "What does it cost\?", "acceptedAnswer": \{"@type": "Answer", "text": ")During the beta[^"]*(")',
         r'\1A one-time purchase of 99.99 EUR on the App Store, with no subscription and no per-participant fees. '
-        r'Institutions can buy licenses in volume through Apple School Manager or Apple Business Manager.\2')
+        r'Institutions can buy licenses in volume through Apple School Manager or Apple Business Manager.\2', 0)
 if '"downloadUrl"' not in s:
     ersetze("Kauf-Angebot", r'("@type": "SoftwareApplication",)',
             r'\1\n        "downloadUrl": "' + STORE + r'",\n        "offers": {"@type": "Offer", "price": "99.99", '
@@ -83,8 +84,6 @@ print(f"Rest „beta/TestFlight“ auf der Seite: {len(rest)} (Danksagung an Bet
 if probe:
     raise SystemExit(0)
 SEITE.write_text(s, encoding="utf-8"); LLMS.write_text(llms_neu, encoding="utf-8")
-subprocess.run(["python3", str(Path.home() / "Developer/WimHofBreathwork/scripts/app-tour/sprachseite.py"),
-                "hrv-research/index.html", "de", "CARLON HRV Research – HRV-Studien-App für Polar H10 & Movesense Flash",
-                "iPhone-App für HRV-Studien: bis zu vier Polar H10 oder Movesense Flash, Phasenmarker, DFA α1 und "
-                "Original-RR für Kubios, Python und R."], cwd=HIER.parent, check=True)
+# Bau wie jeden Tag: DE erzeugen, Satzregeln, FAQ-Markup je Sprache aus der sichtbaren FAQ (02.11.2026)
+subprocess.run(["bash", str(Path.home() / "Developer/website-werkstatt/research/bau.sh")], check=True)
 print(f"✓ Starttag gesetzt — Store-Links auf der Seite: {s.count(STORE)}")
