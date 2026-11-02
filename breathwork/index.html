@@ -41,19 +41,20 @@
       "applicationCategory": "HealthApplication",
       "applicationSubCategory": "Breathwork",
       "url": "https://vitalkultur.com/breathwork/",
-      "description": "Breathwork on Apple Watch: 19 techniques, three haptic levels and session analysis. Practise with your eyes closed and create your own breathing patterns.",
+      "description": "Breathing practice for Apple Watch and iPhone. 19 guided techniques felt as haptic cues on the wrist with eyes closed, three haptic levels, a pattern builder on the watch and sharing with one tap. Pulse and breathing from the watch are included; the optional Cockpit adds beat-to-beat HRV from a Polar H10 or Movesense paired straight to the watch.",
       "featureList": [
         "19 guided breathing techniques",
         "Three haptic levels",
-        "Haptic guidance for eyes-closed breathing practice on Apple Watch",
-        "Create and share your own breathing patterns",
-        "Tummo rounds and a separate cold-tracking mode",
-        "Heart rate from the watch's optical sensor",
-        "Compare target and detected breathing, with rhythm accuracy for paced patterns",
-        "Optional CARLON Cockpit: RR intervals from Polar H10 or Movesense and HRV analysis",
-        "iPhone app: comparisons, trends and export",
-        "Save workouts and mindful minutes to Apple Health with your permission",
-        "No account, no in-app tracking"
+        "Eyes-closed guidance on Apple Watch",
+        "Pattern builder on the watch",
+        "Share patterns with one tap",
+        "Tummo with breath retention and cold tracking",
+        "Pulse from the watch's optical sensor",
+        "Breathing rhythm against the guide",
+        "Cockpit (in-app purchase): Polar H10 or Movesense paired to the watch, HRV, Poincaré, stress index, tachogram",
+        "iPhone companion: session comparison, long-term trends, export",
+        "Apple Health: workouts and mindful minutes",
+        "No account, data stays on your devices"
       ],
       "brand": {
         "@type": "Brand",
@@ -624,7 +625,7 @@ document.head.appendChild(s);})();</script>
     @media (orientation: portrait) and (min-width: 961px) and (max-width: 1366px) {
       .story-raster { display: none; }
       .k-story { --kw: min(54vw, 540px, calc((100svh - 400px) * .625)) !important; }
-      .k-satz h3 { font-size: 46px !important; line-height: 1.15; max-width: 22ch; }
+      .k-satz h2, .k-satz h3 { font-size: 46px !important; line-height: 1.15; max-width: 22ch; }
       .k-satz p { font-size: 21px !important; max-width: 38ch; }
     }
     @media (max-width: 960px), (orientation: portrait) and (min-width: 961px) and (max-width: 1366px) {
@@ -640,7 +641,7 @@ document.head.appendChild(s);})();</script>
       .k-satz { position: relative; max-width: 34em; margin: 0 auto; padding: var(--s13) 16px 0; text-align: center; touch-action: pan-y; }
       .k-satz > * { opacity: calc(1 - 2.2 * var(--af, 0)); transform: translateX(calc(var(--f, 0) * var(--eb, 40px) * -1)); will-change: transform, opacity; }
       .k-satz .gurt { display: table; margin: 0 auto var(--s13); --eb: 24px; }
-      .k-satz h3 { font-size: 28px; line-height: 1.22; letter-spacing: -.012em; font-weight: 300; text-wrap: balance; max-width: 22ch; margin: 0 auto; --eb: 56px; }
+      .k-satz h2, .k-satz h3 { font-size: 28px; line-height: 1.22; letter-spacing: -.012em; font-weight: 300; text-wrap: balance; max-width: 22ch; margin: 0 auto; --eb: 56px; }
       .k-satz p { font-size: 17px; line-height: 1.55; font-weight: 350; color: var(--t2); margin: var(--s13) auto 0; max-width: 34ch; text-wrap: pretty; --eb: 96px; }
       .k-satz .zeitraffer { margin-top: var(--s13); --eb: 120px; }
       .k-story .k-steuer { margin-top: var(--s21); }
@@ -653,7 +654,7 @@ document.head.appendChild(s);})();</script>
       .k-story .k-punkte i.an { background: none; }
     }
     @media (max-width: 960px) and (min-width: 600px) {
-      .k-satz h3 { font-size: 38px; line-height: 1.18; max-width: 24ch; }
+      .k-satz h2, .k-satz h3 { font-size: 38px; line-height: 1.18; max-width: 24ch; }
       .k-satz p { font-size: 19px; max-width: 36ch; }
     }
     html { scroll-padding-top: 55px; }
@@ -689,7 +690,7 @@ document.head.appendChild(s);})();</script>
       .k-nr span { color: var(--t4); }
       .labor .k-nr { color: var(--puls); }
       .k-satz .gurt { display: table; margin: 0 0 var(--s13); }
-      .k-satz h3 { font-size: clamp(36px, 3.6vw, 52px); line-height: 1.12; letter-spacing: -.02em; font-weight: 300; text-wrap: balance; max-width: 15ch; margin: 0; }
+      .k-satz h2, .k-satz h3 { font-size: clamp(36px, 3.6vw, 52px); line-height: 1.12; letter-spacing: -.02em; font-weight: 300; text-wrap: balance; max-width: 15ch; margin: 0; }
       .k-satz p { font-size: clamp(18px, 1.5vw, 21px); line-height: 1.6; font-weight: 350; color: var(--t2); margin: var(--s21) 0 0; max-width: 32ch; text-wrap: pretty; }
       .k-satz .zeitraffer { margin-top: var(--s21); }
       .k-story .k-steuer { grid-column: 2; grid-row: 2; align-self: start; justify-content: flex-start; margin-top: var(--s34); }
@@ -1236,9 +1237,9 @@ document.head.appendChild(s);})();</script>
           </ol>
           <div class="label klein stufen-kopf" data-en="How much guidance? Three levels" data-de="Wie viel Führung? Drei Stufen">How much guidance? Three levels</div>
                     <ul class="stufen" role="radiogroup" aria-label="Haptic level" data-label-de="Haptik-Stufe">
-            <li><button class="glas" role="radio" aria-checked="false" data-stufe="1"><b data-en="Level 1" data-de="Stufe 1">Level 1</b><span data-en="Phase cues only – one signal at each change" data-de="Nur die Phasenwechsel – ein Signal bei jedem Wechsel">Phase cues only – one signal at each change</span><svg viewBox="0 0 260 22" aria-hidden="true"><g fill="currentColor"><circle cx="6" cy="11" r="4"/><circle cx="18" cy="11" r="4"/><circle cx="136" cy="11" r="4"/></g><path d="M0 21h260" stroke="currentColor" opacity=".2"/></svg></button></li>
-            <li><button class="glas" role="radio" aria-checked="true" data-stufe="2"><b data-en="Level 2" data-de="Stufe 2">Level 2</b><span data-en="Extra taps on the inhale; a cue for the exhale" data-de="Zusätzliche Impulse beim Einatmen; ein Signal zum Ausatmen">Extra taps on the inhale; a cue for the exhale</span><svg viewBox="0 0 260 22" aria-hidden="true"><g fill="currentColor"><circle cx="6" cy="11" r="1.6"/><circle cx="20" cy="11" r="2"/><circle cx="32" cy="11" r="2.4"/><circle cx="42" cy="11" r="2.8"/><circle cx="51" cy="11" r="3.2"/><circle cx="59" cy="11" r="3.6"/><circle cx="66" cy="11" r="4"/><circle cx="136" cy="11" r="4"/></g><path d="M0 21h260" stroke="currentColor" opacity=".2"/></svg></button></li>
-            <li><button class="glas" role="radio" aria-checked="false" data-stufe="3"><b data-en="Level 3" data-de="Stufe 3">Level 3</b><span data-en="Full guidance – extra taps on the inhale and exhale" data-de="Volle Führung – zusätzliche Impulse beim Ein- und Ausatmen">Full guidance – extra taps on the inhale and exhale</span><svg viewBox="0 0 260 22" aria-hidden="true"><g fill="currentColor"><circle cx="6" cy="11" r="1.6"/><circle cx="20" cy="11" r="2"/><circle cx="32" cy="11" r="2.4"/><circle cx="42" cy="11" r="2.8"/><circle cx="51" cy="11" r="3.2"/><circle cx="59" cy="11" r="3.6"/><circle cx="66" cy="11" r="4"/><circle cx="136" cy="11" r="4"/><circle cx="143" cy="11" r="3.6"/><circle cx="151" cy="11" r="3.2"/><circle cx="160" cy="11" r="2.8"/><circle cx="170" cy="11" r="2.4"/><circle cx="182" cy="11" r="2"/><circle cx="196" cy="11" r="1.6"/></g><path d="M0 21h260" stroke="currentColor" opacity=".2"/></svg></button></li>
+            <li role="none"><button class="glas" role="radio" aria-checked="false" data-stufe="1"><b data-en="Level 1" data-de="Stufe 1">Level 1</b><span data-en="Phase cues only – one signal at each change" data-de="Nur die Phasenwechsel – ein Signal bei jedem Wechsel">Phase cues only – one signal at each change</span><svg viewBox="0 0 260 22" aria-hidden="true"><g fill="currentColor"><circle cx="6" cy="11" r="4"/><circle cx="18" cy="11" r="4"/><circle cx="136" cy="11" r="4"/></g><path d="M0 21h260" stroke="currentColor" opacity=".2"/></svg></button></li>
+            <li role="none"><button class="glas" role="radio" aria-checked="true" data-stufe="2"><b data-en="Level 2" data-de="Stufe 2">Level 2</b><span data-en="Extra taps on the inhale; a cue for the exhale" data-de="Zusätzliche Impulse beim Einatmen; ein Signal zum Ausatmen">Extra taps on the inhale; a cue for the exhale</span><svg viewBox="0 0 260 22" aria-hidden="true"><g fill="currentColor"><circle cx="6" cy="11" r="1.6"/><circle cx="20" cy="11" r="2"/><circle cx="32" cy="11" r="2.4"/><circle cx="42" cy="11" r="2.8"/><circle cx="51" cy="11" r="3.2"/><circle cx="59" cy="11" r="3.6"/><circle cx="66" cy="11" r="4"/><circle cx="136" cy="11" r="4"/></g><path d="M0 21h260" stroke="currentColor" opacity=".2"/></svg></button></li>
+            <li role="none"><button class="glas" role="radio" aria-checked="false" data-stufe="3"><b data-en="Level 3" data-de="Stufe 3">Level 3</b><span data-en="Full guidance – extra taps on the inhale and exhale" data-de="Volle Führung – zusätzliche Impulse beim Ein- und Ausatmen">Full guidance – extra taps on the inhale and exhale</span><svg viewBox="0 0 260 22" aria-hidden="true"><g fill="currentColor"><circle cx="6" cy="11" r="1.6"/><circle cx="20" cy="11" r="2"/><circle cx="32" cy="11" r="2.4"/><circle cx="42" cy="11" r="2.8"/><circle cx="51" cy="11" r="3.2"/><circle cx="59" cy="11" r="3.6"/><circle cx="66" cy="11" r="4"/><circle cx="136" cy="11" r="4"/><circle cx="143" cy="11" r="3.6"/><circle cx="151" cy="11" r="3.2"/><circle cx="160" cy="11" r="2.8"/><circle cx="170" cy="11" r="2.4"/><circle cx="182" cy="11" r="2"/><circle cx="196" cy="11" r="1.6"/></g><path d="M0 21h260" stroke="currentColor" opacity=".2"/></svg></button></li>
           </ul>
           <button class="btn btn-1 sp-los" type="button" aria-pressed="false"><span data-en="Box breathing with sound" data-de="Box-Atmung mit Ton">Box breathing with sound</span></button>
           <p class="sp-hinweis" data-en="The sounds demonstrate the haptic cues – in the app, the vibration on your wrist guides you. Tap a cue or play the watch video." data-de="Die Töne machen die haptischen Signale hörbar – in der App führt dich allein die Vibration am Handgelenk. Tipp auf ein Signal oder spiel das Uhr-Video ab.">The sounds demonstrate the haptic cues – in the app, the vibration on your wrist guides you. Tap a cue or play the watch video.</p>
@@ -1423,7 +1424,7 @@ document.head.appendChild(s);})();</script>
   // Sprache = Adresse (/breathwork/ englisch, /breathwork/de/ deutsch) — beide statisch für Suchmaschinen.
   var lang = document.documentElement.lang === 'de' ? 'de' : 'en';
   document.querySelectorAll('#langToggle [data-l]').forEach(function (s) { s.classList.toggle('on', s.getAttribute('data-l') === lang); });
-  (function (b, t) { b.setAttribute('aria-label', t); b.setAttribute('title', t); })(document.getElementById('langToggle'), lang === 'de' ? 'Zu Englisch wechseln' : 'Switch to German');
+  (function (b, t) { b.setAttribute('aria-label', t); b.setAttribute('title', t); })(document.getElementById('langToggle'), 'EN · DE – ' + (lang === 'de' ? 'Zu Englisch wechseln' : 'Switch to German'));
   if (lang === 'de') {
     document.querySelectorAll('[data-beta]').forEach(function (a) { a.setAttribute('href', 'mailto:jan@vitalkultur.com?subject=CARLON%20Breathwork%20%E2%80%93%20Beta-Zugang&body=Hallo%20Jan%2C%0A%0Aich%20m%C3%B6chte%20CARLON%20Breathwork%20testen.%0A%0AApple-Watch-Modell%3A%0ADiese%20Atem%C3%BCbungen%20mache%20ich%3A%0AE-Mail%20f%C3%BCr%20die%20TestFlight-Einladung%3A%0A%0AViele%20Gr%C3%BC%C3%9Fe%0A'); });
     document.querySelectorAll('[data-coach]').forEach(function (a) { a.setAttribute('href', 'mailto:jan@vitalkultur.com?subject=CARLON%20Breathwork%20%E2%80%93%20Coach-Beta&body=Hallo%20Jan%2C%0A%0Aich%20leite%20Atemarbeit%20an%20und%20m%C3%B6chte%20CARLON%20mit%20meinen%20Teilnehmenden%20testen.%0A%0AWas%20ich%20unterrichte%3A%0AMit%20wie%20vielen%20Menschen%20ich%20arbeite%3A%0AApple-Watch-Modell%3A%0A%0AViele%20Gr%C3%BC%C3%9Fe%0A'); });
@@ -1705,7 +1706,7 @@ function seitenFilm(schirm, v, weiter) {
     raster.parentNode.insertBefore(k, raster.nextSibling);
     function inhalt(s) { var g = s.querySelector('.gurt'), z = s.querySelector('.zeitraffer');
       var j = sch.indexOf(s) + 1;
-      return '<span class="k-nr" aria-hidden="true">0' + j + '<span> / 0' + sch.length + '</span></span>' + (g ? g.outerHTML : '') + s.querySelector('h3').outerHTML + s.querySelector('p').outerHTML + (z ? z.outerHTML : ''); }
+      return '<span class="k-nr" aria-hidden="true">0' + j + '<span> / 0' + sch.length + '</span></span>' + (g ? g.outerHTML : '') + s.querySelector('h3').outerHTML.replace(/^<h3/, '<h2').replace(/<\/h3>$/, '</h2>') + s.querySelector('p').outerHTML + (z ? z.outerHTML : ''); }
     /* Platz für den LÄNGSTEN Satz – die Seite springt beim Wischen nie */
     function messe() { if (!k.offsetWidth) return; var m = 0; satz.style.minHeight = '';
       sch.forEach(function (s) { satz.innerHTML = inhalt(s); m = Math.max(m, satz.offsetHeight); });
@@ -1836,7 +1837,7 @@ document.querySelectorAll('[data-karussell]').forEach(function (k) {
     var z = v.getAttribute('data-scrub').split(' ').map(Number), X0 = z[0], X1 = z[1], ST = z[2], N = Math.round((X1 - X0) / ST) + 1;
     var schirm = v.closest('.at-screen'), hand = false, sicht = false, raf = 0, k = 0, ziel = -1, t0 = 0;
     var still = matchMedia('(prefers-reduced-motion: reduce)').matches, DAUER = 18;
-    v.pause(); v.removeAttribute('loop'); v.preload = 'auto';
+    v.pause(); v.removeAttribute('loop');   // vorladen erst beim Hereinscrollen (Lighthouse 02.11.2026: 0,9 MB beim Seitenaufruf)
     // iOS-Safari zeigt Bilder eines Videos, das nie lief, nicht an – einmal kurz anspielen, dann nur noch springen
     var bereit = false;
     function wecke() { if (bereit) return; bereit = true; var p = v.play();
@@ -1866,6 +1867,7 @@ document.querySelectorAll('[data-karussell]').forEach(function (k) {
     addEventListener('pointerup', function (e) { if (maus && !bewegt) tipp(e.clientX); maus = false; });
     schirm.classList.add('scrub-schirm');
     if (!('IntersectionObserver' in window)) return;
+    new IntersectionObserver(function (es) { if (es[0].isIntersecting) v.preload = 'auto'; }, { rootMargin: '600px 0px' }).observe(v);
     new IntersectionObserver(function (es) { sicht = es[0].isIntersecting; if (sicht) los(); else { hand = false; t0 = 0; } }, { threshold: 0.6 }).observe(v);
     new MutationObserver(los).observe(v.closest('.at-scr'), { attributes: true, attributeFilter: ['class'] });
   });
