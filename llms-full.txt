@@ -6,14 +6,14 @@
 
 - **Platform:** iPhone with iOS 17 or later
 - **Sensors:** Polar H10 and Movesense Flash – up to four at once from one iPhone
-- **In-sensor recording:** Polar H10: up to 95,000 beats (about 20 h of everyday life, about 10.5 h at 150 bpm) · Movesense Flash: about 11 h of ECG at 256 Hz plus motion
-- **RR data:** Polar H10 live in 1/1024 s, from its memory in 1 ms · Movesense Flash: R peaks detected in the 256 Hz ECG · originals kept unchanged
+- **Onboard recording:** Polar H10: up to 95,000 RR intervals (about 20 h of everyday life, about 10.5 h at 150 bpm) · Movesense Flash: about 11 h of ECG at 256 Hz plus motion
+- **RR data:** Polar H10: resolution 1/1024 s live, 1 ms from its memory · Movesense Flash: R peaks detected in the 256 Hz ECG · exported as recorded
 - **Protocol phases:** Event buttons, one tap marks every running recording; segment and event tables in the export
-- **Metrics:** RMSSD, SDNN, pNN50, SD1/SD2, LF/HF, Baevsky, DFA α1 – also over time in 2-minute windows every 5 s
-- **Exports:** CSV with Kubios import settings, Kubios text, FIT, EDF+, WFDB, JSON with audit trail, PDF report, figures as vector PDF and 300-dpi PNG
-- **Validation:** 331 of 331 checks against NeuroKit2 and SciPy (validation dossier 1.4)
-- **Privacy:** No account, no CARLON server, no analytics in the app
-- **Version:** 1.4 · page updated 29 October 2026
+- **Metrics:** RMSSD, SDNN, pNN50, SD1/SD2, LF/HF, Baevsky, DFA α1; α1 also over time in 2-minute windows every 5 s
+- **Exports:** CSV with Kubios import settings, Kubios text, FIT, EDF+, WFDB, JSON (complete export with audit trail), PDF report, figures as vector PDF and 300-dpi PNG
+- **Validation:** 331 of 331 checks passed against NeuroKit2, SciPy and Task Force definitions (validation dossier 1.4)
+- **Privacy:** No account, no CARLON server, no usage analytics in the app
+- **Version:** 1.4 · page updated November 2, 2026
 
 ## Frequently asked questions
 
@@ -23,58 +23,58 @@ Two sensors, both tested with the app: the Polar H10 chest strap – live and in
 
 ### How long can a Polar H10 or Movesense Flash record without the phone?
 
-Polar H10: up to 95,000 beats in the sensor – about 20 hours of everyday life, about 10.5 hours at 150 bpm; one recording per strap. Movesense Flash: about 11 hours of ECG at 256 Hz plus motion in its 128 MB memory. The iPhone only needs to be nearby to start and to read out.
+Polar H10: up to 95,000 RR intervals in the sensor – about 20 hours of everyday life, about 10.5 hours at 150 bpm; one recording per strap. Movesense Flash: about 11 hours of ECG at 256 Hz plus motion in its 128 MB memory. The iPhone needs to be nearby only to start, and to stop and read out.
 
 ### Can one iPhone record several Polar H10 at once?
 
-Yes – up to four from one iPhone. They record to their own memory and are read out together afterwards; each recording is assigned to its participant with its real start time.
+Yes – up to four from one iPhone. They record to their own memory and are read out together afterwards; each recording is assigned to its participant code with its stored start time.
 
 ### Can I use the data in Kubios HRV?
 
-Yes. The CSV carries the exact settings for the Kubios custom text import in its header; the app also writes a Kubios text file and FIT. RR intervals are exported exactly as recorded.
+The CSV carries the intended settings for the Kubios custom text import in its header; the app also writes a Kubios text file and FIT. RR intervals are exported as recorded. Comparable results also depend on the analysis settings you choose; a documented Kubios import test is in progress.
 
 ### How do I get values for each phase?
 
 Tap an event button at each phase change. The segment table lists duration, beats, heart rate, RMSSD, SDNN and pNN50 for every phase between two events, computed with the same validated code as the rest of the app.
 
-### How is the app validated?
+### What has been verified?
 
-Every metric is compared with independent reference implementations (NeuroKit2, SciPy, Task Force definitions) on 18 RR series with 20,431 beats: 331 of 331 checks passed (metric comparisons plus artifact, threshold and rhythm checks). Artifact detection matches NeuroKit2 beat by beat. The version-specific dossier lists every check with its tolerance.
+Every metric is compared with independent reference implementations (NeuroKit2, SciPy, Task Force definitions) on 18 RR series with 20,431 beats: 331 of 331 checks passed (metric comparisons plus artifact, threshold and rhythm checks). With matching settings, artifact detection matches NeuroKit2 beat by beat. The version-specific dossier lists every check with its tolerance. This verifies the computation, not the clinical accuracy of the sensors.
 
 ### Do older recordings benefit from updates?
 
-Yes. The app stores only the original sensor data and computes every metric fresh from it, so an improved method applies to all past recordings. Open or re-export a recording to get the latest analysis; files you exported earlier stay unchanged and name the app version that produced them.
+Yes. The app keeps the original sensor data and computes every metric fresh from it, so an improved method applies to all past recordings. Open or re-export a recording to get the latest analysis; files you exported earlier stay unchanged and name the app version that produced them. Archive the files used for your study.
 
 ### Can reviewers recompute the results?
 
-Yes. Every export contains the original RR intervals, each beat's artifact flag and correction, the app version and the exact method of every metric. With open tools such as NeuroKit2 or SciPy, anyone can recompute the values – the validation dossier shows how.
+Yes. The RR exports contain the original intervals; the complete JSON export and the report add each beat's artifact flag and correction, the app version and the exact method of every metric. With open tools such as NeuroKit2 or SciPy, anyone can recompute the values – the validation dossier shows how.
 
 ### Does any data leave the iPhone?
 
-Only where you send it: an export, a study folder you choose, or your iPhone’s own backup. There is no account and no CARLON server – nothing reaches us.
+The app processes data on the iPhone and sends no measurement data to us. Copies exist only where you create them: an export, a study folder you choose, or your iPhone’s own backup. There is no account and no CARLON server.
 
 ### Is there an Android version?
 
-No – CARLON HRV Research runs on iPhone with iOS 17 or later. The exported files open on any platform.
+No – CARLON HRV Research runs on iPhone with iOS 17 or later. The exported files can be processed on other platforms with compatible software.
 
 ### Is it a medical device?
 
-No. It is a research and wellness tool and does not diagnose or treat any condition.
+No. It is a research and wellness tool and is not intended to diagnose or treat any condition.
 
 ### Can I use it for a bachelor’s or master’s thesis?
 
-Yes – it is built for that: participants under a study code, phase markers, values per phase, a methods paragraph to copy, figures at 300 dpi and a citation with the app version. The data stay on the iPhone until you export them or switch on the study folder; check your university’s rules on where study data may be stored.
+Yes – it is built for that: participants under a study code, phase markers, values per phase, a draft methods paragraph, figures at 300 dpi and a citation with the app version. The data stay on the iPhone until you export them or switch on the study folder; check your university’s rules on where study data may be stored.
 
 ### What does it cost?
 
-During the beta, access is by invitation through Apple TestFlight. At launch it becomes a one-time purchase on the App Store – no subscription, no per-participant fees; institutions can buy licenses in volume through Apple School Manager or Apple Business Manager.
+During the beta, access is by invitation through Apple TestFlight. At launch it is planned as a one-time purchase on the App Store – no subscription, no per-participant fees; volume purchasing for institutions through Apple School Manager or Apple Business Manager is planned.
 
 ## Data protection and study conduct (methods block for ethics applications)
 
-Recording and storage. RR intervals are recorded with CARLON HRV Research (iOS app) from Polar H10 or Movesense Flash chest sensors via Bluetooth, live or in the sensor’s internal memory with later read-out; until read-out, such a recording remains on the sensor. Data are stored only locally on the study iPhone. The app has no user account, no server of its own and no analytics or advertising services. Data leave the device only through an explicit export by the study team (iOS share sheet) to a destination the team chooses, or through the optional study folder: a folder the team selects in the Files app, e.g. institutional storage, to which the app copies each new recording. Recordings are part of the device’s regular iPhone backup.
-Pseudonymisation. Participants are entered under a study code chosen by the team (e.g. P-01). On export, the participant can be replaced by a stable pseudonym (ANON- followed by eight hexadecimal characters, derived from an internal identifier with SHA-256). The key linking code and person is kept by the study team outside the app. The data are therefore pseudonymised, not anonymised. Free-text notes are exported as entered; the study team decides what they contain.
-Integrity and deletion. Original RR intervals are stored unchanged; corrections are kept separately. Changes are logged in a tamper-evident audit trail following ALCOA+ principles. Recordings can be deleted in the app at any time (GDPR Art. 17).
-Classification. The app is a research tool, not a medical device, and is not used for diagnosis or treatment.
+Recording and storage. RR intervals are recorded with CARLON HRV Research (iOS app) from Polar H10 or Movesense Flash chest sensors via Bluetooth, live or in the sensor’s internal memory with later read-out; until read-out, such a recording remains on the sensor. The app processes and stores the data on the study iPhone. The app has no user account, no server of its own and no usage analytics or advertising services. Data leave the device only through an explicit export by the study team (iOS share sheet) to a destination the team chooses, or through the optional study folder: a folder the team selects in the Files app, e.g. institutional storage, to which the app copies each new recording. Recordings are part of the device’s regular iPhone backup.
+Pseudonymization. Participants are entered under a study code chosen by the team (e.g. P-01). On export, the participant can be replaced by a stable pseudonym (ANON- followed by eight hexadecimal characters, derived from an internal identifier with SHA-256). The key linking code and person is kept by the study team outside the app. The data are therefore pseudonymized, not anonymized. Free-text notes are exported as entered; the study team decides what they contain.
+Integrity and deletion. Original RR intervals are stored as recorded (physiologically impossible values are discarded and counted); corrections are kept separately. Changes are logged in an append-only audit trail following ALCOA+ principles; a SHA-256 hash chain makes later changes to the log detectable. Recordings can be deleted in the app at any time; exported files, study-folder copies and backups must be covered by the study team’s own deletion procedure.
+Classification. The app is a research tool, not a medical device, and is not intended for diagnosis or treatment.
 
 ## Details
 
