@@ -5,8 +5,10 @@ Warum ein Skript statt `git revert 7aaa93b f2b0cc5`: Nach den Beta-Commits wurde
 weiter bearbeitet; der Revert läuft auf Konflikte (geprobt 28.10.2026). Das Skript setzt die
 Store-Stellen in den AKTUELLEN Stand ein und bricht laut ab, wenn eine Stelle fehlt.
 
-  python3 hrv-research/starttag.py          # schreibt index.html + llms.txt, erzeugt de/ neu
-  python3 hrv-research/starttag.py --probe  # zeigt nur, was es ersetzen würde
+  python3 hrv-research/starttag.py              # zeigt nur, was es ersetzen würde (Probe ist Standard)
+  python3 hrv-research/starttag.py --schreiben  # schreibt index.html + llms.txt, erzeugt de/ neu
+Unbekannte Optionen brechen ab: Am 03.11.2026 lief der Starttag versehentlich durch `--help` (damals Standard =
+schreiben). Probe als Standard, Schreiben nur ausdrücklich.
 Danach: Seite im Simulator prüfen (Knöpfe führen zu apps.apple.com/app/id6826010655), committen, pushen.
 """
 import re, subprocess, sys
@@ -16,7 +18,10 @@ STORE = "https://apps.apple.com/app/id6826010655"
 HIER = Path(__file__).resolve().parent
 SEITE = HIER / "index.html"
 LLMS = HIER.parent / "llms.txt"
-probe = "--probe" in sys.argv
+unbekannt = [x for x in sys.argv[1:] if x not in ("--probe", "--schreiben")]
+if unbekannt:
+    raise SystemExit(f"🔴 unbekannte Option {unbekannt} – erlaubt: --probe (Standard), --schreiben")
+probe = "--schreiben" not in sys.argv
 s = SEITE.read_text(encoding="utf-8")
 zaehler = {}
 
