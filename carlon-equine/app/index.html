@@ -2833,7 +2833,7 @@ const Importer = {
       <div class="dropzone" id="dz">
         <svg class="dz-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
         <h4>CARLON-Exporte hierher ziehen</h4>
-        <p>Einzelne Datei, viele Dateien oder <b>ganze Ordner</b> auf einmal.<br>Alles wird zuerst geprüft — du bestätigst, bevor etwas gespeichert wird.</p>
+        <p>Einzelne Datei, viele Dateien oder <b>ganze Ordner</b> auf einmal.<br>Alles wird zuerst geprüft — Sie bestätigen, bevor etwas gespeichert wird.</p>
         <div class="formats">Akzeptiert: <b>.json</b> · <b>.ndjson</b> &nbsp;·&nbsp; Ordner werden durchsucht &nbsp;·&nbsp; Dubletten erkannt</div>
       </div>
       <input type="file" id="fileInput" multiple accept=".carlon,.json,.ndjson,.csv,.zip,.pdf,.txt,.html,.htm,.vcf,application/json,application/zip,application/pdf,application/octet-stream,text/plain,text/html,text/vcard,text/csv" style="display:none">
@@ -2846,7 +2846,7 @@ const Importer = {
         <button class="btn primary" style="font-size:13px" onclick="Importer.receiveMode()">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px"><path d="M4 12v6a2 2 0 002 2h12a2 2 0 002-2v-6M8 8l4-4 4 4M12 4v12" transform="rotate(180 12 12)"/></svg>
           Aufnahme direkt vom Besitzer empfangen</button>
-        <div style="font-size:11px;color:var(--text-dim);margin-top:7px">Peer-to-Peer · der Besitzer sendet direkt an dich, kein Server dazwischen</div>
+        <div style="font-size:11px;color:var(--text-dim);margin-top:7px">Peer-to-Peer · der Besitzer sendet direkt an Sie, kein Server dazwischen</div>
       </div>`;
     $('#impFoot').innerHTML=`<button class="btn ghost" onclick="UI.closeModal()">Schließen</button>`;
     const dz=$('#dz'), fi=$('#fileInput'), di=$('#dirInput');
@@ -3192,7 +3192,7 @@ const Importer = {
     const all=[];Object.values(groups).forEach(g=>g.items.forEach(i=>all.push(i)));coh.forEach(c=>all.push(c));
     const todo=all.filter(x=>!x.dup);
     $('#impFoot').innerHTML='';
-    $('#impBody').innerHTML=`<div style="padding:22px"><div style="text-align:center;color:var(--text-secondary);margin-bottom:12px">Importiere ${todo.length} Aufnahme${todo.length>1?'n':''}…</div><div class="imp-progress"><i id="impPb"></i></div></div>`;
+    $('#impBody').innerHTML=`<div style="padding:22px"><div style="text-align:center;color:var(--text-secondary);margin-bottom:12px">${todo.length} Aufnahme${todo.length>1?'n werden':' wird'} importiert…</div><div class="imp-progress"><i id="impPb"></i></div></div>`;
     let done=0,added=0;const horsesTouched=new Set();
     for(const x of todo){
       try{
@@ -4585,7 +4585,7 @@ const Views={
        eine einzufuehren ist ein eigener Schritt, kein Nebenbei. Solange
        meldet `t-sprache` diese Stelle zu Recht. */
     if(!License.can('station')) return Views.lockedView('Stationswand',
-      'Der Wand-Monitor aller überwachten Pferde — für die Klinik, in der mehrere Behandler denselben Bestand vor Augen haben. Nach Abweichung sortiert, nicht nach Eingang. In Vet-Clinic enthalten.');
+      'Der Wand-Monitor aller überwachten Pferde — für die Klinik, in der mehrere Behandler denselben Bestand vor Augen haben. Nach Abweichung sortiert, nicht nach Eingang. Im Klinik-Tarif enthalten.');
     const rankLvl={crit:3,elev:2,watch:1,stable:0};
     const mon=State.horses.filter(h=>State.latestFor(h.id)).map(h=>{
       const rec=State.latestFor(h.id);
@@ -4619,8 +4619,8 @@ const Views={
       <div class="panel" style="text-align:center;padding:var(--s6) var(--s4)">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="width:46px;height:46px;color:var(--text-faint);margin-bottom:14px"><rect x="3" y="3" width="7" height="7" rx="1.4"/><rect x="14" y="3" width="7" height="7" rx="1.4"/><rect x="3" y="14" width="7" height="7" rx="1.4"/><rect x="14" y="14" width="7" height="7" rx="1.4"/></svg>
         <h3 style="font-family:var(--font-brand);font-size:20px;font-weight:600;margin-bottom:8px">Noch keine Pferde auf Station</h3>
-        <p style="color:var(--text-secondary);font-size:14px;max-width:440px;margin:0 auto 18px">Nimm Pferde mit aktueller Telemetrie auf die Station auf und weise ihnen eine Box zu. Die Wand zeigt dann Ruhe-HF, Stress-Index und Trend je Box.</p>
-        ${available?admitBtn:'<p style="color:var(--text-faint);font-size:13px">Importiere zuerst Aufnahmen — dann lassen sich Pferde aufnehmen.</p>'}
+        <p style="color:var(--text-secondary);font-size:14px;max-width:440px;margin:0 auto 18px">Nehmen Sie Pferde mit aktueller Telemetrie auf die Station auf und weisen Sie ihnen eine Box zu. Die Wand zeigt dann Ruhe-HF, Stress-Index und Trend je Box.</p>
+        ${available?admitBtn:'<p style="color:var(--text-faint);font-size:13px">Importieren Sie zuerst Aufnahmen — dann lassen sich Pferde aufnehmen.</p>'}
       </div></div>`;
     return `
     <div class="view">
@@ -5078,11 +5078,11 @@ const Views={
     const why=`<div class="today-why">${rationale.length?`<span class="rz"><span class="dot">◆</span> Reihenfolge: ${rationale.map(esc).join(' · ')}</span>`:'<span></span>'}<span class="off"><span class="d"></span> Offline-fähig · lokal gesichert</span></div>`;
 
     if(!order.length && !noLoc.length){
-      const doneMsg=doneToday>0?`<div class="today-empty"><div style="color:var(--good);margin-bottom:10px" class="done-check">${IC.checkCircle}</div><div style="font-size:16px;color:var(--good);font-weight:600;margin-bottom:6px">Tag geschafft — alle ${doneToday} Besuche erledigt</div><div style="font-size:12.5px;max-width:340px;margin:0 auto">Neue Besuche markierst du im Board/Liste oder schiebst einen Analog-Patienten ein.</div><div style="margin-top:20px"><button class="btn primary" onclick="Views.insertAnalog()">+ Analog-Patient einschieben</button></div></div>`
+      const doneMsg=doneToday>0?`<div class="today-empty"><div style="color:var(--good);margin-bottom:10px" class="done-check">${IC.checkCircle}</div><div style="font-size:16px;color:var(--good);font-weight:600;margin-bottom:6px">Tag geschafft — alle ${doneToday} Besuche erledigt</div><div style="font-size:12.5px;max-width:340px;margin:0 auto">Neue Besuche markieren Sie im Board oder in der Liste – oder Sie schieben einen Analog-Patienten ein.</div><div style="margin-top:20px"><button class="btn primary" onclick="Views.insertAnalog()">+ Analog-Patient einschieben</button></div></div>`
         :`<div class="today-empty">${IC.route}<div style="font-size:14px;margin:12px 0 6px;color:var(--text-secondary)">Kein Besuch für heute markiert.</div>
-        <div style="font-size:12.5px;max-width:340px;margin:0 auto">Markiere Pferde im Board oder in der Liste als „Besuch fällig" — oder schiebe einen Analog-Patienten (ohne H10) direkt ein.</div>
+        <div style="font-size:12.5px;max-width:340px;margin:0 auto">Markieren Sie Pferde im Board oder in der Liste als „Besuch fällig" — oder schieben Sie einen Analog-Patienten (ohne H10) direkt ein.</div>
         <div style="margin-top:20px"><button class="btn primary" onclick="Views.insertAnalog()">+ Analog-Patient einschieben</button></div></div>`;
-      return `<div class="view"><div class="view-head"><div><span class="eyebrow">Field-Ops${doneToday?` · ${doneToday} erledigt`:''}</span><h1>Heute</h1></div></div>${doneMsg}</div>`;
+      return `<div class="view"><div class="view-head"><div><span class="eyebrow">Tagestour${doneToday?` · ${doneToday} erledigt`:''}</span><h1>Heute</h1></div></div>${doneMsg}</div>`;
     }
 
     const driveMin=Math.round(optKm/45*60);            // reine Fahrzeit ~45 km/h
@@ -5154,7 +5154,7 @@ const Views={
         <div><b>${fmt0(log.length?log.reduce((a,e)=>a+(e.treatmentMin||0),0)/log.length:0)}<small> min</small></b><span>Ø Besuch</span></div>
       </div></div>`:'';
     return `<div class="view"><div class="today-col">
-      <div class="view-head"><div><span class="eyebrow">Field-Ops · ${order.length} Stopp${order.length>1?'s':''}${critCount?` · ${critCount} kritisch`:''}</span><h1>Heute</h1></div></div>
+      <div class="view-head"><div><span class="eyebrow">Tagestour · ${order.length} Stopp${order.length>1?'s':''}${critCount?` · ${critCount} kritisch`:''}</span><h1>Heute</h1></div></div>
       ${hero}
       <div class="today-time">
         <label>${IC.clock}<span>Abfahrt</span> <input type="time" value="${fmtTime(sch.start)}" onchange="Views.setDayStart(this.value)" onclick="event.stopPropagation()"></label>
@@ -5309,7 +5309,7 @@ const Views={
   setAppt(id){
     const h=State.horses.find(x=>x.id===id); if(!h)return;
     UI.modal(`<div class="modal-head"><h3>Termin — ${esc(h.name)}</h3><button class="closex" onclick="UI.closeModal()">${IC.x}</button></div>
-    <div class="modal-body"><p style="font-size:12.5px;color:var(--text-secondary);margin:0 0 14px">Feste Uhrzeit, zu der du vor Ort sein musst. Der Zeitstrahl plant Ankünfte darum herum — zu früh ergibt Puffer, zu spät warnt vor Konflikt.</p>
+    <div class="modal-body"><p style="font-size:12.5px;color:var(--text-secondary);margin:0 0 14px">Feste Uhrzeit, zu der Sie vor Ort sein müssen. Der Zeitstrahl plant Ankünfte darum herum — zu früh ergibt Puffer, zu spät warnt vor Konflikt.</p>
       <div class="field"><label>Uhrzeit</label><input id="apptT" type="time" value="${h.apptMin!=null?fmtTime(h.apptMin):''}"></div></div>
     <div class="modal-foot">${h.apptMin!=null?`<button class="btn ghost" style="color:var(--red);margin-right:auto" onclick="Views.saveAppt('${id}','')">Termin entfernen</button>`:''}<button class="btn ghost" onclick="UI.closeModal()">Abbrechen</button><button class="btn primary" onclick="Views.saveAppt('${id}',$('#apptT').value)">Setzen</button></div>`);
   },
@@ -5380,7 +5380,7 @@ const Views={
         <button class="vbtn" onclick="Voice.export('${v.id}')" title="Als Audiodatei exportieren">${IC.download}</button>
         <button class="vdel" onclick="Voice.del('${v.id}')" title="Löschen">${IC.trash}</button>
       </div>`).join(''):'<div style="font-size:12.5px;color:var(--text-dim);padding:10px 2px">Noch keine Sprachnotiz aufgenommen.</div>'}</div>
-      ${notes.length?`<div class="vnote-gdpr">${IC.owner}<span><b>Teilen/Export</b> gibt die Audiodatei an eine App oder KI deiner Wahl (z. B. zur Transkription). Sie verlässt damit CARLON — die Weiterverarbeitung liegt in <b>deiner</b> Verantwortung als Praxis.</span></div>`:''}
+      ${notes.length?`<div class="vnote-gdpr">${IC.owner}<span><b>Teilen/Export</b> gibt die Audiodatei an eine App oder KI Ihrer Wahl (z. B. zur Transkription). Sie verlässt damit CARLON — die Weiterverarbeitung liegt in <b>Ihrer</b> Verantwortung als Praxis.</span></div>`:''}
     </div>`;
   },
   insertAnalog(){
@@ -5431,8 +5431,8 @@ const Views={
   noHits(){ const q=Views._rosterQuery.trim();
     const svg='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>';
     return Views.emptyState(svg,'Keine Treffer',
-      q?`Für „${esc(q)}" wurde kein Pferd gefunden. Tippe kürzer oder prüfe die Filter.`
-       :'Kein Pferd in diesem Filter. Wähle „Alle" oder lege einen Analog-Patienten an.'); },
+      q?`Für „${esc(q)}" wurde kein Pferd gefunden. Kürzer suchen oder die Filter prüfen.`
+       :'Kein Pferd in diesem Filter. Wählen Sie „Alle" oder legen Sie einen Analog-Patienten an.'); },
   // Quick-Action-Sheet: eine Karte lang/„⋯" → Aktionen ohne Detail-Umweg (Sim-Hebel)
   quickSheet(id){
     const h=State.horses.find(x=>x.id===id); if(!h)return;
@@ -5696,7 +5696,7 @@ const Views={
       </div>
       <div class="chart-card">${chead('bars','RR-Verteilung · TINN','tinn', tt?`TINN ${fmt0(tt.tinn)} <small>ms</small>`:'')}${HRV.histChart(rr,{w:720,h:250})}</div>
       <div class="chart-card">${chead('dfa','DFA-α₁','dfa', dfa1!=null?`α1 ${fmt2(dfa1)}`:'', 'var(--harmony)')}${HRV.dfaBand(dfa1)}${dfa1!=null?(()=>{const dv=dfa1<0.5?['Random — unkorreliert, fragmentierte Regulation','var(--red)']:dfa1<0.75?['Vagal-hyper — sehr parasympathisch','#C77D3A']:dfa1<1.15?['Physiologisch — 1/f-Skalierung, gesunde Balance','var(--good)']:dfa1<1.5?['Sympathisch — erhöhte Korrelation, Sympathikus-Tendenz','var(--amber)']:['Hochkorreliert — starre Regulation, starke Sympathikus-Dominanz','var(--red)'];return `<div class="dfa-verdict"><span class="dot" style="background:${dv[1]}"></span><span>${dv[0]}</span></div>`;})():''}<div class="chart-hint">Detrended Fluctuation Analysis: fraktale Korrelation der Herzschlag-Folge. α1 ≈ 1,0 = gesunde 1/f-Dynamik · &lt;0,75 = zu zufällig · &gt;1,5 = zu starr. Vollbild öffnet die Zonen-Einordnung.</div></div>
-      <div style="font-size:10.5px;color:var(--text-faint);margin-top:2px;font-style:italic;line-height:1.5">Equine Bänder VLF 0–0,01 · LF 0,01–0,07 · HF 0,07–0,6 Hz (Kuwahara 1996). Lomb-Scargle-Spektrum &amp; Kennwerte aus Beat-to-Beat-RR (rrApproximated=false, Polar H10). Poincaré SD1/SD2 (Brennan 2001), Formmuster n. Woo 1992 · Baevsky (1984, equine-skaliert Stucke 2015) · SampEn (Richman 2000). Priorisierungshilfe, keine Diagnose.</div>
+      <div style="font-size:10.5px;color:var(--text-faint);margin-top:2px;font-style:italic;line-height:1.5">Equine Bänder VLF 0–0,01 · LF 0,01–0,07 · HF 0,07–0,6 Hz (Kuwahara 1996). Lomb-Scargle-Spektrum &amp; Kennwerte aus der Schlag-für-Schlag-Reihe des Polar H10. Poincaré SD1/SD2 (Brennan 2001), Formmuster n. Woo 1992 · Baevsky (1984, equine-skaliert Stucke 2015) · SampEn (Richman 2000). Priorisierungshilfe, keine Diagnose.</div>
     </div>`;
   },
   trainingPanel(recs,horse){
@@ -5761,7 +5761,7 @@ const Views={
     return `<div class="view">
       <div class="view-head">
         <div><span class="eyebrow">Praxis-Verwaltung</span><h1>Umsatz &amp; Verwaltung</h1>
-          <div class="sub">Beratungen &amp; Ferneinschätzungen, Fahrtenbuch, Zeiterfassung und Backup — deine gesamte Praxis-Organisation an einem Ort.</div></div>
+          <div class="sub">Beratungen &amp; Ferneinschätzungen, Fahrtenbuch, Zeiterfassung und Backup — Ihre gesamte Praxis-Organisation an einem Ort.</div></div>
         <div style="display:flex;gap:8px;flex-wrap:wrap">
           <button class="btn primary" onclick="Nav.go('logbook')">${IC.doc} Fahrtenbuch &amp; Zeiten</button>
           ${open>0?`<button class="btn ghost" onclick="Revenue.markAllBilled()">${IC.check} Alle offen abrechnen</button>`:''}
@@ -5773,7 +5773,7 @@ const Views={
         if(!fc.length)return'';const km=fc.reduce((s,c)=>s+(c.savedKm||0),0);const rev=fc.reduce((s,c)=>s+(c.fee||0),0);
         const hrs=km/45+fc.length*20/60;const sig='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="1.8"/><path d="M16.5 7.5a6.4 6.4 0 010 9M7.5 16.5a6.4 6.4 0 010-9M19.5 4.5a10.6 10.6 0 010 15M4.5 19.5a10.6 10.6 0 010-15"/></svg>';
         return `<div class="fc-week">
-          <div class="fcw-head">${sig}<div><b>Fern-Check-Bilanz · diese Woche</b><span>Was dir die Telemetrie an Fahrt, Zeit und Nerven erspart hat — die Zahl, die das Abo trägt.</span></div></div>
+          <div class="fcw-head">${sig}<div><b>Fern-Check-Bilanz · diese Woche</b><span>Was Ihnen die Telemetrie an Fahrt, Zeit und Nerven erspart hat — die Zahl, die das Abo trägt.</span></div></div>
           <div class="fcw-grid">
             <div class="fcw-t"><b>${fc.length}</b><span>Fern-Checks</span></div>
             <div class="fcw-t"><b>${fmt0(km)}<small> km</small></b><span>nicht gefahren</span></div>
@@ -5786,7 +5786,7 @@ const Views={
         <div class="kpi amber"><div class="lbl">Offen</div><div class="val">${euro(open).replace(/\s?€/,'')}<small>€</small></div><div class="hint">noch nicht abgerechnet</div></div>
         <div class="kpi"><div class="lbl">Ø Honorar</div><div class="val">${cons.length?euro(total/cons.length).replace(/\s?€/,''):'0'}<small>€</small></div><div class="hint">pro Beratung</div></div>
       </div>
-      <div style="font-size:12px;color:var(--text-dim);margin:-8px 0 var(--s4)">Zum Einordnen: CARLON EQUINE ${License.isPaid()?esc(License.TIERS[License.tier()].name):'Vet-Solo'} kostet ${License.PRICES[License.isPaid()?License.tier():'vet_solo']}.</div>
+      <div style="font-size:12px;color:var(--text-dim);margin:-8px 0 var(--s4)">Zum Einordnen: CARLON EQUINE ${License.isPaid()?esc(License.TIERS[License.tier()].name):'Praxis'} kostet ${License.PRICES[License.isPaid()?License.tier():'vet_solo']}</div>
       ${cons.length?`<div class="detail-grid" style="margin-bottom:var(--s4)">
         <div class="panel">
           <h2 style="font-size:16px;display:flex;align-items:center;gap:8px"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3v18h18M7 14l4-4 3 3 5-6"/></svg>Umsatz-Verlauf <span style="margin-left:auto;display:flex;gap:12px;font-size:11px;font-weight:400"><span style="color:var(--good)">■ abgerechnet</span><span style="color:var(--amber)">■ offen</span></span></h2>
@@ -5812,7 +5812,7 @@ const Views={
             <td><button class="pill ${c.billed?'paid':'open'}" onclick="Revenue.toggleBilled('${c.id}')" title="Status umschalten">${c.billed?'abgerechnet':'offen'}</button></td>
           </tr>`).join('')}</tbody>
         </table></div>`:`<div class="empty-state" style="padding:var(--s5)">
-          <p style="color:var(--text-secondary)">Noch keine Beratungen. Öffne ein Pferd im Triage-Board und klicke „Beratung erfassen" — jede telemetrische Ferneinschätzung wird hier abrechenbar.</p>
+          <p style="color:var(--text-secondary)">Noch keine Beratungen. Öffnen Sie ein Pferd im Board und klicken Sie „Beratung erfassen" — jede telemetrische Ferneinschätzung wird hier abrechenbar.</p>
           <button class="btn primary" onclick="Nav.go('board')">Zum Triage-Board</button></div>`}
       </div>
     </div>`;
@@ -5832,7 +5832,7 @@ const Views={
       </div></div>`;
   },
   coherence(){
-    if(!License.can('coherence')) return Views.lockedView('Kohärenz-Modul','Herz-Kohärenz Pferd ↔ Reiter über die Zeit — der Coaching-Fortschritt als Kurve, die abrechenbare Coaching-Leistung. In Vet-Solo & Vet-Clinic enthalten.');
+    if(!License.can('coherence')) return Views.lockedView('Kohärenz-Modul','Herz-Kohärenz Pferd ↔ Reiter über die Zeit — der Coaching-Fortschritt als Kurve, die abrechenbare Coaching-Leistung. Im Praxis- und Klinik-Tarif enthalten.');
     const list=State.coherence.slice().sort((a,b)=>new Date(b.startedAt)-new Date(a.startedAt));
     if(!list.length) return `<div class="view">
       <div class="view-head"><div><span class="eyebrow">Kohärenzforschung</span><h1>Herz-Kohärenz</h1>
@@ -5840,7 +5840,7 @@ const Views={
       <div class="empty-state">
         <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
         <h3>Noch keine Kohärenz-Messungen</h3>
-        <p>Importiere CoherentBurst-Exporte (zwei zeitsynchron gemessene Polar-H10-Gurte). CARLON misst die Herz-zu-Herz-Kopplung mit Mikrosekunden-Präzision — die Basis für Pferd-Reiter-Coaching und Herden-Studien.</p>
+        <p>Importieren Sie Coherent-Burst-Exporte (zwei zeitsynchron gemessene Polar-H10-Gurte). CARLON misst die Herz-zu-Herz-Kopplung mit Mikrosekunden-Präzision — die Basis für Pferd-Reiter-Coaching und Herden-Studien.</p>
         <button class="btn primary" onclick="Importer.open()">Kohärenz-Aufnahme importieren</button>
         <div style="margin-top:16px"><button class="btn ghost" onclick="Seed.loadCoherence()">Demo-Kohärenzmessungen laden</button></div>
       </div></div>`;
@@ -6073,7 +6073,7 @@ const Views={
     return `<div class="view"><div class="empty-state">
       <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 12h4l3 8 4-16 3 8h4"/></svg>
       <h3>Noch keine Aufnahmen</h3>
-      <p>Importiere die CARLON-Equine-Exporte, die dir Pferdebesitzer aus der App senden. Alles bleibt lokal auf diesem Gerät — es werden keine Gesundheitsdaten an einen Server übertragen.</p>
+      <p>Importieren Sie die CARLON-Equine-Exporte, die Ihnen Pferdebesitzer aus der App senden. Alles bleibt lokal auf diesem Gerät — es werden keine Gesundheitsdaten an einen Server übertragen.</p>
       <button class="btn primary" onclick="Importer.open()">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
         Aufnahmen importieren</button>
@@ -6312,7 +6312,7 @@ const Views={
       <div class="field-row"><div class="field"><label>Datum &amp; Uhrzeit</label><input id="vDate" type="datetime-local" value="${def}"></div>
         <div class="field"><label>Dauer (Min)</label><input id="vDur" type="number" value="30"></div></div>
       <div class="field"><label>Ort</label><input id="vLoc" value="${esc(h.place||h.stable||'')}"></div>
-      <p style="font-size:12px;color:var(--text-dim)">Landet direkt in deinem Google- oder Apple-Kalender — mit Ort für die Navigation und 60-Minuten-Erinnerung.</p>
+      <p style="font-size:12px;color:var(--text-dim)">Landet direkt in Ihrem Google- oder Apple-Kalender — mit Ort für die Navigation und 60-Minuten-Erinnerung.</p>
     </div>
     <div class="modal-foot">
       <button class="btn ghost" onclick="Views.doPlan('${hid}','ics')">Apple / .ics</button>
@@ -6405,7 +6405,7 @@ const Views={
       : '';
     Toast.show((r.sofort
       ? `Befund an ${h.owner||'den Halter'} zugestellt — verschlüsselt`
-      : `Befund verschlüsselt im Postausgang — geht raus, sobald du Netz hast`)+zusatz,
+      : `Befund verschlüsselt im Postausgang — geht raus, sobald das Gerät Netz hat`)+zusatz,
       r.sofort?'ok':'info');
   },
   mailOwner(hid){const h=State.horses.find(x=>x.id===hid);const body=encodeURIComponent($('#ownerTxt').value);
@@ -7159,7 +7159,7 @@ const Dispatch={
     this._order=order;
     const body=$('#routeBody');if(!body)return;
     this.drawMap(order);   // Karte immer initialisieren (Startpunkt + evtl. Stopps + Fokus-Pferd)
-    if(!order.length){body.innerHTML=`<div style="color:var(--text-dim);text-align:center;padding:30px;font-size:13px">Keine Besuche markiert.<br><br>Markiere Pferde im Board, in der Liste oder in der Detailansicht als „Besuch fällig".</div>`;
+    if(!order.length){body.innerHTML=`<div style="color:var(--text-dim);text-align:center;padding:30px;font-size:13px">Keine Besuche markiert.<br><br>Markieren Sie Pferde im Board, in der Liste oder in der Detailansicht als „Besuch fällig".</div>`;
       $('#routeStats').innerHTML='';$('#gmapsBtn').disabled=true;return;}
     const totalDist=order.reduce((s,x)=>s+x.dist,0);
     const durMin=sch.end-sch.start;
@@ -7392,7 +7392,7 @@ const Voice={
     const file=this._file(id); if(!file)return;
     const a=document.createElement('a'); a.href=URL.createObjectURL(file); a.download=file.name; a.click();
     setTimeout(()=>URL.revokeObjectURL(a.href),4000);
-    Toast.show('Sprachnotiz exportiert · Weiterverarbeitung liegt bei dir','ok');
+    Toast.show('Sprachnotiz exportiert · Weiterverarbeitung liegt bei Ihnen','ok');
   }
 };
 
@@ -7412,8 +7412,8 @@ const Report={
     const s=State.settings; const fee=s.tariff||45;
     UI.modal(`<div class="modal-head"><h3>Ferneinschätzung — ${esc(h.name)}</h3><button class="closex" onclick="UI.closeModal()">${IC.x}</button></div>
     <div class="modal-body">
-      <div class="rep-intro">${IC.euro}<div>Dein <b>abrechenbarer</b> Telemetrie-Befund. Metriken, Spektrum, Poincaré &amp; Verlauf sind automatisch drin — du gibst Einschätzung + Honorar, CARLON macht das gebrandete PDF und bucht den Umsatz.</div></div>
-      <div class="field"><label>Tierärztliche Einschätzung / Befund</label><textarea id="bfAssess" rows="4" placeholder="Deine Beurteilung…">${esc(suggest)}</textarea></div>
+      <div class="rep-intro">${IC.euro}<div>Ihr <b>abrechenbarer</b> Telemetrie-Befund. Metriken, Spektrum, Poincaré &amp; Verlauf sind automatisch drin — Sie geben Einschätzung + Honorar, CARLON macht das gebrandete PDF und bucht den Umsatz.</div></div>
+      <div class="field"><label>Tierärztliche Einschätzung / Befund</label><textarea id="bfAssess" rows="4" placeholder="Ihre Beurteilung…">${esc(suggest)}</textarea></div>
       <div class="field"><label>Empfehlung / weiteres Vorgehen</label><textarea id="bfRec" rows="2" placeholder="z. B. Kontrolle in 4 Wochen, Belastung reduzieren…"></textarea></div>
       <div class="field-row"><div class="field"><label>Nächste Kontrolle (optional)</label><input id="bfNext" type="date"></div>
         <div class="field"><label>Ausstellende:r</label><input id="bfVet" value="${esc(s.vetName||s.clinicName||'')}"></div></div>
@@ -7711,7 +7711,7 @@ const UI={
     UI.modal(`<div class="modal-head"><button class="closex" onclick="UI.closeModal()">${IC.x}</button><h3>Verbesserung senden</h3></div>
     <div class="modal-body">
       <p style="font-size:13.5px;color:var(--text-secondary);margin-bottom:14px">
-        Was ist dir aufgefallen? Weil CARLON im Browser läuft, ist eine Korrektur
+        Was ist Ihnen aufgefallen? Weil CARLON im Browser läuft, ist eine Korrektur
         am nächsten Tag bei allen da — ohne Update, ohne Store.</p>
       <div class="fb-kind" id="fbKind">
         <button class="on" data-k="Fehler">Fehler</button>
@@ -7720,7 +7720,7 @@ const UI={
         <button data-k="Lob">Das war gut</button>
       </div>
       <div class="field" style="margin-top:12px"><label>Beschreibung</label>
-        <textarea id="fbText" rows="5" placeholder="Was ist passiert? Was hättest du erwartet?"></textarea></div>
+        <textarea id="fbText" rows="5" placeholder="Was ist passiert? Was hätten Sie erwartet?"></textarea></div>
       <details class="fb-det"><summary>Was wird mitgeschickt? (${Object.keys(c).length} technische Angaben)</summary>
         <div class="fb-ctx">${ctxRows}</div>
         <div class="fb-note">Keine Pferdenamen, keine Besitzer, keine Messwerte, keine Notizen — nur die Angaben oben.</div>
@@ -7777,7 +7777,7 @@ const UI={
         const c=el('canvas');c.width=w;c.height=hh;c.getContext('2d').drawImage(img,0,0,w,hh);
         State.settings.logo=c.toDataURL('image/png');await State.saveSettings();
         const pv=$('#sLogoPrev');if(pv)pv.innerHTML=`<img src="${State.settings.logo}" alt="Logo">`;
-        Toast.show('Logo gespeichert — erscheint auf deinen Befund-PDFs','ok');
+        Toast.show('Logo gespeichert — erscheint auf Ihren Befund-PDFs','ok');
       };img.src=r.result;};r.readAsDataURL(f);};
     inp.click();
   },
@@ -7798,7 +7798,7 @@ const UI={
         <button class="btn ghost" onclick="UI.klinikOrdner()">${Teilen.aktiv?'Ordner wechseln':'Ordner verbinden'}</button>
         ${Teilen.letzterFehler?`<div style="font-size:12px;color:var(--amber);margin-top:6px">Zuletzt: ${esc(Teilen.letzterFehler)}</div>`:''}
       </div>`:''}
-      <div class="field"><label>Praxis-Logo <span style="color:var(--text-dim);font-weight:400">— erscheint auf deinen Befund-PDFs (dein Branding, nicht unseres)</span></label>
+      <div class="field"><label>Praxis-Logo <span style="color:var(--text-dim);font-weight:400">— erscheint auf Ihren Befund-PDFs (Ihr Branding, nicht unseres)</span></label>
         <div class="logo-row">
           <div class="logo-prev" id="sLogoPrev">${s.logo?`<img src="${s.logo}" alt="Logo">`:'<span>kein Logo</span>'}</div>
           <button type="button" class="btn ghost" style="font-size:13px" onclick="UI.uploadLogo()">${IC.download||''} Logo hochladen</button>
@@ -7827,9 +7827,9 @@ const UI={
         <div id="storeStatus" style="font-size:12.5px;color:var(--text-secondary);margin-bottom:10px">Speicher-Status wird geprüft…</div>
         <div style="display:flex;gap:8px;flex-wrap:wrap">
           ${PWA.standalone()?'<span class="chip cyan">Als App installiert '+IC.check+'</span>':`<button class="btn ghost" style="font-size:13px" onclick="PWA.install()">${IC.install} Als App installieren</button>`}
-          <button class="btn ghost" style="font-size:13px" onclick="Persist.request().then(p=>{Toast.show(p?'Dauerhafter Speicher aktiv':(PWA.standalone()?'Dein Browser gewährt keinen dauerhaften Speicher — dann ist regelmäßiges Backup Pflicht':'Nicht gewährt — als App installieren, dann erneut'),p?'ok':'warn');UI._fillStorage();Safe.renderBanner();})">Dauerhaften Speicher anfordern</button>
+          <button class="btn ghost" style="font-size:13px" onclick="Persist.request().then(p=>{Toast.show(p?'Dauerhafter Speicher aktiv':(PWA.standalone()?'Ihr Browser gewährt keinen dauerhaften Speicher — dann ist regelmäßiges Backup Pflicht':'Nicht gewährt — als App installieren, dann erneut'),p?'ok':'warn');UI._fillStorage();Safe.renderBanner();})">Dauerhaften Speicher anfordern</button>
         </div>
-        <div class="hint" style="margin-top:8px">Dauerhafter Speicher schützt lokale Daten davor, vom Browser (z. B. iOS nach 7 Tagen) gelöscht zu werden. Manche Browser (z. B. DuckDuckGo) gewähren ihn nicht — dann ist <b>regelmäßiges Backup exportieren</b> dein sicherster Schutz.</div>
+        <div class="hint" style="margin-top:8px">Dauerhafter Speicher schützt lokale Daten davor, vom Browser (z. B. iOS nach 7 Tagen) gelöscht zu werden. Manche Browser (z. B. DuckDuckGo) gewähren ihn nicht — dann ist <b>regelmäßiges Backup exportieren</b> Ihr sicherster Schutz.</div>
       </div>
       <div style="border-top:1px solid var(--border-faint);margin-top:8px;padding-top:16px">
         <label style="display:block;font-size:12px;font-weight:600;color:var(--text-secondary);margin-bottom:9px">Datensicherung</label>
@@ -7839,7 +7839,7 @@ const UI={
           <input type="file" id="backupFile" accept=".json" style="display:none" onchange="Backup.doImport(this.files[0])">
         </div>
         <div class="privacy-note" style="justify-content:flex-start;margin-top:14px"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-          Datenschutz by Design: Alle Gesundheitsdaten liegen ausschließlich lokal in diesem Browser (IndexedDB) — keine Cloud, keine Server-Übertragung. Als Praxis/Klinik bleibst du datenschutzrechtlich Verantwortlicher für die verarbeiteten Daten.
+          Datenschutz by Design: Alle Gesundheitsdaten liegen ausschließlich lokal in diesem Browser (IndexedDB) — keine Cloud, keine Server-Übertragung. Als Praxis oder Klinik bleiben Sie für die verarbeiteten Daten datenschutzrechtlich verantwortlich.
           &nbsp;<a href="datenschutz.html" target="_blank" style="color:var(--cyan)">Datenschutz</a> · <a href="impressum.html" target="_blank" style="color:var(--cyan)">Impressum</a></div>
         <button class="btn ghost" style="margin-top:12px;color:var(--red);font-size:12px" onclick="UI.wipe()">Alle lokalen Daten löschen</button>
       </div>
@@ -7865,7 +7865,7 @@ const UI={
   iosInstall(){
     this.modal(`<div class="modal-head"><button class="closex" onclick="UI.closeModal()">${IC.x}</button><h3>Als App installieren</h3></div>
     <div class="modal-body">
-      <p style="font-size:14px;color:var(--text-secondary);margin-bottom:16px">So legst du CARLON EQUINE wie eine echte App auf den Startbildschirm — für schnellen Zugriff und dauerhaften Speicher:</p>
+      <p style="font-size:14px;color:var(--text-secondary);margin-bottom:16px">So legen Sie CARLON EQUINE wie eine echte App auf den Startbildschirm — für schnellen Zugriff und dauerhaften Speicher:</p>
       <div class="tstep" style="margin-bottom:10px"><div class="ti"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 16V4M8 8l4-4 4 4M20 16v3a1 1 0 01-1 1H5a1 1 0 01-1-1v-3"/></svg></div><div><b>1 · Teilen-Symbol antippen</b><span>In Safari unten (iPhone) bzw. oben (iPad) das „Teilen"-Symbol.</span></div></div>
       <div class="tstep" style="margin-bottom:10px"><div class="ti"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M12 8v8M8 12h8"/></svg></div><div><b>2 · „Zum Home-Bildschirm"</b><span>In der Liste „Zum Home-Bildschirm hinzufügen" wählen.</span></div></div>
       <div class="tstep"><div class="ti"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg></div><div><b>3 · Fertig</b><span>CARLON EQUINE startet ab jetzt wie eine App — offline und mit dauerhaftem lokalem Speicher.</span></div></div>
@@ -7916,13 +7916,13 @@ const UI={
   betaGate(feature){
     const booked=(State.consults||[]).reduce((s,c)=>s+(c.fee||0),0);
     const roi=booked>0
-      ? `In dieser Ansicht sind bereits <b style="color:var(--good)">${euro(booked)}</b> abrechenbarer Telemetrie-Umsatz erfasst — genau die Einnahmequelle, die du als Partner freischaltest.`
-      : `Schon eine per Ferneinschätzung abgerechnete Fahrt refinanziert das Cockpit — die Einnahmequelle, die du als Partner freischaltest.`;
+      ? `In dieser Ansicht sind bereits <b style="color:var(--good)">${euro(booked)}</b> abrechenbarer Telemetrie-Umsatz erfasst — genau die Einnahmequelle, die Sie als Partner freischalten.`
+      : `Schon eine per Ferneinschätzung abgerechnete Fahrt refinanziert das Cockpit — die Einnahmequelle, die Sie als Partner freischalten.`;
     this.modal(`<div class="modal-head"><button class="closex" onclick="UI.closeModal()">${IC.x}</button><h3>Gründungs-Partner werden</h3></div>
     <div class="modal-body">
       ${feature?`<div class="demo-ribbon" style="margin-bottom:14px"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg><div><b>${esc(feature)}</b> ist im vollen Cockpit enthalten.</div></div>`:''}
       <div class="upsell-roi">${IC.euro}<div>${roi}</div></div>
-      <p style="font-size:14px;line-height:1.6;color:var(--text-secondary)">CARLON EQUINE ist gerade in der <b>Beta</b>. Wir nehmen eine begrenzte Zahl Praxen, Kliniken und Trainer als <b>Gründungs-Partner</b> auf — volles Cockpit <b>kostenlos während der Beta</b>, persönliches Onboarding mit deinen echten Aufnahmen, dein früher Preis bleibt dauerhaft gesichert.</p>
+      <p style="font-size:14px;line-height:1.6;color:var(--text-secondary)">CARLON EQUINE ist gerade in der <b>Beta</b>. Wir nehmen eine begrenzte Zahl Praxen, Kliniken und Trainer als <b>Gründungs-Partner</b> auf — volles Cockpit <b>kostenlos während der Beta</b>, persönliches Onboarding mit Ihren echten Aufnahmen, Ihr früher Preis bleibt dauerhaft gesichert.</p>
       <ul style="font-size:13.5px;color:var(--text-secondary);line-height:1.6;margin:12px 0 0;padding:0;list-style:none;display:flex;flex-direction:column;gap:9px">
         <li style="display:flex;gap:9px;align-items:flex-start"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--good)" stroke-width="2.6" style="flex-shrink:0;margin-top:1px"><path d="M20 6L9 17l-5-5"/></svg><span>Kein offener Zugang — jeder Partner wird persönlich freigeschaltet.</span></li>
         <li style="display:flex;gap:9px;align-items:flex-start"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--good)" stroke-width="2.6" style="flex-shrink:0;margin-top:1px"><path d="M20 6L9 17l-5-5"/></svg><span>100 % lokal, keine Cloud, keine Kreditkarte.</span></li>
@@ -7967,9 +7967,9 @@ const UI={
     const booked=(State.consults||[]).reduce((s,c)=>s+(c.fee||0),0);
     const mult=booked>0?Math.max(1,Math.round(booked/License.PREIS.soloMonat)):0;
     const roi=booked>0
-      ? `Du hast in dieser Ansicht bereits <b style="color:var(--good)">${euro(booked)}</b> abrechenbaren Telemetrie-Umsatz erfasst. Das Abo kostet <b>${License.PREIS.soloMonat} €/Mo</b> — das ist <b style="color:var(--cyan-strong)">${mult}× drin.</b>`
+      ? `Sie haben in dieser Ansicht bereits <b style="color:var(--good)">${euro(booked)}</b> abrechenbaren Telemetrie-Umsatz erfasst. Das Abo kostet <b>${License.PREIS.soloMonat} €/Mo</b> — das ist <b style="color:var(--cyan-strong)">${mult}× drin.</b>`
       : `Schon <b>eine</b> per Ferneinschätzung eingesparte oder abgerechnete Fahrt (50–200 €) refinanziert die Lizenz für den ganzen Monat.`;
-    this.modal(`<div class="modal-head"><button class="closex" onclick="UI.closeModal()">${IC.x}</button><h3>Deine neue Einnahmequelle freischalten</h3></div>
+    this.modal(`<div class="modal-head"><button class="closex" onclick="UI.closeModal()">${IC.x}</button><h3>Ihre neue Einnahmequelle freischalten</h3></div>
     <div class="modal-body">
       ${feature?`<div class="demo-ribbon" style="margin-bottom:14px"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg><div><b>${esc(feature)}</b> ist Teil der Vollversion.</div></div>`:''}
       <div class="upsell-roi">${IC.euro}<div>${roi}</div></div>
@@ -8003,7 +8003,7 @@ const UI={
                       :`<button class="btn ghost" style="margin-top:8px;padding:7px 12px;font-size:12px" onclick="UI.activate()">Schlüssel eingeben</button>`;})()}</div>
         </div>`).join('')}
       </div>
-      <p style="font-size:12px;color:var(--text-dim);margin-top:16px">Preise zzgl. MwSt. — als Praxis ziehst du die Vorsteuer ab. Zahlung und Rechnung laufen über Stripe, für EU-Praxen mit USt-IdNr. greift das Reverse-Charge-Verfahren. Nach der Zahlung wirst du hierher zurückgeleitet und die Praxis ist sofort freigeschaltet — kein Schlüssel, keine E-Mail, kein Warten. Alle Gesundheitsdaten bleiben auch mit Lizenz zu 100 % lokal auf diesem Gerät.</p>
+      <p style="font-size:12px;color:var(--text-dim);margin-top:16px">Preise zzgl. MwSt. — als Praxis ziehen Sie die Vorsteuer ab. Zahlung und Rechnung laufen über Stripe, für EU-Praxen mit USt-IdNr. greift das Reverse-Charge-Verfahren. Nach der Zahlung werden Sie hierher zurückgeleitet und die Praxis ist sofort freigeschaltet — kein Schlüssel, keine E-Mail, kein Warten. Alle Gesundheitsdaten bleiben auch mit Lizenz zu 100 % lokal auf diesem Gerät.</p>
     </div>
     <div class="modal-foot"><button class="btn ghost" onclick="UI.closeModal()">Später</button><button class="btn primary" onclick="UI.activate()">Ich habe einen Schlüssel</button></div>`);
   },
@@ -8018,7 +8018,7 @@ const UI={
   },
   async tourPruefen(){
     const el=$('#tourBereitText'), box=$('#tourBereit');
-    if(el) el.textContent='Prüfe…';
+    if(el) el.textContent='Wird geprüft…';
     const r=await License.tourBereitschaft();
     if(!box||!el) return;
     box.classList.remove('gut','warn');
@@ -8476,16 +8476,16 @@ const UI={
             ${lz.kulanz?' · verlängert, weil die Abo-Prüfung zuletzt nicht erreichbar war':''}
           </div>`;})()}</div>
         <div class="price"><b>✓</b><span>aktiv</span></div></div>
-      ${License.isFounder()?'<div style="font-size:11.5px;color:var(--text-dim);margin-top:10px">Als Gründungs-Partner bleibt dir dein früher Preis dauerhaft gesichert.</div>':''}
+      ${License.isFounder()?'<div style="font-size:11.5px;color:var(--text-dim);margin-top:10px">Als Gründungs-Partner bleibt Ihnen Ihr früher Preis dauerhaft gesichert.</div>':''}
       ${(()=>{const lz=License.laufzeit();
         if(!lz||!lz.kulanz) return '';
-        return `<div class="demo-ribbon" style="margin-top:14px"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 8v4M12 16h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/></svg><div>Die Abo-Prüfung war zuletzt nicht erreichbar — <b>du arbeitest normal weiter</b>. Sobald das Gerät wieder online ist, verlängert sich das im Hintergrund von selbst. Nichts zu tun.</div></div>`;})()}
+        return `<div class="demo-ribbon" style="margin-top:14px"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 8v4M12 16h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/></svg><div>Die Abo-Prüfung war zuletzt nicht erreichbar — <b>Sie arbeiten normal weiter</b>. Sobald das Gerät wieder online ist, verlängert sich das im Hintergrund von selbst. Nichts zu tun.</div></div>`;})()}
       ${/* NUR bei einer Lizenz OHNE Abo (alter, von Hand ausgestellter
             Schluessel). Mit Abo laeuft die Lizenz immer hoechstens 14 Tage und
             erneuert sich taeglich von selbst — "laeuft bald ab" stuende dann
             dauerhaft da und wuerde zu genau dem Dauerstress, den niemand
             gebrauchen kann. Eine Warnung, die immer leuchtet, wird ignoriert. */
-        !(State.settings.license||{}).sub && d!=null && d<21 ?'<div class="demo-ribbon" style="margin-top:14px"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 8v4M12 16h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/></svg><div>Läuft bald ab — rechtzeitig verlängern. Deine <b>Daten bleiben erhalten</b>, das Cockpit wechselt sonst nur in den Demo-Modus.</div></div>':''}
+        !(State.settings.license||{}).sub && d!=null && d<21 ?'<div class="demo-ribbon" style="margin-top:14px"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 8v4M12 16h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/></svg><div>Läuft bald ab — rechtzeitig verlängern. Ihre <b>Daten bleiben erhalten</b>, das Cockpit wechselt sonst nur in den Demo-Modus.</div></div>':''}
     </div>
     ${(State.settings.license||{}).sub?`<div style="margin-top:14px;padding:12px 14px;border:1px solid var(--border-subtle);border-radius:var(--r-m)">
       <div style="font-size:12px;color:var(--text-secondary);margin-bottom:9px">Karte wechseln, Rechnungen herunterladen oder kündigen — alles direkt bei Stripe, ohne uns zu schreiben.</div>
@@ -9063,7 +9063,7 @@ const License={
     },
     zurueckgedreht(){ return Date.now() < this.marke()-3600000; },
   },
-  TIERS:{demo:{name:'Demo',color:'demo'},vet_solo:{name:'Vet-Solo',color:'paid'},vet_clinic:{name:'Vet-Clinic',color:'paid'},research:{name:'Research',color:'paid'}},
+  TIERS:{demo:{name:'Demo',color:'demo'},vet_solo:{name:'Praxis',color:'paid'},vet_clinic:{name:'Klinik',color:'paid'},research:{name:'Research',color:'paid'}},
   /* EINE Quelle für jede Preisangabe. Vorher standen 49 € an fünf Stellen
      verstreut — Anzeige, ROI-Rechnung, Preistabelle, Kommentar. Genau so
      entsteht der Fall, dass eine Stelle beim Ändern übersehen wird und die
@@ -9489,7 +9489,7 @@ const License={
   async portalOeffnen(){
     const s=State.settings.license||{};
     if(!s.sub){ Toast.show('Kein Abo hinterlegt','warn'); return; }
-    Toast.show('Öffne die Abo-Verwaltung…','info');
+    Toast.show('Abo-Verwaltung wird geöffnet…','info');
     try{
       const r=await fetch(this.DIENST+'/portal',{method:'POST',
         headers:{'Content-Type':'application/json'},
@@ -10598,7 +10598,7 @@ const Safe={
       wants.add('backup'); urgent=true;
     }
     if(c.hasData&&!c.persisted){
-      if(c.standalone){ risks.push('Dein Browser garantiert keinen dauerhaften Speicher — sichere regelmäßig per Backup.'); wants.add('backup'); }
+      if(c.standalone){ risks.push('Ihr Browser garantiert keinen dauerhaften Speicher — sichern Sie regelmäßig per Backup.'); wants.add('backup'); }
       else { risks.push('Speicher noch nicht dauerhaft — als App installieren schützt vor Löschen nach ~7 Tagen.'); wants.add('install'); wants.add('backup'); }
     }
     if(c.hasData&&c.age>7){ risks.push(c.age===Infinity?'Noch kein Backup erstellt.':`Letztes Backup vor ${Math.round(c.age)} Tagen.`); wants.add('backup'); }
@@ -10768,7 +10768,7 @@ const Sprache={
     /* Kein Treffer mehr in der Oberflaeche (14.08.2026 geprueft) — der Satz
        wurde umgeschrieben, der Schutzeintrag blieb stehen. Bleibt als
        Wortlaut-Reserve, traegt aber kein „Screening" mehr. */
-    'Ein validierter Beobachtungs-Marker liefert CARLON EQUINE als Random-Forest-Score. Hier siehst du den atemwegs-relevanten Marker im Verlauf.',
+    'Ein validierter Beobachtungs-Marker liefert CARLON EQUINE als Random-Forest-Score. Hier sehen Sie den atemwegs-relevanten Marker im Verlauf.',
     'Atemwegs-Beobachtung (HRV)',
     'Im individuellen Normbereich — die geplante Einheit inkl. höherer Intensität ist vertretbar.',
     'Alle Kernwerte im erwarteten Bereich — stabile Kontrolle, kein akuter Handlungsbedarf.'
@@ -10799,6 +10799,18 @@ const Sprache={
     'Die Marker haben sich über das Fenster verschlechtert.':'The markers worsened across the window.',
     'Zu wenige Messungen oder Zeitraum zu kurz.':'Too few recordings or the period is too short.',
     // Navigation und Rahmen
+    // 05.11.2026 — im Englischen bisher deutsch geblieben (gerenderter Scan aller Ansichten)
+    'Alle betreuten Pferde mit Besitzer, Standort und Aufnahme-Historie.':'All horses under your care, with owner, location and recording history.',
+    '+ Neues Pferd anlegen':'+ Add new horse',
+    'Der Wand-Monitor aller überwachten Pferde — für die Klinik, in der mehrere Behandler denselben Bestand vor Augen haben. Nach Abweichung sortiert, nicht nach Eingang. Im Klinik-Tarif enthalten.':'The wall monitor of every horse under observation — for the clinic where several vets watch the same patients. Sorted by deviation, not by arrival. Included in the clinic plan.',
+    'Optimierte Route nach Dringlichkeit: kritische Pferde zuerst, innerhalb jeder Stufe der kürzeste Weg. Direkt in Google Maps übertragbar.':'Route optimised by urgency: critical horses first, the shortest way within each level. Opens directly in Google Maps.',
+    'Bereit für die Tour prüfen':'Check readiness for the round',
+    'Beratungen & Ferneinschätzungen, Fahrtenbuch, Zeiterfassung und Backup — Ihre gesamte Praxis-Organisation an einem Ort.':'Consultations & remote assessments, mileage log, time tracking and backup — your whole practice organisation in one place.',
+    'Was Ihnen die Telemetrie an Fahrt, Zeit und Nerven erspart hat — die Zahl, die das Abo trägt.':'What telemetry has saved you in driving, time and nerves — the figure that pays for the subscription.',
+    'nicht gefahren':'not driven',
+    'noch nicht abgerechnet':'not yet billed',
+    'Wiederkehrender Telemetrie-Umsatz der letzten 6 Monate — die Einnahmequelle, die das Abo trägt.':'Recurring telemetry revenue over the last 6 months — the income that pays for the subscription.',
+    'Herz-Kohärenz Pferd ↔ Reiter über die Zeit — der Coaching-Fortschritt als Kurve, die abrechenbare Coaching-Leistung. Im Praxis- und Klinik-Tarif enthalten.':'Horse ↔ rider heart coherence over time — coaching progress as a curve, a billable coaching service. Included in the practice and clinic plans.',
     'Hengst':'Stallion', 'Wallach':'Gelding', 'Stute':'Mare', 'Jungstute':'Filly', 'Junghengst':'Colt',
     'Englisches Vollblut':'Thoroughbred', 'Warmblut':'Warmblood', 'Araber':'Arabian', 'Hannoveraner':'Hanoverian',
     'Heute':'Today', 'Board':'Board', 'Station':'Ward', 'Karte':'Map',
@@ -10904,10 +10916,10 @@ const Sprache={
     'Akzeptiert:':'Accepted:',
     'Ordner werden durchsucht':'folders are searched',
     'Dubletten erkannt':'duplicates detected',
-    'Alles wird zuerst geprüft — du bestätigst, bevor etwas gespeichert wird.':'Everything is checked first — you confirm before anything is saved.',
+    'Alles wird zuerst geprüft — Sie bestätigen, bevor etwas gespeichert wird.':'Everything is checked first — you confirm before anything is saved.',
     'In dieser Ansicht sind bereits':'This view already contains',
     'Aufnahme direkt vom Besitzer empfangen':'Recording received straight from the owner',
-    'Peer-to-Peer · der Besitzer sendet direkt an dich, kein Server dazwischen':'Peer-to-peer · the owner sends straight to you, no server in between',
+    'Peer-to-Peer · der Besitzer sendet direkt an Sie, kein Server dazwischen':'Peer-to-peer · the owner sends straight to you, no server in between',
     'Posteingang und Postausgang':'Inbox and outbox',
 
     // Verwaltung / Einstellungen
@@ -10920,7 +10932,7 @@ const Sprache={
     'Praxis-Logo':'Practice logo',
     'Logo hochladen':'Upload logo',
     'kein Logo':'no logo',
-    '— erscheint auf deinen Befund-PDFs (dein Branding, nicht unseres)':'— appears on your findings PDFs (your branding, not ours)',
+    '— erscheint auf Ihren Befund-PDFs (Ihr Branding, nicht unseres)':'— appears on your findings PDFs (your branding, not ours)',
     'PNG/JPG, quer oder quadratisch — wird auf 320 px skaliert und lokal gespeichert.':'PNG/JPG, landscape or square — scaled to 320 px and stored locally.',
     'Startort der Route (Adresse oder Ort)':'Starting point of the route (address or place)',
     'Adresse eingeben und „Suchen" — Koordinaten werden automatisch ermittelt.':'Enter an address and press “Search” — the coordinates are found automatically.',
@@ -10942,17 +10954,17 @@ const Sprache={
     'Ihre Praxis-Kennung ist noch nicht gesichert.':'Your practice key is not backed up yet.',
     'Sie liegt nur in diesem Browser — geht sie verloren, zeigen alle gedruckten Aushänge dauerhaft ins Leere.':'It lives only in this browser — if it is lost, every printed stable notice points nowhere, permanently.',
     'Speicher noch nicht dauerhaft — als App installieren schützt vor Löschen nach ~7 Tagen.':'Storage is not persistent yet — installing as an app protects against deletion after ~7 days.',
-    'Dein Browser garantiert keinen dauerhaften Speicher — sichere regelmäßig per Backup.':'Your browser does not guarantee persistent storage — back up regularly.',
+    'Ihr Browser garantiert keinen dauerhaften Speicher — sichern Sie regelmäßig per Backup.':'Your browser does not guarantee persistent storage — back up regularly.',
     'Speichern ist zuletzt fehlgeschlagen — bitte jetzt ein Backup sichern.':'The last save failed — please back up now.',
     'Noch kein Backup erstellt.':'No backup made yet.',
     'Als App sichern':'Install as an app',
     'Dauerhafter Speicher schützt lokale Daten davor, vom Browser (z. B. iOS nach 7 Tagen) gelöscht zu werden. Manche Browser (z. B. DuckDuckGo) gewähren ihn nicht — dann ist':'Persistent storage protects local data from being deleted by the browser (e.g. iOS after 7 days). Some browsers (e.g. DuckDuckGo) do not grant it — then',
-    'Datenschutz by Design: Alle Gesundheitsdaten liegen ausschließlich lokal in diesem Browser (IndexedDB) — keine Cloud, keine Server-Übertragung. Als Praxis/Klinik bleibst du datenschutzrechtlich Verantwortlicher für die verarbeiteten Daten.':'Privacy by design: all health data stays exclusively local in this browser (IndexedDB) — no cloud, no server transfer. As a practice or clinic you remain the controller for the data processed.',
+    'Datenschutz by Design: Alle Gesundheitsdaten liegen ausschließlich lokal in diesem Browser (IndexedDB) — keine Cloud, keine Server-Übertragung. Als Praxis oder Klinik bleiben Sie für die verarbeiteten Daten datenschutzrechtlich verantwortlich.':'Privacy by design: all health data stays exclusively local in this browser (IndexedDB) — no cloud, no server transfer. As a practice or clinic you remain the controller for the data processed.',
     'Backup jetzt':'Back up now',
     'Backup exportieren':'Export backup',
     'Backup einspielen':'Restore backup',
     'regelmäßiges Backup exportieren':'export a backup regularly',
-    'dein sicherster Schutz.':'is your safest protection.',
+    'Ihr sicherster Schutz.':'is your safest protection.',
     'Alle lokalen Daten löschen':'Delete all local data',
     'Impressum':'Legal notice',
     'Datenschutz':'Privacy',
@@ -10980,10 +10992,10 @@ const Sprache={
     'kostenlos während der Beta':'free during the beta',
     'CARLON EQUINE ist gerade in der':'CARLON EQUINE is currently in',
     '. Wir nehmen eine begrenzte Zahl Praxen, Kliniken und Trainer als':'. We are taking on a limited number of practices, clinics and trainers as',
-    ', persönliches Onboarding mit deinen echten Aufnahmen, dein früher Preis bleibt dauerhaft gesichert.':', personal onboarding with your own recordings, and your early price stays locked in for good.',
+    ', persönliches Onboarding mit Ihren echten Aufnahmen, Ihr früher Preis bleibt dauerhaft gesichert.':', personal onboarding with your own recordings, and your early price stays locked in for good.',
     'auf — volles Cockpit':'— the full cockpit',
     'Telemetrie-Beratungen abrechnen — Ihr neues Geschäftsmodell':'Bill telemetry consultations — your new line of business',
-    'abrechenbarer Telemetrie-Umsatz erfasst — genau die Einnahmequelle, die du als Partner freischaltest.':'in billable telemetry revenue recorded — exactly the income stream you unlock as a partner.',
+    'abrechenbarer Telemetrie-Umsatz erfasst — genau die Einnahmequelle, die Sie als Partner freischalten.':'in billable telemetry revenue recorded — exactly the income stream you unlock as a partner.',
     '— Befund-PDF & Karten-Export in der Vollversion.':'— findings PDF and map export in the full version.',
 
 
@@ -11236,7 +11248,7 @@ const Sprache={
     [/^Abfahrroute planen · (\d+)$/,'Plan route · $1'],
     [/^Zuerst: (.+) · (\d+) km$/,'First: $1 · $2 km'],
     [/^Einsatzplan · (.+)$/,'Day plan · $1'],
-    [/^Field-Ops · (\d+) Stopps · (\d+) kritisch$/,'Field ops · $1 stops · $2 critical'],
+    [/^Tagestour · (\d+) Stopps · (\d+) kritisch$/,'Day route · $1 stops · $2 critical'],
     [/^(\d+) Fahrten vermeidbar · Fern-Check$/,'$1 trips avoidable · remote check'],
     [/^(\d+) Demo-Pferde geladen · inkl\. synthetischem Verlauf$/,'$1 demo horses loaded · incl. synthetic history'],
     [/^— stabile Kontrolle, Telemetrie statt Anfahrt\. Spart die Fahrt zu (.+)\.$/,'— stable check-up, telemetry instead of driving out. Saves the trip to $1.'],
@@ -11492,13 +11504,25 @@ const Sprache={
     // Nahtlose Verlängerung: kein stiller Cliff — bei Ablauf/baldigem Ablauf freundlich erinnern (Daten bleiben erhalten)
     {const rn=License.needsRenewal(); if(rn){ const founder=rn.founder||License.isFounder();
       const msg=rn.state==='expired'
-        ? (founder?'Deine Gründungs-Partner-Freischaltung ist abgelaufen — deine Daten bleiben erhalten. Jetzt verlängern.':'Deine Lizenz ist abgelaufen — deine Daten bleiben erhalten. Jetzt verlängern.')
-        : `Deine Freischaltung läuft in ${rn.days} Tag${rn.days!==1?'en':''} ab — jetzt verlängern.`;
+        ? (founder?'Ihre Gründungs-Partner-Freischaltung ist abgelaufen — Ihre Daten bleiben erhalten. Jetzt verlängern.':'Ihre Lizenz ist abgelaufen — Ihre Daten bleiben erhalten. Jetzt verlängern.')
+        : `Ihre Freischaltung läuft in ${rn.days} Tag${rn.days!==1?'en':''} ab — jetzt verlängern.`;
       setTimeout(()=>Toast.show(msg,rn.state==='expired'?'warn':'info',{label:'Verlängern',fn:()=>License.renew()}),800); }}
     // Geteilte/übergebene Aufnahme direkt aufgreifen (Share-Target / File-Handler / Shortcut)
     {const _p=new URLSearchParams(location.search);
       if(_p.has('shared')) setTimeout(()=>Importer.consumeShared(),300);
-      else if(_p.has('import')||_p.has('open')) setTimeout(()=>Importer.open(),300);}
+      else if(_p.has('import')||_p.has('open')) setTimeout(()=>Importer.open(),300);
+      /* ?demo=<ansicht>[&pferd=<Name>] (05.11.2026): ein Tipp auf der Landingpage führt in
+         eine GEFÜLLTE Praxis statt vor ein Einrichtungsfenster. Demo-Pferde werden NUR in eine
+         leere Praxis geladen — bei eigenen Pferden öffnet nur die Ansicht, nie gemischte Daten. */
+      else if(_p.has('demo')) setTimeout(async()=>{
+        try{
+          if(!(State.horses&&State.horses.length)){ await startWith(true); await State.load(); }
+          else { $('#tour')?.remove(); }
+          const v=_p.get('demo'), erlaubt=['today','board','roster','station','map','revenue','coherence'];
+          const pf=(_p.get('pferd')||'').toLowerCase(), h=pf&&(State.horses||[]).find(x=>String(x.name||'').toLowerCase()===pf);
+          if(h) Views.openHorse(h.id); else Nav.go(erlaubt.includes(v)?v:'today');
+        }catch(e){ console.error('demo',e); }
+      },300);}
     // Persistenz nochmals nach erster Nutzer-Interaktion anfordern (wird dann eher gewährt) + Banner aktualisieren
     addEventListener('pointerdown',async function pOnce(){ removeEventListener('pointerdown',pOnce);
       try{ if(!(await Persist.status())) await Persist.request(); }catch(e){} Safe.renderBanner(); },{once:true});
