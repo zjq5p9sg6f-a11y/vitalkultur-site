@@ -2214,6 +2214,7 @@ const State = {
     // Tagebuch-Einträge liegen im settings-Store mit id-Präfix "log:" (kein Migrations-Bedarf)
     this.daylog=(await DB.all('settings')).filter(r=>r.id&&r.id.indexOf('log:')===0);
     const s=await DB.get('settings','app'); if(s) this.settings={...this.settings,...s.data};
+    if(typeof Baseline!=='undefined') Baseline.triageAuffrischen();
   },
   async saveSettings(){await DB.put('settings',{id:'app',data:this.settings});},
   recsFor(hid){return this.recordings.filter(r=>r.horseId===hid).sort((a,b)=>new Date(a.startedAt)-new Date(b.startedAt));},
@@ -2575,20 +2576,19 @@ const Triage = {
      Darunter heisst er, was er ist — und die Anzeige sagt dazu, ab wann die
      eigene Baseline traegt. Gerechnet wird in beiden Faellen gleich; nur
      behauptet wird weniger. */
-  MIN_EIGEN: 4,
+  MIN_EIGEN: 4,   // eine beurteilte + Baseline.MIN frühere Aufnahmen
   basisHerkunft(h){
-    const base=h&&h.baselineRMSSD;
-    if(!base) return null;
-    const eigene=State.recsFor(h.id).filter(r=>r&&r.metrics&&r.metrics.rmssd!=null).length;
-    const eigenstaendig = eigene>=this.MIN_EIGEN;
+    const b=Baseline.fuer(h);
+    if(!b) return null;
+    const eigenstaendig=b.eigen;
     return {
-      wert: base,
-      eigene,
+      wert: b.wert,
+      eigene: b.n,
       eigenstaendig,
       name: eigenstaendig ? 'individueller Baseline' : 'dem angegebenen Ausgangswert',
       kurz: eigenstaendig ? 'Baseline' : 'Ausgangswert',
       zusatz: eigenstaendig ? ''
-        : ` — noch keine eigene Baseline (${eigene} von ${this.MIN_EIGEN} Aufnahmen); der Wert stammt aus dem Datensatz`,
+        : ` — noch keine eigene Baseline (${b.n} von ${Baseline.MIN} früheren Aufnahmen in ${Baseline.TAGE} Tagen); der Wert stammt aus dem Datensatz`,
     };
   },
   baselineAmpel(h,rec){
@@ -2607,6 +2607,70 @@ const Triage = {
     for(let i=recs.length-1;i>0;i--){ if(recs[i].metrics.rmssd<recs[i-1].metrics.rmssd) streak++; else break; }
     return streak;
   }
+};
+
+/* ════════════════════════════════════════════════════════════════════════
+   BASELINE — aus den EIGENEN Aufnahmen des Pferds gerechnet (05.11.2026)
+   ════════════════════════════════════════════════════════════════════════
+   BEFUND (Langzeitprobe 40 Pferde × 12 Monate, 4.160 Aufnahmen): Visite
+   rechnete NIE eine Baseline. „Baseline" war das Feld `baselineRMSSDms` der
+   importierten Datei — eingefroren beim Import, und bei Roh-RR, CSV,
+   .carlon und Messstation gar nicht vorhanden. Kein Pferd der Probe hatte
+   eine; ein Einbruch um 60 % in den letzten drei Aufnahmen blieb ohne
+   Baseline-Hinweis. Ab 4 Aufnahmen hiess der Importwert trotzdem
+   „individuelle Baseline".
+
+   METHODE wie in der App (EquineBaselineStore: 30 Tage, n ≥ 3, Mittel und
+   Standardabweichung der Werte). ZWEI bewusste Unterschiede, beide für die
+   Praxis nötig:
+   • Das Fenster endet an der BEURTEILTEN Aufnahme, nicht an „jetzt" — eine
+     Praxis sieht auch Pferde, die vor zwei Monaten zuletzt gemessen wurden.
+   • Die beurteilte Aufnahme gehört NICHT zu ihrer eigenen Baseline. Ein
+     Mittel, das den geprüften Wert enthält, zieht jede Abweichung zu sich
+     heran (bei n = 3 um ein Viertel).
+   Reichen die eigenen Aufnahmen nicht, gilt der Wert der Datei — und heisst
+   dann „Ausgangswert", nie Baseline. */
+const Baseline={
+  TAGE:30, MIN:3,
+  _aus(recs, bisMs){
+    const von=bisMs-this.TAGE*864e5;
+    const xs=recs.filter(r=>{const t=new Date(r.startedAt).getTime();return t<bisMs&&t>=von&&r.metrics&&r.metrics.rmssd>0;}).map(r=>r.metrics.rmssd);
+    if(xs.length<this.MIN) return {n:xs.length};
+    const m=xs.reduce((a,b)=>a+b,0)/xs.length;
+    return {n:xs.length, wert:m, sd:Math.sqrt(xs.reduce((a,b)=>a+(b-m)*(b-m),0)/xs.length)};
+  },
+  /** Baseline zum Zeitpunkt `bis` (Standard: die letzte Aufnahme des Pferds). */
+  fuer(h, bis){
+    if(!h) return null;
+    const recs=State.recsFor(h.id);
+    const bisMs=bis!=null?new Date(bis).getTime():(recs.length?new Date(recs[recs.length-1].startedAt).getTime():Date.now());
+    const e=this._aus(recs,bisMs);
+    if(e.wert!=null) return {wert:e.wert, sd:e.sd, n:e.n, eigen:true};
+    if(h.baselineRMSSD) return {wert:h.baselineRMSSD, n:e.n, eigen:false};
+    return null;
+  },
+  wert(h,bis){ const b=this.fuer(h,bis); return b?b.wert:null; },
+  /* Nach jedem Laden: die Dringlichkeit jeder Aufnahme gegen die Baseline
+     IHRES Zeitpunkts neu beurteilen (nur im Speicher). Die beim Import
+     gespeicherte Stufe kannte die spätere Reihe nicht. Ein Durchlauf je
+     Pferd, gleitendes Fenster — 4.160 Aufnahmen in Millisekunden. */
+  triageAuffrischen(){
+    const jePferd={};
+    for(const r of State.recordings)(jePferd[r.horseId]=jePferd[r.horseId]||[]).push(r);
+    for(const hid in jePferd){
+      const h=State.horses.find(x=>x.id===hid);
+      const recs=jePferd[hid].sort((a,b)=>new Date(a.startedAt)-new Date(b.startedAt));
+      const t=recs.map(r=>new Date(r.startedAt).getTime());
+      let lo=0, sum=0, sq=0, n=0;
+      for(let i=0;i<recs.length;i++){
+        while(lo<i && t[lo]<t[i]-this.TAGE*864e5){ const v=recs[lo].metrics&&recs[lo].metrics.rmssd; if(v>0){sum-=v;sq-=v*v;n--;} lo++; }
+        let base=null;
+        if(n>=this.MIN) base=sum/n; else if(h&&h.baselineRMSSD) base=h.baselineRMSSD;
+        if(recs[i].metrics) recs[i].triage=Triage.score({metrics:recs[i].metrics,clinical:recs[i].clinical,durationSec:recs[i].durationSec,baselineRMSSD:base});
+        const v=recs[i].metrics&&recs[i].metrics.rmssd; if(v>0){sum+=v;sq+=v*v;n++;}
+      }
+    }
+  },
 };
 
 /* ════════════════════════════════════════════════════════════════════════
@@ -2635,7 +2699,20 @@ const Asthma={
      Bequemlichkeit, sondern Bedingung: Ohne Filterung liefert eine Reihe
      mit AV-Block-Pausen — beim ruhenden Pferd voellig normal — einen
      „hohen Verdacht", den die App gar nicht erst ausspricht. */
+  /* Ergebnis je Aufnahme merken (05.11.2026): Die Akte rechnete beim Öffnen JEDE
+     Aufnahme des Pferds neu durch — bei 104 Aufnahmen eines Jahres 528 ms von 616 ms
+     Öffnungszeit. Gemerkt wird am Aufnahme-OBJEKT (nicht an der Kennung): State.load
+     legt neue Objekte an, und zwei Objekte mit gleicher Kennung, aber anderem Inhalt
+     (Prüfstrecke t-atemwege) bekommen je ihr eigenes Ergebnis. */
+  _lokal:new WeakMap(),
   lokal(rec){
+    if(!rec||typeof rec!=='object') return this._lokalRechnen(rec);
+    if(this._lokal.has(rec)) return this._lokal.get(rec);
+    const e=this._lokalRechnen(rec);
+    this._lokal.set(rec,e);
+    return e;
+  },
+  _lokalRechnen(rec){
     if(typeof HRVVorstufe==='undefined'||typeof EquineAsthmaScreener==='undefined') return null;
     const rr=rec&&rec.rr; if(!rr||rr.length<30) return null;
 
@@ -2691,7 +2768,11 @@ const Asthma={
     let trend=null;
     try{
       if(typeof EquineAsthmaTrendModel!=='undefined'){
-        const p=this.punkte(recs);
+        /* Das Modell betrachtet nur die letzten 30 Tage (asthma.js, windowDays). Ältere
+           Aufnahmen vorher auszuwerten kostete bei einem Jahr Verlauf 0,5 s je Akte und
+           änderte nichts; ein Tag Rand, das Modell schneidet selbst genau. */
+        const ab=Date.now()-31*864e5;
+        const p=this.punkte(recs.filter(r=>r.startedAt&&new Date(r.startedAt).getTime()>=ab));
         if(p.length>=2) trend=EquineAsthmaTrendModel.analyze({points:p});
       }
     }catch(e){ console.warn('[asthma] Trend fehlgeschlagen',e); }
@@ -2793,7 +2874,7 @@ const Training={
     const hr=r.slice(-3).map(x=>x.metrics.meanHR).filter(v=>v!=null);
     const rmssdTrend=rm[2]-rm[0];
     const hrTrend=hr.length>=2?hr[hr.length-1]-hr[0]:0;
-    const base=horse.baselineRMSSD, cur=rm[2];
+    const base=Baseline.wert(horse), cur=rm[2];
     const belowBase=base&&cur<base*0.85;
     let status,cls,txt;
     if(rmssdTrend<-8&&hrTrend>2){status='Belastung hoch';cls='alert';txt='RMSSD fällt und Ruhe-HF steigt über die letzten Einheiten — Zeichen unvollständiger Erholung. Regenerationstag einplanen, Intensität zurücknehmen.';}
@@ -3273,11 +3354,17 @@ const Importer = {
     // Dublette?
     const recId='r_'+Math.abs(hashStr(horse.id+n.recId)).toString(36);
     if(State.recordings.some(r=>r.id===recId)) return {dup:true,horseId:horse.id,triage:{level:'stable'}};
-    const triage=Triage.score(n);
+    const _eigen=Baseline.fuer(horse,n.startedAt);
+    const triage=Triage.score(_eigen?{...n,baselineRMSSD:_eigen.wert}:n);
     const rec={
       id:recId, horseId:horse.id, startedAt:n.startedAt, durationSec:n.durationSec, beatCount:n.beatCount,
       intent:n.intent, metrics:n.metrics, triage, clinical:n.clinical, device:n.device,
-      rr:n.rr.length<=2000?n.rr:n.rr.filter((_,i)=>i%Math.ceil(n.rr.length/2000)===0),
+      /* VOLLE Schlagfolge (05.11.2026). Bis heute blieb ueber 2000 Schlaegen nur jeder
+         n-te — jede Pferdeaufnahme ueber ~50 min. Spektrum, Poincaré („jeder Punkt ein
+         Schlag gegen den naechsten"), SampEn und Verteilung liefen dann auf Werten, die
+         keine Nachbarn waren. Eine 8-h-Nacht sind ~19.000 Zahlen (~150 KB) — tragbar.
+         Bereits verdichtet gespeicherte Aufnahmen erkennt `Views.verdichtet`. */
+      rr:n.rr,
       /* WER SIE EINGESPIELT HAT (15.08.2026). In einer Einzelpraxis ist das
          entbehrlich — es gibt nur eine Person. Sobald mehrere Behandler auf
          DENSELBEN Bestand schauen, ist eine Aufnahme ohne Herkunft ein
@@ -4540,7 +4627,7 @@ const Views={
   board(){
     const horses=State.horses.filter(h=>State.latestFor(h.id));
     if(!horses.length) return Views.emptyMain();
-    const withTri=horses.map(h=>{const rec=State.latestFor(h.id);return {h,rec,tri:rec.triage||Triage.score({metrics:rec.metrics,clinical:rec.clinical,baselineRMSSD:h.baselineRMSSD})};});
+    const withTri=horses.map(h=>{const rec=State.latestFor(h.id);return {h,rec,tri:rec.triage||Triage.score({metrics:rec.metrics,clinical:rec.clinical,baselineRMSSD:Baseline.wert(h)})};});
     const cols={crit:[],elev:[],watch:[],stable:[]};
     withTri.forEach(x=>cols[x.tri.level].push(x));
     Object.values(cols).forEach(c=>c.sort((a,b)=>(b.tri.score-a.tri.score)||(new Date(b.rec.startedAt)-new Date(a.rec.startedAt))));
@@ -4589,7 +4676,7 @@ const Views={
     const rankLvl={crit:3,elev:2,watch:1,stable:0};
     const mon=State.horses.filter(h=>State.latestFor(h.id)).map(h=>{
       const rec=State.latestFor(h.id);
-      const tri=rec.triage||Triage.score({metrics:rec.metrics,clinical:rec.clinical,baselineRMSSD:h.baselineRMSSD});
+      const tri=rec.triage||Triage.score({metrics:rec.metrics,clinical:rec.clinical,baselineRMSSD:Baseline.wert(h)});
       const amp=Triage.baselineAmpel(h,rec); const streak=Triage.fallingStreak(h.id);
       const m=rec.metrics;
       const hrHigh=(h.baselineHR&&m.meanHR!=null)?m.meanHR>h.baselineHR*1.2:false;
@@ -4672,7 +4759,7 @@ const Views={
     const bv=rr.length?HRV.baevsky(rr):null; const si=bv?bv.SI:null;
     const siPct=si!=null?Math.max(5,Math.min(100,si/300*100)):0;
     const siCol=si==null?'var(--text-dim)':si<80?'var(--good)':si<150?'var(--amber)':'var(--red)';
-    const delta=(h.baselineRMSSD&&m.rmssd!=null)?(m.rmssd-h.baselineRMSSD)/h.baselineRMSSD*100:null;
+    const _b=Baseline.wert(h), delta=(_b&&m.rmssd!=null)?(m.rmssd-_b)/_b*100:null;
     const recs=State.recsFor(h.id);
     const spark=recs.length>=3?Chart.spark(recs.map(r=>({x:r.startedAt,y:r.metrics.rmssd})),{w:220,h:24,color:tri.level==='crit'?'var(--red)':tri.level==='elev'?'var(--amber)':'var(--cyan)'}):'';
     return `<div class="st-tile ${tri.level}${hint?' hint':''}" onclick="Views.openHorse('${h.id}')" title="${esc(h.name)} — Akte öffnen">
@@ -4773,7 +4860,7 @@ const Views={
       <div class="row2">
         <div class="metric"><b>${fmt0(m.rmssd)}</b><span>RMSSD ms</span></div>
         <div class="metric"><b>${fmt0(m.meanHR)}</b><span>HF bpm</span></div>
-        ${(h.baselineRMSSD&&m.rmssd!=null)?`<div class="metric"><b class="mdelta ${m.rmssd<h.baselineRMSSD*0.7?'bad':m.rmssd<h.baselineRMSSD*0.86?'warn':'ok'}">${m.rmssd>=h.baselineRMSSD?'+':''}${fmt0((m.rmssd-h.baselineRMSSD)/h.baselineRMSSD*100)}%</b><span>vs Baseline</span></div>`:(m.dfa!=null?`<div class="metric"><b>${fmt2(m.dfa)}</b><span>DFA α1</span></div>`:(m.quality!=null?`<div class="metric"><b>${fmt0(m.quality)}</b><span>Signalqual.</span></div>`:''))}
+        ${(Baseline.wert(h)&&m.rmssd!=null)?`<div class="metric"><b class="mdelta ${m.rmssd<Baseline.wert(h)*0.7?'bad':m.rmssd<Baseline.wert(h)*0.86?'warn':'ok'}">${m.rmssd>=Baseline.wert(h)?'+':''}${fmt0((m.rmssd-Baseline.wert(h))/Baseline.wert(h)*100)}%</b><span>vs Baseline</span></div>`:(m.dfa!=null?`<div class="metric"><b>${fmt2(m.dfa)}</b><span>DFA α1</span></div>`:(m.quality!=null?`<div class="metric"><b>${fmt0(m.quality)}</b><span>Signalqual.</span></div>`:''))}
       </div>
       ${(()=>{const s=State.recsFor(h.id).map(r=>({x:r.startedAt,y:r.metrics.rmssd}));return s.length>=3?`<div style="margin-top:9px;opacity:.85">${Chart.spark(s,{w:250,h:26,color:tri.level==='crit'?'var(--red)':tri.level==='elev'?'var(--amber)':'var(--cyan)'})}</div>`:'';})()}
       ${flags?`<div class="chips">${flags}</div>`:''}
@@ -4910,7 +4997,7 @@ const Views={
         <div class="hr-vitals">
           <div class="m"><b>${m.rmssd!=null?fmt0(m.rmssd):'—'} ${trS}</b><span>RMSSD ms</span></div>
           <div class="m"><b>${m.meanHR!=null?fmt0(m.meanHR):'—'}</b><span>Ruhe-HF</span></div>
-          ${(h.baselineRMSSD&&m.rmssd!=null)?`<div class="m"><b class="mdelta ${m.rmssd<h.baselineRMSSD*0.7?'bad':m.rmssd<h.baselineRMSSD*0.86?'warn':'ok'}">${m.rmssd>=h.baselineRMSSD?'+':''}${fmt0((m.rmssd-h.baselineRMSSD)/h.baselineRMSSD*100)}%</b><span>vs Baseline</span></div>`:''}
+          ${(Baseline.wert(h)&&m.rmssd!=null)?`<div class="m"><b class="mdelta ${m.rmssd<Baseline.wert(h)*0.7?'bad':m.rmssd<Baseline.wert(h)*0.86?'warn':'ok'}">${m.rmssd>=Baseline.wert(h)?'+':''}${fmt0((m.rmssd-Baseline.wert(h))/Baseline.wert(h)*100)}%</b><span>vs Baseline</span></div>`:''}
           <div class="hr-last">${spark}<span>${rec?'vor '+relTime(rec.startedAt):'keine Messung'}${d!=null?' · '+fmt0(d)+' km':''}</span></div>
         </div>
         <input class="hr-note" placeholder="Kurzbefund / Notiz eintragen…" value="${esc(h.shortNote||'')}" onclick="event.stopPropagation()" onchange="Views.saveNote('${h.id}',this.value)">
@@ -5525,7 +5612,7 @@ const Views={
           <div class="verlauf-grid">
           <div class="chart-wrap">
             <div class="ct"><span>RMSSD-Verlauf ${Views.deltaChip(rmssdSeries,true)}</span><span class="leg"><i style="color:var(--cyan)">RMSSD ms</i><i style="color:var(--good)">typ. Bereich</i><i style="color:var(--text-secondary)">Baseline</i></span></div>
-            ${Chart.ts(rmssdSeries,{band:[40,100],color:'var(--cyan)',unit:'ms',baseline:h.baselineRMSSD,baselineLabel:'Baseline',classify:Views.clsRMSSD})}
+            ${Chart.ts(rmssdSeries,{band:[40,100],color:'var(--cyan)',unit:'ms',baseline:Baseline.wert(h),baselineLabel:((Triage.basisHerkunft(h)||{}).kurz||'Baseline'),classify:Views.clsRMSSD})}
           </div>
           <div class="chart-wrap">
             <div class="ct"><span>Ruhe-Herzfrequenz-Verlauf ${Views.deltaChip(hrSeries,false)}</span><span class="leg"><i style="color:var(--amber)">HF bpm</i><i style="color:var(--good)">physiol.</i><i style="color:var(--text-secondary)">Baseline</i></span></div>
@@ -5564,7 +5651,7 @@ const Views={
             <div class="ref-lines">
               ${h.stable?`<div><span>Stall</span><b>${esc(h.stable)}</b></div>`:''}
               <div class="ref-addr"><span>Adresse</span>${h.place?`<b>${esc(h.place)}</b>${(h.lat!=null&&h.lng!=null)?`<button class="ref-navi" onclick="Dispatch.navTo('${h.id}')">${IC.nav}Navi</button>`:''}`:`<a onclick="Views.editHorse('${h.id}')" style="color:var(--amber);cursor:pointer;font-weight:600">+ Straße &amp; Hausnr. ergänzen</a>`}</div>
-              <div><span>Baseline</span><b>${fmt0(h.baselineRMSSD)} ms</b> <small style="color:var(--text-dim)">RMSSD</small></div>
+              <div><span>${(Triage.basisHerkunft(h)||{}).kurz||'Baseline'}</span><b>${fmt0(Baseline.wert(h))} ms</b> <small style="color:var(--text-dim)">RMSSD</small></div>
             </div>
             ${(()=>{const sib=Views.ownerKey(h)==='Ohne Besitzer'?[]:State.horses.filter(x=>x.id!==h.id&&Views.ownerKey(x)===Views.ownerKey(h));return sib.length?`<div style="margin-top:14px;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--text-dim);font-weight:600">Weitere Pferde dieses Besitzers</div><div class="other-horses">${sib.slice().sort((a,b)=>{const ra=State.latestFor(a.id),rb=State.latestFor(b.id);return Triage.LEVELS[(rb?rb.triage.level:'stable')].rank-Triage.LEVELS[(ra?ra.triage.level:'stable')].rank;}).map(s=>{const r=State.latestFor(s.id);const lv=r?r.triage.level:'stable';const c={crit:'var(--red)',elev:'var(--amber)',watch:'var(--cyan)',stable:'var(--good)'}[lv];return `<div class="other-horse" onclick="Views.openHorse('${s.id}')">${Views.avatar(s,24)}<span>${esc(s.name)}</span><span class="oh-dot" style="background:${c}"></span></div>`;}).join('')}</div>`:'';})()}
             ${h.photo?`<button class="btn ghost" style="font-size:11px;padding:5px 10px;margin-top:12px" onclick="Views.removePhoto('${h.id}')">Foto entfernen</button>`:''}
@@ -5633,14 +5720,17 @@ const Views={
       <div class="vh-act">${act}</div>
     </div>`;
   },
+  /* Gespeicherte Reihe kuerzer als die Schlagzahl ⇒ vor dem 05.11.2026 verdichtet. */
+  verdichtet(rec){ return !!(rec&&rec.rr&&rec.beatCount&&rec.rr.length<rec.beatCount); },
   signalPanel(rec){
     if(!rec||!rec.rr||rec.rr.length<5)return '';
+    if(Views.verdichtet(rec)) return `<div style="margin-bottom:var(--s4)"><p style="font-size:12px;color:var(--text-dim)">Die gespeicherte Schlagfolge dieser Aufnahme ist verdichtet — Spektrum, Poincaré und Verteilung lassen sich daraus nicht zeigen. Die Kennzahlen stammen aus der vollständigen Reihe.</p></div>`;
     const m=rec.metrics||{}; const rr=rec.rr;
     const psd=HRV.lombPSD(rr); const bd=HRV.bands(psd);
     const bv=HRV.baevsky(rr); const se=HRV.sampEn(rr); const tt=HRV.tinnTri(rr);
     const dfa1=(m.dfa!=null)?m.dfa:HRV.dfaAlpha1(rr);
     const meanRR=rr.reduce((a,b)=>a+b,0)/rr.length;
-    const lfhf=(bd&&bd.lfhf!=null)?bd.lfhf:m.lfhf;
+    const lfhf=(m.lfhf!=null)?m.lfhf:(bd&&bd.lfhf!=null?bd.lfhf:null);   // geprüfte Zahl (Rechenkern) vor dem Lomb-Bild
     // Metrik-Meta wie die App: [Label-Farbe, Kontext-Zeile (Bereich/Bedeutung · Quelle)]
     const VMETA={
       'RMSSD':['var(--cyan)','Vagal · 25–120'], 'SDNN':['var(--cyan)','Overall · 50–200'],
@@ -6107,7 +6197,7 @@ const Views={
      weiter, was dort steht, und sagen dazu, was WIR damit gemacht haben. */
   herkunft(rec, pferd){
     const q = rec && rec.metrics || {};
-    const base = pferd && pferd.baselineRMSSD;
+    const base = pferd && Baseline.wert(pferd);
     return {
       erzeugtVon: 'CARLON Equine Visite',
       fassung: (typeof BUILD !== 'undefined' ? BUILD : 'unbekannt'),
@@ -6563,7 +6653,7 @@ const Handoff={
       eyebrow:'Herzraten-Bericht', vom:'Bericht vom', besitzer:'Besitzer',
       tMean:'Ø Puls', tMin:'Ruhe-Puls', tMax:'Spitze', tQual:'Signalgüte',
       chartVit:'Puls und Herzratenvariabilität', chartPoi:'Schlag zu Schlag · Poincaré',
-      chartNix:'Keine Kurvendaten in dieser Aufnahme',
+      chartNix:'Keine Kurvendaten in dieser Aufnahme (oder nur verdichtet gespeichert)',
       notiz:'Einschätzung der Praxis',
       handT:'Für die weiterbehandelnde Praxis',
       handP:'Dieser Bericht enthält den vollständigen Datensatz als offenes FHIR-R5-Bundle — direkt in euer Praxis- oder Klinik-System übernehmbar, ohne Abtippen.',
@@ -6594,7 +6684,7 @@ const Handoff={
       eyebrow:'Heart rate report', vom:'Report of', besitzer:'Owner',
       tMean:'Mean HR', tMin:'Resting HR', tMax:'Peak', tQual:'Signal quality',
       chartVit:'Heart rate and heart rate variability', chartPoi:'Beat to beat · Poincaré',
-      chartNix:'No waveform data in this recording',
+      chartNix:'No waveform data in this recording (or stored condensed only)',
       notiz:'Assessment by the practice',
       handT:'For the receiving practice or clinic',
       handP:'This report carries the complete dataset as an open FHIR R5 bundle — importable directly into your practice or clinic system, with nothing to retype.',
@@ -6624,9 +6714,9 @@ const Handoff={
     const L=Handoff.WORTE[sprache]||Handoff.WORTE.de;
     // RR aus der gespeicherten Aufnahme; der Normalizer kennt alle Feldvarianten.
     const m=r.metrics;
-    const rr=(r.rr&&r.rr.length?r.rr:null)
+    const rr=Views.verdichtet(r) ? [] : ((r.rr&&r.rr.length?r.rr:null)
           || (r.raw&&typeof Normalizer!=='undefined'?Normalizer.rr(r.raw):null)
-          || r.rrIntervalsMs || [];
+          || r.rrIntervalsMs || []);
     const {font,logo}=await Handoff.assets();
     const praxis=(State.settings&&State.settings.clinicName)||'';
     const when=new Date(r.startedAt||Date.now());
@@ -6660,7 +6750,7 @@ const Handoff={
        Deutung — die Einordnung bleibt tieraerztlich. */
     const psd = rr.length>=120 ? HRV.lombPSD(rr) : null;
     const bd  = psd ? HRV.bands(psd) : null;
-    const lfhf = (bd&&bd.lfhf!=null)?bd.lfhf:((m&&m.lfhf!=null)?m.lfhf:null);
+    const lfhf = (m&&m.lfhf!=null)?m.lfhf:((bd&&bd.lfhf!=null)?bd.lfhf:null);   // geprüfte Zahl vor dem Lomb-Bild
     const lfhfTxt = lfhf!=null ? (L.komma?lfhf.toFixed(2).replace('.',','):lfhf.toFixed(2)) : null;
     const verlaufSerie = State.recsFor(h.id)
       .filter(x=>x.metrics&&x.metrics.rmssd!=null)
@@ -6676,7 +6766,7 @@ const Handoff={
     /* Der Verlauf ist das Produktversprechen der Visite-Seite ("mit ...
        Verlauf und Poincaré") — ab drei Aufnahmen wird er zur Kurve. */
     const verlauf = verlaufSerie.length>=3
-      ? `<div class="cw"><div class="ct">${L.chartVerlauf.replace('{n}',verlaufSerie.length)}</div>${Chart.ts(verlaufSerie,{w:900,h:240,unit:'ms',baseline:(h.baselineRMSSD!=null?h.baselineRMSSD:null),baselineLabel:L.verlaufBase})}<div class="cs">${L.verlaufSub}</div></div>`
+      ? `<div class="cw"><div class="ct">${L.chartVerlauf.replace('{n}',verlaufSerie.length)}</div>${Chart.ts(verlaufSerie,{w:900,h:240,unit:'ms',baseline:(Baseline.wert(h)!=null?Baseline.wert(h):null),baselineLabel:L.verlaufBase})}<div class="cs">${L.verlaufSub}</div></div>`
       : '';
 
     const bundle=FHIR.bundle(r,h);
@@ -7462,13 +7552,13 @@ const Report={
     const s=State.settings;
     const st=(k,unit,v,c,dec)=>`<div class="pr-stat"><div class="k">${k}</div><div class="v">${v==null?'n.v.':(dec===2?fmt2(v):dec?fmt1(v):fmt0(v))}${(v!=null&&unit)?' '+unit:''}</div>${c?`<div class="c ${c.cls}">${c.text}</div>`:''}</div>`;
     const series=recs.map(r=>({x:r.startedAt,y:r.metrics.rmssd}));
-    const rr=rec.rr||[];
+    const rr=Views.verdichtet(rec)?[]:(rec.rr||[]);   // verdichtete Reihe: keine Nachbarn ⇒ nichts daraus rechnen
     const dfa=(m.dfa!=null)?m.dfa:(rr.length?HRV.dfaAlpha1(rr):null);
     const psd=rr.length>=24?HRV.lombPSD(rr):null; const bd=HRV.bands(psd);
     const bv=rr.length?HRV.baevsky(rr):null; const se=rr.length?HRV.sampEn(rr):null; const tt=rr.length?HRV.tinnTri(rr):null;
     const meanRR=rr.length?rr.reduce((a,b)=>a+b,0)/rr.length:null;
-    const lfhf=(bd&&bd.lfhf!=null)?bd.lfhf:m.lfhf;
-    const base=h.baselineRMSSD&&m.rmssd!=null?`Individuelle Baseline ${fmt0(h.baselineRMSSD)} ms · aktuell ${fmt0(m.rmssd)} ms (${m.rmssd>=h.baselineRMSSD?'+':''}${fmt0((m.rmssd-h.baselineRMSSD)/h.baselineRMSSD*100)} %)`:'';
+    const lfhf=(m.lfhf!=null)?m.lfhf:(bd&&bd.lfhf!=null?bd.lfhf:null);   // geprüfte Zahl (Rechenkern) vor dem Lomb-Bild
+    const base=Baseline.wert(h)&&m.rmssd!=null?`${(Triage.basisHerkunft(h)||{}).eigenstaendig?'Individuelle Baseline':'Ausgangswert'} ${fmt0(Baseline.wert(h))} ms · aktuell ${fmt0(m.rmssd)} ms (${m.rmssd>=Baseline.wert(h)?'+':''}${fmt0((m.rmssd-Baseline.wert(h))/Baseline.wert(h)*100)} %)`:'';
     const nextTxt=d.next?`<div style="margin-top:8px;font-weight:600;color:#04303a">Nächste Kontrolle: ${esc(new Date(d.next).toLocaleDateString('de-DE'))}</div>`:'';
     const viralFoot=d.viral!==false?`<div class="pr-viral">
       <img src="${Report.QR}" alt="CARLON QR" width="88" height="88">
@@ -10782,6 +10872,9 @@ const Sprache={
      Der deutsche Satz ist der Schluessel. Sortiert wie die Oberflaeche:
      Navigation, Board, Akte, Station, Karte, Verwaltung, Kauf. */
   WB:{
+    'Die gespeicherte Schlagfolge dieser Aufnahme ist verdichtet — Spektrum, Poincaré und Verteilung lassen sich daraus nicht zeigen. Die Kennzahlen stammen aus der vollständigen Reihe.':'The stored beat sequence of this recording is condensed — spectrum, Poincaré and distribution cannot be shown from it. The metrics come from the complete series.',
+    // Baseline aus eigenen Aufnahmen (05.11.2026)
+    'Ausgangswert':'Initial value',
     // Atemwegs-Beobachtung — im Cockpit gerechnet (09.08.2026)
     'Die gespeicherte Schlagfolge dieser Aufnahme ist verdichtet — darauf lässt sich keine belastbare Atemwegs-Beobachtung rechnen.':'The stored beat sequence of this recording is condensed — no dependable airway observation can be computed from it.',
     'Datengrundlage zu klein — die Atemwegs-Beobachtung braucht sieben Minuten Ruhe und 200 Schläge.':'Too little data — the airway observation needs seven minutes at rest and 200 beats.',
