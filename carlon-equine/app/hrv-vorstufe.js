@@ -492,6 +492,19 @@
     }
     return n > 0 ? (treffer / n) * 100 : 0;
   }
+  /* Zwilling zu EquineFilterPipeline.sdsdOhne (Stichprobe, n−1 der Differenzen). */
+  function sdsdOhne(rrs, auslassen) {
+    if (!rrs || rrs.length < 3) return 0;
+    const d = [];
+    for (let i = 1; i < rrs.length; i++) {
+      if (auslassen.has(i) || auslassen.has(i - 1)) continue;
+      d.push(rrs[i] - rrs[i - 1]);
+    }
+    if (d.length < 2) return 0;
+    const m = d.reduce((a, b) => a + b, 0) / d.length;
+    let q = 0; for (const x of d) q += (x - m) * (x - m);
+    return Math.sqrt(q / (d.length - 1));
+  }
   function sdnnOhne(rrs, auslassen) {
     if (!rrs || rrs.length < 2) return 0;
     const werte = rrs.filter((_, i) => !auslassen.has(i));
@@ -908,8 +921,9 @@
    */
   function cubicSplineResampleTo4Hz(rrIntervalsMs) {
     const fs = 4.0;
-    // Crash-Guard: max 5000 RR (~80 min bei 60 bpm)
-    const capped = rrIntervalsMs.length > 5000 ? rrIntervalsMs.slice(0, 5000) : rrIntervalsMs;
+    // 05.11.2026: keine Kappe mehr (wie Swift f7ea0a9e) — 5000 Schläge / 8192 Werte schnitten
+    // jede Aufnahme über 34 min ab; LF/HF kamen still aus dem Anfang.
+    const capped = rrIntervalsMs;
     if (capped.length < 4) return { samples: [], fs: fs };
 
     const times = [], values = [];
@@ -923,7 +937,7 @@
     if (!times.length || !(times[times.length - 1] > 0)) return { samples: [], fs: fs };
     const totalSec = times[times.length - 1];
     // Crash-Guard: max 8192 Samples (= 2048 s bei 4 Hz)
-    const nSamples = Math.min(8192, Math.trunc(totalSec * fs));
+    const nSamples = Math.min(Math.trunc(24 * 3600 * fs), Math.trunc(totalSec * fs));
     if (nSamples < 32) return { samples: [], fs: fs };
 
     const y2 = naturalCubicSplineSecondDerivs(times, values);
@@ -937,13 +951,14 @@
     for (let k = 1; k < freqs.length; k++) {
       const fLo = freqs[k - 1];
       const fHi = freqs[k];
-      if (fHi < low || fLo > high) continue;
-      // ABWEICHUNGSNOTIZ: das Original integriert den GANZEN Bin, sobald er das
-      // Band beruehrt — es schneidet an der Bandgrenze nicht ab. Ein Bin an der
-      // Grenze zaehlt damit voll in BEIDE Baender. Bei df = 0,0156 Hz und einem
-      // LF-Band von 0,06 Hz Breite ist das kein Rundungsfehler, sondern Teil der
-      // Kalibrierung. Unveraendert uebernommen.
-      sum += 0.5 * (psd[k - 1] + psd[k]) * (fHi - fLo);
+      // ── SCHNITT AN DER BANDGRENZE (05.11.2026, wie HRVKubiosPipeline.integrateBand heute) ──
+      // Bis heute zaehlte ein Bin, der die Grenze beruehrt, VOLL in beide Baender (alte
+      // Swift-Fassung). Swift schneidet inzwischen an der Grenze und interpoliert die Dichte;
+      // die Messstation lag damit bei LF/HF bis 3× daneben (64-min-Aufnahme: 14,18 statt 4,70).
+      const a = Math.max(fLo, low), b = Math.min(fHi, high);
+      if (!(b > a) || !(fHi > fLo)) continue;
+      const dichte = (f) => psd[k - 1] + (psd[k] - psd[k - 1]) * (f - fLo) / (fHi - fLo);
+      sum += 0.5 * (dichte(a) + dichte(b)) * (b - a);
     }
     return sum;
   }
@@ -960,7 +975,8 @@
     overlapPct = (overlapPct === undefined) ? 0.5 : overlapPct;
 
     if (samples.length < segmentLength) return null;
-    const maxTotal = segmentLength + Math.trunc(segmentLength * (1.0 - overlapPct)) * 200;
+    // 05.11.2026: 24 h wie Swift (f7ea0a9e) — vorher 200 Fenster = die ersten 107,7 min.
+    const maxTotal = Math.trunc(24 * 3600 * fs);
     const capped = samples.length > maxTotal ? samples.slice(0, maxTotal) : samples;
     for (const v of capped) if (!isFinite(v)) return null;
 
@@ -1122,7 +1138,10 @@
     const r = rFactor * sd;
 
     function countMatches(dim) {
-      const nLocal = n - dim + 1;
+      // 05.11.2026 — wie Swift seit 17.10. (2d24d4db, Research): beide Zählungen über DIESELBEN
+      // n − m Vorlagen (Richman & Moorman 2000). `n − dim + 1` zählte für m eine Vorlage mehr,
+      // SampEn lag 1–3 % zu hoch (gegen NeuroKit2).
+      const nLocal = n - m;
       if (!(nLocal > 1)) return 0;
       let count = 0;
       for (let i = 0; i < nLocal - 1; i++) {
@@ -1236,8 +1255,12 @@
     // mathematisch fast, aber nicht ganz identisch (die direkte Form zieht die
     // mittlere Differenz ab); auf denselben Daten unterscheiden sie sich um
     // rund 0,6 %. Der Screener ist auf die Brennan-Form kalibriert.
-    const sd1 = rmssd / Math.sqrt(2.0);
-    const sd2Squared = 2 * sdnn * sdnn - 0.5 * rmssd * rmssd;
+    // 05.11.2026 — EINE Poincaré-Formel wie Swift (EquineFilterPipeline.poincareOhne, f7ea0a9e):
+    // SD1/SD2 aus SDSD (Streuung der Differenzen), nicht aus RMSSD. Beide weichen ab, sobald
+    // die Herzfrequenz über die Aufnahme einen Trend hat.
+    const sdsd = sdsdOhne(corrected, ausgelassen);
+    const sd1 = Math.sqrt(0.5) * sdsd;
+    const sd2Squared = 2 * sdnn * sdnn - 0.5 * sdsd * sdsd;
     const sd2 = sd2Squared > 0 ? Math.sqrt(sd2Squared) : 0;
     const sd2sd1Ratio = sd2 > 0 ? sd2 / sd1 : 0;   // SD2/SD1, nicht umgekehrt (Wonghanchao)
 
