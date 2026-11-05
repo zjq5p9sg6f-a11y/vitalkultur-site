@@ -3908,8 +3908,15 @@ function onBeat(ev){
   S.hrSchlaege=(S.hrSchlaege||0)+1;
   if(!S.rrGesehen && S.hrSchlaege===12) rrFehltMelden();
   $('#hr').textContent=hr||'–';
-  if(hr){ S.hrMin=Math.min(S.hrMin??hr,hr); S.hrMax=Math.max(S.hrMax??hr,hr);
-    $('#hrRange').textContent = S.hrMin===S.hrMax ? String(S.hrMin) : S.hrMin+'–'+S.hrMax; }
+  /* SPANNE NUR AUS PLAUSIBLEN WERTEN (05.11.2026). Vorher ging jedes Paket ein —
+     ein gestoertes mit 178 bpm stand in einer Ruhemessung im Stall fuer die
+     ganze Aufnahme als „bisher 29–178“ (Pruefstand Chrome, Beispielmessung).
+     In die Spanne kommt ein Wert erst, wenn er hoechstens 30 % neben dem Median
+     der letzten zehn liegt; der aktuelle Puls oben bleibt ungefiltert. */
+  if(hr){ const f=(S.hrFenster=(S.hrFenster||[]).concat(hr).slice(-10));
+    const m=f.slice().sort((a,b)=>a-b)[f.length>>1];
+    if(f.length>=5 && Math.abs(hr-m)/m<=0.3){ S.hrMin=Math.min(S.hrMin??hr,hr); S.hrMax=Math.max(S.hrMax??hr,hr);
+      $('#hrRange').textContent = S.hrMin===S.hrMax ? String(S.hrMin) : S.hrMin+'–'+S.hrMax; } }
   $('#beats').textContent=fmt0(S.rr.length);
   const h=$('#heart'); h.classList.remove('beat'); void h.offsetWidth; h.classList.add('beat');
   /* Nicht bei jedem Schlag ALLES neu zeichnen: vier Diagramme aus
@@ -4798,7 +4805,7 @@ function liveDiagrammeZuruecksetzen(){
 
 $('#btnRestart').addEventListener('click',()=>{
   if(S.rr.length>=12 && !confirmDiscard()) return;
-  S.rr=[]; S.hr=0; S.startedAt=new Date(); S.hrMin=null; S.hrMax=null;
+  S.rr=[]; S.hr=0; S.startedAt=new Date(); S.hrMin=null; S.hrMax=null; S.hrFenster=[];
   $('#hrRange').textContent='–'; $('#recFill').style.width='0';
   $('#hr').textContent='–'; $('#beats').textContent='0'; $('#dur').textContent='0:00';
   liveDiagrammeZuruecksetzen(); $('#qdot').className='dot';
@@ -5104,7 +5111,7 @@ $('#shOwner').addEventListener('click',()=>share('owner'));
 $('#shVet').addEventListener('click',()=>share('vet'));
 
 $('#btnAgain').addEventListener('click',()=>{
-  S.rr=[]; S.hr=0; S.blob=null; S.startedAt=null; S.stopped=false; S.hrMin=null; S.hrMax=null;
+  S.rr=[]; S.hr=0; S.blob=null; S.startedAt=null; S.stopped=false; S.hrMin=null; S.hrMax=null; S.hrFenster=[];
   $('#hrRange').textContent='–'; $('#recFill').style.width='0';
   $('#pb').style.width='0'; $('#status').textContent=''; $('#err').textContent='';
   $('#barWrap').classList.add('hidden');
