@@ -4408,20 +4408,20 @@ const Info={
     UI.modal(`<div class="info-pop guide">
       <div class="ip-head">${IC.info}<h3>Poincaré verstehen</h3></div>
       <div class="ip-body">
-        <div class="gd-lead">Jeder Punkt trägt ein RR-Intervall gegen das direkt folgende auf (RRₙ vs. RRₙ₊₁). Ein Punkt <b>auf</b> der Diagonale (y = x) heißt: zwei aufeinanderfolgende Schläge waren gleich lang. Die Wolke zeigt auf einen Blick, wie stark — und in welche Richtung — die Herzfrequenz von Schlag zu Schlag variiert.</div>
+        <div class="gd-lead">Jeder Punkt trägt ein RR-Intervall gegen das direkt folgende auf (RRₙ vs. RRₙ₊₁). Ein Punkt auf der Diagonale (y = x) heißt: zwei aufeinanderfolgende Schläge waren gleich lang. Die Wolke zeigt auf einen Blick, wie stark — und in welche Richtung — die Herzfrequenz von Schlag zu Schlag variiert.</div>
         <div class="gd-sd">
           <div class="gd-mini">${Info.miniPoinca('comet')}</div>
           <div class="gd-sd-t">
-            <div class="gd-row"><b style="color:var(--cyan)">SD1</b><span>Breite <b>quer</b> zur Diagonale — Schlag-zu-Schlag-Änderung, Kurzzeit-Variabilität (= RMSSD/√2).</span></div>
-            <div class="gd-row"><b style="color:var(--equine)">SD2</b><span>Länge <b>entlang</b> der Diagonale — Gesamt-Streuung über die Aufnahme, Langzeit-Variabilität.</span></div>
+            <div class="gd-row"><b style="color:var(--cyan)">SD1</b><span>Breite quer zur Diagonale — Schlag-zu-Schlag-Änderung, Kurzzeit-Variabilität (= RMSSD/√2).</span></div>
+            <div class="gd-row"><b style="color:var(--equine)">SD2</b><span>Länge entlang der Diagonale — Gesamt-Streuung über die Aufnahme, Langzeit-Variabilität.</span></div>
           </div>
         </div>
         <div class="gd-h">Die drei charakteristischen Formen</div>
-        <div class="gd-shape"><div class="gd-mini">${Info.miniPoinca('comet')}</div><div class="gd-shape-t"><b style="color:var(--good)">Komet</b><span>Elongierte, auffächernde Wolke. Hohe Kurz- <b>und</b> Langzeit-Variabilität — reich strukturiertes, flexibles Herzmuster.</span></div></div>
+        <div class="gd-shape"><div class="gd-mini">${Info.miniPoinca('comet')}</div><div class="gd-shape-t"><b style="color:var(--good)">Komet</b><span>Elongierte, auffächernde Wolke. Hohe Kurz- und Langzeit-Variabilität — reich strukturiertes, flexibles Herzmuster.</span></div></div>
         <div class="gd-shape"><div class="gd-mini">${Info.miniPoinca('torpedo')}</div><div class="gd-shape-t"><b style="color:var(--amber)">Torpedo</b><span>Schmale, zigarrenförmige Wolke. Reduzierte Schlag-zu-Schlag-Änderung (kleines SD1) bei erhaltener Länge — Kurzzeit-Variabilität ist niedrig.</span></div></div>
         <div class="gd-shape"><div class="gd-mini">${Info.miniPoinca('ball')}</div><div class="gd-shape-t"><b style="color:var(--red)">Ball</b><span>Runder, kompakter Cluster. Niedrige Variabilität in beide Richtungen — sehr gleichförmige Intervalle.</span></div></div>
         <div class="gd-h">Die Kennzahl</div>
-        <div class="gd-metric"><b style="color:var(--cyan)">SD2/SD1</b><span>Das Verhältnis beschreibt die <b>Form</b>: hoch = elongiert (Komet), nahe 1 = rund (Ball). Es setzt Langzeit- zu Kurzzeit-Variabilität ins Verhältnis.</span></div>
+        <div class="gd-metric"><b style="color:var(--cyan)">SD2/SD1</b><span>Das Verhältnis beschreibt die Form: hoch = elongiert (Komet), nahe 1 = rund (Ball). Es setzt Langzeit- zu Kurzzeit-Variabilität ins Verhältnis.</span></div>
         <div class="ip-ref">SD1/SD2: Brennan 2001 · Formmuster in Anlehnung an Woo et al. 1992 (Humankardiologie) · Task Force 1996</div>
         <div class="gd-dis">Die Form ist ein beschreibendes Label der gemessenen Variabilität — keine medizinische Diagnose. Ihre Bedeutung hängt von Spezies, Aufnahmesituation (Ruhe/Belastung), Signalqualität und Artefakten ab.</div>
       </div>
@@ -6460,7 +6460,7 @@ const Views={
            unsere eigene ID und ist im ERP nicht anschlussfähig. -->
       <div class="field-row"><div class="field"><label>Klinik-Patienten-ID</label>
           <input id="eIdClinic" value="${esc((h.extIds&&h.extIds.clinicPMS)||'')}" placeholder="ID aus eurer Praxissoftware">
-          <div class="hint">Wandert in den FHIR-Export → euer System erkennt das Pferd wieder.</div></div>
+          <div class="hint">Wandert in den FHIR-Export → Ihr System erkennt das Pferd wieder.</div></div>
         <div class="field"><label>UELN</label><input id="eIdUeln" value="${esc((h.extIds&&h.extIds.ueln)||'')}" placeholder="Universal Equine Life Number"></div></div>
       <div class="field-row"><div class="field"><label>Mikrochip (ISO)</label>
           <input id="eIdChip" value="${esc((h.extIds&&h.extIds.microchip)||'')}" placeholder="15-stellige Transpondernummer"></div>
@@ -7936,7 +7936,7 @@ const UI={
     // Features hier sind gegen PAID_ONLY + maxHorses verifiziert — nichts versprechen, was kein Gate hat.
     const FEATS=['Unbegrenzt viele Pferde (Demo: 3)','Befund-PDF für Besitzer','CSV-Export der Messdaten','Route an Google Maps übergeben','Besitzer-Rückmeldung einholen','Kohärenz-Auswertung'];
     const plans=[
-      ['year','Jahresabo',(License.PREIS.soloJahr/12).toFixed(2).replace('.',','),`${License.PREIS.soloJahr} € im Jahr — zwei Monate günstiger`,'beste Wahl'],
+      ['year','Jahresabo',(License.PREIS.soloJahr/12).toFixed(2).replace('.',','),`${License.PREIS.soloJahr.toLocaleString('de-DE')} € im Jahr — zwei Monate günstiger`,'beste Wahl'],
       ['month','Monatsabo',String(License.PREIS.soloMonat),'monatlich kündbar',''],
     ];
     /* Klinik-Stufe (AP3): eigener Block unter der Praxis — der Magnet ist
@@ -7968,7 +7968,7 @@ const UI={
     const mult=booked>0?Math.max(1,Math.round(booked/License.PREIS.soloMonat)):0;
     const roi=booked>0
       ? `Sie haben in dieser Ansicht bereits <b style="color:var(--good)">${euro(booked)}</b> abrechenbaren Telemetrie-Umsatz erfasst. Das Abo kostet <b>${License.PREIS.soloMonat} €/Mo</b> — das ist <b style="color:var(--cyan-strong)">${mult}× drin.</b>`
-      : `Schon <b>eine</b> per Ferneinschätzung eingesparte oder abgerechnete Fahrt (50–200 €) refinanziert die Lizenz für den ganzen Monat.`;
+      : `Schon eine per Ferneinschätzung eingesparte oder abgerechnete Fahrt (50–200 €) refinanziert die Lizenz für den ganzen Monat.`;
     this.modal(`<div class="modal-head"><button class="closex" onclick="UI.closeModal()">${IC.x}</button><h3>Ihre neue Einnahmequelle freischalten</h3></div>
     <div class="modal-body">
       ${feature?`<div class="demo-ribbon" style="margin-bottom:14px"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg><div><b>${esc(feature)}</b> ist Teil der Vollversion.</div></div>`:''}
@@ -8003,7 +8003,11 @@ const UI={
                       :`<button class="btn ghost" style="margin-top:8px;padding:7px 12px;font-size:12px" onclick="UI.activate()">Schlüssel eingeben</button>`;})()}</div>
         </div>`).join('')}
       </div>
-      <p style="font-size:12px;color:var(--text-dim);margin-top:16px">Preise zzgl. MwSt. — als Praxis ziehen Sie die Vorsteuer ab. Zahlung und Rechnung laufen über Stripe, für EU-Praxen mit USt-IdNr. greift das Reverse-Charge-Verfahren. Nach der Zahlung werden Sie hierher zurückgeleitet und die Praxis ist sofort freigeschaltet — kein Schlüssel, keine E-Mail, kein Warten. Alle Gesundheitsdaten bleiben auch mit Lizenz zu 100 % lokal auf diesem Gerät.</p>
+      <p style="font-size:12.5px;color:var(--text-secondary);margin-top:16px">${(()=>{ /* KASSENZAHL VORAB (05.11.2026): Stripe zeigt als Verkäufer zuerst den Bruttobetrag
+        (in der Live-Kasse gelesen: 177,31 / 1.773,10 / 415,31 / 4.153,10 €). Aus den Preisen gerechnet, nicht abgeschrieben. */
+        const b=x=>(Math.round(x*119)/100).toLocaleString('de-DE',{minimumFractionDigits:2,maximumFractionDigits:2})+' €';
+        const P=License.PREIS; return `An der Kasse für Praxen in Deutschland inkl. 19 % USt.: Praxis ${b(P.soloMonat)} im Monat bzw. ${b(P.soloJahr)} im Jahr · Klinik ${b(P.klinikMonat)} im Monat bzw. ${b(P.klinikJahr)} im Jahr.`; })()}</p>
+      <p style="font-size:12px;color:var(--text-dim);margin-top:8px">Preise zzgl. MwSt. — als Praxis ziehen Sie die Vorsteuer ab. Zahlung und Rechnung laufen über Stripe, für EU-Praxen mit USt-IdNr. greift das Reverse-Charge-Verfahren. Nach der Zahlung werden Sie hierher zurückgeleitet und die Praxis ist sofort freigeschaltet — kein Schlüssel, keine E-Mail, kein Warten. Alle Gesundheitsdaten bleiben auch mit Lizenz zu 100 % lokal auf diesem Gerät.</p>
     </div>
     <div class="modal-foot"><button class="btn ghost" onclick="UI.closeModal()">Später</button><button class="btn primary" onclick="UI.activate()">Ich habe einen Schlüssel</button></div>`);
   },
@@ -10811,6 +10815,60 @@ const Sprache={
     'noch nicht abgerechnet':'not yet billed',
     'Wiederkehrender Telemetrie-Umsatz der letzten 6 Monate — die Einnahmequelle, die das Abo trägt.':'Recurring telemetry revenue over the last 6 months — the income that pays for the subscription.',
     'Herz-Kohärenz Pferd ↔ Reiter über die Zeit — der Coaching-Fortschritt als Kurve, die abrechenbare Coaching-Leistung. Im Praxis- und Klinik-Tarif enthalten.':'Horse ↔ rider heart coherence over time — coaching progress as a curve, a billable coaching service. Included in the practice and clinic plans.',
+    // 05.11.2026 — Preisdialog (gerenderter EN-Scan)
+    'Schon eine per Ferneinschätzung eingesparte oder abgerechnete Fahrt (50–200 €) refinanziert die Lizenz für den ganzen Monat.':'A single trip saved or billed through a remote assessment (€50–200) pays for the licence for the whole month.',
+    'CARLON Equine Visite — Praxis':'CARLON Equine Visite — Practice',
+    'CARLON Equine Visite — Klinik':'CARLON Equine Visite — Clinic',
+    'Unbegrenzt viele Pferde (Demo: 3)':'Unlimited horses (demo: 3)',
+    'Befund-PDF für Besitzer':'Report PDF for owners',
+    'CSV-Export der Messdaten':'CSV export of the measurements',
+    'Route an Google Maps übergeben':'Send the route to Google Maps',
+    'Besitzer-Rückmeldung einholen':'Collect owner feedback',
+    'Kohärenz-Auswertung':'Coherence analysis',
+    '€ / Monat':'€ / month',
+    'monatlich kündbar':'cancel monthly',
+    'Nachsorge ab dem Entlasstag · mehrere Teams, Plätze in einer Lizenz':'Aftercare from discharge day · several teams, seats in one licence',
+    'Alles aus der Praxis-Stufe':'Everything in the practice plan',
+    'Entlass-Karte je Patient — die Halterin misst zu Hause weiter':'Discharge card per patient — the owner keeps measuring at home',
+    'Klinik-Name im Cockpit':'Clinic name in the cockpit',
+    'Klinik · Jahresabo':'Clinic · annual plan',
+    'Klinik · Monatsabo':'Clinic · monthly plan',
+    'Jahresabo':'Annual plan', 'Monatsabo':'Monthly plan', 'beste Wahl':'best value', 'Abonnieren':'Subscribe',
+    'Preise zzgl. MwSt. — als Praxis ziehen Sie die Vorsteuer ab. Zahlung und Rechnung laufen über Stripe, für EU-Praxen mit USt-IdNr. greift das Reverse-Charge-Verfahren. Nach der Zahlung werden Sie hierher zurückgeleitet und die Praxis ist sofort freigeschaltet — kein Schlüssel, keine E-Mail, kein Warten. Alle Gesundheitsdaten bleiben auch mit Lizenz zu 100 % lokal auf diesem Gerät.':'Prices exclude VAT — as a practice you reclaim input VAT. Payment and invoicing run through Stripe; EU practices with a VAT ID are charged under the reverse-charge procedure. After payment you are sent back here and the practice is unlocked immediately — no key, no email, no waiting. All health data stays 100% local on this device, with a licence too.',
+    // 05.11.2026 — Dialoge (gerenderter EN-Scan aller 22 Fenster)
+    "Lizenz-Schlüssel":"Licence key",
+    "Dieser Weg ist für Pilot- und Gründungs-Praxen, die einen Schlüssel direkt von uns bekommen haben. Wer über die Kasse abschließt, braucht ihn nicht — dort schaltet sich die Praxis nach der Zahlung von selbst frei. Einmal einfügen, danach wird der Schlüssel ausschließlich auf diesem Gerät geprüft, auch ohne Netz.":"This route is for pilot and founding practices that received a key directly from us. If you subscribe at checkout you do not need one — the practice unlocks itself after payment. Paste it once; from then on the key is checked only on this device, even offline.",
+    "Was ist Ihnen aufgefallen? Weil CARLON im Browser läuft, ist eine Korrektur am nächsten Tag bei allen da — ohne Update, ohne Store.":"What did you notice? Because CARLON runs in the browser, a fix reaches everyone the next day — no update, no store.",
+    "Als Mail öffnen":"Open as email",
+    "pünktlich":"on time",
+    "Die .ics-Datei importiert alle Termine auf einmal — in Apple Kalender, Google Kalender und Outlook. Jeder Termin enthält Halter, HRV-Kurzstatus, Adresse und einen Navigations-Link.":"The .ics file imports all appointments at once — into Apple Calendar, Google Calendar and Outlook. Each appointment contains the owner, a short HRV status, the address and a navigation link.",
+    "Für die Kartenroute (füllt automatisch aus der Adresse)":"For the map route (filled in from the address)",
+    "Pferd löschen":"Delete horse",
+    "Werte im erwarteten Bereich — stabile Kontrolle, kein Vor-Ort-Befund nötig.":"Values in the expected range — stable check, no on-site examination needed.",
+    "Fern-Check abschließen & abrechnen":"Complete & bill remote check",
+    "Kunde ohne H10 — schnell in die heutige Route aufnehmen. Ort wird geocodiert, die Route sofort neu optimiert.":"Client without an H10 — add to today’s route quickly. The location is geocoded and the route re-optimised at once.",
+    "Pferd / Patient":"Horse / patient",
+    "So legen Sie CARLON EQUINE wie eine echte App auf den Startbildschirm — für schnellen Zugriff und dauerhaften Speicher:":"How to put CARLON EQUINE on your home screen like a real app — for quick access and persistent storage:",
+    "In Safari unten (iPhone) bzw. oben (iPad) das „Teilen\"-Symbol.":"In Safari, tap the “Share” icon at the bottom (iPhone) or top (iPad).",
+    "In der Liste „Zum Home-Bildschirm hinzufügen\" wählen.":"Choose “Add to Home Screen” from the list.",
+    "CARLON EQUINE startet ab jetzt wie eine App — offline und mit dauerhaftem lokalem Speicher.":"From now on CARLON EQUINE starts like an app — offline and with persistent local storage.",
+    "Anderen Schlüssel":"Different key",
+    "Art der Beratung":"Type of consultation",
+    "Die Besitzerin bekommt einen Link, in dem Pferd und Akte schon hinterlegt sind. Sie muss nichts eintippen — und die Messung landet auf der richtigen Akte, egal von welchem Gerät sie misst.":"The owner receives a link with the horse and record already filled in. She types nothing — and the measurement lands on the right record, whichever device she measures with.",
+    "Landet direkt in Ihrem Google- oder Apple-Kalender — mit Ort für die Navigation und 60-Minuten-Erinnerung.":"Goes straight into your Google or Apple calendar — with the location for navigation and a 60-minute reminder.",
+    "Jeder Punkt trägt ein RR-Intervall gegen das direkt folgende auf (RRₙ vs. RRₙ₊₁). Ein Punkt auf der Diagonale (y = x) heißt: zwei aufeinanderfolgende Schläge waren gleich lang. Die Wolke zeigt auf einen Blick, wie stark — und in welche Richtung — die Herzfrequenz von Schlag zu Schlag variiert.":"Each point plots one RR interval against the next (RRₙ vs. RRₙ₊₁). A point on the diagonal (y = x) means two consecutive beats were equally long. The cloud shows at a glance how strongly — and in which direction — heart rate varies from beat to beat.",
+    "Breite quer zur Diagonale — Schlag-zu-Schlag-Änderung, Kurzzeit-Variabilität (= RMSSD/√2).":"Width across the diagonal — beat-to-beat change, short-term variability (= RMSSD/√2).",
+    "Länge entlang der Diagonale — Gesamt-Streuung über die Aufnahme, Langzeit-Variabilität.":"Length along the diagonal — overall spread across the recording, long-term variability.",
+    "Elongierte, auffächernde Wolke. Hohe Kurz- und Langzeit-Variabilität — reich strukturiertes, flexibles Herzmuster.":"Elongated, fanning cloud. High short- and long-term variability — a richly structured, flexible heart pattern.",
+    "Schmale, zigarrenförmige Wolke. Reduzierte Schlag-zu-Schlag-Änderung (kleines SD1) bei erhaltener Länge — Kurzzeit-Variabilität ist niedrig.":"Narrow, cigar-shaped cloud. Reduced beat-to-beat change (small SD1) with length preserved — short-term variability is low.",
+    "Runder, kompakter Cluster. Niedrige Variabilität in beide Richtungen — sehr gleichförmige Intervalle.":"Round, compact cluster. Low variability in both directions — very uniform intervals.",
+    "Das Verhältnis beschreibt die Form: hoch = elongiert (Komet), nahe 1 = rund (Ball). Es setzt Langzeit- zu Kurzzeit-Variabilität ins Verhältnis.":"The ratio describes the shape: high = elongated (comet), close to 1 = round (ball). It relates long-term to short-term variability.",
+    "Dauer-Einladung für alle":"Standing invitation for everyone",
+    "Alles hier ist Ende-zu-Ende verschlüsselt — auch auf diesem Gerät. Nichts wird verworfen, solange es nicht zugestellt oder importiert ist.":"Everything here is end-to-end encrypted — on this device too. Nothing is discarded until it has been delivered or imported.",
+    "Feste Uhrzeit, zu der Sie vor Ort sein müssen. Der Zeitstrahl plant Ankünfte darum herum — zu früh ergibt Puffer, zu spät warnt vor Konflikt.":"Fixed time at which you need to be on site. The timeline plans arrivals around it — early leaves a buffer, late warns of a conflict.",
+    "Wandert in den FHIR-Export → Ihr System erkennt das Pferd wieder.":"Goes into the FHIR export → your system recognises the horse.",
+    'Besitzer-Rückmeldung':'Owner feedback',
+    'Später':'Later',
     'Hengst':'Stallion', 'Wallach':'Gelding', 'Stute':'Mare', 'Jungstute':'Filly', 'Junghengst':'Colt',
     'Englisches Vollblut':'Thoroughbred', 'Warmblut':'Warmblood', 'Araber':'Arabian', 'Hannoveraner':'Hanoverian',
     'Heute':'Today', 'Board':'Board', 'Station':'Ward', 'Karte':'Map',
@@ -11249,6 +11307,13 @@ const Sprache={
     [/^Zuerst: (.+) · (\d+) km$/,'First: $1 · $2 km'],
     [/^Einsatzplan · (.+)$/,'Day plan · $1'],
     [/^Tagestour · (\d+) Stopps · (\d+) kritisch$/,'Day route · $1 stops · $2 critical'],
+    [/^An der Kasse für Praxen in Deutschland inkl\.\s19\s%\sUSt\.: Praxis (.+?) im Monat bzw\. (.+?) im Jahr · Klinik (.+?) im Monat bzw\. (.+?) im Jahr\.$/,
+     (m,a,b,c,d)=>`At checkout for practices in Germany incl. 19% VAT: practice ${Sprache.euroEN(a)} a month or ${Sprache.euroEN(b)} a year · clinic ${Sprache.euroEN(c)} a month or ${Sprache.euroEN(d)} a year.`],
+    [/^([\d.,]+)\s€ im Jahr — zwei Monate günstiger$/,(m,a)=>`${Sprache.euroEN(a)} a year — two months cheaper`],
+    [/^spart die Anfahrt zu (.+)$/,'saves the trip to $1'],
+    [/^(\d+) Termine mit Zeiten, Adressen & Erinnerung$/,'$1 appointments with times, addresses & reminders'],
+    [/^Was wird mitgeschickt\? \((\d+) technische Angaben\)$/,'What is sent along? ($1 technical details)'],
+    [/^(.+) is included in the full cockpit\.$/,(m,a)=>`${Sprache.WB[a]||a} is included in the full cockpit.`],
     [/^(\d+) Fahrten vermeidbar · Fern-Check$/,'$1 trips avoidable · remote check'],
     [/^(\d+) Demo-Pferde geladen · inkl\. synthetischem Verlauf$/,'$1 demo horses loaded · incl. synthetic history'],
     [/^— stabile Kontrolle, Telemetrie statt Anfahrt\. Spart die Fahrt zu (.+)\.$/,'— stable check-up, telemetry instead of driving out. Saves the trip to $1.'],
@@ -11294,6 +11359,10 @@ const Sprache={
   /* Ein Satz bleibt deutsch, wenn er regulatorischen Wortlaut traegt —
      auch als Bruchstueck. Das Cockpit zerlegt Saetze an <b>-Tags, und ein
      halb uebersetzter Hinweis ist schlimmer als ein deutscher. */
+  /* „1.773,10 €“ / „1,490“ (bereits umgestellt) → „€1,773.10“ / „€1,490“. */
+  euroEN(x){ let t=String(x).replace(/[\s\u00a0]*€/,'').trim();
+    if(/,\d{2}$/.test(t)) t=t.replace(/\./g,'').replace(',','.'); else t=t.replace(/[.,]/g,'');
+    const n=Number(t); return Number.isFinite(n)?'€'+n.toLocaleString('en-GB',{minimumFractionDigits:/\./.test(t)?2:0,maximumFractionDigits:2}):x; },
   istRecht(t){
     if(t.length<8) return false;
     return this.RECHT.some(r=>r.includes(t)||t.includes(r));
@@ -11305,13 +11374,15 @@ const Sprache={
     const k=t.trim();
     if(!k||this.istRecht(k)) return null;
     if(imNavi&&this.NAV[k]) return t.replace(k,this.NAV[k]);
-    const w=this.WB[k];
+    /* Leerraum vereinheitlicht nachschlagen (05.11.2026): Sätze, die im Quelltext über mehrere
+       Zeilen umbrechen, tragen Zeilenumbruch + Einrückung im Textknoten — der Eintrag traf nie. */
+    const w=this.WB[k]||this.WB[k.replace(/\s+/g,' ')];
     if(w) return t.replace(k,w);
     /* Kalendernamen ziehen NACH — auch hinter einem Muster. Sonst bleibt
        „Day plan · Freitag, 7. August" auf halbem Weg stehen: die Regel hat
        schon getroffen und war damit fertig. */
     const dat=(x)=>!/\d/.test(x)?x:x.replace(
-      /\b(Montag|Dienstag|Mittwoch|Donnerstag|Freitag|Samstag|Sonntag|Januar|Februar|März|April|Mai|Juni|Juli|August|September|Oktober|November|Dezember|Gestern|Morgen|Jan\.|Feb\.|Mär\.|Apr\.|Jun\.|Jul\.|Aug\.|Sep\.|Okt\.|Nov\.|Dez\.)/g,
+      /\b(Montag|Dienstag|Mittwoch|Donnerstag|Freitag|Samstag|Sonntag|Januar|Februar|März|April|Mai|Juni|Juli|August|September|Oktober|November|Dezember|Gestern|Morgen|Jan\.|Feb\.|Mär\.|Apr\.|Jun\.|Jul\.|Aug\.|Sep\.|Okt\.|Nov\.|Dez\.)(?![A-Za-zÄÖÜäöüß])/g,   /* Wortende (05.11.2026): sonst wurde „E-Mail“ zu „E-Mayl“ */
       y=>this.DATUM[y]||y)
       /* „7. August" ist deutsche Ordnungszahl; im Englischen steht der
          Punkt nicht. Ohne diesen Schritt liest es sich uebersetzt-aber-falsch. */
