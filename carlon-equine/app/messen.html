@@ -4693,7 +4693,7 @@ $('#btnSend').addEventListener('click', async ()=>{
       $('#btnAgain').classList.remove('hidden');
       return;
     }
-    if(fach&&praxisKey){
+    if(POSTFACH_AN && fach&&praxisKey){   /* Schalter auch hier: sonst schickte ein alter ?room=-Link mit Fach doch ans Postfach */
       /* Der neue Weg: verschluesseln und einwerfen. Niemand muss warten.
          Verschluesselt wird HIER, auf dem Geraet des Besitzers — der
          Zwischenspeicher bekommt nur Chiffrat zu sehen und kann es nicht
