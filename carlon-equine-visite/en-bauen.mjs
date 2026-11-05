@@ -269,6 +269,8 @@ tausche('Ein Preis, eine Praxis', 'One price, one practice');
 /* Die Monatsrate fuehrt (Jan, 13.08.) — die grosse Zahl ist der Anker. */
 tausche('oder 1.490&nbsp;€ im Jahr — entspricht 124,17&nbsp;€ im Monat, zwei Monate gespart',
         'or €1,490 per year — €124.17 a month, two months saved');
+tausche('An der Kasse für Praxen in Deutschland: 177,31&nbsp;€ im Monat bzw. 1.773,10&nbsp;€ im Jahr, jeweils inkl. 19&nbsp;% USt.',
+        'At checkout for practices in Germany: €177.31 a month or €1,773.10 a year, each incl. 19% VAT.');
 tausche('Unbegrenzt Pferde, Aufnahmen und Verläufe', 'Unlimited horses, recordings and trends');
 tausche('Ein Standort, alle Geräte — ohne Zuschlag je Gerät', 'All staff, all devices of the business');
 tausche('Befundbericht mit eigenem Briefkopf', 'Findings report on your own letterhead');

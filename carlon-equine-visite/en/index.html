@@ -1483,6 +1483,10 @@ html.rev-an .rev.in{opacity:1;transform:none}
       <!-- DIE MONATSRATE FUEHRT (Jan, 13.08.): die grosse Zahl ist der Anker. -->
       <div class="tarif-preis"><b>149&nbsp;€</b> <span>net per month · VAT charged by Stripe</span></div>
       <div class="tarif-alt">or €1,490 per year — €124.17 a month, two months saved</div>
+      <!-- KEIN ZAHLENBRUCH AN DER KASSE (05.11.2026, geprüft in der Live-Kasse): Stripe zeigt
+           als Verkäufer zuerst den Bruttobetrag. Wer hier nur 149 € liest und dort 177,31 €,
+           hält das für einen Fehler und bricht ab. Deshalb steht die Kassenzahl schon hier. -->
+      <div class="tarif-alt">At checkout for practices in Germany: €177.31 a month or €1,773.10 a year, each incl. 19% VAT.</div>
       <ul class="enthalten">
         <li>Unlimited horses, recordings and trends</li>
         <li>All staff, all devices of the business</li>

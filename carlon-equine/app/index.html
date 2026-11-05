@@ -198,7 +198,8 @@ main{flex:1;overflow-y:auto;overflow-x:hidden;position:relative}
 .view{padding:var(--s5) var(--s5) var(--s7);max-width:1480px;margin:0 auto;animation:fade .4s ease}
 @keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
 .view-head{display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:var(--s5);gap:var(--s4);flex-wrap:wrap}
-.view-head h1{font-family:var(--font-brand);font-weight:700;font-size:35px;letter-spacing:-.02em;display:flex;align-items:center;gap:14px}
+/* Titel wie in der App (05.11.2026): Jost Regular — die App setzt Pferdenamen und Titel ohne Fett; die Hierarchie trägt die Größe. */
+.view-head h1{font-family:var(--font-brand);font-weight:400;font-size:35px;letter-spacing:.005em;display:flex;align-items:center;gap:14px}
 .view-head .sub{color:var(--text-secondary);font-size:14px;margin-top:6px;max-width:640px}
 .eyebrow{font-size:10.5px;letter-spacing:.26em;text-transform:uppercase;color:var(--cyan-deep);font-weight:600;margin-bottom:9px;display:block}
 
@@ -2223,6 +2224,16 @@ const State = {
 /* ════════════════════════════════════════════════════════════════════════
    NORMALIZER — versteht ALLE CARLON-Equine-Exportvarianten
    ════════════════════════════════════════════════════════════════════════ */
+/* GESCHLECHT UND RASSE IN DER SPRACHE DER OBERFLÄCHE (05.11.2026). Die App speichert
+   `stallion/gelding/mare/filly/colt` (EquineFoundation.Sex) — in Visite stand bei echten
+   Pferden „stallion“. Angezeigt wird deutsch; die englische Fassung übersetzt das
+   Wörterbuch weiter unten wie jedes andere Wort. */
+const Stamm={
+  GESCHLECHT:{stallion:'Hengst',gelding:'Wallach',mare:'Stute',filly:'Jungstute',colt:'Junghengst'},
+  RASSE:{thoroughbred:'Englisches Vollblut',warmblood:'Warmblut',arabian:'Araber',hannoveran:'Hannoveraner',hanoverian:'Hannoveraner'},
+  geschlecht(x){ return x ? (this.GESCHLECHT[String(x).toLowerCase()]||x) : ''; },
+  rasse(x){ return x ? (this.RASSE[String(x).toLowerCase()]||x) : ''; },
+};
 const Normalizer = {
   // extrahiert RR-Intervalle (ms) aus den bekannten Feldvarianten
   rr(raw){
@@ -4632,7 +4643,7 @@ const Views={
     UI.modal(`<div class="modal-head"><h3>Pferd aufnehmen</h3><button class="closex" onclick="UI.closeModal()">${IC.x}</button></div>
       <div class="modal-body"><p style="color:var(--text-secondary);font-size:13px;margin-bottom:12px">Pferd auf die Station aufnehmen — Box wird automatisch vergeben (später änderbar).</p>
       <div class="admit-list">${cand.map(({h,rec})=>`<button class="admit-row" onclick="Views.admitToStation('${h.id}')">
-        ${Views.avatar(h,30)}<div class="ar-txt"><b>${esc(h.name)}</b><span>${esc(h.stable||h.breed||'—')} · Ruhe-HF ${fmt0(rec.metrics.meanHR)} bpm</span></div>
+        ${Views.avatar(h,30)}<div class="ar-txt"><b>${esc(h.name)}</b><span>${esc(h.stable||Stamm.rasse(h.breed)||'—')} · Ruhe-HF ${fmt0(rec.metrics.meanHR)} bpm</span></div>
         <span class="ar-add">${IC.arrow}</span></button>`).join('')}</div></div>`,{sheet:true});
   },
   async admitToStation(id){ const h=State.horses.find(x=>x.id===id); if(!h)return;
@@ -4670,7 +4681,7 @@ const Views={
         ${hint?`<span class="st-flag">${IC.eye}Bitte ansehen</span>`:`<span class="st-ok" title="Trend stabil">${IC.check}</span>`}
         <button class="st-menu" onclick="event.stopPropagation();Views.stationMenu('${h.id}')" title="Box / Entlassen"><svg viewBox="0 0 24 24" fill="currentColor"><circle cx="5" cy="12" r="1.9"/><circle cx="12" cy="12" r="1.9"/><circle cx="19" cy="12" r="1.9"/></svg></button>
       </div>
-      <div class="st-id">${Views.avatar(h,30)}<div style="min-width:0"><div class="st-name">${esc(h.name)}</div><div class="st-stable">${esc(h.stable||h.breed||'—')}</div></div></div>
+      <div class="st-id">${Views.avatar(h,30)}<div style="min-width:0"><div class="st-name">${esc(h.name)}</div><div class="st-stable">${esc(h.stable||Stamm.rasse(h.breed)||'—')}</div></div></div>
       <div class="st-vitals">
         <div class="st-hr"><b>${fmt0(m.meanHR)}</b><small>bpm · Ruhe-HF</small></div>
         ${delta!=null?`<div class="st-delta ${delta<-14?'bad':delta<-8?'warn':'ok'}"><b>${delta>=0?'+':''}${fmt0(delta)}%</b><small>vs Baseline</small></div>`:`<div class="st-delta"><b>${fmt0(m.rmssd)}</b><small>RMSSD ms</small></div>`}
@@ -4755,7 +4766,7 @@ const Views={
       <div class="top">
         <div style="display:flex;gap:9px;align-items:center;min-width:0">
           ${Views.avatar(h,30)}
-          <div style="min-width:0"><div class="nm">${esc(h.name)}</div><div class="brd">${esc(h.breed||h.stable||'—')}</div></div>
+          <div style="min-width:0"><div class="nm">${esc(h.name)}</div><div class="brd">${esc(Stamm.rasse(h.breed)||h.stable||'—')}</div></div>
         </div>
         <div class="pc-right">${tr?`<span class="trend" style="color:${tr.col}" title="RMSSD-Trend vs. Vor-Aufnahme">${tr.sym}</span>`:''}<button class="qa-btn" onclick="event.stopPropagation();Views.quickSheet('${h.id}')" title="Schnellaktionen"><svg viewBox="0 0 24 24" fill="currentColor"><circle cx="5" cy="12" r="1.9"/><circle cx="12" cy="12" r="1.9"/><circle cx="19" cy="12" r="1.9"/></svg></button></div>
       </div>
@@ -4891,7 +4902,7 @@ const Views={
           ${Views.avatar(h,44)}
           <div class="hr-name">
             <b onclick="Views.openHorse('${h.id}')">${esc(h.name)}</b>
-            <div class="sub">${esc(h.breed||'—')}${h.age?' · '+h.age+' J':''}${place?' · '+esc(place):''}${sammel?' <span class="hr-sammel">Sammelstall</span>':''}${Views.keyFlag(tri)}</div>
+            <div class="sub">${esc(Stamm.rasse(h.breed)||'—')}${h.age?' · '+h.age+' J':''}${place?' · '+esc(place):''}${sammel?' <span class="hr-sammel">Sammelstall</span>':''}${Views.keyFlag(tri)}</div>
           </div>
           <span class="tri-badge tri-${tri.level}" style="padding:4px 10px;font-size:11px"><span class="dot"></span>${Triage.LEVELS[tri.level].label}</span>
         </div>
@@ -4922,7 +4933,7 @@ const Views={
       <div class="top">
         <div style="display:flex;gap:12px;align-items:center;min-width:0">
           ${Views.avatar(h,46)}
-          <div style="min-width:0"><div class="nm">${esc(h.name)}</div><div class="brd">${esc(h.breed||'—')}${h.age?' · '+h.age+' J':''}</div></div>
+          <div style="min-width:0"><div class="nm">${esc(h.name)}</div><div class="brd">${esc(Stamm.rasse(h.breed)||'—')}${h.age?' · '+h.age+' J':''}</div></div>
         </div>
         <span class="tri-badge tri-${tri.level}" style="padding:4px 9px;font-size:11px"><span class="dot"></span>${Triage.LEVELS[tri.level].label}</span>
       </div>
@@ -5459,7 +5470,7 @@ const Views={
             ${Views.avatar(h,74,{clickable:true})}
             <div>
               <h1 style="font-size:28px">${esc(h.name)}</h1>
-              <div class="sub" style="margin-top:4px">${esc(h.breed||'—')}${h.sex?' · '+esc(h.sex):''}${h.age?' · '+h.age+' J':''}${h.weightKg?' · '+h.weightKg+' kg':''}</div>
+              <div class="sub" style="margin-top:4px">${esc(Stamm.rasse(h.breed)||'—')}${h.sex?' · '+esc(Stamm.geschlecht(h.sex)):''}${h.age?' · '+h.age+' J':''}${h.weightKg?' · '+h.weightKg+' kg':''}</div>
               <div style="margin-top:8px;display:flex;gap:8px;align-items:center;flex-wrap:wrap">
                 <span class="tri-badge tri-${tri.level}"><span class="dot"></span>${Triage.LEVELS[tri.level].label}</span>
                 ${h.needsVisit?'<span class="chip visit">Besuch fällig</span>':''}
@@ -6768,7 +6779,7 @@ svg .hov-cross,svg .hov-focus{display:none}
 
   <span class="eyebrow">${L.eyebrow}</span>
   <h1>${esc(h.name||'Pferd')}</h1>
-  <div class="sub">${dstr} · ${tstr}${h.breed?' · '+esc(h.breed):''}${h.owner?' · '+L.besitzer+': '+esc(h.owner):''}</div>
+  <div class="sub">${dstr} · ${tstr}${h.breed?' · '+esc(Stamm.rasse(h.breed)):''}${h.owner?' · '+L.besitzer+': '+esc(h.owner):''}</div>
 
   <div class="tiles">
     ${val(L.tMean,m.meanHR,'bpm','meanHR')}${val(L.tMin,m.minHR,'bpm')}${val(L.tMax,m.maxHR,'bpm')}
@@ -7471,7 +7482,7 @@ const Report={
       </div>
       ${s.logo?`<div class="pr-cobrand">Telemetrie-Befund · erstellt mit CARLON EQUINE — Equine Heart Science</div>`:''}
       <h1>${esc(h.name)}</h1>
-      <div class="sub">${esc(h.breed||'—')}${h.sex?' · '+esc(h.sex):''}${h.age?' · '+h.age+' Jahre':''}${h.owner?' · Besitzer: '+esc(h.owner):''}${h.stable?' · '+esc(h.stable):''}</div>
+      <div class="sub">${esc(Stamm.rasse(h.breed)||'—')}${h.sex?' · '+esc(Stamm.geschlecht(h.sex)):''}${h.age?' · '+h.age+' Jahre':''}${h.owner?' · Besitzer: '+esc(h.owner):''}${h.stable?' · '+esc(h.stable):''}</div>
       <div class="pr-tri ${tri.level}">Beobachtungs-Einstufung: ${Triage.LEVELS[tri.level].label}</div>
       ${base?`<div style="font-size:12px;color:#5a7080;margin-top:8px">${esc(base)}</div>`:''}
       <h2>Messwerte — ${fmtDate(rec.startedAt,true)}</h2>
@@ -7660,6 +7671,9 @@ const BUILD='beta-2026-07-11';   // Test-Beta Build-Stamp
    nicht verkaufen als versehentlich verkaufen. */
 const LIVE = (typeof window!=='undefined' && window.CARLON_LIVE===true);
 const BETA_GATED = !LIVE;
+/* Verkauf offen ⇒ kein „BETA“ neben dem Namen (05.11.2026): auf einem Produkt, das
+   Geld kostet, kostet das Wort Vertrauen. Hängt am selben einen Schalter. */
+if(LIVE){ const _b=document.querySelector('.beta-pill'); if(_b) _b.remove(); }
 const FEEDBACK_TO='jan@vitalkultur.com';
 const UI={
   betaApply(){
@@ -10785,6 +10799,8 @@ const Sprache={
     'Die Marker haben sich über das Fenster verschlechtert.':'The markers worsened across the window.',
     'Zu wenige Messungen oder Zeitraum zu kurz.':'Too few recordings or the period is too short.',
     // Navigation und Rahmen
+    'Hengst':'Stallion', 'Wallach':'Gelding', 'Stute':'Mare', 'Jungstute':'Filly', 'Junghengst':'Colt',
+    'Englisches Vollblut':'Thoroughbred', 'Warmblut':'Warmblood', 'Araber':'Arabian', 'Hannoveraner':'Hanoverian',
     'Heute':'Today', 'Board':'Board', 'Station':'Ward', 'Karte':'Map',
     'Pferde':'Horses', 'Verwaltung':'Admin', 'Navi':'Nav', 'Akte':'Record',
     'Chart':'Chart', 'Route':'Route', 'JETZT':'NOW', 'BETA':'BETA', 'Beta':'Beta',
