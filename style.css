@@ -580,3 +580,8 @@ footer nav a:hover { color: var(--accent); }
   .flower-ring { width: 60px !important; height: 60px !important; }
   .flower-ring.center { top: 30px !important; left: 30px !important; }
 }
+
+/* Typografie Rechtsseiten + Support (Typo-Prüfung 09.11.2026): keine Waisen, ausgewogene Überschriften, kein seitliches Scrollen */
+h1, h2, h3 { text-wrap: balance; }
+p, li { text-wrap: pretty; }
+p, li, td, dd { overflow-wrap: anywhere; }   /* lange URLs/Pfade brechen um, statt die Seite zu verbreitern */
