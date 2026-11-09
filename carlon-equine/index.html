@@ -6619,14 +6619,14 @@ function render(data) {
   // Hero-Meta in 2 Gruppen: Session-Daten + Subject-Daten
   const sessionMeta = `<span>${dateStr.toUpperCase()}</span><span class="dot">·</span>
     <span>${durMin}:${String(durSec).padStart(2,'0')} MIN</span><span class="dot">·</span>
-    <span>${sess.beatCount || 0} BEATS</span>`;
+    <span>${Number(sess.beatCount) || 0} BEATS</span>`;
   const _yrUnit = window.CARLON_LANG === 'de' ? 'J.' : 'YR';
   const subjectMeta = [
     s.ageYears ? `${s.ageYears} ${_yrUnit}` : null,
     s.weightKg ? `${s.weightKg} KG` : null,
     s.heightCm ? `${s.heightCm} CM` : null,
     data.device?.model ? data.device.model.toUpperCase() : null
-  ].filter(Boolean).map(x => `<span>${x}</span>`).join('<span class="dot">·</span>');
+  ].filter(Boolean).map(x => `<span>${escapeHtml(x)}</span>`).join('<span class="dot">·</span>');   // importierte Werte nie als HTML (Audit W4, 09.11.)
   document.getElementById('heroMeta').innerHTML = sessionMeta + (subjectMeta ? `<span class="dot" style="opacity:0.4">|</span>` + subjectMeta : '');
   // Intent + motionContext can overlap (z.B. intent=rest + motion=rest = Doppelung).
   // Bei Match → nur Motion-Badge zeigen (das ist der semantisch reichere Marker).

@@ -85,7 +85,7 @@
       Website: <a href="https://vitalkultur.com">https://vitalkultur.com</a>
     </p>
 
-    <h2>2. Grundsatz: lokal, kein Tracking, Minimaldaten (Art. 5 &amp; 25 DSGVO)</h2>
+    <h2>2. Grundsatz: lokal, Minimaldaten, kein Tracking in den Apps (Art. 5 &amp; 25 DSGVO)</h2>
     <p>
       Alle drei Apps und der Web-Viewer wurden nach <strong>Privacy by Design</strong>
       und <strong>Privacy by Default</strong> (Art. 25 DSGVO) entwickelt. Der
@@ -442,9 +442,11 @@
       Wir nutzen <strong>GoatCounter</strong>
       (<a href="https://www.goatcounter.com" target="_blank" rel="noopener">goatcounter.com</a>),
       einen datenschutzfreundlichen Open-Source-Webanalyse-Dienst. GoatCounter setzt
-      <strong>keine Cookies</strong>, speichert nichts in deinem Endgerät (kein
-      localStorage, kein Cache), betreibt <strong>kein Browser-Fingerprinting</strong>
-      und bildet <strong>keine geräteübergreifenden Profile</strong>.
+      <strong>keine Cookies</strong>, legt von sich aus nichts in deinem Endgerät ab und betreibt
+      <strong>kein Browser-Fingerprinting</strong>. Das Skript liest lediglich die
+      Bildschirmbreite und prüft, ob du die Zählung in diesem Browser abgeschaltet hast
+      (Eintrag <code>skipgc</code> im lokalen Speicher – er entsteht nur, wenn du selbst
+      abschaltest, siehe Opt-out). Es bildet <strong>keine geräteübergreifenden Profile</strong>.
     </p>
     <p>
       IP-Adresse und User-Agent werden für maximal <strong>8 Stunden ausschließlich im
@@ -484,6 +486,9 @@
       <strong>Opt-out:</strong> Sendet dein Browser <code>Do Not Track</code> (DNT)
       oder <code>Global Privacy Control</code> (GPC), wird das Analyse-Skript
       <strong>gar nicht erst geladen</strong> — es werden dann keinerlei Daten erfasst.
+      Unabhängig davon kannst du die Zählung in diesem Browser jederzeit selbst abschalten:
+      <a href="/#toggle-goatcounter">vitalkultur.com/#toggle-goatcounter</a> aufrufen
+      (bestätigt mit einem Hinweis; erneutes Aufrufen schaltet sie wieder ein).
     </p>
     <p class="note">
       <strong>Widerspruchsrecht nach Art. 21 Abs. 1 DSGVO:</strong> Du kannst dieser

@@ -84,7 +84,7 @@
       Website: <a href="https://vitalkultur.com">https://vitalkultur.com</a>
     </p>
 
-    <h2>2. Principle: local, no tracking, data minimisation (Art. 5 &amp; 25 GDPR)</h2>
+    <h2>2. Principle: local, data minimisation, no tracking in the apps (Art. 5 &amp; 25 GDPR)</h2>
     <p>
       All three apps and the web viewer are built on <strong>Privacy by Design</strong>
       and <strong>Privacy by Default</strong> (Art. 25 GDPR). The default is:
@@ -425,8 +425,10 @@
       We use <strong>GoatCounter</strong>
       (<a href="https://www.goatcounter.com" target="_blank" rel="noopener">goatcounter.com</a>),
       a privacy-friendly open-source web-analytics service. GoatCounter sets
-      <strong>no cookies</strong>, stores nothing on your device (no localStorage, no
-      cache), performs <strong>no browser fingerprinting</strong> and builds
+      <strong>no cookies</strong>, places nothing on your device by itself and performs
+      <strong>no browser fingerprinting</strong>. The script only reads the screen width and
+      checks whether you have switched counting off in this browser (a <code>skipgc</code>
+      entry in local storage – it only exists if you switch it off yourself, see opt-out). It builds
       <strong>no cross-device profiles</strong>.
     </p>
     <p>
@@ -462,6 +464,9 @@
       <strong>Opt-out:</strong> If your browser sends <code>Do Not Track</code> (DNT)
       or <code>Global Privacy Control</code> (GPC), the analytics script is
       <strong>not loaded at all</strong> — no data whatsoever is collected.
+      Independently of that, you can switch counting off in this browser at any time:
+      open <a href="/#toggle-goatcounter">vitalkultur.com/#toggle-goatcounter</a>
+      (confirmed by a notice; opening it again switches counting back on).
     </p>
     <p class="note">
       <strong>Right to object under Art. 21(1) GDPR:</strong> You may object to this

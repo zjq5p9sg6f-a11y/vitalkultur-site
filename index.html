@@ -409,6 +409,7 @@ document.head.appendChild(s);})();</script>
       color: var(--text-faint); margin-bottom: 16px;
     }
     .about-strip h2 {
+      text-wrap: balance;   /* gleich lange Zeilen, keine kurze Restzeile (Typo-Prüfung 09.11.) */
       font-size: clamp(24px, 3.5vw, 34px);
       font-weight: 200; line-height: 1.3;
       color: var(--text-soft);
@@ -517,7 +518,7 @@ document.head.appendChild(s);})();</script>
 
   <section class="products-section" id="apps">
     <div class="products-eyebrow" data-en="One engine · one ecosystem" data-de="Eine Engine · ein Ökosystem">Eine Engine · ein Ökosystem</div>
-    <p class="products-intro" style="max-width:660px;margin:6px auto 30px;text-align:center;font-size:15px;line-height:1.65;color:var(--muted,#8a94a6)" data-en="Three apps, one foundation — the same research-grade HRV engine behind each: Polar H10, local on your devices, honest with every number. From human breath on the wrist (<strong style='color:var(--text,#e8eef5);font-weight:500'>Breathwork</strong>) to a horse's heart biometry (<strong style='color:var(--text,#e8eef5);font-weight:500'>Equine</strong>) to raw RR intervals for science (<strong style='color:var(--text,#e8eef5);font-weight:500'>Research</strong>): one platform, the same measurement rigour in every domain." data-de="Drei Apps, ein Fundament — hinter jeder dieselbe forschungsnahe HRV-Engine: Polar H10, lokal auf deinen Geräten, ehrlich bei jeder Zahl. Vom menschlichen Atem am Handgelenk (<strong style='color:var(--text,#e8eef5);font-weight:500'>Breathwork</strong>) über die Herzbiometrie des Pferds (<strong style='color:var(--text,#e8eef5);font-weight:500'>Equine</strong>) bis zu Roh-RR-Intervallen für die Forschung (<strong style='color:var(--text,#e8eef5);font-weight:500'>Research</strong>): eine Plattform, dieselbe Messgenauigkeit in jeder Domäne.">Drei Apps, ein Fundament — hinter jeder dieselbe forschungsnahe HRV-Engine: Polar H10, lokal auf deinen Geräten, ehrlich bei jeder Zahl. Vom menschlichen Atem am Handgelenk (<strong style="color:var(--text,#e8eef5);font-weight:500">Breathwork</strong>) über die Herzbiometrie des Pferds (<strong style="color:var(--text,#e8eef5);font-weight:500">Equine</strong>) bis zu Roh-RR-Intervallen für die Forschung (<strong style="color:var(--text,#e8eef5);font-weight:500">Research</strong>): eine Plattform, dieselbe Messgenauigkeit in jeder Domäne.</p>
+    <p class="products-intro" style="max-width:660px;margin:6px auto 30px;text-align:center;font-size:15px;line-height:1.65;color:var(--muted,#8a94a6)" data-en="Three apps, one foundation — the same research-grade HRV engine behind each: Polar H10, local on your devices, honest with every number. From human breath on the wrist (<strong style='color:var(--text,#e8eef5);font-weight:500'>Breathwork</strong>) to a horse's heart biometry (<strong style='color:var(--text,#e8eef5);font-weight:500'>Equine</strong>) to raw RR intervals for science (<strong style='color:var(--text,#e8eef5);font-weight:500'>Research</strong>): one platform, one shared analysis core in every&nbsp;app." data-de="Drei Apps, ein Fundament — hinter jeder dieselbe forschungsnahe HRV-Engine: Polar H10, lokal auf deinen Geräten, ehrlich bei jeder Zahl. Vom menschlichen Atem am Handgelenk (<strong style='color:var(--text,#e8eef5);font-weight:500'>Breathwork</strong>) über die Herzbiometrie des Pferds (<strong style='color:var(--text,#e8eef5);font-weight:500'>Equine</strong>) bis zu Roh-RR-Intervallen für die Forschung (<strong style='color:var(--text,#e8eef5);font-weight:500'>Research</strong>): eine Plattform, ein gemeinsamer Analysekern in jeder&nbsp;App.">Drei Apps, ein Fundament — hinter jeder dieselbe forschungsnahe HRV-Engine: Polar H10, lokal auf deinen Geräten, ehrlich bei jeder Zahl. Vom menschlichen Atem am Handgelenk (<strong style="color:var(--text,#e8eef5);font-weight:500">Breathwork</strong>) über die Herzbiometrie des Pferds (<strong style="color:var(--text,#e8eef5);font-weight:500">Equine</strong>) bis zu Roh-RR-Intervallen für die Forschung (<strong style="color:var(--text,#e8eef5);font-weight:500">Research</strong>): eine Plattform, ein gemeinsamer Analysekern in jeder&nbsp;App.</p>
     <div class="products">
 
       <a class="product-card breathwork" href="/breathwork/">
@@ -694,7 +695,7 @@ document.head.appendChild(s);})();</script>
     </div>
     <div class="trust-item">
       <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 12c0 5-3 9-9 9s-9-4-9-9 4-9 9-9c2 0 4 .5 5 1.5"/><path d="M9 12l2 2 5-5"/></svg>
-      <span data-en="No tracking" data-de="Kein Tracking">No tracking</span>
+      <span data-en="Tracking-free apps" data-de="Apps ohne Tracking">Tracking-free apps</span>
     </div>
     <div class="trust-item">
       <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2v20M2 12h20"/><circle cx="12" cy="12" r="5"/></svg>
@@ -704,8 +705,8 @@ document.head.appendChild(s);})();</script>
 
   <section class="about-strip">
     <div class="label" data-en="The philosophy" data-de="Die Philosophie">The philosophy</div>
-    <h2 data-en="We don't just show the science — we make it <em>tangible.</em> Peer-reviewed depth, translated into something you can feel, decide on, act on."
-        data-de="Wir zeigen die Wissenschaft nicht nur — wir machen sie <em>greifbar.</em> Peer-reviewte Tiefe, übersetzt in etwas, das du fühlen, entscheiden, handeln kannst.">We don't just show the science — we make it <em>tangible.</em> Peer-reviewed depth, translated into something you can feel, decide on, act on.</h2>
+    <h2 data-en="We don't just show the science — we make it <em>tangible.</em> Peer‑reviewed depth, translated into something you can feel, decide on, act on."
+        data-de="Wir zeigen die Wissenschaft nicht nur — wir machen sie <em>greifbar.</em> Peer‑reviewte Tiefe, übersetzt in etwas, das du fühlen, entscheiden, handeln kannst.">We don't just show the science — we make it <em>tangible.</em> Peer‑reviewed depth, translated into something you can feel, decide on, act on.</h2>
   </section>
 
 </main>
@@ -714,8 +715,8 @@ document.head.appendChild(s);})();</script>
   <div class="foot-grid">
     <div class="foot-brand-col">
       <img src="/assets/vitalkultur-wordmark.png" alt="Vitalkultur">
-      <p data-en="An independent team building research-grade wellness apps."
-         data-de="Ein unabhängiges Team für forschungsnahe Wellness-Apps.">An independent team building research-grade wellness apps.</p>
+      <p data-en="An independent team building research-grade wellness&nbsp;apps."
+         data-de="Ein unabhängiges Team für forschungsnahe&nbsp;Wellness-Apps.">An independent team building research-grade wellness&nbsp;apps.</p>
     </div>
     <div class="foot-links-col">
       <div class="foot-link-group">
