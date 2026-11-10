@@ -31,7 +31,7 @@ if(d=='1'||d=='yes'||navigator.globalPrivacyControl===true)return;
 var s=document.createElement('script');s.async=true;s.src='//gc.zgo.at/count.js';
 s.setAttribute('data-goatcounter','https://vitalkultur.goatcounter.com/count');
 document.head.appendChild(s);})();</script>
-<meta name="description" content="CARLON Equine Visite — die browser-lokale Praxis-Ansicht für Tierärzte & Kliniken. Der Halter misst mit der CARLON Equine App, du liest den Verlauf: Triage nach Dringlichkeit, Abfahrroute, Befund-PDF. Auswertung im Browser, kein Konto, verschlüsselt unterwegs.">
+<meta name="description" content="CARLON Equine Visite — die browser-lokale Praxis-Ansicht für Tierärzte & Kliniken. Der Halter misst mit der CARLON Equine App, du liest den Verlauf: Reihenfolge nach Abweichung von der eigenen Baseline, Abfahrroute, Bericht als PDF. Auswertung im Browser, kein Konto, verschlüsselt unterwegs.">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Vitalkultur">
 <meta property="og:title" content="CARLON Equine – für Tierärzte & Kliniken">
@@ -85,7 +85,7 @@ document.head.appendChild(s);})();</script>
     "de",
     "en"
    ],
-   "description": "Browser-lokale Praxis-Ansicht für Pferdetierärzte und Kliniken: Triage nach biometrischer Dringlichkeit, Verlauf über Wochen, Abfahrroute, Befundbericht und Export als FHIR R5. Kein Medizinprodukt, keine Diagnose.",
+   "description": "Browser-lokale Praxis-Ansicht für Pferdetierärzte und Kliniken: Reihenfolge nach Abweichung von der eigenen Baseline, Verlauf über Wochen, Abfahrroute, Befundbericht und Export als FHIR R5. Kein Medizinprodukt, keine Diagnose.",
    "audience": {
     "@type": "BusinessAudience",
     "audienceType": "Tierärztinnen und Tierärzte, Pferdekliniken"
@@ -162,7 +162,7 @@ document.head.appendChild(s);})();</script>
      "name": "Welche Evidenz steht hinter den Atemwegs-Markern?",
      "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Bezugsarbeit ist Nyerges-Bohák 2025 (Equine Veterinary Journal, n = 40): 20 Pferde mit schwerem Asthma, BAL-referenziert, gegen 20 unauffällige Kontrollen. Die Arbeit berichtet Gruppenunterschiede und nennt SD2, SDNN, TINN und SD2/SD1 als die trennstärkeren Größen — einen Schwellenwert enthält sie nicht. Unsere Schwellen liegen mittig zwischen ihren Gruppenmitteln; das ist eine eigene Ableitung, kein Literaturwert, und jede Schwelle steht einzeln da. Die BAL-Zytologie bleibt der Goldstandard — der Verlauf ersetzt sie nicht, er begründet, wann sie ansteht."
+      "text": "Bezugsarbeit ist Nyerges-Bohák 2025 (Equine Veterinary Journal, n&nbsp;=&nbsp;40): 20&nbsp;Pferde mit schwerem Asthma, BAL-referenziert, gegen 20&nbsp;unauffällige Kontrollen. Die Arbeit berichtet Gruppenunterschiede und nennt SD2, SDNN, TINN und SD2/SD1 als die trennstärkeren Größen — einen Schwellenwert enthält sie nicht. Unsere Schwellen liegen zwischen ihren Gruppenmitteln, nicht genau mittig; das ist eine eigene Ableitung, kein Literaturwert, und jede Schwelle steht einzeln da. Die BAL-Zytologie bleibt der Goldstandard — der Verlauf ersetzt sie nicht, er begründet, wann sie ansteht."
      }
     },
     {
@@ -911,8 +911,7 @@ html.rev-an .rev.in{opacity:1;transform:none}
     <div class="usp">
       <h3>Aus „Können Sie mal draufschauen?" wird eine Messung</h3>
       <p>Statt Anruf und Handyvideo schickt die Halterin eine standardisierte Aufnahme
-         samt Messprotokoll. Sie öffnen sie, wenn Sie Zeit haben — und sehen vorher,
-         wie dringend es ist.</p>
+         samt Messprotokoll. Sie öffnen sie, wenn Sie Zeit haben — und sehen vorher, wie stark die Werte von der eigenen Baseline abweichen.</p>
     </div>
     <div class="usp">
       <h3>Die Ferneinschätzung ist abrechenbar</h3>
@@ -1117,9 +1116,8 @@ html.rev-an .rev.in{opacity:1;transform:none}
     <div class="grid">
       <div class="card">
         <h3>Einordnung mit Begründung</h3>
-        <p>Vier Stufen von stabil bis kritisch, immer mit dem Wert, der sie ausgelöst hat —
-           und mit der Abweichung von der Baseline <em>dieses</em> Pferds, nicht von einem
-           Lehrbuchwert.</p>
+        <p>Vier Stufen von stabil bis stark abweichend, immer mit dem Wert, der sie ausgelöst hat —
+           und mit der Abweichung von der Baseline <em>dieses</em> Pferds, nicht von einem&nbsp;Lehrbuchwert.</p>
       </div>
       <div class="card">
         <h3>Signalgüte, bevor Sie deuten</h3>
@@ -1136,10 +1134,9 @@ html.rev-an .rev.in{opacity:1;transform:none}
              ist fuer eine studierte Leserin ein rotes Tuch: welche? Die
              Referenz traegt die App selbst (asthma.js, DOI 10.1111/evj.14414). -->
         <p>HRV-basierte Marker mit ihren Schwellen, einzeln aufgeführt. Bezugsarbeit ist
-           Nyerges-Bohák 2025 (Equine Veterinary Journal, n = 40): 20 Pferde mit schwerem
-           Asthma, BAL-referenziert, gegen 20 unauffällige Kontrollen. Sie berichtet
-           Gruppenunterschiede, <strong>keine Schwellenwerte</strong> — unsere liegen mittig
-           dazwischen und sind damit unsere eigene Ableitung. Ein
+           Nyerges-Bohák 2025 (Equine Veterinary Journal, n&nbsp;=&nbsp;40): 20&nbsp;Pferde mit schwerem
+           Asthma, BAL-referenziert, gegen 20&nbsp;unauffällige Kontrollen. Sie berichtet
+           Gruppenunterschiede, <strong>keine Schwellenwerte</strong> — unsere liegen zwischen den Gruppenmitteln, nicht genau mittig, und sind damit unsere eigene Ableitung. Ein
            <strong>Beobachtungshinweis</strong>, ausdrücklich keine Diagnose: Die
            BAL-Zytologie bleibt der Goldstandard.</p>
       </div>
@@ -1329,7 +1326,7 @@ html.rev-an .rev.in{opacity:1;transform:none}
 
     <div class="feature">
       <div class="f-shot"><img src="assets/visite-shots/05-tagesplan.jpg" loading="lazy"
-        alt="Tagesplan: die Stopps des Tages als Karten, kritische zuerst, mit gesparter Fahrstrecke und Greifpunkt zum Umsortieren"></div>
+        alt="Tagesplan: die Stopps des Tages als Karten, stärkste Abweichung zuerst, mit gesparter Fahrstrecke und Greifpunkt zum Umsortieren"></div>
       <div class="f-txt">
         <div class="f-k">Tagesplan</div>
         <h3>Der Tag sortiert sich nach Dringlichkeit, nicht nach der Reihenfolge der Anrufe.</h3>
@@ -1345,7 +1342,7 @@ html.rev-an .rev.in{opacity:1;transform:none}
     <div class="shots three">
       <figure class="shot">
         <div class="frame"><img src="assets/visite-shots/08-route.jpg" loading="lazy"
-          alt="Abfahrroute auf der Karte, kritische Pferde zuerst, direkt an Google Maps übergebbar"></div>
+          alt="Abfahrroute auf der Karte, Pferde mit der stärksten Abweichung zuerst, direkt an Google Maps übergebbar"></div>
         <figcaption>Karte &amp; Route — die Abfahrfolge, direkt an Google&nbsp;Maps übergeben, statt Adressen abzutippen.</figcaption>
       </figure>
       <figure class="shot">
@@ -1597,10 +1594,10 @@ html.rev-an .rev.in{opacity:1;transform:none}
       <div class="card">
         <h3>Welche Evidenz steht hinter den Atemwegs-Markern?</h3>
         <p>Bezugsarbeit ist Nyerges-Bohák 2025 (Equine Veterinary Journal, n = 40):
-           20 Pferde mit schwerem Asthma, BAL-referenziert, gegen 20 unauffällige
+           20 Pferde mit schwerem Asthma, BAL-referenziert, gegen 20&nbsp;unauffällige
            Kontrollen. Die Arbeit berichtet Gruppenunterschiede und nennt SD2, SDNN, TINN
            und SD2/SD1 als die trennstärkeren Größen — einen Schwellenwert enthält sie
-           nicht. Unsere Schwellen liegen mittig zwischen ihren Gruppenmitteln; das ist
+           nicht. Unsere Schwellen liegen zwischen ihren Gruppenmitteln, nicht genau mittig; das ist
            eine eigene Ableitung, kein Literaturwert, und jede Schwelle steht einzeln da.
            Die BAL-Zytologie bleibt der Goldstandard — der Verlauf ersetzt sie nicht, er
            begründet, wann sie ansteht.</p>
