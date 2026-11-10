@@ -6353,7 +6353,6 @@ function buildDemoData() {
     },
     rrData: rrData,
     clinicalIndicators: {
-      acuteColic:        { flag: "green",  hint: "RMSSD im Normbereich, keine Hinweise auf akuten Stress." },
       respiratoryMarker: { flag: "green",  hint: "HF-Power im Normbereich, vagaler Tonus intakt." },
       afibHint:          { flag: "green",  hint: "RR-Pattern konsistent mit Sinus-Rhythmus (Broux 2018)." }
     },
@@ -6805,14 +6804,7 @@ function render(data) {
     document.getElementById('indicatorsPanel').style.display = 'block';
     const ind = data.clinicalIndicators;
     const items = [
-      // Akute Colic: Gruppenunterschiede bei akutem Abdomen sind in Gehlen 2020
-      // (Animals 10(9):1563) berichtet — einen Cutoff enthaelt die Arbeit nicht.
-      // Unsere Schwellen sind daraus abgeleitet: RMSSD-Reduktion + Tachykardie
-      // als HRV-Beobachtungshinweis bei akutem Abdomen. BEKANNTE LUECKE: die
-      // konservativ behandelte Kolikgruppe lag im LF/HF-Mittel UNTER unserer
-      // Schwelle — dieses Kriterium erfasst sie systematisch nicht.
-      { key: 'acuteColic',        name: t('ind.name.acuteColic'),        src: 'Gehlen 2020 (group differences) · thresholds our own',
-        thresholdDesc: 'RMSSD <25 ms · HR Δ >20% baseline' },
+      // Kolik-Indikator entfernt (10.11.2026, Equine-Session): öffentliche Web-App lesen Halter = Laien; Kolik = HWG § 12 Anlage B Nr. 4.
       // Umbenannt von "Asthma-Screen" (klinisch nicht aus HRV ableitbar) auf
       // "Respiratorischer Marker" mit Disclaimer. Equine Asthma wird klinisch
       // diagnostiziert (BAL-Zytologie, Histamin-Bronchoprovokation), nicht via HRV.
@@ -6827,7 +6819,6 @@ function render(data) {
     const fd_ind = data.metrics?.frequencyDomain || {};
     // Severity = wie nah am Threshold (0-100%)
     const severity = {
-      acuteColic: Math.max(0, Math.min(100, td_ind.rmssdMs ? (1 - (td_ind.rmssdMs / 25)) * 100 : 0)),
       respiratoryMarker: Math.max(0, Math.min(100, fd_ind.hfPowerMs2 ? (1 - (fd_ind.hfPowerMs2 / 2000)) * 100 : 0)),
       afibHint: Math.max(0, Math.min(100, td_ind.rmssdMs ? (td_ind.rmssdMs / 302) * 100 : 0))
     };
@@ -9935,7 +9926,6 @@ function preparePrintCover() {
   // Indikator-Liste statt Auto-Befund (regulatorisch: kein Diagnose-Output)
   const ind = lastData.clinicalIndicators || {};
   const indItems = [
-    { key: 'acuteColic',        name: t('ind.name.acuteColic'),         cite: 'Gehlen 2020 (group differences) · thresholds our own' },
     { key: 'respiratoryMarker', name: t('ind.name.respiratoryMarker'),  cite: 'Nyerges-Bohák 2025 (group differences) · thresholds our own' },
     { key: 'afibHint',          name: t('ind.name.afibHint'),           cite: 'Broux 2018 · the RMSSD threshold is our own' }
   ];
@@ -10142,7 +10132,6 @@ Object.assign(window.CARLON_I18N, {
   'ind.observation_long': { en: 'observation recommended', de: 'Beobachtung empfohlen' },
   'ind.flag_long':     { en: 'marker elevated',           de: 'Marker erhöht' },
   // Indicator display names — used in main UI grid + print-cover indicator list.
-  'ind.name.acuteColic':        { en: 'Acute Colic',          de: 'Akute Colic' },
   'ind.name.respiratoryMarker': { en: 'Respiratory Marker',   de: 'Respiratorischer Marker' },
   'ind.name.afibHint':          { en: 'AFib Hint',            de: 'AFib-Hinweis' },
   'ind.name.vagalAvBlocks':     { en: 'Vagal AV-Blocks',      de: 'Vagale AV-Blocks' },
