@@ -1841,7 +1841,7 @@ nav.tabs button.on{text-shadow:none}
         <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="9" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/><rect x="14" y="12" width="7" height="9" rx="1"/><rect x="3" y="16" width="7" height="5" rx="1"/></svg>
         <span class="lbl">Übersicht</span><span class="badge hidden" id="critBadge">0</span>
       </button>
-      <button data-tab="station" title="Stationswand — Wand-Monitor aller überwachten Pferde (Klinik-Funktion)">
+      <button data-tab="station" title="Stationswand — Übersichtswand aller aufgenommenen Pferde (Klinik-Funktion)">
         <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1.4"/><rect x="14" y="3" width="7" height="7" rx="1.4"/><rect x="3" y="14" width="7" height="7" rx="1.4"/><rect x="14" y="14" width="7" height="7" rx="1.4"/></svg>
         <span class="lbl">Station</span>
       </button>
@@ -4742,7 +4742,7 @@ const Views={
       <div class="panel" style="text-align:center;padding:var(--s6) var(--s4)">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="width:46px;height:46px;color:var(--text-faint);margin-bottom:14px"><rect x="3" y="3" width="7" height="7" rx="1.4"/><rect x="14" y="3" width="7" height="7" rx="1.4"/><rect x="3" y="14" width="7" height="7" rx="1.4"/><rect x="14" y="14" width="7" height="7" rx="1.4"/></svg>
         <h3 style="font-family:var(--font-brand);font-size:20px;font-weight:600;margin-bottom:8px">Noch keine Pferde auf Station</h3>
-        <p style="color:var(--text-secondary);font-size:14px;max-width:440px;margin:0 auto 18px">Nehmen Sie Pferde mit aktueller Telemetrie auf die Station auf und weisen Sie ihnen eine Box zu. Die Wand zeigt dann Ruhe-HF, Baevsky-Index und Trend je Box.</p>
+        <p style="color:var(--text-secondary);font-size:14px;max-width:440px;margin:0 auto 18px">Nehmen Sie Pferde mit aktueller Aufnahme auf die Wand auf und weisen Sie ihnen eine Box zu. Die Wand zeigt dann Ruhe-HF, Baevsky-Index und Trend je Box.</p>
         ${available?admitBtn:'<p style="color:var(--text-faint);font-size:13px">Importieren Sie zuerst Aufnahmen — dann lassen sich Pferde aufnehmen.</p>'}
       </div></div>`;
     return `
@@ -4762,7 +4762,7 @@ const Views={
     const cand=State.horses.filter(h=>!h.onStation&&State.latestFor(h.id))
       .map(h=>({h,rec:State.latestFor(h.id)}))
       .sort((a,b)=>(a.h.name||'').localeCompare(b.h.name||''));
-    if(!cand.length){ Toast.show('Alle überwachten Pferde sind bereits auf Station','info'); return; }
+    if(!cand.length){ Toast.show('Alle aufgenommenen Pferde sind bereits auf der Wand','info'); return; }
     UI.modal(`<div class="modal-head"><h3>Pferd aufnehmen</h3><button class="closex" onclick="UI.closeModal()">${IC.x}</button></div>
       <div class="modal-body"><p style="color:var(--text-secondary);font-size:13px;margin-bottom:12px">Pferd auf die Station aufnehmen — Box wird automatisch vergeben (später änderbar).</p>
       <div class="admit-list">${cand.map(({h,rec})=>`<button class="admit-row" onclick="Views.admitToStation('${h.id}')">
@@ -5281,7 +5281,7 @@ const Views={
             <div class="tacts-sec">
               <button class="tsec" onclick="Dispatch.navTo('${h.id}')">${IC.nav}<span>Navi</span></button>
               <a class="tsec call ${h.phone?'':'off'}" ${h.phone?`href="tel:${esc(h.phone)}"`:''}>${IC.phone}<span>Anrufen</span></a>
-              <button class="tsec${remoteOk?' remote':''}" onclick="${remoteOk?`Views.fernCheck('${h.id}')`:`Views.logConsult('${h.id}')`}">${remoteOk?ICremote:IC.doc}<span>${remoteOk?'Fern-Check':'Beratung'}</span></button>
+              <button class="tsec${remoteOk?' remote':''}" onclick="${remoteOk?`Views.fernCheck('${h.id}')`:`Views.logConsult('${h.id}')`}">${remoteOk?ICremote:IC.doc}<span>${remoteOk?'Aufnahme ansehen':'Erfassen'}</span></button>
               <button class="tsec" onclick="Views.openHorse('${h.id}')">${IC.eye}<span>Akte</span></button>
             </div>
             <button class="tacts-skip" onclick="Views.reschedule('${h.id}',event)">${IC.clock} Nicht heute · verschieben</button>
@@ -6177,7 +6177,7 @@ const Views={
           </div>
           <div class="panel">
             <h2 style="font-size:16px">Coaching-Notiz</h2>
-            <p style="color:var(--text-secondary);font-size:13px;margin-bottom:12px">Diese Kohärenz-Messung als Coaching-Einheit abrechnen.</p>
+            <p style="color:var(--text-secondary);font-size:13px;margin-bottom:12px">Diese Kohärenz-Messung als Coaching-Einheit erfassen.</p>
             <button class="btn ghost block" onclick="Views.logCohConsult('${c.id}')">Als Beratung erfassen</button>
           </div>
         </div>
@@ -6191,7 +6191,7 @@ const Views={
     <div class="modal-body"><div class="field"><label>Bezug</label><input value="${esc(c.label)}" disabled></div>
     <div class="field-row"><div class="field"><label>Dauer (Min)</label><input id="cDur" type="number" value="45"></div>
     <div class="field"><label>Honorar (€)</label><input id="cFee" type="number" value="${State.settings.tariff}"></div></div>
-    <div class="field"><label>Notiz</label><textarea id="cNote" placeholder="Kohärenz-Befund, Empfehlung…"></textarea></div>
+    <div class="field"><label>Notiz</label><textarea id="cNote" placeholder="Kohärenz-Beobachtung, Empfehlung…"></textarea></div>
     <label style="display:flex;align-items:center;gap:9px;font-size:13px"><input type="checkbox" id="cBilled" style="width:auto;accent-color:var(--cyan)"> bereits abgerechnet</label></div>
     <div class="modal-foot"><button class="btn ghost" onclick="UI.closeModal()">Abbrechen</button><button class="btn primary" onclick="Views.saveCohConsult('${id}')">Speichern</button></div>`);
   },
@@ -6356,7 +6356,7 @@ const Views={
         <div class="field"><label>Dauer (Min)</label><input id="cDur" type="number" value="20" min="0"></div>
         <div class="field"><label>Honorar (€)</label><input id="cFee" type="number" value="${State.settings.tariff}" min="0" step="5"></div>
       </div>
-      <div class="field"><label>Notiz (optional)</label><textarea id="cNote" style="min-height:70px" placeholder="Befund, Empfehlung…"></textarea></div>
+      <div class="field"><label>Notiz (optional)</label><textarea id="cNote" style="min-height:70px" placeholder="Beobachtung, Empfehlung…"></textarea></div>
       <label style="display:flex;align-items:center;gap:9px;font-size:13px;cursor:pointer"><input type="checkbox" id="cBilled" style="width:auto;accent-color:var(--cyan)"> bereits abgerechnet</label>
     </div>
     <div class="modal-foot"><button class="btn ghost" onclick="UI.closeModal()">Abbrechen</button><button class="btn primary" onclick="Views.saveConsult('${hid}')">Speichern</button></div>`);
@@ -6431,7 +6431,7 @@ const Views={
       treatmentMin:15,driveKm:0,driveMin:0,savedKm:Math.round(km*10)/10,triageLevel:lvl,remote:true,estimated:true};
     await DB.put('settings',entry); State.daylog.push(entry);
     delete h.arrivedAt; h.needsVisit=false; h.visitDoneAt=now.toISOString(); h.resolvedRemote=true; await DB.put('horses',h);
-    UI.closeModal(); Toast.show(`✓ Fern-Check · ~${fmt0(km)} km gespart · ${euro(fee)} abgerechnet`,'ok'); Nav.refresh();
+    UI.closeModal(); Toast.show(`✓ Aus der heutigen Tour genommen · Datensichtung dokumentiert`,'ok'); Nav.refresh();
   },
   async toggleBilledInline(){},
   planVisit(hid){
@@ -6440,7 +6440,7 @@ const Views={
     const def=new Date(d.getTime()-d.getTimezoneOffset()*60000).toISOString().slice(0,16);
     UI.modal(`<div class="modal-head"><button class="closex" onclick="UI.closeModal()">${IC.x}</button><h3>Termin planen — ${esc(h.name)}</h3></div>
     <div class="modal-body">
-      <div class="field"><label>Anlass</label><select id="vType"><option>Praxisbesuch</option><option>Kontrolluntersuchung</option><option>HRV-Verlaufskontrolle</option><option>Nachkontrolle</option><option>Telemetrie-Beratung</option></select></div>
+      <div class="field"><label>Anlass</label><select id="vType"><option>Praxisbesuch</option><option>Kontrolluntersuchung</option><option>HRV-Verlaufskontrolle</option><option>Nachkontrolle</option><option>Datensichtung (Aufnahme)</option></select></div>
       <div class="field-row"><div class="field"><label>Datum &amp; Uhrzeit</label><input id="vDate" type="datetime-local" value="${def}"></div>
         <div class="field"><label>Dauer (Min)</label><input id="vDur" type="number" value="30"></div></div>
       <div class="field"><label>Ort</label><input id="vLoc" value="${esc(h.place||h.stable||'')}"></div>
@@ -6485,7 +6485,7 @@ const Views={
       `Herzliche Grüße\n${sign||''}`;
     UI.modal(`<div class="modal-head"><button class="closex" onclick="UI.closeModal()">${IC.x}</button><h3>Rückmeldung an Besitzer</h3></div>
     <div class="modal-body">
-      <p style="font-size:13px;color:var(--text-secondary);margin-bottom:12px">Fertiger, besitzerfreundlicher Befundtext für ${esc(h.name)}. Frei editierbar.</p>
+      <p style="font-size:13px;color:var(--text-secondary);margin-bottom:12px">Fertiger, verständlicher Rückmeldungstext für ${esc(h.name)}. Frei editierbar.</p>
       <textarea id="ownerTxt" style="width:100%;min-height:300px;background:var(--bg-deep);border:1px solid var(--border-subtle);border-radius:var(--r-s);color:var(--text-primary);padding:14px;font-size:13px;line-height:1.6;resize:vertical">${esc(txt)}</textarea>
     </div>
     <div class="modal-foot">
@@ -10709,16 +10709,16 @@ function showTour(){
   t.innerHTML=`<div class="tour-card">
     <img src="assets/carlon-logo-soft-512.png" alt="">
     <h2>CARLON Equine — Praxis-Cockpit</h2>
-    <div class="lead">Ein Aushang im Stall, und Ihre Kundinnen messen selbst. Die Aufnahmen kommen verschlüsselt zu Ihnen, Sie beurteilen ohne Anfahrt — und Ihre Patienten bleiben zwischen den Terminen sichtbar.</div>
+    <div class="lead">Ruhe-HRV Ihrer Pferde als Verlauf — und die Tour danach geplant. Ausgewertet hier im Browser, nichts liegt bei uns.</div>
     <div class="tour-steps">
-      <div class="tstep"><div class="ti">${IC.qr}</div><div><b>1 · Aushang aufhängen</b><span>Ein Blatt mit QR-Code für den ganzen Stall. Ihre Kundinnen brauchen kein Konto.</span></div></div>
-      <div class="tstep"><div class="ti">${IC.postfach}</div><div><b>2 · Aufnahmen kommen an</b><span>Die Halterin schickt Ihnen die Datei — hineinziehen, fertig. Das Board sortiert nach Dringlichkeit, kritische zuerst.</span></div></div>
-      <div class="tstep"><div class="ti">${IC.senden}</div><div><b>3 · Befund zurückschicken</b><span>Ohne Anfahrt. Wer rausfahren muss, bekommt die Route nach Dringlichkeit.</span></div></div>
-      <div class="tstep"><div class="ti"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6M8 13h8M8 17h6"/></svg></div><div><b>4 · Abrechnen</b><span>Jeder Befund wird als offene Fern-Leistung erfasst. Satz und Ziffer bestimmen Sie.</span></div></div>
+      <div class="tstep"><div class="ti">${IC.qr}</div><div><b>1 · Aushang oder Mess-Link</b><span>Ein QR-Blatt für den Stall: Halterinnen nehmen sieben Minuten Ruhe-HRV auf, ohne Konto.</span></div></div>
+      <div class="tstep"><div class="ti">${IC.postfach}</div><div><b>2 · Aufnahmen kommen an</b><span>Datei hineinziehen, fertig. Die Übersicht zeigt jedes Pferd gegen seine eigene Basis.</span></div></div>
+      <div class="tstep"><div class="ti">${IC.route}</div><div><b>3 · Tour planen</b><span>Kürzeste Strecke als Standard, auf Wunsch deutliche Abweichung zuerst. Die Einordnung treffen Sie.</span></div></div>
+      <div class="tstep"><div class="ti">${IC.doc}</div><div><b>4 · Dokumentieren</b><span>Messwertbericht mit Ihrem Briefkopf, Leistungen und Fahrten an einem Ort.</span></div></div>
     </div>
     <div class="tour-cta">
-      <button class="btn primary" onclick="startWith(false,true)">${IC.qr} Praxis einrichten</button>
-      <button class="btn ghost" onclick="startWith(true)">Erst umsehen (Demo-Daten)</button>
+      <button class="btn primary" onclick="startWith(true)">Demo mit 15 Pferden ansehen</button>
+      <button class="btn ghost" onclick="startWith(false,true)">${IC.qr} Eigene Praxis einrichten</button>
     </div>
     <div class="privacy-note"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
       <!-- ⚠ DIE ZUSAGE GALT NUR FÜR EINEN VON ZWEI WEGEN (Jan, 04.09.2026).
@@ -11170,7 +11170,7 @@ const Sprache={
     'Pferde auf Station':'Horses on the ward',
     'Klinik · Stationsüberwachung':'Clinic · ward monitoring',
     'Klinik-Funktion':'Clinic feature',
-    'Stationswand — Wand-Monitor aller überwachten Pferde (Klinik-Funktion)':'Ward wall — wall monitor for every horse under observation (clinic feature)',
+    'Stationswand — Übersichtswand aller aufgenommenen Pferde (Klinik-Funktion)':'Ward wall — wall monitor for every horse under observation (clinic feature)',
     'Aufgenommene Pferde als Kachelwand — nach biometrischem Trend priorisiert. Für den Monitor im Stationszimmer: was Aufmerksamkeit braucht, steht oben.':'Admitted horses as a tile wall, ranked by biometric trend. For the monitor in the ward office: whatever needs attention sits at the top.',
     'Box / Entlassen':'Box / discharge',
     'Pferd aufnehmen':'Admit horse',
@@ -11446,6 +11446,13 @@ const Sprache={
     'Ich bestelle als':'I am ordering as a', 'Unternehmer (§ 14 BGB)':'business (§ 14 BGB)', 'für meine Praxis oder Klinik und akzeptiere die':'for my practice or clinic and accept the', 'AGB':'terms',
     'Bitte kurz bestätigen: Bestellung als Unternehmen (§ 14 BGB)':'Please confirm: ordering as a business (§ 14 BGB)', '€ netto / Monat':'€ net / month', 'Übersichtswand für das ganze Team (ohne Alarme)':'Overview wall for the whole team (no alarms)',
     'Verkäufer und Rechnungssteller ist Stripe (Link) im eigenen Namen; die Rechnung kommt von dort (EU mit USt-IdNr.: Reverse Charge). Freischaltung sofort nach der Zahlung; Ihre Daten bleiben auf Ihren Geräten.':'Seller and invoicing party is Stripe (Link) in its own name; the invoice comes from there (EU with VAT ID: reverse charge). Unlocked right after payment; your data stays on your devices.',
+    'Ruhe-HRV Ihrer Pferde als Verlauf — und die Tour danach geplant. Ausgewertet hier im Browser, nichts liegt bei uns.':'Your horses’ resting HRV as a trend — and the day’s route planned around it. Analysed here in the browser, nothing is stored with us.',
+    '1 · Aushang oder Mess-Link':'1 · Poster or recording link', 'Ein QR-Blatt für den Stall: Halterinnen nehmen sieben Minuten Ruhe-HRV auf, ohne Konto.':'A QR sheet for the stable: owners record seven minutes of resting HRV, no account.',
+    '2 · Aufnahmen kommen an':'2 · Recordings arrive', 'Datei hineinziehen, fertig. Die Übersicht zeigt jedes Pferd gegen seine eigene Basis.':'Drop the file in, done. The overview shows every horse against its own baseline.',
+    '3 · Tour planen':'3 · Plan the route', 'Kürzeste Strecke als Standard, auf Wunsch deutliche Abweichung zuerst. Die Einordnung treffen Sie.':'Shortest route by default, clear deviation first if you prefer. The assessment is yours.',
+    '4 · Dokumentieren':'4 · Document', 'Messwertbericht mit Ihrem Briefkopf, Leistungen und Fahrten an einem Ort.':'Measurement report on your letterhead, services and trips in one place.',
+    'Demo mit 15 Pferden ansehen':'Explore the demo with 15 horses', 'Eigene Praxis einrichten':'Set up your own practice',
+    'Aufnahme ansehen':'View recording', 'Erfassen':'Record', '✓ Aus der heutigen Tour genommen · Datensichtung dokumentiert':'✓ Removed from today’s route · data review documented', 'Beobachtung, Empfehlung…':'Observation, recommendation…', 'Datensichtung (Aufnahme)':'Data review (recording)',
     'Als Leistung erfassen':'Record as a service',
     'RMSSD':'RMSSD',
     'SDNN':'SDNN',
