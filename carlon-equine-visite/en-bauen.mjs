@@ -40,7 +40,7 @@ tausche('<html lang="de">', '<html lang="en">');
 tausche('<title>CARLON Equine Visite — die Praxis-Ansicht für Tierärzte &amp; Kliniken</title>',
         '<title>CARLON Equine Visite — the practice view for equine vets &amp; clinics</title>');
 tausche(`content="CARLON Equine für Pferdepraxen und -kliniken: Die Halterin nimmt die Ruhe-HRV im Stall mit einem Polar-H10-Gurt auf, Sie sehen den Verlauf gegen die eigene Vorgeschichte des Pferds, mit Signalgüte, und planen Ihre Tour nach Strecke. Auswertung im Browser, kein Medizinprodukt."`,
-        `content="CARLON Equine for equine practices and clinics: the owner records resting HRV in the stable with a Polar H10 strap, you see the trend against the horse’s own history, with signal quality, and plan your round by distance. Analysis in the browser, not a medical device."`);
+        `content="CARLON Equine for equine practices and clinics: the owner records resting HRV in the stable with a Polar H10 strap, you see the trend against the horse’s own history, with signal quality, and plan your round by distance. Browser-local analysis, not a medical device."`);
 tausche('<meta property="og:title" content="CARLON Equine – für Tierärzte & Kliniken">',
         '<meta property="og:title" content="CARLON Equine – for equine vets &amp; clinics">');
 tausche(`<meta property="og:description" content="Die Tour geplant. Jedes Pferd mit seinem Verlauf. Die Halterin nimmt im Stall auf, Sie sehen den Verlauf mit Signalgüte — Auswertung im Browser, nicht in der Cloud.">`,
@@ -928,6 +928,19 @@ tausche('>Praxis-Abo wählen · 149&nbsp;€ / Monat →<', '>Choose practice pl
 tausche('>Oder erst eine persönliche Einführung ↓<', '>Or a personal introduction first ↓<');
 tausche('>Klinik-Abo wählen · 349&nbsp;€ / Monat →<', '>Choose clinic plan · €349 / month →<');
 tausche('>Klinik-Ordner vorab im Gespräch klären ↓<', '>Discuss the clinic folder first ↓<');
+tausche(`Transport, fremde Umgebung, fremde Menschen — jeder dieser Reize verschiebt genau die
+      autonome Balance, die Sie beurteilen wollen. Der Messort ist bei der Ruhe-HRV keine
+      Nebensache, sondern Teil der Methode: Die Auswertung verlangt
+      <strong>mindestens sieben Minuten Ruhe in gewohnter Umgebung</strong> — darunter gibt
+      sie kein Ergebnis aus. Nach Verladung
+      und Fahrt ist diese Bedingung systematisch nicht erfüllt — in der eigenen Box ist sie
+      es jeden Tag.`, `Transport, unfamiliar surroundings, unfamiliar people — each of these shifts exactly the
+      autonomic balance you want to assess. For resting HRV the place of recording is not a
+      side issue but part of the method: the analysis requires
+      <strong>at least seven minutes of rest in familiar surroundings</strong> — below that it
+      gives no result. After loading
+      and a drive this condition is systematically not met — in the horse’s own box it is
+      met every day.`);
 if (fehlend.length) {
   console.error('\n  ✗ Der Bau bricht ab — diese Bloecke gibt es in index.html nicht (mehr):\n');
   for (const f of fehlend) console.error(`      ${f.erwartet}× erwartet, ${f.gefunden}× gefunden:  „${f.de}…"`);
