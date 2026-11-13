@@ -93,6 +93,15 @@
      die Einbeziehung nach § 305 Abs. 2 BGB ergaenzt habe. Erreichbar heisst
      auch: mit dem Daumen im Stall treffbar. */
   .rechtsweg a{display:inline-block;min-height:44px;line-height:44px;padding:0 10px}
+
+.kontext .chipzeile{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
+.kontext .chipzeile button{font:inherit;font-size:13px;padding:7px 12px;border-radius:999px;border:1px solid rgba(255,255,255,.16);background:transparent;color:inherit;cursor:pointer}
+.kontext .chipzeile button.an{border-color:#3ECFB2;background:rgba(62,207,178,.12);color:#3ECFB2}
+.bg-flower{display:none!important}
+
+/* Fluchtlinie (13.11.2026, Gemini R3): unter der Wortmarke alles linksbündig wie das Formular */
+#vReady h1,#vReady .sub,#vReady > p,#vReady .lead,#vReady ul{text-align:left}
+#vReady p.sub,#vReady > p,#vReady .brauchst{margin-left:0;margin-right:auto;align-self:flex-start}
 </style>
 <style>
 /* ============================================================================
@@ -204,20 +213,21 @@ img.logo{width:34px;height:34px;display:block;flex:none;
 .lockup{text-align:left}
 .wm{font-family:var(--font-brand);font-weight:500;letter-spacing:.15em;font-size:16px;
   white-space:nowrap;line-height:1.05;color:var(--text)}
-.tag{font-size:8px;letter-spacing:.335em;color:var(--cyan);text-transform:uppercase;
+.tag{font-size:9.5px;letter-spacing:.22em;color:var(--cyan);text-transform:uppercase;
   margin-top:5px;font-weight:600;white-space:nowrap;line-height:1;padding-left:.02em}
 
 /* HERO im Empfangs-Zustand: gestapelt und gross, wie der App-Startbildschirm.
    Dort ist die Wortmarke bewusst duenner und weiter gelaufen als im Briefkopf. */
 body.hero .brand{flex-direction:column;align-self:center;gap:0;margin-bottom:var(--s5)}
-body.hero img.logo{width:clamp(148px,26vw,272px);height:auto;
+body.hero img.logo{width:clamp(88px,12vw,120px);height:auto;   /* 13.11.: kompakter, damit Formular + Verbinden-Knopf ohne Scrollen sichtbar sind */
+  
   filter:drop-shadow(0 0 26px var(--glow-1)) drop-shadow(0 0 72px var(--glow-2))}
 body.hero .lockup{text-align:center;margin-top:-2px}
 body.hero .wm{font-weight:300;font-size:clamp(20px,3vw,32px);letter-spacing:.3em;text-indent:.3em}
 body.hero .tag{font-size:clamp(9px,.95vw,10.5px);letter-spacing:.34em;margin-top:12px;text-indent:.34em}
 
 /* ── Typo ──────────────────────────────────────────────────────────────── */
-h1{font-family:var(--font-brand);font-weight:600;font-size:clamp(23px,2.8vw,35px);margin-bottom:var(--s2);letter-spacing:-.02em;line-height:1.1}
+h1{font-family:var(--font-brand);font-weight:400;font-size:clamp(24px,2.6vw,30px);margin-bottom:var(--s2);letter-spacing:-.02em;line-height:1.1}
 p.sub{color:var(--sec);font-size:clamp(13px,1.15vw,15px);margin:0 auto clamp(var(--s3),2vw,var(--s4));max-width:52ch}
 .eyebrow{display:block;font-family:var(--font-mono);font-size:10px;letter-spacing:.26em;text-transform:uppercase;
   color:var(--cyan-deep);font-weight:600;margin-bottom:var(--s2)}
@@ -794,8 +804,8 @@ const HAUS={ appImStore:false, appUrl:'https://carlon.app' };
   <div class="brand">
     <img class="logo" src="assets/carlon-logo-soft-512.png" alt="">
     <div class="lockup">
-      <div class="wm">CARLON EQUINE</div>
-      <div class="tag" data-i18n="brandTag">Equine Heart Science</div>
+      <div class="wm">CARLON</div>
+      <div class="tag" data-i18n="brandTag">EQUINE BIOMETRICS</div>
     </div>
   </div>
 
@@ -892,6 +902,14 @@ const HAUS={ appImStore:false, appUrl:'https://carlon.app' };
     <div class="field">
       <label for="horse" data-i18n="horseLabel">Name des Pferds</label>
       <input id="horse" type="text" placeholder="z. B. Mistral" data-i18n-ph="horsePh" autocomplete="off" spellcheck="false">
+    </div>
+    <!-- GEFÜHRTES RUHEPROTOKOLL (13.11.2026, Gemini Runde 1 + Recherche 13-04: Haltung/Umgebung beeinflussen
+         die Ruhe-HRV – erst gleiche Bedingungen machen zwei Aufnahmen vergleichbar). Zwei Tipps, landen im Datensatz. -->
+    <div class="field kontext" id="kontext">
+      <label>Wo wird gemessen?</label>
+      <div class="chipzeile" data-feld="umgebung"><button type="button" data-w="eigene_box" class="an">Eigene Box</button><button type="button" data-w="anbindeplatz">Anbindeplatz</button><button type="button" data-w="fremder_stall">Fremder Stall</button></div>
+      <label style="margin-top:10px">Davor</label>
+      <div class="chipzeile" data-feld="vorbedingung"><button type="button" data-w="ruhe_2h" class="an">≥ 2 h ohne Arbeit</button><button type="button" data-w="nach_bewegung">Nach Bewegung</button><button type="button" data-w="beim_fressen">Beim Fressen</button></div>
     </div>
     <button class="btn" id="btnConnect">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"><path d="M6.5 8.5L17.5 15.5L12 20V4l5.5 4.5L6.5 15.5"/></svg>
@@ -1017,7 +1035,7 @@ const HAUS={ appImStore:false, appUrl:'https://carlon.app' };
     <div class="next livepanel">
       <div class="next-h">
         <span class="eyebrow" style="margin-bottom:6px" data-i18n="progressH">Aufnahme-Fortschritt</span>
-        <p id="recTxt" aria-live="polite">Empfohlen sind mindestens sieben Minuten ruhige Messung — erst dann trägt die Atemwegs-Auswertung.</p>
+        <p id="recTxt" aria-live="polite">Empfohlen sind mindestens sieben Minuten ruhige Messung — erst dann trägt die volle Auswertung.</p>
       </div>
       <div class="qbar"><i id="recFill"></i></div>
       <div class="proto-row" style="cursor:default">
@@ -1336,11 +1354,11 @@ de:{
  lastBeatsLbl:'Letzte Schläge',
  recRemaining:'Noch {x} bis zu den empfohlenen sieben Minuten.',
  recBeatsMissing:'Die Zeit reicht — es fehlen noch {n} Schläge. Bei einem sehr ruhigen Puls dauert das etwas länger.',
- recReached:'Sieben Minuten und genug Schläge — die Aufnahme trägt jetzt auch die Atemwegs-Auswertung. Länger messen schadet nicht, der Verlauf wird ruhiger.',
+ recReached:'Sieben Minuten und genug Schläge — die Aufnahme trägt jetzt die volle Auswertung. Länger messen schadet nicht, der Verlauf wird ruhiger.',
  sigChecking:'Signal wird geprüft…', sigStable:'Signal stabil', sigNoisy:'Signal unruhig — Gurtsitz und Feuchtigkeit prüfen',
  sigBad:'Signal stark gestört — Gurt neu anfeuchten und nachsetzen',
  verdictClean:'Sauberes Signal über die gesamte Aufnahme. Diese Messung kann so weitergegeben werden.',
- verdictCleanShort:'Das Signal ist sauber. Die Aufnahme ist kürzer als sieben Minuten — für einen belastbaren Ruhe-Verlauf und die Atemwegs-Auswertung darf sie gern länger sein.',
+ verdictCleanShort:'Das Signal ist sauber. Die Aufnahme ist kürzer als sieben Minuten — für einen belastbaren Ruhe-Verlauf darf sie gern länger sein.',
  verdictNoisy:'Das Signal war stellenweise unruhig. Weitergeben ist möglich — eine zweite Messung mit gut angefeuchtetem Gurt wird aber deutlich besser.',
  verdictBad:'Das Signal war stark gestört. Wir empfehlen, den Gurt neu anzufeuchten, nachzusetzen und noch einmal zu messen.',
  doneSubRoom:'Die Aufnahme ist fertig — ein Tipp, und du schickst sie deiner Praxis.',
@@ -1351,7 +1369,7 @@ de:{
  dropStop:'Aufnahme abschließen',
  pairsOf:'von',
 
- brandTag:'Equine Heart Science',
+ brandTag:'EQUINE BIOMETRICS',
  /* Empfang */
  readyH1:'Messung für den Tierarzt',
  readySub:'Verbinde den Polar-H10-Gurt deines Pferds. Die Aufnahme entsteht auf deinem Gerät und wird dort für deine Praxis verschlüsselt — du schickst sie mit einem Tipp, lesen kann sie nur die Praxis.',
@@ -1363,7 +1381,7 @@ de:{
     und verschickt ihn selbst. Genau dieser Besucher ist die Richtung, die
     uns NEUE Praxen bringt; ihn mit einem falschen Satz zu empfangen wäre
     der teuerste Fehler auf dieser Seite. */
- freiH1:'Herzrhythmus deines Pferdes messen',
+ freiH1:'Ruhe-HRV deines Pferds aufnehmen',
  freiSub:'Verbinde den Polar-H10-Gurt — die Aufnahme entsteht auf deinem Gerät und bleibt dort. Am Ende bekommst du eine Datei, die du deiner Tierärztin oder deinem Tierarzt schickst wie ein Foto. Ohne App, ohne Konto.',
  freiTitle:'Herzrhythmus beim Pferd messen — CARLON Equine',
  roomLabel:'Verbindungscode:',
@@ -1411,7 +1429,7 @@ de:{
  tDur:'Dauer', tDurSub:'seit dem Start',
  tBatt:'Gurt-Akku', tBattSub:'Ladestand des Senders',
  progressH:'Aufnahme-Fortschritt',
- progressStart:'Empfohlen sind mindestens sieben Minuten ruhige Messung — erst dann trägt die Atemwegs-Auswertung.',
+ progressStart:'Empfohlen sind mindestens sieben Minuten ruhige Messung — erst dann trägt die volle Auswertung.',
  stop:'Messung beenden', restart:'Verwerfen und neu starten',
  stopBestaetigen:'Erst {x} gemessen — wirklich beenden? Nochmal tippen.',
  restartToast:'Neu gestartet — der Gurt bleibt verbunden',
@@ -1543,11 +1561,11 @@ en:{
  lastBeatsLbl:'Recent beats',
  recRemaining:'Another {x} to reach the recommended seven minutes.',
  recBeatsMissing:'Long enough — {n} more beats to go. With a very calm pulse this takes a little longer.',
- recReached:'Seven minutes and enough beats — the recording now also carries the airway assessment. Recording longer does no harm, the trend becomes steadier.',
+ recReached:'Seven minutes and enough beats — the recording now carries the full analysis. Recording longer does no harm, the trend becomes steadier.',
  sigChecking:'Checking signal…', sigStable:'Signal stable', sigNoisy:'Signal unsteady — check belt fit and moisture',
  sigBad:'Signal badly disturbed — re-moisten the belt and reseat it',
  verdictClean:'Clean signal throughout the recording. This measurement can be passed on as it is.',
- verdictCleanShort:'The signal is clean. The recording is shorter than seven minutes — for a dependable resting trend and the airway assessment it may well run longer.',
+ verdictCleanShort:'The signal is clean. The recording is shorter than seven minutes — for a dependable resting trend it may well run longer.',
  verdictNoisy:'The signal was unsteady in places. Passing it on is possible — but a second recording with a well-moistened belt will be considerably better.',
  verdictBad:'The signal was badly disturbed. We recommend re-moistening the belt, reseating it and recording again.',
  doneSubRoom:'The recording is ready — one tap and it goes to your practice.',
@@ -1558,10 +1576,10 @@ en:{
  dropStop:'Finish recording',
  pairsOf:'of',
 
- brandTag:'Equine Heart Science',
+ brandTag:'EQUINE BIOMETRICS',
  readyH1:'Recording for your vet',
  readySub:'Connect your horse’s Polar H10 belt. The recording is made on your device and encrypted there for your practice — you send it with one tap, and only the practice can read it.',
- freiH1:'Measure your horse’s heart rhythm',
+ freiH1:'Record your horse’s resting HRV',
  freiSub:'Connect the Polar H10 belt — the recording is made on your device and stays there. At the end you get a file you send to your vet like a photo. No app, no account.',
  freiTitle:'Measure equine heart rhythm — CARLON Equine',
  roomLabel:'Connection code:',
@@ -1600,7 +1618,7 @@ en:{
  tDur:'Duration', tDurSub:'since the start',
  tBatt:'Belt battery', tBattSub:'charge level of the sensor',
  progressH:'Recording progress',
- progressStart:'At least seven minutes of quiet recording is recommended — only then does the airway assessment carry.',
+ progressStart:'At least seven minutes of quiet recording is recommended — only then does the full analysis carry.',
  stop:'Finish recording', restart:'Discard and start over',
  stopBestaetigen:'Only {x} recorded — really finish? Tap again.',
  restartToast:'Started over — the belt stays connected',
@@ -2831,7 +2849,7 @@ de:{
     ['Erfassung','Der Gurt meldet jeden Schlag einzeln — gezählt wird nicht geschätzt.']]},
   dur:{t:'Aufnahmedauer',r:[
     ['Was','Die Zeit zwischen erstem und letztem erfassten Schlag.'],
-    ['Empfehlung','Sieben Minuten in ruhiger Box, mindestens 200 Schläge. Kürzere Aufnahmen sind möglich, aber die Atemwegs-Auswertung verwirft sie bewusst: Ihre Schwellen stammen aus längeren Ruheaufnahmen und würden auf kurzen Messungen zu häufig anschlagen.'],
+    ['Empfehlung','Sieben Minuten in ruhiger Box, mindestens 200 Schläge. Kürzere Aufnahmen sind möglich, aber das Atemmuster-Profil verwirft sie bewusst: Ihre Schwellen stammen aus längeren Ruheaufnahmen und würden auf kurzen Messungen zu häufig anschlagen.'],
     ['Hinweis','Die Dauer sagt nichts über die Qualität — dafür steht die Signalgüte im Messprotokoll.']]},
   hr:{t:'Ø Herzfrequenz',r:[
     ['Was','Der durchschnittliche Puls über die Aufnahme, in Schlägen pro Minute.'],
@@ -2896,7 +2914,7 @@ en:{
     ['Capture','The belt reports every beat individually — counted, not estimated.']]},
   dur:{t:'Recording length',r:[
     ['What','The time between the first and the last captured beat.'],
-    ['Recommendation','Seven minutes in a quiet box, at least 200 beats. Shorter recordings are possible, but the airway assessment deliberately discards them: its thresholds come from longer resting recordings and would trigger too often on short ones.'],
+    ['Recommendation','Seven minutes in a quiet box, at least 200 beats. Shorter recordings are possible, but the breathing-pattern profile deliberately discards them: its thresholds come from longer resting recordings and would trigger too often on short ones.'],
     ['Note','Length says nothing about quality — signal quality in the recording log covers that.']]},
   hr:{t:'Average pulse',r:[
     ['What','The average pulse across the recording, in beats per minute.'],
@@ -4465,6 +4483,8 @@ function buildExport(name,rr,m,secs,opt){
   return satz;
 }
 
+function kontextLesen(){ const k={}; document.querySelectorAll('#kontext .chipzeile').forEach(z=>{ const b=z.querySelector('button.an'); if(b) k[z.dataset.feld]=b.dataset.w; }); return Object.keys(k).length?k:null; }
+document.addEventListener('click',e=>{ const b=e.target.closest&&e.target.closest('#kontext .chipzeile button'); if(!b) return; b.parentNode.querySelectorAll('button').forEach(x=>x.classList.toggle('an',x===b)); });
 function buildExportVoll(name,rr,m,secs){
   return {
     schema:{ name:'carlon_equine_v1', version:'1.0' },
@@ -4486,7 +4506,7 @@ function buildExportVoll(name,rr,m,secs){
     subject:{ id:subjectId(name), nameAtTime:name, species:'horse' },
     session:{ id:(crypto.randomUUID?crypto.randomUUID().toUpperCase():String(Date.now())),
               startedAt:S.startedAt.toISOString().replace(/\.\d+Z$/,'Z'),
-              durationSec:Math.round(secs), beatCount:rr.length },
+              durationSec:Math.round(secs), beatCount:rr.length, kontext:kontextLesen() },
     /* Das erzeugende System deklariert sein eigenes Korrekturverfahren.
        Ohne diese Angabe kaeme der Rohwert im Cockpit an, als waere er
        artefaktkorrigiert — und wuerde dort gegen Referenzbereiche gehalten,

@@ -12,7 +12,7 @@
    dreihundert Zeilen selbst — einmal geschrieben, nie wieder angefasst.
 
    UMFANG (bewusst begrenzt)
-   Byte-Modus, Fehlerkorrektur M (~15 %), Versionen 1–13. Das traegt bis
+   Byte-Modus, Fehlerkorrektur M (~15 %), Versionen 1–15 (14/15 seit 13.11.2026). Das traegt bis
    334 Zeichen; die Dauer-Einladung braucht rund 170. Laengeres wird
    ABGELEHNT statt stillschweigend abgeschnitten — ein QR-Code, der falsch
    scannt, ist schlimmer als keiner.
@@ -69,12 +69,14 @@
     7:  [18, 4, 31, 0, 0],   8:  [22, 2, 38, 2, 39],  9:  [22, 3, 36, 2, 37],
     10: [26, 4, 43, 1, 44],  11: [30, 1, 50, 4, 51],  12: [22, 6, 36, 2, 37],
     13: [22, 8, 37, 1, 38],
+    14: [24, 4, 40, 5, 41],  15: [24, 5, 41, 5, 42],   // 13.11.2026: Geräte-Link (≈355 Byte) – ISO/IEC 18004 Tab. 9
   };
   /* Mittelpunkte der Ausrichtungsmuster je Version */
   const AUSRICHT = {
     1: [], 2: [6, 18], 3: [6, 22], 4: [6, 26], 5: [6, 30], 6: [6, 34],
     7: [6, 22, 38], 8: [6, 24, 42], 9: [6, 26, 46], 10: [6, 28, 50],
     11: [6, 30, 54], 12: [6, 32, 58], 13: [6, 34, 62],
+    14: [6, 26, 46, 66], 15: [6, 26, 48, 70],
   };
   const datenKapazitaet = (v) => { const t = M[v]; return t[1] * t[2] + t[3] * t[4]; };
 
@@ -301,7 +303,7 @@
   function matrix(text, maskeErzwingen) {
     const bytes = Array.from(new TextEncoder().encode(String(text)));
     let version = 0;
-    for (let v = 1; v <= 13; v++) {
+    for (let v = 1; v <= 15; v++) {
       const kopf = v <= 9 ? 8 : 16;
       if (bytes.length * 8 + 4 + kopf <= datenKapazitaet(v) * 8) { version = v; break; }
     }

@@ -39,12 +39,12 @@ const tausche = (de, en, n = 1) => {
 tausche('<html lang="de">', '<html lang="en">');
 tausche('<title>CARLON Equine Visite — die Praxis-Ansicht für Tierärzte &amp; Kliniken</title>',
         '<title>CARLON Equine Visite — the practice view for equine vets &amp; clinics</title>');
-tausche('content="CARLON Equine Visite — die browser-lokale Praxis-Ansicht für Tierärzte & Kliniken. Der Halter misst mit der CARLON Equine App, du liest den Verlauf: Triage nach Dringlichkeit, Abfahrroute, Befund-PDF. Auswertung im Browser, kein Konto, verschlüsselt unterwegs."',
-        'content="CARLON Equine Visite — the browser-local practice view for equine vets and clinics. The owner records with the CARLON Equine app, you read the trend: triage by urgency, route planning, findings PDF. Analysed in the browser, no account, encrypted in transit."');
+tausche(`content="CARLON Equine für Pferdepraxen und -kliniken: Die Halterin nimmt die Ruhe-HRV im Stall mit einem Polar-H10-Gurt auf, Sie sehen den Verlauf gegen die eigene Vorgeschichte des Pferds, mit Signalgüte, und planen Ihre Tour nach Strecke. Auswertung im Browser, kein Medizinprodukt."`,
+        `content="CARLON Equine for equine practices and clinics: the owner records resting HRV in the stable with a Polar H10 strap, you see the trend against the horse’s own history, with signal quality, and plan your round by distance. Analysis in the browser, not a medical device."`);
 tausche('<meta property="og:title" content="CARLON Equine – für Tierärzte & Kliniken">',
         '<meta property="og:title" content="CARLON Equine – for equine vets &amp; clinics">');
-tausche('<meta property="og:description" content="Betreuung, die nicht an der Stalltür endet. Der Halter misst, du liest den Verlauf, das Pferd wird früher erreicht — browser-lokal, Auswertung im Browser, nicht in der Cloud.">',
-        '<meta property="og:description" content="Care that does not stop at the stable door. The owner records, you read the trend, the horse is reached earlier — browser-local, analysed in the browser, not in the cloud.">');
+tausche(`<meta property="og:description" content="Die Tour geplant. Jedes Pferd mit seinem Verlauf. Die Halterin nimmt im Stall auf, Sie sehen den Verlauf mit Signalgüte — Auswertung im Browser, nicht in der Cloud.">`,
+        `<meta property="og:description" content="Your round, planned. Every horse with its trend. The owner records in the stable, you see the trend with signal quality — analysis in the browser, not in the cloud.">`);
 tausche('<meta property="og:url" content="https://vitalkultur.com/carlon-equine-visite/">',
         '<meta property="og:url" content="https://vitalkultur.com/carlon-equine-visite/en/">');
 tausche('<meta property="og:locale" content="de_DE">\n<meta property="og:locale:alternate" content="en_US">',
@@ -112,29 +112,30 @@ tausche("window.CARLON_LANG = localStorage.getItem('carlon.viewer.lang') || 'de'
 tausche('CARLON Equine Visite · für Tierärztinnen und Tierärzte',
         'CARLON Equine Visite · for veterinary surgeons');
 /* Dieselbe Zeile wie in der og:description — Identitaet, nicht Funktion. */
-tausche('Betreuung, die nicht an der Stalltür endet.',
-        'Care that does not stop at the stable door.');
-tausche(`Der Anruf sagt „irgendwie nicht fit". Die Messung, die Ihnen die Halterin aus dem
-      Stall schickt, sagt, wie weit dieses Pferd von <strong>seiner eigenen</strong>
-      Baseline abweicht — Sie entscheiden mit Datengrundlage, wer heute dran ist und
-      wer bis zur Kontrolle warten kann.`,
-`The phone call says “not quite right somehow”. The recording the owner sends you from
-      the stable says how far this horse deviates from <strong>its own</strong> baseline —
-      you decide on evidence who is up today and who can wait until the follow-up.`);
+tausche(`Die Tour geplant. Jedes Pferd mit seinem Verlauf.`,
+        `Your round, planned. Every horse with its trend.`);
+tausche(`Die Halterin nimmt im Stall in Ruhe auf, die Aufnahme kommt verschlüsselt zu Ihnen.
+      Vor dem Besuch sehen Sie, wie gut die Aufnahme ist und wie weit die Ruhe-HRV von
+      <strong>der eigenen</strong> Vorgeschichte dieses Pferds abweicht — und planen Ihre
+      Tour nach Strecke, Termin oder Ihrer eigenen Sortierung.`,
+        `The owner records in the stable at rest, and the recording reaches you encrypted.
+      Before the visit you see how good the recording is and how far the resting HRV deviates from
+      <strong>this horse’s own</strong> history — and plan your round by distance, appointment
+      or your own order.`);
 tausche('Cockpit mit 15&nbsp;Demo-Pferden öffnen →', 'Open the cockpit with 15&nbsp;demo horses →', 2);
 tausche('>Was es kostet<', '>What it costs<');
-tausche('Das Demo-Cockpit ist die vollständige Anwendung mit vollständigen Beispielverläufen — ohne Konto, ohne Installation. Nichts davon verlässt Ihren Browser.',
-        'The demo cockpit is the complete application with full example trends — no account, no installation. None of it leaves your browser.');
+tausche('Das Demo-Cockpit ist die vollständige Anwendung mit vollständigen Beispielverläufen — ohne Konto, ohne Installation. Nichts davon verlässt Ihren Browser von selbst.',
+        'The demo cockpit is the complete application with full example trends — no account, no installation. None of it leaves your browser on its own.');
 /* Hero-Belege + Visual (13.08.: φ-Split-Kopf) */
 tausche('<li><b>Gemessen im Stall,</b> in Ruhe — gegen die eigene Baseline dieses Pferds.</li>',
         '<li><b>Recorded in the stable,</b> at rest — against this horse’s own baseline.</li>');
-tausche('<li><b>Ausgewertet in Ihrem Browser</b> — Patientendaten erreichen uns nicht, ein AVV mit uns entfällt.</li>',
-        '<li><b>Analysed in your browser</b> — patient data never reaches us, so no data-processing agreement with us is needed.</li>');
-tausche('<li><b>Abrechenbar</b> — die Ferneinschätzung führt die GOT als Ziffer&nbsp;1, den Brief als Ziffer&nbsp;89.</li>',
-        '<li><b>Billable</b> — the German fee schedule (GOT) lists the remote assessment as item&nbsp;1, the letter as item&nbsp;89.</li>');
+tausche(`<li><b>Ausgewertet in Ihrem Browser</b> — Pferdedaten erreichen uns nicht — nach unserer Einschätzung ist deshalb kein AVV mit uns nötig.</li>`,
+        `<li><b>Analysed in your browser</b> — horse data never reaches us; in our assessment no data processing agreement with us is therefore needed.</li>`);
+tausche(`<li><b>Nachvollziehbar</b> — roher und bereinigter Wert nebeneinander, mit Signalgüte und Methodenversion.</li>`,
+        `<li><b>Traceable</b> — raw and cleaned value side by side, with signal quality and method version.</li>`);
 tausche('title="Demo-Cockpit öffnen"', 'title="Open the demo cockpit"');
-tausche(`alt="Pferde-Akte im Cockpit: Einstufung Stabil mit Begründung, Kernwerte RMSSD, Ruhe-HF, SDNN und DFA gegen die individuelle Baseline, Trainings-Readiness und Ferneinschätzung"`,
-        `alt="Horse record in the cockpit: classification Stable with reasoning, key values RMSSD, resting HR, SDNN and DFA against the individual baseline, training readiness and remote assessment"`);
+tausche(`alt="Pferde-Akte im Cockpit: Kernwerte RMSSD, Ruhe-HF, SDNN und DFA gegen die eigene Vorgeschichte des Pferds, mit Signalgüte und Verlauf"`,
+        `alt="Horse record in the cockpit: key values RMSSD, resting HR, SDNN and DFA against the horse’s own history, with signal quality and trend"`);
 // Fluss-Leiste im Hero (Stall → Praxis)
 tausche('<span class="hf-chip">Im Stall gemessen</span>', '<span class="hf-chip">Recorded in the stable</span>');
 tausche('<span class="hf-chip">In Ihrer Praxis gelesen</span>', '<span class="hf-chip">Read in your practice</span>');
@@ -150,36 +151,41 @@ tausche('Ruhe-HRV gibt es nur dort, wo Ruhe ist: im eigenen Stall.',
         'Resting HRV only exists where rest exists: in the horse’s own stable.');
 /* Die Abrechnungs-Karte (neu 13.08.2026) — das Geld-Argument stand bisher
    ganz unten auf der Seite. GOT-Ziffern werden GENANNT, nie verrechnet. */
-tausche('Die Ferneinschätzung ist abrechenbar', 'Remote assessment is billable');
-tausche(`Die Beratung ohne Untersuchung führt die <strong>GOT als Ziffer&nbsp;1</strong>, den
-         Tierarztbrief je angefangene 15&nbsp;Minuten als <strong>Ziffer&nbsp;89</strong>. Aus
-         einem Anruf ohne Datengrundlage wird eine dokumentierte Leistung mit einer.`,
-`German veterinary fee schedule (GOT) lists advice without examination as <strong>item&nbsp;1</strong>,
-         and the veterinary letter per started 15&nbsp;minutes as <strong>item&nbsp;89</strong>. A
-         phone call without a basis becomes a service with one.`);
+tausche(`Dokumentiert statt erinnert`,
+        `Documented, not remembered`);
+tausche(`Aufnahme, Messprotokoll und Ihre Notiz liegen zusammen in der Akte — als
+         Messwertbericht mit Ihrem Briefkopf oder als Export für Ihre Praxissoftware.`,
+        `Recording, measurement protocol and your note sit together in the record — as a
+         measurement report on your letterhead or as an export for your practice software.`);
 tausche('In der eigenen Box, zur gewohnten Zeit', 'Its own box, not an examination room');
-tausche('Aus „Können Sie mal draufschauen?" wird eine Messung',
-        'From “could you take a quick look?” to a measurement');
-tausche('Wiederholbar, ohne dass jemand fährt', 'Repeatable without anyone driving out');
+tausche(`Statt Handyvideo: eine standardisierte Aufnahme`,
+        `Instead of a phone video: a standardised recording`);
+tausche(`Wiederholbar unter gleichen Bedingungen`,
+        `Repeatable under the same conditions`);
 
 // Abschnitt 2 — Cockpit
 tausche('Was im Cockpit steht', 'What the cockpit shows');
-tausche('Erst die Reihenfolge. Dann die Zahlen, die sie begründen.', 'One glance, then the depth.');
-tausche(`Oben die Einstufung und der Wert, der sie ausgelöst hat. Darunter alles,
+tausche(`Erst der Überblick. Dann die Zahlen, auf denen er beruht.`,
+        `The overview first. Then the numbers it rests on.`);
+tausche(`Oben die Abweichung von der eigenen Vorgeschichte und der Wert, aus dem sie folgt. Darunter alles,
        was Sie zum Nachrechnen brauchen — nichts davon versteckt.`,
-`The classification at the top and the value that triggered it. Below it
+        `At the top the deviation from the horse’s own history and the value it follows from. Below it
        everything you need to check the maths — none of it hidden.`);
-tausche('<div class="f-k">Triage</div>', '<div class="f-k">Triage</div>');
-tausche('Vier Stufen, und daneben steht, welcher Wert sie ausgelöst hat.',
-        'Four levels, and next to each the value that triggered it.');
+tausche(`<div class="f-k">Übersicht</div>`,
+        `<div class="f-k">Overview</div>`);
+tausche(`Vier Abweichungsstufen, und daneben steht, aus welchem Wert sie folgen.`,
+        `Four deviation levels, and next to each the value it follows from.`);
 tausche('<div class="f-k">Die Akte</div>', '<div class="f-k">The record</div>');
 tausche('Alles, was Sie zum Nachrechnen brauchen — an einer Stelle.',
         'Everything you need to check the maths — in one place.');
-tausche('Einordnung mit Begründung', 'A classification with its reason');
+tausche(`Abweichung mit Begründung`,
+        `Deviation with its reason`);
 tausche('Signalgüte, bevor Sie deuten', 'Signal quality before interpretation');
-tausche('Atemwegs-Marker im Verlauf', 'Airway markers over time');
+tausche(`Atemmuster-Profil aus der Literatur`,
+        `Breathing-pattern profile from the literature`);
 tausche('Die üblichen Ansichten, in guter Auflösung', 'The familiar views, at proper resolution');
-tausche('Befund und Abrechnung an einer Stelle', 'Findings and billing in one place');
+tausche(`Messwertbericht und Dokumentation an einer Stelle`,
+        `Measurement report and documentation in one place`);
 tausche('Export ohne Sackgasse', 'Export without a dead end');
 
 // Abschnitt 3 — Wissenschaft
@@ -237,22 +243,22 @@ tausche('Nach einer Umstellung sichtbar', 'Visible after a change');
 
 // Abschnitt 5 — Anschluss
 tausche('>Anschluss<', '>Interoperability<');
-tausche('Der Befund geht in Ihre Praxissoftware, nicht in eine Sackgasse.',
-        'The findings do not stay inside our window.');
+tausche(`Die Daten gehen in Ihre Praxissoftware, nicht in eine Sackgasse.`,
+        `The data goes into your practice software, not into a dead end.`);
 
 // Abschnitt 6 — Arbeitstag
 tausche('>Ihr Arbeitstag<', '>Your working day<');
 tausche('Zwischen zwei Terminen liegt Ihr Fahrweg.', 'Between two appointments lies your drive.');
 /* (weiter unten im Rumpftext uebersetzt — hier waere es doppelt) */
 tausche('<div class="f-k">Tagesplan</div>', '<div class="f-k">Day plan</div>');
-tausche('Der Tag sortiert sich nach Dringlichkeit, nicht nach der Reihenfolge der Anrufe.',
-        'The day sorts itself by urgency, not by the order the calls came in.');
+tausche(`Die Tour plant sich nach Strecke und Termin — die Reihenfolge bestimmen Sie.`,
+        `The round plans itself by distance and appointment — you set the order.`);
 tausche('Karte &amp; Route — die Abfahrfolge, direkt an Google&nbsp;Maps übergeben, statt Adressen abzutippen.',
         'Map &amp; route — the departure order, handed straight to Google&nbsp;Maps instead of retyping addresses.');
 tausche('Kompakt — der ganze Tag auf einer Zeitachse, wenn es schnell gehen muss.',
         'Compact — the whole day on one timeline, when it has to be quick.');
-tausche('Verwaltung — Fahrtenbuch, Zeiterfassung, abgerechnete Ferneinschätzungen, als CSV heraus.',
-        'Administration — mileage log, time tracking, billed remote assessments, exported as CSV.');
+tausche(`Dokumentation — Fahrtenbuch, Zeiterfassung, erfasste Leistungen, als CSV heraus.`,
+        `Documentation — mileage log, time tracking, recorded services, exported as CSV.`);
 
 // Abschnitt 7 — Grenzen
 tausche('Grenzen, die wir selbst ziehen', 'Limits we draw ourselves');
@@ -273,14 +279,15 @@ tausche('An der Kasse für Praxen in Deutschland: 177,31&nbsp;€ im Monat bzw. 
         'At checkout for practices in Germany: €177.31 a month or €1,773.10 a year, each incl. 19% VAT.');
 tausche('Unbegrenzt Pferde, Aufnahmen und Verläufe', 'Unlimited horses, recordings and trends');
 tausche('Ein Standort, alle Geräte — ohne Zuschlag je Gerät', 'All staff, all devices of the business');
-tausche('Befundbericht mit eigenem Briefkopf', 'Findings report on your own letterhead');
+tausche(`Messwertbericht mit eigenem Briefkopf`,
+        `Measurement report on your own letterhead`);
 tausche('Export als JSON, CSV, Kubios und FHIR&nbsp;R5', 'Export as JSON, CSV, Kubios and FHIR&nbsp;R5');
-tausche('Monatlich kündbar zum Ende der Abrechnungsperiode', 'Cancellable monthly, effective at the end of the billing period');
+tausche('Monatsabo monatlich kündbar, Jahresabo zum Ende der Laufzeit', 'Monthly plan cancellable monthly, annual plan at the end of its term');
 
 // Abschnitt 9 — Demo
 tausche('Bevor Sie irgendetwas entscheiden', 'Before you decide anything');
-tausche('Fünfzehn Demo-Pferde. Echte Verläufe. Kein Konto.',
-        'Fifteen demo horses. Real trends. No account.');
+tausche('Fünfzehn Demo-Pferde. Vollständige Beispielverläufe. Kein Konto.',
+        'Fifteen demo horses. Complete example trends. No account.');
 tausche('Läuft im Browser. Nichts wird installiert, nichts übertragen, nichts angelegt.',
         'Runs in the browser. Nothing installed, nothing transmitted, nothing created.');
 
@@ -290,7 +297,7 @@ tausche(`Wer in der Beta mitgestaltet, behält seinen Preis als
          Gründungspartner. Ihre Anmeldung liest der Entwickler selbst — und meldet
          sich persönlich zurück, meist am selben Tag.`,
 `Take part in the beta and you keep your founding-partner price. The developer
-         reads your registration himself — and replies personally, usually the
+         reads every registration personally — and replies, usually the
          same day.`);
 tausche('> Ich bin mobil unterwegs<', '> I work ambulatory<');
 tausche('> Wir sind eine Klinik<', '> We are a clinic<');
@@ -327,58 +334,30 @@ tausche('Für Tierärzte &amp; Kliniken · Teil von CARLON Equine',
         'For equine vets &amp; clinics · part of CARLON Equine');
 tausche('Made in Iffezheim · Deutschland', 'Made in Iffezheim · Germany', 2);   // data-de + Text
 tausche('CARLON Equine (die App)', 'CARLON Equine (the app)', 2);   // data-de + Text
-tausche('Therapie &amp; Forschung', 'Therapy &amp; research', 2);   // data-de + Text
-
-
-
-/* ── RUMPFTEXT ────────────────────────────────────────────────────────
-   Wortgenau aus der deutschen Seite gezogen, nicht abgetippt. Aendert
-   sich dort ein Zeichen, findet der Block hier nicht mehr statt und der
-   Bau bricht ab — genau so soll es sein. */
-tausche(`
-      Transport, fremde Umgebung, fremde Menschen — jeder dieser Reize verschiebt genau die
-      autonome Balance, die Sie beurteilen wollen. Der Messort ist bei der Ruhe-HRV keine
-      Nebensache, sondern Teil der Methode: Die Atemwegs-Auswertung verlangt
-      <strong>mindestens sieben Minuten Ruhe in gewohnter Umgebung</strong> — darunter gibt
-      sie kein Ergebnis aus. Nach Verladung
-      und Fahrt ist diese Bedingung systematisch nicht erfüllt — in der eigenen Box ist sie
-      es jeden Tag.
-    `,
-        `
-      Transport, unfamiliar surroundings, unfamiliar people — each of these stimuli shifts
-      exactly the autonomic balance you want to assess. For resting HRV the measurement
-      site is not a side issue but part of the method: the airway analysis requires
-      <strong>at least seven minutes of rest in familiar surroundings</strong> — below that
-      it returns no result. After
-      loading and a journey this condition is systematically unmet — in the horse's own
-      box it is met every day.
-    `);
+tausche(`Kohärenz &amp; Forschung`,
+        `Coherence &amp; research`, 2);
 /* Der Atemwegs-Absatz ist neu (13.08.2026) — und er ist das staerkste
    Argument der Seite: bei Asthma IST die Umgebung der Gegenstand. */
 tausche(`
-      <strong>Beim equinen Asthma ist das nicht nur eine Bedingung, sondern der ganze
-      Punkt.</strong> Was das Pferd belastet, steht im Stall: Einstreu, Heu, Lüftung. Eine
-      Messung in der Klinik nimmt ausgerechnet die Umgebung heraus, um die es geht. Zu Hause,
-      wiederholt über Wochen, sehen Sie stattdessen, was Sie wirklich wissen wollen — ob die
-      Umstellung gewirkt hat.
+      <strong>Gleiche Box, gleiche Zeit, gleiches Protokoll.</strong> Nur unter gewohnten
+      Bedingungen sind zwei Aufnahmen vergleichbar. Zu Hause, wiederholt über Wochen, entsteht
+      so ein Verlauf, der zeigt, wie sich die Ruhe-HRV dieses Pferds nach einer Umstellung in
+      Haltung, Fütterung oder Training entwickelt — die Einordnung bleibt bei Ihnen.
     `,
         `
-      <strong>For equine asthma this is not merely a condition — it is the entire
-      point.</strong> What burdens the horse is in the stable: bedding, hay, ventilation. A
-      recording taken at the clinic removes precisely the environment in question. At home,
-      repeated over weeks, you see instead what you actually want to know — whether the
-      change worked.
+      <strong>Same box, same time, same protocol.</strong> Only under familiar
+      conditions are two recordings comparable. At home, repeated over weeks, this builds a
+      trend that shows how this horse’s resting HRV develops after a change in
+      housing, feeding or training — the interpretation stays with you.
     `);
 tausche(`Die Halterin legt den Gurt an, das Pferd steht wie immer. Kein Transport, keine
          Aufregung durch Fremde, kein sperriges Gerät im Weg.`,
         `The owner puts on the belt, the horse stands as it always does. No transport, no
          excitement from strangers, no bulky equipment in the way.`);
-tausche(`Statt Anruf und Handyvideo schickt die Halterin eine standardisierte Aufnahme
-         samt Messprotokoll. Sie öffnen sie, wenn Sie Zeit haben — und sehen vorher,
-         wie dringend es ist.`,
-        `Instead of a phone call and a shaky video, the owner sends a standardised
-         recording with its measurement report. You open it when you have time — and
-         see beforehand how urgent it is.`);
+tausche(`Die Halterin schickt eine Aufnahme samt Messprotokoll. Sie öffnen sie, wenn es in
+         Ihre Planung passt — mit Signalgüte und dem Vergleich zur eigenen Vorgeschichte des Pferds.`,
+        `The owner sends a recording with its measurement protocol. You open it when it fits
+         your planning — with signal quality and the comparison to the horse’s own history.`);
 
 /* ── 2b · DIE MESSSTATION (neu 13.08.2026) ────────────────────────────
    Der ganze Abschnitt ist neu. Ohne diese Bloecke bliebe er auf der
@@ -408,15 +387,15 @@ tausche(`Es gibt <strong>nichts zu installieren</strong>. Die Halterin öffnet I
 tausche(`Bei Ihnen kommt kein Screenshot an, sondern ein Datensatz: alle Schlagabstände im
       Rohzustand, die daraus berechneten Kennwerte und die Signalgüte dazu. Sie sehen also
       nicht nur eine Zahl, sondern auch, <strong>wie sehr Sie ihr trauen können</strong>.
-      Ins Cockpit kommt die Datei mit einem Handgriff — hineinziehen, fertig: Signalgüte,
-      Baseline-Abgleich und Einstufung stehen sofort da.`,
-`What reaches you is not a screenshot but a dataset: every beat-to-beat interval in its raw
-      state, the metrics derived from it, and the signal quality alongside. So you see not
-      just a number, but also <strong>how far you can trust it</strong>.
-      Into the cockpit the file goes with one motion — drag it in, done: signal quality,
-      baseline comparison and classification are there at once.`);
-tausche('Der Aushang führt hierher. Ein Feld für den Pferdenamen, ein Knopf zum Gurt — mehr steht nicht im Weg.',
-        'The poster leads here. One field for the horse\'s name, one button for the belt — nothing else in the way.');
+      Ins Cockpit kommt die Datei mit einem Handgriff — hineinziehen, fertig: Signalgüte
+      und der Vergleich mit der eigenen Vorgeschichte stehen sofort da.`,
+        `What reaches you is not a screenshot but a dataset: every beat interval in its
+      raw state, the measures computed from it and the signal quality alongside. So you see
+      not just a number but also <strong>how far you can trust it</strong>.
+      The file goes into the cockpit with one move — drag it in, done: signal quality
+      and the comparison with the horse’s own history are there at once.`);
+tausche('Der Aushang führt hierher. Pferdename, zwei Tipps für Ort und Ruhezeit, ein Knopf zum Gurt — ohne Konto.',
+        'The poster leads here. Horse name, two taps for place and rest time, one button for the belt — no account.');
 tausche('Während der Aufnahme sieht sie, ob das Signal trägt — nicht erst hinterher.',
         'During the recording she can see whether the signal holds — not only afterwards.');
 tausche('Das Ergebnis, sofort. <strong>Zwei RMSSD-Werte statt einem</strong> — der rohe und der über nur unauffällige Schlagpaare.',
@@ -467,66 +446,60 @@ tausche('alt="RR-Tachogramm über 324 Schläge und darunter die aus der Herzschl
         'alt="RR tachogram over 324 beats and below it the breathing curve derived from heartbeat modulation"');
 tausche('alt="Der Sende-Knopf An die Praxis senden mit dem Hinweis, dass die Datei auf dem Gerät entsteht und es auf einem selbst gewählten Weg verlässt"',
         'alt="The send button reading Send to the practice, with the note that the file is created on the device and leaves it by a route of your choosing"');
-tausche(`Eine Kontrolle in zwei Wochen kostet niemanden eine Anfahrt. Genau daraus entsteht
-         der Verlauf, den eine Momentaufnahme nie liefern kann.`,
-        `A follow-up in two weeks costs nobody a drive. That is exactly how the trend comes
-         about that a snapshot can never deliver.`);
+tausche(`Die nächste Aufnahme entsteht in derselben Box nach demselben Protokoll. Genau daraus
+         entsteht der Verlauf, den eine Momentaufnahme nie liefern kann.`,
+        `The next recording is made in the same box under the same protocol. Exactly that
+         builds the trend a snapshot can never provide.`);
 tausche(`<b>Nach Abweichung sortiert</b>, nicht nach Eingang — jedes Pferd gegen seine eigene Baseline, nicht gegen eine Tabelle.`,
         `<b>Sorted by deviation</b>, not by arrival — every horse against its own baseline, not against a table.`);
-tausche(`<b>Der Grund steht dabei.</b> Eine Einstufung ohne den auslösenden Wert wäre eine Meinung.`,
-        `<b>The reason is shown with it.</b> A classification without the triggering value would be an opinion.`);
+tausche(`<b>Der Wert steht dabei.</b> Eine Stufe ohne den zugrunde liegenden Wert wäre eine Meinung — sie beschreibt Messwerte, keinen Gesundheitszustand.`,
+        `<b>The value is shown alongside.</b> A level without its underlying value would be an opinion — it describes measurements, not a state of health.`);
 tausche(`<b>Die Halterin ist einen Tipp entfernt</b>, direkt von der Karte aus.`,
         `<b>The owner is one tap away</b>, straight from the card.`);
 tausche(`<b>Werte gegen die eigene Baseline</b> des Pferds, als Hinweis. Die Deutung bleibt bei Ihnen.`,
         `<b>Values against the horse's own baseline</b>, as an indication. The interpretation stays with you.`);
 tausche(`<b>Signalgüte vor der Zahl</b>: wie viele Schlagpaare tragen die Auswertung überhaupt.`,
         `<b>Signal quality before the number</b>: how many beat pairs actually carry the analysis.`);
-tausche(`<b>Ferneinschätzung erfassen und abrechnen</b>, ohne die Akte zu verlassen.`,
-        `<b>Record and bill the remote assessment</b> without leaving the file.`);
-tausche(`Vier Stufen von stabil bis kritisch, immer mit dem Wert, der sie ausgelöst hat —
-           und mit der Abweichung von der Baseline <em>dieses</em> Pferds, nicht von einem
-           Lehrbuchwert.`,
-        `Four levels from stable to critical, always with the value that triggered it —
-           and with the deviation from <em>this</em> horse's baseline, not from a textbook
-           figure.`);
+tausche(`<b>Beobachtungsnotiz und Messwertbericht</b>, ohne die Akte zu verlassen.`,
+        `<b>Observation note and measurement report</b>, without leaving the record.`);
+tausche(`Vier Stufen von „im Eigenbereich“ bis „deutliche Abweichung“, immer mit dem Wert, aus dem sie folgen —
+           und mit der Abweichung von der Baseline <em>dieses</em> Pferds, nicht von einem&nbsp;Lehrbuchwert.`,
+        `Four levels from “within own range” to “marked deviation”, always with the value they follow from —
+           and with the deviation from <em>this</em> horse’s baseline, not from a&nbsp;textbook value.`);
 tausche(`Anteil auswertbarer Schlagpaare, Artefaktrate, korrigierte AV-Block-Pausen.
            Eine Aufnahme, die nichts trägt, sagt Ihnen das — statt eine Zahl zu zeigen.`,
         `Share of usable beat pairs, artefact rate, corrected AV-block pauses.
            A recording that carries nothing tells you so — instead of showing a number.`);
-tausche(`HRV-basierte Marker mit ihren Schwellen, einzeln aufgeführt. Bezugsarbeit ist
-           Nyerges-Bohák 2025 (Equine Veterinary Journal, n = 40): 20 Pferde mit schwerem
-           Asthma, BAL-referenziert, gegen 20 unauffällige Kontrollen. Sie berichtet
-           Gruppenunterschiede, <strong>keine Schwellenwerte</strong> — unsere liegen mittig
-           dazwischen und sind damit unsere eigene Ableitung. Ein
-           <strong>Beobachtungshinweis</strong>, ausdrücklich keine Diagnose: Die
-           BAL-Zytologie bleibt der Goldstandard.`,
-        `HRV-based markers with their thresholds, listed individually. The reference study is
-           Nyerges-Bohák 2025 (Equine Veterinary Journal, n = 40): 20 horses with severe
-           asthma, BAL-referenced, against 20 unremarkable controls. It reports group
-           differences, <strong>no threshold values</strong> — ours sit midway between them
-           and are therefore our own derivation. An
-           <strong>observational note</strong>, explicitly not a diagnosis: BAL
-           cytology remains the gold standard.`);
+tausche(`Fünf HRV-Kennwerte, einzeln aufgeführt, verglichen mit den Gruppenmitteln einer
+           veröffentlichten Vergleichsstudie (Nyerges-Bohák 2025, Equine Veterinary Journal, n&nbsp;=&nbsp;40).
+           Die Studie berichtet Gruppenunterschiede, <strong>keine Schwellenwerte</strong> — unsere
+           Vergleichsgrenzen sind eine eigene Ableitung, offen dokumentiert in der Methodik.
+           Ein Messmuster, <strong>keine gesundheitliche Einstufung</strong>.`,
+        `Five HRV measures, listed individually, compared with the group means of a
+           published comparison study (Nyerges-Bohák 2025, Equine Veterinary Journal, n&nbsp;=&nbsp;40).
+           The study reports group differences, <strong>no threshold values</strong> — our
+           comparison limits are our own derivation, documented openly in the methodology.
+           A measurement pattern, <strong>not a health classification</strong>.`);
 tausche(`Tachogramm, Poincaré, Spektrum, DFA, Histogramm — dieselben Darstellungen wie
            in der iOS-App, im Vollbild neu gezeichnet statt hochskaliert.`,
         `Tachogram, Poincaré, spectrum, DFA, histogram — the same views as in the iOS app,
            redrawn at full size rather than scaled up.`);
-tausche(`Befundbericht mit Ihrem Briefkopf, Rückmeldung an die Halterin, und eine
-           Übersicht, was noch offen ist.`,
-        `A findings report on your own letterhead, feedback to the owner, and an overview
-           of what is still open.`);
+tausche(`Messwertbericht mit Ihrem Briefkopf, Rückmeldung an die Halterin, und eine
+           Übersicht über Leistungen, Fahrten und Zeiten.`,
+        `A measurement report on your own letterhead, feedback to the owner, and an overview
+           of services, trips and times.`);
 tausche(`JSON, CSV, Kubios-kompatibel — und <strong>FHIR&nbsp;R5</strong> mit
            LOINC-Codes für die Praxissoftware.`,
         `JSON, CSV, Kubios-compatible — and <strong>FHIR&nbsp;R5</strong> with
            LOINC codes for your practice software.`);
 tausche(`
       Ein ruhendes Pferd zeigt AV-Block-Pausen — physiologisch, kein Befund. Rechnet man
-      sie roh mit, steigen SDNN und RMSSD dramatisch, und die Marker, die bei
+      sie roh mit, steigen SDNN und RMSSD dramatisch, und die Kennwerte, die bei
       <em>kleinen</em> Werten anschlagen, kippen ins Gegenteil.
     `,
         `
       A resting horse shows AV-block pauses — physiological, not a finding. Count them in
-      raw and SDNN and RMSSD rise dramatically, and the markers that respond to
+      raw and SDNN and RMSSD rise dramatically, and the measures that respond to
       <em>small</em> values flip into the opposite.
     `);
 tausche(`AV-Block-Pausen, Bewegungs-Artefakte, unplausible Schläge — die Auswertung
@@ -544,13 +517,13 @@ tausche(`AV-Block-Pausen, Bewegungs-Artefakte, unplausible Schläge — die Ausw
          it instead of claiming a correction that never happened.
          <a href="/carlon-equine/methodik.html">Every stage with its threshold →</a>`);
 tausche(`Ungefiltert wirkt ein ruhendes Pferd systematisch auffälliger, als es ist.
-         Eine Triage, die zu oft warnt, ist so wertlos wie eine, die schweigt —
-         deshalb wird erst bereinigt, dann eingestuft. Damit ein auffälliges Pferd
-         auffällt, weil es das Pferd ist. Nicht die Messung.`,
+         Eine Übersicht, die zu oft Abweichungen zeigt, ist so wertlos wie eine, die keine zeigt —
+         deshalb wird erst bereinigt, dann verglichen. Damit eine Abweichung
+         auffällt, weil sie im Pferd liegt. Nicht in der Messung.`,
         `Unfiltered, a resting horse looks systematically more conspicuous than it is.
-         A triage that warns too often is as worthless as one that stays silent —
-         so the data is cleaned first, classified second. So that a conspicuous horse
-         stands out because of the horse. Not the measurement.`);
+         An overview that shows deviations too often is as worthless as one that shows none —
+         so the data is cleaned first, compared second. So that a deviation
+         stands out because it lies in the horse. Not in the measurement.`);
 tausche(`Zu wenige Schläge, zu kurz, zu viele Artefakte — dann steht „Datengrundlage zu
          klein" und kein Urteil. Ein Werkzeug, das immer etwas sagt, ist kein Werkzeug.`,
         `Too few beats, too short, too many artefacts — then it says “insufficient data”
@@ -570,12 +543,12 @@ tausche(`Jede neue Aufnahme reiht sich ein. Sie sehen, ob sich die Marker verbes
         `Every new recording joins the line. You see whether the markers improve, hold or
            deteriorate — with the time window, the number of measurements and the change
            as a figure.`);
-tausche(`Haltung, Fütterung, Management, Rekonvaleszenz: Die Kontrollmessung kostet
-           keine Anfahrt, also findet sie auch statt. Als Beobachtung — die Bewertung
+tausche(`Haltung, Fütterung, Management, Training: Die nächste Aufnahme entsteht im
+           eigenen Stall nach demselben Protokoll. Als Beobachtung — die Bewertung
            bleibt bei Ihnen.`,
-        `Housing, feeding, management, convalescence: the follow-up measurement costs no
-           drive, so it actually happens. As an observation — the assessment stays with
-           you.`);
+        `Housing, feeding, management, training: the next recording is made in the
+           horse’s own stable under the same protocol. As an observation — the assessment
+           stays with you.`);
 tausche(`
       Jede Aufnahme lässt sich als <strong>FHIR&nbsp;R5</strong> ausgeben — als
       <code>Observation</code> mit LOINC-Codes und UCUM-Einheiten, das Pferd als
@@ -595,25 +568,21 @@ tausche(`Die Auswertung ist die eine Hälfte. Die andere ist der Tag, an dem
        Monat überlebt.`,
         `The analysis is one half. The other is the day you have to fit it into — and that
        is what decides whether a tool survives its first month.`);
-tausche(`<b>Die Einstufung ordnet die Stopps.</b> Was Sie anders sehen, schieben Sie per Greifpunkt um — die Software schlägt vor, sie entscheidet nicht.`,
-        `<b>The classification orders the stops.</b> Where you see it differently you drag the card — the software suggests, it does not decide.`);
+tausche(`<b>Standard ist die kürzeste Strecke.</b> Auf Wunsch sortieren Sie Pferde mit deutlicher Abweichung nach vorn, per Greifpunkt verschieben Sie jeden Stopp — die Software ordnet, Sie entscheiden.`,
+        `<b>The default is the shortest route.</b> If you wish, you move horses with a marked deviation to the front, and drag any stop by its handle — the software arranges, you decide.`);
 tausche(`<b>Nichts davon verlässt Ihr Gerät von selbst</b> — erst Ihr Tipp übergibt
             die Route an die Karten-App.`,
         `<b>None of it leaves your device on its own</b> — only your tap hands
             the route to the maps app.`);
 tausche(`
-      Die schriftliche oder fernmündliche Beratung ohne Untersuchung ist in der
-      <strong>GOT als Ziffer&nbsp;1</strong> geführt, der Tierarztbrief je angefangene
-      15&nbsp;Minuten als <strong>Ziffer&nbsp;89</strong>. Was das bei Ihrem Satz ergibt,
-      rechnen Sie besser als wir — CARLON erfasst die Ferneinschätzung nur an der Stelle,
-      an der sie entsteht, und gibt sie als CSV heraus.
+      CARLON erfasst Ihre Leistungen, Fahrten und Zeiten dort, wo sie entstehen, und gibt sie
+      als CSV heraus. Was Sie davon wie abrechnen, entscheiden Sie nach der tatsächlich
+      erbrachten Leistung — die Software rechnet nicht ab und verspricht keinen Erlös.
     `,
         `
-      Written or telephone advice without examination is listed in the German veterinary
-      fee schedule (GOT) as <strong>item&nbsp;1</strong>, the veterinary letter per started
-      15&nbsp;minutes as <strong>item&nbsp;89</strong>. What that comes to at your rate you
-      can work out better than we can — CARLON only records the remote assessment where it
-      arises, and exports it as CSV.
+      CARLON records your services, trips and times where they arise, and exports them
+      as CSV. What you invoice and how is your decision, based on the work actually
+      done — the software does not invoice and promises no revenue.
     `);
 tausche(`Die Software zeigt Messwerte, Signalqualität, Verlauf und Abweichung. Die
            medizinische Deutung bleibt vollständig bei Ihnen. CARLON Equine Visite ist
@@ -625,12 +594,12 @@ tausche(`Auch wenn ein Verlauf eindeutig aussieht: Ob etwas geändert wird, steh
            auf dem Schirm. Das ist Ihre Entscheidung, nicht die einer Kennzahl.`,
         `Even when a trend looks unambiguous: whether anything is changed appears nowhere
            on the screen. That is your decision, not a metric's.`);
-tausche(`Ihre Patienten liegen im Speicher Ihres Geräts. Wir haben keinen Zugriff und
+tausche(`Ihre Pferdedaten liegen im Speicher Ihres Geräts. Wir haben keinen Zugriff und
            könnten sie auch nicht löschen. Die Aufnahme der Halterin läuft gar nicht erst
            über uns: Sie schickt Ihnen eine Datei — geöffnet über Ihren Mess-Link, ist sie
            von der ersten Sekunde an für Ihre Praxis verschlüsselt.`,
-        `Your patients live in your device's storage. We have no access and could not
-           delete them either. The owner's recording never passes through us at all: she
+        `Your horse data lives in your device's storage. We have no access and could not
+           delete it either. The owner's recording never passes through us at all: she
            sends you a file — opened via your measuring link, it is encrypted for your
            practice from the very first second.`);
 tausche(`Eine zugeschickte Datei ist kein Anruf. Bei akuten Beschwerden gilt, was immer
@@ -650,24 +619,15 @@ tausche(`
 /* (Der Absatz mit dem Angebot steht weiter unten in der praezisierten
    Fassung — hier waere er doppelt.) */
 tausche(`
-      Zum Einordnen: Der Jahrespreis liegt in der Größenordnung eines einzelnen
-      Praxisbesuchs mit Anfahrt. Ob sich das trägt, entscheiden Sie am besten an Ihren
-      eigenen Zahlen — nicht an unseren.
-    `,
-        `
-      For scale: the annual price is in the region of a single practice visit including the
-      drive. Whether that pays off is best decided against your own figures — not ours.
-    `);
-tausche(`
       Das Demo-Cockpit ist nicht ein Video und keine Bildstrecke, sondern die vollständige
-      Anwendung. Öffnen Sie eine Akte, drehen Sie an den Ansichten, drucken Sie einen
-      Befund. Ein Pferd im Bestand zeigt einen Abwärtsverlauf über vier Wochen — sehen Sie
-      selbst, ab wann er auffällt.
+      Anwendung. Öffnen Sie eine Akte, drehen Sie an den Ansichten, erstellen Sie einen
+      Messwertbericht. Ein Pferd im Bestand zeigt einen Abwärtsverlauf über vier Wochen — sehen Sie
+      selbst, ab wann er sichtbar wird.
     `,
         `
       The demo cockpit is not a video and not a slideshow, but the complete application.
-      Open a file, work the views, print a findings report. One horse in the list shows a
-      downward trend over four weeks — see for yourself from when it becomes noticeable.
+      Open a record, work the views, create a measurement report. One horse in the list shows a
+      downward trend over four weeks — see for yourself from when it becomes visible.
     `);
 tausche(`Nein. CARLON bereitet Verlaufsdaten auf und hilft bei der Reihenfolge. Ob eine
            klinische Untersuchung, weitere Diagnostik oder eine Behandlung nötig ist,
@@ -720,8 +680,8 @@ tausche('"applicationSubCategory": "Veterinärmedizinische Praxis-Software"',
         '"applicationSubCategory": "Veterinary practice software"');
 tausche('"operatingSystem": "Web (Chrome, Edge, Safari)"',
         '"operatingSystem": "Web (Chrome, Edge, Safari)"');
-tausche('"description": "Browser-lokale Praxis-Ansicht für Pferdetierärzte und Kliniken: Triage nach biometrischer Dringlichkeit, Verlauf über Wochen, Abfahrroute, Befundbericht und Export als FHIR R5. Kein Medizinprodukt, keine Diagnose."',
-        '"description": "Browser-local practice view for equine vets and clinics: triage by biometric urgency, trends over weeks, route planning, findings report and export as FHIR R5. Not a medical device, not a diagnosis."');
+tausche(`"description": "Browser-Werkzeug für Pferdepraxen und -kliniken: Tourenplanung, Ruhe-HRV-Verlauf je Pferd gegen die eigene Vorgeschichte, Signalgüte, Messwertbericht und Export als FHIR R5. Kein Medizinprodukt, keine Diagnose."`,
+        `"description": "Browser tool for equine practices and clinics: round planning, resting HRV trend per horse against its own history, signal quality, measurement report and export as FHIR R5. Not a medical device, not a diagnosis."`);
 tausche('"audienceType": "Tierärztinnen und Tierärzte, Pferdekliniken"',
         '"audienceType": "Equine veterinarians and equine clinics"');
 tausche('"text": "Nein. CARLON bereitet Verlaufsdaten auf und hilft bei der Reihenfolge. Ob eine klinische Untersuchung, weitere Diagnostik oder eine Behandlung nötig ist, entscheiden ausschließlich Sie."',
@@ -744,26 +704,22 @@ tausche(`Jede Aufnahme bringt ihr Messprotokoll mit: Anteil auswertbarer Schlagp
            with it: every single beat interval.`);
 tausche('"text": "Jede Aufnahme bringt ihr Messprotokoll mit: Anteil auswertbarer Schlagpaare, Artefaktrate, Sensor, Zeitauflösung. Eine Aufnahme, die nichts trägt, wird genau so ausgewiesen — Sie deuten nie blind. Und die Rohdaten liegen bei: jeder einzelne Schlagabstand."',
         '"text": "Every recording carries its own measurement report: share of usable beat pairs, artefact rate, sensor, timing resolution. A recording that carries nothing is flagged as exactly that — you never interpret blind. And the raw data comes with it: every single beat interval."');
-tausche('Welche Evidenz steht hinter den Atemwegs-Markern?',
-        'What evidence sits behind the airway markers?', 2);
-tausche(`Bezugsarbeit ist Nyerges-Bohák 2025 (Equine Veterinary Journal, n = 40):
-           20 Pferde mit schwerem Asthma, BAL-referenziert, gegen 20 unauffällige
-           Kontrollen. Die Arbeit berichtet Gruppenunterschiede und nennt SD2, SDNN, TINN
-           und SD2/SD1 als die trennstärkeren Größen — einen Schwellenwert enthält sie
-           nicht. Unsere Schwellen liegen mittig zwischen ihren Gruppenmitteln; das ist
-           eine eigene Ableitung, kein Literaturwert, und jede Schwelle steht einzeln da.
-           Die BAL-Zytologie bleibt der Goldstandard — der Verlauf ersetzt sie nicht, er
-           begründet, wann sie ansteht.`,
-        `The reference study is Nyerges-Bohák 2025 (Equine Veterinary Journal, n = 40):
-           20 horses with severe asthma, BAL-referenced, against 20 unremarkable controls.
-           The study reports group differences and names SD2, SDNN, TINN and SD2/SD1 as
-           the more discriminating measures — it contains no threshold value. Ours sit
-           midway between its group means; that is our own derivation, not a value from
-           the literature, and every threshold is listed individually. BAL cytology
-           remains the gold standard — the trend does not replace it, it substantiates
-           when it is due.`);
-tausche('"text": "Bezugsarbeit ist Nyerges-Bohák 2025 (Equine Veterinary Journal, n = 40): 20 Pferde mit schwerem Asthma, BAL-referenziert, gegen 20 unauffällige Kontrollen. Die Arbeit berichtet Gruppenunterschiede und nennt SD2, SDNN, TINN und SD2/SD1 als die trennstärkeren Größen — einen Schwellenwert enthält sie nicht. Unsere Schwellen liegen mittig zwischen ihren Gruppenmitteln; das ist eine eigene Ableitung, kein Literaturwert, und jede Schwelle steht einzeln da. Die BAL-Zytologie bleibt der Goldstandard — der Verlauf ersetzt sie nicht, er begründet, wann sie ansteht."',
-        '"text": "The reference study is Nyerges-Bohák 2025 (Equine Veterinary Journal, n = 40): 20 horses with severe asthma, BAL-referenced, against 20 unremarkable controls. The study reports group differences and names SD2, SDNN, TINN and SD2/SD1 as the more discriminating measures — it contains no threshold value. Ours sit midway between its group means; that is our own derivation, not a value from the literature, and every threshold is listed individually. BAL cytology remains the gold standard — the trend does not replace it, it substantiates when it is due."');
+tausche(`Worauf beruht das Atemmuster-Profil?`,
+        `What is the breathing-pattern profile based on?`, 2);
+tausche(`Auf einer veröffentlichten Vergleichsstudie (Nyerges-Bohák 2025, Equine Veterinary
+           Journal, n = 40), die Gruppenunterschiede in SD2, SDNN, TINN und SD2/SD1 berichtet —
+           einen Schwellenwert enthält sie nicht. Unsere Vergleichsgrenzen liegen zwischen ihren
+           Gruppenmitteln; das ist eine eigene Ableitung, kein Literaturwert, und jede Grenze
+           steht einzeln in der Methodik. Das Profil beschreibt ein Messmuster — es stellt
+           nichts fest und ersetzt keine Untersuchung.`,
+        `On a published comparison study (Nyerges-Bohák 2025, Equine Veterinary
+           Journal, n = 40) that reports group differences in SD2, SDNN, TINN and SD2/SD1 —
+           it contains no threshold value. Our comparison limits sit between its group
+           means; that is our own derivation, not a value from the literature, and every limit
+           is listed individually in the methodology. The profile describes a measurement
+           pattern — it establishes nothing and replaces no examination.`);
+tausche(`"text": "Auf einer veröffentlichten Vergleichsstudie (Nyerges-Bohák 2025, Equine Veterinary Journal, n = 40), die Gruppenunterschiede in SD2, SDNN, TINN und SD2/SD1 berichtet — einen Schwellenwert enthält sie nicht. Unsere Vergleichsgrenzen liegen zwischen ihren Gruppenmitteln; das ist eine eigene Ableitung, kein Literaturwert, und jede Grenze steht einzeln in der Methodik. Das Profil beschreibt ein Messmuster — es stellt nichts fest und ersetzt keine Untersuchung."`,
+        `"text": "On a published comparison study (Nyerges-Bohák 2025, Equine Veterinary Journal, n = 40) that reports group differences in SD2, SDNN, TINN and SD2/SD1 — it contains no threshold value. Our comparison limits sit between its group means; that is our own derivation, not a value from the literature, and every limit is listed individually in the methodology. The profile describes a measurement pattern — it establishes nothing and replaces no examination."`);
 tausche('"text": "Die Anwendung wechselt in einen funktionsreduzierten Modus. Ihre Daten bleiben auf dem Gerät und lassen sich weiterhin öffnen und exportieren. Wir könnten sie gar nicht löschen — sie liegen bei Ihnen."',
         '"text": "The application switches to a reduced mode. Your data stays on the device and can still be opened and exported. We could not delete it — it is with you."');
 tausche('"text": "Nein. Das Cockpit läuft vollständig in Ihrem Browser, und auch die Aufnahme der Halterin erreicht uns nicht: Ihre Messstation legt eine Datei auf ihrem eigenen Gerät an, die sie Ihnen selbst schickt. Es gibt keinen Zwischenspeicher bei uns — und damit nichts, worüber ein Auftragsverarbeitungsvertrag zu schließen wäre."',
@@ -792,20 +748,12 @@ tausche('>Muster-Bericht als PDF<', '>Sample report (PDF)<');
 /* Die Nutzen-Schwelle vor dem Preis (15.08.2026). GOT-Ziffern bleiben
    auch auf Englisch stehen — sie sind der deutsche Gebuehrenrahmen und
    werden nicht uebersetzt, nur erklaert. */
-tausche(`<strong>Ab wann er sich trägt, rechnen Sie in einem Satz nach.</strong> Eine einzige
-      Anfahrt, die durch eine Fernkontrolle entfällt, liegt je nach Strecke in der
-      Größenordnung des halben bis ganzen Monatsbeitrags. Kommt eine abrechenbare
-      Ferneinschätzung dazu — die GOT führt die Beratung ohne Untersuchung als Ziffer&nbsp;1,
-      den Tierarztbrief als Ziffer&nbsp;89 —, trägt sich der Monat aus Leistungen, die vorher
-      gar nicht stattgefunden hätten. Vergleichbare Telemetrie im Pferdesport wird
-      <em>je Pferd</em> abgerechnet; hier zahlen Sie einmal für den Betrieb.`,
-`<strong>You can work out where it pays for itself in one sentence.</strong> A single
-      drive saved by a remote check is, depending on distance, in the range of half to a
-      full monthly fee. Add one billable remote assessment — the German fee schedule (GOT)
-      lists consultation without examination as item&nbsp;1 and the veterinary letter as
-      item&nbsp;89 — and the month is carried by work that would not have happened at all.
-      Comparable telemetry in equine sport is billed <em>per horse</em>; here you pay once
-      for the practice.`);
+tausche(`Vergleichbare Systeme im Pferdesport rechnen <em>je Pferd</em> oder mit eigenem Sensor ab;
+      hier nutzen Sie einen handelsüblichen Polar-H10-Gurt. Testen Sie den ganzen Ablauf vorher
+      im Demo-Cockpit — ohne Konto.`,
+        `Comparable systems in equine sport bill <em>per horse</em> or with their own sensor;
+      here you use an off-the-shelf Polar H10 strap. Try the whole workflow first
+      in the demo cockpit — no account.`);
 
 tausche('<div class="tarif-preis"><b>149&nbsp;€</b> <span>netto im Monat · USt. weist Stripe aus</span></div>',
         '<div class="tarif-preis"><b>149&nbsp;€</b> <span>net per month · VAT charged by Stripe</span></div>');
@@ -844,27 +792,27 @@ tausche('<span id="heroBeta"> Wir sind in der Beta und begleiten jede Praxis per
 tausche('Ihre Kundin erlebt Ihre Praxis, nicht unsere Software',
         'Your client experiences your practice, not our software');
 tausche(`Sie misst über Ihren Mess-Link auf Ihre Empfehlung, und die Rückmeldung trägt
-         Ihren Briefkopf. Die Kontrolle nach der Umstellung, die bisher am Fahrweg
-         scheiterte, wird zu einem Kontaktpunkt Ihrer Praxis.`,
+         Ihren Briefkopf. Jede Aufnahme zwischen zwei Besuchen wird zu einem
+         Kontaktpunkt Ihrer Praxis.`,
         `She records via your measuring link on your recommendation, and the reply carries
-         your letterhead. The follow-up after a management change that used to fail on
-         the drive out becomes a touchpoint of your practice.`);
+         your letterhead. Every recording between two visits becomes a
+         touchpoint of your practice.`);
 
 // Physiologie-Lead (Warum die Zahlen tragen)
 tausche(`
       Die Herzratenvariabilität wird mit der Aktivität des autonomen Nervensystems in
       Verbindung gebracht — dem Wechselspiel aus Sympathikus und Parasympathikus. Sie ist
       damit kein Ablesen eines Zustands: einen belastbaren Normwert gibt es beim Pferd
-      nicht. Für die Einstufung zählt deshalb die eigene Baseline des Pferds. Nur die
-      Atemwegs-Marker tragen zusätzlich feste Schwellen — und die sind aus den
+      nicht. Für die Abweichungsstufen zählt deshalb die eigene Vorgeschichte des Pferds. Nur das
+      Atemmuster-Profil vergleicht zusätzlich mit festen Grenzen — und die sind aus den
       Gruppenmitteln einer Studie abgeleitet, nicht aus ihr übernommen (Nyerges-Bohák 2025).
     `,
         `
       Heart rate variability is associated with the activity of the autonomic nervous
       system — the interplay of sympathetic and parasympathetic tone. It is therefore not
       a readout of a state: there is no robust normal value in the horse. That is why the
-      classification rests on the horse's own baseline. Only the airway markers carry
-      fixed thresholds in addition — and those are derived from the group means of a
+      deviation levels rest on the horse's own history. Only the breathing-pattern profile
+      additionally compares with fixed limits — and those are derived from the group means of a
       study, not taken from it (Nyerges-Bohák 2025).
     `);
 
@@ -891,11 +839,10 @@ tausche(`Ein Tipp auf den Link oder ein Scan, und die Messstation ist da — im 
            from the very first second; the owner sends you the file on whatever channel
            she already uses.`);
 tausche('<h3>Datei ins Cockpit ziehen</h3>', '<h3>Drag the file into the cockpit</h3>');
-tausche(`Signalgüte, Baseline-Abgleich und Einstufung stehen sofort — die Triage
-           ordnet das Pferd ein, der Befund ist aus der Akte heraus erstellt.`,
-        `Signal quality, baseline comparison and classification are there at once — the
-           triage places the horse, and the findings report is created straight from the
-           record.`);
+tausche(`Signalgüte und der Vergleich mit der eigenen Vorgeschichte stehen sofort da —
+           der Messwertbericht ist aus der Akte heraus erstellt, die Einordnung machen Sie.`,
+        `Signal quality and the comparison with the horse's own history are there at once —
+           the measurement report is created straight from the record, the interpretation is yours.`);
 
 // FAQ: Nacht-Einwand + Baseline (Titel doppelt: Karte + JSON-LD-name)
 tausche('Entsteht daraus eine Pflicht, ständig hinzusehen?',
@@ -928,14 +875,33 @@ tausche('"text": "Aus den Ruhemessungen dieses Pferds selbst: Ab vier eigenen Au
 
 
 // Evidenz-Marke (Comet-Audit) — nur der uebersetzbare Chip
-tausche('<span>n = 40 · 20 sEA BAL-referenziert vs. 20 Kontrollen</span>',
-        '<span>n = 40 · 20 sEA BAL-referenced vs. 20 controls</span>');
+tausche('<span>n = 40 · Vergleichsgruppen 20 / 20</span>',
+        '<span>n = 40 · comparison groups 20 / 20</span>');
 tausche('<span>Schwellen: eigene Ableitung</span>', '<span>Thresholds: our own derivation</span>');
-tausche('aria-label="Evidenz der Atemwegs-Marker"', 'aria-label="Evidence behind the airway markers"');
+tausche(`aria-label="Bezugsstudie des Atemmuster-Profils"`,
+        `aria-label="Reference study of the breathing-pattern profile"`);
 
 
 // Zwei Preis-Stufen (13.08.)
 
+
+/* Klinik-Tarif + Abgrenzung (13.11.2026, Ganzheits-Kreis Runde 2) */
+tausche(`<div class="tarif-name">Für Pferdepraxen</div>`, `<div class="tarif-name">For equine practices</div>`);
+tausche(`<div class="tarif-name">Für Pferdekliniken</div>`, `<div class="tarif-name">For equine clinics</div>`);
+tausche(`<div class="tarif-alt">oder 3.490&nbsp;€ im Jahr — zwei Monate gespart</div>`, `<div class="tarif-alt">or €3,490 a year — two months saved</div>`);
+tausche(`<div class="tarif-alt">An der Kasse für Kliniken in Deutschland: 415,31&nbsp;€ im Monat bzw. 4.153,10&nbsp;€ im Jahr, jeweils inkl. 19&nbsp;% USt.</div>`, `<div class="tarif-alt">At checkout for clinics in Germany: €415.31 a month or €4,153.10 a year, each incl. 19&nbsp;% VAT.</div>`);
+tausche(`<li>Alles aus der Praxis-Stufe</li>`, `<li>Everything in the practice plan</li>`);
+tausche(`<li>Gemeinsamer Bestand über Ihren Klinik-Ordner auf dem vorhandenen Netzlaufwerk — jedes Gerät sieht denselben Stand, ohne Cloud</li>`, `<li>Shared records via your clinic folder on your existing network drive — every device sees the same state, no cloud</li>`);
+tausche(`<li>Stationswand für den Monitor im Stationszimmer</li>`, `<li>Station wall for the monitor in the ward</li>`);
+tausche(`<li>Mehrere Plätze in einer Lizenz</li>`, `<li>Several seats in one licence</li>`);
+tausche(`<li>Feste Methodenversion je Auswertung — für Archiv und Studien</li>`, `<li>A fixed method version per analysis — for archives and studies</li>`);
+tausche(`<div class="eyebrow">Einordnung</div>`, `<div class="eyebrow">Positioning</div>`);
+tausche(`<h2>Wofür CARLON gebaut ist — und wofür andere Werkzeuge da sind.</h2>`, `<h2>What CARLON is built for — and what other tools are for.</h2>`);
+tausche(`<h3>Belastung im Training und Galopp</h3><p>Die Domäne spezialisierter Trainingssysteme mit eigenem Sensor, etwa Arioneo Equimetre oder EQUIMO.</p>`, `<h3>Load in training and at the gallop</h3><p>The domain of dedicated training systems with their own sensor, such as Arioneo Equimetre or EQUIMO.</p>`);
+tausche(`<h3>Gangbild und Bewegung</h3><p>Die Domäne der Video-Ganganalyse, etwa Sleip.</p>`, `<h3>Gait and movement</h3><p>The domain of video gait analysis, such as Sleip.</p>`);
+tausche(`<h3>Schneller Live-Puls am Telefon</h3><p>Dafür reicht die kostenlose Polar-Equine-App.</p>`, `<h3>A quick live pulse on the phone</h3><p>The free Polar Equine app does that.</p>`);
+tausche(`<h3>Ruhe-HRV im eigenen Stall, als Verlauf</h3><p><strong>CARLON Equine:</strong> wiederholbare Aufnahmen gegen die eigene Vorgeschichte, AV-Pausen sauber getrennt, Auswertung im Browser, FHIR&nbsp;R5 — ein Preis für den Betrieb.</p>`, `<h3>Resting HRV in the horse’s own stable, as a trend</h3><p><strong>CARLON Equine:</strong> repeatable recordings against the horse’s own history, AV pauses cleanly separated, analysis in the browser, FHIR&nbsp;R5 — one price for the practice.</p>`);
+tausche('Nur für Tierarztpraxen und Pferdekliniken — Bestellung ausschließlich als Unternehmen (§ 14 BGB).', 'For veterinary practices and equine clinics only — orders exclusively as a business (§ 14 BGB).');
 if (fehlend.length) {
   console.error('\n  ✗ Der Bau bricht ab — diese Bloecke gibt es in index.html nicht (mehr):\n');
   for (const f of fehlend) console.error(`      ${f.erwartet}× erwartet, ${f.gefunden}× gefunden:  „${f.de}…"`);

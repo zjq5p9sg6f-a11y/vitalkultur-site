@@ -31,11 +31,11 @@ if(d=='1'||d=='yes'||navigator.globalPrivacyControl===true)return;
 var s=document.createElement('script');s.async=true;s.src='//gc.zgo.at/count.js';
 s.setAttribute('data-goatcounter','https://vitalkultur.goatcounter.com/count');
 document.head.appendChild(s);})();</script>
-<meta name="description" content="CARLON Equine Visite — the browser-local practice view for equine vets and clinics. The owner records with the CARLON Equine app, you read the trend: triage by urgency, route planning, findings PDF. Analysed in the browser, no account, encrypted in transit.">
+<meta name="description" content="CARLON Equine for equine practices and clinics: the owner records resting HRV in the stable with a Polar H10 strap, you see the trend against the horse’s own history, with signal quality, and plan your round by distance. Analysis in the browser, not a medical device.">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Vitalkultur">
 <meta property="og:title" content="CARLON Equine – for equine vets &amp; clinics">
-<meta property="og:description" content="Care that does not stop at the stable door. The owner records, you read the trend, the horse is reached earlier — browser-local, analysed in the browser, not in the cloud.">
+<meta property="og:description" content="Your round, planned. Every horse with its trend. The owner records in the stable, you see the trend with signal quality — analysis in the browser, not in the cloud.">
 <meta property="og:url" content="https://vitalkultur.com/carlon-equine-visite/en/">
 <meta property="og:image" content="https://vitalkultur.com/carlon-equine/assets/og-equine.png">
 <meta property="og:locale" content="en_US">
@@ -85,12 +85,12 @@ document.head.appendChild(s);})();</script>
     "de",
     "en"
    ],
-   "description": "Browser-local practice view for equine vets and clinics: triage by biometric urgency, trends over weeks, route planning, findings report and export as FHIR R5. Not a medical device, not a diagnosis.",
+   "description": "Browser tool for equine practices and clinics: round planning, resting HRV trend per horse against its own history, signal quality, measurement report and export as FHIR R5. Not a medical device, not a diagnosis.",
    "audience": {
     "@type": "BusinessAudience",
     "audienceType": "Equine veterinarians and equine clinics"
    },
-   "offers": {
+   "offers": [{
     "@type": "Offer",
     "price": "1490",
     "priceCurrency": "EUR",
@@ -108,11 +108,35 @@ document.head.appendChild(s);})();</script>
       "unitCode": "ANN"
      }
     },
-    "availability": "https://schema.org/PreOrder",
+    "availability": "https://schema.org/InStock",
+    "seller": {
+     "@id": "https://vitalkultur.com/#org"
+    }
+   },
+{
+    "@type": "Offer",
+    "price": "3490",
+    "priceCurrency": "EUR",
+    "priceSpecification": {
+     "@type": "UnitPriceSpecification",
+     "price": "3490",
+     "priceCurrency": "EUR",
+     "valueAddedTaxIncluded": false,
+     "billingDuration": 1,
+     "billingIncrement": 1,
+     "unitCode": "ANN",
+     "referenceQuantity": {
+      "@type": "QuantitativeValue",
+      "value": 1,
+      "unitCode": "ANN"
+     }
+    },
+    "availability": "https://schema.org/InStock",
     "seller": {
      "@id": "https://vitalkultur.com/#org"
     }
    }
+   ]
   },
   {
    "@type": "FAQPage",
@@ -159,10 +183,10 @@ document.head.appendChild(s);})();</script>
     },
     {
      "@type": "Question",
-     "name": "What evidence sits behind the airway markers?",
+     "name": "What is the breathing-pattern profile based on?",
      "acceptedAnswer": {
       "@type": "Answer",
-      "text": "The reference study is Nyerges-Bohák 2025 (Equine Veterinary Journal, n = 40): 20 horses with severe asthma, BAL-referenced, against 20 unremarkable controls. The study reports group differences and names SD2, SDNN, TINN and SD2/SD1 as the more discriminating measures — it contains no threshold value. Ours sit midway between its group means; that is our own derivation, not a value from the literature, and every threshold is listed individually. BAL cytology remains the gold standard — the trend does not replace it, it substantiates when it is due."
+      "text": "On a published comparison study (Nyerges-Bohák 2025, Equine Veterinary Journal, n = 40) that reports group differences in SD2, SDNN, TINN and SD2/SD1 — it contains no threshold value. Our comparison limits sit between its group means; that is our own derivation, not a value from the literature, and every limit is listed individually in the methodology. The profile describes a measurement pattern — it establishes nothing and replaces no examination."
      }
     },
     {
@@ -266,9 +290,9 @@ nav{position:sticky;top:0;z-index:50;background:rgba(0,3,8,0.72);backdrop-filter
 .wordmark{display:flex;flex-direction:row;align-items:center;gap:10px;line-height:1.05}
 .wordmark-logo{width:40px;height:40px;background-image:-webkit-image-set(url("/assets/equine-mark-112.png") 1x,url("/assets/equine-mark-224.png") 2x);background-image:image-set(url("/assets/equine-mark-112.png") 1x,url("/assets/equine-mark-224.png") 2x);background-size:contain;background-repeat:no-repeat;background-position:center;flex:0 0 auto}
 .wordmark-text{display:flex;flex-direction:column;line-height:1.05}
-.wordmark .brand{font-family:var(--font-brand);font-weight:300;letter-spacing:0.14em;font-size:16px;color:var(--text-primary)}
-.wordmark .sub{font-family:var(--font-mono);font-size:8.5px;letter-spacing:0.24em;text-transform:uppercase;color:var(--cyan);margin-top:3px}
-.nav-madein{display:flex;align-items:center;gap:5px;font-family:var(--font-mono);font-size:9px;letter-spacing:0.16em;text-transform:uppercase;color:var(--text-dim)}
+.wordmark .brand{font-family:var(--font-brand);font-weight:400;letter-spacing:0.16em;font-size:16px;color:var(--text-primary)}
+.wordmark .sub{font-family:var(--font-mono);font-size:10px;font-weight:500;letter-spacing:0.22em;text-transform:uppercase;color:var(--cyan);margin-top:4px}
+.nav-madein{display:flex;align-items:center;gap:5px;font-family:var(--font-mono);font-size:10px;letter-spacing:0.16em;text-transform:uppercase;color:var(--text-dim)}
 .nav-actions{margin-left:auto;display:flex;gap:9px;align-items:center}
 .btn{font-family:var(--font-mono);font-size:11px;font-weight:500;letter-spacing:0.12em;text-transform:uppercase;padding:0 14px;height:34px;border-radius:8px;display:inline-flex;align-items:center;justify-content:center;gap:7px;border:1px solid var(--border-subtle);background:transparent;color:var(--text-secondary);cursor:pointer;transition:border-color .18s,color .18s}
 .btn:hover{border-color:var(--cyan);color:var(--cyan)}
@@ -289,7 +313,7 @@ nav{position:sticky;top:0;z-index:50;background:rgba(0,3,8,0.72);backdrop-filter
    Vorher war der Kopf reiner TEXT — das Produkt tauchte erst zwei
    Bildschirmseiten tiefer auf. Die 50-ms-Regel des Conversion-Playbooks
    verlangt ein Visual im Hero (40-50 % der Flaeche, kein Stock-Foto):
-   hier ist es das ECHTE Triage-Board plus der Messbeleg der Halterin —
+   hier ist es die ECHTE Übersicht plus der Messbeleg der Halterin —
    der ganze Kreislauf des Produkts in einem Blick, und ein Klick darauf
    oeffnet die echte Anwendung. Dahinter das Pferd-Mandala als
    Wasserzeichen (CI §1.3: Geldschein-Prinzip, 0.04-0.08) mit der
@@ -300,7 +324,7 @@ nav{position:sticky;top:0;z-index:50;background:rgba(0,3,8,0.72);backdrop-filter
    gesperrter Monospace ueber die halbe Seite liest niemand. */
 .eyebrow{font-family:var(--font-mono);font-size:var(--t-mark);letter-spacing:0.28em;
   text-transform:uppercase;color:var(--cyan);margin-bottom:var(--sp-21)}
-h1{font-family:var(--font-brand);font-weight:300;font-size:clamp(38px,4vw,56px);
+h1{font-family:var(--font-brand);font-weight:350;font-size:clamp(38px,4vw,56px);
   line-height:1.08;letter-spacing:-0.02em;margin-bottom:var(--sp-21);
   /* 56 = 72/√φ (die naechste Stufe unter dem Voll-Hero-Grad): in der
      Split-Spalte bricht 72 px mitten im Satz („das / Pferd"). 20ch Bahn
@@ -310,15 +334,13 @@ h1{font-family:var(--font-brand);font-weight:300;font-size:clamp(38px,4vw,56px);
 /* Der Vorspann traegt EINEN Gedanken. Stand hier ein Absatz von vier
    Zeilen, las ihn im Hero niemand — dort entscheidet sich in Sekunden, ob
    weitergelesen wird. */
-.hero-sub{font-size:var(--t-body);font-weight:300;color:var(--text-secondary);
+.hero-sub{font-size:var(--t-body);font-weight:400;color:var(--text-secondary);
   max-width:30em;margin:0 0 var(--sp-34);line-height:1.6}
-/* Drei Belege above the fold — die drei staerksten Argumente der Seite
-   (Stall-Messung, browser-lokal, abrechenbar) als eine Zeile je Beleg.
-   Dieselbe Rauten-Sprache wie .enthalten/.feature — ein Vokabular. */
+
 .hero-belege{margin:var(--sp-34) 0 0;padding:var(--sp-21) 0 0;list-style:none;
   border-top:1px solid var(--border-faint);display:flex;flex-direction:column;gap:var(--sp-13)}
 .hero-belege li{position:relative;padding-left:20px;font-size:var(--t-klein);
-  color:var(--text-secondary);font-weight:300;line-height:1.55}
+  color:var(--text-secondary);font-weight:400;line-height:1.55}
 .hero-belege li b{color:var(--text-primary);font-weight:500}
 .hero-belege li::before{content:"";position:absolute;left:0;top:7px;width:7px;height:7px;
   border-radius:2px;background:var(--cyan);transform:rotate(45deg)}
@@ -329,7 +351,7 @@ h1{font-family:var(--font-brand);font-weight:300;font-size:clamp(38px,4vw,56px);
    188 Zeichen je Zeile. Monospace ist fuer Marken, Zahlen und Code — ein
    Satz darin ist eine Lesebremse und sah auf der Seite aus wie ein
    Terminal-Auswurf. Jetzt normale Schrift, in Lesebreite. */
-.cta-note{font-size:var(--t-klein);color:var(--text-dim);font-weight:300;
+.cta-note{font-size:var(--t-klein);color:var(--text-dim);font-weight:400;
   max-width:34em;margin:var(--sp-13) 0 0;line-height:1.6}
 
 /* Die rechte Hero-Haelfte: Cockpit-Shot als Tuer zur Demo. */
@@ -358,7 +380,7 @@ h1{font-family:var(--font-brand);font-weight:300;font-size:clamp(38px,4vw,56px);
 /* Der Messbeleg der Halterin, ueberlappend — der andere Endpunkt des
    Kreislaufs. Rein illustrativ (aria-hidden): dieselben Zahlen erklaert
    der Messstations-Abschnitt weiter unten in Ruhe. */
-.hero-phone{position:absolute;z-index:2;left:-7%;bottom:-5%;width:32%;
+.hero-phone{position:absolute;z-index:2;left:-12%;bottom:-11%;width:29%;
   /* Beschnitten auf die Kurven (Puls/HRV in Gold und Cyan) — das volle
      Bild ist 1:2,17 und hing bis in die Bildunterschrift. */
   aspect-ratio:9/13;
@@ -372,7 +394,7 @@ h1{font-family:var(--font-brand);font-weight:300;font-size:clamp(38px,4vw,56px);
 .hero-phone img{width:100%;height:100%;object-fit:cover;object-position:top;display:block;border-radius:19px}
 /* Die Unterschrift beginnt rechts vom ueberlappenden Telefon. */
 .hero-visual figcaption{margin-top:var(--sp-21);font-size:var(--t-klein);
-  color:var(--text-dim);font-weight:300;line-height:1.6;margin-left:31%;padding-left:var(--sp-13)}
+  color:var(--text-dim);font-weight:400;line-height:1.6;margin-left:31%;padding-left:var(--sp-13)}
 .hero-visual figcaption b{color:var(--text-secondary);font-weight:500}
 /* ── DIE FLUSS-LEISTE (Jan, 13.08.) ──────────────────────────────────
    Telefon und Cockpit standen nebeneinander, aber DASS sie ein System
@@ -390,7 +412,7 @@ h1{font-family:var(--font-brand);font-weight:300;font-size:clamp(38px,4vw,56px);
   animation:flussPuls 3.5s ease-in-out infinite}
 @keyframes flussPuls{0%{left:0;opacity:0}12%{opacity:1}88%{opacity:1}100%{left:calc(100% - 6px);opacity:0}}
 @media (prefers-reduced-motion:reduce){.hf-linie i{animation:none;left:calc(50% - 3px)}}
-@media (max-width:560px){.hf-chip{font-size:9px;padding:4px 8px}}
+@media (max-width:560px){.hf-chip{font-size:9.5px;padding:4px 8px}}
 @media(max-width:860px){
   .hero-grid{grid-template-columns:1fr;gap:var(--sp-34)}
   .hero-visual{max-width:430px;justify-self:center;width:100%}
@@ -412,11 +434,11 @@ section{padding-top:var(--sp-89);padding-bottom:var(--sp-89)}
    Neue Ordnung: HERO zentriert (kurz, plakativ), INHALT linksbuendig. */
 .sec-eyebrow{font-family:var(--font-mono);font-size:var(--t-mark);letter-spacing:0.28em;
   text-transform:uppercase;color:var(--cyan);margin-bottom:var(--sp-13);text-align:left}
-h2{font-family:var(--font-brand);font-weight:300;font-size:clamp(28px,3.6vw,var(--t-h2));
+h2{font-family:var(--font-brand);font-weight:350;font-size:clamp(28px,3.6vw,var(--t-h2));
   line-height:1.12;letter-spacing:-0.014em;text-align:left;margin:0;
   max-width:20ch;text-wrap:balance}
 .sec-lead{text-align:left;color:var(--text-secondary);max-width:var(--mass);
-  margin:var(--sp-21) 0 0;font-weight:300;line-height:1.66;font-size:var(--t-body)}
+  margin:var(--sp-21) 0 0;font-weight:400;line-height:1.66;font-size:var(--t-body)}
 /* Inhalt hält IMMER denselben Abstand zum Überschriften-Block (ob mit/ohne Lead) */
 .grid,.shots{margin-top:var(--sp-55)}
 
@@ -424,7 +446,7 @@ h2{font-family:var(--font-brand);font-weight:300;font-size:clamp(28px,3.6vw,var(
 .grid{display:grid;grid-template-columns:repeat(2,1fr);gap:var(--sp-21)}
 .card{border:1px solid var(--border-subtle);border-radius:18px;padding:var(--sp-34);background:linear-gradient(160deg,rgba(6,16,26,0.6),rgba(2,8,13,0.4))}
 .card h3{font-size:17px;font-weight:500;margin-bottom:12px;color:var(--text-primary);letter-spacing:-0.01em}
-.card p{font-size:14px;color:var(--text-secondary);line-height:1.68;font-weight:300}
+.card p{font-size:14px;color:var(--text-secondary);line-height:1.68;font-weight:400}
 
 /* Cockpit shots */
 .shots{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--sp-21)}
@@ -440,6 +462,7 @@ h2{font-family:var(--font-brand);font-weight:300;font-size:clamp(28px,3.6vw,var(
 .tarife-grid{max-width:920px;margin:var(--sp-55) auto 0;display:grid;
   grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:var(--sp-21)}
 .tarife-grid .tarif{max-width:none;margin:0}
+.b2b-hinweis{max-width:920px;margin:var(--sp-34,34px) auto 0;font-family:var(--font-mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--cyan);text-align:center}
 .t-stufe{font-family:var(--font-mono);font-size:var(--t-mark);letter-spacing:0.2em;
   text-transform:uppercase;color:var(--cyan);text-align:center;margin-bottom:var(--sp-13)}
 /* Der gemeinsame Fuss (Recht + Kaufweg) ist KEINE dritte Karte. */
@@ -450,16 +473,16 @@ h2{font-family:var(--font-brand);font-weight:300;font-size:clamp(28px,3.6vw,var(
      fuehrt der Jahrespreis und die Alternative steht klein darunter. */
   .tarif-preis{display:flex;align-items:baseline;gap:10px;justify-content:center;
                margin-bottom:6px;flex-wrap:wrap}
-  .tarif-preis b{font-family:var(--font-brand);font-weight:300;
+  .tarif-preis b{font-family:var(--font-brand);font-weight:350;
                  font-size:clamp(42px,7vw,64px);letter-spacing:-.02em; /* 42/64 = Stufen der CI-Skala */
                  color:var(--text-primary);line-height:1}
   .tarif-preis span{font-size:14px;color:var(--text-secondary)}
   .tarif-alt{text-align:center;font-size:14px;color:var(--text-dim);
              margin-bottom:20px}
 .enthalten{margin-top:var(--sp-21);display:grid;grid-template-columns:repeat(2,1fr);gap:9px 26px}
-.enthalten li{list-style:none;position:relative;padding-left:20px;font-size:14px;color:var(--text-secondary);font-weight:300;line-height:1.6}
+.enthalten li{list-style:none;position:relative;padding-left:20px;font-size:14px;color:var(--text-secondary);font-weight:400;line-height:1.6}
 .enthalten li::before{content:"";position:absolute;left:0;top:8px;width:7px;height:7px;border-radius:2px;background:var(--cyan);transform:rotate(45deg)}
-.tarif-fuss{margin-top:26px;font-size:14px;color:var(--text-dim);line-height:1.75;font-weight:300;text-align:center}
+.tarif-fuss{margin-top:26px;font-size:14px;color:var(--text-dim);line-height:1.75;font-weight:400;text-align:center}
 .tarif-fuss a{color:var(--text-secondary);text-decoration:underline;text-underline-offset:3px}
 .tarif-fuss a:hover{color:var(--cyan)}
 @media(max-width:720px){.enthalten{grid-template-columns:1fr}}
@@ -500,9 +523,9 @@ h2{font-family:var(--font-brand);font-weight:300;font-size:clamp(28px,3.6vw,var(
    keinem Quelltext-Review auf; nur die Inventur der GERENDERTEN Groessen
    hat ihn verraten. */
 .usp h3{font-size:var(--t-body);font-weight:500;color:var(--text-primary);margin:0 0 var(--sp-8);letter-spacing:-0.005em}
-.usp p{font-size:var(--t-klein);color:var(--text-secondary);line-height:1.6;font-weight:300;margin:0;max-width:42em}
+.usp p{font-size:var(--t-klein);color:var(--text-secondary);line-height:1.6;font-weight:400;margin:0;max-width:60ch}
 /* Beweiszahl gross — Zahlen scannen schneller als Saetze. */
-.u-zahl{font-family:var(--font-brand);font-weight:300;font-size:var(--t-h2);line-height:1;
+.u-zahl{font-family:var(--font-brand);font-weight:350;font-size:var(--t-h2);line-height:1;
   color:var(--cyan);margin:var(--sp-8) 0 var(--sp-13)}
 .u-zahl span{font-size:var(--t-body);color:var(--text-dim);margin-left:2px}
 /* Evidenz-Marke: die Studien-Referenz als sichtbares Kennzeichen statt
@@ -521,7 +544,7 @@ h2{font-family:var(--font-brand);font-weight:300;font-size:clamp(28px,3.6vw,var(
 .feature .f-k{font-family:var(--font-mono);font-size:var(--t-mark);letter-spacing:0.2em;text-transform:uppercase;color:var(--cyan);margin-bottom:var(--sp-13)}
 .feature .f-txt h3{font-size:clamp(22px,2.6vw,var(--t-h3));font-weight:400;font-family:var(--font-brand);color:var(--text-primary);line-height:1.2;letter-spacing:-0.01em;margin-bottom:var(--sp-21)}
 .feature .f-txt ul{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:15px}
-.feature .f-txt li{position:relative;padding-left:22px;font-size:17px;line-height:1.62;color:var(--text-secondary);font-weight:300}
+.feature .f-txt li{position:relative;padding-left:22px;font-size:17px;line-height:1.62;color:var(--text-secondary);font-weight:400}
 .feature .f-txt li b{color:var(--text-primary);font-weight:500}
 .feature .f-txt li::before{content:"";position:absolute;left:0;top:8px;width:7px;height:7px;border-radius:2px;background:var(--cyan);transform:rotate(45deg)}
 /* 3er-Raster, Bilder in voller Hoehe (kein Crop) */
@@ -560,7 +583,7 @@ h2{font-family:var(--font-brand);font-weight:300;font-size:clamp(28px,3.6vw,var(
 .shot .frame img{width:100%;height:100%;object-fit:cover;object-position:top left;display:block}
 .shot .frame span{font-family:var(--font-mono);font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:var(--text-dim)}
 .shot img{width:100%;border:1px solid var(--border-subtle);border-radius:16px;display:block}
-.shot figcaption{font-size:14px;color:var(--text-secondary);margin-top:16px;font-weight:300;text-align:center;line-height:1.55}
+.shot figcaption{font-size:14px;color:var(--text-secondary);margin-top:16px;font-weight:400;text-align:center;line-height:1.55}
 
 /* Final CTA — EINE Achse. Die Ueberschriften der Seite sind linksbuendig;
    ein zentrierter Knopf unter linksbuendigem Text sitzt „irgendwo" und
@@ -573,19 +596,19 @@ h2{font-family:var(--font-brand);font-weight:300;font-size:clamp(28px,3.6vw,var(
 /* Anmeldung — ruhig, nicht laut. Ein Formular auf einer Seite, die
    Zurueckhaltung verspricht, darf nicht wie eine Lead-Maschine aussehen. */
 /* Muster-Befund: ruhig, aber nicht versteckt. Es ist der Beleg, nicht die Deko. */
-.befundmuster{display:flex;align-items:center;gap:22px;flex-wrap:wrap;margin-top:34px;padding:22px 24px;
+.berichtsmuster{display:flex;align-items:center;gap:22px;flex-wrap:wrap;margin-top:34px;padding:22px 24px;
   border:1px solid var(--border-subtle);border-radius:16px;
   background:linear-gradient(150deg,rgba(62,207,178,0.05),rgba(62,207,178,0.012))}
-.befundmuster>div{flex:1;min-width:260px}
-.befundmuster b{display:block;font-size:17px;color:var(--text-primary);font-weight:500;margin-bottom:6px}
-.befundmuster span{font-size:14px;color:var(--text-secondary);font-weight:300;line-height:1.65}
-.befundmuster a{white-space:nowrap}
+.berichtsmuster>div{flex:1;min-width:260px}
+.berichtsmuster b{display:block;font-size:17px;color:var(--text-primary);font-weight:500;margin-bottom:6px}
+.berichtsmuster span{font-size:14px;color:var(--text-secondary);font-weight:400;line-height:1.65}
+.berichtsmuster a{white-space:nowrap}
 .anmeldung{max-width:720px;margin:var(--sp-55) auto 0;text-align:left;padding:34px 32px 30px;position:relative;
   border:1px solid var(--border-subtle);border-radius:18px;
   background:linear-gradient(150deg,rgba(62,207,178,0.05),rgba(62,207,178,0.012))}
 .anmeldung h3{font-family:var(--font-brand);font-weight:400;font-size:clamp(21px,2.4vw,var(--t-h3));
   color:var(--text-primary);margin-bottom:10px;letter-spacing:-0.01em}
-.anm-lead{font-size:17px;color:var(--text-secondary);font-weight:300;line-height:1.7;margin-bottom:24px}
+.anm-lead{font-size:17px;color:var(--text-secondary);font-weight:400;line-height:1.7;margin-bottom:24px}
 .anm-art{display:flex;flex-wrap:wrap;gap:10px 22px;margin-bottom:22px}
 .anm-art label{display:flex;align-items:center;gap:8px;font-size:14px;color:var(--text-secondary);cursor:pointer}
 .anm-art input{accent-color:var(--cyan);width:16px;height:16px}
@@ -616,8 +639,8 @@ h2{font-family:var(--font-brand);font-weight:300;font-size:clamp(28px,3.6vw,var(
 
 /* Footer */
 footer{border-top:1px solid var(--border-faint);padding:var(--sp-55) 24px var(--sp-55);text-align:center;margin-top:var(--sp-34)}
-.footer-brand{font-family:var(--font-brand);font-weight:300;letter-spacing:0.14em;font-size:17px}
-.footer-tagline{font-family:var(--font-mono);font-size:9px;letter-spacing:0.24em;text-transform:uppercase;color:var(--cyan);margin-top:6px}
+.footer-brand{font-family:var(--font-brand);font-weight:400;letter-spacing:0.16em;font-size:16px}
+.footer-tagline{font-family:var(--font-mono);font-size:10px;letter-spacing:0.24em;text-transform:uppercase;color:var(--cyan);margin-top:6px}
 .footer-madein{font-family:var(--font-mono);font-size:var(--t-mark);letter-spacing:0.22em;text-transform:uppercase;color:rgba(255,255,255,0.4);margin-top:var(--sp-13)}
 .footer-links{display:flex;gap:20px;justify-content:center;margin:22px 0;flex-wrap:wrap}
 .footer-links a{font-size:14px;color:var(--text-dim)}
@@ -667,8 +690,8 @@ html.rev-an .rev.in{opacity:1;transform:none}
   .nav-inner{padding:9px 15px;gap:10px}
   .wordmark{gap:8px}
   .wordmark-logo{width:32px;height:32px}
-  .wordmark .brand{font-size:13px;letter-spacing:0.05em;white-space:nowrap}
-  .wordmark .sub{font-size:7px;letter-spacing:0.13em;margin-top:2px}
+  .wordmark .brand{font-size:14px;letter-spacing:0.14em;white-space:nowrap}
+  .wordmark .sub{font-size:9.5px;letter-spacing:0.18em;margin-top:3px}
   .nav-actions{gap:6px}
   .btn{padding:0 9px;height:30px;font-size:9.5px;letter-spacing:0.06em}
 }
@@ -761,7 +784,7 @@ html.rev-an .rev.in{opacity:1;transform:none}
 .lb-cap{
   position: absolute; bottom: max(18px, env(safe-area-inset-bottom)); left: 0; right: 0;
   text-align: center; font-size: var(--t-klein); color: var(--text-secondary); padding: 0 24px;
-  font-weight: 300; pointer-events: none;
+  font-weight: 400; pointer-events: none;
 }
 
   /* Beruehrziele nach WCAG 2.5.8: mindestens 44 px fuer alles, was ein
@@ -771,6 +794,13 @@ html.rev-an .rev.in{opacity:1;transform:none}
   nav .nav-actions a, .btn, .btn-back, .btn-demo, .cta-primary, .footer-links a{
     min-height:44px; display:inline-flex; align-items:center; justify-content:center;
   }
+
+.tarif-name{font-family:var(--font-mono);font-size:11px;letter-spacing:.20em;text-transform:uppercase;color:var(--cyan,#3ECFB2);margin-bottom:8px}
+
+/* Typografie: Ziffern tabellarisch, Fußtext mit Zeilenmaß */
+.tarif-preis b,.u-zahl,table,.tarif-alt,.enthalten li{font-variant-numeric:tabular-nums lining-nums}
+.tarif-fuss{max-width:62ch;margin-left:auto;margin-right:auto}
+h1,h2{text-wrap:balance}
 </style>
 </head>
 <body>
@@ -781,8 +811,8 @@ html.rev-an .rev.in{opacity:1;transform:none}
     <a class="wordmark" href="/carlon-equine/" title="Zu CARLON Equine">
       <span class="wordmark-logo"></span>
       <span class="wordmark-text">
-        <span class="brand">CARLON EQUINE</span>
-        <span class="sub">Equine Heart Science</span>
+        <span class="brand">CARLON</span>
+        <span class="sub">EQUINE BIOMETRICS</span>
       </span>
     </a>
     <div class="nav-madein" title="Iffezheim">
@@ -823,31 +853,27 @@ html.rev-an .rev.in{opacity:1;transform:none}
   <div class="wrap hero-grid">
     <div class="hero-copy">
     <div class="eyebrow">CARLON Equine Visite · for veterinary surgeons</div>
-    <!-- Die Schlagzeile ist IDENTITAET, nicht Funktion (Jan, 13.08.): sie
-         benennt, was die Praxis IST — Betreuung ueber den Besuch hinaus.
-         Die funktionale Aussage (sehen bevor fahren, Baseline, Triage)
-         traegt der Vorspann direkt darunter. Die Zeile stand schon in der
-         og:description — jetzt sagt die Seite sie auch selbst. -->
-    <h1>Care that does not stop at the stable door.</h1>
+    <h1>Your round, planned. Every horse with its trend.</h1>
     <!-- Der Vorspann beginnt beim ANRUF — dem Moment, den jede mobile
          Praxis kennt: entscheiden am Telefon, ohne Datengrundlage. Das
          Produkt ist die Antwort auf genau diesen Moment. -->
     <p class="hero-sub">
-      The phone call says “not quite right somehow”. The recording the owner sends you from
-      the stable says how far this horse deviates from <strong>its own</strong> baseline —
-      you decide on evidence who is up today and who can wait until the follow-up.
+      The owner records in the stable at rest, and the recording reaches you encrypted.
+      Before the visit you see how good the recording is and how far the resting HRV deviates from
+      <strong>this horse’s own</strong> history — and plan your round by distance, appointment
+      or your own order.
     </p>
     <div class="cta-row">
       <a class="cta-primary" href="/carlon-equine/app/">Open the cockpit with 15&nbsp;demo horses →</a>
       <a class="btn btn-back" href="#preis">What it costs</a>
     </div>
-    <p class="cta-note">The demo cockpit is the complete application with full example trends — no account, no installation. None of it leaves your browser.<span id="heroBeta"> We are in beta and accompany every practice personally — join now and you keep your price as a founding partner.</span></p>
+    <p class="cta-note">The demo cockpit is the complete application with full example trends — no account, no installation. None of it leaves your browser on its own.<span id="heroBeta"> We are in beta and accompany every practice personally — join now and you keep your price as a founding partner.</span></p>
     <!-- Die drei staerksten Argumente der Seite, above the fold — jede
          Zeile wird weiter unten mit einem eigenen Abschnitt eingeloest. -->
     <ul class="hero-belege">
       <li><b>Recorded in the stable,</b> at rest — against this horse’s own baseline.</li>
-      <li><b>Analysed in your browser</b> — patient data never reaches us, so no data-processing agreement with us is needed.</li>
-      <li><b>Billable</b> — the German fee schedule (GOT) lists the remote assessment as item&nbsp;1, the letter as item&nbsp;89.</li>
+      <li><b>Analysed in your browser</b> — horse data never reaches us; in our assessment no data processing agreement with us is therefore needed.</li>
+      <li><b>Traceable</b> — raw and cleaned value side by side, with signal quality and method version.</li>
     </ul>
     </div>
     <figure class="hero-visual">
@@ -859,7 +885,7 @@ html.rev-an .rev.in{opacity:1;transform:none}
            Einstufung, Kernwerten gegen die Baseline, Readiness. -->
       <a class="hero-shot" href="/carlon-equine/app/" title="Open the demo cockpit">
         <img src="../assets/visite-shots/09-akte.jpg" fetchpriority="high"
-          alt="Horse record in the cockpit: classification Stable with reasoning, key values RMSSD, resting HR, SDNN and DFA against the individual baseline, training readiness and remote assessment"></a>
+          alt="Horse record in the cockpit: key values RMSSD, resting HR, SDNN and DFA against the horse’s own history, with signal quality and trend"></a>
       <span class="hero-phone" aria-hidden="true"><img src="../assets/station-shots/06-tachogramm.jpg" alt=""></span>
       <figcaption>
         <span class="hero-fluss"><span class="hf-chip">Recorded in the stable</span><span
@@ -891,20 +917,19 @@ html.rev-an .rev.in{opacity:1;transform:none}
          selbst. Genau so wird es gesagt. -->
     <h2>Resting HRV only exists where rest exists: in the horse’s own stable.</h2>
     <p class="sec-lead">
-      Transport, unfamiliar surroundings, unfamiliar people — each of these stimuli shifts
-      exactly the autonomic balance you want to assess. For resting HRV the measurement
-      site is not a side issue but part of the method: the airway analysis requires
-      <strong>at least seven minutes of rest in familiar surroundings</strong> — below that
-      it returns no result. After
-      loading and a journey this condition is systematically unmet — in the horse's own
-      box it is met every day.
+      Transport, fremde Umgebung, fremde Menschen — jeder dieser Reize verschiebt genau die
+      autonome Balance, die Sie beurteilen wollen. Der Messort ist bei der Ruhe-HRV keine
+      Nebensache, sondern Teil der Methode: Die Auswertung verlangt
+      <strong>mindestens sieben Minuten Ruhe in gewohnter Umgebung</strong> — darunter gibt
+      sie kein Ergebnis aus. Nach Verladung
+      und Fahrt ist diese Bedingung systematisch nicht erfüllt — in der eigenen Box ist sie
+      es jeden Tag.
     </p>
     <p class="sec-lead" style="margin-top:var(--sp-21)">
-      <strong>For equine asthma this is not merely a condition — it is the entire
-      point.</strong> What burdens the horse is in the stable: bedding, hay, ventilation. A
-      recording taken at the clinic removes precisely the environment in question. At home,
-      repeated over weeks, you see instead what you actually want to know — whether the
-      change worked.
+      <strong>Same box, same time, same protocol.</strong> Only under familiar
+      conditions are two recordings comparable. At home, repeated over weeks, this builds a
+      trend that shows how this horse’s resting HRV develops after a change in
+      housing, feeding or training — the interpretation stays with you.
     </p>
     <div class="usps">
       <div class="usp">
@@ -913,21 +938,19 @@ html.rev-an .rev.in{opacity:1;transform:none}
          excitement from strangers, no bulky equipment in the way.</p>
     </div>
     <div class="usp">
-      <h3>From “could you take a quick look?” to a measurement</h3>
-      <p>Instead of a phone call and a shaky video, the owner sends a standardised
-         recording with its measurement report. You open it when you have time — and
-         see beforehand how urgent it is.</p>
+      <h3>Instead of a phone video: a standardised recording</h3>
+      <p>The owner sends a recording with its measurement protocol. You open it when it fits
+         your planning — with signal quality and the comparison to the horse’s own history.</p>
     </div>
     <div class="usp">
-      <h3>Remote assessment is billable</h3>
-      <p>German veterinary fee schedule (GOT) lists advice without examination as <strong>item&nbsp;1</strong>,
-         and the veterinary letter per started 15&nbsp;minutes as <strong>item&nbsp;89</strong>. A
-         phone call without a basis becomes a service with one.</p>
+      <h3>Documented, not remembered</h3>
+      <p>Recording, measurement protocol and your note sit together in the record — as a
+         measurement report on your letterhead or as an export for your practice software.</p>
     </div>
     <div class="usp">
-      <h3>Repeatable without anyone driving out</h3>
-      <p>A follow-up in two weeks costs nobody a drive. That is exactly how the trend comes
-         about that a snapshot can never deliver.</p>
+      <h3>Repeatable under the same conditions</h3>
+      <p>The next recording is made in the same box under the same protocol. Exactly that
+         builds the trend a snapshot can never provide.</p>
     </div>
     </div>
   </div>
@@ -979,19 +1002,20 @@ html.rev-an .rev.in{opacity:1;transform:none}
       <strong>two or three loan belts in the practice</strong> that you hand out; owners with
       several horses usually buy their own. One belt serves any number of horses — it simply
       gets moved.
+    </p>
     <p class="sec-lead" style="margin-top:var(--sp-21)">
-      What reaches you is not a screenshot but a dataset: every beat-to-beat interval in its raw
-      state, the metrics derived from it, and the signal quality alongside. So you see not
-      just a number, but also <strong>how far you can trust it</strong>.
-      Into the cockpit the file goes with one motion — drag it in, done: signal quality,
-      baseline comparison and classification are there at once.
+      What reaches you is not a screenshot but a dataset: every beat interval in its
+      raw state, the measures computed from it and the signal quality alongside. So you see
+      not just a number but also <strong>how far you can trust it</strong>.
+      The file goes into the cockpit with one move — drag it in, done: signal quality
+      and the comparison with the horse’s own history are there at once.
     </p>
 
     <div class="shots telefon">
       <figure class="shot">
         <div class="frame"><img src="../assets/station-shots/01-start.jpg" loading="lazy"
           alt="Measuring station in the phone browser: start screen stating that the recording is created on the device and encrypted for the practice"></div>
-        <figcaption>The poster leads here. One field for the horse's name, one button for the belt — nothing else in the way.</figcaption>
+        <figcaption>The poster leads here. Horse name, two taps for place and rest time, one button for the belt — no account.</figcaption>
       </figure>
       <figure class="shot">
         <div class="frame"><img src="../assets/station-shots/02-live.jpg" loading="lazy"
@@ -1029,8 +1053,8 @@ html.rev-an .rev.in{opacity:1;transform:none}
            zum Bindungs-Argument gebuendelt. -->
       <h3>Your client experiences your practice, not our software</h3>
       <p>She records via your measuring link on your recommendation, and the reply carries
-         your letterhead. The follow-up after a management change that used to fail on
-         the drive out becomes a touchpoint of your practice.</p>
+         your letterhead. Every recording between two visits becomes a
+         touchpoint of your practice.</p>
     </div>
     <div class="usp">
       <h3>Two numbers, not one</h3>
@@ -1061,13 +1085,8 @@ html.rev-an .rev.in{opacity:1;transform:none}
 <section>
   <div class="wrap">
     <div class="sec-eyebrow">What the cockpit shows</div>
-    <h2>One glance, then the depth.</h2>
-    <!-- „Urteil" stand hier — das Wort, das die Seite drei Abschnitte weiter
-         ausdruecklich verneint („Die Deutung bleibt bei Ihnen"). Eine Seite,
-         die an einer Stelle urteilt und an der anderen beteuert, es nicht zu
-         tun, verliert an beiden. Jetzt dasselbe Wort wie an der Triage-Karte:
-         Einstufung. -->
-    <p class="sec-lead">The classification at the top and the value that triggered it. Below it
+    <h2>The overview first. Then the numbers it rests on.</h2>
+    <p class="sec-lead">At the top the deviation from the horse’s own history and the value it follows from. Below it
        everything you need to check the maths — none of it hidden.</p>
 
     <!-- Bilder statt Beschreibung. Der Entwurf hatte KEIN einziges
@@ -1075,14 +1094,14 @@ html.rev-an .rev.in{opacity:1;transform:none}
          man nicht sieht, muss man glauben; eines, das man sieht, muss man
          nur noch wollen. -->
     <div class="feature">
-      <div class="f-shot"><img src="../assets/visite-shots/10-triage.jpg" loading="lazy"
-        alt="Triage-Board: jedes Pferd als Karte, sortiert nach Abweichung von seiner eigenen Baseline, mit Anruf-Knopf beim Halter"></div>
+      <div class="f-shot"><img src="../assets/visite-shots/10-uebersicht.jpg" loading="lazy"
+        alt="Übersicht: jedes Pferd als Karte mit seiner Abweichung von der eigenen Vorgeschichte, mit Anruf-Knopf beim Halter"></div>
       <div class="f-txt">
-        <div class="f-k">Triage</div>
-        <h3>Four levels, and next to each the value that triggered it.</h3>
+        <div class="f-k">Overview</div>
+        <h3>Four deviation levels, and next to each the value it follows from.</h3>
         <ul>
           <li><b>Sorted by deviation</b>, not by arrival — every horse against its own baseline, not against a table.</li>
-          <li><b>The reason is shown with it.</b> A classification without the triggering value would be an opinion.</li>
+          <li><b>The value is shown alongside.</b> A level without its underlying value would be an opinion — it describes measurements, not a state of health.</li>
           <li><b>The owner is one tap away</b>, straight from the card.</li>
         </ul>
       </div>
@@ -1095,11 +1114,11 @@ html.rev-an .rev.in{opacity:1;transform:none}
         <ul>
           <li><b>Values against the horse's own baseline</b>, as an indication. The interpretation stays with you.</li>
           <li><b>Signal quality before the number</b>: how many beat pairs actually carry the analysis.</li>
-          <li><b>Record and bill the remote assessment</b> without leaving the file.</li>
+          <li><b>Observation note and measurement report</b>, without leaving the record.</li>
         </ul>
       </div>
       <div class="f-shot"><img src="../assets/visite-shots/09-akte.jpg" loading="lazy"
-        alt="Pferde-Akte: Messwerte gegen die individuelle Baseline, Signalgüte, Verlauf, dazu Ferneinschätzung erfassen und abrechnen"></div>
+        alt="Pferde-Akte: Messwerte gegen die eigene Vorgeschichte, Signalgüte, Verlauf und Beobachtungsnotiz"></div>
     </div>
 
     <!-- DAS ARTEFAKT, DAS DAS HAUS VERLAESST.
@@ -1108,7 +1127,7 @@ html.rev-an .rev.in{opacity:1;transform:none}
          Artefakt sehen" — deshalb steht es hier zum Anfassen, nicht als
          Beschreibung. Erzeugt aus der Demo ueber DENSELBEN Weg, den die
          Praxis geht (Handoff.build), nicht nachgebaut. -->
-    <div class="befundmuster">
+    <div class="berichtsmuster">
       <div>
         <b>See the report before you decide anything.</b>
         <span>Generated from the demo library (fictitious sample data) — key values, heart-rate and HRV
@@ -1120,10 +1139,9 @@ html.rev-an .rev.in{opacity:1;transform:none}
     </div>
     <div class="grid">
       <div class="card">
-        <h3>A classification with its reason</h3>
-        <p>Four levels from stable to critical, always with the value that triggered it —
-           and with the deviation from <em>this</em> horse's baseline, not from a textbook
-           figure.</p>
+        <h3>Deviation with its reason</h3>
+        <p>Four levels from “within own range” to “marked deviation”, always with the value they follow from —
+           and with the deviation from <em>this</em> horse’s baseline, not from a&nbsp;textbook value.</p>
       </div>
       <div class="card">
         <h3>Signal quality before interpretation</h3>
@@ -1135,17 +1153,12 @@ html.rev-an .rev.in{opacity:1;transform:none}
              unnoetig Last — er klingt nach Reihenuntersuchung mit medizinischem
              Zweck. „Beobachtungshinweis" ist der kanonische Guardrail-Wortlaut
              der Copy-CI und beschreibt praezise, was die Software tut. -->
-        <h3>Airway markers over time</h3>
-        <!-- Die Studie steht mit NAMEN da — „eine veroeffentlichte Studie"
-             ist fuer eine studierte Leserin ein rotes Tuch: welche? Die
-             Referenz traegt die App selbst (asthma.js, DOI 10.1111/evj.14414). -->
-        <p>HRV-based markers with their thresholds, listed individually. The reference study is
-           Nyerges-Bohák 2025 (Equine Veterinary Journal, n = 40): 20 horses with severe
-           asthma, BAL-referenced, against 20 unremarkable controls. It reports group
-           differences, <strong>no threshold values</strong> — ours sit midway between them
-           and are therefore our own derivation. An
-           <strong>observational note</strong>, explicitly not a diagnosis: BAL
-           cytology remains the gold standard.</p>
+        <h3>Breathing-pattern profile from the literature</h3>
+        <p>Five HRV measures, listed individually, compared with the group means of a
+           published comparison study (Nyerges-Bohák 2025, Equine Veterinary Journal, n&nbsp;=&nbsp;40).
+           The study reports group differences, <strong>no threshold values</strong> — our
+           comparison limits are our own derivation, documented openly in the methodology.
+           A measurement pattern, <strong>not a health classification</strong>.</p>
       </div>
       <div class="card">
         <h3>The familiar views, at proper resolution</h3>
@@ -1153,9 +1166,9 @@ html.rev-an .rev.in{opacity:1;transform:none}
            redrawn at full size rather than scaled up.</p>
       </div>
       <div class="card">
-        <h3>Findings and billing in one place</h3>
-        <p>A findings report on your own letterhead, feedback to the owner, and an overview
-           of what is still open.</p>
+        <h3>Measurement report and documentation in one place</h3>
+        <p>A measurement report on your own letterhead, feedback to the owner, and an overview
+           of services, trips and times.</p>
       </div>
       <div class="card">
         <h3>Export without a dead end</h3>
@@ -1183,19 +1196,19 @@ html.rev-an .rev.in{opacity:1;transform:none}
       Heart rate variability is associated with the activity of the autonomic nervous
       system — the interplay of sympathetic and parasympathetic tone. It is therefore not
       a readout of a state: there is no robust normal value in the horse. That is why the
-      classification rests on the horse's own baseline. Only the airway markers carry
-      fixed thresholds in addition — and those are derived from the group means of a
+      deviation levels rest on the horse's own history. Only the breathing-pattern profile
+      additionally compares with fixed limits — and those are derived from the group means of a
       study, not taken from it (Nyerges-Bohák 2025).
     </p>
     <p class="sec-lead" style="margin-top:var(--sp-21)">
       A resting horse shows AV-block pauses — physiological, not a finding. Count them in
-      raw and SDNN and RMSSD rise dramatically, and the markers that respond to
+      raw and SDNN and RMSSD rise dramatically, and the measures that respond to
       <em>small</em> values flip into the opposite.
     </p>
-    <div class="evidenz" aria-label="Evidence behind the airway markers">
+    <div class="evidenz" aria-label="Reference study of the breathing-pattern profile">
       <span class="ev-cyan">Nyerges-Bohák 2025</span>
       <span>Equine Veterinary Journal</span>
-      <span>n = 40 · 20 sEA BAL-referenced vs. 20 controls</span>
+      <span>n = 40 · comparison groups 20 / 20</span>
       <span>DOI 10.1111/evj.14414</span>
       <span>Thresholds: our own derivation</span>
     </div>
@@ -1219,15 +1232,11 @@ html.rev-an .rev.in{opacity:1;transform:none}
            hinterlegten RR-Serie nach; die 130 % sind daraus ABGELEITET. -->
     </div>
     <div class="usp">
-      <!-- 14.08.2026 (Jan): die interne QA-Zahl (8/20) ist raus — sie las
-           sich wie eine Mini-Studie und machte klein, was gross ist. Der
-           Beleg (app/belege/vorstufe-vergleich.json) bleibt im Repo; die
-           Karte traegt jetzt den NUTZEN der Bereinigung fuer die Triage. -->
       <h3>Too conspicuous is wrong too</h3>
       <p>Unfiltered, a resting horse looks systematically more conspicuous than it is.
-         A triage that warns too often is as worthless as one that stays silent —
-         so the data is cleaned first, classified second. So that a conspicuous horse
-         stands out because of the horse. Not the measurement.</p>
+         An overview that shows deviations too often is as worthless as one that shows none —
+         so the data is cleaned first, compared second. So that a deviation
+         stands out because it lies in the horse. Not in the measurement.</p>
     </div>
     <div class="usp">
       <h3>And where it is not enough, it says so</h3>
@@ -1282,9 +1291,9 @@ html.rev-an .rev.in{opacity:1;transform:none}
       </div>
       <div class="card">
         <h3>Visible after a change</h3>
-        <p>Housing, feeding, management, convalescence: the follow-up measurement costs no
-           drive, so it actually happens. As an observation — the assessment stays with
-           you.</p>
+        <p>Housing, feeding, management, training: the next recording is made in the
+           horse’s own stable under the same protocol. As an observation — the assessment
+           stays with you.</p>
       </div>
     </div>
   </div>
@@ -1294,7 +1303,7 @@ html.rev-an .rev.in{opacity:1;transform:none}
 <section>
   <div class="wrap">
     <div class="sec-eyebrow">Interoperability</div>
-    <h2>The findings do not stay inside our window.</h2>
+    <h2>The data goes into your practice software, not into a dead end.</h2>
     <p class="sec-lead">
       Every recording can be exported as <strong>FHIR&nbsp;R5</strong> — as an
       <code>Observation</code> with LOINC codes and UCUM units, the horse as a
@@ -1305,23 +1314,6 @@ html.rev-an .rev.in{opacity:1;transform:none}
   </div>
 </section>
 
-<!-- ── 6b · PRAXISALLTAG ───────────────────────────────────────────
-     WARUM DIESER ABSCHNITT (12.08.2026): Der Entwurf hatte ihn nicht — die
-     alte Seite schon. Ein Aussenaudit nannte genau ihn den eigenstaendigen
-     Kaufgrund: „das hebt Visite vom reinen HRV-Auswertungstool zu einem
-     echten Arbeitswerkzeug fuer mobile Pferdetieraerzte und duerfte fuer
-     die Kaufentscheidung mindestens so schwer wiegen wie die Messdaten".
-     Bei keinem der genannten Wettbewerber gesehen.
-
-     Er steht bewusst UNMITTELBAR VOR den Grenzen und dem Preis: wer gerade
-     gelesen hat, dass das Werkzeug seinen Tag traegt und seine
-     Ferneinschaetzung abrechenbar macht, liest die Jahresgebuehr anders.
-
-     KEIN Eurobetrag und keine Beispielrechnung. Die GOT-Saetze haengen an
-     der Bemessung des Tierarztes; eine Summe von uns waere genau die Sorte
-     Zahl, die bei der ersten Nachpruefung durch einen Tierarzt auffliegt —
-     so ist es im Outreach-Kit schon einmal passiert. Genannt werden die
-     Ziffern, gerechnet wird in der Praxis. -->
 <section>
   <div class="wrap">
     <div class="sec-eyebrow">Your working day</div>
@@ -1331,12 +1323,12 @@ html.rev-an .rev.in{opacity:1;transform:none}
 
     <div class="feature">
       <div class="f-shot"><img src="../assets/visite-shots/05-tagesplan.jpg" loading="lazy"
-        alt="Tagesplan: die Stopps des Tages als Karten, kritische zuerst, mit gesparter Fahrstrecke und Greifpunkt zum Umsortieren"></div>
+        alt="Tagesplan: die Stopps des Tages als Karten in Streckenreihenfolge, mit Fahrzeit und Greifpunkt zum Umsortieren"></div>
       <div class="f-txt">
         <div class="f-k">Day plan</div>
-        <h3>The day sorts itself by urgency, not by the order the calls came in.</h3>
+        <h3>The round plans itself by distance and appointment — you set the order.</h3>
         <ul>
-          <li><b>The classification orders the stops.</b> Where you see it differently you drag the card — the software suggests, it does not decide.</li>
+          <li><b>The default is the shortest route.</b> If you wish, you move horses with a marked deviation to the front, and drag any stop by its handle — the software arranges, you decide.</li>
           <li><b>Die Fahrzeit zum nächsten Stopp</b> steht an jeder Karte, bevor Sie zusagen.</li>
           <li><b>None of it leaves your device on its own</b> — only your tap hands
             the route to the maps app.</li>
@@ -1347,7 +1339,7 @@ html.rev-an .rev.in{opacity:1;transform:none}
     <div class="shots three">
       <figure class="shot">
         <div class="frame"><img src="../assets/visite-shots/08-route.jpg" loading="lazy"
-          alt="Abfahrroute auf der Karte, kritische Pferde zuerst, direkt an Google Maps übergebbar"></div>
+          alt="Abfahrroute auf der Karte in Ihrer Reihenfolge, direkt an Google Maps übergebbar"></div>
         <figcaption>Map &amp; route — the departure order, handed straight to Google&nbsp;Maps instead of retyping addresses.</figcaption>
       </figure>
       <figure class="shot">
@@ -1356,18 +1348,16 @@ html.rev-an .rev.in{opacity:1;transform:none}
         <figcaption>Compact — the whole day on one timeline, when it has to be quick.</figcaption>
       </figure>
       <figure class="shot">
-        <div class="frame"><img src="../assets/visite-shots/07-verwaltung.jpg" loading="lazy"
-          alt="Verwaltung: Fahrtenbuch, Zeiterfassung, abgerechnete Ferneinschätzungen und CSV-Ausgabe"></div>
-        <figcaption>Administration — mileage log, time tracking, billed remote assessments, exported as CSV.</figcaption>
+        <div class="frame"><img src="../assets/visite-shots/07-dokumentation.jpg" loading="lazy"
+          alt="Dokumentation: Fahrtenbuch, Zeiterfassung, erfasste Leistungen und CSV-Ausgabe"></div>
+        <figcaption>Documentation — mileage log, time tracking, recorded services, exported as CSV.</figcaption>
       </figure>
     </div>
 
     <p class="sec-lead" style="margin-top:44px">
-      Written or telephone advice without examination is listed in the German veterinary
-      fee schedule (GOT) as <strong>item&nbsp;1</strong>, the veterinary letter per started
-      15&nbsp;minutes as <strong>item&nbsp;89</strong>. What that comes to at your rate you
-      can work out better than we can — CARLON only records the remote assessment where it
-      arises, and exports it as CSV.
+      CARLON records your services, trips and times where they arise, and exports them
+      as CSV. What you invoice and how is your decision, based on the work actually
+      done — the software does not invoice and promises no revenue.
     </p>
   </div>
 </section>
@@ -1391,8 +1381,8 @@ html.rev-an .rev.in{opacity:1;transform:none}
       </div>
       <div class="card">
         <h3>No database at our end</h3>
-        <p>Your patients live in your device's storage. We have no access and could not
-           delete them either. The owner's recording never passes through us at all: she
+        <p>Your horse data lives in your device's storage. We have no access and could not
+           delete it either. The owner's recording never passes through us at all: she
            sends you a file — opened via your measuring link, it is encrypted for your
            practice from the very first second.</p>
       </div>
@@ -1436,9 +1426,8 @@ html.rev-an .rev.in{opacity:1;transform:none}
       <div class="usp">
         <div class="u-k">Step 3</div>
         <h3>Drag the file into the cockpit</h3>
-        <p>Signal quality, baseline comparison and classification are there at once — the
-           triage places the horse, and the findings report is created straight from the
-           record.</p>
+        <p>Signal quality and the comparison with the horse's own history are there at once —
+           the measurement report is created straight from the record, the interpretation is yours.</p>
       </div>
     </div>
   </div>
@@ -1464,19 +1453,14 @@ html.rev-an .rev.in{opacity:1;transform:none}
          GOT-Summe (die Ziffern ja, die Betraege nie) und ohne erfundene
          Studienzahl: genannt wird nur, was die Praxis selbst nachrechnet. -->
     <p class="sec-lead" style="margin-top:var(--sp-21)">
-      <strong>You can work out where it pays for itself in one sentence.</strong> A single
-      drive saved by a remote check is, depending on distance, in the range of half to a
-      full monthly fee. Add one billable remote assessment — the German fee schedule (GOT)
-      lists consultation without examination as item&nbsp;1 and the veterinary letter as
-      item&nbsp;89 — and the month is carried by work that would not have happened at all.
-      Comparable telemetry in equine sport is billed <em>per horse</em>; here you pay once
-      for the practice.
+      Comparable systems in equine sport bill <em>per horse</em> or with their own sensor;
+      here you use an off-the-shelf Polar H10 strap. Try the whole workflow first
+      in the demo cockpit — no account.
     </p>
-    <!-- KLINIK-STUFE VORBEREITET, BEWUSST NOCH NICHT GEZEIGT (Jan, 13.08.):
-         erst das fertige Klinik-Produkt (Branding, Kasse, Nachsorge-Flow),
-         dann die Karte. Markup/Uebersetzungen liegen in der Git-Historie,
-         die Preisquelle im Cockpit ist vorbereitet. -->
+    <p class="b2b-hinweis">For veterinary practices and equine clinics only — orders exclusively as a business (§ 14 BGB).</p>
+    <div class="tarife-grid">
     <div class="tarif">
+      <div class="tarif-name">For equine practices</div>
       <!-- „netto" steht SICHTBAR am Preis. Der Waechter t-preisseite bestand
            bisher ueber den toten CSS-Klassennamen `.t-netto` — auf der Seite
            selbst stand das Wort nie. -->
@@ -1490,10 +1474,24 @@ html.rev-an .rev.in{opacity:1;transform:none}
       <ul class="enthalten">
         <li>Unlimited horses, recordings and trends</li>
         <li>All staff, all devices of the business</li>
-        <li>Findings report on your own letterhead</li>
+        <li>Measurement report on your own letterhead</li>
         <li>Export as JSON, CSV, Kubios and FHIR&nbsp;R5</li>
-        <li>Cancellable monthly, effective at the end of the billing period</li>
+        <li>Monthly plan cancellable monthly, annual plan at the end of its term</li>
       </ul>
+    </div>
+    <div class="tarif tarif-klinik">
+      <div class="tarif-name">For equine clinics</div>
+      <div class="tarif-preis"><b>349&nbsp;€</b> <span>netto im Monat · USt. weist Stripe aus</span></div>
+      <div class="tarif-alt">or €3,490 a year — two months saved</div>
+      <div class="tarif-alt">At checkout for clinics in Germany: €415.31 a month or €4,153.10 a year, each incl. 19&nbsp;% VAT.</div>
+      <ul class="enthalten">
+        <li>Everything in the practice plan</li>
+        <li>Shared records via your clinic folder on your existing network drive — every device sees the same state, no cloud</li>
+        <li>Station wall for the monitor in the ward</li>
+        <li>Several seats in one licence</li>
+        <li>A fixed method version per analysis — for archives and studies</li>
+      </ul>
+    </div>
     </div>
     <div class="tarif tarif-fussblock">
       <p class="tarif-fuss">
@@ -1520,6 +1518,17 @@ html.rev-an .rev.in{opacity:1;transform:none}
         /* Beim Live-Gang verschwindet der Beta-Satz im Hero von selbst —
            zwei Stellen, ein Schalter. */
         var hb = document.getElementById('heroBeta'); if (hb) hb.remove();
+        /* Beta-Anmeldung wird zur persönlichen Einführung: wer erst sprechen will, hat einen zweiten Weg zum Abschluss. */
+        var umbau = function(){ var f = document.getElementById('anmeldung');
+        if (f) {
+          var h = f.querySelector('h3'), l = f.querySelector('.anm-lead'), b = f.querySelector('.anm-senden');
+          if (h) h.textContent = de ? 'Lieber erst sprechen? Persönliche Einführung' : 'Prefer to talk first? Personal introduction';
+          if (l) l.textContent = de ? 'Wir gehen den Ablauf mit Ihren eigenen Aufnahmen durch — schriftlich oder telefonisch, wie es Ihnen passt. Ihre Anfrage liest der Entwickler selbst und meldet sich meist am selben Tag.'
+                                    : 'We walk through the workflow with your own recordings — in writing or by phone, as you prefer. The developer reads every request personally and usually replies the same day.';
+          if (b) b.textContent = de ? 'Einführung anfragen →' : 'Request an introduction →';
+          ['data-de','data-en'].forEach(function(k){ [h,l,b].forEach(function(e){ if (e) e.removeAttribute(k); }); });
+        }
+        }; if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', umbau); else umbau();
         box.innerHTML =
           '<a class="cta-primary" href="/carlon-equine/app/?kasse=1" ' +
           'data-en="Subscribe — activates immediately" data-de="Abonnieren — sofort aktiv">' +
@@ -1549,16 +1558,25 @@ html.rev-an .rev.in{opacity:1;transform:none}
     })();
     </script>
     </div>
-    <p class="sec-lead" style="margin-top:26px">
-      For scale: the annual price is in the region of a single practice visit including the
-      drive. Whether that pays off is best decided against your own figures — not ours.
-    </p>
   </div>
 </section>
 
 <!-- ── 9 · FAQ — VOR dem Abschluss: Einwandbehandlung wirkt nur,
      wenn danach eine Handlung moeglich ist. Wer erst in der FAQ
      ueberzeugt wird, hatte vorher den weitesten Weg zum Formular. ───────────────────────────────────────────────────── -->
+<section class="sec" id="abgrenzung">
+  <div class="wrap">
+    <div class="eyebrow">Positioning</div>
+    <h2>What CARLON is built for — and what other tools are for.</h2>
+    <div class="grid">
+      <div class="card"><h3>Load in training and at the gallop</h3><p>The domain of dedicated training systems with their own sensor, such as Arioneo Equimetre or EQUIMO.</p></div>
+      <div class="card"><h3>Gait and movement</h3><p>The domain of video gait analysis, such as Sleip.</p></div>
+      <div class="card"><h3>A quick live pulse on the phone</h3><p>The free Polar Equine app does that.</p></div>
+      <div class="card"><h3>Resting HRV in the horse’s own stable, as a trend</h3><p><strong>CARLON Equine:</strong> repeatable recordings against the horse’s own history, AV pauses cleanly separated, analysis in the browser, FHIR&nbsp;R5 — one price for the practice.</p></div>
+    </div>
+  </div>
+</section>
+
 <section>
   <div class="wrap">
     <div class="sec-eyebrow">Frequently asked</div>
@@ -1596,15 +1614,13 @@ html.rev-an .rev.in{opacity:1;transform:none}
            with it: every single beat interval.</p>
       </div>
       <div class="card">
-        <h3>What evidence sits behind the airway markers?</h3>
-        <p>The reference study is Nyerges-Bohák 2025 (Equine Veterinary Journal, n = 40):
-           20 horses with severe asthma, BAL-referenced, against 20 unremarkable controls.
-           The study reports group differences and names SD2, SDNN, TINN and SD2/SD1 as
-           the more discriminating measures — it contains no threshold value. Ours sit
-           midway between its group means; that is our own derivation, not a value from
-           the literature, and every threshold is listed individually. BAL cytology
-           remains the gold standard — the trend does not replace it, it substantiates
-           when it is due.</p>
+        <h3>What is the breathing-pattern profile based on?</h3>
+        <p>On a published comparison study (Nyerges-Bohák 2025, Equine Veterinary
+           Journal, n = 40) that reports group differences in SD2, SDNN, TINN and SD2/SD1 —
+           it contains no threshold value. Our comparison limits sit between its group
+           means; that is our own derivation, not a value from the literature, and every limit
+           is listed individually in the methodology. The profile describes a measurement
+           pattern — it establishes nothing and replaces no examination.</p>
       </div>
       <!-- Der Nacht-Einwand: jedes System, das Dringlichkeit einstuft,
            erzeugt potenziell die Erwartung, dass jemand hinsieht. Beide
@@ -1639,11 +1655,11 @@ html.rev-an .rev.in{opacity:1;transform:none}
 <section class="final">
   <div class="wrap">
     <div class="sec-eyebrow">Before you decide anything</div>
-    <h2>Fifteen demo horses. Real trends. No account.</h2>
+    <h2>Fifteen demo horses. Complete example trends. No account.</h2>
     <p class="sec-lead">
       The demo cockpit is not a video and not a slideshow, but the complete application.
-      Open a file, work the views, print a findings report. One horse in the list shows a
-      downward trend over four weeks — see for yourself from when it becomes noticeable.
+      Open a record, work the views, create a measurement report. One horse in the list shows a
+      downward trend over four weeks — see for yourself from when it becomes visible.
     </p>
     <div class="cta-row">
       <a class="cta-primary" href="/carlon-equine/app/">Open the cockpit with 15&nbsp;demo horses →</a>
@@ -1672,7 +1688,7 @@ html.rev-an .rev.in{opacity:1;transform:none}
           action="mailto:jan@vitalkultur.com" method="post" enctype="text/plain">
       <h3>Join as a beta practice</h3>
       <p class="anm-lead">Take part in the beta and you keep your founding-partner price. The developer
-         reads your registration himself — and replies personally, usually the
+         reads every registration personally — and replies, usually the
          same day.</p>
 
       <div class="anm-art" role="radiogroup" aria-label="Praxisart">
@@ -1714,12 +1730,13 @@ html.rev-an .rev.in{opacity:1;transform:none}
 </section>
 
 <footer>
-  <div class="footer-brand">CARLON EQUINE VISITE</div>
+  <div class="footer-brand">CARLON</div>
+  <div class="footer-tagline" style="margin-top:4px;letter-spacing:.22em;color:var(--cyan)">EQUINE BIOMETRICS</div>
   <div class="footer-tagline">For equine vets &amp; clinics · part of CARLON Equine</div>
   <div class="footer-madein" data-en="Made in Iffezheim · Germany" data-de="Made in Iffezheim · Germany">Made in Iffezheim · Germany</div>
   <div class="footer-links">
     <a href="/carlon-equine/" data-en="CARLON Equine (the app)" data-de="CARLON Equine (the app)">CARLON Equine (the app)</a>
-    <a href="/carlon-equine/coherence.html" data-en="Therapy &amp; research" data-de="Therapy &amp; research">Therapy &amp; research</a>
+    <a href="/carlon-equine/coherence.html" data-en="Coherence &amp; research" data-de="Coherence &amp; research">Coherence &amp; research</a>
     <a href="/privacy-en.html">Privacy</a>
     <a href="/terms.html#visite">Terms</a>
     <a href="/impressum.html">Legal notice</a>

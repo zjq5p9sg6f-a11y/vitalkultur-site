@@ -28,7 +28,7 @@
    Kasse von sich aus — der Schalter allein kann also keinen Kunden in eine
    tote oder falsche Kasse schicken.                                        */
 
-window.CARLON_LIVE = false;
+window.CARLON_LIVE = true;
 
 /* ════════════════════════════════════════════════════════════════════════
    DER ZWEITE SCHALTER — das Postfach
