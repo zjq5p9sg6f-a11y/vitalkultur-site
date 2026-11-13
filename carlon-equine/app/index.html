@@ -7555,19 +7555,17 @@ const Report={
       <div class="field-row"><div class="field"><label>Nächste Kontrolle (optional)</label><input id="bfNext" type="date"></div>
         <div class="field"><label>Ausstellende:r</label><input id="bfVet" value="${esc(s.vetName||s.clinicName||'')}"></div></div>
       <div class="rep-bill">
-        <label class="rep-bill-h"><input type="checkbox" id="bfBill" checked onchange="Report.refreshCta()"><span>Als Leistung erfassen</span></label>
+        <label class="rep-bill-h"><input type="checkbox" id="bfBill" onchange="Report.refreshCta()"><span>Zusätzlich als Leistung in Ihrer Dokumentation erfassen</span></label>
         <div id="bfBillBody">
-          <div class="fee-chips">
-            ${[35,45,60,75].map(v=>`<button type="button" class="feechip" data-fee="${v}" onclick="Report.setFee(${v})">${v} €</button>`).join('')}
-            <input id="bfFee" type="number" min="0" step="5" value="${fee}" oninput="Report.refreshCta()">
-          </div>
+          <div class="field" style="margin:8px 0 0"><label>Betrag für Ihre eigene Dokumentation (optional, €)</label>
+            <input id="bfFee" type="number" min="0" step="5" value="" placeholder="—" oninput="Report.refreshCta()"></div>
           <label class="rep-chk"><input type="checkbox" id="bfPaid"> schon bezahlt (sonst als „offen" erfasst)</label>
         </div>
       </div>
       <label class="rep-chk" style="margin-top:12px"><input type="checkbox" id="bfViral" checked> CARLON-Hinweis (QR) aufs PDF</label>
     </div>
     <div class="modal-foot"><button class="btn ghost" onclick="UI.closeModal()">Abbrechen</button><button class="btn primary" id="bfCta" onclick="Report.build()">Messwertbericht erstellen</button></div>`);
-    setTimeout(()=>Report.setFee(fee),0);
+    setTimeout(()=>Report.refreshCta(),0);
   },
   setFee(v){ const inp=$('#bfFee'); if(inp)inp.value=v; Report.refreshCta(); },
   refreshCta(){
@@ -7575,7 +7573,7 @@ const Report={
     const bill=$('#bfBill')&&$('#bfBill').checked; const fee=num($('#bfFee')&&$('#bfFee').value)||0;
     const body=$('#bfBillBody'); if(body){body.style.opacity=bill?'1':'.4'; body.style.pointerEvents=bill?'':'none';}
     document.querySelectorAll('#bfBillBody .feechip').forEach(c=>c.classList.toggle('on',+c.dataset.fee===fee));
-    cta.innerHTML=(bill&&fee>0)?'Messwertbericht erstellen · Leistung erfassen':'Messwertbericht erstellen';
+    cta.innerHTML=bill?'Messwertbericht erstellen · Leistung erfassen':'Messwertbericht erstellen';
   },
   async build(){
     const hid=this._hid; if(!State.horses.find(x=>x.id===hid))return;
@@ -7583,12 +7581,12 @@ const Report={
     const d={assess:($('#bfAssess').value||'').trim(),recom:($('#bfRec').value||'').trim(),
       next:$('#bfNext').value||'',vet:($('#bfVet').value||'').trim(),viral:$('#bfViral').checked};
     UI.closeModal();
-    if(bill&&fee>0){
+    if(bill){
       const c={id:'c_'+Math.abs(hashStr(hid+performance.now())).toString(36),horseId:hid,date:new Date().toISOString(),
         type:'Datensichtung (Aufnahme)',durationMin:0,fee,notes:d.assess?('Notiz: '+d.assess).slice(0,240):'Datensichtung (Aufnahme)',billed:!!paid,report:true};
       await DB.put('consults',c); State.consults.push(c);
-      Toast.show(`Befund erstellt · ${euro(fee)} ${paid?'abgerechnet':'als offen erfasst'}`,'ok');
-    } else { Toast.show('Befund erstellt','ok'); }
+      Toast.show(`Messwertbericht erstellt · Leistung dokumentiert${fee>0?' ('+euro(fee)+')':''}`,'ok');
+    } else { Toast.show('Messwertbericht erstellt','ok'); }
     this.render(hid,d);
     setTimeout(()=>{ window.print(); if(typeof Nav!=='undefined'&&Nav.cur==='detail')Nav.refresh(); },160);
   },
@@ -11453,6 +11451,8 @@ const Sprache={
     '4 · Dokumentieren':'4 · Document', 'Messwertbericht mit Ihrem Briefkopf, Leistungen und Fahrten an einem Ort.':'Measurement report on your letterhead, services and trips in one place.',
     'Demo mit 15 Pferden ansehen':'Explore the demo with 15 horses', 'Eigene Praxis einrichten':'Set up your own practice',
     'Aufnahme ansehen':'View recording', 'Erfassen':'Record', '✓ Aus der heutigen Tour genommen · Datensichtung dokumentiert':'✓ Removed from today’s route · data review documented', 'Beobachtung, Empfehlung…':'Observation, recommendation…', 'Datensichtung (Aufnahme)':'Data review (recording)',
+    'Zusätzlich als Leistung in Ihrer Dokumentation erfassen':'Also record as a service in your documentation', 'Betrag für Ihre eigene Dokumentation (optional, €)':'Amount for your own records (optional, €)',
+    'Messwertbericht erstellt':'Measurement report created',
     'Als Leistung erfassen':'Record as a service',
     'RMSSD':'RMSSD',
     'SDNN':'SDNN',
