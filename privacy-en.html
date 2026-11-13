@@ -44,7 +44,7 @@
 
   <div class="container legal">
     <h1>Privacy Policy</h1>
-    <p class="subtitle">Vitalkultur · Effective: 9 November 2026 · Version 2.7 — portfolio-wide (all iOS apps + vitalkultur.com)</p>
+    <p class="subtitle">Vitalkultur · Effective: 13 November 2026 · Version 2.8 — portfolio-wide (all iOS apps + vitalkultur.com)</p>
     <p><em>This is the English version. The
     German version at <a href="/privacy.html">vitalkultur.com/privacy.html</a>
     is the legally binding master document under EU/GDPR jurisdiction.</em></p>
@@ -66,8 +66,10 @@
       <li><strong>iOS app CARLON Breathwork</strong> (Apple Watch + iPhone) —
         including all training modes (Box Breathing, Tummo, Coherence,
         <strong>Cold-Exposure</strong>, Custom Patterns)</li>
-      <li><strong>iOS app + web viewer CARLON Equine — Heart Science</strong></li>
+      <li><strong>iOS app + web viewer CARLON Equine</strong></li>
       <li><strong>iOS app CARLON HRV Research</strong></li>
+      <li><strong>iOS app CARLON HRV Lab</strong></li>
+      <li><strong>iOS app CARLON Sound</strong></li>
     </ul>
 
     <!-- ============================================================
@@ -192,7 +194,7 @@
 
     <!-- ===== CARLON Equine ===== -->
     <div class="legal-product">
-      <h3>3.2 CARLON Equine — Heart Science</h3>
+      <h3>3.2 CARLON Equine</h3>
       <p class="product-meta">iOS app + web viewer · equine HRV analysis via Polar H10</p>
 
       <p><strong>Sensor data (local, no server):</strong></p>
@@ -350,6 +352,61 @@
         Cloudflare additionally encrypts stored values at rest (AES-256-GCM);
         transport runs over TLS.
       </p>
+    </div>
+
+    <!-- ===== CARLON HRV Lab (13.11.2026) ===== -->
+    <div class="legal-product">
+      <h3>3.5 CARLON HRV Lab</h3>
+      <p class="product-meta">iOS app (iPhone) · second app built from the CARLON HRV Research source code</p>
+      <p>CARLON HRV Lab is built from the same source code as CARLON HRV Research. Section&nbsp;3.3 applies
+         unchanged to data categories, exports, the optional study folder and the absence of Apple Health,
+         cloud, account and analytics. Differences:</p>
+      <ul>
+        <li>no widget and no app group — recordings stay in the app’s own container (accessible via the Files app);</li>
+        <li>additionally, simultaneous start of several sensors and an experimental backup of the live recording in the sensor’s memory — neither changes the data paths (Bluetooth to the sensor, files on your device).</li>
+      </ul>
+      <p>The only permission is Bluetooth (Polar&nbsp;H10, Movesense). The app has no internet connection of its own
+         and sends nothing to Vitalkultur or third parties. RR intervals are health data within the meaning of
+         Art.&nbsp;9 GDPR; they are processed exclusively on your device.</p>
+    </div>
+
+    <!-- ===== CARLON Sound (13.11.2026) ===== -->
+    <div class="legal-product">
+      <h3>3.6 CARLON Sound</h3>
+      <p class="product-meta">iOS app · practice and tuning app for handpan and other instruments</p>
+      <p><strong>Microphone:</strong> CARLON Sound listens to your playing to detect pitch, timing and touch.
+         Detection runs in your device’s memory. <strong>Audio is only stored</strong> when you start a sound
+         recording (tone lens, calibration) or switch on the test recording (off by default) — then as a file on your device.</p>
+      <p><strong>Heart-rate strap (optional, Bluetooth):</strong> If you connect a chest strap (e.g. Polar&nbsp;H10),
+         heart rate and RR intervals (time between heartbeats) are shown alongside your exercises. These are health data
+         within the meaning of Art.&nbsp;9 GDPR; they are processed locally only and serve practice guidance only, not the
+         detection, monitoring or treatment of disease.</p>
+      <p><strong>Calendar (optional, write-only):</strong> On request the app adds your practice time as a
+         recurring event. It does not read your calendar.</p>
+      <p><strong>Local data:</strong> practice sessions, errors, tempo, heart data, habit and settings stay on your
+         device. They only leave it if you share them yourself (iOS share sheet) or export them to a folder you
+         choose once.</p>
+      <p><strong>No internet connection, no analytics:</strong> the app has no network connection of its own, no
+         account, no analytics, crash-reporting or tracking tools and no in-app purchases. No data is sent to
+         Vitalkultur or third parties. Your data is backed up only by your device’s normal iCloud backup, if enabled.</p>
+    </div>
+
+    <div class="legal-product">
+      <h3>3.7 Common notes on CARLON HRV Lab and CARLON Sound</h3>
+      <p><strong>Legal classification of local processing.</strong> Both apps process your data exclusively on your
+         device. Vitalkultur receives none of this data and can neither view, correct, hand over nor delete it. To the
+         extent Vitalkultur were nevertheless regarded as controller, processing serves to provide the app’s functions
+         (Art.&nbsp;6(1)(b) GDPR). Heart rate and RR intervals are only processed when you connect a sensor yourself
+         (Art.&nbsp;9(2)(a) GDPR); you can end this at any time by disconnecting the sensor and deleting the recordings.</p>
+      <p><strong>Storage period and deletion.</strong> Data remains stored until you delete it — in the app, via the
+         Files app or by deleting the app. There is no fixed deletion period because the data only exists on your device.</p>
+      <p><strong>Voluntary.</strong> All permissions are voluntary. Without the microphone, pitch detection does not
+         work; without Bluetooth, no sensor or heart measurement. No automated decision-making takes place.</p>
+      <p><strong>Data of other people.</strong> If you record data of third parties (e.g. study participants or
+         students), you are responsible for informing them and obtaining any required consent or ethics approval.
+         Vitalkultur does not conduct studies and receives no study data.</p>
+      <p><strong>Export destinations.</strong> If you export or share files to a cloud service, that service’s terms
+         and privacy notices apply.</p>
     </div>
 
     <h2>4. Data export — Art.&nbsp;20 GDPR (portability)</h2>

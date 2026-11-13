@@ -896,9 +896,9 @@ tausche(`<li>Mehrere Plätze in einer Lizenz</li>`, `<li>Several seats in one li
 tausche(`<li>Feste Methodenversion je Auswertung — für Archiv und Studien</li>`, `<li>A fixed method version per analysis — for archives and studies</li>`);
 tausche(`<div class="eyebrow">Einordnung</div>`, `<div class="eyebrow">Positioning</div>`);
 tausche(`<h2>Wofür CARLON gebaut ist — und wofür andere Werkzeuge da sind.</h2>`, `<h2>What CARLON is built for — and what other tools are for.</h2>`);
-tausche(`<h3>Belastung im Training und Galopp</h3><p>Die Domäne spezialisierter Trainingssysteme mit eigenem Sensor, etwa Arioneo Equimetre oder EQUIMO.</p>`, `<h3>Load in training and at the gallop</h3><p>The domain of dedicated training systems with their own sensor, such as Arioneo Equimetre or EQUIMO.</p>`);
-tausche(`<h3>Gangbild und Bewegung</h3><p>Die Domäne der Video-Ganganalyse, etwa Sleip.</p>`, `<h3>Gait and movement</h3><p>The domain of video gait analysis, such as Sleip.</p>`);
-tausche(`<h3>Schneller Live-Puls am Telefon</h3><p>Dafür reicht die kostenlose Polar-Equine-App.</p>`, `<h3>A quick live pulse on the phone</h3><p>The free Polar Equine app does that.</p>`);
+tausche(`<h3>Belastung im Training und Galopp</h3><p>Die Domäne spezialisierter Trainingssysteme mit eigenem Sensor am Sattelgurt.</p>`, `<h3>Load in training and at the gallop</h3><p>The domain of dedicated training systems with their own sensor on the girth.</p>`);
+tausche(`<h3>Gangbild und Bewegung</h3><p>Die Domäne der Video- und Sensor-Ganganalyse.</p>`, `<h3>Gait and movement</h3><p>The domain of video and sensor gait analysis.</p>`);
+tausche(`<h3>Schneller Live-Puls am Telefon</h3><p>Dafür reicht die kostenlose App des Gurt-Herstellers.</p>`, `<h3>A quick live pulse on the phone</h3><p>The strap maker’s free app does that.</p>`);
 tausche(`<h3>Ruhe-HRV im eigenen Stall, als Verlauf</h3><p><strong>CARLON Equine:</strong> wiederholbare Aufnahmen gegen die eigene Vorgeschichte, AV-Pausen sauber getrennt, Auswertung im Browser, FHIR&nbsp;R5 — ein Preis für den Betrieb.</p>`, `<h3>Resting HRV in the horse’s own stable, as a trend</h3><p><strong>CARLON Equine:</strong> repeatable recordings against the horse’s own history, AV pauses cleanly separated, analysis in the browser, FHIR&nbsp;R5 — one price for the practice.</p>`);
 tausche('Nur für Tierarztpraxen und Pferdekliniken — Bestellung ausschließlich als Unternehmen (§ 14 BGB).', 'For veterinary practices and equine clinics only — orders exclusively as a business (§ 14 BGB).');
 
