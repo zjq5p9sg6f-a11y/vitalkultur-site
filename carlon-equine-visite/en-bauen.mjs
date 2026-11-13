@@ -123,7 +123,7 @@ tausche(`Die Halterin nimmt im Stall in Ruhe auf, die Aufnahme kommt verschlüss
       <strong>this horse’s own</strong> history — and plan your round by distance, appointment
       or your own order.`);
 tausche('Cockpit mit 15&nbsp;Demo-Pferden öffnen →', 'Open the cockpit with 15&nbsp;demo horses →', 2);
-tausche('>Was es kostet<', '>What it costs<');
+tausche('>Preise &amp; Freischaltung · ab 149&nbsp;€<', '>Pricing &amp; activation · from €149<');
 tausche('Das Demo-Cockpit ist die vollständige Anwendung mit vollständigen Beispielverläufen — ohne Konto, ohne Installation. Nichts davon verlässt Ihren Browser von selbst.',
         'The demo cockpit is the complete application with full example trends — no account, no installation. None of it leaves your browser on its own.');
 /* Hero-Belege + Visual (13.08.: φ-Split-Kopf) */
@@ -758,15 +758,15 @@ tausche(`Vergleichbare Systeme im Pferdesport rechnen <em>je Pferd</em> oder mit
 tausche('<div class="tarif-preis"><b>149&nbsp;€</b> <span>netto im Monat · USt. weist Stripe aus</span></div>',
         '<div class="tarif-preis"><b>149&nbsp;€</b> <span>net per month · VAT charged by Stripe</span></div>');
 tausche(`Das Angebot richtet sich ausschließlich an Unternehmer im Sinne des § 14 BGB.
-        <strong>Wir selbst rechnen als Kleinunternehmer nach § 19 UStG ohne Umsatzsteuer ab.</strong>
         Für das Browser-Cockpit tritt <strong>Stripe als Verkäufer im eigenen Namen</strong> auf
-        (Merchant of Record) und weist die Umsatzsteuer nach seinen Verhältnissen aus; mit
-        gültiger EU-USt-IdNr. greift dort das Reverse-Charge-Verfahren. Einzelheiten in`,
-`This offer is directed exclusively at entrepreneurs within the meaning of § 14 BGB.
-        <strong>We ourselves invoice without VAT under the German small-business rule (§ 19 UStG).</strong>
+        (Merchant of Record): Sie erhalten von dort eine Rechnung mit ausgewiesener Umsatzsteuer
+        für Ihren Vorsteuerabzug; mit gültiger EU-USt-IdNr. greift das Reverse-Charge-Verfahren.
+        Vitalkultur selbst ist Kleinunternehmer nach § 19 UStG. Einzelheiten in`,
+`This offer is directed exclusively at businesses within the meaning of § 14 BGB.
         For the browser cockpit, <strong>Stripe acts as the seller in its own name</strong>
-        (merchant of record) and charges VAT according to its own status; with a valid EU VAT ID
-        the reverse-charge procedure applies there. Details in`);
+        (merchant of record): you receive an invoice from Stripe showing VAT for your input-tax
+        deduction; with a valid EU VAT ID the reverse-charge procedure applies.
+        Vitalkultur itself is a small business under § 19 UStG. Details in`);
 
 
 /* Positiv behauptet statt doppelt verneint (Copy-CI §12). */
@@ -888,7 +888,7 @@ tausche(`aria-label="Bezugsstudie des Atemmuster-Profils"`,
 /* Klinik-Tarif + Abgrenzung (13.11.2026, Ganzheits-Kreis Runde 2) */
 tausche(`<div class="tarif-name">Für Pferdepraxen</div>`, `<div class="tarif-name">For equine practices</div>`);
 tausche(`<div class="tarif-name">Für Pferdekliniken</div>`, `<div class="tarif-name">For equine clinics</div>`);
-tausche(`<div class="tarif-alt">oder 3.490&nbsp;€ im Jahr — zwei Monate gespart</div>`, `<div class="tarif-alt">or €3,490 a year — two months saved</div>`);
+tausche(`<div class="tarif-alt">oder 3.490&nbsp;€ im Jahr — entspricht 290,83&nbsp;€ im Monat, zwei Monate gespart</div>`, `<div class="tarif-alt">or €3,490 a year — equivalent to €290.83 a month, two months saved</div>`);
 tausche(`<div class="tarif-alt">An der Kasse für Kliniken in Deutschland: 415,31&nbsp;€ im Monat bzw. 4.153,10&nbsp;€ im Jahr, jeweils inkl. 19&nbsp;% USt.</div>`, `<div class="tarif-alt">At checkout for clinics in Germany: €415.31 a month or €4,153.10 a year, each incl. 19&nbsp;% VAT.</div>`);
 tausche(`<li>Alles aus der Praxis-Stufe</li>`, `<li>Everything in the practice plan</li>`);
 tausche(`<li>Gemeinsamer Bestand über Ihren Klinik-Ordner auf dem vorhandenen Netzlaufwerk — jedes Gerät sieht denselben Stand, ohne Cloud</li>`, `<li>Shared records via your clinic folder on your existing network drive — every device sees the same state, no cloud</li>`);
@@ -902,6 +902,32 @@ tausche(`<h3>Gangbild und Bewegung</h3><p>Die Domäne der Video-Ganganalyse, etw
 tausche(`<h3>Schneller Live-Puls am Telefon</h3><p>Dafür reicht die kostenlose Polar-Equine-App.</p>`, `<h3>A quick live pulse on the phone</h3><p>The free Polar Equine app does that.</p>`);
 tausche(`<h3>Ruhe-HRV im eigenen Stall, als Verlauf</h3><p><strong>CARLON Equine:</strong> wiederholbare Aufnahmen gegen die eigene Vorgeschichte, AV-Pausen sauber getrennt, Auswertung im Browser, FHIR&nbsp;R5 — ein Preis für den Betrieb.</p>`, `<h3>Resting HRV in the horse’s own stable, as a trend</h3><p><strong>CARLON Equine:</strong> repeatable recordings against the horse’s own history, AV pauses cleanly separated, analysis in the browser, FHIR&nbsp;R5 — one price for the practice.</p>`);
 tausche('Nur für Tierarztpraxen und Pferdekliniken — Bestellung ausschließlich als Unternehmen (§ 14 BGB).', 'For veterinary practices and equine clinics only — orders exclusively as a business (§ 14 BGB).');
+
+/* 13.11. Conversion C0 */
+tausche('<p class="rollen-weiche"><a href="#arbeitstag">Für Fahrpraxen ↓</a> · <a href="#klinik">Für Pferdekliniken ↓</a></p>', '<p class="rollen-weiche"><a href="#arbeitstag">For mobile practices ↓</a> · <a href="#klinik">For equine clinics ↓</a></p>');
+tausche('>Die Bereinigung an 15 Beispielpferden selbst prüfen →<', '>Check the cleaning yourself on 15 example horses →<');
+tausche('>Zu den Tarifen ↓<', '>To the plans ↓<');
+tausche('<div class="sec-eyebrow">Für Pferdekliniken</div>', '<div class="sec-eyebrow">For equine clinics</div>');
+tausche('<h2>Auf Station derselbe Stand. Zu Hause geht der Verlauf weiter.</h2>', '<h2>The same picture on the ward. At home the trend continues.</h2>');
+tausche('alt="Stationswand: alle aufgenommenen Pferde als Kacheln mit bereinigtem RMSSD, Ruhe-HF, Abweichung von der eigenen Basis, Signalgüte und Protokoll"', 'alt="Ward wall: all recorded horses as tiles with cleaned RMSSD, resting HR, deviation from their own baseline, signal quality and protocol"');
+tausche('<div class="f-k">Stationswand · Klinik-Ordner</div>', '<div class="f-k">Ward wall · clinic folder</div>');
+tausche('<h3>Ein Bildschirm im Stationszimmer, auf dem das ganze Team dasselbe sieht.</h3>', '<h3>One screen in the ward office where the whole team sees the same thing.</h3>');
+tausche('<li><b>Übersichtswand ohne Alarme</b> — jede Box mit bereinigtem RMSSD, Ruhe-HF, Signalgüte und Protokoll, sortiert nach Abweichung von der eigenen Basis.</li>', '<li><b>Overview wall without alarms</b> — every box with cleaned RMSSD, resting HR, signal quality and protocol, sorted by deviation from its own baseline.</li>');
+tausche('<li><b>Gemeinsamer Klinik-Ordner</b> auf Ihrem vorhandenen Netzlaufwerk — jedes Gerät im Haus liest denselben Stand, ohne Cloud.</li>', '<li><b>Shared clinic folder</b> on your existing network drive — every device in the building reads the same state, no cloud.</li>');
+tausche('<li><b>Nach der Entlassung</b> geben Sie den Mess-Link mit: Die nächsten Ruheaufnahmen aus der gewohnten Box landen in derselben Akte.</li>', '<li><b>After discharge</b> you hand over the recording link: the next resting recordings from the horse’s usual stable land in the same record.</li>');
+tausche('<li><b>Feste Methodenversion</b> je Auswertung — für Archiv, Fallbesprechung und Studien.</li>', '<li><b>Fixed method version</b> per analysis — for archive, case review and studies.</li>');
+tausche('>Stationswand im Demo ansehen →<', '>See the ward wall in the demo →<');
+tausche('<div class="g-k">Persönlich, nicht anonym</div>', '<div class="g-k">Personal, not anonymous</div>');
+tausche(`<p><b>Entwickelt und betreut von Jan Rohwedder</b> (Vitalkultur, Iffezheim). Es gibt noch keine
+         Referenzlogos auf dieser Seite — und wir erfinden auch keine. Stattdessen erreichen Sie den
+         Entwickler direkt, vor und nach dem Kauf.</p>`, `<p><b>Built and supported by Jan Rohwedder</b> (Vitalkultur, Iffezheim, Germany). There are no
+         reference logos on this page yet — and we won’t invent any. Instead you reach the
+         developer directly, before and after you buy.</p>`);
+tausche('<p class="g-kontakt">Frage vorab?', '<p class="g-kontakt">A question first?');
+tausche('>Praxis-Abo wählen · 149&nbsp;€ / Monat →<', '>Choose practice plan · €149 / month →<');
+tausche('>Oder erst eine persönliche Einführung ↓<', '>Or a personal introduction first ↓<');
+tausche('>Klinik-Abo wählen · 349&nbsp;€ / Monat →<', '>Choose clinic plan · €349 / month →<');
+tausche('>Klinik-Ordner vorab im Gespräch klären ↓<', '>Discuss the clinic folder first ↓<');
 if (fehlend.length) {
   console.error('\n  ✗ Der Bau bricht ab — diese Bloecke gibt es in index.html nicht (mehr):\n');
   for (const f of fehlend) console.error(`      ${f.erwartet}× erwartet, ${f.gefunden}× gefunden:  „${f.de}…"`);

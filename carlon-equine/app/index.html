@@ -34,7 +34,7 @@
 
 .kauf-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;align-items:start}
 @media(max-width:760px){.kauf-grid{grid-template-columns:1fr}}
-.kauf-grid .tier-opt{padding:12px 14px}.kauf-b2b{display:flex;gap:10px;align-items:flex-start;margin-top:14px;padding:10px 12px;border:1px solid rgba(62,207,178,.35);border-radius:10px;font-size:13px;color:var(--text-primary);cursor:pointer}.kauf-b2b input{margin-top:3px;accent-color:var(--cyan)}.kauf-b2b a{color:var(--cyan)}.kauf-link[aria-disabled=true]{opacity:.45;filter:grayscale(.4)}.kauf-grid .tier-table{gap:8px}.kauf-grid .tier-opt ul{line-height:1.6}
+.kauf-grid .tier-opt{padding:12px 14px}.kauf-b2b{display:flex;gap:10px;align-items:flex-start;margin:0 0 14px;padding:10px 12px;border:1px solid rgba(62,207,178,.35);border-radius:10px;font-size:13px;color:var(--text-primary);cursor:pointer}.kauf-b2b input{margin-top:3px;accent-color:var(--cyan)}.kauf-b2b a{color:var(--cyan)}.kauf-link[aria-disabled=true]{opacity:.45;filter:grayscale(.4)}.kauf-grid .tier-table{gap:8px}.kauf-grid .tier-opt ul{line-height:1.6}
 
 .vh-cta.ghost.hell,.verdict-hero .vh-cta.ghost.hell{color:#E8F8FF;border:1px solid rgba(62,207,178,.45);background:rgba(62,207,178,.08)}
 .pc-guete.lang{margin:10px 0 0;font-size:12.5px;color:var(--text-secondary)}
@@ -7559,10 +7559,9 @@ const Report={
         <div id="bfBillBody">
           <div class="field" style="margin:8px 0 0"><label>Betrag für Ihre eigene Dokumentation (optional, €)</label>
             <input id="bfFee" type="number" min="0" step="5" value="" placeholder="—" oninput="Report.refreshCta()"></div>
-          <label class="rep-chk"><input type="checkbox" id="bfPaid"> schon bezahlt (sonst als „offen" erfasst)</label>
         </div>
       </div>
-      <label class="rep-chk" style="margin-top:12px"><input type="checkbox" id="bfViral" checked> CARLON-Hinweis (QR) aufs PDF</label>
+      <label class="rep-chk" style="margin-top:12px"><input type="checkbox" id="bfViral"> CARLON-Hinweis (QR) aufs PDF</label>
     </div>
     <div class="modal-foot"><button class="btn ghost" onclick="UI.closeModal()">Abbrechen</button><button class="btn primary" id="bfCta" onclick="Report.build()">Messwertbericht erstellen</button></div>`);
     setTimeout(()=>Report.refreshCta(),0);
@@ -8074,8 +8073,8 @@ const UI={
     // Features hier sind gegen PAID_ONLY + maxHorses verifiziert — nichts versprechen, was kein Gate hat.
     const FEATS=['Unbegrenzt viele Pferde','Tourenplanung mit Ruhe-HRV-Verlauf je Pferd','Aufnahmequalität sichtbar: roh und bereinigt, Artefakte, Methodenversion','Mess-Link für Halter – Aufnahme kommt verschlüsselt zu Ihnen','Messwertbericht (PDF) mit Ihrem Logo, CSV- und FHIR-Export','Auswertung lokal im Browser – keine Pferde-, Halter- oder Messdaten auf unseren Servern'];
     const plans=[
-      ['year','Jahresabo',(License.PREIS.soloJahr/12).toFixed(2).replace('.',','),`${License.PREIS.soloJahr.toLocaleString('de-DE')} € im Jahr · 12 Monate Laufzeit, zwei Monate günstiger`,'beste Wahl'],
-      ['month','Monatsabo',String(License.PREIS.soloMonat),'monatlich kündbar',''],
+      ['month','Monatsabo',String(License.PREIS.soloMonat),'monatlich kündbar','zum Einstieg'],
+      ['year','Jahresabo',(License.PREIS.soloJahr/12).toFixed(2).replace('.',','),`${License.PREIS.soloJahr.toLocaleString('de-DE')} € im Jahr · 12 Monate Laufzeit, zwei Monate günstiger`,'zwei Monate gespart'],
     ];
     /* Klinik-Stufe (AP3): eigener Block unter der Praxis — der Magnet ist
        der Entlasstag (Nachsorge-Flow), nicht die Platzzahl.
@@ -8098,13 +8097,14 @@ const UI={
        „Schluessel eingeben" zurueck, weil checkoutLink() ohne Link null gibt. */
     const KLINIK_SELBSTKAUF = true;
     const kplans=KLINIK_SELBSTKAUF?[
-      ['clinicYear','Klinik · Jahresabo',(License.PREIS.klinikJahr/12).toFixed(2).replace('.',','),`${License.PREIS.klinikJahr.toLocaleString('de-DE')} € im Jahr · 12 Monate Laufzeit, zwei Monate günstiger`,''],
       ['clinicMonth','Klinik · Monatsabo',String(License.PREIS.klinikMonat),'monatlich kündbar',''],
+      ['clinicYear','Klinik · Jahresabo',(License.PREIS.klinikJahr/12).toFixed(2).replace('.',','),`${License.PREIS.klinikJahr.toLocaleString('de-DE')} € im Jahr · 12 Monate Laufzeit, zwei Monate günstiger`,''],
     ]:[];
     this.modal(`<div class="modal-head"><button class="closex" onclick="UI.closeModal()">${IC.x}</button><h3>CARLON Equine freischalten</h3></div>
     <div class="modal-body">
       ${feature?`<div class="demo-ribbon" style="margin-bottom:14px"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg><div><b>${esc(feature)}</b> ist Teil der Vollversion.</div></div>`:''}
       
+      <label class="kauf-b2b"><input type="checkbox" id="kaufB2B" onchange="document.querySelectorAll('.kauf-link').forEach(l=>l.setAttribute('aria-disabled',this.checked?'false':'true'))"> <span>Ich bestelle als <b>Unternehmer (§ 14 BGB)</b> für meine Praxis oder Klinik und akzeptiere die <a href="/agb.html" target="_blank" rel="noopener">AGB</a>.</span></label>
       <div class="kauf-grid"><div class="kauf-spalte">
       <div class="tier-opt feat" style="align-items:flex-start">
         <div style="flex:1"><h4>CARLON Equine — für Pferdepraxen</h4>
@@ -8117,7 +8117,7 @@ const UI={
             <div style="font-size:12px;color:var(--text-dim)">${note}</div></div>
           <div class="price"><b>${price}</b><span>€ netto / Monat</span>
             ${(()=>{const u=License.checkoutLink(id);
-              return u?`<a class="btn primary kauf-link" aria-disabled="true" style="margin-top:8px;padding:7px 12px;font-size:12px" href="${u}" target="_blank" rel="noopener" onclick="if(!document.getElementById('kaufB2B')?.checked){event.preventDefault();UI.kaufHinweis();}">Abonnieren</a>`
+              return u?`<a class="btn primary kauf-link" aria-disabled="true" style="margin-top:8px;padding:7px 12px;font-size:12px" href="${u}" target="_blank" rel="noopener" onclick="if(!document.getElementById('kaufB2B')?.checked){event.preventDefault();UI.kaufHinweis();}">Weiter zur Kasse →</a>`
                       :`<button class="btn ghost" style="margin-top:8px;padding:7px 12px;font-size:12px" onclick="UI.activate()">Schlüssel eingeben</button>`;})()}</div>
         </div>`).join('')}
       </div>
@@ -8133,12 +8133,11 @@ const UI={
             <div style="font-size:12px;color:var(--text-dim)">${note}</div></div>
           <div class="price"><b>${price}</b><span>€ netto / Monat</span>
             ${(()=>{const u=License.checkoutLink(id);
-              return u?`<a class="btn primary kauf-link" aria-disabled="true" style="margin-top:8px;padding:7px 12px;font-size:12px" href="${u}" target="_blank" rel="noopener" onclick="if(!document.getElementById('kaufB2B')?.checked){event.preventDefault();UI.kaufHinweis();}">Abonnieren</a>`
+              return u?`<a class="btn primary kauf-link" aria-disabled="true" style="margin-top:8px;padding:7px 12px;font-size:12px" href="${u}" target="_blank" rel="noopener" onclick="if(!document.getElementById('kaufB2B')?.checked){event.preventDefault();UI.kaufHinweis();}">Weiter zur Kasse →</a>`
                       :`<button class="btn ghost" style="margin-top:8px;padding:7px 12px;font-size:12px" onclick="UI.activate()">Schlüssel eingeben</button>`;})()}</div>
         </div>`).join('')}
       </div>
       </div></div>
-      <label class="kauf-b2b"><input type="checkbox" id="kaufB2B" onchange="document.querySelectorAll('.kauf-link').forEach(l=>l.setAttribute('aria-disabled',this.checked?'false':'true'))"> <span>Ich bestelle als <b>Unternehmer (§ 14 BGB)</b> für meine Praxis oder Klinik und akzeptiere die <a href="/agb.html" target="_blank" rel="noopener">AGB</a>.</span></label>
       <p style="font-size:12.5px;color:var(--text-secondary);margin-top:12px">${(()=>{ /* KASSENZAHL VORAB (05.11.2026): Stripe zeigt als Verkäufer zuerst den Bruttobetrag
         (in der Live-Kasse gelesen: 177,31 / 1.773,10 / 415,31 / 4.153,10 €). Aus den Preisen gerechnet, nicht abgeschrieben. */
         const b=x=>(Math.round(x*119)/100).toLocaleString('de-DE',{minimumFractionDigits:2,maximumFractionDigits:2})+' €';
@@ -11453,6 +11452,7 @@ const Sprache={
     'Aufnahme ansehen':'View recording', 'Erfassen':'Record', '✓ Aus der heutigen Tour genommen · Datensichtung dokumentiert':'✓ Removed from today’s route · data review documented', 'Beobachtung, Empfehlung…':'Observation, recommendation…', 'Datensichtung (Aufnahme)':'Data review (recording)',
     'Zusätzlich als Leistung in Ihrer Dokumentation erfassen':'Also record as a service in your documentation', 'Betrag für Ihre eigene Dokumentation (optional, €)':'Amount for your own records (optional, €)',
     'Messwertbericht erstellt':'Measurement report created',
+    'Weiter zur Kasse →':'Continue to checkout →', 'zum Einstieg':'to start', 'zwei Monate gespart':'two months saved',
     'Als Leistung erfassen':'Record as a service',
     'RMSSD':'RMSSD',
     'SDNN':'SDNN',

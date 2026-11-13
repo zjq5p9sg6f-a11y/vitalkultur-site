@@ -458,6 +458,12 @@ h2{font-family:var(--font-brand);font-weight:350;font-size:clamp(28px,3.6vw,var(
 .tarife-grid{max-width:920px;margin:var(--sp-55) auto 0;display:grid;
   grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:var(--sp-21)}
 .tarife-grid .tarif{max-width:none;margin:0}
+.rollen-weiche{margin-top:12px;font-size:14px;color:var(--text-secondary)}.rollen-weiche a{color:var(--cyan);border-bottom:1px solid rgba(62,207,178,.35)}
+.gruender{max-width:920px;margin:var(--sp-34,34px) auto 0;padding:20px 24px;border:1px solid rgba(62,207,178,.30);border-radius:16px;background:rgba(62,207,178,.05)}
+.gruender .g-k{font-family:var(--font-mono);font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--cyan);margin-bottom:8px}
+.gruender p{font-size:15px;line-height:1.65;color:var(--text-secondary);max-width:70ch}.gruender b{color:var(--text-primary);font-weight:500}
+.gruender .g-kontakt{margin-top:10px;font-size:14px}.gruender .g-kontakt a{color:var(--cyan);white-space:nowrap}
+.tarif-knopf{display:block;text-align:center;margin-top:18px}.tarif-neben{display:block;text-align:center;margin-top:10px;font-size:13px;color:var(--text-secondary)}
 .b2b-hinweis{max-width:920px;margin:var(--sp-34,34px) auto 0;font-family:var(--font-mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--cyan);text-align:center}
 .t-stufe{font-family:var(--font-mono);font-size:var(--t-mark);letter-spacing:0.2em;
   text-transform:uppercase;color:var(--cyan);text-align:center;margin-bottom:var(--sp-13)}
@@ -860,8 +866,9 @@ h1,h2{text-wrap:balance}
     </p>
     <div class="cta-row">
       <a class="cta-primary" href="/carlon-equine/app/">Cockpit mit 15&nbsp;Demo-Pferden öffnen →</a>
-      <a class="btn btn-back" href="#preis">Was es kostet</a>
+      <a class="btn btn-back" href="#preis">Preise &amp; Freischaltung · ab 149&nbsp;€</a>
     </div>
+    <p class="rollen-weiche"><a href="#arbeitstag">Für Fahrpraxen ↓</a> · <a href="#klinik">Für Pferdekliniken ↓</a></p>
     <p class="cta-note">Das Demo-Cockpit ist die vollständige Anwendung mit vollständigen Beispielverläufen — ohne Konto, ohne Installation. Nichts davon verlässt Ihren Browser von selbst.<span id="heroBeta"> Wir sind in der Beta und begleiten jede Praxis persönlich — wer jetzt einsteigt, behält seinen Preis als Gründungspartner.</span></p>
     <!-- Die drei staerksten Argumente der Seite, above the fold — jede
          Zeile wird weiter unten mit einem eigenen Abschnitt eingeloest. -->
@@ -1265,6 +1272,10 @@ h1,h2{text-wrap:balance}
          und die Qualitätsanzeige warnt kein einziges Mal. Ein hoher Anteil
          plausibler Schläge sagt nichts darüber, ob der Kennwert stimmt.</p>
     </div>
+    <div class="cta-row" style="margin-top:var(--sp-34,34px)">
+      <a class="cta-primary" href="/carlon-equine/app/?demo=board">Die Bereinigung an 15 Beispielpferden selbst prüfen →</a>
+      <a class="btn btn-back" href="#preis">Zu den Tarifen ↓</a>
+    </div>
   </div>
 </section>
 
@@ -1310,7 +1321,7 @@ h1,h2{text-wrap:balance}
   </div>
 </section>
 
-<section>
+<section id="arbeitstag">
   <div class="wrap">
     <div class="sec-eyebrow">Ihr Arbeitstag</div>
     <h2>Zwischen zwei Terminen liegt Ihr Fahrweg.</h2>
@@ -1400,6 +1411,28 @@ h1,h2{text-wrap:balance}
      UI.aushangDrucken() nach Lizenz, Schluessel im QR (t-pilotschluessel),
      Drag&Drop-Import (dropzone). Bewusst VOR dem Preis: erst der Weg,
      dann die Zahl. -->
+<section id="klinik">
+  <div class="wrap">
+    <div class="sec-eyebrow">Für Pferdekliniken</div>
+    <h2>Auf Station derselbe Stand. Zu Hause geht der Verlauf weiter.</h2>
+    <div class="feature">
+      <div class="f-shot"><img src="assets/visite-shots/11-station.jpg" loading="lazy"
+        alt="Stationswand: alle aufgenommenen Pferde als Kacheln mit bereinigtem RMSSD, Ruhe-HF, Abweichung von der eigenen Basis, Signalgüte und Protokoll"></div>
+      <div class="f-txt">
+        <div class="f-k">Stationswand · Klinik-Ordner</div>
+        <h3>Ein Bildschirm im Stationszimmer, auf dem das ganze Team dasselbe sieht.</h3>
+        <ul>
+          <li><b>Übersichtswand ohne Alarme</b> — jede Box mit bereinigtem RMSSD, Ruhe-HF, Signalgüte und Protokoll, sortiert nach Abweichung von der eigenen Basis.</li>
+          <li><b>Gemeinsamer Klinik-Ordner</b> auf Ihrem vorhandenen Netzlaufwerk — jedes Gerät im Haus liest denselben Stand, ohne Cloud.</li>
+          <li><b>Nach der Entlassung</b> geben Sie den Mess-Link mit: Die nächsten Ruheaufnahmen aus der gewohnten Box landen in derselben Akte.</li>
+          <li><b>Feste Methodenversion</b> je Auswertung — für Archiv, Fallbesprechung und Studien.</li>
+        </ul>
+        <p style="margin-top:14px"><a class="cta-primary" href="/carlon-equine/app/?demo=station">Stationswand im Demo ansehen →</a></p>
+      </div>
+    </div>
+  </div>
+</section>
+
 <section>
   <div class="wrap">
     <div class="sec-eyebrow">Der Start</div>
@@ -1454,6 +1487,13 @@ h1,h2{text-wrap:balance}
       hier nutzen Sie einen handelsüblichen Polar-H10-Gurt. Testen Sie den ganzen Ablauf vorher
       im Demo-Cockpit — ohne Konto.
     </p>
+    <div class="gruender">
+      <div class="g-k">Persönlich, nicht anonym</div>
+      <p><b>Entwickelt und betreut von Jan Rohwedder</b> (Vitalkultur, Iffezheim). Es gibt noch keine
+         Referenzlogos auf dieser Seite — und wir erfinden auch keine. Stattdessen erreichen Sie den
+         Entwickler direkt, vor und nach dem Kauf.</p>
+      <p class="g-kontakt">Frage vorab? <a href="tel:+4915678300113">+49&nbsp;156&nbsp;78300113</a> · <a href="mailto:jan@vitalkultur.com">jan@vitalkultur.com</a></p>
+    </div>
     <p class="b2b-hinweis">Nur für Tierarztpraxen und Pferdekliniken — Bestellung ausschließlich als Unternehmen (§ 14 BGB).</p>
     <div class="tarife-grid">
     <div class="tarif">
@@ -1475,11 +1515,13 @@ h1,h2{text-wrap:balance}
         <li>Export als JSON, CSV, Kubios und FHIR&nbsp;R5</li>
         <li>Monatsabo monatlich kündbar, Jahresabo zum Ende der Laufzeit</li>
       </ul>
+      <a class="cta-primary tarif-knopf" href="/carlon-equine/app/?kasse=1">Praxis-Abo wählen · 149&nbsp;€ / Monat →</a>
+      <a class="tarif-neben" href="#anmeldung">Oder erst eine persönliche Einführung ↓</a>
     </div>
     <div class="tarif tarif-klinik">
       <div class="tarif-name">Für Pferdekliniken</div>
       <div class="tarif-preis"><b>349&nbsp;€</b> <span>netto im Monat · USt. weist Stripe aus</span></div>
-      <div class="tarif-alt">oder 3.490&nbsp;€ im Jahr — zwei Monate gespart</div>
+      <div class="tarif-alt">oder 3.490&nbsp;€ im Jahr — entspricht 290,83&nbsp;€ im Monat, zwei Monate gespart</div>
       <div class="tarif-alt">An der Kasse für Kliniken in Deutschland: 415,31&nbsp;€ im Monat bzw. 4.153,10&nbsp;€ im Jahr, jeweils inkl. 19&nbsp;% USt.</div>
       <ul class="enthalten">
         <li>Alles aus der Praxis-Stufe</li>
@@ -1488,15 +1530,17 @@ h1,h2{text-wrap:balance}
         <li>Mehrere Plätze in einer Lizenz</li>
         <li>Feste Methodenversion je Auswertung — für Archiv und Studien</li>
       </ul>
+      <a class="cta-primary tarif-knopf" href="/carlon-equine/app/?kasse=1">Klinik-Abo wählen · 349&nbsp;€ / Monat →</a>
+      <a class="tarif-neben" href="#anmeldung">Klinik-Ordner vorab im Gespräch klären ↓</a>
     </div>
     </div>
     <div class="tarif tarif-fussblock">
       <p class="tarif-fuss">
         Das Angebot richtet sich ausschließlich an Unternehmer im Sinne des § 14 BGB.
-        <strong>Wir selbst rechnen als Kleinunternehmer nach § 19 UStG ohne Umsatzsteuer ab.</strong>
         Für das Browser-Cockpit tritt <strong>Stripe als Verkäufer im eigenen Namen</strong> auf
-        (Merchant of Record) und weist die Umsatzsteuer nach seinen Verhältnissen aus; mit
-        gültiger EU-USt-IdNr. greift dort das Reverse-Charge-Verfahren. Einzelheiten in
+        (Merchant of Record): Sie erhalten von dort eine Rechnung mit ausgewiesener Umsatzsteuer
+        für Ihren Vorsteuerabzug; mit gültiger EU-USt-IdNr. greift das Reverse-Charge-Verfahren.
+        Vitalkultur selbst ist Kleinunternehmer nach § 19 UStG. Einzelheiten in
         <a href="/agb.html#visite">§ 12a unserer AGB</a> und in der
         <a href="/privacy.html">Datenschutzerklärung</a>.
       </p>
@@ -1526,10 +1570,8 @@ h1,h2{text-wrap:balance}
           ['data-de','data-en'].forEach(function(k){ [h,l,b].forEach(function(e){ if (e) e.removeAttribute(k); }); });
         }
         }; if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', umbau); else umbau();
-        box.innerHTML =
-          '<a class="cta-primary" href="/carlon-equine/app/?kasse=1" ' +
-          'data-en="Subscribe — activates immediately" data-de="Abonnieren — sofort aktiv">' +
-          (de ? 'Abonnieren — sofort aktiv' : 'Subscribe — activates immediately') + '</a>';
+        /* Die Tarifkarten tragen jetzt je einen eigenen Knopf (Conversion C0) — kein dritter Sammelknopf. */
+        box.innerHTML = '';
       } else {
         /* BETA-LOGIK STATT FRUST-MOMENT (Comet-Audit, 13.08.): der Arzt
            sieht 79 EUR, will klicken — und las nur „Kasse noch nicht
