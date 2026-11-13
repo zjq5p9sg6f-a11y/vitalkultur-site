@@ -8624,7 +8624,7 @@ const UI={
         <div style="font-size:13px"><b>Auf weiterem Gerät nutzen</b><br><span style="color:var(--text-secondary)">Mit iPad oder Praxis-PC scannen – die Lizenz gilt dann dort ohne Schlüssel. Ihre Akten liegen je Gerät; sie kommen per Backup oder Klinik-Ordner mit. Link nur innerhalb der Praxis weitergeben.</span>
         <div style="margin-top:8px"><button class="btn ghost" onclick="navigator.clipboard&&navigator.clipboard.writeText(License.geraetLink()).then(()=>Toast.show('Geräte-Link kopiert','ok'))">Link kopieren</button></div></div></div>`:''}
       <div style="margin-top:14px;font-size:13px;color:var(--text-secondary)">Fragen zum Produkt: <b>Jan Rohwedder</b> · <a href="mailto:jan@vitalkultur.com">jan@vitalkultur.com</a><br>Rechnung, Karte, Kündigung: „Abo verwalten“ in der Lizenz-Ansicht.</div>
-      <div style="display:flex;gap:8px;margin-top:16px;flex-wrap:wrap"><button class="btn primary" onclick="(typeof Praxis!=='undefined'?Praxis.einladung():Promise.resolve(null)).then(l=>{ if(l) window.open(l,'_blank','noopener'); else location.href='messen.html'; })">Erste Aufnahme starten</button><button class="btn ghost" onclick="UI.closeModal()">Später</button></div>
+      <div style="display:flex;gap:8px;margin-top:16px;flex-wrap:wrap"><button class="btn primary" onclick="(typeof Praxis!=='undefined'?Praxis.einladung():Promise.resolve(null)).then(l=>{ if(l) window.open(l,'_blank','noopener'); else location.href='messen.html'; })">Erste Aufnahme starten</button>${(State.horses||[]).length?'':`<button class="btn ghost" title="Lädt 15 Beispielpferde – in den Einstellungen jederzeit wieder entfernbar" onclick="UI.closeModal();startWith(true).then(()=>Nav.go('today'))">Ohne Gurt umsehen (Beispielpferde)</button>`}<button class="btn ghost" onclick="UI.closeModal()">Später</button></div>
     </div>`);
   },
   licenseInfo(){
@@ -11453,6 +11453,7 @@ const Sprache={
     'Zusätzlich als Leistung in Ihrer Dokumentation erfassen':'Also record as a service in your documentation', 'Betrag für Ihre eigene Dokumentation (optional, €)':'Amount for your own records (optional, €)',
     'Messwertbericht erstellt':'Measurement report created',
     'Weiter zur Kasse →':'Continue to checkout →', 'zum Einstieg':'to start', 'zwei Monate gespart':'two months saved',
+    'Ohne Gurt umsehen (Beispielpferde)':'Look around without a belt (example horses)',
     'Als Leistung erfassen':'Record as a service',
     'RMSSD':'RMSSD',
     'SDNN':'SDNN',
