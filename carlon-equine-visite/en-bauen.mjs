@@ -304,7 +304,6 @@ tausche('> Wir sind eine Klinik<', '> We are a clinic<');
 tausche('<label>Name<input', '<label>Name<input');
 tausche('<label>Praxis oder Klinik <span>(optional)</span><input', '<label>Practice or clinic <span>(optional)</span><input');
 tausche('<label>E-Mail<input', '<label>Email<input');
-tausche('<label>Telefon <span>(falls Ihnen ein Anruf lieber ist)</span>', '<label>Phone <span>(if you would rather be called)</span>');
 tausche('<label>Region <span>(optional)</span><input', '<label>Region <span>(optional)</span><input');
 tausche('placeholder="z.&nbsp;B. Ortenau, Oberbayern, Münsterland"', 'placeholder="e.g. Ortenau, Bavaria, Münsterland"');
 tausche('<label>Etwa wie viele Pferde betreuen Sie? <span>(optional)</span><input', '<label>Roughly how many horses do you look after?<input');
@@ -923,7 +922,8 @@ tausche(`<p><b>Entwickelt und betreut von Jan Rohwedder</b> (Vitalkultur, Iffezh
          Entwickler direkt, vor und nach dem Kauf.</p>`, `<p><b>Built and supported by Jan Rohwedder</b> (Vitalkultur, Iffezheim, Germany). There are no
          reference logos on this page yet — and we won’t invent any. Instead you reach the
          developer directly, before and after you buy.</p>`);
-tausche('<p class="g-kontakt">Frage vorab?', '<p class="g-kontakt">A question first?');
+tausche('<p class="g-kontakt">Frage vorab? Schreiben Sie an', '<p class="g-kontakt">A question first? Write to');
+tausche(' — Antwort meist am selben Tag.</p>', ' — usually answered the same day.</p>');
 tausche('>Praxis-Abo wählen · 149&nbsp;€ / Monat →<', '>Choose practice plan · €149 / month →<');
 tausche('>Oder erst eine persönliche Einführung ↓<', '>Or a personal introduction first ↓<');
 tausche('>Klinik-Abo wählen · 349&nbsp;€ / Monat →<', '>Choose clinic plan · €349 / month →<');

@@ -1492,7 +1492,7 @@ h1,h2{text-wrap:balance}
       <p><b>Entwickelt und betreut von Jan Rohwedder</b> (Vitalkultur, Iffezheim). Es gibt noch keine
          Referenzlogos auf dieser Seite — und wir erfinden auch keine. Stattdessen erreichen Sie den
          Entwickler direkt, vor und nach dem Kauf.</p>
-      <p class="g-kontakt">Frage vorab? <a href="tel:+4915678300113">+49&nbsp;156&nbsp;78300113</a> · <a href="mailto:jan@vitalkultur.com">jan@vitalkultur.com</a></p>
+      <p class="g-kontakt">Frage vorab? Schreiben Sie an <a href="mailto:jan@vitalkultur.com">jan@vitalkultur.com</a> — Antwort meist am selben Tag.</p>
     </div>
     <p class="b2b-hinweis">Nur für Tierarztpraxen und Pferdekliniken — Bestellung ausschließlich als Unternehmen (§ 14 BGB).</p>
     <div class="tarife-grid">
@@ -1564,8 +1564,8 @@ h1,h2{text-wrap:balance}
         if (f) {
           var h = f.querySelector('h3'), l = f.querySelector('.anm-lead'), b = f.querySelector('.anm-senden');
           if (h) h.textContent = de ? 'Lieber erst sprechen? Persönliche Einführung' : 'Prefer to talk first? Personal introduction';
-          if (l) l.textContent = de ? 'Wir gehen den Ablauf mit Ihren eigenen Aufnahmen durch — schriftlich oder telefonisch, wie es Ihnen passt. Ihre Anfrage liest der Entwickler selbst und meldet sich meist am selben Tag.'
-                                    : 'We walk through the workflow with your own recordings — in writing or by phone, as you prefer. The developer reads every request personally and usually replies the same day.';
+          if (l) l.textContent = de ? 'Wir gehen den Ablauf mit Ihren eigenen Aufnahmen schriftlich durch — Schritt für Schritt, in Ruhe. Ihre Anfrage liest der Entwickler selbst und meldet sich meist am selben Tag.'
+                                    : 'We walk through the workflow with your own recordings in writing — step by step, at your pace. The developer reads every request personally and usually replies the same day.';
           if (b) b.textContent = de ? 'Einführung anfragen →' : 'Request an introduction →';
           ['data-de','data-en'].forEach(function(k){ [h,l,b].forEach(function(e){ if (e) e.removeAttribute(k); }); });
         }
@@ -1740,7 +1740,6 @@ h1,h2{text-wrap:balance}
         <label>Name<input name="name" autocomplete="name" required></label>
         <label>Praxis oder Klinik <span>(optional)</span><input name="praxis" autocomplete="organization"></label>
         <label>E-Mail<input name="email" type="email" autocomplete="email" required></label>
-        <label>Telefon <span>(falls Ihnen ein Anruf lieber ist)</span><input name="telefon" type="tel" autocomplete="tel"></label>
         <label>Region <span>(optional)</span><input name="region" placeholder="z.&nbsp;B. Ortenau, Oberbayern, Münsterland"></label>
         <label>Etwa wie viele Pferde betreuen Sie? <span>(optional)</span><input name="pferde" inputmode="numeric" placeholder="z.&nbsp;B. 180"></label>
       </div>
