@@ -57,8 +57,13 @@ const HREF_EN = `<link rel="canonical" href="https://vitalkultur.com/carlon-equi
 <link rel="alternate" hreflang="de" href="https://vitalkultur.com/carlon-equine-visite/">
 <link rel="alternate" hreflang="en" href="https://vitalkultur.com/carlon-equine-visite/en/">
 <link rel="alternate" hreflang="x-default" href="https://vitalkultur.com/carlon-equine-visite/">`;
-tausche('<meta name="twitter:card" content="summary_large_image">',
-        HREF_EN + '\n<meta name="twitter:card" content="summary_large_image">');
+/* 14.11.2026: Die deutsche Seite trägt inzwischen selbst canonical+hreflang. Früher wurde der EN-Block
+   ZUSÄTZLICH eingefügt → zwei widersprüchliche canonicals, die erste (deutsche) gewann, EN galt als Duplikat.
+   Jetzt wird der deutsche Block ERSETZT. */
+tausche(`<link rel="canonical" href="https://vitalkultur.com/carlon-equine-visite/">
+<link rel="alternate" hreflang="de" href="https://vitalkultur.com/carlon-equine-visite/">
+<link rel="alternate" hreflang="en" href="https://vitalkultur.com/carlon-equine-visite/en/">
+<link rel="alternate" hreflang="x-default" href="https://vitalkultur.com/carlon-equine-visite/">`, HREF_EN);
 
 /* ── Verweise: relative Pfade liegen eine Ebene tiefer ─────────────────
    Die englische Seite liegt in en/ — jeder relative Bildpfad muss hoch. */
