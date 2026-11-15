@@ -497,12 +497,12 @@ tausche(`JSON, CSV, Kubios-kompatibel — und <strong>FHIR&nbsp;R5</strong> mit
         `JSON, CSV, Kubios-compatible — and <strong>FHIR&nbsp;R5</strong> with
            LOINC codes for your practice software.`);
 tausche(`
-      Ein ruhendes Pferd zeigt AV-Block-Pausen — physiologisch, kein Befund. Rechnet man
+      Ein ruhendes Pferd zeigt oft lange Pausen zwischen zwei Herzschlägen — häufig ein AV-Block II°; was es ist, zeigt nur das EKG. Rechnet man
       sie roh mit, steigen SDNN und RMSSD dramatisch, und die Kennwerte, die bei
       <em>kleinen</em> Werten anschlagen, kippen ins Gegenteil.
     `,
         `
-      A resting horse shows AV-block pauses — physiological, not a finding. Count them in
+      A resting horse often shows long pauses between two beats — frequently a second-degree AV block; only an ECG shows what it is. Count them in
       raw and SDNN and RMSSD rise dramatically, and the measures that respond to
       <em>small</em> values flip into the opposite.
     `);
