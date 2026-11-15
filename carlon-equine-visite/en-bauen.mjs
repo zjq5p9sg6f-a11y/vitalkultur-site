@@ -863,6 +863,9 @@ tausche(`Nein. CARLON sendet keine Alarme, und die Halterin sieht keine Einstufu
 tausche('"text": "Nein. CARLON sendet keine Alarme, und die Halterin sieht keine Einstufung — die entsteht erst in Ihrem Cockpit, wenn Sie es öffnen. Eine zugeschickte Datei ist eine Zusendung wie eine E-Mail: Wann Sie sie sichten, bestimmen Sie und kommunizieren es wie bisher. Für den Notfall gilt, was immer gilt: der Anruf."',
         '"text": "No. CARLON sends no alerts, and the owner sees no classification — it only comes into being in your cockpit, when you open it. A file sent to you is a delivery like an email: when you review it is up to you, communicated to your clients as before. For emergencies, what has always applied still applies: the phone call."');
 tausche('Woher kommt die Baseline?', 'Where does the baseline come from?', 2);
+tausche(`<div class="leiste" id="leiste" hidden><span class="leiste-t">CARLON Equine Visite · ab 149&nbsp;€ netto/Monat</span><a class="leiste-b2" href="#preis">Tarife</a><a class="leiste-b" href="/carlon-equine/app/?demo=today">Demo öffnen →</a></div>
+`, `<div class="leiste" id="leiste" hidden><span class="leiste-t">CARLON Equine Visite · from €149 net/month</span><a class="leiste-b2" href="#preis">Plans</a><a class="leiste-b" href="/carlon-equine/app/?demo=today">Open demo →</a></div>
+`);
 /* Poincaré mit Zeitregler (16.11.2026) */
 tausche(`    <div class="pz-block">
       <div class="pz-text">

@@ -564,6 +564,13 @@ section[id]{scroll-margin-top:76px}
 .pz-start{position:absolute;left:50%;bottom:22px;transform:translateX(-50%);padding:12px 20px;border-radius:999px;border:1px solid rgba(62,207,178,.6);
   background:rgba(8,14,18,.86);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);color:#3ECFB2;font-weight:600;font-size:14px;cursor:pointer;box-shadow:0 12px 30px rgba(0,0,0,.5)}
 .pz-start:hover{background:rgba(62,207,178,.16)}
+.leiste{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(14px + env(safe-area-inset-bottom,0px));z-index:60;display:flex;align-items:center;gap:12px;
+  padding:9px 9px 9px 18px;border-radius:999px;background:rgba(10,16,20,.88);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+  border:1px solid rgba(62,207,178,.32);box-shadow:0 18px 40px rgba(0,0,0,.55);max-width:calc(100% - 24px)}
+.leiste-t{font-size:13px;color:var(--text-secondary);white-space:nowrap}
+.leiste-b{padding:9px 16px;border-radius:999px;background:var(--cyan);color:#04130f;font-weight:700;font-size:13.5px;white-space:nowrap;text-decoration:none}
+.leiste-b2{font-size:13px;color:var(--cyan);text-decoration:none;white-space:nowrap}
+@media(max-width:560px){.leiste-t{display:none}}
 .beleg-bild{margin:var(--sp-21) 0 var(--sp-8);padding:var(--sp-8) var(--sp-8);
   border-radius:8px;background:rgba(255,255,255,.02);overflow:hidden}
 .beleg-bild svg{display:block;max-width:100%;height:auto}
@@ -957,197 +964,33 @@ h1,h2{text-wrap:balance}
   </div>
 </section>
 
-<!-- ── 2 · DER STRUKTURELLE VORTEIL ────────────────────────────────────
-     Das stärkste Argument der ganzen Seite, und es ist kein Marketing:
-     Die Atemwegs-Auswertung verlangt ≥ 7 Minuten Ruhe. Nach Verladung und Fahrt ist
-     diese Bedingung systematisch nicht erfüllt. -->
 <section>
   <div class="wrap">
-    <div class="sec-eyebrow">The difference that arises before the measurement</div>
-    <!-- Fuer die akademische Leserin ist der Messort kein Komfort-Argument,
-         sondern Methodik: Transportstress ist ein Konfounder der Groesse
-         selbst. Genau so wird es gesagt. -->
-    <h2>Resting HRV only exists where rest exists: in the horse’s own stable.</h2>
-    <p class="sec-lead">
-      Transport, unfamiliar surroundings, unfamiliar people — each of these shifts exactly the
-      autonomic balance you want to assess. For resting HRV the place of recording is not a
-      side issue but part of the method: the analysis requires
-      <strong>at least seven minutes of rest in familiar surroundings</strong> — below that it
-      gives no result. After loading
-      and a drive this condition is systematically not met — in the horse’s own box it is
-      met every day.
-    </p>
-    <p class="sec-lead" style="margin-top:var(--sp-21)">
-      <strong>Same box, same time, same protocol.</strong> Only under familiar
-      conditions are two recordings comparable. At home, repeated over weeks, this builds a
-      trend that shows how this horse’s resting HRV develops after a change in
-      housing, feeding or training — the interpretation stays with you.
-    </p>
+    <div class="sec-eyebrow">Getting started</div>
+    <h2>Three steps to your first recording.</h2>
     <div class="usps">
       <div class="usp">
-      <h3>Its own box, not an examination room</h3>
-      <p>The owner puts on the belt, the horse stands as it always does. No transport, no
-         excitement from strangers, no bulky equipment in the way.</p>
-    </div>
-    <div class="usp">
-      <h3>Instead of a phone video: a standardised recording</h3>
-      <p>The owner sends a recording with its measurement protocol. You open it when it fits
-         your planning — with signal quality and the comparison to the horse’s own history.</p>
-    </div>
-    <div class="usp">
-      <h3>Documented, not remembered</h3>
-      <p>Recording, measurement protocol and your note sit together in the record — as a
-         measurement report on your letterhead or as an export for your practice software.</p>
-    </div>
-    <div class="usp">
-      <h3>Repeatable under the same conditions</h3>
-      <p>The next recording is made in the same box under the same protocol. Exactly that
-         builds the trend a snapshot can never provide.</p>
-    </div>
-    </div>
-  </div>
-</section>
-
-<!-- ── 2b · DIE MESSSTATION ────────────────────────────────────────────
-     WARUM DIESER ABSCHNITT EXISTIERT (13.08.2026)
-     Die Messstation kam auf dieser Seite NICHT VOR — kein Bild, kein
-     Abschnitt, kein Verweis. Der Tierarzt sah das Cockpit, also seine eigene
-     Seite, und nie das, was seine Kundin erlebt. Genau davon haengt aber ab,
-     ob ueberhaupt eine Aufnahme bei ihm ankommt: er kann das Werkzeug nicht
-     empfehlen, wenn er nicht weiss, wie es sich anfuehlt.
-
-     Die Bilder sind ECHT und entstehen aus der laufenden Seite mit einer
-     realen Aufnahme (`station-bilder.mjs`, Testpferd 2 · 325 Schlaege ·
-     9:25 min). Keine Attrappen: eine gezeichnete Vorschau altert in dem
-     Moment, in dem sich die Oberflaeche aendert, und niemand merkt es, weil
-     kein Pruefstand ein Bild liest. Neu bauen mit einem Befehl. -->
-<section>
-  <div class="wrap">
-    <div class="sec-eyebrow">The measuring station</div>
-    <!-- ⚠ „Auf jedem Telefon" stand hier — und die FAQ derselben Seite
-         sagt, dass iPhones im Browser nicht messen koennen (Apple laesst
-         kein Web-Bluetooth zu). Wer die Kernzusage einer Ueberschrift in
-         der eigenen FAQ widerlegt findet, misstraut ab da jeder weiteren.
-         Jetzt steht die Bedingung SOFORT hier, nicht erst in der FAQ. -->
-    <h2>A measuring station that runs in the browser — no app, no account.</h2>
-    <p class="sec-lead">
-      There is <strong>nothing to install</strong>. The owner opens your measuring link —
-      received as a message, found on your practice website or scanned from the poster —
-      and the measuring station is there: in the browser, no sign-up. She connects the Polar H10 belt, lets
-      the horse stand and taps send once.
-      <strong>No onboarding, no questions coming back to you.</strong> Recording works on an
-      Android smartphone or tablet, or a laptop with Chrome or Edge — on iPhone and iPad, Apple does not permit
-      Bluetooth in the browser. One capable device in the barn is enough for
-      all horses.
-    
-    </p>
-    <!-- DIE FRAGE, DIE JEDEN KAUF BLOCKIERT (15.08.2026): Die Seite nannte den
-         Gurt elfmal und sagte nirgends, wer ihn stellt. Ein Tierarzt rechnet
-         dann im Kopf „zwanzig Kunden mal ein Geraet" und legt auf. Bewusst
-         OHNE Eurobetrag: ein Hardwarepreis, den wir nicht setzen, altert in
-         unserem Text und wird zur falschen Zusage. Der Vergleich mit der
-         Anfahrt traegt dieselbe Aussage und bleibt richtig. -->
-    <p class="sec-lead" style="margin-top:var(--sp-21)">
-      <strong>And the belt?</strong> A Polar&nbsp;H10 is an off-the-shelf device, available everywhere
-      and cheaper than a single call-out. We do <em>not</em> sell it — so you can choose freely and
-      get same-day replacement if one fails, rather than waiting for us. What works well:
-      <strong>two or three loan belts in the practice</strong> that you hand out; owners with
-      several horses usually buy their own. One belt serves any number of horses — it simply
-      gets moved.
-    </p>
-    <figure class="gurt-block">
-      <picture>
-        <source srcset="/carlon-equine/assets/polar-h10-strap.avif" type="image/avif">
-        <source srcset="/carlon-equine/assets/polar-h10-strap.webp" type="image/webp">
-        <img src="/carlon-equine/assets/polar-h10-strap.png" width="1234" height="851" loading="lazy" decoding="async"
-          alt="Polar H10 with the Equine belt – electrical measurement of cardiac activity on the horse">
-      </picture>
-      <figcaption>
-        <div class="sec-eyebrow">The sensor</div>
-        <h3>Polar H10 with the Equine belt: measured electrically, like an ECG.</h3>
-        <ul class="gurt-liste">
-          <li><b>R-waves, not a light pulse.</b> The H10 measures the heart’s electrical activity and delivers every beat interval at about 1&nbsp;ms resolution (1/1024&nbsp;s) – optical sensors estimate it from light.</li>
-          <li><b>Made for the horse’s body.</b> The Equine belt is sized for the horse’s girth; electrode gel on the coat lowers the coat impedance – that gives a clean signal.</li>
-          <li><b>Strongest at rest.</b> Exactly where Visite measures: in the horse’s own stall, without movement.</li>
-          <li><b>Freely available.</b> Not our device, no lock-in – you get a replacement the same day.</li>
-        </ul>
-      </figcaption>
-    </figure>
-    <p class="sec-lead" style="margin-top:var(--sp-21)">
-      What reaches you is not a screenshot but a dataset: every beat interval in its
-      raw state, the measures computed from it and the signal quality alongside. So you see
-      not just a number but also <strong>how far you can trust it</strong>.
-      The file goes into the cockpit with one move — drag it in, done: signal quality
-      and the comparison with the horse’s own history are there at once.
-    </p>
-
-    <div class="shots telefon">
-      <figure class="shot">
-        <div class="frame"><img src="../assets/station-shots/01-start.jpg" loading="lazy"
-          alt="Measuring station in the phone browser: start screen stating that the recording is created on the device and encrypted for the practice"></div>
-        <figcaption>The poster leads here. Horse name, two taps for place and rest time, one button for the belt — no account.</figcaption>
-      </figure>
-      <figure class="shot">
-        <div class="frame"><img src="../assets/station-shots/02-live.jpg" loading="lazy"
-          alt="Recording in progress: pulse, number of captured heartbeats, duration and a signal-quality indicator"></div>
-        <figcaption>During the recording she can see whether the signal holds — not only afterwards.</figcaption>
-      </figure>
-      <figure class="shot">
-        <div class="frame"><img src="../assets/station-shots/04-beleg.jpg" loading="lazy"
-          alt="Recording result: 324 heartbeats, 9:25 minutes, mean pulse 34 bpm, RMSSD 130.3 ms and next to it the value over unremarkable pairs only, 76.2 ms"></div>
-        <figcaption>The result, immediately. <strong>Two RMSSD values instead of one</strong> — the raw one and the one over unremarkable beat pairs only.</figcaption>
-      </figure>
-      <figure class="shot">
-        <div class="frame"><img src="../assets/station-shots/07-protokoll.jpg" loading="lazy"
-          alt="Measurement log: signal quality, 319 of 323 usable beat pairs, recording duration, sensor designation and time resolution of 1/1024 second"></div>
-        <figcaption>The measurement log states <strong>how good</strong> the recording is: usable beat pairs, sensor, time resolution.</figcaption>
-      </figure>
-      <figure class="shot">
-        <div class="frame"><img src="../assets/station-shots/06-tachogramm.jpg" loading="lazy"
-          alt="RR tachogram over 324 beats and below it the breathing curve derived from heartbeat modulation"></div>
-        <figcaption>RR tachogram and breathing curve — the same raw data you then analyse in the cockpit.</figcaption>
-      </figure>
-      <figure class="shot">
-        <div class="frame"><img src="../assets/station-shots/08-senden.jpg" loading="lazy"
-          alt="The send button reading Send to the practice, with the note that the file is created on the device and leaves it by a route of your choosing"></div>
-        <figcaption>One tap opens her phone's share sheet. The sentence below it is the entire privacy commitment.</figcaption>
-      </figure>
-    </div>
-
-    <div class="usps">
+        <div class="u-k">Step 1</div>
+        <h3>Share your measuring link</h3>
+        <p>Your cockpit creates your personal measuring link — it carries your key.
+           Send it as a message, put it on your practice website — or print it as a
+           QR poster for the barn aisle and the waiting room.</p>
+      </div>
       <div class="usp">
-      <!-- Das strategische Argument der niedergelassenen Praxis: die
-           Kundenbindung laeuft unter IHREM Namen, nicht unserem. Jede
-           Aussage hier existiert bereits an anderer Stelle der Seite
-           (Aushang, Briefkopf-Befund, Rueckmeldung) — hier wird sie
-           zum Bindungs-Argument gebuendelt. -->
-      <h3>Your client experiences your practice, not our software</h3>
-      <p>She records via your measuring link on your recommendation, and the reply carries
-         your letterhead. Every recording between two visits becomes a
-         touchpoint of your practice.</p>
+        <div class="u-k">Step 2</div>
+        <h3>The owner opens it and records</h3>
+        <p>One tap on the link or one scan, and the measuring station is there — in the
+           browser, no app, no account. Every recording is encrypted for your practice
+           from the very first second; the owner sends you the file on whatever channel
+           she already uses.</p>
+      </div>
+      <div class="usp">
+        <div class="u-k">Step 3</div>
+        <h3>Drag the file into the cockpit</h3>
+        <p>Signal quality and the comparison with the horse's own history are there at once —
+           the measurement report is created straight from the record, the interpretation is yours.</p>
+      </div>
     </div>
-    <div class="usp">
-      <h3>Raw and corrected value side by side</h3>
-      <p>In horses, physiological pauses — second-degree AV block is normal in a resting
-         horse — and genuine artefacts occur in the same series. A filter cannot tell them
-         apart; it discards both. The station therefore reports the raw value <em>and</em>
-         the one over unremarkable pairs. Which share comes from what is your call, not the
-         software's.</p>
-    </div>
-    <div class="usp">
-      <h3>Nothing passes through us</h3>
-      <p>The moment your client opens your measuring link, the file is already encrypted
-         <strong>against your key</strong> on her device. She sends it by whatever route she
-         chooses. We never see it and store it nowhere — in our assessment, therefore, no data
-         processing agreement is needed between us.</p>
-    </div>
-    </div>
-
-    <p class="sec-lead" style="margin-top:40px">
-      You can <strong>try the station yourself right now</strong> — even without a belt: it
-      replays a resting recording.
-      <a href="/carlon-equine/app/messen.html">Open the measuring station →</a>
-    </p>
   </div>
 </section>
 
@@ -1394,17 +1237,196 @@ h1,h2{text-wrap:balance}
   </div>
 </section>
 
-<!-- ── 6 · ANSCHLUSS ──────────────────────────────────────────────── -->
+<!-- ── 2 · DER STRUKTURELLE VORTEIL ────────────────────────────────────
+     Das stärkste Argument der ganzen Seite, und es ist kein Marketing:
+     Die Atemwegs-Auswertung verlangt ≥ 7 Minuten Ruhe. Nach Verladung und Fahrt ist
+     diese Bedingung systematisch nicht erfüllt. -->
 <section>
   <div class="wrap">
-    <div class="sec-eyebrow">Interoperability</div>
-    <h2>Export as FHIR R5, JSON and CSV – open to your practice software.</h2>
+    <div class="sec-eyebrow">The difference that arises before the measurement</div>
+    <!-- Fuer die akademische Leserin ist der Messort kein Komfort-Argument,
+         sondern Methodik: Transportstress ist ein Konfounder der Groesse
+         selbst. Genau so wird es gesagt. -->
+    <h2>Resting HRV only exists where rest exists: in the horse’s own stable.</h2>
     <p class="sec-lead">
-      Every recording can be exported as <strong>FHIR&nbsp;R5</strong> — as an
-      <code>Observation</code> with LOINC codes and UCUM units, the horse as a
-      <code>Patient</code> with the identifiers you already keep: practice software number,
-      UELN, microchip, passport. Plus JSON, CSV and a Kubios-compatible export for research,
-      and a SHA-256 checksum per record for your documentation.
+      Transport, unfamiliar surroundings, unfamiliar people — each of these shifts exactly the
+      autonomic balance you want to assess. For resting HRV the place of recording is not a
+      side issue but part of the method: the analysis requires
+      <strong>at least seven minutes of rest in familiar surroundings</strong> — below that it
+      gives no result. After loading
+      and a drive this condition is systematically not met — in the horse’s own box it is
+      met every day.
+    </p>
+    <p class="sec-lead" style="margin-top:var(--sp-21)">
+      <strong>Same box, same time, same protocol.</strong> Only under familiar
+      conditions are two recordings comparable. At home, repeated over weeks, this builds a
+      trend that shows how this horse’s resting HRV develops after a change in
+      housing, feeding or training — the interpretation stays with you.
+    </p>
+    <div class="usps">
+      <div class="usp">
+      <h3>Its own box, not an examination room</h3>
+      <p>The owner puts on the belt, the horse stands as it always does. No transport, no
+         excitement from strangers, no bulky equipment in the way.</p>
+    </div>
+    <div class="usp">
+      <h3>Instead of a phone video: a standardised recording</h3>
+      <p>The owner sends a recording with its measurement protocol. You open it when it fits
+         your planning — with signal quality and the comparison to the horse’s own history.</p>
+    </div>
+    <div class="usp">
+      <h3>Documented, not remembered</h3>
+      <p>Recording, measurement protocol and your note sit together in the record — as a
+         measurement report on your letterhead or as an export for your practice software.</p>
+    </div>
+    <div class="usp">
+      <h3>Repeatable under the same conditions</h3>
+      <p>The next recording is made in the same box under the same protocol. Exactly that
+         builds the trend a snapshot can never provide.</p>
+    </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── 2b · DIE MESSSTATION ────────────────────────────────────────────
+     WARUM DIESER ABSCHNITT EXISTIERT (13.08.2026)
+     Die Messstation kam auf dieser Seite NICHT VOR — kein Bild, kein
+     Abschnitt, kein Verweis. Der Tierarzt sah das Cockpit, also seine eigene
+     Seite, und nie das, was seine Kundin erlebt. Genau davon haengt aber ab,
+     ob ueberhaupt eine Aufnahme bei ihm ankommt: er kann das Werkzeug nicht
+     empfehlen, wenn er nicht weiss, wie es sich anfuehlt.
+
+     Die Bilder sind ECHT und entstehen aus der laufenden Seite mit einer
+     realen Aufnahme (`station-bilder.mjs`, Testpferd 2 · 325 Schlaege ·
+     9:25 min). Keine Attrappen: eine gezeichnete Vorschau altert in dem
+     Moment, in dem sich die Oberflaeche aendert, und niemand merkt es, weil
+     kein Pruefstand ein Bild liest. Neu bauen mit einem Befehl. -->
+<section>
+  <div class="wrap">
+    <div class="sec-eyebrow">The measuring station</div>
+    <!-- ⚠ „Auf jedem Telefon" stand hier — und die FAQ derselben Seite
+         sagt, dass iPhones im Browser nicht messen koennen (Apple laesst
+         kein Web-Bluetooth zu). Wer die Kernzusage einer Ueberschrift in
+         der eigenen FAQ widerlegt findet, misstraut ab da jeder weiteren.
+         Jetzt steht die Bedingung SOFORT hier, nicht erst in der FAQ. -->
+    <h2>A measuring station that runs in the browser — no app, no account.</h2>
+    <p class="sec-lead">
+      There is <strong>nothing to install</strong>. The owner opens your measuring link —
+      received as a message, found on your practice website or scanned from the poster —
+      and the measuring station is there: in the browser, no sign-up. She connects the Polar H10 belt, lets
+      the horse stand and taps send once.
+      <strong>No onboarding, no questions coming back to you.</strong> Recording works on an
+      Android smartphone or tablet, or a laptop with Chrome or Edge — on iPhone and iPad, Apple does not permit
+      Bluetooth in the browser. One capable device in the barn is enough for
+      all horses.
+    
+    </p>
+    <!-- DIE FRAGE, DIE JEDEN KAUF BLOCKIERT (15.08.2026): Die Seite nannte den
+         Gurt elfmal und sagte nirgends, wer ihn stellt. Ein Tierarzt rechnet
+         dann im Kopf „zwanzig Kunden mal ein Geraet" und legt auf. Bewusst
+         OHNE Eurobetrag: ein Hardwarepreis, den wir nicht setzen, altert in
+         unserem Text und wird zur falschen Zusage. Der Vergleich mit der
+         Anfahrt traegt dieselbe Aussage und bleibt richtig. -->
+    <p class="sec-lead" style="margin-top:var(--sp-21)">
+      <strong>And the belt?</strong> A Polar&nbsp;H10 is an off-the-shelf device, available everywhere
+      and cheaper than a single call-out. We do <em>not</em> sell it — so you can choose freely and
+      get same-day replacement if one fails, rather than waiting for us. What works well:
+      <strong>two or three loan belts in the practice</strong> that you hand out; owners with
+      several horses usually buy their own. One belt serves any number of horses — it simply
+      gets moved.
+    </p>
+    <figure class="gurt-block">
+      <picture>
+        <source srcset="/carlon-equine/assets/polar-h10-strap.avif" type="image/avif">
+        <source srcset="/carlon-equine/assets/polar-h10-strap.webp" type="image/webp">
+        <img src="/carlon-equine/assets/polar-h10-strap.png" width="1234" height="851" loading="lazy" decoding="async"
+          alt="Polar H10 with the Equine belt – electrical measurement of cardiac activity on the horse">
+      </picture>
+      <figcaption>
+        <div class="sec-eyebrow">The sensor</div>
+        <h3>Polar H10 with the Equine belt: measured electrically, like an ECG.</h3>
+        <ul class="gurt-liste">
+          <li><b>R-waves, not a light pulse.</b> The H10 measures the heart’s electrical activity and delivers every beat interval at about 1&nbsp;ms resolution (1/1024&nbsp;s) – optical sensors estimate it from light.</li>
+          <li><b>Made for the horse’s body.</b> The Equine belt is sized for the horse’s girth; electrode gel on the coat lowers the coat impedance – that gives a clean signal.</li>
+          <li><b>Strongest at rest.</b> Exactly where Visite measures: in the horse’s own stall, without movement.</li>
+          <li><b>Freely available.</b> Not our device, no lock-in – you get a replacement the same day.</li>
+        </ul>
+      </figcaption>
+    </figure>
+    <p class="sec-lead" style="margin-top:var(--sp-21)">
+      What reaches you is not a screenshot but a dataset: every beat interval in its
+      raw state, the measures computed from it and the signal quality alongside. So you see
+      not just a number but also <strong>how far you can trust it</strong>.
+      The file goes into the cockpit with one move — drag it in, done: signal quality
+      and the comparison with the horse’s own history are there at once.
+    </p>
+
+    <div class="shots telefon">
+      <figure class="shot">
+        <div class="frame"><img src="../assets/station-shots/01-start.jpg" loading="lazy"
+          alt="Measuring station in the phone browser: start screen stating that the recording is created on the device and encrypted for the practice"></div>
+        <figcaption>The poster leads here. Horse name, two taps for place and rest time, one button for the belt — no account.</figcaption>
+      </figure>
+      <figure class="shot">
+        <div class="frame"><img src="../assets/station-shots/02-live.jpg" loading="lazy"
+          alt="Recording in progress: pulse, number of captured heartbeats, duration and a signal-quality indicator"></div>
+        <figcaption>During the recording she can see whether the signal holds — not only afterwards.</figcaption>
+      </figure>
+      <figure class="shot">
+        <div class="frame"><img src="../assets/station-shots/04-beleg.jpg" loading="lazy"
+          alt="Recording result: 324 heartbeats, 9:25 minutes, mean pulse 34 bpm, RMSSD 130.3 ms and next to it the value over unremarkable pairs only, 76.2 ms"></div>
+        <figcaption>The result, immediately. <strong>Two RMSSD values instead of one</strong> — the raw one and the one over unremarkable beat pairs only.</figcaption>
+      </figure>
+      <figure class="shot">
+        <div class="frame"><img src="../assets/station-shots/07-protokoll.jpg" loading="lazy"
+          alt="Measurement log: signal quality, 319 of 323 usable beat pairs, recording duration, sensor designation and time resolution of 1/1024 second"></div>
+        <figcaption>The measurement log states <strong>how good</strong> the recording is: usable beat pairs, sensor, time resolution.</figcaption>
+      </figure>
+      <figure class="shot">
+        <div class="frame"><img src="../assets/station-shots/06-tachogramm.jpg" loading="lazy"
+          alt="RR tachogram over 324 beats and below it the breathing curve derived from heartbeat modulation"></div>
+        <figcaption>RR tachogram and breathing curve — the same raw data you then analyse in the cockpit.</figcaption>
+      </figure>
+      <figure class="shot">
+        <div class="frame"><img src="../assets/station-shots/08-senden.jpg" loading="lazy"
+          alt="The send button reading Send to the practice, with the note that the file is created on the device and leaves it by a route of your choosing"></div>
+        <figcaption>One tap opens her phone's share sheet. The sentence below it is the entire privacy commitment.</figcaption>
+      </figure>
+    </div>
+
+    <div class="usps">
+      <div class="usp">
+      <!-- Das strategische Argument der niedergelassenen Praxis: die
+           Kundenbindung laeuft unter IHREM Namen, nicht unserem. Jede
+           Aussage hier existiert bereits an anderer Stelle der Seite
+           (Aushang, Briefkopf-Befund, Rueckmeldung) — hier wird sie
+           zum Bindungs-Argument gebuendelt. -->
+      <h3>Your client experiences your practice, not our software</h3>
+      <p>She records via your measuring link on your recommendation, and the reply carries
+         your letterhead. Every recording between two visits becomes a
+         touchpoint of your practice.</p>
+    </div>
+    <div class="usp">
+      <h3>Raw and corrected value side by side</h3>
+      <p>In horses, physiological pauses — second-degree AV block is normal in a resting
+         horse — and genuine artefacts occur in the same series. A filter cannot tell them
+         apart; it discards both. The station therefore reports the raw value <em>and</em>
+         the one over unremarkable pairs. Which share comes from what is your call, not the
+         software's.</p>
+    </div>
+    <div class="usp">
+      <h3>Nothing passes through us</h3>
+      <p>The moment your client opens your measuring link, the file is already encrypted
+         <strong>against your key</strong> on her device. She sends it by whatever route she
+         chooses. We never see it and store it nowhere — in our assessment, therefore, no data
+         processing agreement is needed between us.</p>
+    </div>
+    </div>
+
+    <p class="sec-lead" style="margin-top:40px">
+      You can <strong>try the station yourself right now</strong> — even without a belt: it
+      replays a resting recording.
+      <a href="/carlon-equine/app/messen.html">Open the measuring station →</a>
     </p>
   </div>
 </section>
@@ -1457,36 +1479,18 @@ h1,h2{text-wrap:balance}
   </div>
 </section>
 
-<!-- ── 7 · VERZICHT ───────────────────────────────────────────────── -->
-<section class="rev">
+<!-- ── 6 · ANSCHLUSS ──────────────────────────────────────────────── -->
+<section>
   <div class="wrap">
-    <div class="sec-eyebrow">Limits we draw ourselves</div>
-    <h2>What CARLON deliberately does not do.</h2>
-    <div class="grid">
-      <div class="card">
-        <h3>No diagnosis</h3>
-        <p>The software shows measured values, signal quality, trend and deviation. The
-           medical interpretation remains entirely with you. CARLON Equine Visite is not a
-           medical device within the meaning of Regulation (EU) 2017/745.</p>
-      </div>
-      <div class="card">
-        <h3>No treatment recommendation</h3>
-        <p>Even when a trend looks unambiguous: whether anything is changed appears nowhere
-           on the screen. That is your decision, not a metric's.</p>
-      </div>
-      <div class="card">
-        <h3>No database at our end</h3>
-        <p>Your horse data lives in your device's storage. We have no access and could not
-           delete it either. The owner's recording never passes through us at all: she
-           sends you a file — opened via your measuring link, it is encrypted for your
-           practice from the very first second.</p>
-      </div>
-      <div class="card">
-        <h3>Not an emergency channel</h3>
-        <p>A file someone sends you is not a phone call. In acute cases what always applies
-           still applies — act veterinarily, immediately.</p>
-      </div>
-    </div>
+    <div class="sec-eyebrow">Interoperability</div>
+    <h2>Export as FHIR R5, JSON and CSV – open to your practice software.</h2>
+    <p class="sec-lead">
+      Every recording can be exported as <strong>FHIR&nbsp;R5</strong> — as an
+      <code>Observation</code> with LOINC codes and UCUM units, the horse as a
+      <code>Patient</code> with the identifiers you already keep: practice software number,
+      UELN, microchip, passport. Plus JSON, CSV and a Kubios-compatible export for research,
+      and a SHA-256 checksum per record for your documentation.
+    </p>
   </div>
 </section>
 
@@ -1515,36 +1519,6 @@ h1,h2{text-wrap:balance}
           <li><b>Fixed method version</b> per analysis — for archive, case review and studies.</li>
         </ul>
         <p style="margin-top:14px"><a class="cta-primary" href="/carlon-equine/app/?demo=station">See the ward wall in the demo →</a></p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<section>
-  <div class="wrap">
-    <div class="sec-eyebrow">Getting started</div>
-    <h2>Three steps to your first recording.</h2>
-    <div class="usps">
-      <div class="usp">
-        <div class="u-k">Step 1</div>
-        <h3>Share your measuring link</h3>
-        <p>Your cockpit creates your personal measuring link — it carries your key.
-           Send it as a message, put it on your practice website — or print it as a
-           QR poster for the barn aisle and the waiting room.</p>
-      </div>
-      <div class="usp">
-        <div class="u-k">Step 2</div>
-        <h3>The owner opens it and records</h3>
-        <p>One tap on the link or one scan, and the measuring station is there — in the
-           browser, no app, no account. Every recording is encrypted for your practice
-           from the very first second; the owner sends you the file on whatever channel
-           she already uses.</p>
-      </div>
-      <div class="usp">
-        <div class="u-k">Step 3</div>
-        <h3>Drag the file into the cockpit</h3>
-        <p>Signal quality and the comparison with the horse's own history are there at once —
-           the measurement report is created straight from the record, the interpretation is yours.</p>
       </div>
     </div>
   </div>
@@ -1684,6 +1658,39 @@ h1,h2{text-wrap:balance}
       }
     })();
     </script>
+    </div>
+  </div>
+</section>
+
+<!-- ── 7 · VERZICHT ───────────────────────────────────────────────── -->
+<section class="rev">
+  <div class="wrap">
+    <div class="sec-eyebrow">Limits we draw ourselves</div>
+    <h2>What CARLON deliberately does not do.</h2>
+    <div class="grid">
+      <div class="card">
+        <h3>No diagnosis</h3>
+        <p>The software shows measured values, signal quality, trend and deviation. The
+           medical interpretation remains entirely with you. CARLON Equine Visite is not a
+           medical device within the meaning of Regulation (EU) 2017/745.</p>
+      </div>
+      <div class="card">
+        <h3>No treatment recommendation</h3>
+        <p>Even when a trend looks unambiguous: whether anything is changed appears nowhere
+           on the screen. That is your decision, not a metric's.</p>
+      </div>
+      <div class="card">
+        <h3>No database at our end</h3>
+        <p>Your horse data lives in your device's storage. We have no access and could not
+           delete it either. The owner's recording never passes through us at all: she
+           sends you a file — opened via your measuring link, it is encrypted for your
+           practice from the very first second.</p>
+      </div>
+      <div class="card">
+        <h3>Not an emergency channel</h3>
+        <p>A file someone sends you is not a phone call. In acute cases what always applies
+           still applies — act veterinarily, immediately.</p>
+      </div>
     </div>
   </div>
 </section>
@@ -2045,6 +2052,14 @@ var glas=document.createElement('div');glas.className='pz-glas';var f=document.c
 glas.appendChild(f);img.replaceWith(glas);k.remove();
 var pass=function(){f.style.transform='scale('+(glas.clientWidth/1180)+')';};pass();addEventListener('resize',pass);
 if(window.goatcounter&&goatcounter.count)goatcounter.count({path:'visite-live-akte',title:'live-akte',event:true});});});})();
+</script>
+<div class="leiste" id="leiste" hidden><span class="leiste-t">CARLON Equine Visite · from €149 net/month</span><a class="leiste-b2" href="#preis">Plans</a><a class="leiste-b" href="/carlon-equine/app/?demo=today">Open demo →</a></div>
+<script>
+/* Mitlaufende Leiste (C6 Fable: „kein mitlaufender Knopf“) – erscheint, sobald der Kopf verlassen ist, verschwindet am Preis-Abschnitt. */
+(function(){var l=document.getElementById('leiste'),k=document.querySelector('.hero'),p=document.getElementById('preis');if(!l||!k||!('IntersectionObserver' in window))return;
+var imKopf=true,amPreis=false,f=function(){l.hidden=imKopf||amPreis;};
+new IntersectionObserver(function(e){imKopf=e[0].isIntersecting;f();}).observe(k);
+if(p)new IntersectionObserver(function(e){amPreis=e[0].isIntersecting;f();},{threshold:.15}).observe(p);})();
 </script>
 </body>
 </html>
