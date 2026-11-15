@@ -34,7 +34,7 @@
 
 .kauf-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;align-items:start}
 @media(max-width:760px){.kauf-grid{grid-template-columns:1fr}}
-.kauf-grid .tier-opt{padding:12px 14px}.kauf-spalte.gewaehlt>.tier-opt.feat:first-child{border-color:var(--cyan);box-shadow:0 0 0 2px rgba(62,207,178,.28)}.kauf-kurz{font-size:12px;color:var(--text-dim);margin:-6px 0 14px 2px}.kauf-b2b{display:flex;gap:10px;align-items:flex-start;margin:0 0 14px;padding:10px 12px;border:1px solid rgba(62,207,178,.35);border-radius:10px;font-size:13px;color:var(--text-primary);cursor:pointer}.kauf-b2b input{margin-top:3px;accent-color:var(--cyan)}.kauf-b2b a{color:var(--cyan)}.kauf-link[aria-disabled=true]{opacity:.45;filter:grayscale(.4)}.kauf-grid .tier-table{gap:8px}.kauf-grid .tier-opt ul{line-height:1.6}
+.kauf-grid .tier-opt{padding:12px 14px}.kauf-spalte.gewaehlt>.tier-opt.feat:first-child{border-color:var(--cyan);box-shadow:0 0 0 2px rgba(62,207,178,.28)}.kauf-kurz{font-size:12px;color:var(--text-dim);margin:-6px 0 14px 2px}.kauf-b2b{display:flex;gap:10px;align-items:flex-start;margin:0 0 14px;padding:10px 12px;border:1px solid rgba(62,207,178,.35);border-radius:10px;font-size:13px;color:var(--text-primary);cursor:pointer}.kauf-b2b input{margin-top:3px;accent-color:var(--cyan)}.kauf-b2b a{color:var(--cyan)}.kauf-link[aria-disabled=true]{opacity:.45;filter:grayscale(.4)}.kauf-grid .tier-table{gap:8px}.kauf-spalte{display:flex;flex-direction:column}.kauf-spalte>.tier-table{order:-1;margin:0 0 10px!important}.kauf-grid .tier-opt ul{line-height:1.6}
 
 .vh-cta.ghost.hell,.verdict-hero .vh-cta.ghost.hell{color:#E8F8FF;border:1px solid rgba(62,207,178,.45);background:rgba(62,207,178,.08)}
 .pc-guete.lang{margin:10px 0 0;font-size:12.5px;color:var(--text-secondary)}
@@ -8104,7 +8104,7 @@ const UI={
       ${feature?`<div class="demo-ribbon" style="margin-bottom:14px"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg><div><b>${esc(feature)}</b> ist Teil der Vollversion.</div></div>`:''}
       
       <label class="kauf-b2b"><input type="checkbox" id="kaufB2B" onchange="document.querySelectorAll('.kauf-link').forEach(l=>l.setAttribute('aria-disabled',this.checked?'false':'true'))"> <span>Ich bestelle als <b>Unternehmer (§ 14 BGB)</b> für meine Praxis oder Klinik und akzeptiere die <a href="/agb.html" target="_blank" rel="noopener">AGB</a>.</span></label>
-      <p class="kauf-kurz">Preise netto · Rechnung mit ausgewiesener USt. von Stripe · nach der Zahlung sofort freigeschaltet — kein Schlüssel, keine E-Mail.</p>
+      <p class="kauf-kurz">Preise netto · Rechnung mit ausgewiesener USt. von Stripe · nach der Zahlung sofort freigeschaltet — kein Schlüssel, keine E-Mail.<br><b style="color:var(--text-primary)">Vorher kostenlos testen</b> im Demo-Modus mit Beispielpferden. Das Monatsabo ist jederzeit zum Monatsende kündbar.</p>
       <div class="kauf-grid"><div class="kauf-spalte">
       <div class="tier-opt feat" style="align-items:flex-start">
         <div style="flex:1"><h4>CARLON Equine — für Pferdepraxen</h4>
@@ -8142,7 +8142,7 @@ const UI={
         (in der Live-Kasse gelesen: 177,31 / 1.773,10 / 415,31 / 4.153,10 €). Aus den Preisen gerechnet, nicht abgeschrieben. */
         const b=x=>(Math.round(x*119)/100).toLocaleString('de-DE',{minimumFractionDigits:2,maximumFractionDigits:2})+' €';
         const P=License.PREIS; return `An der Kasse für Praxen in Deutschland inkl. 19 % USt.: Praxis ${b(P.soloMonat)} im Monat bzw. ${b(P.soloJahr)} im Jahr · Klinik ${b(P.klinikMonat)} im Monat bzw. ${b(P.klinikJahr)} im Jahr.`; })()}</p>
-      <p style="font-size:12px;color:var(--text-dim);margin-top:4px">Verkäufer und Rechnungssteller ist Stripe (Link) im eigenen Namen; die Rechnung kommt von dort (EU mit USt-IdNr.: Reverse Charge). Nach der Zahlung sind Sie sofort freigeschaltet — kein Schlüssel, keine E-Mail.</p>
+      <p style="font-size:12px;color:var(--text-dim);margin-top:4px">Verkäufer und Rechnungssteller ist Stripe (Link) im eigenen Namen; die Rechnung kommt von dort. Nach der Zahlung sind Sie sofort freigeschaltet — kein Schlüssel, keine E-Mail.</p>
     </div>
     <div class="modal-foot"><button class="btn ghost" onclick="UI.closeModal()">Später</button><button class="btn primary" onclick="UI.activate()">Ich habe einen Schlüssel</button></div>`,{wide:true});
   },
@@ -11060,7 +11060,7 @@ const Sprache={
     'Klinik · Jahresabo':'Clinic · annual plan',
     'Klinik · Monatsabo':'Clinic · monthly plan',
     'Jahresabo':'Annual plan', 'Monatsabo':'Monthly plan', 'beste Wahl':'best value', 'Abonnieren':'Subscribe',
-    'Verkäufer und Rechnungssteller ist Stripe (Link) im eigenen Namen; die Rechnung kommt von dort (EU mit USt-IdNr.: Reverse Charge). Nach der Zahlung sind Sie sofort freigeschaltet — kein Schlüssel, keine E-Mail.':'Stripe is the seller (EU with VAT ID: reverse charge). After payment you are unlocked at once — no key, no email.',
+    'Verkäufer und Rechnungssteller ist Stripe (Link) im eigenen Namen; die Rechnung kommt von dort. Nach der Zahlung sind Sie sofort freigeschaltet — kein Schlüssel, keine E-Mail.':'Stripe is the seller. After payment you are unlocked at once — no key, no email.',
     // 05.11.2026 — Dialoge (gerenderter EN-Scan aller 22 Fenster)
     "Lizenz-Schlüssel":"Licence key",
     "Dieser Weg ist für Pilot- und Gründungs-Praxen, die einen Schlüssel direkt von uns bekommen haben. Wer über die Kasse abschließt, braucht ihn nicht — dort schaltet sich die Praxis nach der Zahlung von selbst frei. Einmal einfügen, danach wird der Schlüssel ausschließlich auf diesem Gerät geprüft, auch ohne Netz.":"This route is for pilot and founding practices that received a key directly from us. If you subscribe at checkout you do not need one — the practice unlocks itself after payment. Paste it once; from then on the key is checked only on this device, even offline.",
@@ -11446,7 +11446,7 @@ const Sprache={
     'Ihr Messwertbericht. Kennwerte, Spektrum, Poincaré und Verlauf sind automatisch drin — Sie ergänzen Ihre Einschätzung, CARLON erstellt das PDF mit Ihrem Briefkopf.':'Your measurement report. Metrics, spectrum, Poincaré and trend are included automatically — you add your assessment, CARLON creates the PDF on your letterhead.',
     'Ich bestelle als':'I am ordering as a', 'Unternehmer (§ 14 BGB)':'business (§ 14 BGB)', 'für meine Praxis oder Klinik und akzeptiere die':'for my practice or clinic and accept the', 'AGB':'terms',
     'Bitte kurz bestätigen: Bestellung als Unternehmen (§ 14 BGB)':'Please confirm: ordering as a business (§ 14 BGB)', '€ netto / Monat':'€ net / month', 'Übersichtswand für das ganze Team (ohne Alarme)':'Overview wall for the whole team (no alarms)',
-    'Verkäufer und Rechnungssteller ist Stripe (Link) im eigenen Namen; die Rechnung kommt von dort (EU mit USt-IdNr.: Reverse Charge). Nach der Zahlung sind Sie sofort freigeschaltet — kein Schlüssel, keine E-Mail.':'Seller and invoicing party is Stripe (Link) in its own name; the invoice comes from there (EU with VAT ID: reverse charge). After payment you are unlocked at once — no key, no email.',
+    'Verkäufer und Rechnungssteller ist Stripe (Link) im eigenen Namen; die Rechnung kommt von dort. Nach der Zahlung sind Sie sofort freigeschaltet — kein Schlüssel, keine E-Mail.':'Seller and invoicing party is Stripe (Link) in its own name; the invoice comes from there. After payment you are unlocked at once — no key, no email.',
     'Ruhe-HRV Ihrer Pferde als Verlauf — und die Tour danach geplant. Ausgewertet hier im Browser, nichts liegt bei uns.':'Your horses’ resting HRV as a trend — and the day’s route planned around it. Analysed here in the browser, nothing is stored with us.',
     '1 · Aushang oder Mess-Link':'1 · Poster or recording link', 'Ein QR-Blatt für den Stall: Halterinnen nehmen sieben Minuten Ruhe-HRV auf, ohne Konto.':'A QR sheet for the stable: owners record seven minutes of resting HRV, no account.',
     '2 · Aufnahmen kommen an':'2 · Recordings arrive', 'Datei hineinziehen, fertig. Die Übersicht zeigt jedes Pferd gegen seine eigene Basis.':'Drop the file in, done. The overview shows every horse against its own baseline.',
@@ -11459,6 +11459,8 @@ const Sprache={
     'Weiter zur Kasse →':'Continue to checkout →', 'zum Einstieg':'to start', 'zwei Monate gespart':'two months saved',
     'Ohne Gurt umsehen (Beispielpferde)':'Look around without a belt (example horses)',
     'Preise netto · Rechnung mit ausgewiesener USt. von Stripe · nach der Zahlung sofort freigeschaltet — kein Schlüssel, keine E-Mail.':'Prices net · invoice with VAT shown, issued by Stripe · unlocked right after payment — no key, no email.',
+    'Vorher kostenlos testen':'Try it free first',
+    'im Demo-Modus mit Beispielpferden. Das Monatsabo ist jederzeit zum Monatsende kündbar.':'in demo mode with sample horses. The monthly plan can be cancelled at any time to the end of the month.',
     'Als Leistung erfassen':'Record as a service',
     'RMSSD':'RMSSD',
     'SDNN':'SDNN',
