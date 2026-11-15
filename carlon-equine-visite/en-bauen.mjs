@@ -872,6 +872,44 @@ tausche(`Nein. CARLON sendet keine Alarme, und die Halterin sieht keine Einstufu
 tausche('"text": "Nein. CARLON sendet keine Alarme, und die Halterin sieht keine Einstufung — die entsteht erst in Ihrem Cockpit, wenn Sie es öffnen. Eine zugeschickte Datei ist eine Zusendung wie eine E-Mail: Wann Sie sie sichten, bestimmen Sie und kommunizieren es wie bisher. Für den Notfall gilt, was immer gilt: der Anruf."',
         '"text": "No. CARLON sends no alerts, and the owner sees no classification — it only comes into being in your cockpit, when you open it. A file sent to you is a delivery like an email: when you review it is up to you, communicated to your clients as before. For emergencies, what has always applied still applies: the phone call."');
 tausche('Woher kommt die Baseline?', 'Where does the baseline come from?', 2);
+/* Sensor-Block (Jan 15.11.: Gurt-Foto + Vorteile) */
+tausche(`    <figure class="gurt-block">
+      <picture>
+        <source srcset="/carlon-equine/assets/polar-h10-strap.avif" type="image/avif">
+        <source srcset="/carlon-equine/assets/polar-h10-strap.webp" type="image/webp">
+        <img src="/carlon-equine/assets/polar-h10-strap.png" width="1234" height="851" loading="lazy" decoding="async"
+          alt="Polar H10 mit Equine-Gurt – elektrische Messung der Herzaktivität am Pferd">
+      </picture>
+      <figcaption>
+        <div class="sec-eyebrow">Der Sensor</div>
+        <h3>Polar H10 mit Equine-Gurt: elektrisch gemessen, wie ein EKG.</h3>
+        <ul class="gurt-liste">
+          <li><b>Echte R-Zacken statt Lichtpuls.</b> Der H10 misst die elektrische Herzaktivität und liefert jeden Schlagabstand mit rund 1&nbsp;ms Auflösung (1/1024&nbsp;s) – optische Sensoren schätzen ihn aus Licht.</li>
+          <li><b>Für den Pferdekörper gemacht.</b> Der Equine-Gurt ist auf den Brustumfang des Pferds ausgelegt; Elektrodengel auf dem Fell senkt die Fell-Impedanz – so entsteht ein sauberes Signal.</li>
+          <li><b>Am stärksten in Ruhe.</b> Genau dort, wo Visite misst: in der eigenen Box, ohne Bewegung.</li>
+          <li><b>Frei erhältlich.</b> Kein Gerät von uns, keine Bindung – Ersatz bekommen Sie am selben Tag.</li>
+        </ul>
+      </figcaption>
+    </figure>
+`, `    <figure class="gurt-block">
+      <picture>
+        <source srcset="/carlon-equine/assets/polar-h10-strap.avif" type="image/avif">
+        <source srcset="/carlon-equine/assets/polar-h10-strap.webp" type="image/webp">
+        <img src="/carlon-equine/assets/polar-h10-strap.png" width="1234" height="851" loading="lazy" decoding="async"
+          alt="Polar H10 with the Equine belt – electrical measurement of cardiac activity on the horse">
+      </picture>
+      <figcaption>
+        <div class="sec-eyebrow">The sensor</div>
+        <h3>Polar H10 with the Equine belt: measured electrically, like an ECG.</h3>
+        <ul class="gurt-liste">
+          <li><b>Real R-waves, not a light pulse.</b> The H10 measures the heart’s electrical activity and delivers every beat interval at about 1&nbsp;ms resolution (1/1024&nbsp;s) – optical sensors estimate it from light.</li>
+          <li><b>Made for the horse’s body.</b> The Equine belt is sized for the horse’s girth; electrode gel on the coat lowers the coat impedance – that gives a clean signal.</li>
+          <li><b>Strongest at rest.</b> Exactly where Visite measures: in the horse’s own stall, without movement.</li>
+          <li><b>Freely available.</b> Not our device, no lock-in – you get a replacement the same day.</li>
+        </ul>
+      </figcaption>
+    </figure>
+`);
 /* FAQ Datensicherung (C5, 15.11.2026) – sichtbar + JSON-LD */
 tausche(`Wo liegen meine Daten, und wie sichere ich sie?`, `Where is my data, and how do I back it up?`, 2);
 tausche(`Ausschließlich in Ihrem Browser auf Ihrem Gerät – keine Cloud, kein Server von uns. Unter Dokumentation legt „Backup sichern“ eine Sicherungsdatei an; „Backup einspielen“ stellt damit alles auf einem neuen Gerät oder Browser wieder her, samt Freischaltung. Fehlt eine aktuelle Sicherung, zeigt das Cockpit es oben an. Im Klinik-Tarif liegt der Bestand zusätzlich im Klinik-Ordner auf Ihrem Netzlaufwerk.`, `Only in your browser on your device – no cloud, no server of ours. Under Documentation, “Back up” creates a backup file; “Restore backup” brings everything back on a new device or browser, including your activation. If a recent backup is missing, the cockpit shows it at the top. On the clinic plan the records are also kept in the clinic folder on your network drive.`, 2);
