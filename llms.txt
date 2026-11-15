@@ -13,7 +13,7 @@ iPhone app (iOS 17 or later) for HRV studies. Records beat-to-beat RR intervals 
 - Metrics: RMSSD, SDNN, pNN50, Poincaré SD1/SD2, DFA α1 (also over time: 120-s windows every 5 s, smoothness-priors detrending λ = 500), HRV triangular index, TINN, sample entropy, LF/HF (Task Force bands), Baevsky stress index. Artifact detection: Lipponen & Tarvainen (2019) with a 30-ms threshold floor for high heart rates, tested on 18 series (every injected error still caught, 98 % fewer false alarms on normal beats).
 - Validation: every metric recomputed by independent references (NeuroKit2, SciPy, Task Force definitions) on 18 RR series with 20,431 beats – 331 of 331 checks passed (metric comparisons plus artifact, threshold and rhythm checks); artifact detection identical to NeuroKit2 beat by beat; the DFA α1 time course checked window by window (2,854 windows, largest deviation 7·10⁻¹¹). Version-specific validation dossier available.
 - Future-proof: the app stores only the original sensor data and computes every metric fresh, so improved methods apply retroactively to all past recordings (re-export to update); every export names the app version and exact method, so results can be recomputed for peer review.
-- Not a medical device; for research and wellness use. The app interface is in English.
+- Research tool, not a medical device; not for medical decisions. For health concerns, consult a physician. The app interface is available in English and German.
 
 - [Product page (English)](https://vitalkultur.com/hrv-research/)
 - [Produktseite (Deutsch)](https://vitalkultur.com/hrv-research/de/)
@@ -22,7 +22,7 @@ iPhone app (iOS 17 or later) for HRV studies. Records beat-to-beat RR intervals 
 - [Example PDF report from a real recording](https://vitalkultur.com/hrv-research/assets/CARLON-HRV-Research-Example-Report.pdf)
 - [All facts, FAQ and methods block in one file](https://vitalkultur.com/llms-full.txt)
 - [Sample data (ZIP): a real 48-min Polar H10 gym session in every export format, CC BY 4.0](https://vitalkultur.com/hrv-research/assets/CARLON-HRV-Research-Sample-Data.zip)
-- [Example report (PDF) of the same session, build 2026102801](https://vitalkultur.com/hrv-research/assets/CARLON-HRV-Research-Example-Report.pdf)
+- [Example report (PDF) of the same session, build 2026111404](https://vitalkultur.com/hrv-research/assets/CARLON-HRV-Research-Example-Report.pdf)
 
 ### Facts that are often misquoted
 
