@@ -118,8 +118,8 @@ tausche("window.CARLON_LANG = localStorage.getItem('carlon.viewer.lang') || 'de'
 tausche('CARLON Equine Visite · für Tierärztinnen und Tierärzte',
         'CARLON Equine Visite · for veterinary surgeons');
 /* Dieselbe Zeile wie in der og:description — Identitaet, nicht Funktion. */
-tausche(`Ruhe-HRV aus dem eigenen Stall. Jedes Pferd im Vergleich mit sich selbst.`,
-        `Resting HRV from the home stable. Each horse compared with itself.`);
+tausche(`Betreuung, die nicht an der Stalltür endet.`,
+        `Care that doesn’t end at the stable door.`);
 tausche(`Die Halterin misst im Stall. Sie sehen vor dem Besuch, <strong>wie weit dieses Pferd von seiner eigenen Basis abweicht</strong> – und wie verlässlich die Aufnahme ist.`,
         `The owner records in the stable. Before the visit you see <strong>how far this horse deviates from its own baseline</strong> – and how reliable the recording is.`);
 tausche('Cockpit mit 15&nbsp;Demo-Pferden öffnen →', 'Open the cockpit with 15&nbsp;demo horses →', 2);
