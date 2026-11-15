@@ -372,7 +372,7 @@ tausche(`Es gibt <strong>nichts zu installieren</strong>. Die Halterin öffnet I
       gescannt — und die Messstation ist da: im Browser, ohne Anmeldung. Sie verbindet den
       Polar-H10-Gurt, lässt das Pferd stehen und tippt einmal auf Senden.
       <strong>Kein Onboarding, keine Rückfragen bei Ihnen.</strong> Gemessen wird mit einem
-      Android-Telefon oder einem Rechner mit Chrome oder Edge — auf dem iPhone lässt Apple
+      Android-Smartphone oder ‑Tablet oder einem Laptop mit Chrome oder Edge — auf iPhone und iPad lässt Apple
       Bluetooth im Browser nicht zu. Im Stall genügt ein einziges messfähiges Gerät für
       alle Pferde.`,
 `There is <strong>nothing to install</strong>. The owner opens your measuring link —
@@ -380,7 +380,7 @@ tausche(`Es gibt <strong>nichts zu installieren</strong>. Die Halterin öffnet I
       and the measuring station is there: in the browser, no sign-up. She connects the Polar H10 belt, lets
       the horse stand and taps send once.
       <strong>No onboarding, no questions coming back to you.</strong> Recording works on an
-      Android phone or a computer with Chrome or Edge — on iPhone, Apple does not permit
+      Android smartphone or tablet, or a laptop with Chrome or Edge — on iPhone and iPad, Apple does not permit
       Bluetooth in the browser. One capable device in the barn is enough for
       all horses.`);
 tausche(`Bei Ihnen kommt kein Screenshot an, sondern ein Datensatz: alle Schlagabstände im
@@ -635,10 +635,10 @@ tausche(`Nein. CARLON bereitet Verlaufsdaten auf und hilft bei der Reihenfolge. 
         `No. CARLON prepares trend data and helps with the order of visits. Whether a
            clinical examination, further diagnostics or treatment is needed is decided by
            you alone.`);
-tausche(`Einen Polar-H10-Brustgurt und ein Android-Gerät oder einen Rechner mit
+tausche(`Einen Polar-H10-Brustgurt und ein Android-Smartphone oder ‑Tablet oder einen Laptop mit
            Chrome oder Edge. Auf iPhone und iPad lässt Apple Bluetooth im Browser nicht zu;
            die Seite führt dort auf ein messfähiges Gerät.`,
-        `A Polar H10 chest belt and an Android device or a computer with
+        `A Polar H10 chest belt and an Android smartphone or tablet, or a laptop with
            Chrome or Edge. On iPhone and iPad, Apple does not permit Bluetooth in the
            browser; the page directs you to a capable device there.`);
 tausche(`Die Anwendung wechselt in einen funktionsreduzierten Modus. Ihre Daten bleiben
@@ -686,8 +686,8 @@ tausche('"audienceType": "Tierärztinnen und Tierärzte, Pferdekliniken"',
         '"audienceType": "Equine veterinarians and equine clinics"');
 tausche('"text": "Nein. CARLON bereitet Verlaufsdaten auf und hilft bei der Reihenfolge. Ob eine klinische Untersuchung, weitere Diagnostik oder eine Behandlung nötig ist, entscheiden ausschließlich Sie."',
         '"text": "No. CARLON prepares trend data and helps with the order of visits. Whether a clinical examination, further diagnostics or treatment is needed is decided by you alone."');
-tausche('"text": "Einen Polar-H10-Brustgurt und ein Android-Gerät oder einen Rechner mit Chrome oder Edge. Auf iPhone und iPad lässt Apple Bluetooth im Browser nicht zu; die Seite führt dort auf ein messfähiges Gerät."',
-        '"text": "A Polar H10 chest belt and an Android device or a computer with Chrome or Edge. On iPhone and iPad, Apple does not permit Bluetooth in the browser; the page directs you to a capable device there."');
+tausche('"text": "Einen Polar-H10-Brustgurt und ein Android-Smartphone oder ‑Tablet oder einen Laptop mit Chrome oder Edge. Auf iPhone und iPad lässt Apple Bluetooth im Browser nicht zu; die Seite führt dort auf ein messfähiges Gerät."',
+        '"text": "A Polar H10 chest belt and an Android smartphone or tablet, or a laptop with Chrome or Edge. On iPhone and iPad, Apple does not permit Bluetooth in the browser; the page directs you to a capable device there."');
 
 /* Die zwei neuen FAQ-Karten (13.08., Persona-Pass) — Frage-Titel stehen
    doppelt (Karte + JSON-LD-name), daher n=2; die Antworten getrennt als
@@ -868,17 +868,23 @@ tausche(`    <div class="pz-block">
       <div class="pz-text">
         <div class="sec-eyebrow">Poincaré mit Zeitregler</div>
         <h3>Jeder Schlag behält seinen Zeitpunkt – spulen Sie durch die Aufnahme.</h3>
-        <p>Ziehen Sie den Regler: Die Wolke baut sich Schlag für Schlag auf, SD1 und SD2 rechnen für das gewählte Zeitfenster mit. Zeigen oder tippen Sie auf einen Punkt – das Fadenkreuz nennt Schlag, Zeitpunkt und beide Abstände in Millisekunden. Die AV-Block-Pause dieser Ruheaufnahme ist bernsteinfarben markiert. Dieselbe Grafik steht im Cockpit in jeder Akte.</p>
+        <p>Das ist die Akte im Cockpit, nicht eine Grafik dafür. Ziehen Sie den Regler: Die Wolke baut sich Schlag für Schlag auf, SD1 und SD2 rechnen für das gewählte Zeitfenster mit. Zwei Finger oder das Mausrad zoomen, Ziehen verschiebt den Ausschnitt, ein Doppeltipp setzt zurück. Zeigen Sie auf einen Punkt – das Fadenkreuz nennt Schlag, Zeitpunkt und beide Abstände in Millisekunden.</p>
       </div>
-      <figure class="pz" data-quelle="/carlon-equine/app/belege/rmssd-roh-vs-korrigiert.json"></figure>
+      <div class="pz-live" data-app="/carlon-equine/app/?demo=roster&amp;pferd=champion&amp;fokus=poincare">
+        <img src="../assets/visite-shots/12-poincare.jpg" loading="lazy" alt="Akte im Cockpit: Poincaré-Karte mit Zeitregler, SD1/SD2-Ellipse und Achsen in Millisekunden">
+        <button class="pz-start" type="button">Im Cockpit selbst ausprobieren ▶</button>
+      </div>
     </div>
 `, `    <div class="pz-block">
       <div class="pz-text">
         <div class="sec-eyebrow">Poincaré with time slider</div>
         <h3>Every beat keeps its time stamp – scrub through the recording.</h3>
-        <p>Drag the slider: the cloud builds up beat by beat, SD1 and SD2 follow the selected time window. Point at or tap a dot – the crosshair names the beat, its time and both intervals in milliseconds. The AV-block pause of this resting recording is marked in amber. The same chart is in every horse record in the cockpit.</p>
+        <p>This is the horse record in the cockpit, not a chart made for the page. Drag the slider: the cloud builds up beat by beat, SD1 and SD2 follow the selected time window. Two fingers or the mouse wheel zoom, dragging moves the view, a double tap resets. Point at a dot – the crosshair names the beat, its time and both intervals in milliseconds.</p>
       </div>
-      <figure class="pz" data-quelle="/carlon-equine/app/belege/rmssd-roh-vs-korrigiert.json"></figure>
+      <div class="pz-live" data-app="/carlon-equine/app/?demo=roster&amp;pferd=champion&amp;fokus=poincare">
+        <img src="../assets/visite-shots/12-poincare.jpg" loading="lazy" alt="Horse record in the cockpit: Poincaré card with time slider, SD1/SD2 ellipse and axes in milliseconds">
+        <button class="pz-start" type="button">Try it in the cockpit itself ▶</button>
+      </div>
     </div>
 `);
 /* Sensor-Block (Jan 15.11.: Gurt-Foto + Vorteile) */

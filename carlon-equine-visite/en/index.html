@@ -154,7 +154,7 @@ document.head.appendChild(s);})();</script>
      "name": "What does the owner need?",
      "acceptedAnswer": {
       "@type": "Answer",
-      "text": "A Polar H10 chest belt and an Android device or a computer with Chrome or Edge. On iPhone and iPad, Apple does not permit Bluetooth in the browser; the page directs you to a capable device there."
+      "text": "A Polar H10 chest belt and an Android smartphone or tablet, or a laptop with Chrome or Edge. On iPhone and iPad, Apple does not permit Bluetooth in the browser; the page directs you to a capable device there."
      }
     },
     {
@@ -536,14 +536,14 @@ section[id]{scroll-margin-top:76px}
 /* GERÄT (15.11.2026, Jan: „nur Screenshots mit Kontur – wirkt billig“; kein Apple-Gerät nachbauen):
    generisches Tablet in Anthrazit – Aluminium-Verlauf, feine Lichtkante, schmaler Rand, Kamerapunkt
    an der kurzen Seite (Querformat), Glas mit innerem Rand. Gilt für Hero, Funktionsbilder und Bildreihe. */
-.f-shot,.shots.three .frame,.hero-shot{position:relative;border:0!important;border-radius:24px!important;padding:11px 11px 11px 17px!important;
+.f-shot,.shots.three .frame,.hero-shot,.pz-live{position:relative;border:0!important;border-radius:24px!important;padding:11px 11px 11px 17px!important;
   background:linear-gradient(150deg,#45494f 0%,#2c2f34 22%,#1e2024 60%,#141518 100%)!important;
   box-shadow:inset 0 1px 0 rgba(255,255,255,.16),inset 0 0 0 1px rgba(255,255,255,.05),0 0 0 1px #08090b,
     0 50px 90px -45px rgba(0,0,0,.95),0 18px 40px -30px rgba(0,0,0,.8),0 0 70px rgba(62,207,178,.07)!important;overflow:visible!important}
-.f-shot::before,.shots.three .frame::before,.hero-shot::after{content:''!important;position:absolute!important;left:6px!important;top:50%!important;
+.f-shot::before,.shots.three .frame::before,.hero-shot::after,.pz-live::before{content:''!important;position:absolute!important;left:6px!important;top:50%!important;
   transform:translateY(-50%)!important;width:5px!important;height:5px!important;border-radius:50%!important;background:#0b0c0f!important;
   box-shadow:0 0 0 1px rgba(255,255,255,.07),inset 0 0 1px rgba(80,160,200,.6)!important}
-.f-shot img,.shots.three .frame img,.hero-shot img{display:block;width:100%;height:auto;border-radius:13px!important;box-shadow:0 0 0 1px rgba(0,0,0,.85),0 0 0 2px rgba(255,255,255,.03)}
+.f-shot img,.shots.three .frame img,.hero-shot img,.pz-live img{display:block;width:100%;height:auto;border-radius:13px!important;box-shadow:0 0 0 1px rgba(0,0,0,.85),0 0 0 2px rgba(255,255,255,.03)}
 /* Bildreihe auf Tablet/Telefon als Wisch-Karussell (natives Scrollen, kein Einrasten – Kanon Breathwork) */
 @media(max-width:860px){
   .shots.three{display:flex!important;overflow-x:auto;gap:16px;padding:6px 4px 18px;margin-left:-4px;margin-right:-4px;
@@ -554,10 +554,14 @@ section[id]{scroll-margin-top:76px}
 .pz-block{margin-top:var(--sp-34);display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);gap:var(--sp-34);align-items:center;background:var(--bg-surface);border:1px solid var(--border-faint);border-radius:20px;padding:var(--sp-21)}
 .pz-text h3{margin:6px 0 12px;font-size:1.25em;line-height:1.3}.pz-text p{color:var(--text-secondary);line-height:1.6}
 @media(max-width:860px){.pz-block{grid-template-columns:1fr}}
-@media(max-width:860px){.hero-fluss{flex-direction:column;align-items:flex-start;gap:6px!important;flex-wrap:nowrap!important}
+@media(max-width:1320px){.hero-fluss{flex-direction:column;align-items:flex-start;gap:6px!important;flex-wrap:nowrap!important}
   .hf-linie{flex:0 0 22px!important;width:1px;min-width:0!important;height:22px;margin-left:22px}
   .hf-linie i{left:-2.5px!important;top:0;animation:flussPulsV 3.5s ease-in-out infinite!important}}
 @keyframes flussPulsV{0%{top:0;opacity:0}12%{opacity:1}88%{opacity:1}100%{top:calc(100% - 6px);opacity:0}}
+.pz-live{position:relative;overflow:hidden!important}.pz-live.an{padding-bottom:11px!important}
+.pz-start{position:absolute;left:50%;bottom:22px;transform:translateX(-50%);padding:12px 20px;border-radius:999px;border:1px solid rgba(62,207,178,.6);
+  background:rgba(8,14,18,.86);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);color:#3ECFB2;font-weight:600;font-size:14px;cursor:pointer;box-shadow:0 12px 30px rgba(0,0,0,.5)}
+.pz-start:hover{background:rgba(62,207,178,.16)}
 .beleg-bild{margin:var(--sp-21) 0 var(--sp-8);padding:var(--sp-8) var(--sp-8);
   border-radius:8px;background:rgba(255,255,255,.02);overflow:hidden}
 .beleg-bild svg{display:block;max-width:100%;height:auto}
@@ -1030,7 +1034,7 @@ h1,h2{text-wrap:balance}
       and the measuring station is there: in the browser, no sign-up. She connects the Polar H10 belt, lets
       the horse stand and taps send once.
       <strong>No onboarding, no questions coming back to you.</strong> Recording works on an
-      Android phone or a computer with Chrome or Edge — on iPhone, Apple does not permit
+      Android smartphone or tablet, or a laptop with Chrome or Edge — on iPhone and iPad, Apple does not permit
       Bluetooth in the browser. One capable device in the barn is enough for
       all horses.
     
@@ -1348,9 +1352,12 @@ h1,h2{text-wrap:balance}
       <div class="pz-text">
         <div class="sec-eyebrow">Poincaré with time slider</div>
         <h3>Every beat keeps its time stamp – scrub through the recording.</h3>
-        <p>Drag the slider: the cloud builds up beat by beat, SD1 and SD2 follow the selected time window. Point at or tap a dot – the crosshair names the beat, its time and both intervals in milliseconds. The AV-block pause of this resting recording is marked in amber. The same chart is in every horse record in the cockpit.</p>
+        <p>This is the horse record in the cockpit, not a chart made for the page. Drag the slider: the cloud builds up beat by beat, SD1 and SD2 follow the selected time window. Two fingers or the mouse wheel zoom, dragging moves the view, a double tap resets. Point at a dot – the crosshair names the beat, its time and both intervals in milliseconds.</p>
       </div>
-      <figure class="pz" data-quelle="/carlon-equine/app/belege/rmssd-roh-vs-korrigiert.json"></figure>
+      <div class="pz-live" data-app="/carlon-equine/app/?demo=roster&amp;pferd=champion&amp;fokus=poincare">
+        <img src="../assets/visite-shots/12-poincare.jpg" loading="lazy" alt="Horse record in the cockpit: Poincaré card with time slider, SD1/SD2 ellipse and axes in milliseconds">
+        <button class="pz-start" type="button">Try it in the cockpit itself ▶</button>
+      </div>
     </div>
     <div class="cta-row" style="margin-top:var(--sp-34,34px)">
       <a class="cta-primary" href="/carlon-equine/app/?demo=board">Check the cleaning yourself on 15 example horses →</a>
@@ -1706,7 +1713,7 @@ h1,h2{text-wrap:balance}
            you alone.</p></div>
       </details>
       <details class="faq-item" data-spur-auf="faq-2"><summary><h3>What does the owner need?</h3></summary>
-        <div class="faq-a"><p>A Polar H10 chest belt and an Android device or a computer with
+        <div class="faq-a"><p>A Polar H10 chest belt and an Android smartphone or tablet, or a laptop with
            Chrome or Edge. On iPhone and iPad, Apple does not permit Bluetooth in the
            browser; the page directs you to a capable device there.</p></div>
       </details>
@@ -2027,6 +2034,15 @@ document.querySelectorAll('details[data-spur-auf]').forEach(function(d){d.addEve
 if(!d.open)return;var n=d.getAttribute('data-spur-auf');if(schon[n])return;var g=window.goatcounter;if(!g||!g.count)return;
 schon[n]=1;g.count({path:'visite-'+sp+'/'+n,title:n,event:true});});});})();
 </script>
-<script src="../assets/poincare-zeit.js?v=1" defer></script>
+<script>
+/* Live-Akte im Gerät (16.11.2026, Jan: „Original-App, spulbar, zoombar – man muss sehen, was man kauft“).
+   Erst Standbild (schnell), auf Tipp lädt das Cockpit selbst im Tablet-Format 1180×820, maßstäblich eingepasst. */
+(function(){document.querySelectorAll('.pz-live').forEach(function(box){var k=box.querySelector('.pz-start');if(!k)return;
+k.addEventListener('click',function(){var f=document.createElement('iframe');f.src=box.getAttribute('data-app');f.title=k.textContent;f.loading='eager';
+f.setAttribute('allow','fullscreen');box.classList.add('an');var img=box.querySelector('img');
+var pass=function(){var w=box.clientWidth-28,s=w/1180;f.style.cssText='width:1180px;height:820px;border:0;border-radius:13px;transform:scale('+s+');transform-origin:0 0;display:block;background:#0b0f14';box.style.height=(820*s+22)+'px';};
+img.replaceWith(f);k.remove();pass();addEventListener('resize',pass);
+if(window.goatcounter&&goatcounter.count)goatcounter.count({path:'visite-live-akte',title:'live-akte',event:true});});});})();
+</script>
 </body>
 </html>

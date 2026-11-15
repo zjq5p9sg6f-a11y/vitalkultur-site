@@ -11903,7 +11903,10 @@ const Sprache={
        wenn die App gar nicht offen ist. Safari kennt das nicht — dort bleibt
        es bei den Ausloesern oben, was die 14+14 Tage Reichweite ohnehin
        tragen. Scheitert die Registrierung, faellt nichts aus. */
-    try{
+    /* 16.11.2026: NICHT mehr im Startpfad warten. `serviceWorker.ready` löst nie auf, wenn kein Service-Worker
+       registriert werden kann (privates Fenster, blockierte Website-Daten, eingebettete Ansicht, Testbrowser) –
+       der Start blieb dann für immer auf dem Ladebild stehen (gefunden an der eingebetteten Akte der Visite-Seite). */
+    (async()=>{ try{
       const reg=await navigator.serviceWorker?.ready;
       if(reg&&'sync' in reg) await reg.sync.register('carlon-lizenz');
       if(reg&&reg.periodicSync){
@@ -11911,7 +11914,7 @@ const Sprache={
         if(p&&p.state==='granted')
           await reg.periodicSync.register('carlon-lizenz',{minInterval:24*60*60*1000});
       }
-    }catch(e){}
+    }catch(e){} })();
     document.addEventListener('visibilitychange', ()=>{
       if(document.visibilityState==='visible'){
         License.lizenzHolenWennFaellig(); Postfach.abholen(); Postausgang.senden(); }
@@ -11942,6 +11945,8 @@ const Sprache={
           const v=_p.get('demo'), erlaubt=['today','board','roster','station','map','revenue','coherence'];
           const pf=(_p.get('pferd')||'').toLowerCase(), h=pf&&(State.horses||[]).find(x=>String(x.name||'').toLowerCase()===pf);
           if(h) Views.openHorse(h.id); else Nav.go(erlaubt.includes(v)?v:'today');
+          /* &fokus=poincare (16.11.2026): Visite-Seite bettet die echte Akte ein und springt zur Poincaré-Karte mit Zeitregler. */
+          if(h && _p.get('fokus')==='poincare') setTimeout(()=>{ const f=document.getElementById('pzAkte'); if(f) f.scrollIntoView({block:'center'}); },700);
         }catch(e){ console.error('demo',e); }
       },300);}
     // Persistenz nochmals nach erster Nutzer-Interaktion anfordern (wird dann eher gewährt) + Banner aktualisieren
