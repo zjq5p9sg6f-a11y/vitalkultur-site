@@ -93,33 +93,43 @@
     }
     knopf.addEventListener('click', function () { abspielen(false); });
     regler.addEventListener('input', function () { if (spielt) { cancelAnimationFrame(spielt); spielt = null; knopf.textContent = '▶'; } vorgefuehrt = true; setze(+regler.value); });
-    function naechster(ev) { var b = cv.getBoundingClientRect(), x = ev.clientX - b.left, y = ev.clientY - b.top, best = -1, bd = 1e9;
+    /* Fadenkreuz wie in den CARLON-Apps (Jan 16.11.): Finger/Maus sucht, der Wert BLEIBT stehen, ein Tipp blendet ihn aus. */
+    var fest = null;
+    function suche(ev) { var b = cv.getBoundingClientRect(), x = ev.clientX - b.left, y = ev.clientY - b.top, best = -1, bd = 1e9;
       for (var i = 0; i < k; i++) { var dx = X(rr[i]) - x, dy = Y(rr[i + 1]) - y, d = dx * dx + dy * dy; if (d < bd) { bd = d; best = i; } }
-      if (best < 0 || bd > 900) { tipp.hidden = true; zeichne(); return; }
-      zeichne(best); tipp.hidden = false; tipp.style.left = X(rr[best]) + 'px'; tipp.style.top = Y(rr[best + 1]) + 'px';
-      tipp.innerHTML = '<b>' + T.schlag + ' ' + (best + 1) + '</b> · ' + fmtZeit(t[best]) + '<br>' + Math.round(rr[best]) + ' → ' + Math.round(rr[best + 1]) + ' ms' + ((av[best] || av[best + 1]) ? '<br><span style="color:' + AMBER + '">' + T.av + '</span>' : ''); }
+      return (best < 0 || bd > 1600) ? null : best; }
+    function zeige(idx) { fest = idx; if (idx == null) { tipp.hidden = true; zeichne(); return; }
+      zeichne(idx); tipp.hidden = false; tipp.style.left = X(rr[idx]) + 'px'; tipp.style.top = Y(rr[idx + 1]) + 'px';
+      tipp.innerHTML = '<b>' + T.schlag + ' ' + (idx + 1) + '</b> · ' + fmtZeit(t[idx]) + '<br>' + Math.round(rr[idx]) + ' → ' + Math.round(rr[idx + 1]) + ' ms' + ((av[idx] || av[idx + 1]) ? '<br><span style="color:' + AMBER + '">' + T.av + '</span>' : ''); }
+    var altZeichne = zeichne; zeichne = function (hl) { altZeichne(hl === undefined ? fest : hl); if (fest != null && hl === undefined && !tipp.hidden) { tipp.style.left = X(rr[fest]) + 'px'; tipp.style.top = Y(rr[fest + 1]) + 'px'; } };
     function zoom(f, px) { var w = wert(px), neu = Math.max(60, Math.min(hi - lo, (vhi - vlo) * f)); var a = (w - vlo) / (vhi - vlo);
       vlo = w - a * neu; vhi = vlo + neu; if (vlo < lo - 200) { vlo = lo - 200; vhi = vlo + neu; } if (vhi > hi + 200) { vhi = hi + 200; vlo = vhi - neu; } zeichne(); }
     function schieb(dpx) { var d = dpx / (S - M.l - M.r) * (vhi - vlo); vlo -= d; vhi -= d; zeichne(); }
-    function zurueck() { vlo = lo; vhi = hi; tipp.hidden = true; zeichne(); }
+    function zurueck() { vlo = lo; vhi = hi; zeichne(); }
     cv.addEventListener('wheel', function (e) { e.preventDefault(); var b = cv.getBoundingClientRect(); zoom(Math.exp(e.deltaY * 0.0016), e.clientX - b.left); }, { passive: false });
-    cv.addEventListener('dblclick', zurueck);
-    var zieh = null;
-    cv.addEventListener('mousedown', function (e) { zieh = e.clientX; });
-    window.addEventListener('mouseup', function () { zieh = null; });
-    cv.addEventListener('mousemove', function (e) { if (zieh != null && (vhi - vlo) < (hi - lo) - 1) { schieb(e.clientX - zieh); zieh = e.clientX; } });
+    cv.addEventListener('dblclick', function (e) { e.preventDefault(); zurueck(); });
+    // Zeiger: suchen beim Ziehen; kurzer Tipp auf ein stehendes Fadenkreuz blendet es aus. Gezoomt + Maus ziehen = verschieben.
+    var druck = null, zwei = false;
+    cv.addEventListener('pointerdown', function (e) { if (zwei) return; cv.setPointerCapture(e.pointerId);
+      druck = { x: e.clientX, y: e.clientY, t: Date.now(), war: fest, maus: e.pointerType === 'mouse', schieben: e.pointerType === 'mouse' && (vhi - vlo) < (hi - lo) - 1 && e.shiftKey === false && fest == null };
+      if (!druck.schieben && druck.war == null) zeige(suche(e)); });
+    cv.addEventListener('pointermove', function (e) { if (zwei) return;
+      if (druck) { if (druck.schieben) { schieb(e.clientX - druck.x); druck.x = e.clientX; return; }
+        if (Math.hypot(e.clientX - druck.x, e.clientY - druck.y) > 6) { druck.bewegt = true; zeige(suche(e)); } }
+      else if (e.pointerType === 'mouse' && fest == null) { var i2 = suche(e); if (i2 != null) { zeichne(i2); } else zeichne(); } });
+    cv.addEventListener('pointerup', function (e) { if (!druck) return; var kurz = !druck.bewegt && Date.now() - druck.t < 350;
+      if (kurz && druck.war != null) zeige(null); druck = null; });
+    cv.addEventListener('pointercancel', function () { druck = null; });
     var t2 = null, letzterTipp = 0;
-    cv.addEventListener('touchstart', function (e) { if (e.touches.length === 2) { e.preventDefault(); var a = e.touches[0], b = e.touches[1]; t2 = { d: Math.hypot(a.clientX - b.clientX, a.clientY - b.clientY), x: (a.clientX + b.clientX) / 2 }; }
-      else if (e.touches.length === 1) { var jetzt = Date.now(); if (jetzt - letzterTipp < 300) { e.preventDefault(); zurueck(); } letzterTipp = jetzt; } }, { passive: false });
+    cv.addEventListener('touchstart', function (e) { if (e.touches.length === 2) { e.preventDefault(); zwei = true; druck = null; var a = e.touches[0], b = e.touches[1]; t2 = { d: Math.hypot(a.clientX - b.clientX, a.clientY - b.clientY), x: (a.clientX + b.clientX) / 2 }; }
+      else if (e.touches.length === 1) { var jetzt = Date.now(); if (jetzt - letzterTipp < 280) { e.preventDefault(); zurueck(); } letzterTipp = jetzt; } }, { passive: false });
     cv.addEventListener('touchmove', function (e) { if (e.touches.length === 2 && t2) { e.preventDefault(); var a = e.touches[0], b = e.touches[1], bb = cv.getBoundingClientRect();
       var d = Math.hypot(a.clientX - b.clientX, a.clientY - b.clientY), x = (a.clientX + b.clientX) / 2; schieb(x - t2.x); zoom(t2.d / d, x - bb.left); t2 = { d: d, x: x }; } }, { passive: false });
-    cv.addEventListener('touchend', function () { t2 = null; });
-    cv.addEventListener('pointermove', naechster); cv.addEventListener('pointerdown', naechster);
-    cv.addEventListener('pointerleave', function () { tipp.hidden = true; zeichne(); });
+    cv.addEventListener('touchend', function (e) { if (e.touches.length < 2) { t2 = null; setTimeout(function () { zwei = false; }, 60); } });
     window.addEventListener('resize', function () { groesse(); zeichne(); });
   }
   var css = document.createElement('style');
-  css.textContent = '.pz{margin:0}.pz-buehne{position:relative;display:flex;justify-content:center}.pz-c{touch-action:pan-y;display:block;border-radius:14px;cursor:crosshair}' +
+  css.textContent = '.pz{margin:0;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}.pz *{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}.pz-buehne{position:relative;display:flex;justify-content:center}.pz-c{touch-action:none;display:block;border-radius:14px;cursor:crosshair;-webkit-tap-highlight-color:transparent}' +
     '.pz-tipp{position:absolute;transform:translate(-50%,calc(-100% - 12px));padding:7px 11px;border-radius:10px;background:rgba(20,26,32,.95);border:1px solid rgba(255,255,255,.18);color:#e8eef2;font:12px/1.4 system-ui,sans-serif;white-space:nowrap;pointer-events:none;box-shadow:0 10px 24px rgba(0,0,0,.5)}' +
     '.pz-leiste{display:flex;align-items:center;gap:12px;max-width:560px;margin:14px auto 0}.pz-regler{flex:1;accent-color:#3ECFB2;height:28px}' +
     '.pz-knopf{width:38px;height:38px;border-radius:50%;border:1px solid rgba(62,207,178,.5);background:rgba(62,207,178,.1);color:#3ECFB2;font-size:13px;cursor:pointer}' +
