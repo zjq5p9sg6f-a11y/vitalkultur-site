@@ -764,12 +764,12 @@ tausche('<div class="tarif-preis"><b>149&nbsp;€</b> <span>netto im Monat · US
 tausche(`Das Angebot richtet sich ausschließlich an Unternehmer im Sinne des § 14 BGB.
         Für das Browser-Cockpit tritt <strong>Stripe als Verkäufer im eigenen Namen</strong> auf
         (Merchant of Record): Sie erhalten von dort eine Rechnung mit ausgewiesener Umsatzsteuer
-        für Ihren Vorsteuerabzug; mit gültiger EU-USt-IdNr. greift das Reverse-Charge-Verfahren.
+        für Ihren Vorsteuerabzug.
         Vitalkultur selbst ist Kleinunternehmer nach § 19 UStG. Einzelheiten in`,
 `This offer is directed exclusively at businesses within the meaning of § 14 BGB.
         For the browser cockpit, <strong>Stripe acts as the seller in its own name</strong>
         (merchant of record): you receive an invoice from Stripe showing VAT for your input-tax
-        deduction; with a valid EU VAT ID the reverse-charge procedure applies.
+        deduction.
         Vitalkultur itself is a small business under § 19 UStG. Details in`);
 
 
@@ -897,7 +897,7 @@ tausche(`<div class="tarif-name">Für Pferdekliniken</div>`, `<div class="tarif-
 tausche(`<div class="tarif-alt">oder 3.490&nbsp;€ im Jahr — entspricht 290,83&nbsp;€ im Monat, zwei Monate gespart</div>`, `<div class="tarif-alt">or €3,490 a year — equivalent to €290.83 a month, two months saved</div>`);
 tausche(`<div class="tarif-alt">An der Kasse für Kliniken in Deutschland: 415,31&nbsp;€ im Monat bzw. 4.153,10&nbsp;€ im Jahr, jeweils inkl. 19&nbsp;% USt.</div>`, `<div class="tarif-alt">At checkout for clinics in Germany: €415.31 a month or €4,153.10 a year, each incl. 19&nbsp;% VAT.</div>`);
 tausche(`<li>Alles aus der Praxis-Stufe</li>`, `<li>Everything in the practice plan</li>`);
-tausche(`<li>Gemeinsamer Bestand über Ihren Klinik-Ordner auf dem vorhandenen Netzlaufwerk — jedes Gerät sieht denselben Stand, ohne Cloud</li>`, `<li>Shared records via your clinic folder on your existing network drive — every device sees the same state, no cloud</li>`);
+tausche(`<li>Gemeinsamer Bestand über Ihren Klinik-Ordner auf dem vorhandenen Netzlaufwerk — jedes Gerät sieht denselben Stand, ohne Cloud (Ordner verbinden am Rechner mit Chrome oder Edge)</li>`, `<li>Shared records via your clinic folder on your existing network drive — every device sees the same state, no cloud (connect the folder on a computer with Chrome or Edge)</li>`);
 tausche(`<li>Stationswand für den Monitor im Stationszimmer</li>`, `<li>Station wall for the monitor in the ward</li>`);
 tausche(`<li>Mehrere Plätze in einer Lizenz</li>`, `<li>Several seats in one licence</li>`);
 tausche(`<li>Feste Methodenversion je Auswertung — für Archiv und Studien</li>`, `<li>A fixed method version per analysis — for archives and studies</li>`);
@@ -932,9 +932,9 @@ tausche(`<p><b>Entwickelt und betreut von Jan Rohwedder</b> (Vitalkultur, Iffezh
 tausche('<p class="g-kontakt">Frage vorab? Schreiben Sie an', '<p class="g-kontakt">A question first? Write to');
 tausche(' — Antwort meist am selben Tag.</p>', ' — usually answered the same day.</p>');
 tausche('>Praxis-Abo wählen · 149&nbsp;€ / Monat →<', '>Choose practice plan · €149 / month →<');
-tausche('>Oder erst eine persönliche Einführung ↓<', '>Or a personal introduction first ↓<');
+tausche('>Erst ausprobieren: Demo mit 15 Pferden, ohne Konto →<', '>Try it first: demo with 15 horses, no account →<');
 tausche('>Klinik-Abo wählen · 349&nbsp;€ / Monat →<', '>Choose clinic plan · €349 / month →<');
-tausche('>Klinik-Ordner vorab im Gespräch klären ↓<', '>Discuss the clinic folder first ↓<');
+tausche('>Stationswand in der Demo ansehen →<', '>See the station wall in the demo →<');
 tausche(`Transport, fremde Umgebung, fremde Menschen — jeder dieser Reize verschiebt genau die
       autonome Balance, die Sie beurteilen wollen. Der Messort ist bei der Ruhe-HRV keine
       Nebensache, sondern Teil der Methode: Die Auswertung verlangt

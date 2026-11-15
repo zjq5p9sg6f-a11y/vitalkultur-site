@@ -508,6 +508,14 @@ section[id]{scroll-margin-top:76px}
    Weiss-mit-Alpha) auf einer Kante, die nur andeutet. */
 .beleg-breit{margin-top:var(--sp-21);background:var(--bg-surface);
   border:1px solid var(--border-faint);border-radius:14px;padding:var(--sp-21)}
+.faq-liste{display:grid;gap:10px;max-width:860px}
+.faq-item{background:var(--bg-surface);border:1px solid var(--border-faint);border-radius:14px;padding:0 var(--sp-21)}
+.faq-item summary{list-style:none;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:16px;padding:18px 0}
+.faq-item summary::-webkit-details-marker{display:none}
+.faq-item summary h3{margin:0;font-size:1.02em}
+.faq-item summary::after{content:'+';font-size:22px;line-height:1;color:var(--cyan);transition:transform .2s}
+.faq-item[open] summary::after{transform:rotate(45deg)}
+.faq-item .faq-a{padding:0 0 18px;color:var(--text-secondary)}
 .beleg-bild{margin:var(--sp-21) 0 var(--sp-8);padding:var(--sp-8) var(--sp-8);
   border-radius:8px;background:rgba(255,255,255,.02);overflow:hidden}
 .beleg-bild svg{display:block;max-width:100%;height:auto}
@@ -1527,7 +1535,7 @@ h1,h2{text-wrap:balance}
         <li>Monthly plan cancellable monthly, annual plan at the end of its term</li>
       </ul>
       <a class="cta-primary tarif-knopf" href="/carlon-equine/app/?kasse=praxis">Choose practice plan · €149 / month →</a>
-      <a class="tarif-neben" href="#anmeldung">Or a personal introduction first ↓</a>
+      <a class="tarif-neben" href="/carlon-equine/app/?demo=today">Try it first: demo with 15 horses, no account →</a>
     </div>
     <div class="tarif tarif-klinik">
       <div class="tarif-name">For equine clinics</div>
@@ -1536,13 +1544,13 @@ h1,h2{text-wrap:balance}
       <div class="tarif-alt">At checkout for clinics in Germany: €415.31 a month or €4,153.10 a year, each incl. 19&nbsp;% VAT.</div>
       <ul class="enthalten">
         <li>Everything in the practice plan</li>
-        <li>Shared records via your clinic folder on your existing network drive — every device sees the same state, no cloud</li>
+        <li>Shared records via your clinic folder on your existing network drive — every device sees the same state, no cloud (connect the folder on a computer with Chrome or Edge)</li>
         <li>Station wall for the monitor in the ward</li>
         <li>Several seats in one licence</li>
         <li>A fixed method version per analysis — for archives and studies</li>
       </ul>
       <a class="cta-primary tarif-knopf" href="/carlon-equine/app/?kasse=klinik">Choose clinic plan · €349 / month →</a>
-      <a class="tarif-neben" href="#anmeldung">Discuss the clinic folder first ↓</a>
+      <a class="tarif-neben" href="/carlon-equine/app/?demo=station">See the station wall in the demo →</a>
     </div>
     </div>
     <div class="tarif tarif-fussblock">
@@ -1550,7 +1558,7 @@ h1,h2{text-wrap:balance}
         This offer is directed exclusively at businesses within the meaning of § 14 BGB.
         For the browser cockpit, <strong>Stripe acts as the seller in its own name</strong>
         (merchant of record): you receive an invoice from Stripe showing VAT for your input-tax
-        deduction; with a valid EU VAT ID the reverse-charge procedure applies.
+        deduction.
         Vitalkultur itself is a small business under § 19 UStG. Details in
         <a href="/terms.html#visite">§ 12a unserer AGB</a> und in der
         <a href="/privacy-en.html">Datenschutzerklärung</a>.
@@ -1631,72 +1639,64 @@ h1,h2{text-wrap:balance}
   <div class="wrap">
     <div class="sec-eyebrow">Frequently asked</div>
     <h2>What vets ask us first.</h2>
-    <div class="grid">
-      <div class="card">
-        <h3>Does CARLON replace an examination?</h3>
-        <p>No. CARLON prepares trend data and helps with the order of visits. Whether a
+    <div class="faq-liste">
+      <details class="faq-item" data-spur-auf="faq-1"><summary><h3>Does CARLON replace an examination?</h3></summary>
+        <div class="faq-a"><p>No. CARLON prepares trend data and helps with the order of visits. Whether a
            clinical examination, further diagnostics or treatment is needed is decided by
-           you alone.</p>
-      </div>
-      <div class="card">
-        <h3>What does the owner need?</h3>
-        <p>A Polar H10 chest belt and an Android device or a computer with
+           you alone.</p></div>
+      </details>
+      <details class="faq-item" data-spur-auf="faq-2"><summary><h3>What does the owner need?</h3></summary>
+        <div class="faq-a"><p>A Polar H10 chest belt and an Android device or a computer with
            Chrome or Edge. On iPhone and iPad, Apple does not permit Bluetooth in the
-           browser; the page directs you to a capable device there.</p>
-      </div>
-      <div class="card">
-        <h3>What happens after cancellation?</h3>
-        <p>The application switches to a reduced mode. Your data stays on the device and can
-           still be opened and exported. We could not delete it — it is with you.</p>
-      </div>
-      <div class="card">
-        <h3>Do I need a data processing agreement?</h3>
-        <p>No. The cockpit runs entirely in your browser, and the owner's recording never
+           browser; the page directs you to a capable device there.</p></div>
+      </details>
+      <details class="faq-item" data-spur-auf="faq-3"><summary><h3>What happens after cancellation?</h3></summary>
+        <div class="faq-a"><p>The application switches to a reduced mode. Your data stays on the device and can
+           still be opened and exported. We could not delete it — it is with you.</p></div>
+      </details>
+      <details class="faq-item" data-spur-auf="faq-4"><summary><h3>Do I need a data processing agreement?</h3></summary>
+        <div class="faq-a"><p>No. The cockpit runs entirely in your browser, and the owner's recording never
            reaches us either: her measuring station creates a file on her own device, which
            she sends to you herself. There is no relay at our end — and therefore nothing a
-           data processing agreement could be about.</p>
-      </div>
-      <div class="card">
-        <h3>How good can a layperson’s recording be?</h3>
-        <p>Every recording carries its own measurement report: share of usable beat pairs,
+           data processing agreement could be about.</p></div>
+      </details>
+      <details class="faq-item" data-spur-auf="faq-5"><summary><h3>How good can a layperson’s recording be?</h3></summary>
+        <div class="faq-a"><p>Every recording carries its own measurement report: share of usable beat pairs,
            artefact rate, sensor, timing resolution. A recording that carries nothing is
            flagged as exactly that — you never interpret blind. And the raw data comes
-           with it: every single beat interval.</p>
-      </div>
-      <div class="card">
-        <h3>What is the breathing-pattern profile based on?</h3>
-        <p>On a published comparison study (Nyerges-Bohák 2025, Equine Veterinary
+           with it: every single beat interval.</p></div>
+      </details>
+      <details class="faq-item" data-spur-auf="faq-6"><summary><h3>What is the breathing-pattern profile based on?</h3></summary>
+        <div class="faq-a"><p>On a published comparison study (Nyerges-Bohák 2025, Equine Veterinary
            Journal, n = 40) that reports group differences in SD2, SDNN, TINN and SD2/SD1 —
            it contains no threshold value. Our comparison limits sit between its group
            means; that is our own derivation, not a value from the literature, and every limit
            is listed individually in the methodology. The profile describes a measurement
-           pattern — it establishes nothing and replaces no examination.</p>
-      </div>
+           pattern — it establishes nothing and replaces no examination.</p></div>
+      </details>
       <!-- Der Nacht-Einwand: jedes System, das Dringlichkeit einstuft,
            erzeugt potenziell die Erwartung, dass jemand hinsieht. Beide
            Aussagen Code-verifiziert: keine Push/Alarm-APIs im ganzen
            Produkt; die Station zeigt der Halterin ausdruecklich KEINE
            Einstufung (messen.html: „Die Deutung ist das Produkt der
            Praxis und bleibt dort"). -->
-      <div class="card">
-        <h3>Does this create a duty to keep watching?</h3>
-        <p>No. CARLON sends no alerts, and the owner sees no classification — it only
+      <details class="faq-item" data-spur-auf="faq-7"><summary><h3>Does this create a duty to keep watching?</h3></summary>
+        <div class="faq-a"><p>No. CARLON sends no alerts, and the owner sees no classification — it only
            comes into being in your cockpit, when you open it. A file sent to you is a
            delivery like an email: when you review it is up to you, communicated to your
            clients as before. For emergencies, what has always applied still applies:
-           the phone call.</p>
-      </div>
+           the phone call.</p></div>
+      </details>
       <!-- Baseline-Herkunft: MIN_EIGEN = 4 im Cockpit-Code; davor weist
            die Akte offen aus, dass der Vergleichswert noch aus dem
            Referenz-Datensatz stammt. -->
-      <div class="card">
-        <h3>Where does the baseline come from?</h3>
-        <p>From this horse's own resting recordings: from four recordings on, the value
+      <details class="faq-item" data-spur-auf="faq-8"><summary><h3>Where does the baseline come from?</h3></summary>
+        <div class="faq-a"><p>From this horse's own resting recordings: from four recordings on, the value
            counts as an individual baseline. Until then the cockpit openly shows that the
            comparison value still comes from the reference dataset — and how many of the
            horse's own recordings are still missing. It does not pretend to know
-           something it does not.</p>
-      </div>
+           something it does not.</p></div>
+      </details>
     </div>
   </div>
 </section>
@@ -1956,6 +1956,13 @@ if(_lb) _lb.addEventListener('click', function(){
     });
   }
 })();
+</script>
+<script>
+/* FAQ-Klicks zählen (GoatCounter, cookiefrei, ohne Personenbezug; je Aufruf einmal) – welche Frage interessiert? */
+(function(){var sp=(document.documentElement.lang||'de').indexOf('en')===0?'en':'de',schon={};
+document.querySelectorAll('details[data-spur-auf]').forEach(function(d){d.addEventListener('toggle',function(){
+if(!d.open)return;var n=d.getAttribute('data-spur-auf');if(schon[n])return;var g=window.goatcounter;if(!g||!g.count)return;
+schon[n]=1;g.count({path:'visite-'+sp+'/'+n,title:n,event:true});});});})();
 </script>
 </body>
 </html>
