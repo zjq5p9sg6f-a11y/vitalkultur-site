@@ -42,6 +42,7 @@
 .pcard .metric b,.kpi .val,.mono,.ledger td,.st-tile b{font-variant-numeric:tabular-nums lining-nums}
 .pcard .metric{white-space:nowrap}
 .pc-right .trend{display:inline-flex;align-items:baseline}
+@media print{html,body{background:#fff!important}body::before,body::after{display:none!important}}
 </style>
 <link rel="stylesheet" href="assets/leaflet/leaflet.css">
 <style>
@@ -1656,7 +1657,7 @@ svg.viz .sd-lbl{fill:var(--cyan-strong);font-size:10px;font-weight:600;font-fami
 @media print{
   @page{margin:14mm}
   html,body{background:#fff!important;color:#1A1A1E!important;overflow:visible!important;height:auto!important}
-  #app,#toasts,#splash,.modal-bg,.bottom-nav{display:none!important}
+  #app,#toasts,#splash,.modal-bg,.bottom-nav,.bg-vignette,.bg-scanlines,.bg-atmosphere,.bg-flower{display:none!important}
   #printArea{display:block!important;color:#1A1A1E;font-family:var(--font-ui)}
   #printArea *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
   .pr-head{display:flex;align-items:center;justify-content:space-between;border-bottom:2px solid #00b8a0;padding-bottom:12px;margin-bottom:22px}
@@ -5823,10 +5824,13 @@ const Views={
   stat(k,unit,v,c,dec){
     if(v==null)return `<div class="stat"><div class="k">${k}</div><div class="v na" title="Bei 5-Min-Aufnahme bzw. ohne Frequenz-Export nicht valide berechenbar">n. v.</div><div class="cls" style="color:var(--text-faint)">kurze Aufnahme</div></div>`;
     return `<div class="stat"><div class="k">${k}</div><div class="v">${dec===2?fmt2(v):dec?fmt1(v):fmt0(v)}${unit?`<small> ${unit}</small>`:''}</div>${c?`<div class="cls ${c.cls}">${c.text}</div>`:''}</div>`;},
-  clsRMSSD(v){if(v==null)return null;if(v>302)return{text:'sehr hoch – Rhythmus-Muster ansehen',cls:'alert'};if(v<20)return{text:'sehr niedrig',cls:'alert'};if(v<40)return{text:'niedrig',cls:'warn'};return{text:'im üblichen Bereich',cls:'good'};},
-  clsHR(v){if(v==null)return null;if(v>90)return{text:'deutlich über üblichem Ruhewert',cls:'alert'};if(v>48)return{text:'über üblichem Ruhewert',cls:'warn'};if(v<22)return{text:'unter üblichem Ruhewert',cls:'warn'};return{text:'im üblichen Ruhebereich',cls:'good'};},
-  clsSDNN(v){if(v==null)return null;if(v<40)return{text:'niedrig',cls:'alert'};if(v<80)return{text:'mittel',cls:'warn'};return{text:'im üblichen Bereich',cls:'good'};},
-  clsDFA(v){if(v==null)return null;if(v<0.5)return{text:'unkorreliert',cls:'alert'};if(v<0.75)return{text:'niedrig',cls:'warn'};if(v<1.15)return{text:'im üblichen Bereich',cls:'good'};if(v<1.5)return{text:'über üblichem Bereich',cls:'warn'};return{text:'deutlich über üblichem Bereich',cls:'alert'};},
+  /* 16.11.2026: Keine Etiketten nach Tabellengrenzen („im üblichen Bereich“, „über üblichem Ruhewert“) –
+     beim Pferd gibt es dafür keinen Konsens-Normwert; eingeordnet wird gegen die eigene Basis (Triage).
+     Einzige Ausnahme: ein sehr hoher RMSSD ist ein Hinweis auf unregelmäßige Schlagfolge → Tachogramm ansehen. */
+  clsRMSSD(v){if(v==null)return null;if(v>302)return{text:'sehr hoch – Tachogramm ansehen',cls:'warn'};return null;},
+  clsHR(v){return null;},
+  clsSDNN(v){return null;},
+  clsDFA(v){return null;},
   asthmaPanel(recs){
     const a=Asthma.assess(recs); if(!a) return '';
     const sev=a.severity?Asthma.SEV[a.severity]:null;
@@ -7712,27 +7716,27 @@ const Report={
         ${st('SD1','ms',m.sd1)}${st('SD2','ms',m.sd2)}
         ${st('SD2/SD1','',m.sd2sd1,null,2)}${st('SampEn','',se,null,true)}
         ${st('TINN','ms',tt?tt.tinn:null)}${st('Tri-Index','',tt?tt.triIndex:null,null,true)}
-        ${st('LF/HF','',lfhf,null,2)}${st('Baevsky-SI','',bv?bv.SI:null)}
+        ${st('LF/HF','',lfhf,null,2)}
         ${st('Artefakt','%',m.artifactPct,null,true)}${st('AV-Block','',m.avBlock)}
         ${st('Signalqualität','',m.quality)}
       </div>
-      ${psd?`<h2>Frequenzspektrum — Welch/Lomb (equine Bänder)</h2>
+      ${psd?`<h2>Frequenzspektrum — Lomb-Scargle (equine Bänder)</h2>
       <div class="pr-chart-box">${HRV.psdChart(psd,{w:720,h:210})}</div>
-      <div class="pr-stats" style="grid-template-columns:repeat(5,1fr)">
-        ${st('VLF','ms²',bd.vlf)}${st('LF','ms²',bd.lf)}${st('HF','ms²',bd.hf)}${st('Total','ms²',bd.total)}${st('LF/HF','',bd.lfhf,null,2)}
+      <div class="pr-stats" style="grid-template-columns:repeat(4,1fr)">
+        ${st('VLF','ms²',bd.vlf)}${st('LF','ms²',bd.lf)}${st('HF','ms²',bd.hf)}${st('Gesamt','ms²',bd.total)}
       </div>`:''}
       ${rec.rr&&rec.rr.length>4?`<h2>Poincaré — Herzschlag-Streuung (SD1/SD2)</h2><div class="pr-chart-box" style="display:flex;justify-content:center">${Chart.poincare(rec.rr,{size:300,sd1:m.sd1,sd2:m.sd2})}</div>`:''}
       <h2>Tierärztliche Einschätzung</h2>
       <div class="pr-assess">${d.assess?esc(d.assess).replace(/\n/g,'<br>'):'<i style="color:#8a9aa8">— bitte ergänzen —</i>'}</div>
       ${(d.recom||d.next)?`<h2>Empfehlung</h2><div class="pr-assess">${d.recom?esc(d.recom).replace(/\n/g,'<br>'):''}${nextTxt}</div>`:''}
-      ${recs.length>1?`<h2>Langzeitverlauf RMSSD</h2><div class="pr-chart-box">${Chart.line(series,{band:[40,100],color:'#00b8a0',w:720,h:170})}</div>`:''}
+      ${recs.length>1?`<h2>Langzeitverlauf RMSSD</h2><div class="pr-chart-box">${Chart.line(series,{color:'#00b8a0',w:720,h:170,unit:'ms'})}</div>`:''}
       <h2>Aufnahme-Historie (${recs.length})</h2>
       <table><thead><tr><th>Datum</th><th>Dauer</th><th>RMSSD</th><th>Ruhe-HF</th><th>SDNN</th><th>Einstufung</th></tr></thead>
       <tbody>${recs.slice().reverse().slice(0,10).map(r=>`<tr><td>${fmtDate(r.startedAt,true)}</td><td>${r.durationSec?Math.round(r.durationSec/60)+' Min':'—'}</td><td>${fmt0(r.metrics.rmssd)} ms</td><td>${fmt0(r.metrics.meanHR)} bpm</td><td>${fmt0(r.metrics.sdnn)} ms</td><td>${Triage.LEVELS[r.triage.level].label}</td></tr>`).join('')}</tbody></table>
       ${viralFoot}
       <div class="pr-foot">
-        <b>Methodische Referenzen:</b> Kuwahara 1996 (equine Frequenzbänder VLF 0–0,01 · LF 0,01–0,07 · HF 0,07–0,6 Hz) · Lomb-Scargle-Spektrum (ungleichmäßige RR-Abtastung) · Poincaré Brennan 2001 · Baevsky 1984 (Baevsky-Index) · SampEn Richman 2000 · Broux 2018 (RMSSD trennt Vorhofflimmern/Sinus, AUC&gt;0,9) · Gehlen 2020 (Kolik-assoziierte HRV) · Kapteijn 2022 (Polar H10 equine, Ruhe validiert). RMSSD hat keinen Konsens-Ruhewert — Bewertung gegen die individuelle Baseline.<br>
-        <b>Wichtiger Hinweis:</b> Dieser Befund ist eine telemetrische Priorisierungs- und Verlaufshilfe auf Basis der Herzratenvariabilität — <b>keine tierärztliche Diagnose</b>. Die klinische Beurteilung obliegt der behandelnden Tierärztin / dem Tierarzt.<br>
+        <b>Methoden:</b> Kennwerte aus der vollständigen Rohserie, Methodenversion ${esc((typeof Neuauswertung!=='undefined'&&Neuauswertung.version())||'equine-v1')} · Artefaktkorrektur nach Lipponen &amp; Tarvainen 2019 (equine-adaptiert, AV-Block-Pausen getrennt ausgewiesen) · equine Frequenzbänder nach Kuwahara 1996 (VLF 0–0,01 · LF 0,01–0,07 · HF 0,07–0,6 Hz) · Lomb-Scargle-Spektrum (ungleichmäßige Abtastung) · Poincaré nach Brennan 2001 · SampEn nach Richman 2000 · Sensor Polar H10 (Kapteijn 2022, Pferd in Ruhe). Für Ruhe-HRV beim Pferd gibt es keinen Konsens-Normwert; eingeordnet wird gegen die eigene Basis des Pferds (Mittel aus ≥ 3 Aufnahmen in 30 Tagen).<br>
+        <b>Wichtiger Hinweis:</b> Dieser Messwertbericht beschreibt Messwerte und ihren Verlauf als Priorisierungs- und Verlaufshilfe — <b>keine tierärztliche Diagnose</b>. Die klinische Beurteilung obliegt der behandelnden Tierärztin / dem Tierarzt.<br>
         Erstellt mit CARLON Equine · ${fmtDate(new Date().toISOString(),true)} · Session-ID ${esc(rec.id)}
       </div>`;
   },
