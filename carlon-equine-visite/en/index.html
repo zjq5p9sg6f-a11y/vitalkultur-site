@@ -551,6 +551,9 @@ section[id]{scroll-margin-top:76px}
   .shots.three::-webkit-scrollbar{display:none}
   .shots.three .shot{flex:0 0 84%;margin:0}
 }
+.pz-block{margin-top:var(--sp-34);display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);gap:var(--sp-34);align-items:center;background:var(--bg-surface);border:1px solid var(--border-faint);border-radius:20px;padding:var(--sp-21)}
+.pz-text h3{margin:6px 0 12px;font-size:1.25em;line-height:1.3}.pz-text p{color:var(--text-secondary);line-height:1.6}
+@media(max-width:860px){.pz-block{grid-template-columns:1fr}}
 .beleg-bild{margin:var(--sp-21) 0 var(--sp-8);padding:var(--sp-8) var(--sp-8);
   border-radius:8px;background:rgba(255,255,255,.02);overflow:hidden}
 .beleg-bild svg{display:block;max-width:100%;height:auto}
@@ -937,7 +940,7 @@ h1,h2{text-wrap:balance}
       <figcaption>
         <span class="hero-fluss"><span class="hf-chip">Recorded in the stable</span><span
           class="hf-linie" aria-hidden="true"><i></i></span><span class="hf-chip">Read in your practice</span></span>
-        Real views, no mock-ups — <b>one click opens the application.</b>
+        Views from the application — <b>one click opens it.</b>
       </figcaption>
     </figure>
     <!-- ⚠ HIER STAND DER PREIS (bis 13.08.2026).
@@ -1140,7 +1143,7 @@ h1,h2{text-wrap:balance}
 
     <p class="sec-lead" style="margin-top:40px">
       You can <strong>try the station yourself right now</strong> — even without a belt: it
-      replays a real recording.
+      replays a resting recording.
       <a href="/carlon-equine/app/messen.html">Open the measuring station →</a>
     </p>
   </div>
@@ -1338,12 +1341,20 @@ h1,h2{text-wrap:balance}
 </svg>
 
       </div>
-      <p class="beleg">In a real resting recording — 642 beats, 0.31 % artefact rate, rated
+      <p class="beleg">In a resting recording — 642 beats, 0.31 % artefact rate, rated
          <em>excellent</em> by the quality indicator — <strong>two</strong> beats,
          an AV block with its short follow-on beat, are enough to lift RMSSD from
          24.2 to 55.5 ms. <strong>130 % too high</strong> — and the quality
          indicator never warns. A high share of plausible beats says nothing
          about whether the metric is right.</p>
+    </div>
+    <div class="pz-block">
+      <div class="pz-text">
+        <div class="sec-eyebrow">Poincaré with time slider</div>
+        <h3>Every beat keeps its time stamp – scrub through the recording.</h3>
+        <p>Drag the slider: the cloud builds up beat by beat, SD1 and SD2 follow the selected time window. Point at or tap a dot – the crosshair names the beat, its time and both intervals in milliseconds. The AV-block pause of this resting recording is marked in amber. The same chart is in every horse record in the cockpit.</p>
+      </div>
+      <figure class="pz" data-quelle="/carlon-equine/app/belege/rmssd-roh-vs-korrigiert.json"></figure>
     </div>
     <div class="cta-row" style="margin-top:var(--sp-34,34px)">
       <a class="cta-primary" href="/carlon-equine/app/?demo=board">Check the cleaning yourself on 15 example horses →</a>
@@ -2020,5 +2031,6 @@ document.querySelectorAll('details[data-spur-auf]').forEach(function(d){d.addEve
 if(!d.open)return;var n=d.getAttribute('data-spur-auf');if(schon[n])return;var g=window.goatcounter;if(!g||!g.count)return;
 schon[n]=1;g.count({path:'visite-'+sp+'/'+n,title:n,event:true});});});})();
 </script>
+<script src="../assets/poincare-zeit.js?v=1" defer></script>
 </body>
 </html>

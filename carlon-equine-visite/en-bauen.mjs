@@ -145,8 +145,8 @@ tausche(`alt="Pferde-Akte im Cockpit: Kernwerte RMSSD, Ruhe-HF, SDNN und DFA geg
 // Fluss-Leiste im Hero (Stall → Praxis)
 tausche('<span class="hf-chip">Im Stall gemessen</span>', '<span class="hf-chip">Recorded in the stable</span>');
 tausche('<span class="hf-chip">In Ihrer Praxis gelesen</span>', '<span class="hf-chip">Read in your practice</span>');
-tausche(`Echte Ansichten, keine Attrappen — <b>ein Klick öffnet die Anwendung.</b>`,
-        `Real views, no mock-ups — <b>one click opens the application.</b>`);
+tausche(`Ansichten aus der Anwendung — <b>ein Klick öffnet sie.</b>`,
+        `Views from the application — <b>one click opens it.</b>`);
 /* Der Preis stand bis 13.08.2026 im Kopf und ist dort entfernt — wer den
    Preis liest, bevor er den Wert kennt, rechnet gegen ein Produkt, das er
    noch nicht verstanden hat. Der Block entfaellt hier mit. */
@@ -227,13 +227,13 @@ tausche(execSync('node ' + join(HIER, '../carlon-equine/app/belege/beleg-svg.mjs
 /* Der Beleg zur Filter-Behauptung. Zahlen bleiben Zahlen, aber das
    Dezimalkomma wird zum Punkt — sonst liest ein englischer Leser 24,2
    als Tausenderzahl. */
-tausche(`In einer echten Ruheaufnahme — 642 Schläge, 0,31 % Artefaktrate,
+tausche(`In einer Ruheaufnahme — 642 Schläge, 0,31 % Artefaktrate,
          von der Qualitätsanzeige als <em>exzellent</em> geführt — genügen
          <strong>zwei</strong> Schläge, ein AV-Block mit seinem kurzen Folgeschlag,
          um die RMSSD von 24,2 auf 55,5 ms zu heben. <strong>130 % zu hoch</strong> —
          und die Qualitätsanzeige warnt kein einziges Mal. Ein hoher Anteil
          plausibler Schläge sagt nichts darüber, ob der Kennwert stimmt.`,
-`In a real resting recording — 642 beats, 0.31 % artefact rate, rated
+`In a resting recording — 642 beats, 0.31 % artefact rate, rated
          <em>excellent</em> by the quality indicator — <strong>two</strong> beats,
          an AV block with its short follow-on beat, are enough to lift RMSSD from
          24.2 to 55.5 ms. <strong>130 % too high</strong> — and the quality
@@ -436,10 +436,10 @@ tausche('RR-Tachogramm und Atemkurve — dieselben Rohdaten, die Sie danach im C
 tausche('Ein Tipp öffnet das Teilen-Blatt ihres Telefons. Der Satz darunter ist die ganze Datenschutz-Zusage.',
         'One tap opens her phone\'s share sheet. The sentence below it is the entire privacy commitment.');
 tausche(`Sie können die Station <strong>sofort selbst ausprobieren</strong> — auch ohne Gurt:
-      sie spielt eine echte Aufnahme ab.
+      sie spielt eine Ruheaufnahme ab.
       <a href="/carlon-equine/app/messen.html">Messstation öffnen →</a>`,
 `You can <strong>try the station yourself right now</strong> — even without a belt: it
-      replays a real recording.
+      replays a resting recording.
       <a href="/carlon-equine/app/messen.html">Open the measuring station →</a>`);
 /* Die Bildbeschreibungen sind für blinde Leser der einzige Zugang zum Bild —
    auf einer englischen Seite müssen sie englisch sein. */
@@ -872,6 +872,24 @@ tausche(`Nein. CARLON sendet keine Alarme, und die Halterin sieht keine Einstufu
 tausche('"text": "Nein. CARLON sendet keine Alarme, und die Halterin sieht keine Einstufung — die entsteht erst in Ihrem Cockpit, wenn Sie es öffnen. Eine zugeschickte Datei ist eine Zusendung wie eine E-Mail: Wann Sie sie sichten, bestimmen Sie und kommunizieren es wie bisher. Für den Notfall gilt, was immer gilt: der Anruf."',
         '"text": "No. CARLON sends no alerts, and the owner sees no classification — it only comes into being in your cockpit, when you open it. A file sent to you is a delivery like an email: when you review it is up to you, communicated to your clients as before. For emergencies, what has always applied still applies: the phone call."');
 tausche('Woher kommt die Baseline?', 'Where does the baseline come from?', 2);
+/* Poincaré mit Zeitregler (16.11.2026) */
+tausche(`    <div class="pz-block">
+      <div class="pz-text">
+        <div class="sec-eyebrow">Poincaré mit Zeitregler</div>
+        <h3>Jeder Schlag behält seinen Zeitpunkt – spulen Sie durch die Aufnahme.</h3>
+        <p>Ziehen Sie den Regler: Die Wolke baut sich Schlag für Schlag auf, SD1 und SD2 rechnen für das gewählte Zeitfenster mit. Zeigen oder tippen Sie auf einen Punkt – das Fadenkreuz nennt Schlag, Zeitpunkt und beide Abstände in Millisekunden. Die AV-Block-Pause dieser Ruheaufnahme ist bernsteinfarben markiert. Dieselbe Grafik steht im Cockpit in jeder Akte.</p>
+      </div>
+      <figure class="pz" data-quelle="/carlon-equine/app/belege/rmssd-roh-vs-korrigiert.json"></figure>
+    </div>
+`, `    <div class="pz-block">
+      <div class="pz-text">
+        <div class="sec-eyebrow">Poincaré with time slider</div>
+        <h3>Every beat keeps its time stamp – scrub through the recording.</h3>
+        <p>Drag the slider: the cloud builds up beat by beat, SD1 and SD2 follow the selected time window. Point at or tap a dot – the crosshair names the beat, its time and both intervals in milliseconds. The AV-block pause of this resting recording is marked in amber. The same chart is in every horse record in the cockpit.</p>
+      </div>
+      <figure class="pz" data-quelle="/carlon-equine/app/belege/rmssd-roh-vs-korrigiert.json"></figure>
+    </div>
+`);
 /* Sensor-Block (Jan 15.11.: Gurt-Foto + Vorteile) */
 tausche(`    <figure class="gurt-block">
       <picture>
