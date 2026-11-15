@@ -875,17 +875,17 @@ tausche('Woher kommt die Baseline?', 'Where does the baseline come from?', 2);
 /* FAQ Datensicherung (C5, 15.11.2026) – sichtbar + JSON-LD */
 tausche(`Wo liegen meine Daten, und wie sichere ich sie?`, `Where is my data, and how do I back it up?`, 2);
 tausche(`Ausschließlich in Ihrem Browser auf Ihrem Gerät – keine Cloud, kein Server von uns. Unter Dokumentation legt „Backup sichern“ eine Sicherungsdatei an; „Backup einspielen“ stellt damit alles auf einem neuen Gerät oder Browser wieder her, samt Freischaltung. Fehlt eine aktuelle Sicherung, zeigt das Cockpit es oben an. Im Klinik-Tarif liegt der Bestand zusätzlich im Klinik-Ordner auf Ihrem Netzlaufwerk.`, `Only in your browser on your device – no cloud, no server of ours. Under Documentation, “Back up” creates a backup file; “Restore backup” brings everything back on a new device or browser, including your activation. If a recent backup is missing, the cockpit shows it at the top. On the clinic plan the records are also kept in the clinic folder on your network drive.`, 2);
-tausche(`Aus den Ruhemessungen dieses Pferds selbst: Ab vier eigenen Aufnahmen gilt der
+tausche(`Aus den Ruhemessungen dieses Pferds selbst: Ab drei eigenen Aufnahmen in 30 Tagen gilt der
            Wert als individuelle Baseline. Bis dahin zeigt das Cockpit offen an, dass der
            Vergleichswert noch aus dem Referenz-Datensatz stammt — und wie viele eigene
            Aufnahmen noch fehlen. Es tut nicht so, als wüsste es schon etwas.`,
-        `From this horse's own resting recordings: from four recordings on, the value
+        `From this horse's own resting recordings: from three recordings within 30 days, the value
            counts as an individual baseline. Until then the cockpit openly shows that the
            comparison value still comes from the reference dataset — and how many of the
            horse's own recordings are still missing. It does not pretend to know
            something it does not.`);
-tausche('"text": "Aus den Ruhemessungen dieses Pferds selbst: Ab vier eigenen Aufnahmen gilt der Wert als individuelle Baseline. Bis dahin zeigt das Cockpit offen an, dass der Vergleichswert noch aus dem Referenz-Datensatz stammt — und wie viele eigene Aufnahmen noch fehlen. Es tut nicht so, als wüsste es schon etwas."',
-        '"text": "From this horse\'s own resting recordings: from four recordings on, the value counts as an individual baseline. Until then the cockpit openly shows that the comparison value still comes from the reference dataset — and how many of the horse\'s own recordings are still missing. It does not pretend to know something it does not."');
+tausche('"text": "Aus den Ruhemessungen dieses Pferds selbst: Ab drei eigenen Aufnahmen in 30 Tagen gilt der Wert als individuelle Baseline. Bis dahin zeigt das Cockpit offen an, dass der Vergleichswert noch aus dem Referenz-Datensatz stammt — und wie viele eigene Aufnahmen noch fehlen. Es tut nicht so, als wüsste es schon etwas."',
+        '"text": "From this horse\'s own resting recordings: from three recordings within 30 days, the value counts as an individual baseline. Until then the cockpit openly shows that the comparison value still comes from the reference dataset — and how many of the horse\'s own recordings are still missing. It does not pretend to know something it does not."');
 
 
 
