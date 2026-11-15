@@ -10,7 +10,7 @@
 <style>
   :root{
     --bg:#050505; --card:rgba(255,255,255,0.025); --border:rgba(255,255,255,0.08);
-    --text:#f4f4f4; --soft:rgba(244,244,244,0.72); --dim:rgba(244,244,244,0.42);
+    --text:#f4f4f4; --soft:rgba(244,244,244,0.72); --dim:rgba(244,244,244,0.6);
     --cyan:#3ECFB2; --mono:ui-monospace,'SF Mono',Menlo,monospace;
   }
   *{box-sizing:border-box;margin:0;padding:0}
@@ -47,7 +47,7 @@
   <a class="back" href="/carlon-equine/">← CARLON Equine</a>
   <div class="eyebrow" style="margin-top:24px">Support · Beta</div>
   <h1>Hilfe &amp; Kontakt</h1>
-  <p class="lead">Fragen, Feedback oder ein technisches Problem? In der Beta hast du den direkten Draht — jede Nachricht landet bei Jan persönlich.</p>
+  <p class="lead">Hilfe zu CARLON Equine, der App für die Ruhe-HRV deines Pferdes mit dem Polar H10: Gurt anlegen, messen, Datei weitergeben. In der Beta hast du den direkten Draht — jede Nachricht landet bei Jan persönlich.</p>
 
   <div class="contact">
     <div class="k">E-Mail</div>
@@ -58,19 +58,19 @@
   <h2>Häufige Fragen</h2>
 
   <details><summary>Polar H10 koppeln</summary>
-    <p>Feuchte die Elektrodenzonen des Gurts an — beim Pferd ist Elektroden-Gel wegen der Fell-Impedanz praktisch Pflicht für ein sauberes Signal. Lege den Gurt an und öffne die <a href="/messen">Messstation im Browser</a> — dort verbindest du den H10 mit einem Tipp (Android, Laptop oder Tablet mit Chrome/Edge). Die Signalanzeige zeigt dir, wann der Kontakt gut genug ist. Sobald die App im App Store ist, verbindest du den Gurt auch dort unter „Geräte".</p>
+    <p>Feuchte die Elektrodenzonen des Gurts an — beim Pferd ist Elektroden-Gel wegen der Fell-Impedanz praktisch Pflicht für ein sauberes Signal. Lege den Gurt an und öffne die <a href="/messen">Messstation im Browser</a> — dort verbindest du den H10 mit einem Tipp (Android, Laptop oder Tablet mit Chrome oder Edge; nicht auf iPhone und iPad und nicht in Safari oder Firefox, dort fehlt Web Bluetooth). Die Signalanzeige zeigt dir, wann der Kontakt gut genug ist. Sobald die App im App Store ist, verbindest du den Gurt auch dort unter „Geräte".</p>
   </details>
   <details><summary>Geräteinterne Aufnahme (ohne iPhone in Reichweite)</summary>
-    <p>Der H10 kann mehrtägig direkt am Gurt aufzeichnen — Langzeit-Weide, Übernacht-Stall, Transport. Dieser Weg kommt mit der iOS-App: sobald sie im App Store ist, startest du die Aufnahme dort, trennst das iPhone und synchronisierst später mit einem Klick (wichtig: der H10 hat nur einen Aufnahme-Slot; eine ältere Aufnahme muss vor der neuen gelöscht werden). Heute misst du live über die <a href="/messen">Browser-Messstation</a> — das Gerät bleibt dabei in Bluetooth-Reichweite.</p>
+    <p>Der H10 kann über Stunden direkt am Gurt aufzeichnen, etwa über Nacht im Stall, auf der Weide oder beim Transport. Dieser Weg kommt mit der iOS-App: sobald sie im App Store ist, startest du die Aufnahme dort, trennst das iPhone und synchronisierst später mit einem Klick (wichtig: der H10 hat nur einen Aufnahme-Slot; eine ältere Aufnahme muss vor der neuen gelöscht werden). Heute misst du live über die <a href="/messen">Browser-Messstation</a> — das Gerät bleibt dabei in Bluetooth-Reichweite.</p>
   </details>
   <details><summary>Auswertung im Browser öffnen</summary>
     <p>Jeder JSON-Export öffnet sich direkt im Browser-Viewer auf <a href="/carlon-equine/">carlon-equine</a> — per Drag-and-Drop oder Datei-Auswahl. Beim Öffnen und Betrachten <strong>eigener Dateien</strong> findet <strong>keine Übertragung</strong> statt: Der Viewer läuft rein lokal im Browser (Zero-Upload). Kein Login, keine Installation. Auch die Messstation überträgt nichts an uns: Sie legt eine <strong>Datei auf deinem Gerät</strong> an, die du selbst weitergibst — hast du den Aushang deiner Praxis gescannt, ist sie dabei <strong>verschlüsselt</strong> (<a href="/agb.html#uebergabe">§ 12b der AGB</a>).</p>
   </details>
   <details><summary>Auswertung an den Tierarzt weitergeben</summary>
-    <p>Die Messstation legt am Ende eine Datei <code>CARLON_&lt;Pferd&gt;_&lt;Datum&gt;.json</code> auf deinem Gerät an — die schickst du deiner Praxis wie ein Foto, auf dem Weg, den ihr ohnehin nutzt. Sie enthält nur die Messung deines Pferds; Halter-Name und Tierarzt-Kontakte stecken nicht darin. Hat deine Praxis einen CARLON-Aushang, ist die Datei für sie versiegelt. Die Praxis öffnet sie im Browser und sieht die volle Auswertung. Sobald die App im App Store ist, teilst du den Export auch von dort mit einem Tap.</p>
+    <p>Die Messstation legt am Ende eine Datei <code>CARLON_&lt;Pferd&gt;_&lt;Datum&gt;.json</code> auf deinem Gerät an — die gibst du deiner Praxis auf dem Weg, den ihr ohnehin nutzt (z. B. Mail oder Messenger). Sie enthält nur die Messung deines Pferds; Halter-Name und Tierarzt-Kontakte stecken nicht darin. Hat deine Praxis einen CARLON-Aushang, ist die Datei für sie versiegelt. Die Praxis öffnet sie im Browser und sieht die volle Auswertung. Sobald die App im App Store ist, teilst du den Export auch von dort mit einem Tap.</p>
   </details>
   <details><summary>Warum stellt CARLON keine Diagnose?</summary>
-    <p>CARLON Equine ist ein Forschungs- und Beobachtungs-Werkzeug, <strong>kein Medizinprodukt</strong> unter MDR oder FDA. Alle Hinweise auf dem Bildschirm sind Beobachtungshinweise, die eine tierärztliche Folge-Konsultation erfordern — niemals Diagnosen. So bleibt der Befund immer beim Tierarzt.</p>
+    <p>CARLON Equine ist ein Forschungs- und Beobachtungs-Werkzeug, <strong>kein Medizinprodukt</strong> unter MDR oder FDA. Alle Hinweise auf dem Bildschirm sind Beobachtungshinweise, keine Diagnosen; was sie bedeuten, beurteilt deine Tierarztpraxis. So bleibt der Befund immer beim Tierarzt.</p>
   </details>
   <details><summary>Woher kommen die Referenzbereiche?</summary>
     <p>Zum größten Teil von uns selbst — und das steht überall dabei, wo ein solcher Wert erscheint. Für die HRV beim Pferd gibt es keinen allgemein anerkannten Normbereich; die Bereiche, gegen die CARLON vergleicht, sind begründete eigene Festlegungen und ausdrücklich als solche gekennzeichnet. Wo ein Wert wirklich aus einer Studie stammt, steht die Studie mit Namen dabei. Deshalb ist die aussagekräftigste Zahl nicht der Absolutwert, sondern die Abweichung von den <strong>eigenen früheren Messungen deines Pferds</strong>. Wie jede Stufe rechnet, steht offen in der <a href="/carlon-equine/methodik.html">Methoden-Dokumentation</a>.</p>
@@ -80,7 +80,7 @@
   </details>
 
   <div class="disclaimer">
-    <strong>⚠ Positionierung:</strong> CARLON Equine ist ein Forschungs- und Beobachtungs-Werkzeug, kein Medizinprodukt unter MDR oder FDA. Alle Bildschirm-Flags sind Beobachtungshinweise, die eine Tierarzt-Konsultation erfordern — niemals Diagnosen.
+    <strong>⚠ Positionierung:</strong> CARLON Equine zeichnet die Ruhe-HRV von Pferden für Beobachtung, Training und Forschung auf; es stellt keine Diagnose und ist nicht als Medizinprodukt bestimmt. Alle Hinweise auf dem Bildschirm sind Beobachtungen, keine Diagnosen; was sie bedeuten, beurteilt deine Tierarztpraxis.
   </div>
 
   <footer>
