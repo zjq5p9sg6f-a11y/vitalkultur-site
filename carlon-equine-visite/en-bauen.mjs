@@ -38,14 +38,12 @@ const tausche = (de, en, n = 1) => {
    og:locale muss mitwandern — sonst zeigt jede geteilte englische Adresse
    eine deutsche Vorschau. Genau das hat ein Aussenpruefer bemaengelt. */
 tausche('<html lang="de">', '<html lang="en">');
-tausche('<title>CARLON Equine Visite — die Praxis-Ansicht für Tierärzte &amp; Kliniken</title>',
-        '<title>CARLON Equine Visite — the practice view for equine vets &amp; clinics</title>');
-tausche(`content="CARLON Equine für Pferdepraxen und -kliniken: Die Halterin nimmt die Ruhe-HRV im Stall mit einem Polar-H10-Gurt auf, Sie sehen den Verlauf gegen die eigene Vorgeschichte des Pferds, mit Signalgüte, und planen Ihre Tour nach Strecke. Auswertung im Browser, kein Medizinprodukt."`,
-        `content="CARLON Equine for equine practices and clinics: the owner records resting HRV in the stable with a Polar H10 strap, you see the trend against the horse’s own history, with signal quality, and plan your round by distance. Browser-local analysis, not a medical device."`);
-tausche('<meta property="og:title" content="CARLON Equine – für Tierärzte & Kliniken">',
-        '<meta property="og:title" content="CARLON Equine – for equine vets &amp; clinics">');
-tausche(`<meta property="og:description" content="Die Tour geplant. Jedes Pferd mit seinem Verlauf. Die Halterin nimmt im Stall auf, Sie sehen den Verlauf mit Signalgüte — Auswertung im Browser, nicht in der Cloud.">`,
-        `<meta property="og:description" content="Your round, planned. Every horse with its trend. The owner records in the stable, you see the trend with signal quality — analysis in the browser, not in the cloud.">`);
+tausche('<title>CARLON Equine Visite – Ruhe-HRV-Verlauf für Pferdepraxen und Pferdekliniken</title>',
+        '<title>CARLON Equine Visite – resting HRV trends for equine practices and clinics</title>');
+
+tausche('<meta property="og:title" content="CARLON Equine Visite – Betreuung, die nicht an der Stalltür endet">',
+        '<meta property="og:title" content="CARLON Equine Visite – care that doesn’t end at the stable door">');
+
 tausche('<meta property="og:url" content="https://vitalkultur.com/carlon-equine-visite/">',
         '<meta property="og:url" content="https://vitalkultur.com/carlon-equine-visite/en/">');
 tausche('<meta property="og:locale" content="de_DE">\n<meta property="og:locale:alternate" content="en_US">',
@@ -124,8 +122,8 @@ tausche(`Die Halterin misst im Stall. Sie sehen vor dem Besuch, <strong>wie weit
         `The owner records in the stable. Before the visit you see <strong>how far this horse deviates from its own baseline</strong> – and how reliable the recording is.`);
 tausche('Cockpit mit 15&nbsp;Demo-Pferden öffnen →', 'Open the cockpit with 15&nbsp;demo horses →', 2);
 tausche('>Preise &amp; Freischaltung · ab 149&nbsp;€ netto/Monat<', '>Pricing &amp; activation · from €149 net/month<');
-tausche('Ohne Konto, ohne Installation · Daten bleiben in Ihrem Browser · monatlich kündbar.',
-        'No account, no installation · data stays in your browser · cancel monthly.');
+tausche('Ohne Konto, ohne Installation · Daten bleiben in Ihrem Browser · monatlich kündbar · Vitalkultur, Iffezheim',
+        'No account, no installation · data stays in your browser · cancel monthly · Vitalkultur, Iffezheim, Germany');
 /* Hero-Belege + Visual (13.08.: φ-Split-Kopf) */
 
 
@@ -674,8 +672,7 @@ tausche('Teil der Vitalkultur-App-Familie', 'Part of the Vitalkultur app family'
    Absaetze MIT. Deshalb hier noch einmal einzeln — und wortgleich zur
    englischen Fassung des sichtbaren Textes, sonst faellt t-schemadaten.
    Google verlangt genau diese Uebereinstimmung. */
-tausche('CARLON Equine Visite — the practice view for equine vets &amp; clinics</title>',
-        'CARLON Equine Visite — the practice view for equine vets &amp; clinics</title>');
+
 tausche('"applicationSubCategory": "Veterinärmedizinische Praxis-Software"',
         '"applicationSubCategory": "Veterinary practice software"');
 tausche('"operatingSystem": "Web (Chrome, Edge, Safari)"',
@@ -863,6 +860,24 @@ tausche(`Nein. CARLON sendet keine Alarme, und die Halterin sieht keine Einstufu
 tausche('"text": "Nein. CARLON sendet keine Alarme, und die Halterin sieht keine Einstufung — die entsteht erst in Ihrem Cockpit, wenn Sie es öffnen. Eine zugeschickte Datei ist eine Zusendung wie eine E-Mail: Wann Sie sie sichten, bestimmen Sie und kommunizieren es wie bisher. Für den Notfall gilt, was immer gilt: der Anruf."',
         '"text": "No. CARLON sends no alerts, and the owner sees no classification — it only comes into being in your cockpit, when you open it. A file sent to you is a delivery like an email: when you review it is up to you, communicated to your clients as before. For emergencies, what has always applied still applies: the phone call."');
 tausche('Woher kommt die Baseline?', 'Where does the baseline come from?', 2);
+tausche(`Betreuung, die nicht an der Stalltür endet: Die Halterin misst die Ruhe-HRV im Stall mit dem Polar H10, Ihre Praxis sieht die Abweichung von der eigenen Basis des Pferds samt Signalgüte – im Browser, ohne Konto, kein Medizinprodukt. Ab 149 € netto im Monat.`, `Care that doesn’t end at the stable door: the owner records resting HRV in the stable with a Polar H10, your practice sees the deviation from the horse’s own baseline with signal quality – in the browser, no account, not a medical device. From €149 net per month.`, 2);
+tausche(`
+    <table class="geraete">
+      <thead><tr><th>Gerät der Halterin</th><th>Messen im Browser</th></tr></thead>
+      <tbody>
+        <tr><td>Android-Smartphone oder ‑Tablet (Chrome)</td><td class="ja">ja</td></tr>
+        <tr><td>Laptop oder PC mit Chrome oder Edge</td><td class="ja">ja</td></tr>
+        <tr><td>iPhone oder iPad</td><td class="nein">nein – Apple lässt Bluetooth im Browser nicht zu</td></tr>
+      </tbody>
+    </table>`, `
+    <table class="geraete">
+      <thead><tr><th>Owner’s device</th><th>Records in the browser</th></tr></thead>
+      <tbody>
+        <tr><td>Android smartphone or tablet (Chrome)</td><td class="ja">yes</td></tr>
+        <tr><td>Laptop or PC with Chrome or Edge</td><td class="ja">yes</td></tr>
+        <tr><td>iPhone or iPad</td><td class="nein">no – Apple does not allow Bluetooth in the browser</td></tr>
+      </tbody>
+    </table>`);
 tausche(`<div class="leiste" id="leiste" hidden><span class="leiste-t">CARLON Equine Visite · ab 149&nbsp;€ netto/Monat</span><a class="leiste-b2" href="#preis">Tarife</a><a class="leiste-b" href="/carlon-equine/app/?demo=today">Demo öffnen →</a></div>
 `, `<div class="leiste" id="leiste" hidden><span class="leiste-t">CARLON Equine Visite · from €149 net/month</span><a class="leiste-b2" href="#preis">Plans</a><a class="leiste-b" href="/carlon-equine/app/?demo=today">Open demo →</a></div>
 `);

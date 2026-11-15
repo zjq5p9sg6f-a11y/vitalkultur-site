@@ -10,7 +10,7 @@ setTimeout(function(){ if(!document.querySelector('.rev.in'))
   document.documentElement.className=document.documentElement.className.replace(' rev-an',''); },4000);</script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>CARLON Equine Visite — the practice view for equine vets &amp; clinics</title>
+<title>CARLON Equine Visite – resting HRV trends for equine practices and clinics</title>
 <!-- FAVICON IN DER EQUINE-CI. Vorher lag hier das allgemeine App-Symbol —
      das Erste, was ein Tierarzt vom Produkt sieht, war fremde Marke.
      Drei Groessen statt einer: die feine Linienfuehrung der Wortmarke wird
@@ -31,11 +31,11 @@ if(d=='1'||d=='yes'||navigator.globalPrivacyControl===true)return;
 var s=document.createElement('script');s.async=true;s.src='//gc.zgo.at/count.js';
 s.setAttribute('data-goatcounter','https://vitalkultur.goatcounter.com/count');
 document.head.appendChild(s);})();</script>
-<meta name="description" content="CARLON Equine for equine practices and clinics: the owner records resting HRV in the stable with a Polar H10 strap, you see the trend against the horse’s own history, with signal quality, and plan your round by distance. Browser-local analysis, not a medical device.">
+<meta name="description" content="Care that doesn’t end at the stable door: the owner records resting HRV in the stable with a Polar H10, your practice sees the deviation from the horse’s own baseline with signal quality – in the browser, no account, not a medical device. From €149 net per month.">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Vitalkultur">
-<meta property="og:title" content="CARLON Equine – for equine vets &amp; clinics">
-<meta property="og:description" content="Your round, planned. Every horse with its trend. The owner records in the stable, you see the trend with signal quality — analysis in the browser, not in the cloud.">
+<meta property="og:title" content="CARLON Equine Visite – care that doesn’t end at the stable door">
+<meta property="og:description" content="Care that doesn’t end at the stable door: the owner records resting HRV in the stable with a Polar H10, your practice sees the deviation from the horse’s own baseline with signal quality – in the browser, no account, not a medical device. From €149 net per month.">
 <meta property="og:url" content="https://vitalkultur.com/carlon-equine-visite/en/">
 <meta property="og:image" content="https://vitalkultur.com/carlon-equine/assets/og-equine.png">
 <meta property="og:locale" content="en_US">
@@ -571,6 +571,10 @@ section[id]{scroll-margin-top:76px}
 .leiste-b{padding:9px 16px;border-radius:999px;background:var(--cyan);color:#04130f;font-weight:700;font-size:13.5px;white-space:nowrap;text-decoration:none}
 .leiste-b2{font-size:13px;color:var(--cyan);text-decoration:none;white-space:nowrap}
 @media(max-width:560px){.leiste-t{display:none}}
+.geraete{width:100%;max-width:640px;margin:var(--sp-21) 0 0;border-collapse:collapse;font-size:.95em}
+.geraete th{text-align:left;font-weight:600;color:var(--text-dim);font-size:.82em;letter-spacing:.06em;text-transform:uppercase;padding:0 0 8px;border-bottom:1px solid var(--border-faint)}
+.geraete td{padding:11px 0;border-bottom:1px solid var(--border-faint);color:var(--text-secondary)}
+.geraete td.ja{color:var(--cyan);font-weight:600}.geraete td.nein{color:var(--text-dim)}
 .beleg-bild{margin:var(--sp-21) 0 var(--sp-8);padding:var(--sp-8) var(--sp-8);
   border-radius:8px;background:rgba(255,255,255,.02);overflow:hidden}
 .beleg-bild svg{display:block;max-width:100%;height:auto}
@@ -931,7 +935,7 @@ h1,h2{text-wrap:balance}
       <a class="btn btn-back" href="#preis">Pricing &amp; activation · from €149 net/month</a>
     </div>
     <p class="rollen-weiche"><a href="#arbeitstag">For mobile practices ↓</a> · <a href="#klinik">For equine clinics ↓</a></p>
-    <p class="cta-note">No account, no installation · data stays in your browser · cancel monthly.<span id="heroBeta"> We are in beta and accompany every practice personally — join now and you keep your price as a founding partner.</span></p>
+    <p class="cta-note">No account, no installation · data stays in your browser · cancel monthly · Vitalkultur, Iffezheim, Germany<span id="heroBeta"> We are in beta and accompany every practice personally — join now and you keep your price as a founding partner.</span></p>
     <!-- Die drei staerksten Argumente der Seite, above the fold — jede
          Zeile wird weiter unten mit einem eigenen Abschnitt eingeloest. -->
     </div>
@@ -1168,7 +1172,7 @@ h1,h2{text-wrap:balance}
            beleg-svg.mjs — kein abgetippter Pfad, kein JavaScript noetig. -->
       <div class="beleg-bild">
         <svg viewBox="0 0 760 250" role="img" width="100%" style="height:auto" font-family="inherit"
-     aria-label="RR intervals of a resting recording over 642 beats, scale 400–1900 ms. The line stays calm around 849 ms; at beat 630 it jumps to 1794 ms – an AV block with its short follow-up beat. This one spot raises RMSSD from 24.2 to 55.5 ms.">
+     aria-label="RR intervals of a resting recording over 642 beats, scale 400–1900 ms. The line stays calm around 849 ms; at beat 630 it jumps to 1794 ms – a long pause with its short follow-up beat. This one spot raises RMSSD from 24.2 to 55.5 ms.">
   <g stroke="#ffffff" stroke-opacity=".05"><line x1="58" x2="742" y1="197.1" y2="197.1"/><line x1="58" x2="742" y1="171.2" y2="171.2"/><line x1="58" x2="742" y1="145.3" y2="145.3"/><line x1="58" x2="742" y1="119.5" y2="119.5"/><line x1="58" x2="742" y1="93.6" y2="93.6"/><line x1="58" x2="742" y1="67.7" y2="67.7"/><line x1="58" x2="742" y1="41.9" y2="41.9"/><line x1="58" x2="742" y1="16.0" y2="16.0"/></g>
   <g stroke="#ffffff" stroke-opacity=".13"><line x1="58" x2="742" y1="210.0" y2="210.0"/><line x1="58" x2="742" y1="184.1" y2="184.1"/><line x1="58" x2="742" y1="158.3" y2="158.3"/><line x1="58" x2="742" y1="132.4" y2="132.4"/><line x1="58" x2="742" y1="106.5" y2="106.5"/><line x1="58" x2="742" y1="80.7" y2="80.7"/><line x1="58" x2="742" y1="54.8" y2="54.8"/><line x1="58" x2="742" y1="28.9" y2="28.9"/><line x1="58.0" x2="58.0" y1="16" y2="210" stroke-opacity=".06"/><line x1="164.7" x2="164.7" y1="16" y2="210" stroke-opacity=".06"/><line x1="271.4" x2="271.4" y1="16" y2="210" stroke-opacity=".06"/><line x1="378.1" x2="378.1" y1="16" y2="210" stroke-opacity=".06"/><line x1="484.8" x2="484.8" y1="16" y2="210" stroke-opacity=".06"/><line x1="591.5" x2="591.5" y1="16" y2="210" stroke-opacity=".06"/><line x1="743.1" x2="743.1" y1="16" y2="210" stroke-opacity=".06"/></g>
   <g fill="#9fb2c2" font-size="11" text-anchor="end"><text x="51" y="214.0">400</text><text x="51" y="188.1">600</text><text x="51" y="162.3">800</text><text x="51" y="136.4">1000</text><text x="51" y="110.5">1200</text><text x="51" y="84.7">1400</text><text x="51" y="58.8">1600</text><text x="51" y="32.9">1800</text></g>
@@ -1181,7 +1185,7 @@ h1,h2{text-wrap:balance}
   <path d="M732.4 144.4L733.5 144.8L734.5 144.5L735.6 144.1L736.7 142.3L737.7 146.9L738.8 143.5L739.9 142.5L740.9 144.4L742.0 198.6" fill="none" stroke="#8fb3cc" stroke-width="1.2" stroke-linejoin="round"/>
   <path d="M729.2 146.2L730.3 29.7L731.3 144.9L732.4 144.4" fill="none" stroke="#FFB547" stroke-width="2.2" stroke-linejoin="round"/>
   <circle cx="730.3" cy="29.7" r="3.5" fill="#FFB547"/>
-  <text x="722.3" y="33.7" fill="#FFB547" font-size="12" font-weight="600" text-anchor="end">1794 ms · AV block</text>
+  <text x="722.3" y="33.7" fill="#FFB547" font-size="12" font-weight="600" text-anchor="end">1794 ms · long pause</text>
   <rect x="58" y="16" width="684" height="194" fill="none" stroke="#ffffff" stroke-opacity=".18"/>
 </svg>
 
@@ -1321,6 +1325,14 @@ h1,h2{text-wrap:balance}
       all horses.
     
     </p>
+    <table class="geraete">
+      <thead><tr><th>Owner’s device</th><th>Records in the browser</th></tr></thead>
+      <tbody>
+        <tr><td>Android smartphone or tablet (Chrome)</td><td class="ja">yes</td></tr>
+        <tr><td>Laptop or PC with Chrome or Edge</td><td class="ja">yes</td></tr>
+        <tr><td>iPhone or iPad</td><td class="nein">no – Apple does not allow Bluetooth in the browser</td></tr>
+      </tbody>
+    </table>
     <!-- DIE FRAGE, DIE JEDEN KAUF BLOCKIERT (15.08.2026): Die Seite nannte den
          Gurt elfmal und sagte nirgends, wer ihn stellt. Ein Tierarzt rechnet
          dann im Kopf „zwanzig Kunden mal ein Geraet" und legt auf. Bewusst

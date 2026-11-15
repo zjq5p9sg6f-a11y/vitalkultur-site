@@ -4779,7 +4779,7 @@ const Views={
       </div>
       <div class="kpis">
         <button class="kpi act ${critN?'red':'good'}" onclick="Views.kpiGo('crit')" title="Pferde mit deutlicher Abweichung anzeigen"><div class="lbl">Deutliche Abweichung</div><div class="val">${critN}</div><div class="hint">${critN?'von der eigenen Basis':'keine deutliche Abweichung'}</div><span class="go">${IC.arrow}</span></button>
-        <button class="kpi act amber" onclick="Views.kpiGo('visit')" title="Abfahrroute planen"><div class="lbl">Besuche fällig</div><div class="val">${visitsN}</div><div class="hint">Für Routenplanung markiert</div><span class="go">${IC.arrow}</span></button>
+        <button class="kpi act amber" onclick="Views.kpiGo('visit')" title="Abfahrroute planen"><div class="lbl">Auf der Tour</div><div class="val">${visitsN}</div><div class="hint">Für Routenplanung markiert</div><span class="go">${IC.arrow}</span></button>
         <button class="kpi act" onclick="Views.kpiGo('horses')" title="Alle Pferde"><div class="lbl">Betreute Pferde</div><div class="val">${horses.length}</div><div class="hint">${State.horses.length} gesamt im System</div><span class="go">${IC.arrow}</span></button>
         <button class="kpi act" onclick="Views.kpiGo('recs')" title="Zuletzt gemessene Pferde"><div class="lbl">Aufnahmen</div><div class="val">${totalRecs}</div><div class="hint">Aufnahmen gesamt</div><span class="go">${IC.arrow}</span></button>
       </div>
@@ -11221,7 +11221,7 @@ const Sprache={
     'Einsatzplan':'Day plan',
     'Zuletzt gemessene Pferde':'Recently measured horses',
     'Deutliche Abweichung':'Marked deviation',
-    'Besuche fällig':'Visits due',
+    'Besuche fällig':'Visits due', 'Auf der Tour':'On the round',
     'Besuch fällig':'Visit due',
     'Pferde mit deutlicher Abweichung anzeigen':'Show horses with marked deviation',
     'von der eigenen Basis':'from own baseline',
