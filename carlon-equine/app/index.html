@@ -34,7 +34,7 @@
 
 .kauf-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;align-items:start}
 @media(max-width:760px){.kauf-grid{grid-template-columns:1fr}}
-.kauf-grid .tier-opt{padding:12px 14px}.kauf-spalte.gewaehlt>.tier-opt.feat:first-child{border-color:var(--cyan);box-shadow:0 0 0 2px rgba(62,207,178,.28)}.kauf-kurz{font-size:12px;color:var(--text-dim);margin:-6px 0 14px 2px}.kauf-b2b{display:flex;gap:10px;align-items:flex-start;margin:0 0 14px;padding:10px 12px;border:1px solid rgba(62,207,178,.35);border-radius:10px;font-size:13px;color:var(--text-primary);cursor:pointer}.kauf-b2b input{margin-top:3px;accent-color:var(--cyan)}.kauf-b2b a{color:var(--cyan)}.kauf-link[aria-disabled=true]{opacity:.45;filter:grayscale(.4)}.kauf-grid .tier-table{gap:8px}.kauf-spalte{display:flex;flex-direction:column}.kauf-spalte>.tier-table{order:-1;margin:0 0 10px!important}.kauf-grid .tier-opt ul{line-height:1.6}
+.kauf-grid .tier-opt{padding:12px 14px}.kauf-spalte.gewaehlt>.tier-opt.feat:first-child{border-color:var(--cyan);box-shadow:0 0 0 2px rgba(62,207,178,.28)}.kauf-kurz{font-size:12px;color:var(--text-dim);margin:-6px 0 14px 2px}.kauf-b2b{display:flex;gap:10px;align-items:flex-start;margin:0 0 14px;padding:10px 12px;border:1px solid rgba(62,207,178,.35);border-radius:10px;font-size:13px;color:var(--text-primary);cursor:pointer}.kauf-b2b input{margin-top:3px;accent-color:var(--cyan)}.kauf-b2b a{color:var(--cyan)}.kauf-link[aria-disabled=true]{opacity:.82}.kauf-spalte.gewaehlt>.tier-opt.feat:first-child h4::after{content:"Gewählt";margin-left:8px;padding:2px 8px;border-radius:999px;font-size:11px;background:rgba(62,207,178,.18);color:var(--cyan);vertical-align:middle}.kauf-grid .tier-table{gap:8px}.kauf-spalte{display:flex;flex-direction:column}.kauf-spalte>.tier-table{order:-1;margin:0 0 10px!important}.kauf-grid .tier-opt ul{line-height:1.6}
 
 .vh-cta.ghost.hell,.verdict-hero .vh-cta.ghost.hell{color:#E8F8FF;border:1px solid rgba(62,207,178,.45);background:rgba(62,207,178,.08)}
 .pc-guete.lang{margin:10px 0 0;font-size:12.5px;color:var(--text-secondary)}
@@ -944,7 +944,7 @@ h2 svg.ic{width:20px;height:20px}
 .map-ctrl.on{background:var(--cyan-g3);border-color:var(--cyan);color:var(--cyan-strong)}
 .map-ctrl.on svg{color:var(--cyan-strong)}
 .leaflet-container{background:#1A1A1E!important;font-family:var(--font-ui)}
-.leaflet-tile{filter:brightness(1.55) contrast(1.02) saturate(1.12)}
+.leaflet-tile{filter:invert(1) hue-rotate(180deg) brightness(.92) contrast(.9) saturate(.55)}.leaflet-control-attribution{background:rgba(23,23,27,.75)!important;color:var(--text-dim)!important;font-size:10px}.leaflet-control-attribution a{color:var(--text-secondary)!important}
 .leaflet-control-zoom a{background:rgba(23,23,27,.92)!important;color:var(--text-primary)!important;border-color:var(--border-subtle)!important}
 .leaflet-popup-content-wrapper{background:var(--bg-elev);color:var(--text-primary);border:1px solid var(--border-strong);border-radius:12px}
 .leaflet-popup-tip{background:var(--bg-elev)}
@@ -4811,7 +4811,6 @@ const Views={
         <div class="st-hr"><b>${fmt0(m.meanHR)}</b><small>bpm · Ruhe-HF</small></div>
         ${delta!=null?`<div class="st-delta ${delta<-14?'bad':delta<-8?'warn':'ok'}"><b>${delta>=0?'+':''}${fmt0(delta)}%</b><small>vs Baseline</small></div>`:`<div class="st-delta"><b>${fmt0(m.rmssd)}</b><small>RMSSD ms</small></div>`}
       </div>
-      <div class="st-si"><div class="st-si-track"><div class="st-si-fill" style="width:${siPct}%;background:${siCol}"></div></div><span class="st-si-lbl">Baevsky-Index ${si!=null?fmt0(si):'—'}</span></div>
       ${spark?`<div class="st-spark">${spark}</div>`:''}
       ${Views.gueteZeile(rec)}
       <div class="st-foot">${reasons.length?esc(Triage.zeig(reasons[0]).replace(/ (unter|über) (?:dem angegebenen Ausgangswert|individueller Baseline)/,' $1 Basis')):'Trend im Eigenbereich'} · vor ${relTime(rec.startedAt)}</div>
@@ -7338,8 +7337,11 @@ const Dispatch={
     if(this._map && this._map.getContainer()!==cont){ try{this._map.remove();}catch(e){} this._map=null; this._layer=null; }
     if(!this._map){
       // fadeAnimation/zoomAnimation aus → verhindert eingefrorene opacity:0-Kacheln
-      this._map=L.map(cont,{zoomControl:true,attributionControl:false,fadeAnimation:false,zoomAnimation:false,tap:false}).setView([origin.lat,origin.lng],10);
-      L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',{maxZoom:19,crossOrigin:true}).addTo(this._map);
+      this._map=L.map(cont,{zoomControl:true,attributionControl:true,fadeAnimation:false,zoomAnimation:false,tap:false}).setView([origin.lat,origin.lng],10);
+      /* 15.11.2026: CARTO verlangt seit Kurzem einen API-Schlüssel – jede Kachel zeigte „API KEY REQUIRED“ (Jan). Jetzt
+         OpenStreetMap-Standardkacheln (ODbL, Namensnennung Pflicht), dunkel per CSS-Filter. Bei vielen Nutzern: eigener
+         Kachel-Dienst mit Schlüssel (OSM-Nutzungsregeln: kein Massenabruf). */
+      L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,crossOrigin:true,attribution:'© <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a>'}).addTo(this._map);
       this._needFit=true;   // frisch erzeugt → beim ersten Rendern automatisch auf die Route zoomen
     }
     this._map.invalidateSize(false);
@@ -7549,7 +7551,7 @@ const Report={
     <div class="modal-body">
       <div class="rep-intro">${IC.doc}<div>Ihr Messwertbericht. Kennwerte, Spektrum, Poincaré und Verlauf sind automatisch drin — Sie ergänzen Ihre Einschätzung, CARLON erstellt das PDF mit Ihrem Briefkopf.</div></div>
       <div class="field"><label>Tierärztliche Einschätzung (von Ihnen)</label><textarea id="bfAssess" rows="4" placeholder="Ihre Beurteilung…">${esc(suggest)}</textarea></div>
-      <div class="field"><label>Empfehlung / weiteres Vorgehen</label><textarea id="bfRec" rows="2" placeholder="z. B. Kontrolle in 4 Wochen, Belastung reduzieren…"></textarea></div>
+      <div class="field"><label>Empfehlung / weiteres Vorgehen</label><textarea id="bfRec" rows="2" placeholder="z. B. nächste Ruhe-Vergleichsaufnahme in 14 Tagen im gewohnten Stallprotokoll …"></textarea></div>
       <div class="field-row"><div class="field"><label>Nächste Kontrolle (optional)</label><input id="bfNext" type="date"></div>
         <div class="field"><label>Ausstellende:r</label><input id="bfVet" value="${esc(s.vetName||s.clinicName||'')}"></div></div>
       <div class="rep-bill">
@@ -8144,7 +8146,7 @@ const UI={
         const P=License.PREIS; return `An der Kasse für Praxen in Deutschland inkl. 19 % USt.: Praxis ${b(P.soloMonat)} im Monat bzw. ${b(P.soloJahr)} im Jahr · Klinik ${b(P.klinikMonat)} im Monat bzw. ${b(P.klinikJahr)} im Jahr.`; })()}</p>
       <p style="font-size:12px;color:var(--text-dim);margin-top:4px">Verkäufer und Rechnungssteller ist Stripe (Link) im eigenen Namen; die Rechnung kommt von dort. Nach der Zahlung sind Sie sofort freigeschaltet — kein Schlüssel, keine E-Mail.</p>
     </div>
-    <div class="modal-foot"><button class="btn ghost" onclick="UI.closeModal()">Später</button><button class="btn primary" onclick="UI.activate()">Ich habe einen Schlüssel</button></div>`,{wide:true});
+    <div class="modal-foot"><button class="btn ghost" onclick="UI.closeModal()">Später</button><button class="btn ghost" onclick="UI.activate()">Ich habe einen Schlüssel</button></div>`,{wide:true});
   },
   activate(){
     this.modal(`<div class="modal-head"><button class="closex" onclick="UI.closeModal()">${IC.x}</button><h3>Lizenz aktivieren</h3></div>

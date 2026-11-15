@@ -17,6 +17,7 @@
    Aufruf:  node en-bauen.mjs
    Geprueft von: t-englisch.mjs (Struktur-Gleichstand, Rechtsverweise)     */
 import { readFileSync, writeFileSync, mkdirSync } from 'node:fs';
+import { execSync } from 'node:child_process';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -128,7 +129,7 @@ tausche(`Die Halterin nimmt im Stall in Ruhe auf, die Aufnahme kommt verschlüss
       <strong>this horse’s own</strong> history — and plan your round by distance, appointment
       or your own order.`);
 tausche('Cockpit mit 15&nbsp;Demo-Pferden öffnen →', 'Open the cockpit with 15&nbsp;demo horses →', 2);
-tausche('>Preise &amp; Freischaltung · ab 149&nbsp;€<', '>Pricing &amp; activation · from €149<');
+tausche('>Preise &amp; Freischaltung · ab 149&nbsp;€ netto/Monat<', '>Pricing &amp; activation · from €149 net/month<');
 tausche('Das Demo-Cockpit ist die vollständige Anwendung mit vollständigen Beispielverläufen — ohne Konto, ohne Installation. Nichts davon verlässt Ihren Browser von selbst.',
         'The demo cockpit is the complete application with full example trends — no account, no installation. None of it leaves your browser on its own.');
 /* Hero-Belege + Visual (13.08.: φ-Split-Kopf) */
@@ -218,10 +219,9 @@ tausche(`<strong>Und der Gurt?</strong> Ein Polar&nbsp;H10 ist ein handelsüblic
 /* Das Beleg-Bild: Beschriftung fuer Vorleseprogramme und die Achse. Ein
    aria-label in der falschen Sprache ist schlimmer als keines — es klingt
    fuer den Vorleser wie Kauderwelsch. */
-tausche('Die Schlagabstände einer Ruheaufnahme über 642 Schläge. Die Linie verläuft ruhig um 850 Millisekunden. An einer einzigen Stelle springt sie auf 1794 Millisekunden — ein AV-Block mit seinem kurzen Folgeschlag. Diese eine Stelle hebt die RMSSD von 24,2 auf 55,5 Millisekunden.',
-        'Beat-to-beat intervals of a resting recording across 642 beats. The line runs steadily around 850 milliseconds. At a single point it jumps to 1794 milliseconds — an AV block with its short follow-on beat. That one point lifts RMSSD from 24.2 to 55.5 milliseconds.');
-tausche('<span>642 Schläge · rund 850 ms</span><span>Ausschlag 1794 ms</span>',
-        '<span>642 beats · around 850 ms</span><span>spike 1794 ms</span>');
+/* 15.11.2026: Beleg-Grafik mit Skala kommt fertig aus dem Generator (DE und EN), samt aria-label. */
+tausche(execSync('node ' + join(HIER, '../carlon-equine/app/belege/beleg-svg.mjs'), { encoding: 'utf8' }).trim(),
+        execSync('node ' + join(HIER, '../carlon-equine/app/belege/beleg-svg.mjs') + ' --en', { encoding: 'utf8' }).trim());
 
 /* Der Beleg zur Filter-Behauptung. Zahlen bleiben Zahlen, aber das
    Dezimalkomma wird zum Punkt — sonst liest ein englischer Leser 24,2
@@ -776,6 +776,8 @@ tausche(`Das Angebot richtet sich ausschließlich an Unternehmer im Sinne des §
 /* Positiv behauptet statt doppelt verneint (Copy-CI §12). */
 tausche('Ein Preis für den ganzen Betrieb.',
         'One price for the whole business.');
+tausche('<strong>Praxis 149&nbsp;€ netto/Monat oder 1.490&nbsp;€ netto/Jahr · Klinik 349&nbsp;€ netto/Monat oder 3.490&nbsp;€ netto/Jahr.</strong>',
+        '<strong>Practice €149 net/month or €1,490 net/year · Clinic €349 net/month or €3,490 net/year.</strong>');
 /* im Rumpftext-Block mituebersetzt */
 /* in der Hero-Preiszeile mituebersetzt */
 
