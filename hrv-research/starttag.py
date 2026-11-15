@@ -52,7 +52,7 @@ ersetze("Preis", r'<div class="price" data-en="[^"]*[Bb]eta[^"]*" data-de="[^"]*
         '<div class="price">€99.99<small data-en="one-time" data-de="einmalig">one-time</small></div>')
 ersetze("Preis-Text", r'(?<=</div>\n)( *)<p class="lead" data-en="[^"]*TestFlight[^"]*" data-de="[^"]*">.*?</p>',
         r'\1<p class="lead" data-en="Everything above, for every study you run. No subscription, no per-participant fees, no account." '
-        'data-de="Alles oben, für jede Studie, die Sie durchführen. Kein Abo, keine Gebühren pro Proband, kein Konto.">'
+        'data-de="Alles oben, für jede Studie, die Sie durchführen. Kein Abo, keine Gebühren pro Teilnehmer, kein Konto.">'
         'Everything above, for every study you run. No subscription, no per-participant fees, no account.</p>')
 # 4. Kleingedrucktes + Fußleiste
 ersetze("Kleingedrucktes", r'<div class="fine" data-en="iPhone · TestFlight beta[^"]*" data-de="[^"]*">[^<]*</div>',
@@ -62,15 +62,15 @@ ersetze("Fußleiste", r'<small data-en="[^"]*[Bb]eta · iPhone" data-de="[^"]*">
         '<small data-en="One purchase · iPhone" data-de="Einmal kaufen · iPhone">One purchase · iPhone</small>', 0)
 # 5. FAQ sichtbar + Strukturdaten (FAQ, Kauf-Angebot)
 FAQ_EN = ("A one-time purchase on the App Store – no subscription, no per-participant fees. Institutions can buy "
-          "licenses in volume through Apple School Manager or Apple Business Manager.")
-FAQ_DE = ("Ein einmaliger Kauf im App Store – kein Abo, keine Gebühren pro Proband. Einrichtungen kaufen Lizenzen "
-          "in größerer Zahl über Apple School Manager oder Apple Business Manager.")
-ersetze("FAQ sichtbar", r'(<summary data-en="What does it[\s\xa0]cost\?" data-de="Was kostet[\s\xa0]sie\?">[^<]*</summary>)<p data-en="During the beta[^"]*" data-de="[^"]*">.*?</p>',
+          "licenses in volume through Apple School Manager or Apple Business.")
+FAQ_DE = ("Ein einmaliger Kauf im App Store – kein Abo, keine Gebühren pro Teilnehmer. Einrichtungen kaufen Lizenzen "
+          "in größerer Zahl über Apple School Manager oder Apple Business.")
+ersetze("FAQ sichtbar", r'(<summary data-en="What does CARLON HRV Research[\s\xa0]cost\?" data-de="Was kostet CARLON HRV[\s\xa0]Research\?">[^<]*</summary>)<p data-en="During the beta[^"]*" data-de="[^"]*">.*?</p>',
         lambda m: f'{m.group(1)}<p data-en="{FAQ_EN}" data-de="{FAQ_DE}">{FAQ_EN}</p>')
 # FAQ-Markup erzeugt der Bau (werkzeuge/faq-ld.py) aus der sichtbaren FAQ – hier nur noch ein Fallback
-ersetze("FAQ Schema", r'("name": "What does it cost\?", "acceptedAnswer": \{"@type": "Answer", "text": ")During the beta[^"]*(")',
+ersetze("FAQ Schema", r'("name": "What does CARLON HRV Research cost\?", "acceptedAnswer": \{"@type": "Answer", "text": ")During the beta[^"]*(")',
         r'\1A one-time purchase of 99.99 EUR on the App Store, with no subscription and no per-participant fees. '
-        r'Institutions can buy licenses in volume through Apple School Manager or Apple Business Manager.\2', 0)
+        r'Institutions can buy licenses in volume through Apple School Manager or Apple Business.\2', 0)
 if '"downloadUrl"' not in s:
     ersetze("Kauf-Angebot", r'("@type": "SoftwareApplication",)',
             r'\1\n        "downloadUrl": "' + STORE + r'",\n        "offers": {"@type": "Offer", "price": "99.99", '
