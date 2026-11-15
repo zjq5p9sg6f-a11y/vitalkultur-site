@@ -558,7 +558,9 @@ section[id]{scroll-margin-top:76px}
   .hf-linie{flex:0 0 22px!important;width:1px;min-width:0!important;height:22px;margin-left:22px}
   .hf-linie i{left:-2.5px!important;top:0;animation:flussPulsV 3.5s ease-in-out infinite!important}}
 @keyframes flussPulsV{0%{top:0;opacity:0}12%{opacity:1}88%{opacity:1}100%{top:calc(100% - 6px);opacity:0}}
-.pz-live{position:relative;overflow:hidden!important}.pz-live.an{padding-bottom:11px!important}
+.pz-glas{position:relative;width:100%;aspect-ratio:1180/820;overflow:hidden;border-radius:13px;background:#0b0f14;box-shadow:0 0 0 1px rgba(0,0,0,.85)}
+.pz-glas iframe{position:absolute;left:0;top:0;width:1180px;height:820px;border:0;transform-origin:0 0;display:block}
+.pz-live{position:relative;overflow:hidden!important}
 .pz-start{position:absolute;left:50%;bottom:22px;transform:translateX(-50%);padding:12px 20px;border-radius:999px;border:1px solid rgba(62,207,178,.6);
   background:rgba(8,14,18,.86);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);color:#3ECFB2;font-weight:600;font-size:14px;cursor:pointer;box-shadow:0 12px 30px rgba(0,0,0,.5)}
 .pz-start:hover{background:rgba(62,207,178,.16)}
@@ -2039,12 +2041,12 @@ schon[n]=1;g.count({path:'visite-'+sp+'/'+n,title:n,event:true});});});})();
 </script>
 <script>
 /* Live-Akte im Gerät (16.11.2026, Jan: „Original-App, spulbar, zoombar – man muss sehen, was man kauft“).
-   Erst Standbild (schnell), auf Tipp lädt das Cockpit selbst im Tablet-Format 1180×820, maßstäblich eingepasst. */
+   Erst Standbild (schnell), auf Tipp lädt das Cockpit selbst im Tablet-Format 1180×820 – exakt ins Glas eingepasst. */
 (function(){document.querySelectorAll('.pz-live').forEach(function(box){var k=box.querySelector('.pz-start');if(!k)return;
-k.addEventListener('click',function(){var f=document.createElement('iframe');f.src=box.getAttribute('data-app');f.title=k.textContent;f.loading='eager';
-f.setAttribute('allow','fullscreen');box.classList.add('an');var img=box.querySelector('img');
-var pass=function(){var w=box.clientWidth-28,s=w/1180;f.style.cssText='width:1180px;height:820px;border:0;border-radius:13px;transform:scale('+s+');transform-origin:0 0;display:block;background:#0b0f14';box.style.height=(820*s+22)+'px';};
-img.replaceWith(f);k.remove();pass();addEventListener('resize',pass);
+k.addEventListener('click',function(){var img=box.querySelector('img');
+var glas=document.createElement('div');glas.className='pz-glas';var f=document.createElement('iframe');f.src=box.getAttribute('data-app');f.title=k.textContent;
+glas.appendChild(f);img.replaceWith(glas);k.remove();
+var pass=function(){f.style.transform='scale('+(glas.clientWidth/1180)+')';};pass();addEventListener('resize',pass);
 if(window.goatcounter&&goatcounter.count)goatcounter.count({path:'visite-live-akte',title:'live-akte',event:true});});});})();
 </script>
 </body>

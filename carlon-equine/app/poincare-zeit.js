@@ -41,7 +41,8 @@
     });
 
     var dpr = 1, S = 0, M = { l: 62, r: 16, t: 16, b: 48 };
-    function groesse() { var b = cv.parentNode.getBoundingClientRect(); S = Math.min(b.width, 560); dpr = window.devicePixelRatio || 1; cv.width = S * dpr; cv.height = S * dpr; cv.style.width = S + 'px'; cv.style.height = S + 'px'; }
+    var GMAX = fig.classList.contains('pz-gross') ? 820 : 560;
+    function groesse() { var b = cv.parentNode.getBoundingClientRect(); S = Math.max(300, Math.min(b.width, GMAX, (window.innerHeight || 900) - 230)); fig.querySelector('.pz-leiste').style.maxWidth = S + 'px'; dpr = window.devicePixelRatio || 1; cv.width = S * dpr; cv.height = S * dpr; cv.style.width = S + 'px'; cv.style.height = S + 'px'; }
     function X(v) { return M.l + (v - vlo) / (vhi - vlo) * (S - M.l - M.r); }
     function Y(v) { return S - M.b - (v - vlo) / (vhi - vlo) * (S - M.t - M.b); }
     function wert(px) { return vlo + (px - M.l) / (S - M.l - M.r) * (vhi - vlo); }
@@ -70,6 +71,11 @@
       if (k > 3) { var e = sd(k); var cx = X(e.mx), cy = Y(e.mx), px = (S - M.l - M.r) / (vhi - vlo);
         c.save(); c.translate(cx, cy); c.rotate(-Math.PI / 4); c.strokeStyle = CYAN; c.lineWidth = 1.6; c.beginPath(); c.ellipse(0, 0, e.sd2 * px, e.sd1 * px, 0, 0, 7); c.stroke(); c.restore();
         werteEl.innerHTML = '<span><b>SD1</b> ' + e.sd1.toFixed(1).replace('.', DE ? ',' : '.') + ' ms</span><span><b>SD2</b> ' + e.sd2.toFixed(1).replace('.', DE ? ',' : '.') + ' ms</span><span><b>' + k + '</b> ' + T.paare + '</span><span class="pz-av"><i></i>' + T.av + '</span>'; }
+      if (k > 3) { var e2 = sd(k), f1 = function (v) { return v.toFixed(1).replace('.', DE ? ',' : '.'); };
+        c.textAlign = 'left'; c.fillStyle = 'rgba(232,238,242,.92)'; c.font = '600 ' + Math.round(S / 34) + 'px system-ui, sans-serif';
+        c.fillText('SD1 · ' + f1(e2.sd1) + ' ms', M.l + 12, M.t + S / 22); c.fillText('SD2 · ' + f1(e2.sd2) + ' ms', M.l + 12, M.t + S / 22 + S / 26);
+        c.font = Math.round(S / 46) + 'px ui-monospace, Menlo, monospace'; c.fillStyle = TXT;
+        c.fillText('SD2/SD1 · ' + f1(e2.sd2 / e2.sd1) + '   ' + k + ' ' + T.paare, M.l + 12, M.t + S / 22 + 2 * S / 26); }
       if (hl != null) { c.strokeStyle = '#fff'; c.lineWidth = 1; c.beginPath(); c.moveTo(X(rr[hl]), M.t); c.lineTo(X(rr[hl]), S - M.b); c.moveTo(M.l, Y(rr[hl + 1])); c.lineTo(S - M.r, Y(rr[hl + 1])); c.stroke();
         c.fillStyle = '#fff'; c.beginPath(); c.arc(X(rr[hl]), Y(rr[hl + 1]), 4.5, 0, 7); c.fill(); }
       c.restore();
