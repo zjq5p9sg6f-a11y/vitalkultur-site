@@ -4076,13 +4076,24 @@ const Chart={
       zones:[[62,100,'rgba(63,224,164,.10)',['kohärent','var(--good)']],[42,62,'rgba(255,181,71,.08)',['teilkohärent','var(--amber)']],[0,42,'rgba(74,100,120,.06)',null]],
       classify:v=>v>=62?{text:'kohärent',cls:'good'}:v>=42?{text:'teilkohärent',cls:'warn'}:{text:'unabhängig',cls:''}});
   },
-  spark(series,{w=150,h=38,color='var(--cyan)'}={}){
+  /* Verlaufs-Linie in Karten – 15.11.2026 (Jan: „keine Wellness-Grafiken ohne Einheiten, Skala und Raster“):
+     linke Skala mit Min/Max in der Einheit, Raster (Min, Mitte, Max), rechts Anzahl der Aufnahmen.
+     Höhe mindestens 34 px, damit die Beschriftung lesbar bleibt; Breite wie bestellt. */
+  spark(series,{w=150,h=38,color='var(--cyan)',unit='ms',label='RMSSD'}={}){
     const pts=series.filter(p=>p.y!=null); if(pts.length<2) return '';
-    const ys=pts.map(p=>p.y); let mn=Math.min(...ys),mx=Math.max(...ys); const r=(mx-mn)||1;
-    const X=i=>2+i/(pts.length-1)*(w-4), Y=v=>2+(1-(v-mn)/r)*(h-4);
+    h=Math.max(h,34); const L=30,R=26,T=5,B=5;
+    const ys=pts.map(p=>p.y); let mn=Math.min(...ys),mx=Math.max(...ys); if(mx-mn<1){mn-=1;mx+=1;} const r=mx-mn;
+    const X=i=>L+i/(pts.length-1)*(w-L-R), Y=v=>T+(1-(v-mn)/r)*(h-T-B);
     const d=pts.map((p,i)=>`${i?'L':'M'}${X(i).toFixed(1)},${Y(p.y).toFixed(1)}`).join(' ');
-    return `<svg class="chart" viewBox="0 0 ${w} ${h}" style="max-width:${w}px"><path d="${d}" fill="none" stroke="${color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-      <circle cx="${X(pts.length-1).toFixed(1)}" cy="${Y(pts[pts.length-1].y).toFixed(1)}" r="2.6" fill="${color}"/></svg>`;
+    const f=v=>Math.round(v), g=[mx,(mx+mn)/2,mn];
+    return `<svg class="chart spark" viewBox="0 0 ${w} ${h}" style="max-width:${w}px" role="img" aria-label="${label} ${f(mn)}–${f(mx)} ${unit}, ${pts.length} Aufnahmen">
+      ${g.map(v=>`<line x1="${L}" x2="${w-R}" y1="${Y(v).toFixed(1)}" y2="${Y(v).toFixed(1)}" stroke="currentColor" stroke-opacity="${v===g[1]?.07:.16}" stroke-dasharray="${v===g[1]?'2 3':'none'}"/>`).join('')}
+      <text x="${L-4}" y="${(Y(mx)+3).toFixed(1)}" text-anchor="end" font-size="8.5" fill="currentColor" fill-opacity=".62">${f(mx)}</text>
+      <text x="${L-4}" y="${(Y(mn)+3).toFixed(1)}" text-anchor="end" font-size="8.5" fill="currentColor" fill-opacity=".62">${f(mn)}</text>
+      <text x="${w-R+4}" y="${(Y(mx)+3).toFixed(1)}" font-size="8" fill="currentColor" fill-opacity=".5">${unit}</text>
+      <text x="${w-R+4}" y="${(Y(mn)+3).toFixed(1)}" font-size="8" fill="currentColor" fill-opacity=".5">n=${pts.length}</text>
+      <path d="${d}" fill="none" stroke="${color}" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+      <circle cx="${X(pts.length-1).toFixed(1)}" cy="${Y(pts[pts.length-1].y).toFixed(1)}" r="2.4" fill="${color}"/></svg>`;
   },
   _n:0,
   ts(series,opts={}){
@@ -4252,7 +4263,7 @@ const Chart={
     const X=i=>pad.l+i/(rr.length-1)*(w-pad.l-pad.r);
     const Y=v=>pad.t+(1-(v-min)/r)*(h-pad.t-pad.b);
     const path=rr.map((v,i)=>`${i?'L':'M'}${X(i).toFixed(1)},${Y(v).toFixed(1)}`).join(' ');
-    return `<svg class="chart" viewBox="0 0 ${w} ${h}"><path d="${path}" fill="none" stroke="var(--cyan)" stroke-width="1.2" opacity=".85"/></svg>`;
+    return `<svg class="chart" viewBox="0 0 ${w} ${h}" role="img" aria-label="RR ${Math.round(min)}–${Math.round(max)} ms"><line x1="${pad.l}" x2="${w-pad.r}" y1="${Y(max)}" y2="${Y(max)}" stroke="currentColor" stroke-opacity=".14"/><line x1="${pad.l}" x2="${w-pad.r}" y1="${Y(min)}" y2="${Y(min)}" stroke="currentColor" stroke-opacity=".14"/><text x="${pad.l+2}" y="${Y(max)+9}" font-size="9" fill="currentColor" fill-opacity=".6">${Math.round(max)} ms</text><text x="${pad.l+2}" y="${Y(min)-3}" font-size="9" fill="currentColor" fill-opacity=".6">${Math.round(min)} ms · ${rr.length} Schläge</text><path d="${path}" fill="none" stroke="var(--cyan)" stroke-width="1.2" opacity=".85"/></svg>`;
   }
 };
 
@@ -4809,7 +4820,7 @@ const Views={
     const siCol=si==null?'var(--text-dim)':si<80?'var(--good)':si<150?'var(--amber)':'var(--red)';
     const _b=Baseline.wert(h), delta=(_b&&m.rmssd!=null)?(m.rmssd-_b)/_b*100:null;
     const recs=State.recsFor(h.id);
-    const spark=recs.length>=3?Chart.spark(recs.map(r=>({x:r.startedAt,y:r.metrics.rmssd})),{w:220,h:24,color:tri.level==='crit'?'var(--red)':tri.level==='elev'?'var(--amber)':'var(--cyan)'}):'';
+    const spark=recs.length>=3?Chart.spark(recs.map(r=>({x:r.startedAt,y:r.metrics.rmssd})),{w:240,h:36,color:tri.level==='crit'?'var(--red)':tri.level==='elev'?'var(--amber)':'var(--cyan)'}):'';
     return `<div class="st-tile ${tri.level}${hint?' hint':''}" onclick="Views.openHorse('${h.id}')" title="${esc(h.name)} — Akte öffnen">
       <div class="st-head">
         <span class="st-box">Box ${esc(String(box))}</span>
@@ -4913,7 +4924,7 @@ const Views={
       </div>
       ${Views.gueteZeile(rec)}
       ${(tri.reasons&&tri.reasons[0])?`<div class="pc-grund" title="Aus diesem Wert folgt die Stufe – eine Messwert-Beschreibung, keine Einordnung des Gesundheitszustands">Grund: ${esc(Triage.zeig(tri.reasons[0]))}</div>`:''}
-      ${(()=>{const s=State.recsFor(h.id).map(r=>({x:r.startedAt,y:r.metrics.rmssd}));return s.length>=3?`<div style="margin-top:9px;opacity:.85">${Chart.spark(s,{w:250,h:26,color:tri.level==='crit'?'var(--red)':tri.level==='elev'?'var(--amber)':'var(--cyan)'})}</div>`:'';})()}
+      ${(()=>{const s=State.recsFor(h.id).map(r=>({x:r.startedAt,y:r.metrics.rmssd}));return s.length>=3?`<div style="margin-top:9px;opacity:.85">${Chart.spark(s,{w:250,h:36,color:tri.level==='crit'?'var(--red)':tri.level==='elev'?'var(--amber)':'var(--cyan)'})}</div>`:'';})()}
       ${flags?`<div class="chips">${flags}</div>`:''}
       ${(h.owner||h.phone)?`<div class="pc-owner">${IC.owner}<b>${esc(h.owner||'—')}</b>${(h.place||h.stable)?`<span>· ${esc(h.place||h.stable)}</span>`:''}${h.phone?`<a class="pc-call" href="tel:${esc(h.phone)}" onclick="event.stopPropagation()" title="${esc(h.phone)} anrufen">${IC.phone}</a>`:''}</div>`:''}
       <div class="foot">
@@ -5030,7 +5041,7 @@ const Views={
     Views._placeCount={}; State.horses.forEach(h=>{const p=(h.place||h.stable||'').trim(); if(p)Views._placeCount[p]=(Views._placeCount[p]||0)+1;});
     return list.map(({h,rec,tri})=>{
       const m=rec?rec.metrics:{};const tr=Triage.trend(h.id);const recs=State.recsFor(h.id);
-      const spark=recs.length>=3?Chart.spark(recs.map(r=>({x:r.startedAt,y:r.metrics.rmssd})),{w:88,h:22,color:tri.level==='crit'?'var(--red)':tri.level==='elev'?'var(--amber)':'var(--cyan)'}):'';
+      const spark=recs.length>=3?Chart.spark(recs.map(r=>({x:r.startedAt,y:r.metrics.rmssd})),{w:150,h:34,color:tri.level==='crit'?'var(--red)':tri.level==='elev'?'var(--amber)':'var(--cyan)'}):'';
       const d=Views.distKm(h);const sib=State.horses.filter(x=>x.id!==h.id&&Views.ownerKey(x)===Views.ownerKey(h)).length;
       const trS=tr?`<span style="color:${tr.col};font-size:12px">${tr.sym}</span>`:'';
       const place=(h.place?h.place.split(',').pop().trim():h.stable)||'';
