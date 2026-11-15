@@ -204,6 +204,14 @@ document.head.appendChild(s);})();</script>
       "@type": "Answer",
       "text": "Aus den Ruhemessungen dieses Pferds selbst: Ab vier eigenen Aufnahmen gilt der Wert als individuelle Baseline. Bis dahin zeigt das Cockpit offen an, dass der Vergleichswert noch aus dem Referenz-Datensatz stammt — und wie viele eigene Aufnahmen noch fehlen. Es tut nicht so, als wüsste es schon etwas."
      }
+    },
+    {
+     "@type": "Question",
+     "name": "Wo liegen meine Daten, und wie sichere ich sie?",
+     "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Ausschließlich in Ihrem Browser auf Ihrem Gerät – keine Cloud, kein Server von uns. Unter Dokumentation legt „Backup sichern“ eine Sicherungsdatei an; „Backup einspielen“ stellt damit alles auf einem neuen Gerät oder Browser wieder her, samt Freischaltung. Fehlt eine aktuelle Sicherung, zeigt das Cockpit es oben an. Im Klinik-Tarif liegt der Bestand zusätzlich im Klinik-Ordner auf Ihrem Netzlaufwerk."
+     }
     }
    ]
   }
@@ -863,7 +871,7 @@ h1,h2{text-wrap:balance}
   <div class="wrap hero-grid">
     <div class="hero-copy">
     <div class="eyebrow">CARLON Equine Visite · für Tierärztinnen und Tierärzte</div>
-    <h1>Die Tour geplant. Jedes Pferd mit seinem Verlauf.</h1>
+    <h1>Ruhe-HRV aus dem eigenen Stall. Jedes Pferd im Vergleich mit sich selbst.</h1>
     <!-- Der Vorspann beginnt beim ANRUF — dem Moment, den jede mobile
          Praxis kennt: entscheiden am Telefon, ohne Datengrundlage. Das
          Produkt ist die Antwort auf genau diesen Moment. -->
@@ -1068,7 +1076,7 @@ h1,h2{text-wrap:balance}
          Kontaktpunkt Ihrer Praxis.</p>
     </div>
     <div class="usp">
-      <h3>Zwei Zahlen, nicht eine</h3>
+      <h3>Rohwert und bereinigter Wert nebeneinander</h3>
       <p>Beim Pferd liegen physiologische Pausen — der AV-Block II° ist beim ruhenden Pferd
          normal — und echte Störungen in derselben Serie. Ein Filter kann sie nicht
          unterscheiden, er wirft beides weg. Die Station nennt deshalb den rohen Wert
@@ -1172,7 +1180,7 @@ h1,h2{text-wrap:balance}
            Ein Messmuster, <strong>keine gesundheitliche Einstufung</strong>.</p>
       </div>
       <div class="card">
-        <h3>Die üblichen Ansichten, in guter Auflösung</h3>
+        <h3>Tachogramm, Poincaré und Spektrum – mit Achsen, Einheiten und Raster</h3>
         <p>Tachogramm, Poincaré, Spektrum, DFA, Histogramm — dieselben Darstellungen wie
            in der iOS-App, im Vollbild neu gezeichnet statt hochskaliert.</p>
       </div>
@@ -1202,7 +1210,7 @@ h1,h2{text-wrap:balance}
 <section>
   <div class="wrap">
     <div class="sec-eyebrow">Warum die Zahlen tragen</div>
-    <h2>Beim Pferd sind Pausen normal. Wer sie mitrechnet, misst Unsinn.</h2>
+    <h2>Lange Pausen zwischen zwei Schlägen werden erkannt – und getrennt ausgewiesen.</h2>
     <p class="sec-lead">
       Die Herzratenvariabilität wird mit der Aktivität des autonomen Nervensystems in
       Verbindung gebracht — dem Wechselspiel aus Sympathikus und Parasympathikus. Sie ist
@@ -1217,7 +1225,7 @@ h1,h2{text-wrap:balance}
       <em>kleinen</em> Werten anschlagen, kippen ins Gegenteil.
     </p>
     <div class="evidenz" aria-label="Bezugsstudie des Atemmuster-Profils">
-      <span class="ev-cyan">Nyerges-Bohák 2025</span>
+      <a class="ev-cyan" href="https://doi.org/10.1111/evj.14414" target="_blank" rel="noopener">Nyerges-Bohák et al., Equine Vet J 57(3):611–618 (2025) · doi:10.1111/evj.14414</a>
       <span>Equine Veterinary Journal</span>
       <span>n = 40 · Vergleichsgruppen 20 / 20</span>
       <span>DOI 10.1111/evj.14414</span>
@@ -1228,7 +1236,7 @@ h1,h2{text-wrap:balance}
          wie in Abschnitt 2, damit die Karten-Sprache der Seite EINE ist. -->
     <div class="usps">
     <div class="usp">
-      <h3>Misst keinen Mist</h3>
+      <h3>Kein Kennwert ohne Signalgüte und Artefaktanteil</h3>
       <p>AV-Block-Pausen, Bewegungs-Artefakte, unplausible Schläge — die Auswertung
          erkennt und korrigiert sie, <strong>bevor</strong> ein Kennwert entsteht. Ob
          eine Aufnahme aus der App kommt oder aus der Browser-Station: Sie bekommen
@@ -1243,14 +1251,14 @@ h1,h2{text-wrap:balance}
            hinterlegten RR-Serie nach; die 130 % sind daraus ABGELEITET. -->
     </div>
     <div class="usp">
-      <h3>Zu auffällig ist auch falsch</h3>
+      <h3>Unplausible Ausreißer werden erkannt, nicht übernommen</h3>
       <p>Ungefiltert wirkt ein ruhendes Pferd systematisch auffälliger, als es ist.
          Eine Übersicht, die zu oft Abweichungen zeigt, ist so wertlos wie eine, die keine zeigt —
          deshalb wird erst bereinigt, dann verglichen. Damit eine Abweichung
          auffällt, weil sie im Pferd liegt. Nicht in der Messung.</p>
     </div>
     <div class="usp">
-      <h3>Und dort, wo es nicht reicht, sagt es das</h3>
+      <h3>Reicht Signalgüte oder Ruhedauer nicht, steht es dabei</h3>
       <p>Zu wenige Schläge, zu kurz, zu viele Artefakte — dann steht „Datengrundlage zu
          klein" und kein Urteil. Ein Werkzeug, das immer etwas sagt, ist kein Werkzeug.</p>
     </div>
@@ -1329,7 +1337,7 @@ h1,h2{text-wrap:balance}
 <section>
   <div class="wrap">
     <div class="sec-eyebrow">Anschluss</div>
-    <h2>Die Daten gehen in Ihre Praxissoftware, nicht in eine Sackgasse.</h2>
+    <h2>Export als FHIR R5, JSON und CSV – offen für Ihre Praxissoftware.</h2>
     <p class="sec-lead">
       Jede Aufnahme lässt sich als <strong>FHIR&nbsp;R5</strong> ausgeben — als
       <code>Observation</code> mit LOINC-Codes und UCUM-Einheiten, das Pferd als
@@ -1343,7 +1351,7 @@ h1,h2{text-wrap:balance}
 <section id="arbeitstag">
   <div class="wrap">
     <div class="sec-eyebrow">Ihr Arbeitstag</div>
-    <h2>Zwischen zwei Terminen liegt Ihr Fahrweg.</h2>
+    <h2>Tagesroute, Fahrzeit und Fahrtenbuch in derselben Ansicht.</h2>
     <p class="sec-lead">Die Auswertung ist die eine Hälfte. Die andere ist der Tag, an dem
        Sie sie unterbringen müssen — und der entscheidet, ob ein Werkzeug den ersten
        Monat überlebt.</p>
@@ -1455,7 +1463,7 @@ h1,h2{text-wrap:balance}
 <section>
   <div class="wrap">
     <div class="sec-eyebrow">Der Start</div>
-    <h2>So beginnt Ihre Praxis.</h2>
+    <h2>In drei Schritten zur ersten Aufnahme.</h2>
     <div class="usps">
       <div class="usp">
         <div class="u-k">Schritt 1</div>
@@ -1489,7 +1497,7 @@ h1,h2{text-wrap:balance}
     <!-- „Kein Staffelmodell, keine Verhandlung" war doppelt verneint und
          klang nach Abwehr (Copy-CI: positiv behaupten). Was gemeint ist,
          steht positiv im Lead: ein Betrieb, alle Leute, alle Geraete. -->
-    <h2>Ein Preis für den ganzen Betrieb.</h2>
+    <h2>Zwei Tarife. Keine Gebühr je Pferd, Nutzer oder Gerät.</h2>
     <p class="sec-lead" style="margin-bottom:0"><strong>Praxis 149&nbsp;€ netto/Monat oder 1.490&nbsp;€ netto/Jahr · Klinik 349&nbsp;€ netto/Monat oder 3.490&nbsp;€ netto/Jahr.</strong></p>
     <p class="sec-lead">
       Ein Betrieb — eine Praxis oder ein Standort — mit allen tierärztlichen und
@@ -1639,7 +1647,7 @@ h1,h2{text-wrap:balance}
 <section>
   <div class="wrap">
     <div class="sec-eyebrow">Häufige Fragen</div>
-    <h2>Was Tierärzte uns zuerst fragen.</h2>
+    <h2>Fragen aus der Praxis – kurz beantwortet.</h2>
     <div class="faq-liste">
       <details class="faq-item" data-spur-auf="faq-1"><summary><h3>Ersetzt CARLON eine Untersuchung?</h3></summary>
         <div class="faq-a"><p>Nein. CARLON bereitet Verlaufsdaten auf und hilft bei der Reihenfolge. Ob eine
@@ -1697,6 +1705,9 @@ h1,h2{text-wrap:balance}
            Wert als individuelle Baseline. Bis dahin zeigt das Cockpit offen an, dass der
            Vergleichswert noch aus dem Referenz-Datensatz stammt — und wie viele eigene
            Aufnahmen noch fehlen. Es tut nicht so, als wüsste es schon etwas.</p></div>
+      </details>
+      <details class="faq-item" data-spur-auf="faq-9"><summary><h3>Wo liegen meine Daten, und wie sichere ich sie?</h3></summary>
+        <div class="faq-a"><p>Ausschließlich in Ihrem Browser auf Ihrem Gerät – keine Cloud, kein Server von uns. Unter Dokumentation legt „Backup sichern“ eine Sicherungsdatei an; „Backup einspielen“ stellt damit alles auf einem neuen Gerät oder Browser wieder her, samt Freischaltung. Fehlt eine aktuelle Sicherung, zeigt das Cockpit es oben an. Im Klinik-Tarif liegt der Bestand zusätzlich im Klinik-Ordner auf Ihrem Netzlaufwerk.</p></div>
       </details>
     </div>
   </div>

@@ -118,8 +118,8 @@ tausche("window.CARLON_LANG = localStorage.getItem('carlon.viewer.lang') || 'de'
 tausche('CARLON Equine Visite · für Tierärztinnen und Tierärzte',
         'CARLON Equine Visite · for veterinary surgeons');
 /* Dieselbe Zeile wie in der og:description — Identitaet, nicht Funktion. */
-tausche(`Die Tour geplant. Jedes Pferd mit seinem Verlauf.`,
-        `Your round, planned. Every horse with its trend.`);
+tausche(`Ruhe-HRV aus dem eigenen Stall. Jedes Pferd im Vergleich mit sich selbst.`,
+        `Resting HRV from the home stable. Each horse compared with itself.`);
 tausche(`Die Halterin nimmt im Stall in Ruhe auf, die Aufnahme kommt verschlüsselt zu Ihnen.
       Vor dem Besuch sehen Sie, wie gut die Aufnahme ist und wie weit die Ruhe-HRV von
       <strong>der eigenen</strong> Vorgeschichte dieses Pferds abweicht — und planen Ihre
@@ -189,19 +189,20 @@ tausche(`Abweichung mit Begründung`,
 tausche('Signalgüte, bevor Sie deuten', 'Signal quality before interpretation');
 tausche(`Atemmuster-Profil aus der Literatur`,
         `Breathing-pattern profile from the literature`);
-tausche('Die üblichen Ansichten, in guter Auflösung', 'The familiar views, at proper resolution');
+tausche('Tachogramm, Poincaré und Spektrum – mit Achsen, Einheiten und Raster',
+        'Tachogram, Poincaré and spectrum – with axes, units and grid');
 tausche(`Messwertbericht und Dokumentation an einer Stelle`,
         `Measurement report and documentation in one place`);
 tausche('Export ohne Sackgasse', 'Export without a dead end');
 
 // Abschnitt 3 — Wissenschaft
 tausche('Warum die Zahlen tragen', 'Why the numbers hold', 2);   // Kommentar + Text
-tausche('Beim Pferd sind Pausen normal. Wer sie mitrechnet, misst Unsinn.',
-        'In horses, pauses are normal. Count them in and you measure nonsense.');
-tausche('Misst keinen Mist',
-        'No junk in your numbers');
-tausche('Zu auffällig ist auch falsch',
-        'Too conspicuous is wrong too');
+tausche('Lange Pausen zwischen zwei Schlägen werden erkannt – und getrennt ausgewiesen.',
+        'Long pauses between beats are detected – and reported separately.');
+tausche('Kein Kennwert ohne Signalgüte und Artefaktanteil',
+        'No metric without signal quality and artefact rate');
+tausche('Unplausible Ausreißer werden erkannt, nicht übernommen',
+        'Implausible outliers are flagged, not taken over');
 /* Die Gurt-Frage — auf Englisch dieselbe Aussage ohne Betrag. */
 tausche(`<strong>Und der Gurt?</strong> Ein Polar&nbsp;H10 ist ein handelsübliches Gerät, überall
       erhältlich und billiger als eine einzige Anfahrt. Wir verkaufen ihn <em>nicht</em> — damit
@@ -238,7 +239,8 @@ tausche(`In einer echten Ruheaufnahme — 642 Schläge, 0,31 % Artefaktrate,
          24.2 to 55.5 ms. <strong>130 % too high</strong> — and the quality
          indicator never warns. A high share of plausible beats says nothing
          about whether the metric is right.`);
-tausche('Und dort, wo es nicht reicht, sagt es das', 'And where it is not enough, it says so');
+tausche('Reicht Signalgüte oder Ruhedauer nicht, steht es dabei',
+        'If signal quality or resting time falls short, it says so');
 
 // Abschnitt 4 — Verlauf
 tausche('Was eine Momentaufnahme nicht kann', 'What a snapshot cannot do');
@@ -248,12 +250,13 @@ tausche('Nach einer Umstellung sichtbar', 'Visible after a change');
 
 // Abschnitt 5 — Anschluss
 tausche('>Anschluss<', '>Interoperability<');
-tausche(`Die Daten gehen in Ihre Praxissoftware, nicht in eine Sackgasse.`,
-        `The data goes into your practice software, not into a dead end.`);
+tausche(`Export als FHIR R5, JSON und CSV – offen für Ihre Praxissoftware.`,
+        `Export as FHIR R5, JSON and CSV – open to your practice software.`);
 
 // Abschnitt 6 — Arbeitstag
 tausche('>Ihr Arbeitstag<', '>Your working day<');
-tausche('Zwischen zwei Terminen liegt Ihr Fahrweg.', 'Between two appointments lies your drive.');
+tausche('Tagesroute, Fahrzeit und Fahrtenbuch in derselben Ansicht.',
+        'Daily route, drive time and mileage log in one view.');
 /* (weiter unten im Rumpftext uebersetzt — hier waere es doppelt) */
 tausche('<div class="f-k">Tagesplan</div>', '<div class="f-k">Day plan</div>');
 tausche(`Die Tour plant sich nach Strecke und Termin — die Reihenfolge bestimmen Sie.`,
@@ -327,7 +330,8 @@ tausche(' — wir antworten genauso schnell.', ' — we answer just as quickly.'
 
 // FAQ
 tausche('Häufige Fragen', 'Frequently asked');
-tausche('Was Tierärzte uns zuerst fragen.', 'What vets ask us first.');
+tausche('Fragen aus der Praxis – kurz beantwortet.',
+        'Questions from practice – answered briefly.');
 tausche('Ersetzt CARLON eine Untersuchung?', 'Does CARLON replace an examination?', 2);
 tausche('Was braucht die Halterin?', 'What does the owner need?', 2);
 tausche('Was passiert nach einer Kündigung?', 'What happens after cancellation?', 2);
@@ -406,7 +410,8 @@ tausche('Das Ergebnis, sofort. <strong>Zwei RMSSD-Werte statt einem</strong> —
         'The result, immediately. <strong>Two RMSSD values instead of one</strong> — the raw one and the one over unremarkable beat pairs only.');
 tausche('Das Messprotokoll sagt, <strong>wie gut</strong> die Aufnahme ist: auswertbare Schlagpaare, Sensor, Zeitauflösung.',
         'The measurement log states <strong>how good</strong> the recording is: usable beat pairs, sensor, time resolution.');
-tausche('Zwei Zahlen, nicht eine', 'Two numbers, not one');
+tausche('Rohwert und bereinigter Wert nebeneinander',
+        'Raw and corrected value side by side');
 tausche(`Beim Pferd liegen physiologische Pausen — der AV-Block II° ist beim ruhenden Pferd
          normal — und echte Störungen in derselben Serie. Ein Filter kann sie nicht
          unterscheiden, er wirft beides weg. Die Station nennt deshalb den rohen Wert
@@ -774,8 +779,8 @@ tausche(`Das Angebot richtet sich ausschließlich an Unternehmer im Sinne des §
 
 
 /* Positiv behauptet statt doppelt verneint (Copy-CI §12). */
-tausche('Ein Preis für den ganzen Betrieb.',
-        'One price for the whole business.');
+tausche('Zwei Tarife. Keine Gebühr je Pferd, Nutzer oder Gerät.',
+        'Two plans. No fee per horse, user or device.');
 tausche('<strong>Praxis 149&nbsp;€ netto/Monat oder 1.490&nbsp;€ netto/Jahr · Klinik 349&nbsp;€ netto/Monat oder 3.490&nbsp;€ netto/Jahr.</strong>',
         '<strong>Practice €149 net/month or €1,490 net/year · Clinic €349 net/month or €3,490 net/year.</strong>');
 /* im Rumpftext-Block mituebersetzt */
@@ -824,7 +829,8 @@ tausche(`
 
 // Start-Sektion (So beginnt Ihre Praxis)
 tausche('<div class="sec-eyebrow">Der Start</div>', '<div class="sec-eyebrow">Getting started</div>');
-tausche('<h2>So beginnt Ihre Praxis.</h2>', '<h2>How your practice begins.</h2>');
+tausche('<h2>In drei Schritten zur ersten Aufnahme.</h2>',
+        '<h2>Three steps to your first recording.</h2>');
 tausche('<div class="u-k">Schritt 1</div>', '<div class="u-k">Step 1</div>');
 tausche('<div class="u-k">Schritt 2</div>', '<div class="u-k">Step 2</div>');
 tausche('<div class="u-k">Schritt 3</div>', '<div class="u-k">Step 3</div>');
@@ -866,6 +872,9 @@ tausche(`Nein. CARLON sendet keine Alarme, und die Halterin sieht keine Einstufu
 tausche('"text": "Nein. CARLON sendet keine Alarme, und die Halterin sieht keine Einstufung — die entsteht erst in Ihrem Cockpit, wenn Sie es öffnen. Eine zugeschickte Datei ist eine Zusendung wie eine E-Mail: Wann Sie sie sichten, bestimmen Sie und kommunizieren es wie bisher. Für den Notfall gilt, was immer gilt: der Anruf."',
         '"text": "No. CARLON sends no alerts, and the owner sees no classification — it only comes into being in your cockpit, when you open it. A file sent to you is a delivery like an email: when you review it is up to you, communicated to your clients as before. For emergencies, what has always applied still applies: the phone call."');
 tausche('Woher kommt die Baseline?', 'Where does the baseline come from?', 2);
+/* FAQ Datensicherung (C5, 15.11.2026) – sichtbar + JSON-LD */
+tausche(`Wo liegen meine Daten, und wie sichere ich sie?`, `Where is my data, and how do I back it up?`, 2);
+tausche(`Ausschließlich in Ihrem Browser auf Ihrem Gerät – keine Cloud, kein Server von uns. Unter Dokumentation legt „Backup sichern“ eine Sicherungsdatei an; „Backup einspielen“ stellt damit alles auf einem neuen Gerät oder Browser wieder her, samt Freischaltung. Fehlt eine aktuelle Sicherung, zeigt das Cockpit es oben an. Im Klinik-Tarif liegt der Bestand zusätzlich im Klinik-Ordner auf Ihrem Netzlaufwerk.`, `Only in your browser on your device – no cloud, no server of ours. Under Documentation, “Back up” creates a backup file; “Restore backup” brings everything back on a new device or browser, including your activation. If a recent backup is missing, the cockpit shows it at the top. On the clinic plan the records are also kept in the clinic folder on your network drive.`, 2);
 tausche(`Aus den Ruhemessungen dieses Pferds selbst: Ab vier eigenen Aufnahmen gilt der
            Wert als individuelle Baseline. Bis dahin zeigt das Cockpit offen an, dass der
            Vergleichswert noch aus dem Referenz-Datensatz stammt — und wie viele eigene
