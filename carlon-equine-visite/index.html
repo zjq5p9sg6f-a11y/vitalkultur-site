@@ -577,18 +577,28 @@ section[id]{scroll-margin-top:76px}
 .geraete td.ja{color:var(--cyan);font-weight:600}.geraete td.nein{color:var(--text-dim)}
 /* TELEFON-GEHÄUSE (16.11.2026, Jan: „Screenshots ohne edlen Rahmen“) – generisch, Anthrazit, keine Apple-Form:
    gleichmäßiger Rand, Lautsprecher-Schlitz statt Insel, Glas mit innerem Rand. Bildschirm im Seitenverhältnis 9:19,5. */
-.shots.telefon .frame{position:relative;border:0!important;border-radius:36px!important;padding:10px!important;aspect-ratio:9/19.5;overflow:hidden!important;
+.shots.telefon .frame{position:relative;border:0!important;border-radius:30px!important;padding:5px!important;aspect-ratio:9/19.5;overflow:hidden!important;
   background:linear-gradient(150deg,#46494f 0%,#2b2e33 24%,#1d1f23 62%,#131417 100%)!important;
   box-shadow:inset 0 1px 0 rgba(255,255,255,.16),inset 0 0 0 1px rgba(255,255,255,.05),0 0 0 1px #08090b,0 40px 70px -40px rgba(0,0,0,.95),0 0 50px rgba(62,207,178,.06)!important}
-.shots.telefon .frame::after{content:'';position:absolute;top:17px;left:50%;transform:translateX(-50%);width:16%;height:4px;border-radius:4px;background:#0a0b0d;box-shadow:0 0 0 1px rgba(255,255,255,.06);z-index:2}
-.shots.telefon .frame img{width:100%!important;height:100%!important;object-fit:cover;object-position:top center;border-radius:27px!important;box-shadow:0 0 0 1px rgba(0,0,0,.85)}
+.shots.telefon .frame::after{content:none}
+.shots.telefon .frame img{width:100%!important;height:100%!important;object-fit:cover;object-position:top center;border-radius:25px!important;box-shadow:0 0 0 1px rgba(0,0,0,.85)}
 /* Wisch-Karussell auf Tablet und Telefon (natives Scrollen, Kanon Breathwork/Research), am Rechner nebeneinander */
 @media(max-width:1100px){
   .shots.telefon{display:flex!important;overflow-x:auto;gap:22px!important;padding:8px 4px 22px;margin:0 -4px;scrollbar-width:none;-webkit-overflow-scrolling:touch;touch-action:pan-x pan-y;user-select:none;-webkit-user-select:none}
-  .shots.telefon .shot{flex:0 0 40%;margin:0}
+  .shots.telefon .shot{flex:0 0 31%;max-width:270px;margin:0}
 }
-@media(max-width:600px){.shots.telefon .shot{flex:0 0 72%}}
-@media(min-width:1101px){.shots.telefon{grid-template-columns:repeat(3,1fr)!important;gap:var(--sp-34) var(--sp-55)!important;max-width:980px;margin-left:auto;margin-right:auto}}
+@media(max-width:600px){.shots.telefon .shot{flex:0 0 64%}}
+@media(min-width:1101px){.shots.telefon{grid-template-columns:repeat(3,1fr)!important;gap:var(--sp-34) var(--sp-55)!important;max-width:860px;margin-left:auto;margin-right:auto}}
+details.mehr.gross{margin-top:var(--sp-34);border:1px solid var(--border-faint);border-radius:16px;background:var(--bg-surface);padding:0 var(--sp-21)}
+details.mehr.gross>summary{list-style:none;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:16px;padding:18px 0;font-weight:600;color:var(--text-primary)}
+details.mehr.gross>summary::-webkit-details-marker{display:none}
+details.mehr.gross>summary::after{content:'+';font-size:22px;line-height:1;color:var(--cyan);transition:transform .2s}
+details.mehr.gross[open]>summary::after{transform:rotate(45deg)}
+details.mehr.gross[open]{padding-bottom:var(--sp-21)}
+/* Einblenden beim Scrollen wie Research/Breathwork (Jan 16.11.: „edler Effekt, einheitlich“) */
+.rv{opacity:0;transform:translateY(21px);transition:opacity .766s cubic-bezier(.2,.7,.2,1),transform .766s cubic-bezier(.2,.7,.2,1)}
+.rv.in{opacity:1;transform:none}
+@media(prefers-reduced-motion:reduce){.rv{opacity:1;transform:none;transition:none}}
 .beleg-bild{margin:var(--sp-21) 0 var(--sp-8);padding:var(--sp-8) var(--sp-8);
   border-radius:8px;background:rgba(255,255,255,.02);overflow:hidden}
 .beleg-bild svg{display:block;max-width:100%;height:auto}
@@ -1067,7 +1077,10 @@ h1,h2{text-wrap:balance}
       </div>
       <a class="btn ghost" href="assets/CARLON-Muster-Bericht.pdf" download>Muster-Bericht als PDF</a>
     </div>
-    <div class="grid">
+    
+  
+    <details class="mehr gross" data-spur-auf="mehr-was-im-cockpit-steht"><summary><span>Alle Funktionen der Akte im Überblick</span></summary>
+      <div class="grid">
       <div class="card">
         <h3>Abweichung mit Begründung</h3>
         <p>Vier Stufen von „im Eigenbereich“ bis „deutliche Abweichung“, immer mit dem Wert, aus dem sie folgen —
@@ -1106,6 +1119,7 @@ h1,h2{text-wrap:balance}
            LOINC-Codes für die Praxissoftware.</p>
       </div>
     </div>
+    </details>
   </div>
 </section>
 
@@ -1130,50 +1144,12 @@ h1,h2{text-wrap:balance}
       Atemmuster-Profil vergleicht zusätzlich mit festen Grenzen — und die sind aus den
       Gruppenmitteln einer Studie abgeleitet, nicht aus ihr übernommen (Nyerges-Bohák 2025).
     </p>
-    <p class="sec-lead" style="margin-top:var(--sp-21)">
-      Ein ruhendes Pferd zeigt oft lange Pausen zwischen zwei Herzschlägen — häufig ein AV-Block II°; was es ist, zeigt nur das EKG. Rechnet man
-      sie roh mit, steigen SDNN und RMSSD dramatisch, und die Kennwerte, die bei
-      <em>kleinen</em> Werten anschlagen, kippen ins Gegenteil.
-    </p>
-    <div class="evidenz" aria-label="Bezugsstudie des Atemmuster-Profils">
-      <a class="ev-cyan" href="https://doi.org/10.1111/evj.14414" target="_blank" rel="noopener">Nyerges-Bohák et al., Equine Vet J 57(3):611–618 (2025) · doi:10.1111/evj.14414</a>
-      <span>Equine Veterinary Journal</span>
-      <span>n = 40 · Vergleichsgruppen 20 / 20</span>
-      <span>DOI 10.1111/evj.14414</span>
-      <span>Schwellen: eigene Ableitung</span>
-    </div>
+    
+    
     <!-- Ohne .usps-Raster standen die drei Karten mit 0 px Abstand
          aufeinander — Kante an Kante, volle Seitenbreite. Dasselbe Raster
          wie in Abschnitt 2, damit die Karten-Sprache der Seite EINE ist. -->
-    <div class="usps">
-    <div class="usp">
-      <h3>Kein Kennwert ohne Signalgüte und Artefaktanteil</h3>
-      <p>AV-Block-Pausen, Bewegungs-Artefakte, unplausible Schläge — die Auswertung
-         erkennt und korrigiert sie, <strong>bevor</strong> ein Kennwert entsteht. Ob
-         eine Aufnahme aus der App kommt oder aus der Browser-Station: Sie bekommen
-         denselben, bereinigten Wert. Und wenn eine Datei die Kette nachweislich
-         <em>nicht</em> durchlaufen hat, steht das im Bericht — dann sind es rohe
-         Werte, und der Bericht sagt es, statt eine Bereinigung zu behaupten.
-         <a href="/carlon-equine/methodik.html">Jede Stufe mit ihrem Schwellenwert →</a></p>
-      <!-- DER BELEG ZUR BEHAUPTUNG (15.08.2026). Bewusst KEINE QA-Zahl ueber
-           unser Werkzeug (die 8/20 flog genau deshalb raus) — diese Zahl
-           beschreibt das PROBLEM, das ohne Bereinigung bleibt. Nachrechenbar:
-           app/belege/rmssd-nachrechnen.mjs rechnet 55,53 und 24,16 aus der
-           hinterlegten RR-Serie nach; die 130 % sind daraus ABGELEITET. -->
-    </div>
-    <div class="usp">
-      <h3>Unplausible Ausreißer werden erkannt, nicht übernommen</h3>
-      <p>Ungefiltert wirkt ein ruhendes Pferd systematisch auffälliger, als es ist.
-         Eine Übersicht, die zu oft Abweichungen zeigt, ist so wertlos wie eine, die keine zeigt —
-         deshalb wird erst bereinigt, dann verglichen. Damit eine Abweichung
-         auffällt, weil sie im Pferd liegt. Nicht in der Messung.</p>
-    </div>
-    <div class="usp">
-      <h3>Reicht Signalgüte oder Ruhedauer nicht, steht es dabei</h3>
-      <p>Zu wenige Schläge, zu kurz, zu viele Artefakte — dann steht „Datengrundlage zu
-         klein" und kein Urteil. Ein Werkzeug, das immer etwas sagt, ist kein Werkzeug.</p>
-    </div>
-    </div>
+    
 
     <!-- BREIT statt in der Spalte (15.08.2026): In der 330-px-Karte streckte
          das Bild alle drei Karten auf 734 px — zwei standen halb leer. Ueber
@@ -1225,6 +1201,50 @@ h1,h2{text-wrap:balance}
       <a class="cta-primary" href="/carlon-equine/app/?demo=board">Die Bereinigung an 15 Beispielpferden selbst prüfen →</a>
       <a class="btn btn-back" href="#preis">Zu den Tarifen ↓</a>
     </div>
+  
+    <details class="mehr gross" data-spur-auf="mehr-warum-die-zahlen-tragen"><summary><span>Die Methode im Detail: Filterkette, Atemmuster-Profil, Grenzen</span></summary>
+      <p class="sec-lead" style="margin-top:var(--sp-21)">
+      Ein ruhendes Pferd zeigt oft lange Pausen zwischen zwei Herzschlägen — häufig ein AV-Block II°; was es ist, zeigt nur das EKG. Rechnet man
+      sie roh mit, steigen SDNN und RMSSD dramatisch, und die Kennwerte, die bei
+      <em>kleinen</em> Werten anschlagen, kippen ins Gegenteil.
+    </p>
+      <div class="evidenz" aria-label="Bezugsstudie des Atemmuster-Profils">
+      <a class="ev-cyan" href="https://doi.org/10.1111/evj.14414" target="_blank" rel="noopener">Nyerges-Bohák et al., Equine Vet J 57(3):611–618 (2025) · doi:10.1111/evj.14414</a>
+      <span>Equine Veterinary Journal</span>
+      <span>n = 40 · Vergleichsgruppen 20 / 20</span>
+      <span>DOI 10.1111/evj.14414</span>
+      <span>Schwellen: eigene Ableitung</span>
+    </div>
+      <div class="usps">
+    <div class="usp">
+      <h3>Kein Kennwert ohne Signalgüte und Artefaktanteil</h3>
+      <p>AV-Block-Pausen, Bewegungs-Artefakte, unplausible Schläge — die Auswertung
+         erkennt und korrigiert sie, <strong>bevor</strong> ein Kennwert entsteht. Ob
+         eine Aufnahme aus der App kommt oder aus der Browser-Station: Sie bekommen
+         denselben, bereinigten Wert. Und wenn eine Datei die Kette nachweislich
+         <em>nicht</em> durchlaufen hat, steht das im Bericht — dann sind es rohe
+         Werte, und der Bericht sagt es, statt eine Bereinigung zu behaupten.
+         <a href="/carlon-equine/methodik.html">Jede Stufe mit ihrem Schwellenwert →</a></p>
+      <!-- DER BELEG ZUR BEHAUPTUNG (15.08.2026). Bewusst KEINE QA-Zahl ueber
+           unser Werkzeug (die 8/20 flog genau deshalb raus) — diese Zahl
+           beschreibt das PROBLEM, das ohne Bereinigung bleibt. Nachrechenbar:
+           app/belege/rmssd-nachrechnen.mjs rechnet 55,53 und 24,16 aus der
+           hinterlegten RR-Serie nach; die 130 % sind daraus ABGELEITET. -->
+    </div>
+    <div class="usp">
+      <h3>Unplausible Ausreißer werden erkannt, nicht übernommen</h3>
+      <p>Ungefiltert wirkt ein ruhendes Pferd systematisch auffälliger, als es ist.
+         Eine Übersicht, die zu oft Abweichungen zeigt, ist so wertlos wie eine, die keine zeigt —
+         deshalb wird erst bereinigt, dann verglichen. Damit eine Abweichung
+         auffällt, weil sie im Pferd liegt. Nicht in der Messung.</p>
+    </div>
+    <div class="usp">
+      <h3>Reicht Signalgüte oder Ruhedauer nicht, steht es dabei</h3>
+      <p>Zu wenige Schläge, zu kurz, zu viele Artefakte — dann steht „Datengrundlage zu
+         klein" und kein Urteil. Ein Werkzeug, das immer etwas sagt, ist kein Werkzeug.</p>
+    </div>
+    </div>
+    </details>
   </div>
 </section>
 
@@ -1275,13 +1295,17 @@ h1,h2{text-wrap:balance}
       und Fahrt ist diese Bedingung systematisch nicht erfüllt — in der eigenen Box ist sie
       es jeden Tag.
     </p>
-    <p class="sec-lead" style="margin-top:var(--sp-21)">
+    
+    
+  
+    <details class="mehr gross" data-spur-auf="mehr-warum-die-messung-in-den"><summary><span>Warum genau dort: Protokoll und Vergleichbarkeit</span></summary>
+      <p class="sec-lead" style="margin-top:var(--sp-21)">
       <strong>Gleiche Box, gleiche Zeit, gleiches Protokoll.</strong> Nur unter gewohnten
       Bedingungen sind zwei Aufnahmen vergleichbar. Zu Hause, wiederholt über Wochen, entsteht
       so ein Verlauf, der zeigt, wie sich die Ruhe-HRV dieses Pferds nach einer Umstellung in
       Haltung, Fütterung oder Training entwickelt — die Einordnung bleibt bei Ihnen.
     </p>
-    <div class="usps">
+      <div class="usps">
       <div class="usp">
       <h3>In der eigenen Box, zur gewohnten Zeit</h3>
       <p>Die Halterin legt den Gurt an, das Pferd steht wie immer. Kein Transport, keine
@@ -1303,6 +1327,7 @@ h1,h2{text-wrap:balance}
          entsteht der Verlauf, den eine Momentaufnahme nie liefern kann.</p>
     </div>
     </div>
+    </details>
   </div>
 </section>
 
@@ -1420,7 +1445,12 @@ h1,h2{text-wrap:balance}
       </figure>
     </div>
 
-    <div class="usps">
+    
+
+    
+  
+    <details class="mehr gross" data-spur-auf="mehr-die-messstation"><summary><span>Mehr zur Messstation: Datenweg, Datei, Datenschutz</span></summary>
+      <div class="usps">
       <div class="usp">
       <!-- Das strategische Argument der niedergelassenen Praxis: die
            Kundenbindung laeuft unter IHREM Namen, nicht unserem. Jede
@@ -1448,12 +1478,12 @@ h1,h2{text-wrap:balance}
          ab — nach unserer Einschätzung braucht es deshalb zwischen uns keinen Auftragsverarbeitungsvertrag.</p>
     </div>
     </div>
-
-    <p class="sec-lead" style="margin-top:40px">
+      <p class="sec-lead" style="margin-top:40px">
       Sie können die Station <strong>sofort selbst ausprobieren</strong> — auch ohne Gurt:
       sie spielt eine Ruheaufnahme ab.
       <a href="/carlon-equine/app/messen.html">Messstation öffnen →</a>
     </p>
+    </details>
   </div>
 </section>
 
@@ -1572,8 +1602,8 @@ h1,h2{text-wrap:balance}
          GOT-Summe (die Ziffern ja, die Betraege nie) und ohne erfundene
          Studienzahl: genannt wird nur, was die Praxis selbst nachrechnet. -->
     <p class="sec-lead" style="margin-top:var(--sp-21)">
-      Vergleichbare Systeme im Pferdesport rechnen <em>je Pferd</em> oder mit eigenem Sensor ab;
-      hier nutzen Sie einen handelsüblichen Polar-H10-Gurt. Testen Sie den ganzen Ablauf vorher
+      Kein eigener Sensor, keine Gebühr je Pferd:
+      Sie nutzen einen handelsüblichen Polar-H10-Gurt. Testen Sie den ganzen Ablauf vorher
       im Demo-Cockpit — ohne Konto.
     </p>
     <div class="gruender">
@@ -1729,12 +1759,16 @@ h1,h2{text-wrap:balance}
   <div class="wrap">
     <div class="eyebrow">Einordnung</div>
     <h2>Wofür CARLON gebaut ist — und wofür andere Werkzeuge da sind.</h2>
-    <div class="grid">
+    
+  
+    <details class="mehr gross" data-spur-auf="mehr-einordnung"><summary><span>Wofür andere Werkzeuge da sind</span></summary>
+      <div class="grid">
       <div class="card"><h3>Belastung im Training und Galopp</h3><p>Die Domäne spezialisierter Trainingssysteme mit eigenem Sensor am Sattelgurt.</p></div>
       <div class="card"><h3>Gangbild und Bewegung</h3><p>Die Domäne der Video- und Sensor-Ganganalyse.</p></div>
       <div class="card"><h3>Schneller Live-Puls am Telefon</h3><p>Dafür reicht die kostenlose App des Gurt-Herstellers.</p></div>
       <div class="card"><h3>Ruhe-HRV im eigenen Stall, als Verlauf</h3><p><strong>CARLON Equine:</strong> wiederholbare Aufnahmen gegen die eigene Vorgeschichte, AV-Pausen sauber getrennt, Auswertung im Browser, FHIR&nbsp;R5 — ein Preis für den Betrieb.</p></div>
     </div>
+    </details>
   </div>
 </section>
 
@@ -1815,8 +1849,8 @@ h1,h2{text-wrap:balance}
     <p class="sec-lead">
       Das Demo-Cockpit ist nicht ein Video und keine Bildstrecke, sondern die vollständige
       Anwendung. Öffnen Sie eine Akte, drehen Sie an den Ansichten, erstellen Sie einen
-      Messwertbericht. Ein Pferd im Bestand zeigt einen Abwärtsverlauf über vier Wochen — sehen Sie
-      selbst, ab wann er sichtbar wird.
+      Messwertbericht. Ein Demo-Pferd zeigt sinkende Werte über vier Wochen — so sieht
+      ein Verlauf im Cockpit aus.
     </p>
     <div class="cta-row">
       <a class="cta-primary" href="/carlon-equine/app/">Cockpit mit 15&nbsp;Demo-Pferden öffnen →</a>
@@ -2086,9 +2120,20 @@ if(window.goatcounter&&goatcounter.count)goatcounter.count({path:'visite-live-ak
 <script>
 /* Mitlaufende Leiste (C6 Fable: „kein mitlaufender Knopf“) – erscheint, sobald der Kopf verlassen ist, verschwindet am Preis-Abschnitt. */
 (function(){var l=document.getElementById('leiste'),k=document.querySelector('.hero'),p=document.getElementById('preis');if(!l||!k||!('IntersectionObserver' in window))return;
-var imKopf=true,amPreis=false,f=function(){l.hidden=imKopf||amPreis;};
+var imKopf=true,amPreis=false,b=l.querySelector('.leiste-b'),b2=l.querySelector('.leiste-b2'),de=(document.documentElement.lang||'de').indexOf('en')!==0,kauf=false,f=function(){l.hidden=imKopf||amPreis;};
+addEventListener('scroll',function(){var h=document.documentElement,jetzt=(h.scrollTop+innerHeight/2)>h.scrollHeight*0.5;if(jetzt===kauf)return;kauf=jetzt;
+ if(kauf){b.textContent=de?'Praxis-Abo wählen · 149 € →':'Choose practice plan · €149 →';b.href='/carlon-equine/app/?kasse=praxis';b2.textContent='Demo';b2.href='/carlon-equine/app/?demo=today';}
+ else{b.textContent=de?'Demo öffnen →':'Open demo →';b.href='/carlon-equine/app/?demo=today';b2.textContent=de?'Tarife':'Plans';b2.href='#preis';}},{passive:true});
 new IntersectionObserver(function(e){imKopf=e[0].isIntersecting;f();}).observe(k);
 if(p)new IntersectionObserver(function(e){amPreis=e[0].isIntersecting;f();},{threshold:.15}).observe(p);})();
+</script>
+<script>
+(function(){var sel='section h2,section .sec-lead,.feature,.shots,.gurt-block,.pz-block,.beleg-breit,.tarif,.faq-liste,details.mehr.gross,.geraete';
+var els=[].slice.call(document.querySelectorAll(sel)).filter(function(e){return !e.closest('.hero')&&!e.closest('.rv')});
+if(!('IntersectionObserver' in window)||matchMedia('(prefers-reduced-motion: reduce)').matches)return;
+els.forEach(function(e){var b=e.getBoundingClientRect();if(b.top>innerHeight)e.classList.add('rv');});
+var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);}});},{rootMargin:'0px 0px -8% 0px'});
+els.forEach(function(e){if(e.classList.contains('rv'))io.observe(e);});})();
 </script>
 </body>
 </html>

@@ -7742,7 +7742,7 @@ const Report={
       <div class="pr-stats" style="grid-template-columns:repeat(4,1fr)">
         ${lang17?st('LF','ms²',bd.lf):''}${st('HF','ms²',bd.hf)}<div class="pr-stat"><div class="k">Hinweis</div><div style="font-size:11px;line-height:1.4;color:#5a7080">${lang17?'':'LF erst ab 17 min, VLF ab mehreren Stunden – hier nicht berichtet. '}HF bis ${psd&&psd.fN?fmt2(psd.fN):'0,6'} Hz (halbe Schlagfrequenz).</div></div>
       </div>`:''}
-      ${rec.rr&&rec.rr.length>4?`<h2>Poincaré — Herzschlag-Streuung (SD1/SD2)</h2><div class="pr-chart-box" style="display:flex;justify-content:center">${Chart.poincare(rec.rr,{size:300,sd1:m.sd1,sd2:m.sd2})}</div>`:''}
+      ${rec.rr&&rec.rr.length>4?`<h2>Poincaré — Herzschlag-Streuung (SD1/SD2)</h2><div class="pr-chart-box" style="display:flex;justify-content:center">${Chart.poincare(rec.rr,{size:600,sd1:m.sd1,sd2:m.sd2})}</div>`:''}
       <h2>Tierärztliche Einschätzung</h2>
       <div class="pr-assess">${d.assess?esc(d.assess).replace(/\n/g,'<br>'):'<i style="color:#8a9aa8">— bitte ergänzen —</i>'}</div>
       ${(d.recom||d.next)?`<h2>Empfehlung</h2><div class="pr-assess">${d.recom?esc(d.recom).replace(/\n/g,'<br>'):''}${nextTxt}</div>`:''}

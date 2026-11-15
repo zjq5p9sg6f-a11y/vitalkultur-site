@@ -619,13 +619,13 @@ tausche(`
 tausche(`
       Das Demo-Cockpit ist nicht ein Video und keine Bildstrecke, sondern die vollständige
       Anwendung. Öffnen Sie eine Akte, drehen Sie an den Ansichten, erstellen Sie einen
-      Messwertbericht. Ein Pferd im Bestand zeigt einen Abwärtsverlauf über vier Wochen — sehen Sie
-      selbst, ab wann er sichtbar wird.
+      Messwertbericht. Ein Demo-Pferd zeigt sinkende Werte über vier Wochen — so sieht
+      ein Verlauf im Cockpit aus.
     `,
         `
       The demo cockpit is not a video and not a slideshow, but the complete application.
       Open a record, work the views, create a measurement report. One horse in the list shows a
-      downward trend over four weeks — see for yourself from when it becomes visible.
+      downward trend over four weeks — this is what a trend looks like in the cockpit.
     `);
 tausche(`Nein. CARLON bereitet Verlaufsdaten auf und hilft bei der Reihenfolge. Ob eine
            klinische Untersuchung, weitere Diagnostik oder eine Behandlung nötig ist,
@@ -745,11 +745,11 @@ tausche('>Muster-Bericht als PDF<', '>Sample report (PDF)<');
 /* Die Nutzen-Schwelle vor dem Preis (15.08.2026). GOT-Ziffern bleiben
    auch auf Englisch stehen — sie sind der deutsche Gebuehrenrahmen und
    werden nicht uebersetzt, nur erklaert. */
-tausche(`Vergleichbare Systeme im Pferdesport rechnen <em>je Pferd</em> oder mit eigenem Sensor ab;
-      hier nutzen Sie einen handelsüblichen Polar-H10-Gurt. Testen Sie den ganzen Ablauf vorher
+tausche(`Kein eigener Sensor, keine Gebühr je Pferd:
+      Sie nutzen einen handelsüblichen Polar-H10-Gurt. Testen Sie den ganzen Ablauf vorher
       im Demo-Cockpit — ohne Konto.`,
-        `Comparable systems in equine sport bill <em>per horse</em> or with their own sensor;
-      here you use an off-the-shelf Polar H10 strap. Try the whole workflow first
+        `No proprietary sensor, no fee per horse:
+      you use an off-the-shelf Polar H10 strap. Try the whole workflow first
       in the demo cockpit — no account.`);
 
 tausche('<div class="tarif-preis"><b>149&nbsp;€</b> <span>netto im Monat · USt. weist Stripe aus</span></div>',
@@ -860,6 +860,11 @@ tausche(`Nein. CARLON sendet keine Alarme, und die Halterin sieht keine Einstufu
 tausche('"text": "Nein. CARLON sendet keine Alarme, und die Halterin sieht keine Einstufung — die entsteht erst in Ihrem Cockpit, wenn Sie es öffnen. Eine zugeschickte Datei ist eine Zusendung wie eine E-Mail: Wann Sie sie sichten, bestimmen Sie und kommunizieren es wie bisher. Für den Notfall gilt, was immer gilt: der Anruf."',
         '"text": "No. CARLON sends no alerts, and the owner sees no classification — it only comes into being in your cockpit, when you open it. A file sent to you is a delivery like an email: when you review it is up to you, communicated to your clients as before. For emergencies, what has always applied still applies: the phone call."');
 tausche('Woher kommt die Baseline?', 'Where does the baseline come from?', 2);
+tausche('<span>Alle Funktionen der Akte im Überblick</span>', '<span>All horse-record features at a glance</span>');
+tausche('<span>Wofür andere Werkzeuge da sind</span>', '<span>What other tools are for</span>');
+tausche('<span>Die Methode im Detail: Filterkette, Atemmuster-Profil, Grenzen</span>', '<span>The method in detail: filter chain, breathing-pattern profile, limits</span>');
+tausche('<span>Warum genau dort: Protokoll und Vergleichbarkeit</span>', '<span>Why exactly there: protocol and comparability</span>');
+tausche('<span>Mehr zur Messstation: Datenweg, Datei, Datenschutz</span>', '<span>More on the measuring station: data path, file, privacy</span>');
 tausche(`Betreuung, die nicht an der Stalltür endet: Die Halterin misst die Ruhe-HRV im Stall mit dem Polar H10, Ihre Praxis sieht die Abweichung von der eigenen Basis des Pferds samt Signalgüte – im Browser, ohne Konto, kein Medizinprodukt. Ab 149 € netto im Monat.`, `Care that doesn’t end at the stable door: the owner records resting HRV in the stable with a Polar H10, your practice sees the deviation from the horse’s own baseline with signal quality – in the browser, no account, not a medical device. From €149 net per month.`, 2);
 tausche(`
     <table class="geraete">
