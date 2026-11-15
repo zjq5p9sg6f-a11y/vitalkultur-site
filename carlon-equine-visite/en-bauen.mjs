@@ -120,25 +120,16 @@ tausche('CARLON Equine Visite · für Tierärztinnen und Tierärzte',
 /* Dieselbe Zeile wie in der og:description — Identitaet, nicht Funktion. */
 tausche(`Ruhe-HRV aus dem eigenen Stall. Jedes Pferd im Vergleich mit sich selbst.`,
         `Resting HRV from the home stable. Each horse compared with itself.`);
-tausche(`Die Halterin nimmt im Stall in Ruhe auf, die Aufnahme kommt verschlüsselt zu Ihnen.
-      Vor dem Besuch sehen Sie, wie gut die Aufnahme ist und wie weit die Ruhe-HRV von
-      <strong>der eigenen</strong> Vorgeschichte dieses Pferds abweicht — und planen Ihre
-      Tour nach Strecke, Termin oder Ihrer eigenen Sortierung.`,
-        `The owner records in the stable at rest, and the recording reaches you encrypted.
-      Before the visit you see how good the recording is and how far the resting HRV deviates from
-      <strong>this horse’s own</strong> history — and plan your round by distance, appointment
-      or your own order.`);
+tausche(`Die Halterin misst im Stall. Sie sehen vor dem Besuch, <strong>wie weit dieses Pferd von seiner eigenen Basis abweicht</strong> – und wie verlässlich die Aufnahme ist.`,
+        `The owner records in the stable. Before the visit you see <strong>how far this horse deviates from its own baseline</strong> – and how reliable the recording is.`);
 tausche('Cockpit mit 15&nbsp;Demo-Pferden öffnen →', 'Open the cockpit with 15&nbsp;demo horses →', 2);
 tausche('>Preise &amp; Freischaltung · ab 149&nbsp;€ netto/Monat<', '>Pricing &amp; activation · from €149 net/month<');
-tausche('Das Demo-Cockpit ist die vollständige Anwendung mit vollständigen Beispielverläufen — ohne Konto, ohne Installation. Nichts davon verlässt Ihren Browser von selbst.',
-        'The demo cockpit is the complete application with full example trends — no account, no installation. None of it leaves your browser on its own.');
+tausche('Ohne Konto, ohne Installation · Daten bleiben in Ihrem Browser · monatlich kündbar.',
+        'No account, no installation · data stays in your browser · cancel monthly.');
 /* Hero-Belege + Visual (13.08.: φ-Split-Kopf) */
-tausche('<li><b>Gemessen im Stall,</b> in Ruhe — gegen die eigene Baseline dieses Pferds.</li>',
-        '<li><b>Recorded in the stable,</b> at rest — against this horse’s own baseline.</li>');
-tausche(`<li><b>Ausgewertet in Ihrem Browser</b> — Pferdedaten erreichen uns nicht — nach unserer Einschätzung ist deshalb kein AVV mit uns nötig.</li>`,
-        `<li><b>Analysed in your browser</b> — horse data never reaches us; in our assessment no data processing agreement with us is therefore needed.</li>`);
-tausche(`<li><b>Nachvollziehbar</b> — roher und bereinigter Wert nebeneinander, mit Signalgüte und Methodenversion.</li>`,
-        `<li><b>Traceable</b> — raw and cleaned value side by side, with signal quality and method version.</li>`);
+
+
+
 tausche('title="Demo-Cockpit öffnen"', 'title="Open the demo cockpit"');
 tausche(`alt="Pferde-Akte im Cockpit: Kernwerte RMSSD, Ruhe-HF, SDNN und DFA gegen die eigene Vorgeschichte des Pferds, mit Signalgüte und Verlauf"`,
         `alt="Horse record in the cockpit: key values RMSSD, resting HR, SDNN and DFA against the horse’s own history, with signal quality and trend"`);
