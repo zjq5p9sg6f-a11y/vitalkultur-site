@@ -2249,6 +2249,7 @@ const State = {
     // Tagebuch-Einträge liegen im settings-Store mit id-Präfix "log:" (kein Migrations-Bedarf)
     this.daylog=(await DB.all('settings')).filter(r=>r.id&&r.id.indexOf('log:')===0);
     const s=await DB.get('settings','app'); if(s) this.settings={...this.settings,...s.data};
+    if(typeof Neuauswertung!=='undefined') Neuauswertung.alle(this.recordings);   // erst Kennwerte aus der Rohserie, dann Einstufung
     if(typeof Baseline!=='undefined') Baseline.triageAuffrischen();
   },
   async saveSettings(){await DB.put('settings',{id:'app',data:this.settings});},
@@ -2719,6 +2720,61 @@ const Baseline={
   },
 };
 
+/* ════════════════════════════════════════════════════════════════════════
+   NEUAUSWERTUNG – Verbesserungen wirken rückwirkend (15.11.2026, Jan: „dass im Nachhinein
+   Verbesserungen sich immer rückwirkend auf alles auswirken“).
+   Die Rohserie (alle Schlagabstände) bleibt unangetastet gespeichert. Bei JEDEM Laden rechnet
+   das Cockpit die Kennwerte mit der aktuellen Filterkette (hrv-vorstufe.js = Port von
+   EquineFilterPipeline.swift, Eichung t-vorstufe-eichung.mjs) neu – nur im Speicher, nie
+   überschrieben. Neue Methode ⇒ beim nächsten Öffnen tragen ALLE Aufnahmen sie.
+   Die Werte vom Import bleiben als `metricsImport` erhalten (Vergleich, Nachvollziehbarkeit).
+   Nicht neu gerechnet: verdichtete Altaufnahmen (vor 05.11.2026 über 2000 Schläge, jeder n-te
+   Schlag) und Reihen, an denen ein Riegel greift (zu kurz, zu viele Artefakte) – dort bleibt
+   der Importwert mit seinem Herkunftsvermerk stehen.
+   ════════════════════════════════════════════════════════════════════════ */
+const Neuauswertung={
+  /* Rechenkosten (gemessen 15.11.): ~3 ms je 420 Schläge, ~19 ms je 2100. Darum: Ergebnis je Aufnahme
+     MIT Methodenversion an der Aufnahme gespeichert (`neuauswertung.werte`). Gleiche Version ⇒ sofort
+     übernommen; neue Version ⇒ im Hintergrund in Häppchen neu gerechnet, gespeichert, Ansicht erneuert. */
+  version(){ return (typeof HRVVorstufe!=='undefined'&&HRVVorstufe.VERSION)||null; },
+  _rechnen(rec,ver){
+    let v=null; try{ v=HRVVorstufe.analysiere(rec.rr)||null; }catch(e){ v=null; }
+    if(!v) return {status:'riegel',version:ver,n:rec.rr.length};
+    const r=x=>(x!=null&&isFinite(x))?Math.round(x*100)/100:null;
+    return {status:'neu',version:ver,n:rec.rr.length,werte:{rmssd:r(v.rmssdMs),sdnn:r(v.sdnnMs),meanHR:r(v.meanHrBpm),
+      sd1:r(v.sd1Ms),sd2:r(v.sd2Ms),sd2sd1:r(v.sd2sd1Ratio),pnn50:r(v.pnn50Pct),lfhf:r(v.lfHfRatio),
+      dfa:v.nichtlineareBelastbar?r(v.dfaAlpha1):null,artifactPct:r(v.artefaktRatePct),avBlock:v.avBlockCount!=null?v.avBlockCount:null}};
+  },
+  _uebernehmen(rec){
+    const na=rec.neuauswertung; if(!na||na.status!=='neu'||!na.werte) return false;
+    const m0=rec.metricsImport||(rec.metricsImport={...(rec.metrics||{})}); const w=na.werte, P='cockpit-corrected';
+    const o=(k)=>w[k]!=null?w[k]:m0[k];
+    rec.metrics={...m0,rmssd:o('rmssd'),sdnn:o('sdnn'),meanHR:o('meanHR'),sd1:o('sd1'),sd2:o('sd2'),sd2sd1:o('sd2sd1'),
+      pnn50:o('pnn50'),lfhf:o('lfhf'),dfa:w.dfa!=null?w.dfa:m0.dfa,artifactPct:o('artifactPct'),avBlock:o('avBlock'),
+      provenance:{...(m0.provenance||{}),rmssd:P,sdnn:P,meanHR:P,sd1:P,sd2:P,...(w.dfa!=null?{dfa:P}:{})},uncorrected:false};
+    return true;
+  },
+  geeignet(rec){ const rr=rec&&rec.rr; if(!Array.isArray(rr)||rr.length<30) return false;
+    if(rec.beatCount&&rr.length<rec.beatCount){ rec.neuauswertung={status:'verdichtet'}; return false; } return true; },
+  alle(recs){
+    const ver=this.version(); if(!ver) return null; const offen=[]; let n=0;
+    for(const rec of recs||[]){ if(!this.geeignet(rec)) continue;
+      const na=rec.neuauswertung;
+      if(na&&na.version===ver&&na.n===rec.rr.length){ if(this._uebernehmen(rec)) n++; } else offen.push(rec); }
+    this.letzter={aktuell:n,offen:offen.length,gesamt:(recs||[]).length,version:ver};
+    // Die jüngste Aufnahme je Pferd sofort (die steht auf jeder Karte), den Rest im Hintergrund.
+    const juengste=new Set(); const je={}; for(const r of offen){ const a=je[r.horseId]; if(!a||new Date(r.startedAt)>new Date(a.startedAt)) je[r.horseId]=r; }
+    for(const r of Object.values(je)){ r.neuauswertung=this._rechnen(r,ver); this._uebernehmen(r); juengste.add(r); }
+    const rest=offen.filter(r=>!juengste.has(r)); const geaendert=[...juengste];
+    const schritt=()=>{ const t=performance.now(); while(rest.length&&performance.now()-t<12){ const r=rest.shift(); r.neuauswertung=this._rechnen(r,ver); this._uebernehmen(r); geaendert.push(r); }
+      if(rest.length) return setTimeout(schritt,0);
+      // gespeichert wird nur der Rechenstand (Rohserie und Importwerte bleiben unverändert)
+      (async()=>{ for(const r of geaendert){ try{ await DB.put('recordings',r); }catch(e){} }
+        try{ if(typeof Baseline!=='undefined') Baseline.triageAuffrischen(); if(geaendert.length>juengste.size&&typeof Nav!=='undefined'&&Nav.refresh) Nav.refresh(); }catch(e){} })(); };
+    if(offen.length) setTimeout(schritt,0);
+    return this.letzter;
+  },
+};
 /* ════════════════════════════════════════════════════════════════════════
    ASTHMA — equine-spezifische Atemwegs-Beobachtung auf HRV-Basis
    Nutzt App-eigenen Random-Forest-Score (Nyerges-Bohák 2025) wenn vorhanden;
@@ -6726,7 +6782,7 @@ const Handoff={
          (PMID 30871832): 2°-AV-Block ist eine physiologische Arrhythmie,
          die unter Belastung verschwindet. Genau das tut unsere Stufe 4.
          NIEMALS "van Loon 2017" — diese Arbeit existiert nicht. */
-      methKette:'Die Kennwerte wurden von der aufzeichnenden CARLON-App berechnet und dort durch die equine Filterkette geführt: Plausibilitätsprüfung, T-Wellen-Zusammenführung, Artefaktkorrektur nach Lipponen &amp; Tarvainen (2019, equine adaptiert), Reklassifikation des physiologischen AV-Blocks II° nach van Loon (2019, Vet Clin North Am Equine Pract 35:85–102) und Kubios-Spline.',
+      methKette:'Die Kennwerte sind aus der vollständigen Rohserie mit der equinen Filterkette berechnet (aktuelle Methodenversion, bei jedem Öffnen neu; App und Cockpit identisch geeicht): Plausibilitätsprüfung, T-Wellen-Zusammenführung, Artefaktkorrektur nach Lipponen &amp; Tarvainen (2019, equine adaptiert), Reklassifikation des physiologischen AV-Blocks II° nach van Loon (2019, Vet Clin North Am Equine Pract 35:85–102) und Kubios-Spline.',
       methRoh:'Diese Aufnahme enthielt keine von der App berechneten Kennwerte. Die mit † markierten Werte wurden hier aus der Rohserie der RR-Intervalle abgeleitet — ohne Artefaktkorrektur und ohne AV-Block-Reklassifikation. Der physiologische AV-Block II° ist beim ruhenden Pferd häufig (van Loon 2019) und hebt RMSSD und SDNN erheblich an; an echten Aufnahmen wurden bis zu +130 % gemessen. Diese Werte nicht gegen Referenzwerte oder eine Baseline stellen.',
       methUnklar:'Für diese Aufnahme ist nicht vermerkt, ob die Kennwerte von der aufzeichnenden App berechnet oder hier aus der Rohserie abgeleitet wurden. Ohne diesen Nachweis wird die Filterkette hier nicht behauptet. Der physiologische AV-Block II° ist beim ruhenden Pferd häufig (van Loon 2019) und hebt RMSSD und SDNN deutlich an, wenn er nicht korrigiert wurde.',
       methBand:'Frequenzbänder nach Visser (2002), nicht human. Nicht-stationäre Kennwerte werden bewusst nicht berechnet.',
@@ -6752,7 +6808,7 @@ const Handoff={
       handA:'Save FHIR bundle',
       methT:'Method &amp; limits.',
       methGeraet:'Recorded with a Polar H10 (RR intervals).',
-      methKette:'The metrics were computed by the recording CARLON app and passed through its equine filter chain there: plausibility check, T-wave merging, artefact correction after Lipponen &amp; Tarvainen (2019, adapted for the horse), reclassification of physiological second-degree AV block after van Loon (2019, Vet Clin North Am Equine Pract 35:85–102), and Kubios spline interpolation.',
+      methKette:'The metrics are computed from the complete raw series with the equine filter chain (current method version, recomputed on every opening; app and cockpit calibrated identically): plausibility check, T-wave merging, artefact correction after Lipponen &amp; Tarvainen (2019, adapted for the horse), reclassification of physiological second-degree AV block after van Loon (2019, Vet Clin North Am Equine Pract 35:85–102), and Kubios spline interpolation.',
       methRoh:'This recording contained no metrics computed by the app. Values marked † were derived here from the raw RR series — without artefact correction and without AV-block reclassification. Second-degree AV block is a frequent physiological finding in the resting horse (van Loon 2019) and raises RMSSD and SDNN considerably; up to +130 % has been measured on real recordings. Do not compare these values against reference ranges or a baseline.',
       methUnklar:'For this recording it is not documented whether the metrics were computed by the recording app or derived here from the raw series. Without that evidence the filter chain is not claimed here. Second-degree AV block is a frequent physiological finding in the resting horse (van Loon 2019) and raises RMSSD and SDNN considerably when left uncorrected.',
       methBand:'Frequency bands after Visser (2002), not human ones. Non-stationary metrics are deliberately not computed.',
@@ -7121,7 +7177,7 @@ const FHIR={
 
     // Device — Sensor UND Methode maschinenlesbar. Der Standard dokumentiert
     // damit selbst, wie belastbar er ist.
-    const DEV_KORR='Artefakt-Korrektur nach Lipponen-Tarvainen 2019 (equine-adaptiert), durchgeführt von der aufzeichnenden App. ';
+    const DEV_KORR='Artefakt-Korrektur nach Lipponen-Tarvainen 2019 (equine-adaptiert), Filterkette '+((typeof Neuauswertung!=='undefined'&&Neuauswertung.version())||'equine-v1')+' – aus der Rohserie berechnet (App und Cockpit identisch geeicht). ';
     const DEV_ROH='KEINE Artefaktkorrektur (none_raw_series_v1): die als solche gekennzeichneten Kennwerte wurden hier aus der Rohserie abgeleitet. Beim ruhenden Pferd hebt der physiologische AV-Block II° (van Loon 2019) RMSSD erheblich an — an echten Aufnahmen +130 bis +177 %. Diese Werte nicht gegen Referenzbereiche oder eine Baseline stellen. ';
     const DEV_UNKLAR='Für diese Aufnahme ist nicht dokumentiert, ob und wie Artefakte korrigiert wurden; es wird hier kein Verfahren behauptet. ';
     entries.push({resource:{ resourceType:'Device', id:'carlon-pipeline',
