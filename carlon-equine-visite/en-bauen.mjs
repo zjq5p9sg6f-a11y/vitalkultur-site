@@ -417,11 +417,11 @@ tausche('Nichts läuft über uns', 'Nothing passes through us');
 tausche(`Öffnet Ihre Kundin Ihren Mess-Link, ist die Datei schon auf ihrem Gerät
          <strong>gegen Ihren Schlüssel verschlüsselt</strong>. Sie verschickt sie über den
          Weg, den sie selbst wählt. Wir bekommen sie nicht zu sehen und legen sie nirgends
-         ab — deshalb braucht es zwischen uns keinen Auftragsverarbeitungsvertrag.`,
+         ab — nach unserer Einschätzung braucht es deshalb zwischen uns keinen Auftragsverarbeitungsvertrag.`,
         `The moment your client opens your measuring link, the file is already encrypted
          <strong>against your key</strong> on her device. She sends it by whatever route she
-         chooses. We never see it and store it nowhere — which is why no data processing
-         agreement is needed between us.`);
+         chooses. We never see it and store it nowhere — in our assessment, therefore, no data
+         processing agreement is needed between us.`);
 tausche('RR-Tachogramm und Atemkurve — dieselben Rohdaten, die Sie danach im Cockpit auswerten.',
         'RR tachogram and breathing curve — the same raw data you then analyse in the cockpit.');
 tausche('Ein Tipp öffnet das Teilen-Blatt ihres Telefons. Der Satz darunter ist die ganze Datenschutz-Zusage.',
@@ -899,7 +899,7 @@ tausche(`    <figure class="gurt-block">
         <div class="sec-eyebrow">Der Sensor</div>
         <h3>Polar H10 mit Equine-Gurt: elektrisch gemessen, wie ein EKG.</h3>
         <ul class="gurt-liste">
-          <li><b>Echte R-Zacken statt Lichtpuls.</b> Der H10 misst die elektrische Herzaktivität und liefert jeden Schlagabstand mit rund 1&nbsp;ms Auflösung (1/1024&nbsp;s) – optische Sensoren schätzen ihn aus Licht.</li>
+          <li><b>R-Zacken statt Lichtpuls.</b> Der H10 misst die elektrische Herzaktivität und liefert jeden Schlagabstand mit rund 1&nbsp;ms Auflösung (1/1024&nbsp;s) – optische Sensoren schätzen ihn aus Licht.</li>
           <li><b>Für den Pferdekörper gemacht.</b> Der Equine-Gurt ist auf den Brustumfang des Pferds ausgelegt; Elektrodengel auf dem Fell senkt die Fell-Impedanz – so entsteht ein sauberes Signal.</li>
           <li><b>Am stärksten in Ruhe.</b> Genau dort, wo Visite misst: in der eigenen Box, ohne Bewegung.</li>
           <li><b>Frei erhältlich.</b> Kein Gerät von uns, keine Bindung – Ersatz bekommen Sie am selben Tag.</li>
@@ -917,7 +917,7 @@ tausche(`    <figure class="gurt-block">
         <div class="sec-eyebrow">The sensor</div>
         <h3>Polar H10 with the Equine belt: measured electrically, like an ECG.</h3>
         <ul class="gurt-liste">
-          <li><b>Real R-waves, not a light pulse.</b> The H10 measures the heart’s electrical activity and delivers every beat interval at about 1&nbsp;ms resolution (1/1024&nbsp;s) – optical sensors estimate it from light.</li>
+          <li><b>R-waves, not a light pulse.</b> The H10 measures the heart’s electrical activity and delivers every beat interval at about 1&nbsp;ms resolution (1/1024&nbsp;s) – optical sensors estimate it from light.</li>
           <li><b>Made for the horse’s body.</b> The Equine belt is sized for the horse’s girth; electrode gel on the coat lowers the coat impedance – that gives a clean signal.</li>
           <li><b>Strongest at rest.</b> Exactly where Visite measures: in the horse’s own stall, without movement.</li>
           <li><b>Freely available.</b> Not our device, no lock-in – you get a replacement the same day.</li>
