@@ -1669,6 +1669,8 @@ svg.viz .sd-lbl{fill:var(--cyan-strong);font-size:10px;font-weight:600;font-fami
   #printArea h1{font-family:var(--font-brand);font-size:26px;color:#04303a;margin-bottom:2px}
   #printArea h2{font-size:14px;color:#00867a;margin:22px 0 10px;border-bottom:1px solid #d5e2e8;padding-bottom:5px;text-transform:uppercase;letter-spacing:.06em}
   #printArea .sub{color:#5a7080;font-size:13px;margin-bottom:18px}
+  .pr-stat,.pr-chart-box,.pr-assess,table tr{break-inside:avoid;page-break-inside:avoid}
+  #printArea h2{break-after:avoid;page-break-after:avoid}
   .pr-tri{display:inline-block;padding:5px 14px;border-radius:8px;font-weight:700;font-size:13px}
   .pr-tri.crit{background:#ffe3e6;color:#c1121f} .pr-tri.elev{background:#fff2d9;color:#b3760a}
   .pr-tri.watch{background:#dbf7f2;color:#00867a} .pr-tri.stable{background:#dcf5e8;color:#1a7f52}
@@ -7718,7 +7720,8 @@ const Report={
       <div style="font-size:11px;color:#5a7080;margin-top:6px">Stufen ab −20 / −35 / −50 % RMSSD gegen die eigene Basis · beschreibt Messwerte, keine Aussage über den Gesundheitszustand</div>
       ${base?`<div style="font-size:12px;color:#5a7080;margin-top:8px">${esc(base)}</div>`:''}
       <h2>Messwerte — ${fmtDate(rec.startedAt,true)}</h2>
-      ${rr.length?`<div style="font-size:12px;color:#5a7080;margin:-6px 0 12px">Ausgewertet: ${rr.length} Schläge · ${fmt1(dauerMin)} min aus der Rohserie${m.artifactPct!=null?' · Artefakte '+fmt1(m.artifactPct)+' %':''}${m.avBlock!=null?' · AV-Block-Pausen '+m.avBlock:''}</div>`:''}
+      ${rec.kontext?`<div style="font-size:12px;color:#5a7080;margin:-6px 0 4px">Aufnahmeprotokoll: ${[rec.kontext.umgebung,rec.kontext.vorbedingung].filter(Boolean).map(x=>({eigene_box:'eigene Box',anbindeplatz:'Anbindeplatz',fremder_stall:'fremder Stall',ruhe_2h:'≥ 2 h ohne Arbeit',nach_bewegung:'nach Bewegung',beim_fressen:'beim Fressen'})[x]||x).map(esc).join(' · ')}${rec.device&&rec.device.model?' · Sensor '+esc(rec.device.model):''}</div>`:''}
+      ${rr.length?`<div style="font-size:12px;color:#5a7080;margin:-6px 0 12px">Ausgewertet: ${rr.length} Schläge · ${fmt1(dauerMin)} min aus der Rohserie${m.artifactPct!=null?' · Artefakte '+fmt1(m.artifactPct)+' %':''}${m.avBlock!=null?' · lange Pausen '+m.avBlock:''}</div>`:''}
       <div class="pr-stats">
         ${st('RMSSD','ms',m.rmssd,Views.clsRMSSD(m.rmssd))}
         ${st('Ruhe-HF','/min',m.meanHR,Views.clsHR(m.meanHR))}
@@ -7730,9 +7733,10 @@ const Report={
         ${st('SD2/SD1','',m.sd2sd1,null,2)}${st('SampEn (m=2, r=0,2·SD; explorativ)','',se,null,2)}
         ${lang20?st('TINN','ms',tt?tt.tinn:null)+st('Tri-Index','',tt?tt.triIndex:null,null,true):''}
         ${lang17?st('LF/HF','',lfhf,null,2):''}
-        ${st('Artefakt','%',m.artifactPct,null,true)}${st('AV-Block','',m.avBlock)}
+        ${st('Artefakte','%',m.artifactPct,null,true)}${st('Lange Pausen','',m.avBlock)}
         ${st('Signalqualität','',m.quality)}
       </div>
+      ${rr.length>20?`<h2>RR-Tachogramm — jeder Schlagabstand der Aufnahme</h2><div class="pr-chart-box">${Chart.tachogram(rr,{w:720,h:200})}</div>`:''}
       ${psd?`<h2>Frequenzspektrum — Lomb-Scargle (equine Bänder)</h2>
       <div class="pr-chart-box">${HRV.psdChart(psd,{w:720,h:210})}</div>
       <div class="pr-stats" style="grid-template-columns:repeat(4,1fr)">
@@ -7745,7 +7749,7 @@ const Report={
       ${recs.length>1?`<h2>Langzeitverlauf RMSSD (ms) · Band = eigene Basis ±20 %</h2><div class="pr-chart-box">${Chart.line(series,{color:'#00b8a0',w:720,h:190,unit:'ms',yMin:0,yMax:Baseline.wert(h)?Baseline.wert(h)*1.3:null,band:Baseline.wert(h)?[Baseline.wert(h)*0.8,Baseline.wert(h)*1.2]:null})}</div>`:''}
       <h2>Aufnahme-Historie (${recs.length})</h2>
       <table><thead><tr><th>Datum</th><th>Dauer</th><th>RMSSD</th><th>Ruhe-HF</th><th>SDNN</th><th>Einstufung</th></tr></thead>
-      <tbody>${recs.slice().reverse().slice(0,10).map(r=>`<tr><td>${fmtDate(r.startedAt,true)}</td><td>${r.durationSec?Math.round(r.durationSec/60)+' Min':'—'}</td><td>${fmt0(r.metrics.rmssd)} ms</td><td>${fmt0(r.metrics.meanHR)} bpm</td><td>${fmt0(r.metrics.sdnn)} ms</td><td>${Triage.LEVELS[r.triage.level].label}</td></tr>`).join('')}</tbody></table>
+      <tbody>${recs.slice().reverse().slice(0,10).map(r=>`<tr><td>${fmtDate(r.startedAt,true)}</td><td>${(Array.isArray(r.rr)&&r.rr.length>20&&!Views.verdichtet(r))?fmt1(r.rr.reduce((a,b)=>a+b,0)/60000)+' min':(r.durationSec?Math.round(r.durationSec/60)+' min':'—')}</td><td>${fmt0(r.metrics.rmssd)} ms</td><td>${fmt0(r.metrics.meanHR)} bpm</td><td>${fmt0(r.metrics.sdnn)} ms</td><td>${Triage.LEVELS[r.triage.level].label}</td></tr>`).join('')}</tbody></table>
       ${viralFoot}
       <div class="pr-foot">
         <b>Methoden:</b> Kennwerte aus der vollständigen Rohserie, Methodenversion ${esc((typeof Neuauswertung!=='undefined'&&Neuauswertung.version())||'equine-v1')} · Artefaktkorrektur nach Lipponen &amp; Tarvainen 2019 (equine-adaptiert, AV-Block-Pausen getrennt ausgewiesen) · equine Frequenzbänder nach Kuwahara 1996 (VLF 0–0,01 · LF 0,01–0,07 · HF 0,07–0,6 Hz) · Lomb-Scargle-Spektrum (ungleichmäßige Abtastung) · Poincaré nach Brennan 2001 · SampEn nach Richman 2000 · Sensor Polar H10 (für HF, SDNN und RMSSD am ruhenden Pferd geprüft mit anderer Elektroden- und Empfängerkette, Kapteijn 2022; diese Messkette selbst nicht eigens validiert). Für Ruhe-HRV beim Pferd gibt es keinen Konsens-Normwert; eingeordnet wird gegen die eigene Basis des Pferds (Mittel aus ≥ 3 Aufnahmen in 30 Tagen).<br>
