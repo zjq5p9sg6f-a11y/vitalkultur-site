@@ -199,6 +199,13 @@ nav.tabs button.on .badge{background:rgba(0,3,8,.35);color:#fff}
   box-shadow:0 4px 18px -6px var(--cyan-g1),inset 0 1px 0 rgba(255,255,255,.35)}
 .hbtn.primary:hover{transform:translateY(-1px);box-shadow:0 8px 26px -6px var(--cyan-g1),inset 0 1px 0 rgba(255,255,255,.4)}
 .hbtn.ghost{background:var(--bg-elev);border-color:var(--border-subtle);color:var(--text-secondary)}
+/* Exportmenü */
+.ex-liste{display:flex;flex-direction:column;gap:8px}
+.ex-z{display:flex;flex-direction:column;align-items:flex-start;gap:3px;text-align:left;padding:12px 14px;border-radius:12px;border:1px solid var(--border-subtle);background:var(--bg-deep);color:var(--text-primary);cursor:pointer}
+.ex-z:hover{border-color:var(--cyan-deep);background:var(--cyan-faint)}
+.ex-z b{font-family:var(--font-mono);font-size:13px;letter-spacing:.06em;color:var(--cyan)}
+.ex-z span{font-size:12.5px;color:var(--text-secondary)}
+.ex-fuss{margin-top:12px;font-size:12px;color:var(--text-dim);line-height:1.5}
 /* Verbesserung senden */
 .hb-verb{gap:7px}
 .hb-verb-t{font-size:13px;font-weight:600}
@@ -5982,7 +5989,7 @@ const Views={
                   <div class="m"><b>${fmt0(r.metrics.meanHR)}</b><span>HF</span></div>
                   <div class="m"><span class="tri-badge tri-${r.triage.level}" style="padding:2px 8px;font-size:10px"><span class="dot"></span>${Triage.LEVELS[r.triage.level].label}</span></div>
                 </div>
-                <button class="icon-btn" title="Rohdaten (JSON) für CARLON Viewer exportieren" onclick="event.stopPropagation();Views.exportRec('${r.id}')">${IC.eye}</button>
+                <button class="icon-btn" title="Exportieren: JSON, CSV, Kubios, FHIR R5" onclick="event.stopPropagation();Export.menu('${r.id}')">${IC.download}</button>
                 <button class="icon-btn" title="Bericht als eigenständige Datei weitergeben — Besitzer, Überweisungsklinik, Studie" onclick="event.stopPropagation();Handoff.build('${r.id}')">${IC.share||IC.download}</button>
                 <button class="icon-btn" title="Denselben Bericht auf Englisch — für internationale Kliniken, Universitäten und Studien" onclick="event.stopPropagation();Handoff.build('${r.id}','en')"><b style="font-size:9.5px;letter-spacing:.06em;font-family:var(--font-mono)">EN</b></button>
                 <button class="icon-btn" title="FHIR-R5-Bundle für Klinik-Software / ERP exportieren (offener Standard)" onclick="event.stopPropagation();FHIR.export('${r.id}')"><b style="font-size:9.5px;letter-spacing:.06em;font-family:var(--font-mono)">FHIR</b></button>
@@ -6568,9 +6575,13 @@ const Views={
     /* Die Quelldaten bleiben unangetastet — der Herkunftsblock kommt
        DANEBEN, nicht hinein. Wer die Datei im Viewer oeffnet, sieht
        dieselben Werte wie bisher. */
-    const inhalt=Object.assign({}, r.metrics, { herkunft: Views.herkunft(r, pferd) });
+    /* Kreistest 16.11.2026: Der Knopf hieß „Rohdaten (JSON)“, die Datei trug aber KEINE RR-Reihe – nur Kennwerte.
+       Jetzt reist die ungerundete Reihe mit (rrIntervalsMs, vom eigenen Importer zuerst gelesen), dazu die Schlagklassen. */
+    let vk=null; try{ vk=HRVVorstufe.analysiere((r.rr||[]).map(Number)); }catch(e){}
+    const inhalt=Object.assign({}, r.metrics, { herkunft: Views.herkunft(r, pferd),
+      rrIntervalsMs:(r.rr||[]).map(Number), beatAnnotations:(vk&&vk.beatAnnotations)||undefined, startedAt:r.startedAt, durationSec:r.durationSec });
     { const pw=await Pruefwert.rr(r.rr); if(pw) inhalt.pruefwert={ algorithmus:'SHA-256', ueber:Pruefwert.BESCHREIBUNG, wert:pw }; }
-    const blob=new Blob([JSON.stringify(inhalt,null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='carlon-session-'+id+'.json';a.click();
+    Export.laden('carlon-session-'+id+'.json',JSON.stringify(inhalt,null,2),'application/json');
     Toast.show('Für Detail-Analyse: im CARLON Viewer öffnen','info');},
   /* ── ENTLASS-NACHSORGE (Klinik-Stufe, Jan 13.08.2026) ────────────────
      Der Moment, fuer den die Klinik-Stufe gebaut ist: der Patient verlaesst
@@ -7252,6 +7263,38 @@ svg .hov-cross,svg .hov-focus{display:none}
   }
 };
 
+/* EXPORT (16.11.2026, Kreistest Jan: „Exporte wirklich erhaben?“) – Seite, Bericht und Tarif versprechen
+   JSON, CSV, Kubios-kompatibel und FHIR R5; CSV und Kubios fehlten bis heute im Cockpit. Formate wie die iOS-App
+   (carlon-formate.js liest beide zurück): Forschungs-CSV mit Kopf „# carlon_equine_research_rr“, Kubios-CSV „RR_ms“.
+   Kein Runden: Polar H10 liefert 1/1024-s-Schritte (s. FHIR-Bundle), Rundung bräche die Bit-Identität. */
+const Export={
+  name(r){ const h=State.horses.find(x=>x.id===r.horseId)||{}; return ((h.name||'Pferd').replace(/[^\p{L}\p{N}_-]+/gu,'-'))+'_'+(r.startedAt||'').slice(0,10); },
+  laden(name,inhalt,typ){ const b=new Blob([inhalt],{type:typ}); const a=document.createElement('a'); a.href=URL.createObjectURL(b); a.download=name; document.body.appendChild(a); a.click(); a.remove(); setTimeout(()=>URL.revokeObjectURL(a.href),4000); },
+  zahl(v){ return String(Number(v)); },
+  async csvText(r){
+    const rr=(r.rr||[]).map(Number); let v=null; try{ v=HRVVorstufe.analysiere(rr); }catch(e){}
+    const lab=(v&&v.beatAnnotations)||[], kor=(v&&v.correctedRR)||[], sha=await Pruefwert.rr(rr);
+    const h=State.horses.find(x=>x.id===r.horseId)||{};
+    const kopf=['# carlon_equine_research_rr','# horse: '+(h.name||''),'# recorded_at: '+(r.startedAt||''),'# source: CARLON Equine Visite '+BUILD,
+      '# rr_sha256: '+(sha||''),'# rr_unit: ms (unrounded, as recorded)','# label: N normal · A artefact · E ectopic · M missed · ? unclear (CARLON pre-filter)',
+      '# rr_corrected_ms: series after the CARLON correction (replaced intervals in place, no beat inserted)'];
+    let t=0; const zeilen=rr.map((x,i)=>{ t+=x/1000; return [i+1,t.toFixed(3),Export.zahl(x),(lab[i]||''),(kor[i]!=null?Export.zahl(kor[i]):'')].join(','); });
+    return kopf.join('\n')+'\nbeat,t_s,rr_ms,label,rr_corrected_ms\n'+zeilen.join('\n')+'\n';
+  },
+  kubiosText(r){ return 'RR_ms\n'+(r.rr||[]).map(Export.zahl).join('\n')+'\n'; },
+  async csv(id){ const r=State.recordings.find(x=>x.id===id); if(!r) return; Export.laden('CARLON_'+Export.name(r)+'_rr.csv',await Export.csvText(r),'text/csv;charset=utf-8'); Toast.show('CSV exportiert · RR-Reihe mit Klassen und bereinigter Serie','ok'); },
+  kubios(id){ const r=State.recordings.find(x=>x.id===id); if(!r) return; Export.laden('CARLON_'+Export.name(r)+'_rr_kubios.csv',Export.kubiosText(r),'text/csv;charset=utf-8'); Toast.show('Kubios-Datei exportiert · in Kubios als RR-Daten in ms öffnen','ok'); },
+  menu(id){ const r=State.recordings.find(x=>x.id===id); if(!r) return;
+    const z=(f,t,s)=>`<button class="ex-z" onclick="UI.closeModal();${f}"><b>${t}</b><span>${s}</span></button>`;
+    UI.modal(`<div class="modal-head"><button class="closex" onclick="UI.closeModal()">${IC.x}</button><h3>Aufnahme exportieren</h3></div>
+    <div class="modal-body"><div class="ex-liste">
+      ${z(`Views.exportRec('${id}')`,'JSON','Kennwerte, Herkunft, Prüfwert – für den CARLON Viewer')}
+      ${z(`Export.csv('${id}')`,'CSV','Jeder Schlag: Zeit, RR in ms, Klasse, bereinigter Wert – für Excel, R, Python')}
+      ${z(`Export.kubios('${id}')`,'Kubios','RR-Reihe in ms, eine Spalte – für Kubios HRV und andere HRV-Software')}
+      ${z(`FHIR.export('${id}')`,'FHIR R5','Bundle mit Pferd, Kennwerten und Roh-RR – für Praxis- und Kliniksoftware')}
+    </div><p class="ex-fuss">Alle Exporte enthalten die RR-Reihe ungerundet, wie aufgezeichnet. Der Prüfwert (SHA-256) belegt, dass sie unverändert ist.</p></div>`);
+  }
+};
 const FHIR={
   CS:'https://carlon.equine/fhir/CodeSystem/equine-biometrics',
   UCUM:'http://unitsofmeasure.org',
@@ -8277,7 +8320,7 @@ const Coherence={
 /* ════════════════════════════════════════════════════════════════════════
    UI helpers (modal, settings)
    ════════════════════════════════════════════════════════════════════════ */
-const BUILD='beta-2026-07-11';   // Test-Beta Build-Stamp
+const BUILD='visite-2026-11-16';   // Test-Beta Build-Stamp
 /* ═══ GO-PAID-SCHALTER — nahtloser Übergang Beta → bezahltes SaaS ═══
    Zum Umstellen auf offenen Verkauf:
    1) BETA_GATED = false setzen  → Preise und Stripe-Checkout kommen automatisch zurück (KEIN Gratis-Trial, bewusst entfernt).

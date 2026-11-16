@@ -965,6 +965,38 @@ h1,h2{text-wrap:balance}
 <link rel="stylesheet" href="/assets/app-tour/app-tour.css?v=10">
 <style>
 
+.geraete-liste{list-style:none;margin:var(--sp-21) 0 0;padding:0;max-width:720px;border:1px solid var(--border-subtle);border-radius:18px;overflow:hidden;background:linear-gradient(165deg,rgba(255,255,255,.035),rgba(255,255,255,.008))}
+.geraete-liste li{display:grid;grid-template-columns:28px 1fr auto;gap:14px;align-items:center;padding:15px 18px;border-top:1px solid var(--border-faint)}
+.geraete-liste li:first-child{border-top:0}
+.geraete-liste .ic{width:22px;height:22px;color:var(--cyan)}
+.geraete-liste .gl-nein .ic{color:#FFB547}
+.gl-t b{display:block;color:var(--text-primary);font-weight:500;font-size:15px}
+.gl-t span{display:block;color:var(--text-dim);font-size:13.5px;line-height:1.5;margin-top:2px}
+.gl-p{font-family:var(--font-mono);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;padding:6px 11px;border-radius:999px;white-space:nowrap;border:1px solid rgba(62,207,178,.45);color:var(--cyan);background:rgba(62,207,178,.06)}
+.gl-nein .gl-p{border-color:rgba(255,181,71,.5);color:#FFB547;background:rgba(255,181,71,.06)}
+@media(max-width:560px){.geraete-liste li{grid-template-columns:24px 1fr;padding:14px 14px}.gl-p{grid-column:2;justify-self:start;margin-top:-4px}}
+</style>
+<style>
+
+@media(max-width:1023px){
+  .btn-back{font-size:11.5px!important;letter-spacing:.08em!important}
+  .ab-wer,.nu-tag,.gl-p{font-size:11px!important}
+  .nu-woche b{font-size:11.5px!important}
+  .pz-mehr,.tarif-neben{display:inline-block;padding-block:9px!important}
+}
+
+@media(min-width:721px) and (max-width:900px){
+  figure.grafik.als-liste>svg{display:none!important}
+  .export-liste{list-style:none;margin:var(--sp-21) 0 0;padding:18px 22px;border-radius:20px;border:1px solid rgba(62,207,178,.28);background:rgba(62,207,178,.04);max-width:620px}
+  .export-liste .el-kopf{font-family:var(--font-mono);font-size:11px;letter-spacing:.2em;color:var(--cyan);margin-bottom:4px}
+  .export-liste .el-sub{font-size:13px;color:var(--text-dim);margin-bottom:12px}
+  .export-liste li{display:flex;justify-content:space-between;gap:12px;align-items:baseline;padding:11px 0;border-top:1px solid var(--border-subtle)}
+  .export-liste li b{font-family:var(--font-mono);font-weight:500;font-size:14px;color:var(--text-primary)}
+  .export-liste li span{font-size:13px;color:var(--text-dim);text-align:right}
+}
+</style>
+<style>
+
 .nutzen .nu-lead{max-width:62ch;color:var(--text-secondary);line-height:1.6;margin:var(--sp-13) 0 var(--sp-34)}
 .nu-woche{list-style:none;margin:0 0 var(--sp-55);padding:0;display:grid;grid-template-columns:repeat(4,1fr);gap:0;position:relative}
 .nu-woche::before{content:'';position:absolute;left:8px;right:8px;top:8px;height:1px;background:linear-gradient(90deg,var(--cyan),rgba(62,207,178,.15))}
@@ -1173,7 +1205,6 @@ try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; 
             <li>She receives a report with your logo that she can keep and show</li>
             <li>Every recording stays traceable beat by beat, down to the Poincaré plot with time slider</li></ul></div>
     </div>
-    <p class="nu-fuss">Structured by the Kano model: basic, performance and delight features.</p>
   </div>
 </section>
 
@@ -1568,14 +1599,11 @@ try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; 
       all horses.
     
     </p>
-    <table class="geraete">
-      <thead><tr><th>Owner’s device</th><th>Records in the browser</th></tr></thead>
-      <tbody>
-        <tr><td>Android smartphone or tablet (Chrome)</td><td class="ja">yes</td></tr>
-        <tr><td>Laptop or PC with Chrome or Edge</td><td class="ja">yes</td></tr>
-        <tr><td>iPhone or iPad</td><td class="nein">no – Apple does not allow Bluetooth in the browser · way out: a loan set from the practice (belt + Android device)</td></tr>
-      </tbody>
-    </table>
+    <ul class="geraete-liste" aria-label="Owner’s devices">
+      <li class="gl-ja"><svg class="ic" aria-hidden="true"><use href="#i-phone"/></svg><div class="gl-t"><b>Android smartphone or tablet</b><span>with Chrome</span></div><span class="gl-p">records in the browser</span></li>
+      <li class="gl-ja"><svg class="ic" aria-hidden="true"><use href="#i-browser"/></svg><div class="gl-t"><b>Laptop or PC</b><span>with Chrome or Edge</span></div><span class="gl-p">records in the browser</span></li>
+      <li class="gl-nein"><svg class="ic" aria-hidden="true"><use href="#i-phone"/></svg><div class="gl-t"><b>iPhone or iPad</b><span>Apple does not allow Bluetooth in the browser. Way out: a loan set from the practice (strap + Android device).</span></div><span class="gl-p">not in the browser</span></li>
+    </ul>
     <p class="geraete-praxis"><strong>And the practice?</strong> The cockpit runs in any current browser – on a computer, on the iPad and the iPhone. Only recording in the stable needs Bluetooth.</p>
     
     <p class="sec-lead" style="margin-top:var(--sp-21)">
@@ -1665,7 +1693,7 @@ try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; 
 <section>
   <div class="wrap">
     <div class="sec-eyebrow">Interoperability</div>
-    <h2>Export as PDF, CSV, JSON and FHIR&nbsp;R5.</h2>
+    <h2>Export as PDF, CSV, Kubios, JSON and FHIR&nbsp;R5.</h2>
     <p class="sec-lead">
       Every recording can be exported as <strong>FHIR&nbsp;R5</strong> — as an
       <code>Observation</code> with LOINC codes and UCUM units, the horse in the FHIR resource type <code>Patient</code> with the identifiers you already keep: practice software number,
@@ -2132,7 +2160,7 @@ if(_lb) _lb.addEventListener('click', function(){
     t.parentNode.insertBefore(w,t); t.classList.add('nur-gross');
     var s=document.createElement('script'); s.src='/carlon-equine-visite/assets/poincare-zeit.js?v=20261116d'; s.defer=true; document.body.appendChild(s); })();
   
-  tel&&(function(){ var f=document.querySelector('figure.grafik[aria-label^="Eine Aufnahme"],figure.grafik[aria-label^="One recording"]'); if(!f) return;
+  (window.matchMedia&&matchMedia('(max-width:900px)').matches)&&(function(){ var f=document.querySelector('figure.grafik[aria-label^="Eine Aufnahme"],figure.grafik[aria-label^="One recording"]'); if(!f) return;
     var s=f.querySelector('svg'); if(!s) return; var tx=[].slice.call(s.querySelectorAll('text')).map(function(t){return {c:t.getAttribute('class')||'',t:t.textContent};});
     var ul=document.createElement('ul'); ul.className='export-liste'; var kopf=tx.filter(function(x){return /gr-marke/.test(x.c);})[0];
     var sub=tx.filter(function(x){return /gr-klein/.test(x.c);}); var chips=tx.filter(function(x){return /gr-chip-t/.test(x.c);});
