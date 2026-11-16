@@ -1439,6 +1439,8 @@ svg.viz .sd-lbl{fill:var(--cyan-strong);font-size:10px;font-weight:600;font-fami
   border-radius:10px;padding:9px 12px;font-size:12px;box-shadow:var(--shadow);opacity:0;transform:translate(-50%,-115%);
   transition:opacity .12s;z-index:20;white-space:nowrap;min-width:110px}
 .ts-tip.on{opacity:1}
+.ts-tip.oben{transform:translate(-50%,calc(-100% - 8px));padding:6px 10px}
+.ts-tip.oben .tt-val{font-size:14px}
 .ts-tip .tt-date{font-size:10px;color:var(--text-dim);letter-spacing:.04em;margin-bottom:3px}
 .ts-tip .tt-val{font-family:var(--font-mono);font-size:16px;font-weight:600;letter-spacing:-.02em}
 .ts-tip .tt-cls{font-size:11px;font-weight:600;margin-top:1px}
@@ -4338,8 +4340,11 @@ const Chart={
       const cross=svg.querySelector('.ts-cross'),focus=svg.querySelector('.ts-focus'),tip=wrap.querySelector('.ts-tip');
       cross.setAttribute('x1',best.cx);cross.setAttribute('x2',best.cx);cross.classList.add('on');
       focus.setAttribute('cx',best.cx);focus.setAttribute('cy',best.cy);focus.classList.add('on');
-      tip.style.left=(best.cx/vbw*rect.width)+'px';tip.style.top=(best.cy/vbh*rect.height)+'px';
+      /* 16.11.2026 (Jan: „Infobox verdeckt die Grafik“): Die Box steht ÜBER der Zeichenfläche, nie über den Daten;
+         waagrecht folgt sie dem Punkt, bleibt aber im Rahmen. */
       tip.innerHTML=`<div class="tt-date">${fmtDate(best.x,true)}</div><div class="tt-val">${fmt1(best.y)}${unit?' '+esc(unit):''}</div>${best.c?`<div class="tt-cls" style="color:${clsCol[best.k]||'var(--text-secondary)'}">${esc(best.c)}</div>`:''}`;
+      tip.classList.add('oben'); const tw=tip.offsetWidth||120, px=best.cx/vbw*rect.width;
+      tip.style.left=Math.max(tw/2+2,Math.min(rect.width-tw/2-2,px))+'px'; tip.style.top='0px';
       tip.classList.add('on');
     };
     document.addEventListener('mousemove',onMove,{passive:true});
