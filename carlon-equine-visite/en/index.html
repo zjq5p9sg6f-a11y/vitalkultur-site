@@ -189,7 +189,7 @@ document.head.appendChild(s);})();</script>
      "name": "Can I charge for reviewing a recording?",
      "acceptedAnswer": {
       "@type": "Answer",
-      "text": "You decide that under the German fee schedule for veterinarians (GOT) – to our knowledge (November 2026) there is no dedicated GOT item for telemedicine. CARLON delivers measurements, trends and a measurement report; whether this becomes a consultation and how you charge for it is up to you. Reviewing does not replace an examination."
+      "text": "You decide that under the German fee schedule for veterinarians (GOT) – the GOT includes “advice in an individual case without examination” (no. 1); whether it applies here is your decision. CARLON delivers measurements, trends and a measurement report; whether this becomes a consultation and how you charge for it is up to you. Reviewing does not replace an examination."
      }
     }
    ]
@@ -548,6 +548,11 @@ h2{font-family:var(--font-brand);font-weight:350;font-size:clamp(28px,3.6vw,var(
 .gruender .g-k{font-family:var(--font-mono);font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--cyan);margin-bottom:8px}
 .gruender p{font-size:15px;line-height:1.65;color:var(--text-secondary);max-width:70ch}.gruender b{color:var(--text-primary);font-weight:500}
 .gruender .g-kontakt{margin-top:10px;font-size:14px}.gruender .g-kontakt a{color:var(--cyan);white-space:nowrap}
+.abo-grenze{max-width:920px;margin:var(--sp-34) auto 0;display:grid;grid-template-columns:1fr 1fr;gap:var(--sp-21)}
+.abo-grenze>div{border:1px solid var(--border-faint);border-radius:14px;padding:16px 20px;background:var(--bg-surface)}
+.abo-grenze b{display:block;font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:var(--cyan);margin-bottom:6px;font-family:var(--font-mono)}
+.abo-grenze span{font-size:var(--t-klein);color:var(--text-secondary);line-height:1.6}
+@media(max-width:720px){.abo-grenze{grid-template-columns:1fr}}
 .tarif-knopf{display:block;text-align:center;margin-top:18px}.tarif-neben{display:block;text-align:center;margin-top:10px;font-size:13px;color:var(--text-secondary)}
 section[id]{scroll-margin-top:76px}
 .b2b-hinweis{max-width:920px;margin:var(--sp-34,34px) auto 0;font-family:var(--font-mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--cyan);text-align:center}
@@ -917,7 +922,7 @@ try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; 
   <div class="wrap">
     <span class="hero-signet" aria-hidden="true"><img src="/assets/equine-mark-512.png" width="512" height="512" alt="" fetchpriority="high"></span>
     <p class="hero-marke">CARLON<small>EQUINE VISITE</small></p>
-    <div class="eyebrow">Care that doesn’t end at the stable door</div>
+    <div class="eyebrow">For equine practices and clinics</div>
     <h1>Resting HRV in horses: <em>recorded in the stable, read in your practice.</em></h1>
     <p class="hero-sub">
       The owner records in the stable. Before the visit you see <strong>how far this horse deviates from its own baseline</strong> – and how reliable the recording is.
@@ -931,7 +936,7 @@ try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; 
       <li><svg class="ic" aria-hidden="true"><use href="#i-schild"/></svg>Data stays in your browser</li>
       <li><svg class="ic" aria-hidden="true"><use href="#i-check"/></svg>Cancel monthly</li>
     </ul>
-    <p class="rollen-weiche"><a href="#ablauf">How a recording works ↓</a> · <a href="#arbeitstag">For mobile practices ↓</a> · <a href="#klinik">For equine clinics ↓</a></p>
+    <p class="rollen-weiche"><a href="#ablauf">How a recording works ↓</a> · <a href="#arbeitstag">For mobile practices ↓</a> · <a href="#klinik">For equine clinics ↓</a> · <a href="#preis">Pricing ↓</a></p>
     <p class="cta-note">Vitalkultur, Iffezheim, Germany<span id="heroBeta"> · We are in beta and accompany every practice personally — join now and you keep your price as a founding partner.</span></p>
     <figure class="hero-buehne">
       <div class="hb-geraete">
@@ -1025,7 +1030,7 @@ try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; 
         <p>Before you drive out you see signal quality and the trend of recent weeks, instead of only a description over the phone. The recordings are in the record when you see the horse again.</p></div>
       <div class="ez"><svg class="ic ic-ez" aria-hidden="true"><use href="#i-bericht"/></svg>
         <h3>For your client</h3>
-        <p>A measurement report with your letterhead, created straight from the record. The clinic plan adds a discharge card with QR: after discharge the owner keeps recording at home, and the trend comes to you.</p></div>
+        <p>A measurement report with your letterhead, created straight from the record. The clinic plan adds a discharge card with QR: after discharge the owner can send resting recordings from the familiar stall. They do not replace a follow-up examination.</p></div>
     </div>
   </div>
 </section>
@@ -1111,7 +1116,7 @@ try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; 
 <section>
   <div class="wrap">
     <div class="sec-eyebrow">Why the numbers hold</div>
-    <h2>Long pauses between beats are detected – and reported separately.</h2>
+    <h2>Long pauses between beats are flagged – and reported separately.</h2>
     <p class="sec-lead">
       Heart rate variability is associated with the activity of the autonomic nervous
       system — the interplay of sympathetic and parasympathetic tone. It is therefore not
@@ -1258,13 +1263,13 @@ try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; 
       gives no result. After loading
       and a drive this is hard to achieve; in the familiar stall it is achievable every day.
     </p>
-<figure class="grafik rev" aria-label="RMSSD before and during road transport: 74 to 45 milliseconds over 3.5 hours, 90 to 59 milliseconds over 8 hours (Schmidt et al. 2010)">
+<figure class="grafik rev" aria-label="RMSSD before and during road transport: 74 to 45 milliseconds over 3.5 hours, 89.7 to 59 milliseconds over 8 hours (Schmidt et al. 2010)">
       <svg viewBox="0 0 760 240" fill="none" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
         <text x="24" y="30" class="gr-marke">RMSSD IN MS · ROAD TRANSPORT</text>
         <path d="M70 190h660" class="gr-raster"/><text x="60" y="194" text-anchor="end" class="gr-klein">0</text><path d="M70 152h660" class="gr-raster"/><text x="60" y="156" text-anchor="end" class="gr-klein">25</text><path d="M70 115h660" class="gr-raster"/><text x="60" y="119" text-anchor="end" class="gr-klein">50</text><path d="M70 78h660" class="gr-raster"/><text x="60" y="82" text-anchor="end" class="gr-klein">75</text><path d="M70 40h660" class="gr-raster"/><text x="60" y="44" text-anchor="end" class="gr-klein">100</text>
         <rect x="150" y="79" width="46" height="111" rx="5" class="gr-balken"/><text x="173" y="69" text-anchor="middle" class="gr-wert">74</text><text x="173" y="212" text-anchor="middle" class="gr-klein">before</text><rect x="214" y="122" width="46" height="68" rx="5" class="gr-balken-gold"/><text x="237" y="112" text-anchor="middle" class="gr-wert">45</text><text x="237" y="212" text-anchor="middle" class="gr-klein">on the road</text>
         <text x="205" y="234" text-anchor="middle" class="gr-gruppe">3.5 h drive</text>
-        <rect x="470" y="55" width="46" height="135" rx="5" class="gr-balken"/><text x="493" y="45" text-anchor="middle" class="gr-wert">90</text><text x="493" y="212" text-anchor="middle" class="gr-klein">before</text><rect x="534" y="102" width="46" height="88" rx="5" class="gr-balken-gold"/><text x="557" y="92" text-anchor="middle" class="gr-wert">59</text><text x="557" y="212" text-anchor="middle" class="gr-klein">on the road</text>
+        <rect x="470" y="55" width="46" height="135" rx="5" class="gr-balken"/><text x="493" y="45" text-anchor="middle" class="gr-wert">89,7</text><text x="493" y="212" text-anchor="middle" class="gr-klein">before</text><rect x="534" y="102" width="46" height="88" rx="5" class="gr-balken-gold"/><text x="557" y="92" text-anchor="middle" class="gr-wert">59</text><text x="557" y="212" text-anchor="middle" class="gr-klein">on the road</text>
         <text x="525" y="234" text-anchor="middle" class="gr-gruppe">8 h drive</text>
         <text x="274" y="127" class="gr-wert gr-gold">−39%</text>
         <text x="594" y="106" class="gr-wert gr-gold">−34%</text>
@@ -1272,7 +1277,7 @@ try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; 
       <figcaption>Values from Schmidt et&nbsp;al. 2010, Hormones and Behavior, measured on the road. That is why CARLON records in the horse’s own stall.</figcaption>
     </figure>
     <ul class="studien">
-      <li><b>During transport, HRV falls by about a third.</b> RMSSD dropped on road transport from 74 to 45&nbsp;ms (3.5&nbsp;h) and from 90 to 59&nbsp;ms (8&nbsp;h) – measured on the road. <a href="https://doi.org/10.1016/j.yhbeh.2009.11.003" target="_blank" rel="noopener">Schmidt et&nbsp;al. 2010, Hormones and Behavior</a></li>
+      <li><b>During transport, HRV falls by about a third.</b> RMSSD dropped on road transport from 74 to 45&nbsp;ms (3.5&nbsp;h) and from 89.7 to 59&nbsp;ms (8&nbsp;h) – measured on the road. <a href="https://doi.org/10.1016/j.yhbeh.2009.11.003" target="_blank" rel="noopener">Schmidt et&nbsp;al. 2010, Hormones and Behavior</a></li>
       <li><b>Short recordings vary from day to day.</b> In 30 healthy horses, day-to-day variability of HRV was moderate to high in 10- and 60-minute recordings; recording length and time of day influenced most variables, and second-degree AV blocks the RR-based short-term variables – hence identical conditions, comparison with the horse’s own baseline and long pauses reported separately. <a href="https://doi.org/10.1016/j.jvc.2016.10.006" target="_blank" rel="noopener">Eggensperger &amp; Schwarzwald 2017, Journal of Veterinary Cardiology</a></li>
     </ul>
 
@@ -1423,7 +1428,7 @@ try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; 
 <section id="arbeitstag">
   <div class="wrap">
     <div class="sec-eyebrow">Your working day</div>
-    <h2>Daily route, drive time and mileage log in one view.</h2>
+    <h2>Daily route, drive time and trip list in one view.</h2>
     <p class="sec-lead">The analysis is one half. The other is the day you have to fit it into — and that
        is what decides whether a tool survives its first month.</p>
 
@@ -1434,8 +1439,8 @@ try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; 
     <div class="tour-punkte">
       <div class="tp"><svg class="ic li-ic" aria-hidden="true"><use href="#i-route"/></svg><h3>Shortest route</h3><p>The round arranges itself by distance and appointment. You change the order by dragging, stop by stop.</p></div>
       <div class="tp"><svg class="ic li-ic" aria-hidden="true"><use href="#i-uhr"/></svg><h3>Drive time at every stop</h3><p>Arrival, drive time and contact are on every card before you commit.</p></div>
-      <div class="tp"><svg class="ic li-ic" aria-hidden="true"><use href="#i-schild"/></svg><h3>One tap to Google Maps</h3><p>Nothing leaves your device on its own. Only your tap hands the route to the maps app.</p></div>
-      <div class="tp"><svg class="ic li-ic" aria-hidden="true"><use href="#i-akte"/></svg><h3>Logbook and times</h3><p>Services, trips and times are recorded along the way and export as CSV. You do the invoicing – the software promises no revenue.</p></div>
+      <div class="tp"><svg class="ic li-ic" aria-hidden="true"><use href="#i-schild"/></svg><h3>One tap to Google Maps</h3><p>Measurement data never leaves your device. Map and address search come from OpenStreetMap; only your tap hands the route to Google Maps.</p></div>
+      <div class="tp"><svg class="ic li-ic" aria-hidden="true"><use href="#i-akte"/></svg><h3>Trips and times</h3><p>Services, trips and times are recorded along the way and export as CSV (not a tax logbook). Invoicing stays with you.</p></div>
     </div>
   </div>
 </section>
@@ -1443,7 +1448,7 @@ try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; 
 <section>
   <div class="wrap">
     <div class="sec-eyebrow">Interoperability</div>
-    <h2>Export as FHIR R5, JSON and CSV for your practice software.</h2>
+    <h2>Export as PDF, CSV, JSON and FHIR&nbsp;R5.</h2>
     <p class="sec-lead">
       Every recording can be exported as <strong>FHIR&nbsp;R5</strong> — as an
       <code>Observation</code> with LOINC codes and UCUM units, the horse as a
@@ -1508,7 +1513,8 @@ try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; 
       <p class="g-kontakt">A question first? Write to <a href="mailto:jan@vitalkultur.com">jan@vitalkultur.com</a> — usually answered the same day.</p>
     </div>
     <p class="b2b-hinweis">For veterinary practices and equine clinics only — orders exclusively as a business (§ 14 BGB).</p>
-    <div class="tarife-grid">
+    <div class="abo-grenze"><div><b>Without a subscription</b><span>Demo with 15 horses; view files sent to you, up to 3 of your own horses.</span></div><div><b>With a subscription</b><span>Unlimited horses, your own measuring link and QR poster, measurement report with letterhead, CSV and FHIR export, route handoff.</span></div></div>
+<div class="tarife-grid">
     <div class="tarif">
       <div class="tarif-name">For equine practices</div>
 
@@ -1543,7 +1549,7 @@ try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; 
     <div class="tarif tarif-fussblock">
       <p class="tarif-fuss">
         This offer is directed exclusively at businesses within the meaning of § 14 BGB.
-        Payment and invoicing are handled by <strong>Link</strong> (Sold through Link, LLC), a Stripe affiliate, as merchant of record on behalf of Vitalkultur; your statement shows LINK.COM. Link sends you
+        Payment and invoicing are handled by <strong>Link</strong> (Sold through Link, LLC), a Stripe affiliate, as merchant of record on behalf of Vitalkultur; your statement shows LINK.COM* followed by our short name. Link sends you
         the invoice showing VAT. Details in
         <a href="/terms.html#visite">§ 12a unserer AGB</a> und in der
         <a href="/privacy-en.html">Datenschutzerklärung</a>.
@@ -1603,7 +1609,7 @@ try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; 
         <svg class="ic ic-karte" aria-hidden="true"><use href="#i-plus"/><use href="#i-kein"/></svg><h3>No diagnosis</h3>
         <p>The software shows measured values, signal quality, trend and deviation. The
            medical interpretation remains entirely with you. CARLON Equine Visite is not a
-           medical device within the meaning of Regulation (EU) 2017/745.</p>
+           medical device: Regulation (EU) 2017/745 covers products for humans; CARLON Equine Visite is intended for horses only and shows measurements, not findings.</p>
       </div>
       <div class="card">
         <svg class="ic ic-karte" aria-hidden="true"><use href="#i-pfeil"/><use href="#i-kein"/></svg><h3>No treatment recommendation</h3>
@@ -1692,7 +1698,7 @@ try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; 
         <div class="faq-a"><p>Only in your browser on your device – no cloud, no server of ours. Under Documentation, “Back up” creates a backup file; “Restore backup” brings everything back on a new device or browser, including your activation. If a recent backup is missing, the cockpit shows it at the top. On the clinic plan the records are also kept in the clinic folder on your network drive.</p></div>
       </details>
       <details class="faq-item" data-spur-auf="faq-10"><summary><h3>Can I charge for reviewing a recording?</h3></summary>
-        <div class="faq-a"><p>You decide that under the German fee schedule for veterinarians (GOT) – to our knowledge (November 2026) there is no dedicated GOT item for telemedicine. CARLON delivers measurements, trends and a measurement report; whether this becomes a consultation and how you charge for it is up to you. Reviewing does not replace an examination.</p></div>
+        <div class="faq-a"><p>You decide that under the German fee schedule for veterinarians (GOT) – the GOT includes “advice in an individual case without examination” (no. 1); whether it applies here is your decision. CARLON delivers measurements, trends and a measurement report; whether this becomes a consultation and how you charge for it is up to you. Reviewing does not replace an examination.</p></div>
       </details>
     </div>
   </div>
