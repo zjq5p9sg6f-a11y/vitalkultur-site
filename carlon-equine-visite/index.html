@@ -350,6 +350,12 @@ svg.ic.vt-ic{grid-row:1 / span 2;width:34px;height:34px;padding:7px;box-sizing:b
 .hero-phone img,.hero-phone video{border-radius:calc(var(--r) - var(--b))!important}
 .hero-phone::after{content:'';position:absolute;top:calc(var(--b) + 1.4%);left:50%;width:4.2%;aspect-ratio:1;transform:translateX(-50%);border-radius:50%;background:#000;box-shadow:inset 0 0 0 1px #23262b;z-index:3}
 .hero-phone::before{content:'';position:absolute;right:-4px;top:20%;width:2.5px;height:9%;border-radius:0 2px 2px 0;background:#34383d;box-shadow:0 calc(100% + 14px) 0 0 #34383d}
+.pz-echt-block{align-items:start}
+.pz-echt{padding:clamp(12px,1.6vw,20px)!important;overflow:visible!important}
+.pz-echt .pz{background:#000;border-radius:calc(var(--r) - var(--b));padding:clamp(10px,1.4vw,18px)}
+.pz-hinweis{display:flex;gap:10px;align-items:flex-start;margin-top:var(--sp-21)!important;font-size:var(--t-klein);color:var(--text-dim)!important}
+.pz-hinweis svg.ic{width:22px;height:22px;flex:0 0 auto;margin-top:1px}
+.pz-mehr{display:inline-block;margin-top:var(--sp-13);color:var(--cyan);font-size:var(--t-klein);border-bottom:1px solid rgba(62,207,178,.35)}
 
 .ablauf{list-style:none;margin:var(--sp-55) 0 0;padding:0;display:grid;grid-template-columns:repeat(5,1fr);gap:var(--sp-21);counter-reset:ab}
 .ablauf li{position:relative;counter-increment:ab}
@@ -1100,15 +1106,16 @@ try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; 
          und die Qualitätsanzeige warnt kein einziges Mal. Ein hoher Anteil
          plausibler Schläge sagt nichts darüber, ob der Kennwert stimmt.</p>
     </div>
-    <div class="pz-block">
+    <div class="pz-block pz-echt-block">
       <div class="pz-text">
         <div class="sec-eyebrow">Poincaré mit Zeitregler</div>
         <h3>Jeder Schlag behält seinen Zeitpunkt – spulen Sie durch die Aufnahme.</h3>
-        <p>Das ist die Akte im Cockpit, nicht eine Grafik dafür. Ziehen Sie den Regler: Die Wolke baut sich Schlag für Schlag auf, SD1 und SD2 rechnen für das gewählte Zeitfenster mit. Zwei Finger oder das Mausrad zoomen, Ziehen verschiebt den Ausschnitt, ein Doppeltipp setzt zurück. Zeigen Sie auf einen Punkt – das Fadenkreuz nennt Schlag, Zeitpunkt und beide Abstände in Millisekunden.</p>
+        <p>Dieselbe Ruheaufnahme wie oben, so wie das Cockpit sie zeigt: jedes Schlagpaar ein Punkt, die Ellipse aus SD1 und SD2 für das gewählte Zeitfenster. Sobald die Grafik ins Bild kommt, baut sich die Wolke Schlag für Schlag auf – die beiden Paare mit der langen Pause leuchten bernsteinfarben und springen sichtbar aus der Wolke.</p>
+        <p class="pz-hinweis"><svg class="ic" aria-hidden="true"><use href="#i-pfeil"/></svg>Ziehen Sie den Zeitregler vor und zurück. Zeigen Sie auf einen Punkt: Das Fadenkreuz nennt Schlag, Zeitpunkt und beide Abstände in Millisekunden. Mausrad zoomt, Doppelklick setzt zurück.</p>
+        <a class="pz-mehr" href="/carlon-equine/app/?demo=roster&amp;pferd=champion&amp;fokus=poincare">Im Cockpit mit 15 Demo-Pferden weiter →</a>
       </div>
-      <div class="pz-live" data-app="/carlon-equine/app/?demo=roster&amp;pferd=champion&amp;fokus=poincare">
-        <img src="assets/visite-shots/12-poincare.jpg" loading="lazy" alt="Akte im Cockpit: Poincaré-Karte mit Zeitregler, SD1/SD2-Ellipse und Achsen in Millisekunden">
-        <button class="pz-start" type="button">Im Cockpit selbst ausprobieren ▶</button>
+      <div class="pz-live pz-echt">
+        <figure class="pz" data-quelle="/carlon-equine/app/belege/rmssd-roh-vs-korrigiert.json" aria-label="Poincaré-Diagramm der Ruheaufnahme mit 642 Schlägen und Zeitregler"></figure>
       </div>
     </div>
     <div class="cta-row" style="margin-top:var(--sp-34,34px)">
@@ -1893,6 +1900,7 @@ if(_lb) _lb.addEventListener('click', function(){
 
 <script src="/assets/app-tour/app-tour.js?v=14" defer></script>
 
+<script src="assets/poincare-zeit.js?v=2" defer></script>
 <script src="/assets/baukasten/baukasten.js?v=2"></script>
 <script>
 (function(){var t=document.querySelector('.hero-shot video');if(t&&window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches){t.removeAttribute('autoplay');t.pause();}else if(t){var pt=t.play();if(pt&&pt.catch)pt.catch(function(){});}

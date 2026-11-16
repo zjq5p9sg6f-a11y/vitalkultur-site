@@ -1816,6 +1816,20 @@ nav.tabs button.on{text-shadow:none}
   .table-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch}
   .ledger{min-width:540px}
 }
+/* KOPF PASST SICH SELBST AN (16.11.2026, Jan: „Demo freischalten geht über den Rand“; Passform-Prüfstand:
+   Überlauf 246/160/153 px bei 1280/1366/1600 px). Statt fester Breakpoints misst Kopf.passen() die Leiste und
+   verdichtet stufenweise, bis alles passt – auf jedem Tablet- und Telefonformat. */
+header.k1 .speicher-pill #speicherTxt{display:none}
+header.k2 nav.tabs button{padding:8px 9px;gap:5px}
+header.k2 .hbtn.primary .lbl-full{display:none}
+header.k3 nav.tabs button .ic{display:none}
+header.k4 .brand .tag{display:none}
+header.k5 nav.tabs button .ic{display:inline-block}
+header.k5 nav.tabs button .lbl{display:none}
+header.k5 nav.tabs button{position:relative}
+header.k5 nav.tabs button .badge{position:absolute;top:-3px;right:-3px;min-width:15px;height:15px}
+header.k6 #tierPill #tierLabel{display:none}
+header.k7 #tierPill,header.k7 .post-pill{display:none}
 </style>
 
 <div class="bg-atmosphere"></div>
@@ -12017,4 +12031,22 @@ const Sprache={
     $('#splash').innerHTML=`<div style="color:var(--red);text-align:center;padding:20px">Startfehler: ${esc(e.message)}<br><br>Bitte Seite neu laden.</div>`;
   }
 })();
+
+/* Kopf.passen – verdichtet die Kopfleiste stufenweise (k1…k7), bis nichts mehr übersteht. */
+const Kopf={
+  passen(){
+    const h=document.querySelector('header'); if(!h) return;
+    for(let k=1;k<=7;k++) h.classList.remove('k'+k);
+    const zuBreit=()=>h.scrollWidth>h.clientWidth+1 || [...h.children].some(c=>c.offsetParent&&c.getBoundingClientRect().right>innerWidth+0.5);
+    for(let k=1;k<=7&&zuBreit();k++) h.classList.add('k'+k);
+  },
+  start(){
+    let f=0; const neu=()=>{cancelAnimationFrame(f); f=requestAnimationFrame(()=>Kopf.passen());};
+    addEventListener('resize',neu); addEventListener('orientationchange',neu);
+    if(window.ResizeObserver){ const h=document.querySelector('header'); if(h) new ResizeObserver(neu).observe(h); }
+    if(document.fonts&&document.fonts.ready) document.fonts.ready.then(neu);
+    neu();
+  }
+};
+document.addEventListener('DOMContentLoaded',()=>Kopf.start());
 </script>
