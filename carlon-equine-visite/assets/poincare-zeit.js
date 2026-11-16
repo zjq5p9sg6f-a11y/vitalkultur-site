@@ -99,9 +99,16 @@
       for (var i = 0; i < k; i++) { var dx = X(rr[i]) - x, dy = Y(rr[i + 1]) - y, d = dx * dx + dy * dy; if (d < bd) { bd = d; best = i; } }
       return (best < 0 || bd > 4900) ? null : best; }
     function zeige(idx) { fest = idx; if (idx == null) { tipp.hidden = true; zeichne(); return; }
-      zeichne(idx); tipp.hidden = false; tipp.style.left = X(rr[idx]) + 'px'; tipp.style.top = Y(rr[idx + 1]) + 'px';
-      tipp.innerHTML = '<b>' + T.schlag + ' ' + (idx + 1) + '</b> · ' + fmtZeit(t[idx]) + '<br>' + Math.round(rr[idx]) + ' → ' + Math.round(rr[idx + 1]) + ' ms' + ((av[idx] || av[idx + 1]) ? '<br><span style="color:' + AMBER + '">' + T.av + '</span>' : ''); }
-    var altZeichne = zeichne; zeichne = function (hl) { altZeichne(hl === undefined ? fest : hl); if (fest != null && hl === undefined && !tipp.hidden) { tipp.style.left = X(rr[fest]) + 'px'; tipp.style.top = Y(rr[fest + 1]) + 'px'; } };
+      zeichne(idx); tipp.hidden = false;
+      tipp.innerHTML = '<b>' + T.schlag + ' ' + (idx + 1) + '</b> · ' + fmtZeit(t[idx]) + '<br>' + Math.round(rr[idx]) + ' → ' + Math.round(rr[idx + 1]) + ' ms' + ((av[idx] || av[idx + 1]) ? '<br><span style="color:' + AMBER + '">' + T.av + '</span>' : ''); platz(idx); }
+    /* Tooltip links oben neben dem Punkt (16.11.2026, Jan): Bezug ist der CANVAS, nicht die Bühne – die Grafik steht
+       zentriert, sonst saß der Tipp ~280 px zu weit links. 14 px Luft, damit der Finger ihn nicht verdeckt; am Rand
+       klappt er nach rechts bzw. unten. */
+    function platz(idx) { var px = cv.offsetLeft + X(rr[idx]), py = cv.offsetTop + Y(rr[idx + 1]), w = tipp.offsetWidth, h = tipp.offsetHeight, L = 14;
+      var links = px - w - L >= cv.offsetLeft + 4, oben = py - h - L >= cv.offsetTop + 4;
+      tipp.style.left = px + 'px'; tipp.style.top = py + 'px';
+      tipp.style.transform = 'translate(' + (links ? 'calc(-100% - ' + L + 'px)' : L + 'px') + ',' + (oben ? 'calc(-100% - ' + L + 'px)' : L + 'px') + ')'; }
+    var altZeichne = zeichne; zeichne = function (hl) { altZeichne(hl === undefined ? fest : hl); if (fest != null && hl === undefined && !tipp.hidden) platz(fest); };
     function zoom(f, px) { var w = wert(px), neu = Math.max(60, Math.min(hi - lo, (vhi - vlo) * f)); var a = (w - vlo) / (vhi - vlo);
       vlo = w - a * neu; vhi = vlo + neu; if (vlo < lo - 200) { vlo = lo - 200; vhi = vlo + neu; } if (vhi > hi + 200) { vhi = hi + 200; vlo = vhi - neu; } zeichne(); }
     function schieb(dpx) { var d = dpx / (S - M.l - M.r) * (vhi - vlo); vlo -= d; vhi -= d; zeichne(); }

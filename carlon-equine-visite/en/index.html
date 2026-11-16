@@ -382,6 +382,8 @@ svg.ic.vt-ic{grid-row:1 / span 2;width:34px;height:34px;padding:7px;box-sizing:b
   box-shadow:inset 0 1px 0 rgba(255,255,255,.65),inset 0 -1px 0 rgba(255,255,255,.12),0 10px 32px rgba(0,0,0,.5),0 0 26px rgba(255,255,255,.22);
   animation:schauPuls 2.6s ease-in-out infinite}
 .schau-hinweis svg.ic{width:17px;height:17px;color:#fff;filter:drop-shadow(0 1px 1px rgba(0,0,0,.4))}
+.schau-hinweis{transition:opacity .5s ease,translate .5s ease}
+.schau-hinweis.weg{opacity:0;translate:0 6px}
 @keyframes schauPuls{0%,100%{box-shadow:inset 0 1px 0 rgba(255,255,255,.65),inset 0 -1px 0 rgba(255,255,255,.12),0 10px 32px rgba(0,0,0,.5),0 0 18px rgba(255,255,255,.16)}
   50%{box-shadow:inset 0 1px 0 rgba(255,255,255,.65),inset 0 -1px 0 rgba(255,255,255,.12),0 10px 32px rgba(0,0,0,.5),0 0 34px rgba(255,255,255,.34)}}
 @media(prefers-reduced-motion:reduce){.schau-hinweis{animation:none}}
@@ -504,6 +506,9 @@ svg.ic{width:20px;height:20px;flex:0 0 auto;fill:none;stroke:var(--cyan);stroke-
 
 .studien{grid-template-columns:minmax(0,1fr)}
 @media(max-width:720px){.studien a{white-space:normal!important;overflow-wrap:anywhere}}
+.verzicht summary{display:flex;align-items:center;gap:14px}.verzicht summary .ic-karte{width:28px;height:28px;flex:0 0 28px;margin:0}
+.verzicht summary h3{margin:0;flex:1;text-align:left}
+.verzicht-liste{margin-top:var(--sp-21)}
 
 @media(max-width:720px){
   .m-wisch{display:flex!important;flex-direction:row!important;flex-wrap:nowrap!important;grid-template-columns:none!important;overflow-x:auto;gap:14px!important;
@@ -522,17 +527,15 @@ svg.ic{width:20px;height:20px;flex:0 0 auto;fill:none;stroke:var(--cyan);stroke-
   box-shadow:inset 0 1px 0 rgba(255,255,255,.16),0 0 0 1px #08090b,0 40px 80px -30px rgba(0,0,0,.95),0 0 50px rgba(62,207,178,.10);transition:transform .18s}
 .hero-tour:hover .ht-rahmen{transform:translateY(-3px)}
 .ht-rahmen video{display:block;width:100%;height:auto;aspect-ratio:1600/1112;border-radius:clamp(7px,1vw,12px);background:#07090a}
-.g-marke{position:absolute;left:50%;top:-15px;transform:translateX(-50%);z-index:5;display:flex;align-items:center;gap:8px;white-space:nowrap;pointer-events:none;
-  padding:6px 14px 6px 7px;border-radius:999px;color:#fff;font-size:12.5px;font-weight:600;letter-spacing:.005em;text-shadow:0 1px 2px rgba(0,0,0,.45);
-  background:linear-gradient(135deg,rgba(255,255,255,.28),rgba(255,255,255,.10));border:1px solid rgba(255,255,255,.5);
-  -webkit-backdrop-filter:blur(16px) saturate(1.6);backdrop-filter:blur(16px) saturate(1.6);
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.6),0 8px 26px rgba(0,0,0,.5),0 0 22px rgba(255,255,255,.16)}
+.g-marke{position:absolute;left:2px;top:-30px;z-index:5;display:flex;align-items:center;gap:8px;white-space:nowrap;pointer-events:none;
+  color:var(--text-secondary);font-size:12.5px;font-weight:500;letter-spacing:.01em}
 .g-marke i{font-style:normal;display:inline-grid;place-items:center;width:19px;height:19px;border-radius:50%;background:var(--cyan);color:#001a16;font-size:11px;font-weight:700;text-shadow:none}
-.hero-phone .g-marke{top:auto;bottom:-15px}
+.hero-phone .g-marke{top:auto;bottom:-30px}
+.hero-buehne .schau-voll{display:none!important}
 .fc-klein{display:none}
 @media(max-width:760px){.fc-gross{display:none}.fc-klein{display:block;text-align:center;font-family:var(--font-mono);font-size:11px;letter-spacing:.06em;color:var(--text-secondary)}}
 .hero-buehne .hero-shot{z-index:1}
-@media(max-width:1100px){.g-marke{font-size:11px;padding:5px 11px 5px 6px}.g-marke i{width:17px;height:17px;font-size:10px}}
+@media(max-width:1100px){.g-marke{font-size:11px}.g-marke i{width:17px;height:17px;font-size:10px}}
 @media(max-width:760px){
   .hero-buehne{width:100vw;margin-left:calc(50% - 50vw)!important}
   .hb-geraete{display:flex!important;align-items:center;gap:18px;overflow-x:auto;padding:22px 16px 26px!important;scrollbar-width:none;-webkit-overflow-scrolling:touch}
@@ -541,10 +544,11 @@ svg.ic{width:20px;height:20px;flex:0 0 auto;fill:none;stroke:var(--cyan);stroke-
   .hb-geraete .hero-phone{position:relative!important;left:auto!important;bottom:auto!important;width:38vw!important;order:1}
   .hb-geraete .hero-shot{width:84vw;order:2}
   .hero-tour{width:84vw;order:3}
-  .hero-phone .g-marke{bottom:-14px}
+  .hero-phone .g-marke{bottom:-28px}
+  .hb-geraete{padding-top:36px!important}
   .hero-buehne figcaption{margin:var(--sp-13) 16px 0!important}
 }
-.hero-buehne figcaption{position:relative;z-index:1;margin:var(--sp-55) 0 0 calc(12% - 40px);font-size:var(--t-klein);color:var(--text-dim);line-height:1.6;text-align:left}
+.hero-buehne figcaption{position:relative;z-index:1;margin:calc(var(--sp-55) + 14px) 0 0 calc(12% - 40px);font-size:var(--t-klein);color:var(--text-dim);line-height:1.6;text-align:left}
 .hero-buehne figcaption b{color:var(--text-secondary);font-weight:500}
 .hero-fluss{display:flex;align-items:center;gap:var(--sp-8);margin-bottom:var(--sp-8);max-width:820px}
 .hf-chip{font-family:var(--font-mono);font-size:var(--t-mark);letter-spacing:0.07em;
@@ -973,30 +977,28 @@ try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; 
     <div class="eyebrow">For equine practices and clinics</div>
     <h1>Resting HRV in horses: <em>recorded in the stable, read in your practice.</em></h1>
     <p class="hero-sub">
-      The owner records in the stable. Before the visit you see <strong>how far this horse deviates from its own baseline</strong> and how reliable the recording is – and in the same view you plan your <strong>day's route with drive time at every stop</strong>.
+      The owner records in the stable. Before the visit you see the <strong>course against the horse's own baseline</strong> – and in the same application you plan your <strong>day's route</strong>.
     </p>
     <div class="cta-row">
       <a class="cta-primary" href="/carlon-equine/app/">Open the cockpit with 15&nbsp;demo horses →</a>
-      <a class="btn btn-back" href="#preis">Pricing &amp; activation · from €149 net/month</a>
+      <a class="btn btn-back" href="#preis">Pricing from €149 net ↓</a>
     </div>
     <ul class="hero-belege2">
       <li><svg class="ic" aria-hidden="true"><use href="#i-browser"/></svg>No account, no installation</li>
       <li><svg class="ic" aria-hidden="true"><use href="#i-schild"/></svg>Horse and measurement data stay on your device</li>
-      <li><svg class="ic" aria-hidden="true"><use href="#i-route"/></svg>Day's route included</li>
       <li><svg class="ic" aria-hidden="true"><use href="#i-check"/></svg>Cancel monthly</li>
     </ul>
-    <p class="rollen-weiche"><a href="#ablauf">How a recording works ↓</a> · <a href="#arbeitstag">For mobile practices ↓</a> · <a href="#klinik">For equine clinics ↓</a> · <a href="#preis">Pricing ↓</a></p>
     <p class="cta-note"><span id="heroBeta">We are in beta and accompany every practice personally — join now and you keep your price as a founding partner.</span></p>
     <figure class="hero-buehne">
       <div class="hb-geraete">
       <div class="hero-shot schau-box" data-schau="/carlon-equine/app/?schaufenster=1&amp;demo=roster&amp;pferd=sunny&amp;fokus=verlauf">
-        <video src="../assets/visite-shots/13-verlauf-film-v3.mp4" poster="assets/visite-shots/13-verlauf-v3.jpg" width="1600" height="1112" autoplay muted playsinline preload="auto" aria-label="Record of a demo horse in the cockpit: RMSSD, resting heart rate and SDNN trends over weeks against its own baseline, below it heart rate and HRV of a resting recording beat by beat"></video><span class="schau-hinweis" hidden><svg class="ic" aria-hidden="true"><use href="#i-pfeil"/></svg>Now try it: move over the curves or tap</span>
+        <video src="../assets/visite-shots/13-verlauf-film-v3.mp4" poster="assets/visite-shots/13-verlauf-v3.jpg" width="1600" height="1112" autoplay muted playsinline preload="auto" aria-label="Record of a demo horse in the cockpit: RMSSD, resting heart rate and SDNN trends over weeks against its own baseline, below it heart rate and HRV of a resting recording beat by beat"></video>
         <a class="schau-voll" href="/carlon-equine/app/?demo=roster&amp;pferd=sunny" title="Open the cockpit full screen">Full screen ↗</a><span class="g-marke"><i>2</i>Course against own baseline</span></div>
       <span class="hero-phone"><video src="../assets/station-tour/live-v5.mp4" poster="assets/station-tour/live-poster-v5.jpg" width="660" height="1428" autoplay muted playsinline preload="auto" aria-hidden="true"></video><span class="g-marke"><i>1</i>Recorded in the stable</span></span>
       <a class="hero-tour" href="#arbeitstag" aria-label="To the day's route in the cockpit"><span class="ht-rahmen"><video src="../assets/visite-shots/14-tour-film.mp4" poster="assets/visite-shots/14-tour.jpg" width="1600" height="1112" muted playsinline preload="metadata" aria-hidden="true"></video></span><span class="g-marke"><i>3</i>Day's route with drive times</span></a>
       </div>
       <figcaption>
-        <span class="fc-gross">Views from the application — <b>one click opens it.</b></span><span class="fc-klein" aria-hidden="true">‹ Swipe: stable → course → round ›</span>
+        <span class="fc-gross">The real application, not a graphic: <b>move over the curves or tap a device.</b></span><span class="fc-klein" aria-hidden="true">‹ Swipe: stable → course → round ›</span>
       </figcaption>
     </figure>
   </div>
@@ -1652,30 +1654,22 @@ try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; 
   <div class="wrap">
     <div class="sec-eyebrow">Limits we draw ourselves</div>
     <h2>What CARLON deliberately does not do.</h2>
-    <div class="grid">
-      <div class="card">
-        <svg class="ic ic-karte" aria-hidden="true"><use href="#i-plus"/><use href="#i-kein"/></svg><h3>No diagnosis</h3>
-        <p>The software shows measured values, signal quality, trend and deviation. The
-           medical interpretation remains entirely with you. CARLON Equine Visite is not a
-           medical device: Regulation (EU) 2017/745 covers products for humans; CARLON Equine Visite is intended for horses only and shows measurements, not findings.</p>
-      </div>
-      <div class="card">
-        <svg class="ic ic-karte" aria-hidden="true"><use href="#i-pfeil"/><use href="#i-kein"/></svg><h3>No treatment recommendation</h3>
-        <p>Even when a trend looks unambiguous: whether anything is changed appears nowhere
-           on the screen. That is your decision, not a metric's.</p>
-      </div>
-      <div class="card">
-        <svg class="ic ic-karte" aria-hidden="true"><use href="#i-wolke"/><use href="#i-kein"/></svg><h3>No database at our end</h3>
-        <p>Your horse data lives in your device's storage. We have no access and could not
+    <div class="faq-liste verzicht-liste">
+      <details class="faq-item verzicht"><summary><svg class="ic ic-karte" aria-hidden="true"><use href="#i-plus"/><use href="#i-kein"/></svg><h3>No diagnosis</h3></summary>
+        <div class="faq-a"><p>The software shows measured values, signal quality, trend and deviation. The
+           medical interpretation remains entirely with you. In our assessment
+           CARLON Equine Visite does not fall under Regulation (EU) 2017/745: it covers products for humans; Visite is intended for horses only and shows measurements, not findings.</p></div></details>
+      <details class="faq-item verzicht"><summary><svg class="ic ic-karte" aria-hidden="true"><use href="#i-pfeil"/><use href="#i-kein"/></svg><h3>No treatment recommendation</h3></summary>
+        <div class="faq-a"><p>Even when a trend looks unambiguous: whether anything is changed appears nowhere
+           on the screen. That is your decision, not a metric's.</p></div></details>
+      <details class="faq-item verzicht"><summary><svg class="ic ic-karte" aria-hidden="true"><use href="#i-wolke"/><use href="#i-kein"/></svg><h3>No database at our end</h3></summary>
+        <div class="faq-a"><p>Your horse data lives in your device's storage. We have no access and could not
            delete it either. The owner's recording never passes through us at all: she
            sends you a file — opened via your measuring link, it is encrypted for your
-           practice from the very first second.</p>
-      </div>
-      <div class="card">
-        <svg class="ic ic-karte" aria-hidden="true"><use href="#i-glocke"/><use href="#i-kein"/></svg><h3>Not an emergency channel</h3>
-        <p>A file someone sends you is not a phone call. In acute cases what always applies
-           still applies — act veterinarily, immediately.</p>
-      </div>
+           practice from the very first second.</p></div></details>
+      <details class="faq-item verzicht"><summary><svg class="ic ic-karte" aria-hidden="true"><use href="#i-glocke"/><use href="#i-kein"/></svg><h3>Not an emergency channel</h3></summary>
+        <div class="faq-a"><p>A file someone sends you is not a phone call. In acute cases what always applies
+           still applies — act veterinarily, immediately.</p></div></details>
     </div>
   </div>
 </section>
@@ -1995,13 +1989,22 @@ if(_lb) _lb.addEventListener('click', function(){
     return; }
   boxen.forEach(function(box){
     var v=box.querySelector('video'), hin=box.querySelector('.schau-hinweis'), geladen=false, bereit=false, wunsch=!v, gezeigt=false, rahmen=null, fr=null;
+    
+    var benutzt=false, mal=0, tz=null, zuege=0;
+    function weg(){ if(!hin||hin.hidden) return; hin.classList.add('weg'); clearTimeout(tz); tz=setTimeout(function(){ hin.hidden=true; },520); }
+    function zeig(ms){ if(!hin||benutzt||mal>=3) return; mal++; clearTimeout(tz); hin.classList.add('weg'); hin.hidden=false;
+      requestAnimationFrame(function(){ requestAnimationFrame(function(){ hin.classList.remove('weg'); }); }); tz=setTimeout(weg,ms); }
+    function haken(){ try{ var d=fr.contentDocument, aus=function(){ benutzt=true; weg(); };
+      ['pointerdown','wheel','touchstart','keydown'].forEach(function(ev){ d.addEventListener(ev,aus,{passive:true,capture:true}); });
+      d.addEventListener('pointermove',function(){ if(++zuege>14) aus(); },{passive:true,capture:true}); }catch(e){} }
     function passen(){ if(fr) fr.style.transform='scale('+(rahmen.clientWidth/1280)+')'; }
     function vielleicht(){ if(gezeigt||!bereit||!(wunsch||v.ended)) return; gezeigt=true;
-      rahmen.classList.add('an'); box.classList.add('schau-an'); if(v) v.pause(); if(hin){ hin.hidden=false; setTimeout(function(){hin.hidden=true;},6000); } }
+      rahmen.classList.add('an'); box.classList.add('schau-an'); if(v) v.pause(); zeig(6000);
+      if('IntersectionObserver' in window){ var wio=new IntersectionObserver(function(es){ es.forEach(function(x){ if(x.intersectionRatio>=0.6) zeig(4000); else if(x.intersectionRatio<0.2) weg(); }); },{threshold:[0.2,0.6]}); setTimeout(function(){ wio.observe(box); },6500); } }
     function laden(){ if(geladen) return; geladen=true;
       rahmen=document.createElement('div'); rahmen.className='schau-rahmen';
       fr=document.createElement('iframe'); fr.src=box.getAttribute('data-schau'); fr.title='CARLON cockpit – demo horse to try';
-      rahmen.appendChild(fr); box.insertBefore(rahmen,hin||null); passen(); addEventListener('resize',passen); }
+      rahmen.appendChild(fr); fr.addEventListener('load',haken); box.insertBefore(rahmen,hin||null); passen(); addEventListener('resize',passen); }
     addEventListener('message',function(e){ if(fr&&e.source===fr.contentWindow&&e.data&&e.data.carlonSchaufenster==='bereit'){ bereit=true; setTimeout(vielleicht,300); } });
     if(v){ v.addEventListener('timeupdate',function(){ if(v.duration&&v.currentTime>v.duration-5) laden(); }); v.addEventListener('ended',function(){ laden(); vielleicht(); }); }
     ['pointerenter','touchstart'].forEach(function(ev){ box.addEventListener(ev,function(){ wunsch=true; laden(); vielleicht(); },{once:true,passive:true}); });

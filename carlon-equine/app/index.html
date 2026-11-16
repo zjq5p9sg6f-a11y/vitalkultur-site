@@ -2019,7 +2019,7 @@ header.k7 #tierPill,header.k7 .post-pill{display:none}
      bekamen eine falsche Atemwegs-Einstufung, alle nach oben. -->
 <script src="aufnahme-herkunft.js"></script>
 <script src="hrv-vorstufe.js"></script>
-<script src="poincare-zeit.js"></script>
+<script src="poincare-zeit.js?v=20261116b"></script>
 <script src="carlon-formate.js"></script>
 <script src="asthma.js"></script>
 <script src="krypto.js"></script>
@@ -4690,6 +4690,16 @@ const HRV={
     return `<svg class="viz" data-chart="dfa" data-alpha1="${dfa1}" viewBox="0 0 ${w} ${h}">${g}</svg>`;
   }
 };
+
+/* EINGEBETTET (Schaufenster auf der Visite-Seite, 16.11.2026): scrollIntoView scrollt bei einem Iframe vom selben
+   Ursprung auch die ÄUSSERE Seite – beim Laden der Akte sprang die Landingpage um ~1 200 px (Jan: „scrollt automatisch
+   ein Stück runter“). Eingebettet scrollt das Cockpit deshalb nur seine eigene Fläche. */
+if(window.top!==window.self){ Element.prototype.scrollIntoView=function(o){
+  const blk=(o&&typeof o==='object'&&o.block)||'start', r=this.getBoundingClientRect();
+  for(let q=this.parentElement;q&&q!==document.documentElement&&q!==document.body;q=q.parentElement){
+    const cs=getComputedStyle(q); if(/(auto|scroll)/.test(cs.overflowY)&&q.scrollHeight>q.clientHeight+1){
+      const pr=q.getBoundingClientRect(); q.scrollTop+=blk==='center'?(r.top+r.height/2)-(pr.top+pr.height/2):blk==='nearest'?(r.top<pr.top?r.top-pr.top:Math.max(0,r.bottom-pr.bottom)):r.top-pr.top; return; } }
+  window.scrollBy(0,blk==='center'?(r.top+r.height/2-innerHeight/2):blk==='nearest'?(r.top<0?r.top:Math.max(0,r.bottom-innerHeight)):r.top); }; }
 
 /* ── Info · Fachliche Erklärungen (i-Symbole) — hält Fachpublikum stand ── */
 const Info={
