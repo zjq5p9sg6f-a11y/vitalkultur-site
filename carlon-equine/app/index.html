@@ -1357,6 +1357,12 @@ svg.viz .sd-lbl{fill:var(--cyan-strong);font-size:10px;font-weight:600;font-fami
 .vm-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(185px,1fr));gap:9px}
 /* Metrik-Kacheln wie die App: farbcodiertes Label + großer Wert + Kontext-Zeile, Anthrazit + Licht-Oberkante */
 .vm-grid .vm{background:var(--bg-elev);border:1px solid var(--border-faint);border-radius:13px;padding:13px 15px 14px;position:relative;overflow:hidden}
+.vm-grid button.vm{font:inherit;color:inherit;text-align:left;width:100%;cursor:pointer;transition:border-color .15s,background .15s}
+.vm-grid button.vm:hover,.vm-grid button.vm:focus-visible{border-color:rgba(0,229,204,.38);outline:none}
+.vm-grid .vm .k{text-transform:none!important;letter-spacing:.04em!important;font-size:11px}
+.vm-grid .vm .vm-i{width:11px;height:11px;margin-left:5px;vertical-align:-1px;opacity:.45}
+.vm-grid button.vm:hover .vm-i{opacity:.9}
+.vm-hint{font-size:10.5px;color:var(--text-faint);letter-spacing:.02em}
 .vm-grid .vm::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,.07),transparent)}
 .vm-grid .vm .k{font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--cyan);font-weight:700}
 .vm-grid .vm .v{font-family:var(--font-mono);font-size:25px;font-weight:700;font-variant-numeric:tabular-nums;color:var(--text-primary);margin-top:5px;letter-spacing:-.015em;line-height:1.02}
@@ -3738,7 +3744,7 @@ const Chart={
 
   _clipNote(x,y,n){
     if(!n) return '';
-    return `<text x="${x.toFixed(1)}" y="${y.toFixed(1)}" text-anchor="end" style="fill:var(--amber);font-family:var(--font-mono);font-size:9.5px;opacity:.85">${n} ${n===1?'Wert':'Werte'} ausserhalb</text>`;
+    return `<text x="${x.toFixed(1)}" y="${y.toFixed(1)}" text-anchor="end" style="fill:var(--amber);font-family:var(--font-mono);font-size:9.5px;opacity:.85">${n} ${n===1?'Wert':'Werte'} außerhalb</text>`;
   },
   niceTicks(min,max,n){const span=(max-min)||1;const raw=span/n;const mag=Math.pow(10,Math.floor(Math.log10(raw)));const nrm=raw/mag;
     const step=(nrm<1.5?1:nrm<3?2:nrm<7?5:10)*mag;const start=Math.ceil(min/step)*step;const t=[];for(let v=start;v<=max+step*1e-6;v+=step)t.push(+v.toFixed(6));return t;},
@@ -4468,6 +4474,9 @@ const HRV={
     const PY=p=>yb-(Math.min(ytop,p)/ytop)*plotH;
     const E=pmax>=1e5?1e6:(pmax>=100?1e3:1), EU=E===1e6?'10⁶ ':E===1e3?'10³ ':'';
     const fk=t=>{const v=t/E;return (v>=10?fmt0(v):(Math.round(v*10)/10).toLocaleString('de-DE'));};
+    /* Dezimalzeichen wie die übrigen Zahlen (16.11.2026: Achse schrieb 0.030 neben 0,29). */
+    const dz=(x,n)=>fmt2(1.5).indexOf(',')>=0?x.toFixed(n).replace('.',','):x.toFixed(n);
+    const lfKurz=(psd.dauerS||0)<1020;   // LF erst ab ~17 min belastbar → kein Gipfel-Etikett
     const C=this.BANDCOL, bandsDef=kurz?[['lf',0.01,0.07],['hf',0.07,fmax]]:[['vlf',0.003,0.01],['lf',0.01,0.07],['hf',0.07,fmax]];
     // Band-Gradient (harte Stops an den Band-Kanten) für Füllung UND Kontur
     let g=`<defs><linearGradient id="psdg" x1="0" y1="0" x2="1" y2="0">`
@@ -4477,7 +4486,7 @@ const HRV={
     g+=`<rect x="${pad.l}" y="${pad.t}" width="${plotW.toFixed(1)}" height="${plotH.toFixed(1)}" rx="8" fill="#0E0E0E"/>`;
     bandsDef.forEach(([k,a,b])=>{const x0=LX(a),x1=LX(b);g+=`<rect x="${x0.toFixed(1)}" y="${pad.t}" width="${(x1-x0).toFixed(1)}" height="${plotH.toFixed(1)}" fill="${C[k]}" opacity=".05"/>`;});
     yt.forEach(t=>{const yy=PY(t);g+=`<line class="grid-minor" x1="${pad.l}" x2="${w-pad.r}" y1="${yy.toFixed(1)}" y2="${yy.toFixed(1)}"/><text x="${(pad.l-8).toFixed(1)}" y="${(yy+3).toFixed(1)}" text-anchor="end">${fk(t)}</text>`;});
-    (kurz?[0.01,0.03,0.07,fmax]:[0.003,0.01,0.07,fmax]).forEach(f=>{const x=LX(f);g+=`<line class="tick" x1="${x.toFixed(1)}" y1="${yb}" x2="${x.toFixed(1)}" y2="${(yb+4).toFixed(1)}"/><text x="${x.toFixed(1)}" y="${(yb+14).toFixed(1)}" text-anchor="middle">${f<0.01?f.toFixed(3):f.toFixed(2)}</text>`;});
+    (kurz?[0.01,0.03,0.07,fmax]:[0.003,0.01,0.07,fmax]).forEach(f=>{const x=LX(f);g+=`<line class="tick" x1="${x.toFixed(1)}" y1="${yb}" x2="${x.toFixed(1)}" y2="${(yb+4).toFixed(1)}"/><text x="${x.toFixed(1)}" y="${(yb+14).toFixed(1)}" text-anchor="middle">${f<0.01?dz(f,3):dz(f,2)}</text>`;});
     // Durchgehende Kurve: Fläche (Gradient) + Kontur (Gradient)
     let line='',fill='';
     psd.freqs.forEach((f,i)=>{const x=LX(f).toFixed(1),y=PY(psd.power[i]).toFixed(1);if(i===0){line=`M${x},${y}`;fill=`M${x},${yb.toFixed(1)} L${x},${y}`;}else{line+=` L${x},${y}`;fill+=` L${x},${y}`;}});
@@ -4489,15 +4498,15 @@ const HRV={
     bandsDef.forEach(([k,a,b])=>{const col=C[k],x0=LX(a),x1=LX(b);
       g+=`<text x="${((x0+x1)/2).toFixed(1)}" y="${(pad.t+12).toFixed(1)}" text-anchor="middle" style="fill:${col};font-size:10.5px;font-weight:700;letter-spacing:.06em">${k.toUpperCase()}</text>`;
       let pk=null;for(let i=0;i<psd.freqs.length;i++){const f=psd.freqs[i];if(f>=a&&f<b&&(!pk||psd.power[i]>pk.p))pk={f,p:psd.power[i]};}
-      if(pk&&pk.f>fmin){const px=LX(pk.f),py=PY(pk.p);
+      if(pk&&pk.f>fmin&&!(k==='lf'&&lfKurz)){const px=LX(pk.f),py=PY(pk.p);
         g+=`<line x1="${px.toFixed(1)}" y1="${py.toFixed(1)}" x2="${px.toFixed(1)}" y2="${yb.toFixed(1)}" stroke="${col}" stroke-opacity=".35" stroke-width=".8" stroke-dasharray="2 3"/>`;
         g+=`<circle cx="${px.toFixed(1)}" cy="${py.toFixed(1)}" r="2.6" fill="${col}"/>`;
-        g+=`<text x="${px.toFixed(1)}" y="${(py-7).toFixed(1)}" text-anchor="middle" style="fill:${col};font-size:9px;font-weight:600;font-family:var(--font-mono)">${pk.f.toFixed(3)} Hz</text>`;}
+        g+=`<text x="${px.toFixed(1)}" y="${(py-7).toFixed(1)}" text-anchor="middle" style="fill:${col};font-size:9px;font-weight:600;font-family:var(--font-mono)">${dz(pk.f,3)} Hz</text>`;}
       _sm.push({x:+LX((a+b)/2).toFixed(1),y:+PY(pk?pk.p:0).toFixed(1),f:pk?+pk.f.toFixed(3):0,pw:Math.round(B[k]),bd:k.toUpperCase(),pct:Math.round(B[k]/(B.total||1)*100)});
     });
     g+=`<rect x="${pad.l}" y="${pad.t}" width="${plotW.toFixed(1)}" height="${plotH.toFixed(1)}" fill="none" class="axis"/>`;
     g+=`<text x="14" y="${(pad.t+plotH/2).toFixed(0)}" transform="rotate(-90 14 ${(pad.t+plotH/2).toFixed(0)})" text-anchor="middle" class="label-axis">PSD<tspan class="label-unit"> (${EU}ms²/Hz)</tspan></text>`;
-    if(fmax<0.6) g+=`<text x="${(w-pad.r-4).toFixed(1)}" y="${(pad.t+26).toFixed(1)}" text-anchor="end" style="fill:#8a9aa8;font-size:9px">Obergrenze ${fmax.toFixed(2).replace(".",",")} Hz = halbe Schlagfrequenz</text>`;
+    if(fmax<0.6) g+=`<text x="${(w-pad.r-4).toFixed(1)}" y="${(pad.t+26).toFixed(1)}" text-anchor="end" style="fill:#8a9aa8;font-size:9px">Obergrenze ${dz(fmax,2)} Hz = halbe Schlagfrequenz</text>`;
     g+=`<text x="${(pad.l+plotW/2).toFixed(0)}" y="${h-2}" text-anchor="middle" class="label-axis">FREQUENZ<tspan class="label-unit"> (Hz · log)</tspan></text>`;
     return Chart._hov(g,w,h,_sm,"spec");
   },
@@ -4632,16 +4641,31 @@ const HRV={
 /* ── Info · Fachliche Erklärungen (i-Symbole) — hält Fachpublikum stand ── */
 const Info={
   defs:{
-    rmssd:{t:'RMSSD',what:'Root Mean Square of Successive Differences der RR-Intervalle (ms).',method:'√(Mittel der quadrierten Differenzen aufeinanderfolgender normaler RR-Intervalle).',interp:'Misst die kurzfristige, parasympathisch (vagal) vermittelte HRV. Höher = stärkerer Vagotonus/Erholung.',equine:'Kein equiner Konsens-Ruhewert (breed-/methodenabhängig) → gegen die individuelle Baseline bewerten.',ref:'Task Force 1996 · Kuwahara 1996 (equine)'},
-    sdnn:{t:'SDNN',what:'Standardabweichung aller normalen RR-Intervalle (ms).',method:'SD der NN-Intervalle über den Aufnahmezeitraum.',interp:'Gesamt-HRV (sympathisch + parasympathisch). Bei kurzen Aufnahmen von kurzfristiger Variabilität dominiert.',ref:'Task Force 1996'},
-    pnn50:{t:'pNN50',what:'Anteil aufeinanderfolgender RR-Intervalle, die sich um >50 ms unterscheiden (%).',interp:'Weiterer vagaler Marker, eng mit RMSSD korreliert.',ref:'Task Force 1996'},
-    dfa:{t:'DFA α1',what:'Kurzfristiger Skalierungsexponent der Detrended Fluctuation Analysis.',method:'Integrierte RR-Reihe, boxweise linear detrended, RMS-Fluktuation F(n); α1 = Steigung von log F(n) über log n für n = 4–16 Schläge.',interp:'Fraktale Korrelationsstruktur. ~1,0 = gesunde 1/f-Dynamik · <0,75 = zufälliger (Belastung/Krankheit) · >1,5 = zu regelmäßig.',equine:'Robuster als Zeit-/Frequenzmaße bei kurzen equinen Aufnahmen.',ref:'Peng 1995'},
+    /* Erklärungen (16.11.2026, Jan: „jeder Wert, jede Grafik – Auffrischung für Tierärzte ohne HRV-Schwerpunkt").
+       Regeln: erst in Alltagssprache WAS, dann der Rechenweg wie im Code, dann die Einordnung OHNE Normwert-
+       oder Gesundheitsurteil (für Ruhe-HRV beim Pferd gibt es keinen Konsens-Normwert), dann die Quelle.
+       Schwellen und Fenster stehen hier nur, wenn der Code sie genau so rechnet (hrv-vorstufe.js, Chart.*). */
+    rmssd:{t:'RMSSD',what:'Wie stark sich zwei aufeinanderfolgende Herzschläge im Abstand unterscheiden – gemittelt über die ganze Aufnahme, in Millisekunden.',method:'Wurzel aus dem Mittel der quadrierten Differenzen aufeinanderfolgender RR-Abstände, nach der Artefaktbereinigung.',interp:'Gilt als Maß der kurzfristigen, überwiegend vagal (parasympathisch) vermittelten Variabilität. Steigt die Herzfrequenz oder sinkt der Vagustonus, wird der Wert in der Regel kleiner.',equine:'Für Ruhe-RMSSD beim Pferd gibt es keinen Konsens-Normwert; Rasse, Alter, Umgebung und Aufnahmeprotokoll verschieben ihn deutlich. CARLON vergleicht deshalb mit der eigenen Basis des Pferds.',ref:'Task Force 1996 · Shaffer & Ginsberg 2017 · Kuwahara 1996 (Pferd)'},
+    sdnn:{t:'SDNN',what:'Wie weit alle Schlagabstände der Aufnahme um ihren Mittelwert streuen – die Gesamtstreuung, in Millisekunden.',method:'Standardabweichung aller bereinigten RR-Abstände.',interp:'Enthält schnelle und langsame Schwankungen zugleich. Der Wert wächst mit der Aufnahmedauer – vergleichen Sie nur Aufnahmen ähnlicher Länge und gleichen Protokolls.',ref:'Task Force 1996'},
+    pnn50:{t:'pNN50',what:'Anteil der aufeinanderfolgenden Schlagabstände, die sich um mehr als 50 ms unterscheiden, in Prozent.',interp:'Wie RMSSD ein Maß der Schlag-zu-Schlag-Variabilität und eng mit ihm verwandt.',equine:'Die feste 50-ms-Schwelle stammt aus der Humanmedizin (RR um 800 ms). Beim ruhenden Pferd mit RR um 1.500–2.000 ms liegen viele Differenzen darüber, der Wert läuft deshalb oft nahe an seine Obergrenze und trennt schlechter als RMSSD.',ref:'Task Force 1996'},
+    meanrr:{t:'Mittleres RR',what:'Durchschnittlicher Abstand zwischen zwei Herzschlägen, in Millisekunden.',method:'Mittelwert der bereinigten RR-Abstände; 60.000 ÷ mittleres RR ergibt die mittlere Herzfrequenz pro Minute.',interp:'Die Grundlage aller anderen Werte: Variabilitätsmaße wachsen meist mit längerem RR, also mit niedrigerer Herzfrequenz. Zwei Aufnahmen lassen sich deshalb am saubersten bei ähnlicher Ruhe-Herzfrequenz vergleichen.',ref:'Task Force 1996 · Sacha 2013 (Abhängigkeit der HRV von der Herzfrequenz)'},
+    minmax:{t:'Min-HF und Max-HF',what:'Niedrigste und höchste Herzfrequenz, die in der Aufnahme vorkam, pro Minute.',interp:'Die Spannweite während der Aufnahme. Eine hohe Max-HF in einer Ruheaufnahme stammt oft von kurzer Aufregung – ein Geräusch, ein Nachbarpferd, Futter – oder von einer einzelnen Fehlerkennung. Im RR-Tachogramm und in der Kurve „Puls und HRV“ sehen Sie, wann und wie lange.',equine:'Die Ruhe-Herzfrequenz erwachsener Pferde liegt typischerweise etwa zwischen 28 und 44 pro Minute.',ref:'Merck Veterinary Manual (Ruhe-HF Pferd)'},
+    sd1:{t:'SD1',what:'Wie breit die Poincaré-Wolke quer zur Diagonale ist, in Millisekunden – die Schlag-zu-Schlag-Änderung.',method:'Standardabweichung der Punkte senkrecht zur Linie y = x; rechnerisch SD1 ≈ RMSSD ÷ √2.',interp:'Kurzfristige Variabilität, inhaltlich dasselbe wie RMSSD in anderer Skala.',ref:'Brennan, Palaniswami & Kamen 2001'},
+    sd2:{t:'SD2',what:'Wie lang die Poincaré-Wolke entlang der Diagonale ist, in Millisekunden – die langsameren Schwankungen.',method:'Standardabweichung der Punkte entlang der Linie y = x; rechnerisch SD2² = 2·SDNN² − SD1².',interp:'Langfristigere Variabilität innerhalb der Aufnahme, eng verwandt mit SDNN und wie dieser abhängig von der Aufnahmedauer.',ref:'Brennan, Palaniswami & Kamen 2001'},
+    sdratio:{t:'SD2/SD1',what:'Verhältnis von Länge zu Breite der Poincaré-Wolke, ohne Einheit.',interp:'Beschreibt die Form: hoch = langgestreckt, nahe 1 = rund. Die verbreitete Lesart als „sympatho-vagale Balance“ ist nicht gesichert – nutzen Sie den Wert beschreibend und im Verlauf desselben Pferds.',ref:'Brennan, Palaniswami & Kamen 2001'},
+    dfa:{t:'DFA α1',what:'Wie stark die Schlagabstände über kurze Strecken von 4 bis 16 Schlägen zusammenhängen.',method:'Die RR-Reihe wird aufsummiert, in Fenster von n Schlägen geteilt, je Fenster linear vom Trend befreit; α1 ist die Steigung von log F(n) über log n für n = 4–16.',interp:'Etwa 0,5 = Abstände ohne Zusammenhang, wie Zufall · etwa 1 = fraktale, „1/f“-artige Struktur · etwa 1,5 = sehr gleichmäßige, träge Folge. Beim Menschen sinkt α1 mit steigender körperlicher Belastung.',equine:'Für Pferde gibt es keine validierten Referenzbereiche. CARLON weist DFA α1 als explorativ aus und rechnet ihn erst, wenn genügend Schläge vorliegen.',ref:'Peng 1995 · Rogers 2021 (Belastung, Mensch)'},
+    sampen:{t:'Sample Entropy',what:'Wie regelmäßig sich kurze Muster in der Schlagfolge wiederholen.',method:'SampEn(m = 2, r = 0,2 · SD): negativer Logarithmus der Wahrscheinlichkeit, dass zwei Folgen, die über 2 Schläge ähnlich sind, es auch über 3 Schläge bleiben.',interp:'Niedrig = Muster wiederholen sich oft, die Folge ist regelmäßig · hoch = weniger vorhersagbar. Der Wert hängt von Aufnahmelänge und Parametern ab und ist nur unter gleichen Bedingungen vergleichbar.',equine:'Beim Pferd ohne Referenzbereich – explorativ.',ref:'Richman & Moorman 2000'},
+    artefakt:{t:'Artefakte',what:'Anteil der Schläge, die die Bereinigung als fehlerhaft erkannt und ersetzt hat, in Prozent.',method:'Erkennung nach Lipponen & Tarvainen 2019, an das Pferd angepasst. Lange Pausen zählen nicht als Artefakt – sie werden getrennt gezählt und nicht „wegkorrigiert".',interp:'Je niedriger, desto verlässlicher die Kennwerte. Der Anteil allein sagt aber nicht, ob einzelne Fehler einen Kennwert verschieben – deshalb zeigt CARLON Rohwert und bereinigten Wert nebeneinander.',ref:'Lipponen & Tarvainen 2019'},
+    avblock:{t:'Lange Pausen',what:'Wie oft ein Schlagabstand etwa doppelt so lang war wie die Abstände davor und danach.',method:'Gezählt wird ein Abstand vom 1,8- bis 2,2-Fachen des örtlichen Medians (± 10 Schläge), wenn seine Nachbarn unauffällig sind (Abweichung unter 25 %). Diese Pausen werden getrennt ausgewiesen.',interp:'Beim ruhenden Pferd steckt dahinter häufig ein AV-Block 2. Grades, der bei hohem Vagustonus vorkommt und unter Belastung typischerweise verschwindet. Ob es einer ist, zeigt nur das EKG – die Zahl ist ein Hinweis, keine Rhythmusdiagnose.',ref:'Reef et al. 2014 (ACVIM/ECEIM-Konsens) · Eggensperger & Schwarzwald 2017'},
+    dual:{t:'Puls und HRV über die Zeit',what:'Herzfrequenz (gold, pro Minute) und HRV als gleitende RMSSD (cyan, ms) über die ganze Aufnahme, auf derselben Zeitachse.',method:'Die HRV-Kurve ist die RMSSD der jeweils letzten 30 Schläge. Enthält ein Fenster ein auffälliges Schlagpaar (Sprung über 20 %), ist der Abschnitt gestrichelt hinterlegt – dort trägt ein einzelner Schlag die Kurve.',interp:'In Ruhe laufen beide Kurven meist ruhig. Steigt der Puls kurz an – Geräusch, Bewegung, Futter –, fällt die HRV oft im selben Moment. So sehen Sie, welcher Abschnitt eine echte Ruhephase war.',ref:'Task Force 1996'},
+    tacho:{t:'RR-Tachogramm',what:'Jeder einzelne Schlagabstand der Aufnahme als Punkt einer Linie, in Millisekunden – das Rohmaterial aller Kennwerte.',interp:'Die Linie zeigt ruhige Phasen, Ausreißer und lange Pausen auf einen Blick. Bernsteinfarbene Rauten markieren Schläge, die die Bereinigung ersetzt hat; die gestrichelte Linie ist der Mittelwert.',ref:'Task Force 1996'},
+    atem:{t:'Atemkurve (aus dem Herzschlag)',what:'Die Atmung verändert den Herzschlag: beim Einatmen werden die Abstände etwas kürzer, beim Ausatmen länger (respiratorische Sinusarrhythmie). Aus dieser Schwankung entsteht die Atemwelle.',method:'Von jedem RR-Abstand wird das Mittel der umliegenden 11 Schläge abgezogen; was bleibt, ist die schnelle, atmungsbedingte Schwankung. Koralle = Einatmen, Blau = Ausatmen.',interp:'Gleichmäßige Wellen deuten auf ruhige, regelmäßige Atmung. Die Kurve ist aus dem Herzschlag abgeleitet und keine direkte Atemmessung; eine Atemfrequenz daraus ist eine Schätzung.',ref:'Hirsch & Bishop 1981 (RSA) · Task Force 1996'},
+    freq:{t:'Frequenzspektrum',what:'Zerlegt die Schwankungen der Schlagabstände nach ihrem Tempo: langsame Wellen links, schnelle rechts. Die Fläche unter der Kurve je Band ist dessen Leistung in ms².',method:'Lomb-Scargle-Periodogramm direkt auf den ungleichmäßig liegenden Schlägen (ohne Umrechnen auf ein festes Raster), auf die Varianz der Reihe kalibriert.',interp:'HF enthält vor allem die atmungsbedingte Schwankung und gilt als vagal vermittelt. LF ist gemischt. Nach oben endet das Bild bei der halben mittleren Schlagfrequenz – schnellere Schwankungen lassen sich aus Herzschlägen nicht ablesen.',equine:'Bänder an Ruhe-Herzfrequenz und Atmung des Pferds angepasst: LF 0,01–0,07 Hz, HF ab 0,07 Hz. LF braucht mindestens etwa 17 Minuten Aufnahme (zehn Wellen der unteren Bandgrenze); kürzer weist CARLON LF und LF/HF nicht aus.',ref:'Kuwahara 1996 · Lomb 1976 / Scargle 1982 · Task Force 1996'},
+    verlauf:{t:'Verlauf über Wochen',what:'Jede Ruheaufnahme dieses Pferds ist ein Punkt, auf einer echten Zeitachse.',method:'Die Linie „eigene Basis" ist das Mittel aus mindestens drei früheren Aufnahmen der letzten 30 Tage; verglichen wird ab der vierten Aufnahme.',interp:'Der einzelne Wert sagt beim Pferd wenig, die Richtung über Wochen umso mehr. Vergleichbar sind nur Aufnahmen mit gleichem Protokoll: gleiche Box, ähnliche Tageszeit, Ruhe vorher.',ref:'Schmidt 2010 · Eggensperger & Schwarzwald 2017'},
     lfhf:{t:'LF/HF-Verhältnis',what:'Quotient aus Low- und High-Frequency-Power.',interp:'Klassisch als sympatho-vagale Balance gelesen — wissenschaftlich umstritten, da LF nicht rein sympathisch ist. Besser als Trend / gegen Baseline, nicht als Absolutwert.',ref:'Billman 2013 (Kritik)'},
-    freq:{t:'Frequenzspektrum (VLF/LF/HF)',what:'Leistungsdichte der HRV in Frequenzbändern (ms²).',method:'Lomb-Scargle-Periodogramm (ungleichmäßig abgetastete RR, kein Resampling), auf die RR-Varianz kalibriert (∫PSD·df = Varianz, Parseval) → echte ms².',interp:'HF ≈ respiratorische Sinusarrhythmie (vagal) · LF gemischt · VLF langsame Regulation.',equine:'Bänder equine-adaptiert an niedrigere Ruhe-HF/Atemfrequenz: VLF 0–0,01 · LF 0,01–0,07 · HF 0,07–0,6 Hz.',ref:'Kuwahara 1996 · Lomb 1976 / Scargle 1982'},
     baevsky:{t:'Baevsky-Index (SI)',what:'Index der Zentralisierung der Herzratensteuerung (Sympathikus).',method:'SI = AMo / (2 · Mo · MxDMn) aus dem RR-Histogramm (Mo = Modus [s], AMo = Modalamplitude [%], MxDMn = Variationsbreite [s]).',interp:'Höher = stärkere Anspannung/Stress, geringere autonome Flexibilität.',equine:'Keine equine Norm → orientierend, gegen die individuelle Baseline. √SI stabilisiert die Skala.',ref:'Baevsky 1984 · Baevsky & Chernikova 2017'},
-    sampen:{t:'Sample Entropy',what:'Maß der Signal-Komplexität/Unregelmäßigkeit.',method:'SampEn(m=2, r=0,2·SD): negativer Logarithmus der bedingten Wiederholungswahrscheinlichkeit.',interp:'Höher = komplexer/adaptiver (gesund) · sehr niedrig = monoton/pathologisch.',ref:'Richman & Moorman 2000'},
     poincare:{t:'Poincaré-Plot',what:'Streudiagramm RRₙ vs. RRₙ₊₁.',interp:'SD1 (Querachse) ≈ kurzfristige (vagale) Variabilität · SD2 (Längsachse) ≈ langfristige · SD2/SD1 = Balance. Form deckt Arrhythmien/Artefakte auf einen Blick auf.',ref:'SD1/SD2 Brennan 2001 · Formmuster n. Woo 1992'},
-    tinn:{t:'RR-Histogramm · TINN / Triangular Index',what:'Geometrische HRV aus der RR-Verteilung.',method:'Triangular Index = Gesamtzahl / Höhe des Modus · TINN = Basisbreite der Dreiecks-Interpolation (ms).',interp:'Robust gegen einzelne Ausreißer; benötigt ausreichend lange Aufnahmen (≥ 5 min).',ref:'Task Force 1996'},
+    tinn:{t:'RR-Histogramm · TINN / Triangular Index',what:'Geometrische HRV aus der RR-Verteilung.',method:'Triangular Index = Gesamtzahl / Höhe des Modus · TINN = Basisbreite der Dreiecks-Interpolation (ms).',interp:'Unempfindlich gegen einzelne Ausreißer, braucht aber lange Aufnahmen: Die Task Force empfiehlt mindestens 20 Minuten. Kürzere Aufnahmen weist CARLON ohne TINN und Triangular-Index aus.',ref:'Task Force 1996'},
     baseline:{t:'vs. Baseline',what:'Aktueller RMSSD relativ zur individuellen Gesund-Baseline des Pferds (%).',interp:'Da RMSSD keinen equinen Konsens-Ruhewert hat, ist die Abweichung vom eigenen Normal aussagekräftiger als der Absolutwert. Stark negativ = deutliche autonome Abweichung.',equine:'Baseline = rollender Referenzwert aus der Historie dieses Pferds.',ref:'individuelle-Baseline-Prinzip'},
     conditioning:{t:'Konditions-Verlauf',what:'Langzeit-Trend der aeroben Kondition aus wiederholten Ruhe-Messungen.',method:'Lineare Regression von Ruhe-Herzfrequenz und RMSSD-Baseline über Wochen/Monate. Bewertung der Steigung: sinkende Ruhe-HF und/oder steigende HRV = verbesserte Anpassung.',interp:'Ruhe-HF ↓ + HRV ↑ über Wochen = zunehmende aerobe Fitness / parasympathische Anpassung · gegenläufig = Belastung oder nachlassende Kondition.',equine:'Trainingsanpassung beim Pferd; Orientierung für die Periodisierung — keine Leistungsdiagnostik.',ref:'Trainingsphysiologie · vagale Anpassung (Analog Plews/Buchheit-Baseline)'},
     readiness:{t:'Trainings-Readiness',what:'Ampel, ob die heutige vagale Erholung im individuellen Normbereich des Pferds liegt.',method:'lnRMSSD (natürlicher Log von RMSSD) je Aufnahme · rollender Mittelwert der letzten ~7 · Normband = Mittel ± SWC, mit SWC = 0,5 × SD der lnRMSSD (smallest worthwhile change). Heute vs. Band → Bereit / Moderat / Erholung.',interp:'Im/über Band = autonom erholt, geplante (auch intensivere) Einheit vertretbar · unter Band = relative Belastung, Last reduzieren.',equine:'Goldstandard aus dem Humansport (Plews & Buchheit). Beim Pferd EXPERIMENTELL, auf die individuelle Baseline angewandt — Orientierung, keine Trainingsvorschrift.',ref:'Plews & Buchheit 2013/2014 (human)'},
@@ -4690,20 +4714,40 @@ const Info={
   },
   show(key){
     if(key==='poincare')return Info.poincareGuide();
-    const d=Info.defs[key]; if(!d)return;
+    const d=(typeof Sprache!=='undefined'&&Sprache.cur==='en'&&Info.defsEn&&Info.defsEn[key])||Info.defs[key]; if(!d)return;
     UI.modal(`<div class="info-pop">
       <div class="ip-head">${IC.info}<h3>${esc(d.t)}</h3></div>
       <div class="ip-body">
         ${d.what?`<div class="ip-row"><b>Was</b><span>${d.what}</span></div>`:''}
         ${d.method?`<div class="ip-row"><b>Methode</b><span>${d.method}</span></div>`:''}
-        ${d.interp?`<div class="ip-row"><b>Interpretation</b><span>${d.interp}</span></div>`:''}
-        ${d.equine?`<div class="ip-row eq"><b>Equine</b><span>${d.equine}</span></div>`:''}
+        ${d.interp?`<div class="ip-row"><b>Einordnung</b><span>${d.interp}</span></div>`:''}
+        ${d.equine?`<div class="ip-row eq"><b>Beim Pferd</b><span>${d.equine}</span></div>`:''}
         ${d.ref?`<div class="ip-ref">${d.ref}</div>`:''}
       </div>
       <div class="ip-foot"><button class="btn ghost" onclick="UI.closeModal()">Schließen</button></div>
     </div>`,{sheet:true});
   },
   btn(key){ return `<button class="info-i" onclick="event.stopPropagation();Info.show('${key}')" title="Fachliche Erklärung"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg></button>`; },
+};
+/* Englische Fassung der Erklärungen – gleiche Schlüssel, gleicher Inhalt (16.11.2026). */
+Info.defsEn={
+  rmssd:{t:'RMSSD',what:'How much two consecutive heartbeats differ in their interval – averaged over the whole recording, in milliseconds.',method:'Square root of the mean of the squared differences between consecutive RR intervals, after artefact correction.',interp:'Regarded as a measure of short-term, predominantly vagally (parasympathetically) mediated variability. When heart rate rises or vagal tone falls, the value usually becomes smaller.',equine:'There is no consensus reference value for resting RMSSD in horses; breed, age, surroundings and recording protocol shift it considerably. CARLON therefore compares against the horse\'s own baseline.',ref:'Task Force 1996 · Shaffer & Ginsberg 2017 · Kuwahara 1996 (horse)'},
+  sdnn:{t:'SDNN',what:'How widely all intervals of the recording scatter around their mean – the overall spread, in milliseconds.',method:'Standard deviation of all corrected RR intervals.',interp:'Contains fast and slow fluctuations together. The value grows with recording length – compare only recordings of similar length and the same protocol.',ref:'Task Force 1996'},
+  pnn50:{t:'pNN50',what:'Share of consecutive intervals that differ by more than 50 ms, in percent.',interp:'Like RMSSD a measure of beat-to-beat variability and closely related to it.',equine:'The fixed 50 ms threshold comes from human medicine (RR around 800 ms). In a resting horse with RR around 1,500–2,000 ms many differences exceed it, so the value often runs close to its ceiling and separates less well than RMSSD.',ref:'Task Force 1996'},
+  meanrr:{t:'Mean RR',what:'Average interval between two heartbeats, in milliseconds.',method:'Mean of the corrected RR intervals; 60,000 ÷ mean RR gives the mean heart rate per minute.',interp:'The basis of all other values: variability measures usually grow with longer RR, i.e. lower heart rate. Two recordings are therefore compared most cleanly at a similar resting heart rate.',ref:'Task Force 1996 · Sacha 2013 (heart-rate dependence of HRV)'},
+  minmax:{t:'Min HR and max HR',what:'Lowest and highest heart rate that occurred in the recording, per minute.',interp:'The range during the recording. A high max HR in a resting recording often comes from brief excitement – a noise, a neighbouring horse, feed – or from a single misdetection. The RR tachogram and the "Heart rate and HRV" curve show when and for how long.',equine:'The resting heart rate of adult horses typically lies roughly between 28 and 44 per minute.',ref:'Merck Veterinary Manual (resting HR, horse)'},
+  sd1:{t:'SD1',what:'How wide the Poincaré cloud is across the diagonal, in milliseconds – the beat-to-beat change.',method:'Standard deviation of the points perpendicular to the line y = x; arithmetically SD1 ≈ RMSSD ÷ √2.',interp:'Short-term variability – in content the same as RMSSD on a different scale.',ref:'Brennan, Palaniswami & Kamen 2001'},
+  sd2:{t:'SD2',what:'How long the Poincaré cloud is along the diagonal, in milliseconds – the slower fluctuations.',method:'Standard deviation of the points along the line y = x; arithmetically SD2² = 2·SDNN² − SD1².',interp:'Longer-term variability within the recording, closely related to SDNN and, like it, dependent on recording length.',ref:'Brennan, Palaniswami & Kamen 2001'},
+  sdratio:{t:'SD2/SD1',what:'Ratio of the length to the width of the Poincaré cloud, without unit.',interp:'Describes the shape: high = elongated, close to 1 = round. The common reading as "sympatho-vagal balance" is not established – use the value descriptively and in the course of the same horse.',ref:'Brennan, Palaniswami & Kamen 2001'},
+  dfa:{t:'DFA α1',what:'How strongly the intervals are related over short stretches of 4 to 16 beats.',method:'The RR series is integrated, split into windows of n beats and linearly detrended per window; α1 is the slope of log F(n) over log n for n = 4–16.',interp:'About 0.5 = intervals without relation, like chance · about 1 = fractal, "1/f"-like structure · about 1.5 = very even, sluggish sequence. In humans α1 falls with increasing physical load.',equine:'There are no validated reference ranges for horses. CARLON reports DFA α1 as exploratory and only computes it once enough beats are available.',ref:'Peng 1995 · Rogers 2021 (exercise, human)'},
+  sampen:{t:'Sample entropy',what:'How regularly short patterns repeat in the beat sequence.',method:'SampEn(m = 2, r = 0.2 · SD): negative logarithm of the probability that two sequences similar over 2 beats remain similar over 3 beats.',interp:'Low = patterns repeat often, the sequence is regular · high = less predictable. The value depends on recording length and parameters and is comparable only under equal conditions.',equine:'No reference range in horses – exploratory.',ref:'Richman & Moorman 2000'},
+  artefakt:{t:'Artefacts',what:'Share of beats that the correction recognised as faulty and replaced, in percent.',method:'Detection after Lipponen & Tarvainen 2019, adapted to the horse. Long pauses do not count as artefacts – they are counted separately and not "corrected away".',interp:'The lower, the more reliable the values. The share alone does not say whether single errors shift a value – which is why CARLON shows raw and corrected values side by side.',ref:'Lipponen & Tarvainen 2019'},
+  avblock:{t:'Long pauses',what:'How often an interval was about twice as long as the intervals before and after it.',method:'Counted is an interval of 1.8 to 2.2 times the local median (± 10 beats) when its neighbours are unremarkable (deviation below 25 %). These pauses are reported separately.',interp:'In a resting horse this is often a second-degree AV block, which occurs with high vagal tone and typically disappears under exercise. Only the ECG shows whether it is one – the count is a pointer, not a rhythm diagnosis.',ref:'Reef et al. 2014 (ACVIM/ECEIM consensus) · Eggensperger & Schwarzwald 2017'},
+  dual:{t:'Heart rate and HRV over time',what:'Heart rate (gold, per minute) and HRV as rolling RMSSD (cyan, ms) across the whole recording, on the same time axis.',method:'The HRV curve is the RMSSD of the last 30 beats. If a window contains an irregular beat pair (jump above 20 %), the section is shaded and dashed – there a single beat carries the curve.',interp:'At rest both curves usually run calmly. If the pulse rises briefly – noise, movement, feed – HRV often falls at the same moment. This shows which section was a genuine resting phase.',ref:'Task Force 1996'},
+  tacho:{t:'RR tachogram',what:'Every single interval of the recording as a point on a line, in milliseconds – the raw material of all values.',interp:'The line shows calm phases, outliers and long pauses at a glance. Amber diamonds mark beats that the correction replaced; the dashed line is the mean.',ref:'Task Force 1996'},
+  atem:{t:'Respiration curve (from the heartbeat)',what:'Breathing changes the heartbeat: on inspiration the intervals become slightly shorter, on expiration longer (respiratory sinus arrhythmia). The breathing wave is derived from this fluctuation.',method:'From each RR interval the mean of the surrounding 11 beats is subtracted; what remains is the fast, breathing-related fluctuation. Coral = inspiration, blue = expiration.',interp:'Even waves suggest calm, regular breathing. The curve is derived from the heartbeat and is not a direct respiration measurement; a respiratory rate derived from it is an estimate.',ref:'Hirsch & Bishop 1981 (RSA) · Task Force 1996'},
+  freq:{t:'Frequency spectrum',what:'Splits the fluctuations of the intervals by their tempo: slow waves on the left, fast ones on the right. The area under the curve per band is its power in ms².',method:'Lomb-Scargle periodogram directly on the unevenly spaced beats (no resampling to a fixed grid), calibrated to the variance of the series.',interp:'HF contains mainly the breathing-related fluctuation and is regarded as vagally mediated. LF is mixed. The plot ends at half the mean beat rate – faster fluctuations cannot be read from heartbeats.',equine:'Bands adapted to the resting heart rate and breathing of the horse: LF 0.01–0.07 Hz, HF from 0.07 Hz. LF needs at least about 17 minutes of recording (ten waves of the lower band edge); for shorter recordings CARLON does not report LF and LF/HF.',ref:'Kuwahara 1996 · Lomb 1976 / Scargle 1982 · Task Force 1996'},
+  verlauf:{t:'Course over weeks',what:'Each resting recording of this horse is a point on a real time axis.',method:'The "own baseline" line is the mean of at least three earlier recordings from the last 30 days; comparison starts with the fourth recording.',interp:'A single value says little in a horse, the direction over weeks all the more. Only recordings with the same protocol are comparable: same stable, similar time of day, rest beforehand.',ref:'Schmidt 2010 · Eggensperger & Schwarzwald 2017'},
 };
 
 /* ════════════════════════════════════════════════════════════════════════
@@ -5820,15 +5864,15 @@ const Views={
           </div>
           <div class="verlauf-grid">
           <div class="chart-wrap">
-            <div class="ct"><span>RMSSD-Verlauf ${Views.deltaChip(rmssdSeries,true)}</span><span class="leg"><i style="color:var(--cyan)">RMSSD ms</i><i style="color:var(--text-secondary)">eigene Basis</i></span></div>
+            <div class="ct"><span>RMSSD-Verlauf ${Info.btn('verlauf')} ${Views.deltaChip(rmssdSeries,true)}</span><span class="leg"><i style="color:var(--cyan)">RMSSD ms</i><i style="color:var(--text-secondary)">eigene Basis</i></span></div>
             ${Chart.ts(rmssdSeries,{w:380,h:210,color:'var(--cyan)',unit:'ms',baseline:Baseline.wert(h),baselineLabel:((Triage.basisHerkunft(h)||{}).kurz||'Baseline'),classify:Views.clsRMSSD})}
           </div>
           <div class="chart-wrap">
-            <div class="ct"><span>Ruhe-Herzfrequenz-Verlauf ${Views.deltaChip(hrSeries,false)}</span><span class="leg"><i style="color:var(--amber)">HF bpm</i><i style="color:var(--text-secondary)">eigene Basis</i></span></div>
+            <div class="ct"><span>Ruhe-Herzfrequenz-Verlauf ${Info.btn('verlauf')} ${Views.deltaChip(hrSeries,false)}</span><span class="leg"><i style="color:var(--amber)">HF bpm</i><i style="color:var(--text-secondary)">eigene Basis</i></span></div>
             ${Chart.ts(hrSeries,{w:380,h:210,color:'var(--amber)',unit:'bpm',baseline:h.baselineHR,baselineLabel:'Basis',classify:Views.clsHR})}
           </div>
           <div class="chart-wrap">
-            <div class="ct"><span>SDNN-Verlauf ${Views.deltaChip(sdnnSeries,true)}</span><span class="leg"><i style="color:var(--cyan-strong)">SDNN ms</i></span></div>
+            <div class="ct"><span>SDNN-Verlauf ${Info.btn('verlauf')} ${Views.deltaChip(sdnnSeries,true)}</span><span class="leg"><i style="color:var(--cyan-strong)">SDNN ms</i></span></div>
             ${Chart.ts(sdnnSeries,{w:380,h:210,color:'var(--cyan-strong)',unit:'ms',classify:Views.clsSDNN})}
           </div>
           </div>`:''}
@@ -5906,7 +5950,7 @@ const Views={
       <h2 style="font-size:16px"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v7M8.5 9C6 10 5 12.5 5 15a3 3 0 006 0M15.5 9c2.5 1 3.5 3.5 3.5 6a3 3 0 01-6 0"/></svg>Atemwegs-Beobachtung (HRV)</h2>
       ${Asthma.kopf(a,sev,inds)}
       ${Asthma.verlauf(a)}
-      ${a.sd2sd1Series.length>1?`<div class="chart-wrap" style="margin:0"><div class="ct"><span>SD2/SD1-Ratio · sympatho-vagale Balance</span></div>${Chart.ts(a.sd2sd1Series,{color:'var(--equine)',h:120,unit:''})}</div>`:''}
+      ${a.sd2sd1Series.length>1?`<div class="chart-wrap" style="margin:0"><div class="ct"><span>SD2/SD1-Verlauf · Form der Poincaré-Wolke ${Info.btn('sdratio')}</span></div>${Chart.ts(a.sd2sd1Series,{color:'var(--equine)',h:120,unit:''})}</div>`:''}
       <div style="font-size:11px;color:var(--text-faint);margin-top:10px;font-style:italic">Equine-spezifische HRV-Atemwegs-Beobachtung (Nyerges-Bohák 2025 · Random-Forest · n=40 · BAL-validiert). Beobachtungshinweis, keine Diagnose — klinische Abklärung (BAL) bleibt tierärztlich.</div>
     </div>`;
   },
@@ -5943,19 +5987,23 @@ const Views={
     const bv=HRV.baevsky(rr); const se=HRV.sampEn(rr); const tt=HRV.tinnTri(rr);
     const dfa1=(m.dfa!=null)?m.dfa:HRV.dfaAlpha1(rr);
     const meanRR=rr.reduce((a,b)=>a+b,0)/rr.length;
-    const lfhf=(m.lfhf!=null)?m.lfhf:(bd&&bd.lfhf!=null?bd.lfhf:null);   // geprüfte Zahl (Rechenkern) vor dem Lomb-Bild
+    /* Mindestdauer wie im Messwertbericht (Task Force 1996): LF/HF ab 17 min, TINN/Triangular-Index ab 20 min. */
+    const _dMin=rr.reduce((a,b)=>a+b,0)/60000, _l17=_dMin>=17, _l20=_dMin>=20;
+    const lfhf=_l17?((m.lfhf!=null)?m.lfhf:(bd&&bd.lfhf!=null?bd.lfhf:null)):null;   // geprüfte Zahl (Rechenkern) vor dem Lomb-Bild
     // Metrik-Meta wie die App: [Label-Farbe, Kontext-Zeile (Bereich/Bedeutung · Quelle)]
+    /* Kacheln (16.11.2026): jede antippbar → Erklärung. Kontextzeile beschreibt, was der Wert IST –
+       keine Normbereiche, kein Gesundheitsurteil (kein Konsens-Normwert für Ruhe-HRV beim Pferd). */
     const VMETA={
-      'RMSSD':['var(--cyan)','Vagal · 25–120'], 'SDNN':['var(--cyan)','Overall · 50–200'],
-      'pNN50':['var(--cyan)','Vagal · 5–40'], 'meanRR':['var(--cyan)','Mittleres RR'],
-      'Min-HF':['var(--cyan)','Ruhe-Tiefe'], 'Max-HF':['var(--cyan)','Belastungs-Spitze'],
-      'SD1':['var(--cyan)','Kurzzeit · vagal'], 'SD2':['var(--cyan)','Langzeit'],
-      'SD2/SD1':['var(--cyan)','Sympatho/Parasym'], 'TINN':['var(--cyan)','Geometrisch'],
-      'Tri-Index':['var(--cyan)','Verteilungsbreite'],
-      'DFA α1':['var(--harmony)','≈1,0 gesund · Peng 1995'], 'SampEn':['var(--cyan)','Komplexität · Richman 2000'],
-      'Artefakt':['var(--amber)','Signalqualität'], 'AV-Block':['var(--cyan)','benigne bei Sport']
+      'RMSSD':['var(--cyan)','Schlag zu Schlag','rmssd'], 'SDNN':['var(--cyan)','Gesamtstreuung','sdnn'],
+      'pNN50':['var(--cyan)','Sprünge über 50 ms','pnn50'], 'Mittleres RR':['var(--cyan)','Abstand je Schlag','meanrr'],
+      'Min-HF':['var(--cyan)','niedrigster Wert','minmax'], 'Max-HF':['var(--cyan)','höchster Wert','minmax'],
+      'SD1':['var(--cyan)','Poincaré quer','sd1'], 'SD2':['var(--cyan)','Poincaré längs','sd2'],
+      'SD2/SD1':['var(--cyan)','Form der Wolke','sdratio'], 'TINN':['var(--cyan)',_l20?'Verteilungsbreite':'ab 20 min Aufnahme','tinn'],
+      'Tri-Index':['var(--cyan)',_l20?'Verteilungsform':'ab 20 min Aufnahme','tinn'],
+      'DFA α1':['var(--harmony)','explorativ','dfa'], 'SampEn':['var(--cyan)','Regelmäßigkeit · explorativ','sampen'],
+      'Artefakte':['var(--amber)','ersetzte Schläge','artefakt'], 'Lange Pausen':['var(--cyan)','etwa doppelter Abstand','avblock']
     };
-    const vm=(k,v,u,dec)=>{const mm=VMETA[k]||['var(--cyan)',''];return `<div class="vm"><div class="k" style="color:${mm[0]}">${k}</div><div class="v">${v==null?'<span class="na" title="kurze Aufnahme / nicht im Export">n. v.</span>':(dec===2?fmt2(v):dec?fmt1(v):fmt0(v))}${(v!=null&&u)?`<small> ${u}</small>`:''}</div>${mm[1]?`<div class="ctx">${mm[1]}</div>`:''}</div>`;};
+    const vm=(k,v,u,dec)=>{const mm=VMETA[k]||['var(--cyan)','',null];return `<button type="button" class="vm"${mm[2]?` onclick="Info.show('${mm[2]}')" aria-label="${k}: Erklärung öffnen"`:''}><div class="k" style="color:${mm[0]}">${k}<svg class="vm-i" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 16v-5M12 8h.01"/></svg></div><div class="v">${v==null?'<span class="na">n. v.</span>':(dec===2?fmt2(v):dec?fmt1(v):fmt0(v))}${(v!=null&&u)?`<small> ${u}</small>`:''}</div>${mm[1]?`<div class="ctx">${mm[1]}</div>`:''}</button>`;};
     const pw=(k,label,v)=>`<div class="pwr"><span class="pk" style="color:${HRV.BANDCOL[k]||'var(--text-secondary)'}">${label}</span><b>${v==null?'n.v.':fmt0(v)}</b></div>`;
     // App-Header: farbiges Icon + gesperrte Großschrift + rechts farbige Kernzahl
     const CHICO={
@@ -5972,24 +6020,24 @@ const Views={
     const chead=(ico,title,ikey,right,rcol)=>`<div class="ct ct-app"><span class="ct-t"><svg class="ct-ico" viewBox="0 0 24 24" fill="none" stroke="var(--cyan)" stroke-width="2">${CHICO[ico]||''}</svg>${title}</span>${ikey?Info.btn(ikey):''}<span class="ct-sp"></span>${right?`<span class="ct-rt" style="color:${rcol||'var(--cyan)'}">${right}</span>`:''}</div>`;
     return `<div style="margin-bottom:var(--s4)">
       <h2 style="font-size:16px;margin-bottom:16px"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 12h3l2-7 4 15 3-11 2 6h6"/></svg>Signalanalyse · ${fmtDate(rec.startedAt,true)}</h2>
-      <div class="chart-card"><div class="chart-wrap">${chead('tacho','Dual-Vitals · Belastung vs. Erholung',null,`<span style="font-family:var(--font-ui);font-weight:600;font-size:10.5px;letter-spacing:.03em"><span style="color:#FFB547">━ HF bpm</span>&nbsp;&nbsp;<span style="color:var(--cyan)">━ HRV ms</span></span>`)}${Chart.dualVitals(rr)}<div class="chart-hint">Herzfrequenz (Belastung) gegen rollendes RMSSD (Erholungsreserve) über die Zeit. Gesund: HF↑ und HRV↓ synchron · Stress: HF hoch bei niedrigem, starrem HRV. Tippen zeigt beide Werte · <b>⤢</b> Vollbild.</div></div></div>
+      <div class="chart-card"><div class="chart-wrap">${chead('tacho','Puls und HRV über die Zeit','dual',`<span style="font-family:var(--font-ui);font-weight:600;font-size:10.5px;letter-spacing:.03em"><span style="color:#FFB547">━ HF bpm</span>&nbsp;&nbsp;<span style="color:var(--cyan)">━ HRV ms</span></span>`)}${Chart.dualVitals(rr)}<div class="chart-hint">Herzfrequenz (Belastung) gegen rollendes RMSSD (Erholungsreserve) über die Zeit. Gesund: HF↑ und HRV↓ synchron · Stress: HF hoch bei niedrigem, starrem HRV. Tippen zeigt beide Werte · <b>⤢</b> Vollbild.</div></div></div>
       <div class="chart-card">
         ${chead('scatter','Poincaré-Plot','poincare', (m.sd1!=null&&m.sd2!=null)?`<small>bereinigt</small> SD1 ${fmt1(m.sd1)} · SD2 ${fmt1(m.sd2)} <small>ms · Wolke: alle Paare</small>`:'')}
         ${(Array.isArray(rr)&&rr.length>20)?'<figure class="pz pz-app pz-gross" id="pzAkte"></figure>':`<div class="poinca-plot">${Chart.poincare(rr,{sd1:m.sd1,sd2:m.sd2,size:820})}</div>`}
         <div class="poinca-cap">Jeder Punkt = ein Herzschlag (RRₙ) gegen den nächsten (RRₙ₊₁). <b style="color:var(--cyan)">SD1</b> (quer zur Diagonale) = Kurzzeit-/Vagus-Variabilität, <b style="color:var(--cyan)">SD2</b> (entlang) = Langzeit-Variabilität. Kompakte Wolke = geringe HRV, breite Wolke = flexibles autonomes Nervensystem.${(()=>{const sh=poincaShape(m.sd1,m.sd2);return sh?` · <b style="color:${sh.col}">Diese Aufnahme: ${sh.name} — ${sh.note}</b>`:'';})()}</div>
       </div>
-      <div class="chart-card"><div class="chart-wrap">${chead('lungs','Atemkurve · RSA-derived',null,`<span style="font-family:var(--font-ui);font-weight:600;font-size:10.5px;letter-spacing:.03em"><span style="color:#F27359">● Inspiration</span>&nbsp;&nbsp;<span style="color:#4DA6F2">● Expiration</span></span>`)}${Chart.breathWave(rr,{dur:rec.durationSec})}<div class="chart-hint">EDR — respiratorische Sinusarrhythmie aus der HRV-HF-Modulation. Einatmen verkürzt RR (Sympathikus), Ausatmen verlängert RR (Vagus).</div></div></div>
-      <div class="chart-card"><div class="ct" style="margin-bottom:12px"><span>HRV-Kennwerte</span></div>
+      <div class="chart-card"><div class="chart-wrap">${chead('lungs','Atemkurve · aus dem Herzschlag','atem',`<span style="font-family:var(--font-ui);font-weight:600;font-size:10.5px;letter-spacing:.03em"><span style="color:#F27359">● Inspiration</span>&nbsp;&nbsp;<span style="color:#4DA6F2">● Expiration</span></span>`)}${Chart.breathWave(rr,{dur:rec.durationSec})}<div class="chart-hint">Respiratorische Sinusarrhythmie: Beim Einatmen werden die Schlagabstände kürzer (der Vagus wird kurz gebremst), beim Ausatmen länger. Abgeleitet aus dem Herzschlag, keine direkte Atemmessung.</div></div></div>
+      <div class="chart-card"><div class="ct" style="margin-bottom:12px"><span>HRV-Kennwerte</span><span class="ct-sp"></span><span class="vm-hint">Kachel antippen = Erklärung</span></div>
         <div class="vm-grid">
-          ${vm('RMSSD',m.rmssd,'ms')}${vm('SDNN',m.sdnn,'ms')}${vm('pNN50',m.pnn50,'%',true)}${vm('meanRR',meanRR,'ms')}${vm('Min-HF',m.minHR,'bpm')}${vm('Max-HF',m.maxHR,'bpm')}${vm('SD1',m.sd1,'ms')}${vm('SD2',m.sd2,'ms')}${vm('SD2/SD1',m.sd2sd1,'',2)}${vm('TINN',tt?tt.tinn:null,'ms')}${vm('Tri-Index',tt?tt.triIndex:null,'',true)}${vm('DFA α1',dfa1,'',2)}${vm('SampEn',se,'',true)}${vm('Artefakt',m.artifactPct,'%',true)}${vm('AV-Block',m.avBlock,'')}
+          ${vm('RMSSD',m.rmssd,'ms')}${vm('SDNN',m.sdnn,'ms')}${vm('pNN50',m.pnn50,'%',true)}${vm('Mittleres RR',meanRR,'ms')}${vm('Min-HF',m.minHR,'bpm')}${vm('Max-HF',m.maxHR,'bpm')}${vm('SD1',m.sd1,'ms')}${vm('SD2',m.sd2,'ms')}${vm('SD2/SD1',m.sd2sd1,'',2)}${vm('TINN',(_l20&&tt)?tt.tinn:null,'ms')}${vm('Tri-Index',(_l20&&tt)?tt.triIndex:null,'',true)}${vm('DFA α1',dfa1,'',2)}${vm('SampEn',se,'',true)}${vm('Artefakte',m.artifactPct,'%',true)}${vm('Lange Pausen',m.avBlock,'')}
         </div>
       </div>
       <div class="chart-card">
-        ${chead('spectrum','Frequenz-Spektrum','freq', lfhf!=null?`LF/HF ${fmt2(lfhf)} <small>${lfhf>4?'sympathikoton':lfhf<1?'vagoton':'balanciert'}</small>`:'', 'var(--amber)')}
+        ${chead('spectrum','Frequenz-Spektrum','freq', lfhf!=null?`LF/HF ${fmt2(lfhf)}`:`LF/HF <small>n. v. · ab 17 min</small>`, 'var(--amber)')}
         ${HRV.psdChart(psd)}
         <div class="band-legend">
-          ${[['vlf','0,003–0,01 Hz','Thermoreg. + Hormone'],['lf','0,01–0,07 Hz','Baroreflex (equine)'],['hf','0,07–0,6 Hz','Atmung · RSA · vagal']].map(([k,fr,mn])=>`<div class="bl"><span class="bl-dot" style="background:${HRV.BANDCOL[k]}"></span><div class="bl-t"><b style="color:${HRV.BANDCOL[k]}">${k.toUpperCase()}</b><span>${fr} · ${mn}</span></div><b class="bl-v">${bd?fmt0(bd[k]):'–'}<small> ms²</small></b></div>`).join('')}
-          <div class="bl bl-sum"><div class="bl-t"><b style="color:var(--text-secondary)">GESAMT · LF/HF</b><span>Total Power · sympatho-vagale Balance</span></div><b class="bl-v">${bd?fmt0(bd.total):'–'} <small>ms²</small> · ${lfhf!=null?fmt2(lfhf):'–'}</b></div>
+          ${[['vlf','0,003–0,01 Hz','langsame Regulation','vlf'],['lf','0,01–0,07 Hz','gemischt','lf'],['hf',`0,07–${psd&&psd.fN?fmt2(Math.min(0.6,psd.fN)):'0,6'} Hz`,'Atmung · vagal','hf']].filter(([k])=>k!=='vlf'||_dMin>=180).map(([k,fr,mn])=>{const zeig=k==='hf'||_l17;return `<div class="bl"><span class="bl-dot" style="background:${HRV.BANDCOL[k]}"></span><div class="bl-t"><b style="color:${HRV.BANDCOL[k]}">${k.toUpperCase()}</b><span>${fr} · ${mn}</span></div><b class="bl-v">${(bd&&zeig)?fmt0(bd[k])+'<small> ms²</small>':'<small>n. v. · ab 17 min</small>'}</b></div>`;}).join('')}
+          <div class="bl bl-sum"><div class="bl-t"><b style="color:var(--text-secondary)">GESAMT · LF/HF</b><span>Gesamtleistung · LF/HF nur ab 17 min</span></div><b class="bl-v">${bd?fmt0(bd.total):'–'} <small>ms²</small> · ${lfhf!=null?fmt2(lfhf):'n. v.'}</b></div>
         </div>
       </div>
       <div class="chart-card baev-box" data-si="${bv?bv.SI.toFixed(1):''}" data-sqrtsi="${bv?bv.sqrtSI.toFixed(1):''}" data-amo="${bv?bv.AMo.toFixed(1):''}" data-mo="${bv?(bv.Mo*1000).toFixed(0):''}" data-mxdmn="${bv?(bv.MxDMn*1000).toFixed(0):''}">
@@ -11194,6 +11242,37 @@ const Sprache={
      Der deutsche Satz ist der Schluessel. Sortiert wie die Oberflaeche:
      Navigation, Board, Akte, Station, Karte, Verwaltung, Kauf. */
   WB:{
+    'Artefakte':'Artefacts',
+    'Lange Pausen':'Long pauses',
+
+    'SD2/SD1-Verlauf · Form der Poincaré-Wolke':'SD2/SD1 course · shape of the Poincaré cloud',
+    /* 16.11.2026 – Kacheln/Grafiken mit Erklärung */
+    'Puls und HRV über die Zeit':'Heart rate and HRV over time',
+    'Atemkurve · aus dem Herzschlag':'Respiration curve · from the heartbeat',
+    'Kachel antippen = Erklärung':'Tap a tile for its explanation',
+    'Schlag zu Schlag':'beat to beat',
+    'Gesamtstreuung':'overall spread',
+    'Sprünge über 50 ms':'jumps above 50 ms',
+    'Abstand je Schlag':'interval per beat',
+    'niedrigster Wert':'lowest value',
+    'höchster Wert':'highest value',
+    'Poincaré quer':'Poincaré width',
+    'Poincaré längs':'Poincaré length',
+    'Form der Wolke':'shape of the cloud',
+    'ab 20 min Aufnahme':'from 20 min recording',
+    'explorativ':'exploratory',
+    'Regelmäßigkeit · explorativ':'regularity · exploratory',
+    'ersetzte Schläge':'replaced beats',
+    'etwa doppelter Abstand':'about double interval',
+    'n. v. · ab 17 min':'n/a · from 17 min',
+    'langsame Regulation':'slow regulation',
+    'gemischt':'mixed',
+    'Atmung · vagal':'breathing · vagal',
+    'Gesamtleistung · LF/HF nur ab 17 min':'total power · LF/HF only from 17 min',
+    'Einordnung':'Reading it',
+    'Beim Pferd':'In the horse',
+    'Respiratorische Sinusarrhythmie: Beim Einatmen werden die Schlagabstände kürzer (der Vagus wird kurz gebremst), beim Ausatmen länger. Abgeleitet aus dem Herzschlag, keine direkte Atemmessung.':'Respiratory sinus arrhythmia: on inspiration the intervals become shorter (vagal activity briefly withdraws), on expiration longer. Derived from the heartbeat, not a direct respiration measurement.',
+
     'Die gespeicherte Schlagfolge dieser Aufnahme ist verdichtet — Spektrum, Poincaré und Verteilung lassen sich daraus nicht zeigen. Die Kennzahlen stammen aus der vollständigen Reihe.':'The stored beat sequence of this recording is condensed — spectrum, Poincaré and distribution cannot be shown from it. The metrics come from the complete series.',
     // Baseline aus eigenen Aufnahmen (05.11.2026)
     'Ausgangswert':'Initial value',
@@ -11553,7 +11632,7 @@ const Sprache={
     'AV-Block':'AV block',
     'benigne bei Sport':'benign in athletes',
     '≈1,0 gesund · Peng 1995':'≈1.0 healthy · Peng 1995',
-    '1 Wert ausserhalb':'1 value outside',
+    '1 Wert außerhalb':'1 value outside',
     'typ. Bereich':'typical range',
     'z-Wert':'z-score',
     'Normband ms':'Normal band ms',
