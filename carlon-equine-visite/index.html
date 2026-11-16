@@ -271,7 +271,6 @@ nav{position:sticky;top:0;z-index:50;background:rgba(2,2,2,0.72);backdrop-filter
 @media(max-width:560px){nav .nav-actions a.nav-equine{display:none}}
 
 .hero{padding-top:var(--sp-89);padding-bottom:var(--sp-89)}
-.hero-grid{display:grid;grid-template-columns:1.05fr 0.95fr;gap:var(--sp-55);align-items:center}
 
 .eyebrow{font-family:var(--font-mono);font-size:var(--t-mark);letter-spacing:0.28em;
   text-transform:uppercase;color:var(--cyan);margin-bottom:var(--sp-21)}
@@ -298,62 +297,145 @@ h1{font-family:var(--font-brand);font-weight:350;font-size:clamp(38px,4vw,56px);
 .cta-note{font-size:var(--t-klein);color:var(--text-dim);font-weight:400;
   max-width:34em;margin:var(--sp-13) 0 0;line-height:1.6}
 
-.hero-visual{position:relative;margin:0}
-.hero-mandala{position:absolute;top:-9%;right:-14%;width:88%;aspect-ratio:1;z-index:0;
-  background:url("/assets/equine-mark-1200.png") center/contain no-repeat;
-  opacity:0.07;pointer-events:none}
-.hero-aura{position:absolute;inset:-12%;z-index:0;pointer-events:none;filter:blur(28px);
-  background:radial-gradient(circle,rgba(62,207,178,0.12),transparent 62%);
-  animation:heroAura 7s ease-in-out infinite}
-@keyframes heroAura{0%,100%{opacity:0.65}50%{opacity:1}}
-@media (prefers-reduced-motion:reduce){.hero-aura{animation:none}}
+.grafik{margin:var(--sp-55) 0 var(--sp-34)}
+.grafik svg{width:100%;height:auto;display:block;overflow:visible}
+.grafik figcaption{margin-top:var(--sp-13);font-size:var(--t-klein);color:var(--text-dim);line-height:1.6;max-width:46em}
+.gr-feld{stroke:var(--border-faint);fill:rgba(12,12,13,.6)}
+.gr-marke{font-family:var(--font-mono);font-size:11px;letter-spacing:.16em;fill:var(--cyan);stroke:none}
+.gr-klein{font-family:var(--font-mono);font-size:10.5px;fill:var(--text-dim);stroke:none}
+.gr-wert{font-family:var(--font-mono);font-size:12px;fill:var(--text-primary);stroke:none}
+.gr-gold{fill:var(--equine)}
+.gr-gruppe{font-size:13px;fill:var(--text-secondary);stroke:none}
+.gr-frage{font-family:var(--font-brand);font-size:22px;fill:var(--text-dim);stroke:none}
+.gr-achse{stroke:var(--border-subtle);stroke-width:1}
+.gr-raster{stroke:var(--border-faint);stroke-width:1}
+.gr-band{fill:rgba(62,207,178,.10);stroke:rgba(62,207,178,.25);stroke-width:1}
+.gr-mittel{stroke:var(--cyan-deep);stroke-width:1.4;stroke-dasharray:4 5}
+.gr-punkte{fill:rgba(235,230,220,.7);stroke:none}
+.gr-punkt-hell{fill:rgba(235,230,220,.75);stroke:none}
+.gr-neu{fill:var(--equine);stroke:none;filter:drop-shadow(0 0 6px rgba(212,165,116,.7))}
+.gr-zeiger{stroke:var(--text-dim);stroke-width:1.2}
+.gr-balken{fill:rgba(62,207,178,.55);stroke:none}
+.gr-balken-gold{fill:rgba(212,165,116,.75);stroke:none}
+.gr-knoten{stroke:var(--cyan-deep);fill:rgba(62,207,178,.06);stroke-width:1.4}
+.gr-chip{stroke:var(--border-subtle);fill:var(--bg-surface);stroke-width:1}
+.gr-chip-t{font-family:var(--font-mono);font-size:13px;letter-spacing:.06em;fill:var(--cyan-strong);stroke:none}
+.gr-spur{stroke:var(--cyan-deep);stroke-width:1.3;stroke-dasharray:3 5}
+@media (prefers-reduced-motion:no-preference){
+  html.rev-an .grafik.in .gr-spur{animation:abSpur 1.4s linear infinite}
+  html.rev-an .grafik .gr-balken,html.rev-an .grafik .gr-balken-gold{transform:scaleY(0);transform-box:fill-box;transform-origin:bottom;transition:transform 1s cubic-bezier(.2,.7,.2,1)}
+  html.rev-an .grafik.in .gr-balken,html.rev-an .grafik.in .gr-balken-gold{transform:none}
+  html.rev-an .grafik.in .gr-balken-gold{transition-delay:.35s}
+  html.rev-an .grafik.in .gr-neu{animation:abPuls 2.6s ease-in-out infinite}
+}
+@keyframes abPuls{0%,100%{opacity:1}50%{opacity:.45}}
+svg.ic.ic-karte{width:30px;height:30px;margin-bottom:12px;stroke:var(--text-dim)}
 
-.hero-shot{position:relative;z-index:1;display:block;border-radius:26px;overflow:hidden;
-  border:1px solid var(--border-strong);background:#08080b;padding:13px;
-  box-shadow:0 40px 90px -40px rgba(0,0,0,0.85),0 0 55px rgba(62,207,178,0.10),
-    inset 0 1px 0 rgba(255,255,255,0.06);
+@media(max-width:640px){.grafik{overflow-x:auto;-webkit-overflow-scrolling:touch;margin-right:-20px;padding-right:20px}.grafik svg{width:620px;max-width:none}.grafik figcaption{width:auto;max-width:calc(100vw - 40px);position:sticky;left:0}}
+
+.ablauf{list-style:none;margin:var(--sp-55) 0 0;padding:0;display:grid;grid-template-columns:repeat(5,1fr);gap:var(--sp-21);counter-reset:ab}
+.ablauf li{position:relative;counter-increment:ab}
+.ab-bild{position:relative;aspect-ratio:5/4;border:1px solid var(--border-faint);border-radius:18px;background:radial-gradient(ellipse at 50% 30%,rgba(62,207,178,.07),transparent 70%),var(--bg-surface);
+  display:grid;place-items:center;color:rgba(235,230,220,.55);margin-bottom:var(--sp-13)}
+.ab-bild svg{width:82%;height:auto;overflow:visible}
+.ab-bild::before{content:counter(ab);position:absolute;top:10px;left:12px;font-family:var(--font-mono);font-size:11px;color:var(--text-faint)}
+.ablauf li:not(:last-child) .ab-bild::after{content:'';position:absolute;top:50%;right:calc(-1 * var(--sp-21));width:var(--sp-21);height:1px;background:linear-gradient(90deg,var(--cyan-deep),transparent)}
+.ab-wer{display:inline-block;font-family:var(--font-mono);font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--cyan);border:1px solid var(--cyan-deep);border-radius:999px;padding:3px 9px;margin-bottom:var(--sp-8)}
+.ablauf li:nth-child(2) .ab-wer,.ablauf li:nth-child(3) .ab-wer,.ablauf li:nth-child(4) .ab-wer{color:var(--equine);border-color:rgba(212,165,116,.45)}
+.ablauf h3{font-size:var(--t-body);font-weight:500;color:var(--text-primary);margin:0 0 var(--sp-8);letter-spacing:-.005em}
+.ablauf p{font-size:var(--t-klein);color:var(--text-secondary);line-height:1.6;margin:0}
+.ab-rahmen{stroke:rgba(235,230,220,.5)}
+.ab-knopf,.ab-akzent,.ab-blase,.ab-ring,.ab-ekg,.ab-neu{stroke:var(--cyan)}
+.ab-knopf{fill:rgba(62,207,178,.12)}
+.ab-spur{stroke:var(--cyan-deep)}
+.ab-punkte{color:rgba(235,230,220,.6)}
+.ab-neu{fill:var(--cyan);filter:drop-shadow(0 0 5px rgba(62,207,178,.8))}
+.ab-zahl{font-family:var(--font-mono);font-size:10px;letter-spacing:.14em;fill:var(--cyan);stroke:none}
+
+@media (prefers-reduced-motion:no-preference){
+  html.rev-an .ablauf.in li .ab-bild{animation:abAn 10s ease-in-out infinite;animation-delay:calc(var(--i) * 2s)}
+  html.rev-an .ablauf.in .ab-ekg{stroke-dasharray:100;stroke-dashoffset:100;animation:abZeichnen 10s linear infinite;animation-delay:4s}
+  html.rev-an .ablauf.in .ab-ring{stroke-dashoffset:100;animation:abRing 10s linear infinite;animation-delay:4s}
+  html.rev-an .ablauf.in .ab-spur{animation:abSpur 1.2s linear infinite}
+  html.rev-an .ablauf.in .ab-neu{animation:abNeu 10s ease-in-out infinite;animation-delay:8s;opacity:0}
+}
+@keyframes abAn{0%,22%,100%{border-color:var(--border-faint);color:rgba(235,230,220,.55);box-shadow:none}4%,16%{border-color:var(--cyan-deep);color:rgba(235,230,220,.85);box-shadow:0 0 40px -8px rgba(62,207,178,.35)}}
+@keyframes abZeichnen{0%{stroke-dashoffset:100}18%,100%{stroke-dashoffset:0}}
+@keyframes abRing{0%{stroke-dashoffset:100}20%,100%{stroke-dashoffset:0}}
+@keyframes abSpur{to{stroke-dashoffset:-14}}
+@keyframes abNeu{0%,2%{opacity:0;transform:scale(.4)}8%,95%{opacity:1;transform:none}100%{opacity:0}}
+.ab-neu{transform-box:fill-box;transform-origin:center}
+.ab-nachricht{margin:var(--sp-55) auto 0;max-width:640px;border:1px solid var(--border-subtle);border-radius:20px;padding:var(--sp-21) var(--sp-34);background:var(--bg-surface)}
+.ab-nachricht-kopf{display:flex;align-items:center;gap:8px;font-family:var(--font-mono);font-size:var(--t-mark);letter-spacing:.14em;text-transform:uppercase;color:var(--text-dim);margin-bottom:var(--sp-13)}
+.ab-blase-text{position:relative;background:#0f2a24;border:1px solid rgba(62,207,178,.28);border-radius:16px 16px 16px 4px;padding:14px 16px;font-size:15px;line-height:1.55;color:var(--text-primary);margin:0}
+.ab-url{color:var(--cyan-strong);word-break:break-all}
+.ab-ctas{justify-content:center;margin-top:var(--sp-34)}
+.ab-nachricht-fuss{font-size:var(--t-klein);color:var(--text-dim);line-height:1.6;margin:var(--sp-13) 0 0}
+@media(max-width:1000px){
+  .ablauf{grid-template-columns:1fr;gap:var(--sp-21)}
+  .ablauf li{display:grid;grid-template-columns:150px 1fr;column-gap:var(--sp-21);align-items:start}
+  .ablauf li .ab-bild{grid-row:1 / span 3;margin:0}
+  .ablauf li:not(:last-child) .ab-bild::after{top:auto;bottom:calc(-1 * var(--sp-21));right:auto;left:50%;width:1px;height:var(--sp-21);background:linear-gradient(180deg,var(--cyan-deep),transparent)}
+  .ab-wer{justify-self:start}
+}
+@media(max-width:520px){.ablauf li{grid-template-columns:104px 1fr}.ab-nachricht{padding:var(--sp-21)}}
+
+.hero{text-align:center;position:relative;overflow:hidden}
+.hero .wrap{position:relative;z-index:1}
+.hero-signet{position:relative;display:block;width:clamp(128px,15vw,196px);aspect-ratio:1;margin:0 auto var(--sp-21)}
+.hero-signet img{position:relative;z-index:1;width:100%;height:100%;display:block;
+  filter:drop-shadow(0 0 18px rgba(62,207,178,.38)) drop-shadow(0 0 46px rgba(62,207,178,.16));animation:signetAtem 7s ease-in-out infinite}
+.hero-signet::before{content:'';position:absolute;inset:-38%;border-radius:50%;z-index:0;filter:blur(30px);
+  background:radial-gradient(circle,rgba(62,207,178,.20),transparent 64%);animation:heroAura 7s ease-in-out infinite}
+@keyframes signetAtem{0%,100%{transform:scale(1);opacity:.92}50%{transform:scale(1.025);opacity:1}}
+@keyframes heroAura{0%,100%{opacity:.6}50%{opacity:1}}
+.hero-marke{font-family:var(--font-brand);font-weight:400;letter-spacing:.34em;font-size:clamp(20px,2.2vw,28px);color:#bfeee2;margin:0 0 4px;padding-left:.34em}
+.hero-marke small{display:block;font-size:.5em;letter-spacing:.42em;color:var(--cyan);margin-top:8px;font-weight:500}
+.hero .eyebrow{margin:var(--sp-34) auto var(--sp-21);max-width:none}
+.hero h1{margin-left:auto;margin-right:auto;font-size:clamp(40px,5.4vw,72px);max-width:16ch}
+.hero h1 em{font-style:normal;color:var(--cyan)}
+.hero .hero-sub{margin:0 auto var(--sp-34);max-width:34em;font-size:clamp(17px,1.5vw,19px)}
+.hero .cta-row{justify-content:center}
+.hero-belege2{display:flex;flex-wrap:wrap;justify-content:center;gap:10px 22px;margin:var(--sp-34) auto 0;padding:0;list-style:none}
+.hero-belege2 li{display:flex;align-items:center;gap:8px;font-size:var(--t-klein);color:var(--text-secondary)}
+.hero .rollen-weiche{margin-top:var(--sp-21)}
+.hero .cta-note{margin:var(--sp-13) auto 0;text-align:center}
+svg.ic{width:20px;height:20px;flex:0 0 auto;fill:none;stroke:var(--cyan);stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+
+.hero-buehne{position:relative;margin:var(--sp-89) auto 0;max-width:1040px}
+.hb-geraete{position:relative;padding-left:9%}
+.hero-buehne::before{content:'';position:absolute;left:10%;right:0;top:8%;bottom:-6%;z-index:0;filter:blur(40px);
+  background:radial-gradient(ellipse at 50% 40%,rgba(62,207,178,.13),transparent 66%);pointer-events:none}
+.hero-shot{position:relative;z-index:1;display:block;border-radius:clamp(16px,2.4vw,30px);
+  background:linear-gradient(150deg,#46494f 0%,#2b2e33 24%,#1d1f23 62%,#131417 100%);padding:clamp(8px,1.3vw,15px);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.16),inset 0 0 0 1px rgba(255,255,255,.05),0 0 0 1px #08090b,0 50px 110px -50px rgba(0,0,0,.95),0 0 60px rgba(62,207,178,.08);
   transition:transform .18s,box-shadow .18s}
-.hero-shot:hover{transform:translateY(-3px);box-shadow:0 46px 100px -40px rgba(0,0,0,0.9),0 0 70px rgba(62,207,178,0.16),inset 0 1px 0 rgba(255,255,255,0.06)}
-.hero-shot::after{content:'';position:absolute;top:5px;left:50%;transform:translateX(-50%);
-  width:5px;height:5px;border-radius:50%;background:#1c1c1d;box-shadow:inset 0 0 2px #000}
-.hero-shot img{width:100%;height:auto;display:block;border-radius:14px}
-
-.hero-phone{position:absolute;z-index:2;left:-12%;bottom:-11%;width:29%;
-  
-  aspect-ratio:9/13;
-  border:1px solid var(--border-strong);border-radius:26px;overflow:hidden;
-  background:#08080b;padding:7px;
-  box-shadow:0 30px 60px -28px rgba(0,0,0,0.9),inset 0 1px 0 rgba(255,255,255,0.06);
-  pointer-events:none}
-.hero-phone::after{content:'';position:absolute;top:13px;left:50%;transform:translateX(-50%);
-  width:24%;height:8px;border-radius:999px;background:#050505;z-index:3;
-  box-shadow:0 0 0 1px #161618}
-.hero-phone img{width:100%;height:100%;object-fit:cover;object-position:top;display:block;border-radius:19px}
-
-.hero-visual figcaption{margin-top:var(--sp-21);font-size:var(--t-klein);
-  color:var(--text-dim);font-weight:400;line-height:1.6;margin-left:31%;padding-left:var(--sp-13)}
-.hero-visual figcaption b{color:var(--text-secondary);font-weight:500}
-
-.hero-fluss{display:flex;align-items:center;gap:var(--sp-8);margin-bottom:var(--sp-8)}
+.hero-shot:hover{transform:translateY(-3px)}
+.hero-shot img{width:100%;height:auto;display:block;border-radius:clamp(9px,1.2vw,16px);box-shadow:0 0 0 1px rgba(0,0,0,.85)}
+.hero-phone{position:absolute;z-index:2;left:0;bottom:-7%;width:19%;aspect-ratio:9/19.5;box-sizing:content-box;
+  padding:clamp(4px,.55vw,7px);border-radius:clamp(18px,2.4vw,30px);
+  background:linear-gradient(150deg,#46494f 0%,#2b2e33 24%,#1d1f23 62%,#131417 100%);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.16),0 0 0 1px #08090b,0 34px 60px -24px rgba(0,0,0,.95);pointer-events:none}
+.hero-phone img{width:100%;height:100%;object-fit:cover;object-position:top;display:block;border-radius:clamp(14px,1.9vw,24px)}
+.hero-buehne figcaption{position:relative;z-index:1;margin:var(--sp-34) 0 0 24%;font-size:var(--t-klein);color:var(--text-dim);line-height:1.6;text-align:left}
+.hero-buehne figcaption b{color:var(--text-secondary);font-weight:500}
+.hero-fluss{display:flex;align-items:center;gap:var(--sp-8);margin-bottom:var(--sp-8);max-width:520px}
 .hf-chip{font-family:var(--font-mono);font-size:var(--t-mark);letter-spacing:0.07em;
   text-transform:uppercase;color:var(--cyan);background:rgba(62,207,178,0.07);
   border:1px solid var(--cyan-deep);border-radius:999px;padding:5px 11px;white-space:nowrap}
 .hf-linie{position:relative;flex:1;height:1px;background:var(--cyan-deep);min-width:34px}
 .hf-linie i{position:absolute;top:-2.5px;left:0;width:6px;height:6px;border-radius:50%;
-  background:var(--cyan-strong);box-shadow:0 0 8px var(--cyan-glow-1);
-  animation:flussPuls 3.5s ease-in-out infinite}
+  background:var(--cyan-strong);box-shadow:0 0 8px var(--cyan-glow-1);animation:flussPuls 3.5s ease-in-out infinite}
 @keyframes flussPuls{0%{left:0;opacity:0}12%{opacity:1}88%{opacity:1}100%{left:calc(100% - 6px);opacity:0}}
-@media (prefers-reduced-motion:reduce){.hf-linie i{animation:none;left:calc(50% - 3px)}}
-@media (max-width:560px){.hf-chip{font-size:9.5px;padding:4px 8px}}
-@media(max-width:860px){
-  .hero-grid{grid-template-columns:1fr;gap:var(--sp-34)}
-  .hero-visual{max-width:430px;justify-self:center;width:100%}
-  
-  .hero-phone{left:0}
-  .hero-mandala{right:-2%;top:-4%;width:64%}
-  .hero-aura{inset:-6%}
+@media (prefers-reduced-motion:reduce){.hf-linie i{animation:none;left:calc(50% - 3px)}.hero-signet img,.hero-signet::before{animation:none}}
+@media(max-width:760px){
+  .hero-buehne{margin-top:var(--sp-55)}
+  .hb-geraete{padding-left:14%}
+  .hero-phone{width:26%;bottom:-14%}
+  .hero-buehne figcaption{margin-left:30%;margin-top:var(--sp-34)}
   .hero-fluss{flex-wrap:wrap}
-  .hf-linie{min-width:26px}
+  .hf-chip{font-size:9.5px;padding:4px 8px}
+  .hf-linie{min-width:22px}
 }
 
 section{padding-top:var(--sp-89);padding-bottom:var(--sp-89)}
@@ -434,10 +516,6 @@ section[id]{scroll-margin-top:76px}
 .pz-block{margin-top:var(--sp-34);display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);gap:var(--sp-34);align-items:center;background:var(--bg-surface);border:1px solid var(--border-faint);border-radius:20px;padding:var(--sp-21)}
 .pz-text h3{margin:6px 0 12px;font-size:1.25em;line-height:1.3}.pz-text p{color:var(--text-secondary);line-height:1.6}
 @media(max-width:860px){.pz-block{grid-template-columns:1fr}}
-@media(max-width:1320px){.hero-fluss{flex-direction:column;align-items:flex-start;gap:6px!important;flex-wrap:nowrap!important}
-  .hf-linie{flex:0 0 22px!important;width:1px;min-width:0!important;height:22px;margin-left:22px}
-  .hf-linie i{left:-2.5px!important;top:0;animation:flussPulsV 3.5s ease-in-out infinite!important}}
-@keyframes flussPulsV{0%{top:0;opacity:0}12%{opacity:1}88%{opacity:1}100%{top:calc(100% - 6px);opacity:0}}
 .pz-live{position:relative;overflow:hidden!important}
 .pz-start{position:absolute;left:50%;bottom:22px;transform:translateX(-50%);padding:12px 20px;border-radius:999px;border:1px solid rgba(62,207,178,.6);
   background:rgba(8,14,18,.86);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);color:#3ECFB2;font-weight:600;font-size:14px;cursor:pointer;box-shadow:0 12px 30px rgba(0,0,0,.5)}
@@ -688,6 +766,26 @@ h1,h2{text-wrap:balance}
 <link rel="stylesheet" href="/assets/app-tour/app-tour.css?v=10">
 </head>
 <body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><defs>
+  <symbol id="i-check" viewBox="0 0 32 32"><circle cx="16" cy="16" r="11.5"/><path d="M10.5 16.5l3.8 3.8 7.4-8"/></symbol>
+  <symbol id="i-browser" viewBox="0 0 32 32"><rect x="3.5" y="6" width="25" height="20" rx="3.5"/><path d="M3.5 11.5h25"/><circle cx="7.6" cy="8.8" r=".9" fill="currentColor" stroke="none"/><circle cx="10.6" cy="8.8" r=".9" fill="currentColor" stroke="none"/><path d="M9 19.5h3l1.6-3.6 2.2 6.4 1.6-2.8H23" opacity=".85"/></symbol>
+  <symbol id="i-schild" viewBox="0 0 32 32"><path d="M16 3.5l10 3.6v8.1c0 6.4-4.2 11-10 13.3C10.2 26.2 6 21.6 6 15.2V7.1z"/><path d="M11.5 15.8l3.2 3.2 5.8-6.4"/></symbol>
+  <symbol id="i-link" viewBox="0 0 32 32"><path d="M13.5 18.5a5 5 0 0 0 7.1 0l4.3-4.3a5 5 0 0 0-7.1-7.1l-1.6 1.6"/><path d="M18.5 13.5a5 5 0 0 0-7.1 0l-4.3 4.3a5 5 0 0 0 7.1 7.1l1.6-1.6"/></symbol>
+  <symbol id="i-phone" viewBox="0 0 32 32"><rect x="9" y="3.5" width="14" height="25" rx="3.6"/><path d="M14 6.5h4" opacity=".55"/><path d="M12.5 17.5h1.6l1.2-3 1.8 5.5 1.2-2.5h1.2" opacity=".85"/></symbol>
+  <symbol id="i-gurt" viewBox="0 0 32 32"><path d="M3 13.5c4 2.2 8.5 3.2 13 3.2s9-1 13-3.2M3 19c4 2.2 8.5 3.2 13 3.2s9-1 13-3.2" opacity=".55"/><rect x="11" y="12.5" width="10" height="11" rx="3"/><circle cx="16" cy="18" r="1.6"/></symbol>
+  <symbol id="i-uhr" viewBox="0 0 32 32"><circle cx="16" cy="17.5" r="10.5"/><path d="M13 3.5h6M16 3.5v3.5"/><path d="M16 17.5V11.5M16 17.5l4 2.5"/></symbol>
+  <symbol id="i-schloss" viewBox="0 0 32 32"><rect x="7" y="14" width="18" height="13.5" rx="3"/><path d="M11 14v-3.5a5 5 0 0 1 10 0V14"/><circle cx="16" cy="20.5" r="1.7"/></symbol>
+  <symbol id="i-verlauf" viewBox="0 0 32 32"><path d="M4 21.5c5-1.2 9-1.4 12-1.2s7 .4 12-1" opacity=".4" stroke-width="5"/><path d="M5 27h22" opacity=".5"/><circle cx="7" cy="20" r="1.4"/><circle cx="12" cy="21.5" r="1.4"/><circle cx="17" cy="19.5" r="1.4"/><circle cx="22" cy="21" r="1.4"/><circle cx="27" cy="11" r="1.8" fill="currentColor"/></symbol>
+  <symbol id="i-bericht" viewBox="0 0 32 32"><path d="M8 4h11l5 5v19H8z"/><path d="M19 4v5h5"/><path d="M11.5 22l3-4 3 2 3.5-5" opacity=".85"/><path d="M11.5 12.5h5" opacity=".55"/></symbol>
+  <symbol id="i-export" viewBox="0 0 32 32"><path d="M8 4h10l5 5v6"/><path d="M8 4v24h10"/><path d="M18 4v5h5"/><path d="M20 23h9M25.5 19.5L29 23l-3.5 3.5"/></symbol>
+  <symbol id="i-qr" viewBox="0 0 32 32"><rect x="4.5" y="4.5" width="9" height="9" rx="1.5"/><rect x="18.5" y="4.5" width="9" height="9" rx="1.5"/><rect x="4.5" y="18.5" width="9" height="9" rx="1.5"/><path d="M18.5 18.5h3v3h-3zM24.5 18.5h3M18.5 24.5v3M22 24.5h5.5v3" /></symbol>
+  <symbol id="i-kein" viewBox="0 0 32 32"><circle cx="16" cy="16" r="11.5"/><path d="M7.9 24.1L24.1 7.9"/></symbol>
+  <symbol id="i-plus" viewBox="0 0 32 32"><path d="M16 10v12M10 16h12"/></symbol>
+  <symbol id="i-pfeil" viewBox="0 0 32 32"><path d="M9 16h13M18 11.5l4.5 4.5-4.5 4.5"/></symbol>
+  <symbol id="i-wolke" viewBox="0 0 32 32"><path d="M10 22.5h12.5a4.6 4.6 0 0 0 .5-9.2 6.8 6.8 0 0 0-13.1-1.5 5.4 5.4 0 0 0 .1 10.7z"/></symbol>
+  <symbol id="i-glocke" viewBox="0 0 32 32"><path d="M10 21V15a6 6 0 0 1 12 0v6l2 2.5H8z"/><path d="M14 26.5a2.2 2.2 0 0 0 4 0"/></symbol>
+  <symbol id="i-akte" viewBox="0 0 32 32"><path d="M4.5 9.5V25a2 2 0 0 0 2 2h19a2 2 0 0 0 2-2V12a2 2 0 0 0-2-2H15l-2.6-3H6.5a2 2 0 0 0-2 2z"/><path d="M10 21l3-3.5 2.5 2 4-5 2.5 2.5" opacity=".85"/></symbol>
+</defs></svg>
 <div class="bg-wash"></div>
 
 <nav>
@@ -713,11 +811,11 @@ h1,h2{text-wrap:balance}
 </nav>
 
 <section class="hero">
-  <div class="wrap hero-grid">
-    <div class="hero-copy">
-    <div class="eyebrow">CARLON Equine Visite · für Tierärztinnen und Tierärzte</div>
-    <h1>Betreuung, die nicht an der Stalltür endet.</h1>
-    
+  <div class="wrap">
+    <span class="hero-signet" aria-hidden="true"><img src="/assets/equine-mark-512.png" width="512" height="512" alt="" fetchpriority="high"></span>
+    <p class="hero-marke">CARLON<small>EQUINE VISITE</small></p>
+    <div class="eyebrow">Ruhe-HRV aus dem Stall · für Tierärztinnen und Tierärzte</div>
+    <h1>Betreuung, die nicht <em>an der Stalltür endet.</em></h1>
     <p class="hero-sub">
       Die Halterin misst im Stall. Sie sehen vor dem Besuch, <strong>wie weit dieses Pferd von seiner eigenen Basis abweicht</strong> – und wie verlässlich die Aufnahme ist.
     </p>
@@ -725,54 +823,82 @@ h1,h2{text-wrap:balance}
       <a class="cta-primary" href="/carlon-equine/app/">Cockpit mit 15&nbsp;Demo-Pferden öffnen →</a>
       <a class="btn btn-back" href="#preis">Preise &amp; Freischaltung · ab 149&nbsp;€ netto/Monat</a>
     </div>
-    <p class="rollen-weiche"><a href="#arbeitstag">Für Fahrpraxen ↓</a> · <a href="#klinik">Für Pferdekliniken ↓</a></p>
-    <p class="cta-note">Ohne Konto, ohne Installation · Daten bleiben in Ihrem Browser · monatlich kündbar · Vitalkultur, Iffezheim<span id="heroBeta"> Wir sind in der Beta und begleiten jede Praxis persönlich — wer jetzt einsteigt, behält seinen Preis als Gründungspartner.</span></p>
-    
-    </div>
-    <figure class="hero-visual">
-      <span class="hero-mandala" aria-hidden="true"></span>
-      <span class="hero-aura" aria-hidden="true"></span>
-      
+    <ul class="hero-belege2">
+      <li><svg class="ic" aria-hidden="true"><use href="#i-browser"/></svg>Ohne Konto, ohne Installation</li>
+      <li><svg class="ic" aria-hidden="true"><use href="#i-schild"/></svg>Daten bleiben in Ihrem Browser</li>
+      <li><svg class="ic" aria-hidden="true"><use href="#i-check"/></svg>Monatlich kündbar</li>
+    </ul>
+    <p class="rollen-weiche"><a href="#ablauf">So läuft eine Messung ↓</a> · <a href="#arbeitstag">Für Fahrpraxen ↓</a> · <a href="#klinik">Für Pferdekliniken ↓</a></p>
+    <p class="cta-note">Vitalkultur, Iffezheim<span id="heroBeta"> · Wir sind in der Beta und begleiten jede Praxis persönlich — wer jetzt einsteigt, behält seinen Preis als Gründungspartner.</span></p>
+    <figure class="hero-buehne">
+      <div class="hb-geraete">
       <a class="hero-shot" href="/carlon-equine/app/" title="Demo-Cockpit öffnen">
-        <img src="assets/visite-shots/09-akte.jpg" fetchpriority="high"
+        <img src="assets/visite-shots/09-akte.jpg" width="1600" height="1112" loading="eager"
           alt="Pferde-Akte im Cockpit: Kernwerte RMSSD, Ruhe-HF, SDNN und DFA gegen die eigene Vorgeschichte des Pferds, mit Signalgüte und Verlauf"></a>
-      <span class="hero-phone" aria-hidden="true"><img src="assets/station-shots/06-tachogramm.jpg" alt=""></span>
+      <span class="hero-phone" aria-hidden="true"><img src="assets/station-shots/06-tachogramm.jpg" width="554" height="1200" alt=""></span>
+      </div>
       <figcaption>
         <span class="hero-fluss"><span class="hf-chip">Im Stall gemessen</span><span class="sr-only"> → </span><span
           class="hf-linie" aria-hidden="true"><i></i></span><span class="hf-chip">In Ihrer Praxis gelesen</span></span>
         Ansichten aus der Anwendung — <b>ein Klick öffnet sie.</b>
       </figcaption>
     </figure>
-    
   </div>
 </section>
 
-<section>
+<section id="ablauf">
   <div class="wrap">
-    <div class="sec-eyebrow">Der Start</div>
-    <h2>In drei Schritten zur ersten Aufnahme.</h2>
-    <div class="usps">
-      <div class="usp">
-        <div class="u-k">Schritt 1</div>
-        <h3>Mess-Link teilen</h3>
-        <p>Ihr Cockpit erzeugt Ihren persönlichen Mess-Link — er trägt Ihren Schlüssel.
-           Verschicken Sie ihn als Nachricht, setzen Sie ihn auf Ihre Praxis-Website —
-           oder drucken Sie ihn als QR-Aushang für Stallgasse und Wartezimmer.</p>
-      </div>
-      <div class="usp">
-        <div class="u-k">Schritt 2</div>
-        <h3>Die Halterin öffnet und misst</h3>
-        <p>Ein Tipp auf den Link oder ein Scan, und die Messstation ist da — im Browser,
-           ohne App, ohne Konto. Jede Aufnahme ist von der ersten Sekunde an für Ihre
-           Praxis verschlüsselt; die Datei schickt die Halterin auf dem Weg, den sie
-           ohnehin nutzt. Hat sie nur ein iPhone, geben Sie ein <strong>Praxis-Mess-Set</strong> mit: Gurt plus ein günstiges Android-Gerät – Apple lässt Bluetooth im Browser nicht zu.</p>
-      </div>
-      <div class="usp">
-        <div class="u-k">Schritt 3</div>
-        <h3>Datei ins Cockpit ziehen</h3>
-        <p>Signalgüte und der Vergleich mit der eigenen Vorgeschichte stehen sofort da —
-           der Messwertbericht ist aus der Akte heraus erstellt, die Einordnung machen Sie.</p>
-      </div>
+    <div class="sec-eyebrow">Das System</div>
+    <h2>Ein Link aus Ihrer Akte. Die Aufnahme kommt verschlüsselt zurück.</h2>
+    <p class="sec-lead">Sie schicken den Link, Ihre Kundin misst im Stall, Sie lesen den Verlauf. Für die Halterin kostet die Messstation nichts. Sie braucht weder App noch Konto, nur einen Polar-H10-Gurt.</p>
+    <ol class="ablauf rev" aria-label="Ablauf einer Messung">
+      <li style="--i:0"><div class="ab-bild"><svg viewBox="0 0 120 96" stroke="currentColor" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <rect x="10" y="14" width="78" height="56" rx="7" class="ab-rahmen"/><path d="M18 26h30M18 33h20" opacity=".45"/>
+        <rect x="18" y="44" width="40" height="13" rx="6.5" class="ab-knopf"/><path d="M25 50.5h4M33 50.5h18" opacity=".9"/>
+        <path d="M66 50.5c10 0 14-8 24-8" class="ab-spur" stroke-dasharray="3 4"/>
+        <g class="ab-akzent"><path d="M94 37.5a4 4 0 0 1 5.7 0l2.2 2.2a4 4 0 0 1 0 5.7l-1 1M99 47.5a4 4 0 0 1-5.7 0l-2.2-2.2a4 4 0 0 1 0-5.7l1-1"/></g>
+        <path d="M30 80h40" opacity=".35"/></svg></div>
+        <span class="ab-wer">Praxis</span><h3>Mess-Link senden</h3>
+        <p>Aus der Akte per WhatsApp, E-Mail oder SMS, oder als QR-Aushang für Stallgasse und Wartezimmer. Der Link trägt Ihren Praxisnamen.</p></li>
+      <li style="--i:1"><div class="ab-bild"><svg viewBox="0 0 120 96" stroke="currentColor" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <rect x="40" y="8" width="40" height="80" rx="9" class="ab-rahmen"/><path d="M55 13h10" opacity=".45"/>
+        <path d="M46 28h22a3 3 0 0 1 3 3v12a3 3 0 0 1-3 3H52l-5 4v-4h-1a3 3 0 0 1-3-3V31a3 3 0 0 1 3-3z" class="ab-blase"/>
+        <path d="M49 34h16M49 39h10" opacity=".55"/>
+        <rect x="47" y="58" width="26" height="9" rx="4.5" class="ab-knopf"/><path d="M52 62.5h16" opacity=".9"/>
+        <path d="M54 76h12" opacity=".35"/></svg></div>
+        <span class="ab-wer">Halterin</span><h3>Öffnen, ohne App und Konto</h3>
+        <p>Ein Tipp, und die Messstation läuft im Browser. Auf iPhone und iPad lässt Apple Bluetooth im Browser nicht zu. Dafür gibt es Ihr Praxis-Mess-Set: Gurt plus günstiges Android-Gerät.</p></li>
+      <li style="--i:2"><div class="ab-bild"><svg viewBox="0 0 120 96" stroke="currentColor" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <circle cx="60" cy="40" r="30" opacity=".18"/><circle cx="60" cy="40" r="30" class="ab-ring" pathLength="100" stroke-dasharray="100" transform="rotate(-90 60 40)"/>
+        <path d="M33 44h10l3-5 3 5h3l4-17 5 29 3-12h5l3-4 3 4h13" class="ab-ekg" pathLength="100"/>
+        <text x="60" y="92" text-anchor="middle" class="ab-zahl">≥ 7 MIN</text></svg></div>
+        <span class="ab-wer">Im Stall</span><h3>Gurt an, mindestens 7 Minuten Ruhe</h3>
+        <p>Polar H10 am Pferd, in der eigenen Box, zur gewohnten Zeit. Die Station zeigt live, ob das Signal trägt.</p></li>
+      <li style="--i:3"><div class="ab-bild"><svg viewBox="0 0 120 96" stroke="currentColor" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M34 12h32l14 14v52H34z" class="ab-rahmen"/><path d="M66 12v14h14" opacity=".55"/>
+        <path d="M42 36h22M42 42h16" opacity=".4"/>
+        <rect x="47" y="52" width="20" height="16" rx="3" class="ab-akzent"/><path d="M51 52v-4a6 6 0 0 1 12 0v4" class="ab-akzent"/>
+        <path d="M86 60c12-4 16-18 8-30" class="ab-spur" stroke-dasharray="3 4"/><path d="M90 29l4 1 1-4" /></svg></div>
+        <span class="ab-wer">Halterin</span><h3>Verschlüsselt zurück</h3>
+        <p>Die Aufnahme ist ab der ersten Sekunde für Ihre Praxis verschlüsselt. Die Halterin schickt die Datei auf dem Weg, den sie ohnehin nutzt.</p></li>
+      <li style="--i:4"><div class="ab-bild"><svg viewBox="0 0 120 96" stroke="currentColor" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <rect x="10" y="12" width="100" height="70" rx="8" class="ab-rahmen"/>
+        <path d="M20 54c14-3 26-3 40-2s24 1 40-2" stroke-width="11" opacity=".14"/>
+        <path d="M20 54c14-3 26-3 40-2s24 1 40-2" stroke-dasharray="2 3" opacity=".5"/>
+        <g class="ab-punkte" fill="currentColor" stroke="none"><circle cx="24" cy="53" r="2.2"/><circle cx="38" cy="55" r="2.2"/><circle cx="52" cy="51" r="2.2"/><circle cx="66" cy="54" r="2.2"/><circle cx="80" cy="52" r="2.2"/></g>
+        <circle cx="96" cy="34" r="3.4" class="ab-neu"/>
+        <path d="M20 72h80" opacity=".35"/><path d="M20 22h26" opacity=".45"/></svg></div>
+        <span class="ab-wer">Praxis</span><h3>In die Akte ziehen</h3>
+        <p>Signalgüte und Verlauf stehen sofort da, ab der vierten Aufnahme auch der Vergleich mit der eigenen Basis des Pferds. Die Einordnung machen Sie.</p></li>
+    </ol>
+    <div class="ab-nachricht">
+      <div class="ab-nachricht-kopf"><svg class="ic" aria-hidden="true"><use href="#i-phone"/></svg>So kommt Ihr Link bei der Halterin an</div>
+      <p class="ab-blase-text">Guten Tag, hier ist <b>Ihre Praxis</b>. Wie besprochen der Mess-Link für <b>Ihr Pferd</b>: Bitte nehmen Sie mindestens sieben Minuten in Ruhe in der gewohnten Box auf und teilen Sie die Datei mit uns. Sie brauchen den Polar-H10-Gurt und ein Android-Handy oder einen Rechner mit Chrome oder Edge – auf dem iPhone geht es nicht. Die Aufnahme ist eine Verlaufsbeobachtung und ersetzt keine Untersuchung. Macht Ihnen etwas Sorgen, rufen Sie uns bitte an. <span class="ab-url">vitalkultur.com/…/messen.html?…</span></p>
+      <p class="ab-nachricht-fuss">Die Nachricht ist im Cockpit vorbereitet, mit Ihrem Praxisnamen und dem Namen des Pferds. Ein Tipp in der Akte öffnet WhatsApp oder SMS an die hinterlegte Nummer. Für alle Kundinnen gibt es zusätzlich einen gemeinsamen Link als QR-Aushang.</p>
+    </div>
+    <div class="cta-row ab-ctas">
+      <a class="cta-primary" href="/carlon-equine/app/messen.html">Als Halterin ausprobieren: Beispielmessung →</a>
+      <a class="btn btn-back" href="/carlon-equine/app/">Als Praxis ausprobieren: Demo-Cockpit</a>
     </div>
   </div>
 </section>
@@ -973,6 +1099,28 @@ h1,h2{text-wrap:balance}
       Normwert, an dem man ihn messen könnte. Aussagekräftig wird er erst gegen die
       eigene Vorgeschichte des Tieres.
     </p>
+<figure class="grafik rev" aria-label="Schema: ein einzelner Wert ohne Normbereich gegenüber einem Verlauf mit der eigenen Basis des Pferds">
+      <svg viewBox="0 0 760 230" fill="none" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <rect x="1" y="1" width="250" height="228" rx="16" class="gr-feld"/>
+        <rect x="281" y="1" width="478" height="228" rx="16" class="gr-feld"/>
+        <text x="24" y="34" class="gr-marke">EINZELWERT</text>
+        <path d="M44 186h170" class="gr-achse"/><path d="M44 60v126" class="gr-achse"/>
+        <circle cx="129" cy="112" r="6" class="gr-punkt-hell"/>
+        <text x="129" y="92" text-anchor="middle" class="gr-frage">?</text>
+        <text x="129" y="212" text-anchor="middle" class="gr-klein">kein belastbarer Normwert</text>
+        <text x="304" y="34" class="gr-marke">VERLAUF GEGEN DIE EIGENE BASIS</text>
+        <path d="M320 186h420" class="gr-achse"/><path d="M320 60v126" class="gr-achse"/>
+        <path d="M404 106 C 520 102, 600 104, 692 103 L 692 146 C 600 147, 520 146, 404 144 Z" class="gr-band"/>
+        <path d="M404 125 C 520 123, 600 124, 692 124" class="gr-mittel"/>
+        <g class="gr-punkte"><circle cx="420" cy="128" r="4.2"/><circle cx="452" cy="120" r="4.2"/><circle cx="484" cy="131" r="4.2"/><circle cx="516" cy="124" r="4.2"/><circle cx="548" cy="117" r="4.2"/><circle cx="580" cy="127" r="4.2"/><circle cx="612" cy="122" r="4.2"/><circle cx="644" cy="129" r="4.2"/><circle cx="676" cy="119" r="4.2"/></g>
+        <circle cx="716" cy="78" r="7" class="gr-neu"/>
+        <path d="M716 86v18" class="gr-zeiger"/>
+        <text x="708" y="64" text-anchor="end" class="gr-wert">neue Aufnahme</text>
+        <text x="404" y="170" class="gr-klein">eigene Basis · 30 Tage · ab 3 Aufnahmen</text>
+        <text x="740" y="212" text-anchor="end" class="gr-klein">Wochen →</text>
+      </svg>
+      <figcaption>Schema. Die Basis rechnet das Cockpit aus den vorherigen Aufnahmen desselben Pferds; die neue Aufnahme zählt nicht mit.</figcaption>
+    </figure>
     <div class="grid">
       <div class="card">
         <h3>Über Wochen statt über Minuten</h3>
@@ -1004,6 +1152,19 @@ h1,h2{text-wrap:balance}
       und Fahrt ist diese Bedingung systematisch nicht erfüllt — in der eigenen Box ist sie
       es jeden Tag.
     </p>
+<figure class="grafik rev" aria-label="RMSSD vor und während Straßentransport: 74 auf 45 Millisekunden bei 3,5 Stunden, 90 auf 59 Millisekunden bei 8 Stunden (Schmidt et al. 2010)">
+      <svg viewBox="0 0 760 240" fill="none" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <text x="24" y="30" class="gr-marke">RMSSD IN MS · STRASSENTRANSPORT</text>
+        <path d="M70 190h660" class="gr-raster"/><text x="60" y="194" text-anchor="end" class="gr-klein">0</text><path d="M70 152h660" class="gr-raster"/><text x="60" y="156" text-anchor="end" class="gr-klein">25</text><path d="M70 115h660" class="gr-raster"/><text x="60" y="119" text-anchor="end" class="gr-klein">50</text><path d="M70 78h660" class="gr-raster"/><text x="60" y="82" text-anchor="end" class="gr-klein">75</text><path d="M70 40h660" class="gr-raster"/><text x="60" y="44" text-anchor="end" class="gr-klein">100</text>
+        <rect x="150" y="79" width="46" height="111" rx="5" class="gr-balken"/><text x="173" y="69" text-anchor="middle" class="gr-wert">74</text><text x="173" y="212" text-anchor="middle" class="gr-klein">vorher</text><rect x="214" y="122" width="46" height="68" rx="5" class="gr-balken-gold"/><text x="237" y="112" text-anchor="middle" class="gr-wert">45</text><text x="237" y="212" text-anchor="middle" class="gr-klein">unterwegs</text>
+        <text x="205" y="234" text-anchor="middle" class="gr-gruppe">3,5 h Fahrt</text>
+        <rect x="470" y="55" width="46" height="135" rx="5" class="gr-balken"/><text x="493" y="45" text-anchor="middle" class="gr-wert">90</text><text x="493" y="212" text-anchor="middle" class="gr-klein">vorher</text><rect x="534" y="102" width="46" height="88" rx="5" class="gr-balken-gold"/><text x="557" y="92" text-anchor="middle" class="gr-wert">59</text><text x="557" y="212" text-anchor="middle" class="gr-klein">unterwegs</text>
+        <text x="525" y="234" text-anchor="middle" class="gr-gruppe">8 h Fahrt</text>
+        <text x="274" y="127" class="gr-wert gr-gold">−39 %</text>
+        <text x="594" y="106" class="gr-wert gr-gold">−34 %</text>
+      </svg>
+      <figcaption>Werte aus Schmidt et&nbsp;al. 2010, Hormones and Behavior, gemessen unterwegs. Darum misst CARLON in der eigenen Box.</figcaption>
+    </figure>
     <ul class="studien">
       <li><b>Während der Fahrt fällt die HRV um rund ein Drittel.</b> RMSSD sank bei Straßentransport von 74 auf 45&nbsp;ms (3,5&nbsp;h) bzw. von 90 auf 59&nbsp;ms (8&nbsp;h) – gemessen unterwegs. <a href="https://doi.org/10.1016/j.yhbeh.2009.11.003" target="_blank" rel="noopener">Schmidt et&nbsp;al. 2010, Hormones and Behavior</a></li>
       <li><b>Kurze Aufnahmen schwanken von Tag zu Tag.</b> Bei 30 gesunden Pferden war die Tag-zu-Tag-Variabilität der HRV in 10- und 60-Minuten-Aufnahmen mäßig bis hoch; Dauer und Uhrzeit der Aufnahme beeinflussten die meisten Werte, AV-Blöcke 2.&nbsp;Grades die RR-basierten Kurzzeitwerte – darum gleiche Bedingungen, Vergleich mit der eigenen Basis und lange Pausen getrennt ausgewiesen. <a href="https://doi.org/10.1016/j.jvc.2016.10.006" target="_blank" rel="noopener">Eggensperger &amp; Schwarzwald 2017, Journal of Veterinary Cardiology</a></li>
@@ -1098,7 +1259,7 @@ h1,h2{text-wrap:balance}
       Rohzustand, die daraus berechneten Kennwerte und die Signalgüte dazu. Sie sehen also
       nicht nur eine Zahl, sondern auch, <strong>wie sehr Sie ihr trauen können</strong>.
       Ins Cockpit kommt die Datei mit einem Handgriff — hineinziehen, fertig: Signalgüte
-      und der Vergleich mit der eigenen Vorgeschichte stehen sofort da.
+      und Verlauf stehen sofort da, ab der vierten Aufnahme auch der Vergleich mit der eigenen Basis.
     </p>
 
     <div class="vt" data-app-tour>
@@ -1110,9 +1271,9 @@ h1,h2{text-wrap:balance}
       <div class="vt-geraet">
         <div class="at-device at-generisch">
           <div class="at-screen">
-            <div class="at-scr at-scroll" data-dauer="12"><div class="at-scroller" tabindex="0"><img src="assets/station-tour/start-lang.webp" width="660" height="2477" alt="Messstation im Browser des Smartphones: Startseite mit Pferdename und Gurt-Verbindung" loading="lazy" decoding="async"></div></div>
-            <div class="at-scr" data-dauer="16" data-rate="1"><video src="assets/station-tour/live.mp4" poster="assets/station-tour/live-poster.jpg" muted playsinline preload="metadata" aria-label="Messstation während einer Ruheaufnahme im Zeitraffer: Puls, Schlagzahl und Poincaré laufen mit"></video></div>
-            <div class="at-scr at-scroll" data-dauer="20"><div class="at-scroller" tabindex="0"><img src="assets/station-tour/ergebnis-lang.webp" width="660" height="5965" alt="Ergebnis der Messstation: Kennwerte roh und bereinigt, Kurven, Messprotokoll und Senden an die Praxis" loading="lazy" decoding="async"></div></div>
+            <div class="at-scr at-scroll" data-dauer="12"><div class="at-scroller" tabindex="0"><img src="assets/station-tour/start-lang-v2.webp" width="660" height="1975" alt="Messstation im Browser des Smartphones: Startseite mit Pferdename und Gurt-Verbindung" loading="lazy" decoding="async"></div></div>
+            <div class="at-scr" data-dauer="16" data-rate="1"><video src="assets/station-tour/live-v2.mp4" poster="assets/station-tour/live-poster-v2.jpg" muted playsinline preload="metadata" aria-label="Messstation während einer Ruheaufnahme im Zeitraffer: Puls, Schlagzahl und Poincaré laufen mit"></video></div>
+            <div class="at-scr at-scroll" data-dauer="20"><div class="at-scroller" tabindex="0"><img src="assets/station-tour/ergebnis-lang-v2.webp" width="660" height="5340" alt="Ergebnis der Messstation: Kennwerte roh und bereinigt, Kurven, Messprotokoll und Senden an die Praxis" loading="lazy" decoding="async"></div></div>
           </div>
         </div>
         <p class="vt-hinweis">Die Messstation selbst – Liste antippen oder im Gerät scrollen</p>
@@ -1213,6 +1374,15 @@ h1,h2{text-wrap:balance}
       UELN, Mikrochip, Pass. Dazu JSON, CSV und ein Kubios-kompatibler Export für die
       Forschung, und ein SHA-256-Prüfwert je Datensatz für die Dokumentation.
     </p>
+    <figure class="grafik rev" aria-label="Eine Aufnahme, fünf Ausgaben: FHIR R5, JSON, CSV, Kubios-kompatibel und SHA-256-Prüfwert">
+      <svg viewBox="0 0 760 252" fill="none" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M300 126 C 370 126, 380 30, 440 30" class="gr-spur" /><path d="M300 126 C 370 126, 380 78, 440 78" class="gr-spur" /><path d="M300 126 C 370 126, 380 126, 440 126" class="gr-spur" /><path d="M300 126 C 370 126, 380 174, 440 174" class="gr-spur" /><path d="M300 126 C 370 126, 380 222, 440 222" class="gr-spur" />
+        <rect x="10" y="86" width="290" height="80" rx="16" class="gr-knoten"/>
+        <text x="32" y="118" class="gr-marke">EINE AUFNAHME</text>
+        <text x="32" y="144" class="gr-klein">RR-Abstände · Kennwerte · Signalgüte</text>
+        <rect x="440" y="11" width="300" height="38" rx="19" class="gr-chip"/><text x="462" y="35" class="gr-chip-t">FHIR R5</text><text x="722" y="35" text-anchor="end" class="gr-klein">Observation · Patient</text><rect x="440" y="59" width="300" height="38" rx="19" class="gr-chip"/><text x="462" y="83" class="gr-chip-t">JSON</text><text x="722" y="83" text-anchor="end" class="gr-klein">vollständig</text><rect x="440" y="107" width="300" height="38" rx="19" class="gr-chip"/><text x="462" y="131" class="gr-chip-t">CSV</text><text x="722" y="131" text-anchor="end" class="gr-klein">Tabellen</text><rect x="440" y="155" width="300" height="38" rx="19" class="gr-chip"/><text x="462" y="179" class="gr-chip-t">Kubios</text><text x="722" y="179" text-anchor="end" class="gr-klein">Forschung</text><rect x="440" y="203" width="300" height="38" rx="19" class="gr-chip"/><text x="462" y="227" class="gr-chip-t">SHA-256</text><text x="722" y="227" text-anchor="end" class="gr-klein">Prüfwert je Datensatz</text>
+      </svg>
+    </figure>
   </div>
 </section>
 
@@ -1354,25 +1524,25 @@ h1,h2{text-wrap:balance}
     <h2>Was CARLON bewusst nicht tut.</h2>
     <div class="grid">
       <div class="card">
-        <h3>Keine Diagnose</h3>
+        <svg class="ic ic-karte" aria-hidden="true"><use href="#i-plus"/><use href="#i-kein"/></svg><h3>Keine Diagnose</h3>
         <p>Die Software zeigt Messwerte, Signalqualität, Verlauf und Abweichung. Die
            medizinische Deutung bleibt vollständig bei Ihnen. CARLON Equine Visite ist
            kein Medizinprodukt im Sinne der Verordnung (EU) 2017/745.</p>
       </div>
       <div class="card">
-        <h3>Keine Behandlungsempfehlung</h3>
+        <svg class="ic ic-karte" aria-hidden="true"><use href="#i-pfeil"/><use href="#i-kein"/></svg><h3>Keine Behandlungsempfehlung</h3>
         <p>Auch wenn ein Verlauf eindeutig aussieht: Ob etwas geändert wird, steht nirgends
            auf dem Schirm. Das ist Ihre Entscheidung, nicht die einer Kennzahl.</p>
       </div>
       <div class="card">
-        <h3>Keine Datenbank bei uns</h3>
+        <svg class="ic ic-karte" aria-hidden="true"><use href="#i-wolke"/><use href="#i-kein"/></svg><h3>Keine Datenbank bei uns</h3>
         <p>Ihre Pferdedaten liegen im Speicher Ihres Geräts. Wir haben keinen Zugriff und
            könnten sie auch nicht löschen. Die Aufnahme der Halterin läuft gar nicht erst
            über uns: Sie schickt Ihnen eine Datei — geöffnet über Ihren Mess-Link, ist sie
            von der ersten Sekunde an für Ihre Praxis verschlüsselt.</p>
       </div>
       <div class="card">
-        <h3>Kein Notfallweg</h3>
+        <svg class="ic ic-karte" aria-hidden="true"><use href="#i-glocke"/><use href="#i-kein"/></svg><h3>Kein Notfallweg</h3>
         <p>Eine zugeschickte Datei ist kein Anruf. Bei akuten Beschwerden gilt, was immer
            gilt — unmittelbar tierärztlich handeln.</p>
       </div>

@@ -3076,9 +3076,7 @@ const Importer = {
     const link = (typeof Praxis!=='undefined') ? await Praxis.einladung() : null;
     if(!link) return;                       // gate() hat bereits erklaert, warum
     const praxis = ((State.settings&&State.settings.clinicName)||'').trim();
-    const text = praxis
-      ? `Hallo, hier ist ${praxis}. Bitte messen Sie den Herzrhythmus Ihres Pferds einmal in Ruhe — der Link fuehrt Sie Schritt fuer Schritt durch, es dauert sieben Minuten und braucht kein Konto: ${link}`
-      : `Bitte messen Sie den Herzrhythmus Ihres Pferds einmal in Ruhe — der Link fuehrt Sie Schritt fuer Schritt durch, es dauert sieben Minuten und braucht kein Konto: ${link}`;
+    const text = Praxis.nachricht(praxis, null)+' '+link;
     const teilbar = typeof navigator.share==='function';
     $('#impBody').innerHTML=`
       <div style="text-align:center;padding:6px 4px">
@@ -3090,7 +3088,7 @@ const Importer = {
           ${teilbar?`<button class="btn primary" onclick="Importer.einladungTeilen()">Teilen</button>`:''}
           <button class="btn ghost" onclick="Importer.einladungKopieren()">Nachricht kopieren</button>
           <a class="btn ghost" href="https://wa.me/?text=${encodeURIComponent(text)}" target="_blank" rel="noopener">Per WhatsApp</a>
-          <a class="btn ghost" href="mailto:?subject=${encodeURIComponent('Herzrhythmus-Messung fuer Ihr Pferd')}&body=${encodeURIComponent(text)}">Per E-Mail</a>
+          <a class="btn ghost" href="mailto:?subject=${encodeURIComponent('Ruhemessung für Ihr Pferd')}&body=${encodeURIComponent(text)}">Per E-Mail</a>
         </div>
         <p style="font-size:11.5px;color:var(--text-dim);margin-top:16px;max-width:400px;margin-left:auto;margin-right:auto">Derselbe Link gilt fuer alle Ihre Kundinnen — als Aushang im Stall erreicht er vierzig statt einer. Den Aushang drucken Sie ueber die Postfach-Pille.</p>
       </div>`;
@@ -3115,7 +3113,7 @@ const Importer = {
   },
   async einladungTeilen(){
     const e=Importer._einladung; if(!e) return;
-    try{ await navigator.share({title:'Herzrhythmus-Messung', text:e.text}); }
+    try{ await navigator.share({title:'Ruhemessung', text:e.text}); }
     catch(err){ if(err && err.name==='AbortError') return;
       Importer.einladungKopieren(); }
   },
@@ -5727,6 +5725,7 @@ const Views={
         </div>
         <div style="display:flex;gap:8px;flex-wrap:wrap">
           <button class="btn primary" onclick="Report.print('${h.id}')" title="Messwertbericht als PDF mit Ihrem Logo">${IC.check||''} Messwertbericht erstellen</button>
+          <button class="btn ghost" onclick="UI.messungAnfordern('${h.id}')" title="Mess-Link für dieses Pferd an die Halterin schicken – Pferd und Akte stehen schon im Link">${IC.owner} Messung anfordern</button>
           <button class="btn ghost" onclick="Views.logConsult('${h.id}')" title="Beratung ohne PDF erfassen">Beratung erfassen</button>
           <button class="btn ghost" onclick="Views.planVisit('${h.id}')" title="Termin in Google/Apple Kalender">${IC.calendar} Termin</button>
           <button class="btn ghost" onclick="Views.ownerMode('${h.id}')" title="Vollbild zum Zeigen für den Besitzer — iPad umdrehen">${IC.eye||''} Besitzer-Modus</button>
@@ -8378,7 +8377,9 @@ const UI={
   },
   /* Der Anlass, aus dem eine Kundin überhaupt misst. Ohne ihn wartet die
      Praxis darauf, dass jemand von selbst auf die Idee kommt. */
-  messungAnfordern(){
+  /* 16.11.2026 (Jan: „super schnell die Messstation verschicken"): aus der Akte mit dem Pferd vorausgewählt –
+     der Link entsteht sofort, mit Nachricht und direktem Weg an die hinterlegte Nummer. */
+  messungAnfordern(hid){
     const hs=State.horses.slice().sort((a,b)=>String(a.name).localeCompare(String(b.name)));
     if(!hs.length){ Toast.show('Noch kein Pferd angelegt','info'); return; }
     this.modal(`<div class="modal-head"><button class="closex" onclick="UI.closeModal()">${IC.x}</button><h3>Messung anfordern</h3></div>
@@ -8388,7 +8389,7 @@ const UI={
         Sie muss nichts eintippen — und die Messung landet auf der richtigen Akte,
         egal von welchem Gerät sie misst.</p>
       <select id="anfPferd" style="width:100%;background:var(--bg-deep);border:1px solid var(--border-subtle);border-radius:var(--r-s);color:var(--text-primary);padding:12px;font-size:14px">
-        ${hs.map(h=>`<option value="${esc(h.id)}">${esc(h.name)}${h.owner?' · '+esc(h.owner):''}</option>`).join('')}
+        ${hs.map(h=>`<option value="${esc(h.id)}"${h.id===hid?' selected':''}>${esc(h.name)}${h.owner?' · '+esc(h.owner):''}</option>`).join('')}
       </select>
       <div id="anfErgebnis" style="margin-top:14px"></div>
     </div>
@@ -8396,6 +8397,7 @@ const UI={
       <button class="btn ghost" onclick="UI.closeModal()">Schließen</button>
       <button class="btn primary" onclick="UI.anfordernErzeugen()">${IC.kette} Link erzeugen</button>
     </div>`);
+    if(hid && hs.some(h=>h.id===hid)) UI.anfordernErzeugen();
   },
   async anfordernErzeugen(){
     const hid=$('#anfPferd')&&$('#anfPferd').value; if(!hid) return;
@@ -8407,13 +8409,23 @@ const UI={
         <button class="btn primary" id="anfTeilen">${IC.senden} An die Besitzerin schicken</button>
         <button class="btn ghost" id="anfKopieren">${IC.kette} Kopieren</button>
       </div>`;
-    const text='Bitte messen Sie einmal in Ruhe — der Link führt Sie durch:';
+    const h=State.horses.find(x=>x.id===hid)||{};
+    const praxis=((State.settings&&State.settings.clinicName)||'').trim();
+    const text=Praxis.nachricht(praxis, h.name);
+    const nr=String(h.phone||'').replace(/[^0-9+]/g,'');
+    if(nr){
+      const wp=nr.replace(/^\+/,'').replace(/^00/,'').replace(/^0/,'49');
+      const voll=encodeURIComponent(text+' '+link);
+      z.insertAdjacentHTML('beforeend',`<div style="display:flex;gap:8px;margin-top:8px;flex-wrap:wrap">
+        <a class="btn ghost" href="https://wa.me/${wp}?text=${voll}" target="_blank" rel="noopener">${IC.phone} WhatsApp an ${esc(h.owner||nr)}</a>
+        <a class="btn ghost" href="sms:${nr}${/(iPhone|iPad|Macintosh)/.test(navigator.userAgent)?'&':'?'}body=${voll}">${IC.phone} SMS</a></div>`);
+    }
     $('#anfTeilen').onclick=async()=>{
-      if(navigator.share){ try{ await navigator.share({title:'Messung',text,url:link}); return; }catch(_){ } }
+      if(navigator.share){ try{ await navigator.share({title:'Ruhemessung',text,url:link}); return; }catch(e){ if(e&&e.name==='AbortError') return; } }
       $('#anfKopieren').click();
     };
     $('#anfKopieren').onclick=async()=>{
-      try{ await navigator.clipboard.writeText(link); }catch(_){ }
+      try{ await navigator.clipboard.writeText(text+' '+link); }catch(_){ }
       $('#anfKopieren').textContent='Kopiert ✓';
     };
   },
@@ -8842,13 +8854,19 @@ const Praxis={
      Pferdename und Kennung stehen im ANKER, nicht in der Abfrage: ein Anker
      wird nie an einen Server gesendet und steht in keinem Zugriffsprotokoll.
      Ein Pferdename gehört niemandem sonst. */
+  /* Einladungstext (16.11.2026, Recherche Fable 5.2 + § 9 HWG / § 7 UWG geprüft): Absprache, Gerätehinweis
+     (iPhone geht nicht – sonst bricht der erste Tipp ab), „ersetzt keine Untersuchung", Telefon bei Sorgen.
+     Bewusst „Ruhemessung" statt „Herzrhythmus" – das klingt nach Rhythmusdiagnostik. */
+  nachricht(praxis, pferd){
+    return `Guten Tag${praxis?', hier ist '+praxis:''}. Wie besprochen der Mess-Link${pferd?' für '+pferd:''}: Bitte nehmen Sie mindestens sieben Minuten in Ruhe in der gewohnten Box auf und teilen Sie die Datei mit uns. Sie brauchen den Polar-H10-Gurt und ein Android-Handy oder einen Rechner mit Chrome oder Edge – auf dem iPhone geht es nicht. Die Aufnahme ist eine Verlaufsbeobachtung und ersetzt keine Untersuchung. Macht Ihnen etwas Sorgen, rufen Sie uns bitte an.`;
+  },
   async anfordern(hid){
     const h=State.horses.find(x=>x.id===hid); if(!h) return null;
     const basis=await this.einladung(); if(!basis) return null;      // Tor greift dort
     const paket=btoa(unescape(encodeURIComponent(JSON.stringify(
       {sid:h.subjectId||null, n:h.name||''}))))
       .replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');
-    const link=basis+'#a='+paket;
+    const link=basis+(basis.indexOf('#')>=0?'&':'#')+'a='+paket;
     const a=State.settings.anfragen||[];
     if(!a.some(x=>x.pferdId===hid && !x.eingegangen))
       a.push({id:(crypto.randomUUID?crypto.randomUUID():String(Date.now())),
@@ -11417,6 +11435,9 @@ const Sprache={
     'Rückmeldung':'Feedback',
     'Rückmeldung für Halter':'Feedback for the owner',
     'Messwertbericht erstellen':'Create measurement report',
+    'Messung anfordern':'Request a recording',
+    'An die Besitzerin schicken':'Send to the owner',
+    'Link erzeugen':'Create link',
     'Messwertbericht':'Measurement report',
     'Beratung erfassen':'Record consultation',
     '+ Beratung erfassen':'+ Record consultation',
