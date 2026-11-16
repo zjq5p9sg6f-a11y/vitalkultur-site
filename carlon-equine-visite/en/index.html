@@ -735,27 +735,30 @@ section[id]{scroll-margin-top:76px}
 .final .cta-note{margin-left:0;text-align:left}
 .final .anmeldung{margin-left:0}
 
-.berichtsmuster{display:flex;align-items:center;gap:22px;flex-wrap:wrap;margin-top:34px;padding:22px 24px;
-  border:1px solid var(--border-subtle);border-radius:16px;
-  background:linear-gradient(150deg,rgba(62,207,178,0.05),rgba(62,207,178,0.012))}
-.berichtsmuster{flex-wrap:wrap}
+.berichtsmuster{display:grid;grid-template-columns:minmax(240px,300px) minmax(0,1fr);align-items:center;gap:clamp(28px,4vw,56px);
+  margin-top:34px;padding:clamp(28px,3.4vw,44px) clamp(24px,3.6vw,48px);
+  border:1px solid var(--border-subtle);border-radius:20px;
+  background:radial-gradient(120% 140% at 0% 50%,rgba(62,207,178,0.09),rgba(62,207,178,0.015) 60%,transparent);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.05)}
 
-.berichtsmuster .bm-knopf{display:flex;align-items:center;justify-content:center;width:max-content;max-width:100%;margin-top:18px}
-.bm-faecher{position:relative;flex:0 0 auto;width:min(280px,58vw);aspect-ratio:300/250;display:block;margin:10px 40px 10px 54px}
-@media(max-width:720px){.bm-faecher{margin:10px auto 18px}}
-.bm-faecher img{position:absolute;top:0;left:50%;width:58%;height:auto;border-radius:3px;background:#fff;
-  box-shadow:0 18px 40px -12px rgba(0,0,0,.85),0 0 0 1px rgba(255,255,255,.08);transform-origin:50% 100%;transition:transform .35s cubic-bezier(.2,.8,.2,1)}
-.bm-faecher img:nth-child(1){transform:translateX(-50%) rotate(9deg) translate(34%,2%)}
-.bm-faecher img:nth-child(2){transform:translateX(-50%) rotate(-8deg) translate(-34%,3%)}
+.bm-faecher{position:relative;width:100%;max-width:300px;aspect-ratio:300/250;display:block;justify-self:center}
+.bm-faecher img{position:absolute;top:4%;left:50%;width:56%;height:auto;border-radius:3px;background:#fff;
+  box-shadow:0 22px 44px -14px rgba(0,0,0,.9),0 0 0 1px rgba(255,255,255,.08);transform-origin:50% 100%;transition:transform .4s cubic-bezier(.2,.8,.2,1)}
+.bm-faecher img:nth-child(1){transform:translateX(-50%) rotate(9deg) translate(30%,1%)}
+.bm-faecher img:nth-child(2){transform:translateX(-50%) rotate(-9deg) translate(-30%,1%)}
 .bm-faecher img:nth-child(3){transform:translateX(-50%)}
-.bm-faecher:hover img:nth-child(1){transform:translateX(-50%) rotate(13deg) translate(46%,0)}
-.bm-faecher:hover img:nth-child(2){transform:translateX(-50%) rotate(-12deg) translate(-46%,0)}
-.bm-faecher:hover img:nth-child(3){transform:translateX(-50%) translateY(-6px)}
+.bm-faecher:hover img:nth-child(1),.bm-faecher:focus-visible img:nth-child(1){transform:translateX(-50%) rotate(12deg) translate(40%,-1%)}
+.bm-faecher:hover img:nth-child(2),.bm-faecher:focus-visible img:nth-child(2){transform:translateX(-50%) rotate(-12deg) translate(-40%,-1%)}
+.bm-faecher:hover img:nth-child(3),.bm-faecher:focus-visible img:nth-child(3){transform:translateX(-50%) translateY(-6px)}
 @media(prefers-reduced-motion:reduce){.bm-faecher img{transition:none}}
-.berichtsmuster>div{flex:1;min-width:260px}
-.berichtsmuster b{display:block;font-size:17px;color:var(--text-primary);font-weight:500;margin-bottom:6px}
-.berichtsmuster span{font-size:14px;color:var(--text-secondary);font-weight:400;line-height:1.65}
-.berichtsmuster a{white-space:nowrap}
+.berichtsmuster>div{min-width:0}
+.berichtsmuster b{display:block;font-family:var(--font-brand);font-size:clamp(18px,1.6vw,21px);color:var(--text-primary);font-weight:500;letter-spacing:-.005em;margin-bottom:10px}
+.berichtsmuster span{display:block;font-size:14.5px;color:var(--text-secondary);font-weight:400;line-height:1.7;max-width:56ch}
+.berichtsmuster .bm-knopf{display:inline-flex;align-items:center;gap:10px;margin-top:22px;padding:12px 20px;border-radius:999px;white-space:nowrap;
+  border:1px solid rgba(62,207,178,.55);color:var(--cyan);background:rgba(62,207,178,.06);font-size:12.5px;letter-spacing:.08em;line-height:1;transition:background .2s,border-color .2s}
+.berichtsmuster .bm-knopf:hover{background:rgba(62,207,178,.14);border-color:var(--cyan)}
+.berichtsmuster .bm-knopf::after{content:'↗';font-size:14px;letter-spacing:0}
+@media(max-width:720px){.berichtsmuster{grid-template-columns:1fr;text-align:center}.bm-faecher{max-width:260px}.berichtsmuster span{margin:0 auto}}
 .anmeldung{max-width:720px;margin:var(--sp-55) auto 0;text-align:left;padding:34px 32px 30px;position:relative;
   border:1px solid var(--border-subtle);border-radius:18px;
   background:linear-gradient(150deg,rgba(62,207,178,0.05),rgba(62,207,178,0.012))}
@@ -1167,7 +1170,7 @@ try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; 
         <span>Six pages on your letterhead (here fictitious demo data): raw and corrected values,
         tachogram, spectrum, course over weeks, Poincaré over four time segments, limits of the
         recording, methods with references and SHA-256 checksum. The interpretation stays with your practice. The sample report is in German.</span>
-        <a class="btn ghost bm-knopf" href="../assets/CARLON-Muster-Bericht.pdf" target="_blank" rel="noopener">View sample report · PDF, 6 pages (German)</a>
+        <a class="bm-knopf" href="../assets/CARLON-Muster-Bericht.pdf" target="_blank" rel="noopener">View sample report · PDF, 6 pages (German)</a>
       </div>
     </div>
 
