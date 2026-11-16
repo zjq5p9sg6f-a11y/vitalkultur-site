@@ -52,6 +52,7 @@ details.mehr.gross[open]{padding-bottom:var(--sp-21)}
 .f-shot::before,.shots.three .frame::before,.hero-shot::after,.pz-live::before{content:''!important;position:absolute!important;left:50%!important;top:calc(var(--b) / 2)!important;
   transform:translate(-50%,-50%)!important;width:4px!important;height:4px!important;border-radius:50%!important;background:#15171b!important;
   box-shadow:inset 0 0 0 1px #2a2e33!important;z-index:2}
+.hero-shot video{display:block;width:100%;height:auto;border-radius:calc(var(--r) - var(--b));background:#07090a}
 .f-shot img,.shots.three .frame img,.hero-shot img,.pz-live img{display:block;width:100%;height:auto;border-radius:calc(var(--r) - var(--b))!important;box-shadow:none!important}
 
 /* Messstation-Tour (16.11.2026): gemeinsame App-Tour-Komponente, aber GENERISCHES Telefon (Browser-Produkt, kein Apple-Gerät) */

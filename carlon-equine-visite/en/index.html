@@ -792,7 +792,7 @@ html.rev-an .rev.in{opacity:1;transform:none}
 .tarif-fuss{max-width:62ch;margin-left:auto;margin-right:auto}
 h1,h2{text-wrap:balance}
 </style>
-<link rel="stylesheet" href="/assets/baukasten/baukasten.css?v=3">
+<link rel="stylesheet" href="/assets/baukasten/baukasten.css?v=4">
 <link rel="stylesheet" href="/assets/app-tour/app-tour.css?v=10">
 </head>
 <body>
@@ -890,8 +890,7 @@ try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; 
     <figure class="hero-buehne">
       <div class="hb-geraete">
       <a class="hero-shot" href="/carlon-equine/app/" title="Open the demo cockpit">
-        <img src="../assets/visite-shots/13-verlauf.jpg" width="1600" height="1112" loading="eager"
-          alt="Record of a demo horse in the cockpit: RMSSD, resting heart rate and SDNN trends over weeks against its own baseline, below it heart rate and HRV of a resting recording beat by beat"></a>
+        <video src="../assets/visite-shots/13-verlauf-film.mp4" poster="assets/visite-shots/13-verlauf-v2.jpg" width="1600" height="1112" autoplay muted loop playsinline preload="auto" aria-label="Record of a demo horse in the cockpit: RMSSD, resting heart rate and SDNN trends over weeks against its own baseline, below it heart rate and HRV of a resting recording beat by beat"></video></a>
       <span class="hero-phone" aria-hidden="true"><video src="../assets/station-tour/live-v4.mp4" poster="assets/station-tour/live-poster-v4.jpg" width="660" height="1428" autoplay muted loop playsinline preload="auto"></video></span>
       </div>
       <figcaption>
@@ -1893,7 +1892,8 @@ if(_lb) _lb.addEventListener('click', function(){
 
 <script src="/assets/baukasten/baukasten.js?v=2"></script>
 <script>
-(function(){var v=document.querySelector('.hero-phone video');if(!v)return;
+(function(){var t=document.querySelector('.hero-shot video');if(t&&window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches){t.removeAttribute('autoplay');t.pause();}else if(t){var pt=t.play();if(pt&&pt.catch)pt.catch(function(){});}
+  var v=document.querySelector('.hero-phone video');if(!v)return;
   if(window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches){v.removeAttribute('autoplay');v.pause();return;}
   v.playbackRate=1.5;v.addEventListener('loadedmetadata',function(){v.playbackRate=1.5;});
   var p=v.play();if(p&&p.catch)p.catch(function(){});})();
