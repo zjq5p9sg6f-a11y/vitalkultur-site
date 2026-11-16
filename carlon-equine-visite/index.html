@@ -441,7 +441,7 @@ svg.ic{width:20px;height:20px;flex:0 0 auto;fill:none;stroke:var(--cyan);stroke-
   padding:clamp(4px,.55vw,7px);border-radius:clamp(18px,2.4vw,30px);
   background:linear-gradient(150deg,#46494f 0%,#2b2e33 24%,#1d1f23 62%,#131417 100%);
   box-shadow:inset 0 1px 0 rgba(255,255,255,.16),0 0 0 1px #08090b,0 34px 60px -24px rgba(0,0,0,.95);pointer-events:none}
-.hero-phone img{width:100%;height:100%;object-fit:cover;object-position:top;display:block;border-radius:clamp(14px,1.9vw,24px)}
+.hero-phone img,.hero-phone video{width:100%;height:100%;object-fit:cover;object-position:top;display:block;border-radius:clamp(14px,1.9vw,24px);background:#07090a}
 .hero-buehne figcaption{position:relative;z-index:1;margin:var(--sp-34) 0 0 24%;font-size:var(--t-klein);color:var(--text-dim);line-height:1.6;text-align:left}
 .hero-buehne figcaption b{color:var(--text-secondary);font-weight:500}
 .hero-fluss{display:flex;align-items:center;gap:var(--sp-8);margin-bottom:var(--sp-8);max-width:520px}
@@ -860,7 +860,7 @@ h1,h2{text-wrap:balance}
       <a class="hero-shot" href="/carlon-equine/app/" title="Demo-Cockpit öffnen">
         <img src="assets/visite-shots/09-akte.jpg" width="1600" height="1112" loading="eager"
           alt="Pferde-Akte im Cockpit: Kernwerte RMSSD, Ruhe-HF, SDNN und DFA gegen die eigene Vorgeschichte des Pferds, mit Signalgüte und Verlauf"></a>
-      <span class="hero-phone" aria-hidden="true"><img src="assets/station-shots/06-tachogramm.jpg" width="554" height="1200" alt=""></span>
+      <span class="hero-phone" aria-hidden="true"><video src="assets/station-tour/live-v3.mp4" poster="assets/station-tour/live-poster-v3.jpg" width="660" height="1428" autoplay muted loop playsinline preload="auto"></video></span>
       </div>
       <figcaption>
         <span class="hero-fluss"><span class="hf-chip">Im Stall gemessen</span><span class="sr-only"> → </span><span
@@ -1310,16 +1310,16 @@ h1,h2{text-wrap:balance}
 
     <div class="vt" data-app-tour>
       <ol class="vt-liste" data-tour-liste aria-label="So arbeitet die Messstation">
-        <li><button data-i="0"><b>Ein Link, kein Konto</b><span>Die Halterin öffnet Ihren Mess-Link, gibt den Pferdenamen ein und verbindet den Gurt – das ist alles.</span></button><i class="fort"></i></li>
-        <li><button data-i="1"><b>Sie sieht, ob das Signal trägt</b><span>Puls, Schlagzahl und Poincaré laufen live mit – hier eine Ruheaufnahme im Zeitraffer.</span></button><i class="fort"></i></li>
-        <li><button data-i="2"><b>Das Ergebnis mit Messprotokoll</b><span>Rohwert und bereinigter Wert, Kurven, Signalgüte – und ein Tipp schickt die verschlüsselte Datei an Ihre Praxis.</span></button><i class="fort"></i></li>
+        <li><button data-i="0"><b>Sie sieht, ob das Signal trägt</b><span>Puls, Schlagzahl und Poincaré laufen live mit – hier eine Ruheaufnahme im Zeitraffer.</span></button><i class="fort"></i></li>
+        <li><button data-i="1"><b>Das Ergebnis mit Messprotokoll</b><span>Rohwert und bereinigter Wert, Kurven, Signalgüte – und ein Tipp schickt die Datei an Ihre Praxis.</span></button><i class="fort"></i></li>
+        <li><button data-i="2"><b>Ein Link, kein Konto</b><span>Die Halterin öffnet Ihren Mess-Link, gibt den Pferdenamen ein und verbindet den Gurt – das ist alles.</span></button><i class="fort"></i></li>
       </ol>
       <div class="vt-geraet">
         <div class="at-device at-generisch">
           <div class="at-screen">
-            <div class="at-scr at-scroll" data-dauer="12"><div class="at-scroller" tabindex="0"><img src="assets/station-tour/start-lang-v2.webp" width="660" height="1975" alt="Messstation im Browser des Smartphones: Startseite mit Pferdename und Gurt-Verbindung" loading="lazy" decoding="async"></div></div>
             <div class="at-scr" data-dauer="22" data-rate="1.5"><video src="assets/station-tour/live-v3.mp4" poster="assets/station-tour/live-poster-v3.jpg" muted playsinline preload="metadata" aria-label="Messstation während einer Ruheaufnahme im Zeitraffer: Puls, Schlagzahl und Poincaré laufen mit"></video></div>
             <div class="at-scr at-scroll" data-dauer="20"><div class="at-scroller" tabindex="0"><img src="assets/station-tour/ergebnis-lang-v2.webp" width="660" height="5340" alt="Ergebnis der Messstation: Kennwerte roh und bereinigt, Kurven, Messprotokoll und Senden an die Praxis" loading="lazy" decoding="async"></div></div>
+            <div class="at-scr at-scroll" data-dauer="12"><div class="at-scroller" tabindex="0"><img src="assets/station-tour/start-lang-v2.webp" width="660" height="1975" alt="Messstation im Browser des Smartphones: Startseite mit Pferdename und Gurt-Verbindung" loading="lazy" decoding="async"></div></div>
           </div>
         </div>
         <p class="vt-hinweis">Die Messstation selbst – Liste antippen oder im Gerät scrollen</p>
@@ -1892,5 +1892,11 @@ if(_lb) _lb.addEventListener('click', function(){
 <script src="/assets/app-tour/app-tour.js?v=14" defer></script>
 
 <script src="/assets/baukasten/baukasten.js?v=2"></script>
+<script>
+(function(){var v=document.querySelector('.hero-phone video');if(!v)return;
+  if(window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches){v.removeAttribute('autoplay');v.pause();return;}
+  v.playbackRate=1.5;v.addEventListener('loadedmetadata',function(){v.playbackRate=1.5;});
+  var p=v.play();if(p&&p.catch)p.catch(function(){});})();
+</script>
 </body>
 </html>
