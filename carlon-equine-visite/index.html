@@ -385,7 +385,7 @@ svg.ic.vt-ic{grid-row:1 / span 2;width:34px;height:34px;padding:7px;box-sizing:b
 .schau-box .schau-voll{top:auto!important;bottom:-40px;right:2px!important}
 .pz-tablet .schau-hinweis{bottom:auto;top:calc(var(--b) + 13%)}
 .pz-echt-block{padding-bottom:var(--sp-34)!important}
-@media(max-width:640px){.schau-hinweis{font-size:11px;padding:6px 10px}}
+@media(max-width:700px){.schau-hinweis{font-size:11px;padding:6px 10px;animation:none}.schau-box .schau-voll{display:none}}
 
 .tour-tablet{display:block;max-width:1120px;margin:var(--sp-55) auto 0}
 .tour-tablet video{display:block;width:100%;height:auto}
@@ -1927,6 +1927,14 @@ if(_lb) _lb.addEventListener('click', function(){
 (function(){
   var boxen=[].slice.call(document.querySelectorAll('.schau-box[data-schau]')); if(!boxen.length) return;
   var still=window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches;
+  
+  var telefon=window.matchMedia&&matchMedia('(max-width: 700px)').matches;
+  if(telefon){ boxen.forEach(function(box){ var a=box.querySelector('.schau-voll'); var h=box.querySelector('.schau-hinweis');
+      if(h){ h.lastChild.textContent=(document.documentElement.lang||'de').indexOf('en')===0?'Tap to open the cockpit':'Antippen öffnet das Cockpit'; h.hidden=false; }
+      box.style.cursor='pointer'; box.addEventListener('click',function(e){ if(a&&!e.target.closest('a')) location.href=a.href; });
+      var v=box.querySelector('video'); if(v&&!v.hasAttribute('autoplay')&&!still&&'IntersectionObserver' in window){ var vo=new IntersectionObserver(function(es){ es.forEach(function(x){ if(x.isIntersecting){ v.preload='auto'; v.loop=true; var pr=v.play(); if(pr&&pr.catch) pr.catch(function(){}); vo.disconnect(); } }); },{threshold:0.5}); vo.observe(box); }
+      if(v&&v.hasAttribute('autoplay')) v.loop=true; });
+    return; }
   boxen.forEach(function(box){
     var v=box.querySelector('video'), hin=box.querySelector('.schau-hinweis'), geladen=false, bereit=false, wunsch=!v, gezeigt=false, rahmen=null, fr=null;
     function passen(){ if(fr) fr.style.transform='scale('+(rahmen.clientWidth/1280)+')'; }
