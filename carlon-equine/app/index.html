@@ -1823,7 +1823,7 @@ nav.tabs button.on{text-shadow:none}
 /* SCHAUFENSTER (?schaufenster=1, 16.11.2026): eingebettet im Hero der Visite-Seite – eigene Datenbank,
    keine Status-Pillen, keine Hinweise, keine Einführung. Nur die echte Oberfläche zum Selbst-Bedienen. */
 html.schau #tierPill,html.schau #speicherPill,html.schau #postPill,html.schau #safeBanner,html.schau #tour,html.schau #splash,
-html.schau #toasts,html.schau [class*=toast],html.schau .pilot-band,html.schau #bottomNav{display:none!important}
+html.schau .demo-ribbon,html.schau #toasts,html.schau [class*=toast],html.schau .pilot-band,html.schau #bottomNav{display:none!important}
 /* KOPF PASST SICH SELBST AN (16.11.2026, Jan: „Demo freischalten geht über den Rand“; Passform-Prüfstand:
    Überlauf 246/160/153 px bei 1280/1366/1600 px). Statt fester Breakpoints misst Kopf.passen() die Leiste und
    verdichtet stufenweise, bis alles passt – auf jedem Tablet- und Telefonformat. */
@@ -4167,20 +4167,31 @@ const Chart={
      linke Skala mit Min/Max in der Einheit, Raster (Min, Mitte, Max), rechts Anzahl der Aufnahmen.
      Höhe mindestens 34 px, damit die Beschriftung lesbar bleibt; Breite wie bestellt. */
   spark(series,{w=150,h=38,color='var(--cyan)',unit='ms',label='RMSSD'}={}){
+    /* 16.11.2026 (Jan: „Verläufe ohne präzise x-Achse – Hochpräzisionsprodukt, keine Wellness-App“):
+       x = echte Zeit, Strich je Messung, Datum Anfang und Ende, Werte unter dem Finger (Zeitreihen-Hover). */
     const pts=series.filter(p=>p.y!=null); if(pts.length<2) return '';
-    h=Math.max(h,34); const L=30,R=26,T=5,B=5;
+    h=Math.max(h,34)+12; const L=30,R=26,T=5,B=17;
+    const ts=pts.map(p=>+new Date(p.x)); let t0=Math.min(...ts),t1=Math.max(...ts); if(t1===t0){t0-=864e5;t1+=864e5;}
     const ys=pts.map(p=>p.y); let mn=Math.min(...ys),mx=Math.max(...ys); if(mx-mn<1){mn-=1;mx+=1;} const r=mx-mn;
-    const X=i=>L+i/(pts.length-1)*(w-L-R), Y=v=>T+(1-(v-mn)/r)*(h-T-B);
-    const d=pts.map((p,i)=>`${i?'L':'M'}${X(i).toFixed(1)},${Y(p.y).toFixed(1)}`).join(' ');
+    const X=v=>L+(v-t0)/(t1-t0)*(w-L-R), Y=v=>T+(1-(v-mn)/r)*(h-T-B);
+    const d=pts.map((p,i)=>`${i?'L':'M'}${X(ts[i]).toFixed(1)},${Y(p.y).toFixed(1)}`).join(' ');
     const f=v=>Math.round(v), g=[mx,(mx+mn)/2,mn];
-    return `<svg class="chart spark" viewBox="0 0 ${w} ${h}" style="max-width:${w}px" role="img" aria-label="${label} ${f(mn)}–${f(mx)} ${unit}, ${pts.length} Aufnahmen">
+    const fd=v=>{const q=new Date(v);return String(q.getDate()).padStart(2,'0')+'.'+String(q.getMonth()+1).padStart(2,'0')+'.';};
+    const meta=pts.map((p,i)=>({cx:+X(ts[i]).toFixed(1),cy:+Y(p.y).toFixed(1),x:p.x,y:p.y,c:null,k:null}));
+    const mj=JSON.stringify(meta).replace(/'/g,'&#39;').replace(/</g,'&lt;');
+    return `<div class="ts-chart spark-wrap" data-meta='${mj}' data-vbw="${w}" data-vbh="${h}" data-unit="${esc(unit)}" data-color="${color}"><svg class="chart spark" viewBox="0 0 ${w} ${h}" style="max-width:${w}px" role="img" aria-label="${label} ${f(mn)}–${f(mx)} ${unit}, ${pts.length} Aufnahmen, ${fd(t0)} bis ${fd(t1)}">
       ${g.map(v=>`<line x1="${L}" x2="${w-R}" y1="${Y(v).toFixed(1)}" y2="${Y(v).toFixed(1)}" stroke="currentColor" stroke-opacity="${v===g[1]?.07:.16}" stroke-dasharray="${v===g[1]?'2 3':'none'}"/>`).join('')}
       <text x="${L-4}" y="${(Y(mx)+3).toFixed(1)}" text-anchor="end" font-size="8.5" fill="currentColor" fill-opacity=".62">${f(mx)}</text>
       <text x="${L-4}" y="${(Y(mn)+3).toFixed(1)}" text-anchor="end" font-size="8.5" fill="currentColor" fill-opacity=".62">${f(mn)}</text>
       <text x="${w-R+4}" y="${(Y(mx)+3).toFixed(1)}" font-size="8" fill="currentColor" fill-opacity=".5">${unit}</text>
       <text x="${w-R+4}" y="${(Y(mn)+3).toFixed(1)}" font-size="8" fill="currentColor" fill-opacity=".5">n=${pts.length}</text>
+      <line x1="${L}" x2="${w-R}" y1="${h-B+1}" y2="${h-B+1}" stroke="currentColor" stroke-opacity=".22"/>
+      ${ts.map(v=>`<line x1="${X(v).toFixed(1)}" x2="${X(v).toFixed(1)}" y1="${h-B+1}" y2="${h-B+4}" stroke="${color}" stroke-opacity=".6"/>`).join('')}
+      <text x="${L}" y="${h-3}" font-size="8" fill="currentColor" fill-opacity=".55" font-family="var(--font-mono)">${fd(t0)}</text>
+      <text x="${w-R}" y="${h-3}" text-anchor="end" font-size="8" fill="currentColor" fill-opacity=".55" font-family="var(--font-mono)">${fd(t1)}</text>
       <path d="${d}" fill="none" stroke="${color}" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
-      <circle cx="${X(pts.length-1).toFixed(1)}" cy="${Y(pts[pts.length-1].y).toFixed(1)}" r="2.4" fill="${color}"/></svg>`;
+      <circle cx="${X(ts[ts.length-1]).toFixed(1)}" cy="${Y(pts[pts.length-1].y).toFixed(1)}" r="2.4" fill="${color}"/>
+      <line class="ts-cross" x1="0" x2="0" y1="${T}" y2="${h-B}"/><circle class="ts-focus" r="3.5" fill="${color}" stroke="var(--bg-void)" stroke-width="2"/></svg><div class="ts-tip"></div></div>`;
   },
   _n:0,
   ts(series,opts={}){
@@ -5042,7 +5053,7 @@ const Views={
       ${flags?`<div class="chips">${flags}</div>`:''}
       ${(h.owner||h.phone)?`<div class="pc-owner">${IC.owner}<b>${esc(h.owner||'—')}</b>${(h.place||h.stable)?`<span>· ${esc(h.place||h.stable)}</span>`:''}${h.phone?`<a class="pc-call" href="tel:${esc(h.phone)}" onclick="event.stopPropagation()" title="${esc(h.phone)} anrufen">${IC.phone}</a>`:''}</div>`:''}
       <div class="foot">
-        ${h.needsVisit?'<span class="chip visit">Besuch fällig</span>':'<span class="chip" style="opacity:.5" onclick="event.stopPropagation();Views.toggleVisit(\''+h.id+'\',true).then(()=>Nav.refresh())">+ Zu Route</span>'}
+        ${h.needsVisit?'<span class="chip visit">Auf der Tour</span>':'<span class="chip" style="opacity:.5" onclick="event.stopPropagation();Views.toggleVisit(\''+h.id+'\',true).then(()=>Nav.refresh())">+ Zu Route</span>'}
         ${h.nachsorge?'<span class="chip cyan" title="Entlass-Nachsorge läuft — die Halterin misst zu Hause">Nachsorge</span>':''}
         <span class="age">vor ${relTime(rec.startedAt)}</span>
       </div>
@@ -5067,7 +5078,7 @@ const Views={
           <input id="rosterSearch" autocomplete="off" placeholder="Pferd, Halter oder Stall suchen…" value="${esc(Views._rosterQuery)}" oninput="Views._rosterQuery=this.value;Views.updateSuggest(this.value);$('#rosterBody').innerHTML=Views.rosterBody()" onkeydown="Views.suggestKey(event)" onblur="setTimeout(()=>{const s=$('#searchSuggest');if(s)s.classList.remove('on')},160)" onfocus="Views.updateSuggest(this.value)">
           <div id="searchSuggest" class="search-suggest"></div></div>
         <div class="seg">
-          ${[['all','Alle'],['crit','Deutlich'],['elev','Mäßig'],['visit','Besuch fällig']].map(([k,l])=>`<button class="${Views._rosterFilter===k?'on':''}" onclick="Views._rosterFilter='${k}';$$('.tools .seg')[0].querySelectorAll('button').forEach(b=>b.classList.remove('on'));this.classList.add('on');$('#rosterBody').innerHTML=Views.rosterBody()">${l}</button>`).join('')}
+          ${[['all','Alle'],['crit','Deutlich'],['elev','Mäßig'],['visit','Auf der Tour']].map(([k,l])=>`<button class="${Views._rosterFilter===k?'on':''}" onclick="Views._rosterFilter='${k}';$$('.tools .seg')[0].querySelectorAll('button').forEach(b=>b.classList.remove('on'));this.classList.add('on');$('#rosterBody').innerHTML=Views.rosterBody()">${l}</button>`).join('')}
         </div>
         <select id="rosterSortSel" onchange="Views._rosterSort=this.value;$('#rosterBody').innerHTML=Views.rosterBody()" style="padding:9px 12px;background:var(--bg-deep);border:1px solid var(--border-faint);border-radius:var(--r-m);color:var(--text-secondary);font-size:12px;outline:none">
           ${[['urgency','Abweichung'],['recent','Zuletzt gemessen'],['distance','Entfernung'],['owner','Besitzer'],['name','Name']].map(([k,l])=>`<option value="${k}" ${Views._rosterSort===k?'selected':''}>Sortieren: ${l}</option>`).join('')}
@@ -5363,7 +5374,7 @@ const Views={
     if(!order.length && !noLoc.length){
       const doneMsg=doneToday>0?`<div class="today-empty"><div style="color:var(--good);margin-bottom:10px" class="done-check">${IC.checkCircle}</div><div style="font-size:16px;color:var(--good);font-weight:600;margin-bottom:6px">Tag geschafft — alle ${doneToday} Besuche erledigt</div><div style="font-size:12.5px;max-width:340px;margin:0 auto">Neue Besuche markieren Sie im Board oder in der Liste – oder Sie schieben einen Analog-Patienten ein.</div><div style="margin-top:20px"><button class="btn primary" onclick="Views.insertAnalog()">+ Pferd ohne Aufnahme einschieben</button></div></div>`
         :`<div class="today-empty">${IC.route}<div style="font-size:14px;margin:12px 0 6px;color:var(--text-secondary)">Kein Besuch für heute markiert.</div>
-        <div style="font-size:12.5px;max-width:340px;margin:0 auto">Markieren Sie Pferde im Board oder in der Liste als „Besuch fällig" — oder schieben Sie einen Analog-Patienten (ohne H10) direkt ein.</div>
+        <div style="font-size:12.5px;max-width:340px;margin:0 auto">Markieren Sie Pferde im Board oder in der Liste als „Auf der Tour" — oder schieben Sie einen Analog-Patienten (ohne H10) direkt ein.</div>
         <div style="margin-top:20px"><button class="btn primary" onclick="Views.insertAnalog()">+ Pferd ohne Aufnahme einschieben</button></div></div>`;
       return `<div class="view"><div class="view-head"><div><span class="eyebrow">Tagestour${doneToday?` · ${doneToday} erledigt`:''}</span><h1>Heute</h1></div></div>${doneMsg}</div>`;
     }
@@ -5756,7 +5767,7 @@ const Views={
               <div class="sub" style="margin-top:4px">${esc(Stamm.rasse(h.breed)||'—')}${h.sex?' · '+esc(Stamm.geschlecht(h.sex)):''}${h.age?' · '+h.age+' J':''}${h.weightKg?' · '+h.weightKg+' kg':''}</div>
               <div style="margin-top:8px;display:flex;gap:8px;align-items:center;flex-wrap:wrap">
                 <span class="tri-badge tri-${tri.level}"><span class="dot"></span>${Triage.LEVELS[tri.level].label}</span>
-                ${h.needsVisit?'<span class="chip visit">Besuch fällig</span>':''}
+                ${h.needsVisit?'<span class="chip visit">Auf der Tour</span>':''}
                 ${(tri.flags||[]).map(f=>`<span class="chip ${/Rhythmus|Kolik/.test(f)?'red':/Asthma|Atemweg|Signal/.test(f)?'amber':'cyan'}">${esc(Triage.zeig(f))}</span>`).join('')}
               </div>
               ${(h.owner||h.phone)?`<div class="detail-owner">
@@ -6012,7 +6023,7 @@ const Views={
     return `<div class="view">
       <div class="view-head">
         <div><span class="eyebrow">Einsatzplanung</span><h1>Karte &amp; Abfahrroute</h1>
-          <div class="sub">Tour nach kürzester Strecke – oder nach Ihrer Wahl mit deutlicher Abweichung zuerst. Direkt in Google Maps übertragbar.</div></div>
+          <div class="sub">Tour nach kürzester Strecke, Fahrzeit an jedem Stopp. Die Reihenfolge bestimmen Sie; ein Tipp übergibt sie an Google Maps.</div></div>
       </div>
       <!-- Bereitschaft fuer die Tour. Steht hier und nicht in den
            Einstellungen, weil hier der Tag geplant wird — der einzige Moment,
@@ -7433,7 +7444,7 @@ const Dispatch={
     this._order=order;
     const body=$('#routeBody');if(!body)return;
     this.drawMap(order);   // Karte immer initialisieren (Startpunkt + evtl. Stopps + Fokus-Pferd)
-    if(!order.length){body.innerHTML=`<div style="color:var(--text-dim);text-align:center;padding:30px;font-size:13px">Keine Besuche markiert.<br><br>Markieren Sie Pferde im Board, in der Liste oder in der Detailansicht als „Besuch fällig".</div>`;
+    if(!order.length){body.innerHTML=`<div style="color:var(--text-dim);text-align:center;padding:30px;font-size:13px">Keine Besuche markiert.<br><br>Markieren Sie Pferde im Board, in der Liste oder in der Detailansicht als „Auf der Tour".</div>`;
       $('#routeStats').innerHTML='';$('#gmapsBtn').disabled=true;return;}
     const totalDist=order.reduce((s,x)=>s+x.dist,0);
     const durMin=sch.end-sch.start;
@@ -11210,7 +11221,7 @@ const Sprache={
     'Alle betreuten Pferde mit Besitzer, Standort und Aufnahme-Historie.':'All horses under your care, with owner, location and recording history.',
     '+ Neues Pferd anlegen':'+ Add new horse',
     'Die Wandansicht aller aufgezeichneten Pferde — für die Klinik, in der das Team denselben Bestand vor Augen hat. Nach Abweichung sortiert, nicht nach Eingang. Im Klinik-Tarif enthalten.':'The wall view of all recorded horses — for the clinic, where the team shares the same horses at a glance. Sorted by deviation, not by arrival. Included in the clinic plan.',
-    'Tour nach kürzester Strecke – oder nach Ihrer Wahl mit deutlicher Abweichung zuerst. Direkt in Google Maps übertragbar.':'Round by shortest route — or, if you choose, marked deviations first. Hand over to Google Maps directly.',
+    'Tour nach kürzester Strecke, Fahrzeit an jedem Stopp. Die Reihenfolge bestimmen Sie; ein Tipp übergibt sie an Google Maps.':'Round by shortest route, drive time at every stop. You set the order; one tap hands it to Google Maps.',
     'Bereit für die Tour prüfen':'Check readiness for the round',
     'Leistungen, Fahrtenbuch, Zeiterfassung und Backup — Ihre Praxis-Organisation an einem Ort.':'Services, mileage log, time tracking and backup — your practice organisation in one place.',
     'Erfasste Fahrten und Zeiten dieser Woche.':'Trips and times recorded this week.',
@@ -11287,7 +11298,7 @@ const Sprache={
     'Zuletzt gemessene Pferde':'Recently measured horses',
     'Deutliche Abweichung':'Marked deviation',
     'Besuche fällig':'Visits due', 'Auf der Tour':'On the round',
-    'Besuch fällig':'Visit due',
+    'Auf der Tour':'On the round',
     'Pferde mit deutlicher Abweichung anzeigen':'Show horses with marked deviation',
     'von der eigenen Basis':'from own baseline',
     'Bitte ansehen':'Please review',
