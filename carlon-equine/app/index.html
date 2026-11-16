@@ -8548,7 +8548,7 @@ const UI={
     <div class="modal-body">
       ${feature?`<div class="demo-ribbon" style="margin-bottom:14px"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg><div><b>${esc(feature)}</b> ist im vollen Cockpit enthalten.</div></div>`:''}
       
-      <p style="font-size:14px;line-height:1.6;color:var(--text-secondary)">CARLON Equine ist gerade in der <b>Beta</b>. Wir nehmen eine begrenzte Zahl Pferdepraxen und Pferdekliniken als <b>Gründungs-Partner</b> auf — volles Cockpit <b>kostenlos während der Beta</b>, persönliches Onboarding mit Ihren echten Aufnahmen, Ihr früher Preis bleibt dauerhaft gesichert.</p>
+      <p style="font-size:14px;line-height:1.6;color:var(--text-secondary)">CARLON Equine ist gerade in der <b>Beta</b>. Wir nehmen eine begrenzte Zahl Pferdepraxen und Pferdekliniken als <b>Gründungs-Partner</b> auf — volles Cockpit <b>kostenlos während der Beta</b>, persönliches Onboarding mit Ihren echten Aufnahmen, Ihr früher Preis bleibt 24 Monate lang gesichert.</p>
       <ul style="font-size:13.5px;color:var(--text-secondary);line-height:1.6;margin:12px 0 0;padding:0;list-style:none;display:flex;flex-direction:column;gap:9px">
         <li style="display:flex;gap:9px;align-items:flex-start"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--good)" stroke-width="2.6" style="flex-shrink:0;margin-top:1px"><path d="M20 6L9 17l-5-5"/></svg><span>Kein offener Zugang — jeder Partner wird persönlich freigeschaltet.</span></li>
         <li style="display:flex;gap:9px;align-items:flex-start"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--good)" stroke-width="2.6" style="flex-shrink:0;margin-top:1px"><path d="M20 6L9 17l-5-5"/></svg><span>100 % lokal, keine Cloud, keine Kreditkarte.</span></li>
@@ -9146,7 +9146,7 @@ const UI={
             ${lz.kulanz?' · verlängert, weil die Abo-Prüfung zuletzt nicht erreichbar war':''}
           </div>`;})()}</div>
         <div class="price"><b>✓</b><span>aktiv</span></div></div>
-      ${License.isFounder()?'<div style="font-size:11.5px;color:var(--text-dim);margin-top:10px">Als Gründungs-Partner bleibt Ihnen Ihr früher Preis dauerhaft gesichert.</div>':''}
+      ${License.isFounder()?'<div style="font-size:11.5px;color:var(--text-dim);margin-top:10px">Als Gründungs-Partner bleibt Ihnen Ihr früher Preis 24 Monate lang gesichert.</div>':''}
       ${(()=>{const lz=License.laufzeit();
         if(!lz||!lz.kulanz) return '';
         return `<div class="demo-ribbon" style="margin-top:14px"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 8v4M12 16h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/></svg><div>Die Abo-Prüfung war zuletzt nicht erreichbar — <b>Sie arbeiten normal weiter</b>. Sobald das Gerät wieder online ist, verlängert sich das im Hintergrund von selbst. Nichts zu tun.</div></div>`;})()}
@@ -11873,7 +11873,7 @@ const Sprache={
     'kostenlos während der Beta':'free during the beta',
     'CARLON Equine ist gerade in der':'CARLON Equine is currently in',
     '. Wir nehmen eine begrenzte Zahl Pferdepraxen und Pferdekliniken als':'. We are taking on a limited number of equine practices and clinics as',
-    ', persönliches Onboarding mit Ihren echten Aufnahmen, Ihr früher Preis bleibt dauerhaft gesichert.':', personal onboarding with your own recordings, and your early price stays locked in for good.',
+    ', persönliches Onboarding mit Ihren echten Aufnahmen, Ihr früher Preis bleibt 24 Monate lang gesichert.':', personal onboarding with your own recordings, and your early price stays locked in for 24 months.',
     'auf — volles Cockpit':'— the full cockpit',
     'Dokumentation: Leistungen, Fahrten und Zeiten erfassen':'Documentation: record services, trips and times',
     '— Messwertbericht & Karten-Export in der Vollversion.':'— measurement report and map export in the full version.',
