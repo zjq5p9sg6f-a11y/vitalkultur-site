@@ -8689,7 +8689,7 @@ const UI={
     // Features hier sind gegen PAID_ONLY + maxHorses verifiziert — nichts versprechen, was kein Gate hat.
     const FEATS=['Unbegrenzt viele Pferde','Tourenplanung mit Ruhe-HRV-Verlauf je Pferd','Aufnahmequalität sichtbar: roh und bereinigt, Artefakte, Methodenversion','Mess-Link für Halter – Aufnahme kommt verschlüsselt zu Ihnen','Messwertbericht (PDF) mit Ihrem Logo, Export als JSON, CSV, Kubios und FHIR R5','Team-Ordner: alle Tierärzt:innen sehen denselben Stand (OneDrive, Google Drive, Dropbox, Netzlaufwerk)','Auswertung lokal im Browser – keine Pferde-, Halter- oder Messdaten auf unseren Servern'];
     const plans=[
-      ['month','Monatsabo',String(License.PREIS.soloMonat),'monatlich kündbar','zum Einstieg'],
+      ['month','Monatsabo',String(License.PREIS.soloMonat),'14 Tage kostenlos testen, danach monatlich kündbar','14 Tage gratis'],
       ['year','Jahresabo',(License.PREIS.soloJahr/12).toFixed(2).replace('.',','),`${License.PREIS.soloJahr.toLocaleString('de-DE')} € im Jahr · 12 Monate Laufzeit, zwei Monate günstiger`,'zwei Monate gespart'],
     ];
     /* Klinik-Stufe (AP3): eigener Block unter der Praxis — der Magnet ist
@@ -8713,7 +8713,7 @@ const UI={
        „Schluessel eingeben" zurueck, weil checkoutLink() ohne Link null gibt. */
     const KLINIK_SELBSTKAUF = true;
     const kplans=KLINIK_SELBSTKAUF?[
-      ['clinicMonth','Klinik · Monatsabo',String(License.PREIS.klinikMonat),'monatlich kündbar',''],
+      ['clinicMonth','Klinik · Monatsabo',String(License.PREIS.klinikMonat),'14 Tage kostenlos testen, danach monatlich kündbar','14 Tage gratis'],
       ['clinicYear','Klinik · Jahresabo',(License.PREIS.klinikJahr/12).toFixed(2).replace('.',','),`${License.PREIS.klinikJahr.toLocaleString('de-DE')} € im Jahr · 12 Monate Laufzeit, zwei Monate günstiger`,''],
     ]:[];
     this.modal(`<div class="modal-head"><button class="closex" onclick="UI.closeModal()">${IC.x}</button><h3>CARLON Equine freischalten</h3></div>
@@ -8721,7 +8721,7 @@ const UI={
       ${feature?`<div class="demo-ribbon" style="margin-bottom:14px"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg><div><b>${esc(feature)}</b> ist Teil der Vollversion.</div></div>`:''}
       
       <label class="kauf-b2b"><input type="checkbox" id="kaufB2B" onchange="document.querySelectorAll('.kauf-link').forEach(l=>l.setAttribute('aria-disabled',this.checked?'false':'true'))"> <span>Ich bestelle als <b>Unternehmer (§ 14 BGB)</b> für meine Praxis oder Klinik und akzeptiere die <a href="/agb.html" target="_blank" rel="noopener">AGB</a>.</span></label>
-      <p class="kauf-kurz">Preise netto · Rechnung mit ausgewiesener USt. von Stripe · nach der Zahlung sofort freigeschaltet — kein Schlüssel, keine E-Mail.<br><b style="color:var(--text-primary)">Vorher kostenlos testen</b> im Demo-Modus mit Beispielpferden. Das Monatsabo ist jederzeit zum Monatsende kündbar.</p>
+      <p class="kauf-kurz">Preise netto · Rechnung mit ausgewiesener USt. von Stripe · nach der Zahlung sofort freigeschaltet — kein Schlüssel, keine E-Mail.<br><b style="color:var(--text-primary)">14 Tage kostenlos testen</b> mit dem Monatsabo – volles Cockpit, eigene Pferde, Mess-Link. Kündigen Sie in den 14 Tagen, zahlen Sie nichts. Vorher ohne Karte: Demo mit Beispielpferden. Das Monatsabo ist jederzeit zum Monatsende kündbar.</p>
       <div class="kauf-grid"><div class="kauf-spalte">
       <div class="tier-opt feat" style="align-items:flex-start">
         <div style="flex:1"><h4>CARLON Equine — für Pferdepraxen</h4>
@@ -12210,7 +12210,7 @@ const Sprache={
     'Weiter zur Kasse →':'Continue to checkout →', 'zum Einstieg':'to start', 'zwei Monate gespart':'two months saved',
     'Ohne Gurt umsehen (Beispielpferde)':'Look around without a belt (example horses)',
     'Preise netto · Rechnung mit ausgewiesener USt. von Stripe · nach der Zahlung sofort freigeschaltet — kein Schlüssel, keine E-Mail.':'Prices net · invoice with VAT shown, issued by Stripe · unlocked right after payment — no key, no email.',
-    'Vorher kostenlos testen':'Try it free first',
+    'Vorher kostenlos testen':'Try it free first','14 Tage kostenlos testen, danach monatlich kündbar':'14 days free trial, then cancel monthly','14 Tage gratis':'14 days free','14 Tage kostenlos testen':'Try 14 days free',
     'im Demo-Modus mit Beispielpferden. Das Monatsabo ist jederzeit zum Monatsende kündbar.':'in demo mode with sample horses. The monthly plan can be cancelled at any time to the end of the month.',
     'Als Leistung erfassen':'Record as a service',
     'RMSSD':'RMSSD',
