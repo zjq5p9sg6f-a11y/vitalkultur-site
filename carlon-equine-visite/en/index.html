@@ -502,6 +502,17 @@ svg.ic{width:20px;height:20px;flex:0 0 auto;fill:none;stroke:var(--cyan);stroke-
   box-shadow:inset 0 1px 0 rgba(255,255,255,.16),0 0 0 1px #08090b,0 34px 60px -24px rgba(0,0,0,.95);pointer-events:none}
 .hero-phone img,.hero-phone video{width:100%;height:100%;object-fit:cover;object-position:top;display:block;border-radius:clamp(14px,1.9vw,24px);background:#07090a}
 
+.studien{grid-template-columns:minmax(0,1fr)}
+@media(max-width:720px){.studien a{white-space:normal!important;overflow-wrap:anywhere}}
+
+@media(max-width:720px){
+  .m-wisch{display:flex!important;flex-direction:row!important;flex-wrap:nowrap!important;grid-template-columns:none!important;overflow-x:auto;gap:14px!important;
+    margin-left:-16px!important;margin-right:-16px!important;padding:4px 16px 12px!important;scrollbar-width:none;-webkit-overflow-scrolling:touch;list-style:none}
+  .m-wisch::-webkit-scrollbar{display:none}
+  .m-wisch>*{flex:0 0 82%!important;max-width:82%!important;min-width:0;margin:0!important}
+  .tarife-grid.m-wisch>*{flex-basis:86%!important;max-width:86%!important}
+}
+
 .hero-buehne{max-width:none!important;width:min(1280px,calc(100vw - 48px));margin-left:calc(50% - min(640px,50vw - 24px))!important;margin-right:0!important}
 .hb-geraete{display:grid;grid-template-columns:minmax(0,1.72fr) minmax(0,1fr);gap:clamp(18px,2.4vw,34px);align-items:end;padding-left:calc(12% - 40px)!important}
 .hb-geraete .hero-phone{width:12%!important;bottom:-8%!important}
@@ -995,7 +1006,7 @@ try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; 
   <div class="wrap">
     <div class="sec-eyebrow">What Visite is for</div>
     <h2>Three occasions where a trend helps more than memory.</h2>
-    <div class="einsatz">
+    <div class="einsatz m-wisch">
       <div class="ez"><svg class="ic ic-ez" aria-hidden="true"><use href="#i-verlauf"/></svg>
         <h3>After a change</h3>
         <p>Housing, feeding or training changes. The owner records before and after in the same stall, and you see how this horse’s values develop, with time window, number of recordings and the change as a number.</p></div>
@@ -1020,7 +1031,7 @@ try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; 
         <video src="../assets/visite-shots/14-tour-film.mp4" poster="assets/visite-shots/14-tour.jpg" width="1600" height="1112" muted playsinline preload="none" aria-label="Map and route in the cockpit: the map flies to each stop, the list follows with drive time and contact"></video>
         <span class="schau-hinweis" hidden><svg class="ic" aria-hidden="true"><use href="#i-pfeil"/></svg>Drag the map, zoom, tap the stops</span>
         <a class="schau-voll" href="/carlon-equine/app/?demo=map" title="Open the cockpit full screen">Full screen ↗</a></div>
-    <div class="tour-punkte">
+    <div class="tour-punkte m-wisch">
       <div class="tp"><svg class="ic li-ic" aria-hidden="true"><use href="#i-route"/></svg><h3>Short drives – or deviation first</h3><p>Default: stop by stop to the nearest horse, with your appointments. If you wish, you put the horses with the clearest deviation from their own baseline first – you choose this order, not the software. You change it by dragging, stop by stop.</p></div>
       <div class="tp"><svg class="ic li-ic" aria-hidden="true"><use href="#i-uhr"/></svg><h3>Drive time at every stop</h3><p>Arrival, drive time and contact are on every card before you commit.</p></div>
       <div class="tp"><svg class="ic li-ic" aria-hidden="true"><use href="#i-schild"/></svg><h3>One tap to Google Maps</h3><p>Measurement data never leaves your device. Map and address search come from OpenStreetMap; only your tap hands the route to Google Maps.</p></div>
@@ -1034,7 +1045,7 @@ try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; 
     <div class="sec-eyebrow">The system</div>
     <h2>One link from your record. The recording comes back encrypted.</h2>
     <p class="sec-lead">You send the link, your client records in the stable, you read the trend. The measuring station costs the owner nothing. She needs no app and no account, just a Polar H10 strap.</p>
-    <ol class="ablauf rev" aria-label="How a recording works">
+    <ol class="ablauf rev m-wisch" aria-label="How a recording works">
       <li style="--i:0"><div class="ab-bild"><svg viewBox="0 0 120 96" stroke="currentColor" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
         <rect x="10" y="14" width="78" height="56" rx="7" class="ab-rahmen"/><path d="M18 26h30M18 33h20" opacity=".45"/>
         <rect x="18" y="44" width="40" height="13" rx="6.5" class="ab-knopf"/><path d="M25 50.5h4M33 50.5h18" opacity=".9"/>
@@ -1079,7 +1090,7 @@ try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; 
       <p class="ab-blase-text">Hello, this is <b>your practice</b>. As discussed, the measuring link for <b>your horse</b>: please record at least seven minutes at rest in the usual stall and share the file with us. You need the Polar H10 strap and an Android phone or a computer with Chrome or Edge – it does not work on the iPhone. The recording is an observation over time and does not replace an examination. If anything worries you, please call us. <span class="ab-url">vitalkultur.com/…/messen.html?…</span></p>
       <p class="ab-nachricht-fuss">The message is prepared in the cockpit, with your practice name and the horse’s name. One tap in the record opens WhatsApp or a text message to the stored number. For all clients there is also a shared link as a QR poster.</p>
     </div>
-    <div class="ab-wege">
+    <div class="ab-wege m-wisch">
       <div class="ab-weg"><span class="ab-wer">With your link</span><h3>Sealed and already assigned</h3>
         <p>Only your practice can open the file. If you request a recording for a specific horse, it is already in the link and the recording lands in the right record.</p></div>
       <div class="ab-weg"><span class="ab-wer ab-wer-gold">Without a link</span><h3>Your client got there first</h3>
@@ -1538,7 +1549,7 @@ try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; 
       per device</strong> and no limit on recordings.
     </p>
     
-    <ol class="kaufschritte">
+    <ol class="kaufschritte m-wisch">
       <li><b>Pay with Stripe.</b> In the secure checkout, in about two minutes. The invoice showing VAT arrives by email.</li>
       <li><b>Activated at once.</b> After payment you return to the cockpit – it activates itself, no user account.</li>
       <li><b>Manage it yourself.</b> Invoices, payment method and cancellation any time under “Manage subscription”.</li>
@@ -1550,8 +1561,8 @@ try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; 
       <p class="g-kontakt">A question first? Write to <a href="mailto:jan@vitalkultur.com">jan@vitalkultur.com</a> — usually answered the same day.</p>
     </div>
     <p class="b2b-hinweis">For veterinary practices and equine clinics only — orders exclusively as a business (§ 14 BGB).</p>
-    <div class="abo-grenze"><div><b>Without a subscription</b><span>Demo with 15 horses; view files sent to you, up to 3 of your own horses.</span></div><div><b>With a subscription</b><span>Unlimited horses, your own measuring link and QR poster, measurement report with letterhead, CSV and FHIR export, route handoff.</span></div></div>
-<div class="tarife-grid">
+    <div class="abo-grenze m-wisch"><div><b>Without a subscription</b><span>Demo with 15 horses; view files sent to you, up to 3 of your own horses.</span></div><div><b>With a subscription</b><span>Unlimited horses, your own measuring link and QR poster, measurement report with letterhead, CSV and FHIR export, route handoff.</span></div></div>
+<div class="tarife-grid m-wisch">
     <div class="tarif">
       <div class="tarif-name">For equine practices</div>
 
@@ -1935,7 +1946,7 @@ if(_lb) _lb.addEventListener('click', function(){
   }, {passive:true});
   // Swipe-Hinweis unter mobile Carousels
   if(window.matchMedia && window.matchMedia('(max-width:720px)').matches){
-    [].slice.call(document.querySelectorAll('.shots.two, .shots.three, .shots.telefon, .usps, .grid')).forEach(function(row){
+    [].slice.call(document.querySelectorAll('.shots.two, .shots.three, .shots.telefon, .usps, .grid, .m-wisch')).forEach(function(row){
       if(row.children.length<2) return;
       var h=document.createElement('div'); h.className='swipe-hint';
       

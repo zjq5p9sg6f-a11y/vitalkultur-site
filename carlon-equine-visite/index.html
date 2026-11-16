@@ -502,6 +502,17 @@ svg.ic{width:20px;height:20px;flex:0 0 auto;fill:none;stroke:var(--cyan);stroke-
   box-shadow:inset 0 1px 0 rgba(255,255,255,.16),0 0 0 1px #08090b,0 34px 60px -24px rgba(0,0,0,.95);pointer-events:none}
 .hero-phone img,.hero-phone video{width:100%;height:100%;object-fit:cover;object-position:top;display:block;border-radius:clamp(14px,1.9vw,24px);background:#07090a}
 
+.studien{grid-template-columns:minmax(0,1fr)}
+@media(max-width:720px){.studien a{white-space:normal!important;overflow-wrap:anywhere}}
+
+@media(max-width:720px){
+  .m-wisch{display:flex!important;flex-direction:row!important;flex-wrap:nowrap!important;grid-template-columns:none!important;overflow-x:auto;gap:14px!important;
+    margin-left:-16px!important;margin-right:-16px!important;padding:4px 16px 12px!important;scrollbar-width:none;-webkit-overflow-scrolling:touch;list-style:none}
+  .m-wisch::-webkit-scrollbar{display:none}
+  .m-wisch>*{flex:0 0 82%!important;max-width:82%!important;min-width:0;margin:0!important}
+  .tarife-grid.m-wisch>*{flex-basis:86%!important;max-width:86%!important}
+}
+
 .hero-buehne{max-width:none!important;width:min(1280px,calc(100vw - 48px));margin-left:calc(50% - min(640px,50vw - 24px))!important;margin-right:0!important}
 .hb-geraete{display:grid;grid-template-columns:minmax(0,1.72fr) minmax(0,1fr);gap:clamp(18px,2.4vw,34px);align-items:end;padding-left:calc(12% - 40px)!important}
 .hb-geraete .hero-phone{width:12%!important;bottom:-8%!important}
@@ -995,7 +1006,7 @@ try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; 
   <div class="wrap">
     <div class="sec-eyebrow">Wofür Visite gedacht ist</div>
     <h2>Drei Anlässe, bei denen ein Verlauf mehr hilft als die Erinnerung.</h2>
-    <div class="einsatz">
+    <div class="einsatz m-wisch">
       <div class="ez"><svg class="ic ic-ez" aria-hidden="true"><use href="#i-verlauf"/></svg>
         <h3>Nach einer Umstellung</h3>
         <p>Haltung, Fütterung oder Training ändern sich. Die Halterin misst vorher und danach in derselben Box, und Sie sehen, wie sich die Werte dieses Pferds entwickeln, mit Zeitfenster, Zahl der Aufnahmen und Veränderung als Zahl.</p></div>
@@ -1021,7 +1032,7 @@ try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; 
         <video src="assets/visite-shots/14-tour-film.mp4" poster="assets/visite-shots/14-tour.jpg" width="1600" height="1112" muted playsinline preload="none" aria-label="Karte und Abfahrroute im Cockpit: die Karte fährt Stopp für Stopp ab, die Liste läuft mit Fahrzeit und Ansprechpartner mit"></video>
         <span class="schau-hinweis" hidden><svg class="ic" aria-hidden="true"><use href="#i-pfeil"/></svg>Karte ziehen, zoomen, Stopps antippen</span>
         <a class="schau-voll" href="/carlon-equine/app/?demo=map" title="Cockpit im Vollbild öffnen">Vollbild ↗</a></div>
-    <div class="tour-punkte">
+    <div class="tour-punkte m-wisch">
       <div class="tp"><svg class="ic li-ic" aria-hidden="true"><use href="#i-route"/></svg><h3>Kurze Wege – oder Abweichung zuerst</h3><p>Standard: Stopp für Stopp zum nächstgelegenen Pferd, mit Ihren Terminen. Auf Wunsch stellen Sie die Pferde mit der deutlichsten Abweichung von ihrer eigenen Basis an den Anfang – diese Reihenfolge wählen Sie, nicht die Software. Ändern lässt sie sich per Greifpunkt, Stopp für Stopp.</p></div>
       <div class="tp"><svg class="ic li-ic" aria-hidden="true"><use href="#i-uhr"/></svg><h3>Fahrzeit an jedem Stopp</h3><p>Ankunft, Fahrzeit und Ansprechpartner stehen an jeder Karte, bevor Sie zusagen.</p></div>
       <div class="tp"><svg class="ic li-ic" aria-hidden="true"><use href="#i-schild"/></svg><h3>Ein Tipp zu Google Maps</h3><p>Messdaten verlassen Ihr Gerät nicht. Karte und Adresssuche kommen von OpenStreetMap; erst Ihr Tipp übergibt die Route an Google Maps.</p></div>
@@ -1035,7 +1046,7 @@ try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; 
     <div class="sec-eyebrow">Das System</div>
     <h2>Ein Link aus Ihrer Akte. Die Aufnahme kommt verschlüsselt zurück.</h2>
     <p class="sec-lead">Sie schicken den Link, Ihre Kundin misst im Stall, Sie lesen den Verlauf. Für die Halterin kostet die Messstation nichts. Sie braucht weder App noch Konto, nur einen Polar-H10-Gurt.</p>
-    <ol class="ablauf rev" aria-label="Ablauf einer Messung">
+    <ol class="ablauf rev m-wisch" aria-label="Ablauf einer Messung">
       <li style="--i:0"><div class="ab-bild"><svg viewBox="0 0 120 96" stroke="currentColor" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
         <rect x="10" y="14" width="78" height="56" rx="7" class="ab-rahmen"/><path d="M18 26h30M18 33h20" opacity=".45"/>
         <rect x="18" y="44" width="40" height="13" rx="6.5" class="ab-knopf"/><path d="M25 50.5h4M33 50.5h18" opacity=".9"/>
@@ -1080,7 +1091,7 @@ try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; 
       <p class="ab-blase-text">Guten Tag, hier ist <b>Ihre Praxis</b>. Wie besprochen der Mess-Link für <b>Ihr Pferd</b>: Bitte nehmen Sie mindestens sieben Minuten in Ruhe in der gewohnten Box auf und teilen Sie die Datei mit uns. Sie brauchen den Polar-H10-Gurt und ein Android-Handy oder einen Rechner mit Chrome oder Edge – auf dem iPhone geht es nicht. Die Aufnahme ist eine Verlaufsbeobachtung und ersetzt keine Untersuchung. Macht Ihnen etwas Sorgen, rufen Sie uns bitte an. <span class="ab-url">vitalkultur.com/…/messen.html?…</span></p>
       <p class="ab-nachricht-fuss">Die Nachricht ist im Cockpit vorbereitet, mit Ihrem Praxisnamen und dem Namen des Pferds. Ein Tipp in der Akte öffnet WhatsApp oder SMS an die hinterlegte Nummer. Für alle Kundinnen gibt es zusätzlich einen gemeinsamen Link als QR-Aushang.</p>
     </div>
-    <div class="ab-wege">
+    <div class="ab-wege m-wisch">
       <div class="ab-weg"><span class="ab-wer">Mit Ihrem Link</span><h3>Versiegelt und schon zugeordnet</h3>
         <p>Die Datei kann nur Ihre Praxis öffnen. Fordern Sie für ein bestimmtes Pferd an, steht es schon im Link, und die Aufnahme landet auf der richtigen Akte.</p></div>
       <div class="ab-weg"><span class="ab-wer ab-wer-gold">Ohne Link</span><h3>Ihre Kundin war schneller</h3>
@@ -1540,7 +1551,7 @@ try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; 
       Es gibt <strong>keine Gebühr je Pferd, je Nutzer oder je Gerät</strong> und keine Grenze für Aufnahmen.
     </p>
     
-    <ol class="kaufschritte">
+    <ol class="kaufschritte m-wisch">
       <li><b>Bezahlen bei Stripe.</b> Im gesicherten Bezahlfenster, in rund zwei Minuten. Die Rechnung mit ausgewiesener Umsatzsteuer kommt per E-Mail.</li>
       <li><b>Sofort freigeschaltet.</b> Nach der Zahlung kehren Sie ins Cockpit zurück – es schaltet sich von selbst frei, ohne Benutzerkonto.</li>
       <li><b>Selbst verwalten.</b> Rechnungen, Zahlungsart und Kündigung jederzeit unter „Abo verwalten“.</li>
@@ -1552,8 +1563,8 @@ try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; 
       <p class="g-kontakt">Frage vorab? Schreiben Sie an <a href="mailto:jan@vitalkultur.com">jan@vitalkultur.com</a> — Antwort meist am selben Tag.</p>
     </div>
     <p class="b2b-hinweis">Nur für Tierarztpraxen und Pferdekliniken — Bestellung ausschließlich als Unternehmen (§ 14 BGB).</p>
-    <div class="abo-grenze"><div><b>Ohne Abo</b><span>Demo mit 15 Pferden; zugeschickte Dateien ansehen, bis zu 3 eigene Pferde.</span></div><div><b>Mit Abo</b><span>Unbegrenzt Pferde, eigener Mess-Link und QR-Aushang, Messwertbericht mit Briefkopf, CSV- und FHIR-Export, Routenübergabe.</span></div></div>
-<div class="tarife-grid">
+    <div class="abo-grenze m-wisch"><div><b>Ohne Abo</b><span>Demo mit 15 Pferden; zugeschickte Dateien ansehen, bis zu 3 eigene Pferde.</span></div><div><b>Mit Abo</b><span>Unbegrenzt Pferde, eigener Mess-Link und QR-Aushang, Messwertbericht mit Briefkopf, CSV- und FHIR-Export, Routenübergabe.</span></div></div>
+<div class="tarife-grid m-wisch">
     <div class="tarif">
       <div class="tarif-name">Für Pferdepraxen</div>
 
@@ -1939,7 +1950,7 @@ if(_lb) _lb.addEventListener('click', function(){
   }, {passive:true});
   // Swipe-Hinweis unter mobile Carousels
   if(window.matchMedia && window.matchMedia('(max-width:720px)').matches){
-    [].slice.call(document.querySelectorAll('.shots.two, .shots.three, .shots.telefon, .usps, .grid')).forEach(function(row){
+    [].slice.call(document.querySelectorAll('.shots.two, .shots.three, .shots.telefon, .usps, .grid, .m-wisch')).forEach(function(row){
       if(row.children.length<2) return;
       var h=document.createElement('div'); h.className='swipe-hint';
       
