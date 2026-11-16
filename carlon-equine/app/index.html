@@ -1752,6 +1752,13 @@ svg.viz .sd-lbl{fill:var(--cyan-strong);font-size:10px;font-weight:600;font-fami
   .pr-viertel{display:grid;grid-template-columns:1fr 1fr;gap:8px 16px}
   .pr-v-z{font-size:8.5px;font-family:var(--font-mono);color:#00867a;text-align:center;margin-top:1px}
   #printArea th.r,#printArea td.r{text-align:right}
+  #printArea .pr-stats.pr-stats5{grid-template-columns:repeat(5,1fr)}
+  .pr-lese{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:10px 0 4px}
+  .pr-lese>div{font-size:9.5px;line-height:1.45;color:#40606e;border-top:2px solid #00b8a0;padding-top:5px}
+  .pr-lese b{display:block;font-size:8.5px;letter-spacing:.1em;text-transform:uppercase;color:#04303a;margin-bottom:2px}
+  .pr-tri.pr-neutral{background:#e8f0f4;color:#04303a}
+  .pr-pz-zeile span.pr-klein{text-transform:none;letter-spacing:.02em}
+  .pr-frei{margin-top:6px;font-size:8.5px;color:#8a9aa8}
   .pr-empf{margin-top:8px;padding-top:8px;border-top:1px solid #d5e2e8}
   #printArea td{padding:6px 8px}
   .pr-sign{margin-top:10px;font-size:10.5px;color:#5a7080;font-style:italic}
@@ -7812,6 +7819,7 @@ const Report={
       <div class="field"><label>Empfehlung / weiteres Vorgehen</label><textarea id="bfRec" rows="2" placeholder="z. B. nächste Ruhe-Vergleichsaufnahme in 14 Tagen im gewohnten Stallprotokoll …"></textarea></div>
       <div class="field-row"><div class="field"><label>Nächste Kontrolle (optional)</label><input id="bfNext" type="date"></div>
         <div class="field"><label>Ausstellende:r</label><input id="bfVet" value="${esc(s.vetName||s.clinicName||'')}"></div></div>
+      <div class="field"><label>Pferd zuletzt von Ihnen untersucht am (optional, erscheint bei der Unterschrift)</label><input id="bfUnters" type="date"></div>
       <div class="rep-bill">
         <label class="rep-bill-h"><input type="checkbox" id="bfBill" onchange="Report.refreshCta()"><span>Zusätzlich als Leistung in Ihrer Dokumentation erfassen</span></label>
         <div id="bfBillBody">
@@ -7836,7 +7844,7 @@ const Report={
     const hid=this._hid; if(!State.horses.find(x=>x.id===hid))return;
     const bill=$('#bfBill')&&$('#bfBill').checked; const fee=num($('#bfFee')&&$('#bfFee').value)||0; const paid=$('#bfPaid')&&$('#bfPaid').checked;
     const d={assess:($('#bfAssess').value||'').trim(),recom:($('#bfRec').value||'').trim(),
-      next:$('#bfNext').value||'',vet:($('#bfVet').value||'').trim(),viral:$('#bfViral').checked};
+      next:$('#bfNext').value||'',vet:($('#bfVet').value||'').trim(),viral:$('#bfViral').checked,untersucht:($('#bfUnters')&&$('#bfUnters').value)||''};
     /* Briefkopf aus dem Dialog speichern – einmal eingegeben, auf jedem weiteren Bericht */
     { const S=State.settings, nimm=id=>{const e=$('#'+id); return e?e.value.trim():null;};
       const n=nimm('bfName'); if(n) S.clinicName=n; ['clinicAddr:bfAddr','clinicPhone:bfPhone','clinicMail:bfMail','clinicWeb:bfWeb'].forEach(x=>{const [k,id]=x.split(':'); const v=nimm(id); if(v!=null) S[k]=v;});
@@ -7861,7 +7869,8 @@ const Report={
      Chart._artifacts, HRV.*) – der Bericht rechnet nichts anders als die Akte. */
   _P:{ink:'#14181b',dim:'#5a7080',faint:'#8a9aa8',grid:'#e2eaee',minor:'#f0f4f6',axis:'#b9c8d0',teal:'#00867a',dot:'#0a9e88',amber:'#c27d0e',grau:'#b4bfc6'},
   _mmss(s){ s=Math.max(0,Math.round(s)); return Math.floor(s/60)+':'+String(s%60).padStart(2,'0'); },
-  _zk(x,n){ return (x==null||!isFinite(x))?'–':x.toFixed(n).replace('.',','); },
+  _zk(x,n){ if(x==null||!isFinite(x)) return '–'; return n===1?fmt1(x):n===2?fmt2(x):Report._n0(x); },
+  _n0(x){ return (x==null||!isFinite(x))?'–':fmt0(x).replace(/\./g,'\u202F'); },   // 1 702 statt 1.702 (Tausender, schmal)
   /* RR-Tachogramm auf echter Zeitachse (Minuten), Band = Mittel ± 1 SD, bernsteinfarben = ersetzte Schläge */
   _tacho(rr,{w=720,h=230}={}){
     const P=this._P, pad={l:58,r:14,t:12,b:38}, n=rr.length; if(n<2) return '';
@@ -7872,7 +7881,7 @@ const Report={
     let g=`<rect x="${pad.l}" y="${Y(mean+sd).toFixed(1)}" width="${w-pad.l-pad.r}" height="${Math.max(0,Y(mean-sd)-Y(mean+sd)).toFixed(1)}" fill="${P.teal}" opacity=".07"/>`;
     const yt=Chart.niceTicks(mn,mx,5), ys=yt.length>1?yt[1]-yt[0]:100;
     for(let v=yt[0]-ys;v<=mx+1e-6;v+=ys/5){ if(v<mn-1e-6) continue; const maj=yt.some(q=>Math.abs(q-v)<ys*0.05); g+=`<line x1="${pad.l}" x2="${w-pad.r}" y1="${Y(v).toFixed(1)}" y2="${Y(v).toFixed(1)}" stroke="${maj?P.grid:P.minor}" stroke-width="${maj?.8:.5}"/>`; }
-    yt.forEach(q=>{ g+=`<text x="${pad.l-7}" y="${(Y(q)+3).toFixed(1)}" text-anchor="end" font-size="9" fill="${P.dim}" font-family="var(--font-mono)">${fmt0(q)}</text>`; });
+    yt.forEach(q=>{ g+=`<text x="${pad.l-7}" y="${(Y(q)+3).toFixed(1)}" text-anchor="end" font-size="9" fill="${P.dim}" font-family="var(--font-mono)">${Report._n0(q)}</text>`; });
     const xt=Chart.niceTicks(0,T,8), xs=xt.length>1?xt[1]-xt[0]:1;
     for(let v=0;v<=T+1e-6;v+=xs/2){ const maj=xt.some(q=>Math.abs(q-v)<xs*0.05); g+=`<line x1="${X(v).toFixed(1)}" x2="${X(v).toFixed(1)}" y1="${pad.t}" y2="${h-pad.b}" stroke="${maj?P.grid:P.minor}" stroke-width="${maj?.8:.5}"/>`; }
     xt.forEach(q=>{ if(q>T+1e-6) return; g+=`<text x="${X(q).toFixed(1)}" y="${h-pad.b+14}" text-anchor="middle" font-size="9" fill="${P.dim}" font-family="var(--font-mono)">${fmt0(q)}</text>`; });
@@ -7884,8 +7893,11 @@ const Report={
     g+=`<rect x="${pad.l}" y="${pad.t}" width="${w-pad.l-pad.r}" height="${h-pad.t-pad.b}" fill="none" stroke="${P.axis}" stroke-width=".8"/>`;
     g+=`<text x="${(pad.l+(w-pad.l-pad.r)/2).toFixed(0)}" y="${h-4}" text-anchor="middle" font-size="9.5" fill="${P.dim}" font-weight="600" letter-spacing=".06em">Zeit (min)</text>`;
     g+=`<text x="13" y="${(pad.t+(h-pad.t-pad.b)/2).toFixed(0)}" transform="rotate(-90 13 ${(pad.t+(h-pad.t-pad.b)/2).toFixed(0)})" text-anchor="middle" font-size="9.5" fill="${P.dim}" font-weight="600" letter-spacing=".06em">RR-Intervall (ms)</text>`;
-    if(R.clipped) g+=`<text x="${w-pad.r}" y="${pad.t+11}" text-anchor="end" font-size="9" fill="${P.amber}" font-family="var(--font-mono)">${R.clipped} ${R.clipped===1?'Wert':'Werte'} außerhalb, am Rand gehalten</text>`;
-    return {svg:`<svg class="pr-svg" viewBox="0 0 ${w} ${h}">${g}</svg>`,mean,sd,nAf,T};
+    const aus=[]; rr.forEach((v,i)=>{ if(v<mn||v>mx) aus.push({v,t:t[i]}); });
+    aus.forEach(a=>{ const ax=X(a.t), ay=a.v<mn?h-pad.b-2:pad.t+2; g+=`<path d="M${(ax-4).toFixed(1)},${(a.v<mn?ay-6:ay+6).toFixed(1)} L${ax.toFixed(1)},${ay.toFixed(1)} L${(ax+4).toFixed(1)},${(a.v<mn?ay-6:ay+6).toFixed(1)} Z" fill="${P.amber}"/>`; });
+    const ausTxt=aus.length?(aus.length<=2?aus.map(a=>`${Report._n0(a.v)} ms bei ${Report._mmss(a.t*60)} (min:s)`).join(', '):`${aus.length} Werte zwischen ${Report._n0(Math.min(...aus.map(a=>a.v)))} und ${Report._n0(Math.max(...aus.map(a=>a.v)))} ms`):'';
+    if(aus.length) g+=`<text x="${w-pad.r}" y="${pad.t+11}" text-anchor="end" font-size="9" fill="${P.amber}" font-family="var(--font-mono)">außerhalb der Achse: ${ausTxt} ▲▼</text>`;
+    return {svg:`<svg class="pr-svg" viewBox="0 0 ${w} ${h}">${g}</svg>`,mean,sd,nAf,T,aus,ausTxt};
   },
   /* Poincaré in Druckfarben. lo/hi = gemeinsame Skala (Viertel vergleichbar), grau = Gesamtwolke dahinter,
      rand = Randverteilungen oben/rechts wie im Research-Bericht. */
@@ -7899,7 +7911,7 @@ const Report={
     let g=`<rect x="${pL}" y="${pT}" width="${W}" height="${H}" fill="#fbfdfd"/>`;
     for(let v=tk[0]-st;v<=hi+1e-6;v+=mst){ if(v<lo-1e-6) continue; const maj=tk.some(q=>Math.abs(q-v)<mst*.1);
       g+=`<line x1="${PX(v).toFixed(1)}" x2="${PX(v).toFixed(1)}" y1="${pT}" y2="${pT+H}" stroke="${maj?P.grid:P.minor}" stroke-width="${maj?.8:.45}"/><line x1="${pL}" x2="${pL+W}" y1="${PY(v).toFixed(1)}" y2="${PY(v).toFixed(1)}" stroke="${maj?P.grid:P.minor}" stroke-width="${maj?.8:.45}"/>`; }
-    tk.forEach(q=>{ if(q<lo||q>hi) return; g+=`<text x="${PX(q).toFixed(1)}" y="${(pT+H+13).toFixed(1)}" text-anchor="middle" font-size="${klein?8:9}" fill="${P.dim}" font-family="var(--font-mono)">${fmt0(q)}</text><text x="${pL-6}" y="${(PY(q)+3).toFixed(1)}" text-anchor="end" font-size="${klein?8:9}" fill="${P.dim}" font-family="var(--font-mono)">${fmt0(q)}</text>`; });
+    tk.forEach(q=>{ if(q<lo||q>hi) return; g+=`<text x="${PX(q).toFixed(1)}" y="${(pT+H+13).toFixed(1)}" text-anchor="middle" font-size="${klein?8:9}" fill="${P.dim}" font-family="var(--font-mono)">${Report._n0(q)}</text><text x="${pL-6}" y="${(PY(q)+3).toFixed(1)}" text-anchor="end" font-size="${klein?8:9}" fill="${P.dim}" font-family="var(--font-mono)">${Report._n0(q)}</text>`; });
     g+=`<line x1="${PX(lo)}" y1="${PY(lo)}" x2="${PX(hi)}" y2="${PY(hi)}" stroke="${P.dim}" stroke-width=".7" stroke-dasharray="4 3"/>`;
     const r=klein?1.25:1.6;
     if(grau){ let d=''; for(let i=0;i<grau.length-1;i++){ const a=grau[i],b=grau[i+1]; if(a<lo||a>hi||b<lo||b>hi) continue; d+=`M${PX(a).toFixed(1)},${PY(b).toFixed(1)}l0 0`; } g+=`<path d="${d}" stroke="${P.grau}" stroke-opacity=".55" stroke-width="${(r*2).toFixed(1)}" stroke-linecap="round" fill="none"/>`; }
@@ -7922,7 +7934,7 @@ const Report={
     if(titel) g+=`<text x="${pL}" y="${pT-(rand?histH:0)-6}" font-size="${klein?10:11}" font-weight="700" fill="${P.ink}" font-family="var(--font-mono)">${titel}</text>`;
     if(!klein){ g+=`<text x="${(pL+W/2).toFixed(0)}" y="${h-6}" text-anchor="middle" font-size="9.5" font-weight="600" fill="${P.dim}" letter-spacing=".06em">RRₙ (ms)</text>`;
       g+=`<text x="13" y="${(pT+H/2).toFixed(0)}" transform="rotate(-90 13 ${(pT+H/2).toFixed(0)})" text-anchor="middle" font-size="9.5" font-weight="600" fill="${P.dim}" letter-spacing=".06em">RRₙ₊₁ (ms)</text>`;
-      g+=`<text x="${pL+W-6}" y="${pT+H-7}" text-anchor="end" font-size="8.5" fill="${P.faint}" font-family="var(--font-mono)">y = x</text>`; }
+      g+=`<text x="${pL+W-6}" y="${pT+H-7}" text-anchor="end" font-size="8.5" fill="${P.faint}" font-family="var(--font-mono)">RRₙ₊₁ = RRₙ</text>`; }
     if(aus) g+=`<text x="${pL+6}" y="${pT+H-7}" font-size="8.5" fill="${P.amber}" font-family="var(--font-mono)">${aus} außerhalb der Skala</text>`;
     return {svg:`<svg class="pr-svg" viewBox="0 0 ${size} ${h}">${g}</svg>`, sd, n:xs.length, mean:mx};
   },
@@ -7937,14 +7949,14 @@ const Report={
     const X=x=>pad.l+(x-x0)/(x1-x0)*(w-pad.l-pad.r), Y=y=>pad.t+(1-y/top)*(h-pad.t-pad.b);
     let g='';
     yt.forEach(q=>{ g+=`<line x1="${pad.l}" x2="${w-pad.r}" y1="${Y(q).toFixed(1)}" y2="${Y(q).toFixed(1)}" stroke="${P.grid}" stroke-width=".8"/><text x="${pad.l-7}" y="${(Y(q)+3).toFixed(1)}" text-anchor="end" font-size="9" fill="${P.dim}" font-family="var(--font-mono)">${fmt0(q)}</text>`; });
-    if(basis){ g+=`<line x1="${pad.l}" x2="${w-pad.r}" y1="${Y(basis).toFixed(1)}" y2="${Y(basis).toFixed(1)}" stroke="${P.ink}" stroke-width=".9" stroke-dasharray="5 4"/>`;
-      const s20=basis*0.8; g+=`<line x1="${pad.l}" x2="${w-pad.r}" y1="${Y(s20).toFixed(1)}" y2="${Y(s20).toFixed(1)}" stroke="${P.amber}" stroke-width=".9" stroke-dasharray="2 3"/><g font-size="9" font-family="var(--font-mono)"><line x1="${w-pad.r-250}" x2="${w-pad.r-228}" y1="${pad.t-11}" y2="${pad.t-11}" stroke="${P.ink}" stroke-width=".9" stroke-dasharray="5 4"/><text x="${w-pad.r-224}" y="${pad.t-8}" fill="${P.ink}">eigene Basis ${fmt0(basis)} ms</text><line x1="${w-pad.r-98}" x2="${w-pad.r-76}" y1="${pad.t-11}" y2="${pad.t-11}" stroke="${P.amber}" stroke-width=".9" stroke-dasharray="2 3"/><text x="${w-pad.r-72}" y="${pad.t-8}" fill="${P.amber}">−20 % · ${fmt0(s20)} ms</text></g>`; }
+    if(basis){ const xl=Math.max(x0,Math.max(...xs)-30*864e5); g+=`<line x1="${X(xl).toFixed(1)}" x2="${w-pad.r}" y1="${Y(basis).toFixed(1)}" y2="${Y(basis).toFixed(1)}" stroke="${P.ink}" stroke-width=".9" stroke-dasharray="5 4"/>`;
+      const s20=basis*0.8; g+=`<line x1="${pad.l}" x2="${w-pad.r}" y1="${Y(s20).toFixed(1)}" y2="${Y(s20).toFixed(1)}" stroke="${P.amber}" stroke-width=".9" stroke-dasharray="2 3"/><g font-size="9" font-family="var(--font-mono)"><line x1="${w-pad.r-298}" x2="${w-pad.r-276}" y1="${pad.t-11}" y2="${pad.t-11}" stroke="${P.ink}" stroke-width=".9" stroke-dasharray="5 4"/><text x="${w-pad.r-272}" y="${pad.t-8}" fill="${P.ink}">Basis zur letzten Aufnahme ${fmt0(basis)} ms</text><line x1="${w-pad.r-98}" x2="${w-pad.r-76}" y1="${pad.t-11}" y2="${pad.t-11}" stroke="${P.amber}" stroke-width=".9" stroke-dasharray="2 3"/><text x="${w-pad.r-72}" y="${pad.t-8}" fill="${P.amber}">−20 % · ${fmt0(s20)} ms</text></g>`; }
     g+=`<path d="${pts.map((p,i)=>`${i?'L':'M'}${X(+new Date(p.x)).toFixed(1)},${Y(p.y).toFixed(1)}`).join(' ')}" fill="none" stroke="${P.teal}" stroke-width="1.8" stroke-linejoin="round"/>`;
     const jede=pts.length<=8?1:Math.ceil(pts.length/8);
     pts.forEach((p,i)=>{ const x=X(+new Date(p.x)), y=Y(p.y);
       g+=`<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="3.4" fill="#fff" stroke="${P.teal}" stroke-width="1.8"/><text x="${x.toFixed(1)}" y="${(y-8).toFixed(1)}" text-anchor="middle" font-size="9" font-weight="700" fill="${P.teal}" font-family="var(--font-mono)">${fmt0(p.y)}</text>`;
       g+=`<line x1="${x.toFixed(1)}" x2="${x.toFixed(1)}" y1="${h-pad.b}" y2="${h-pad.b+4}" stroke="${P.axis}"/>`;
-      if(i%jede===0||i===pts.length-1) g+=`<text x="${x.toFixed(1)}" y="${h-pad.b+15}" text-anchor="middle" font-size="9" fill="${P.dim}" font-family="var(--font-mono)">${new Date(p.x).toLocaleDateString('de-DE',{day:'2-digit',month:'2-digit',year:'2-digit'})}</text>`; });
+      if(i%jede===0||i===pts.length-1) g+=`<text x="${x.toFixed(1)}" y="${h-pad.b+15}" text-anchor="middle" font-size="9" fill="${P.dim}" font-family="var(--font-mono)">${new Date(p.x).toLocaleDateString('de-DE',{day:'numeric',month:'short'})}</text>`; });
     g+=`<rect x="${pad.l}" y="${pad.t}" width="${w-pad.l-pad.r}" height="${h-pad.t-pad.b}" fill="none" stroke="${P.axis}" stroke-width=".8"/>`;
     g+=`<text x="13" y="${(pad.t+(h-pad.t-pad.b)/2).toFixed(0)}" transform="rotate(-90 13 ${(pad.t+(h-pad.t-pad.b)/2).toFixed(0)})" text-anchor="middle" font-size="9.5" fill="${P.dim}" font-weight="600" letter-spacing=".06em">RMSSD (ms)</text>`;
     g+=`<text x="${(pad.l+(w-pad.l-pad.r)/2).toFixed(0)}" y="${h-4}" text-anchor="middle" font-size="9.5" fill="${P.dim}" font-weight="600" letter-spacing=".06em">Datum der Aufnahme</text>`;
@@ -7957,7 +7969,7 @@ const Report={
     const recs=State.recsFor(h.id); const rec=recs[recs.length-1];
     const m=rec.metrics; const tri=rec.triage||{level:'stable',reasons:[]};
     const s=State.settings, P=this._P;
-    const st=(k,unit,v,dec,zus)=>`<div class="pr-stat"><div class="k">${k}</div><div class="v">${v==null?'<span class="nv">n. v.</span>':(dec===2?fmt2(v):dec?fmt1(v):fmt0(v))}${(v!=null&&unit)?`<small> ${unit}</small>`:''}</div>${zus?`<div class="z">${zus}</div>`:''}</div>`;
+    const st=(k,unit,v,dec,zus)=>`<div class="pr-stat"><div class="k">${k}</div><div class="v">${v==null?'<span class="nv">n. v.</span>':(dec===2?fmt2(v):dec?fmt1(v):Report._n0(v))}${(v!=null&&unit)?`<small> ${unit}</small>`:''}</div>${zus?`<div class="z">${zus}</div>`:''}</div>`;
     const series=recs.map(r=>({x:r.startedAt,y:r.metrics.rmssd}));
     const rr=Views.verdichtet(rec)?[]:(rec.rr||[]);
     const dfa=(m.dfa!=null)?m.dfa:(rr.length?HRV.dfaAlpha1(rr):null);
@@ -7966,6 +7978,9 @@ const Report={
     const kern=rr.length>20?(()=>{try{return HRVVorstufe.analysiere(rr);}catch(e){return null;}})():null;
     const rrK=(kern&&Array.isArray(kern.correctedRR)&&kern.correctedRR.length>20)?kern.correctedRR:rr, bereinigt=rrK!==rr;
     const meanRR=rrK.length?rrK.reduce((a,b)=>a+b,0)/rrK.length:null;   // bereinigt – wie SD1/SD2 und die Poincaré-Zeile
+    /* Min/Max-Herzfrequenz aus der BEREINIGTEN Reihe (B1: 107/min stammte aus einem einzelnen Rohschlag, den keine Abbildung zeigt) */
+    const hrMin=rrK.length?60000/Math.max(...rrK):m.minHR, hrMax=rrK.length?60000/Math.min(...rrK):m.maxHR;
+    const nVorher=r=>recs.filter(x=>x!==r&&+new Date(x.startedAt)<+new Date(r.startedAt)&&+new Date(r.startedAt)-+new Date(x.startedAt)<=30*864e5).length;
     /* Mindestdauer je Kennwert (Task Force 1996: ≥ 10 Wellenlängen der unteren Bandgrenze; geometrische Maße ~20 min) */
     const dauerMin=rr.length?rr.reduce((a,b)=>a+b,0)/60000:0, lang17=dauerMin>=17, lang20=dauerMin>=20;
     const lfhf=(m.lfhf!=null)?m.lfhf:(bd&&bd.lfhf!=null?bd.lfhf:null);
@@ -7980,24 +7995,25 @@ const Report={
     const R=rrK.length>20?Chart._robustRange(rrK,{lo:0.004,hi:0.996,pad:0.10,minSpan:40}):null;
     const pz=R?this._poin(rrK,{size:660,lo:R.min,hi:R.max,rand:true,sdFest:{sd1:m.sd1,sd2:m.sd2}}):null;
     /* Viertel nach Zeit: ein Schlag gehört in das Viertel, in dem sein Intervall endet */
-    let viertel='';
+    let viertel='', nSum=0;
     if(R&&rrK.length>=80){ const T=rrK.reduce((a,b)=>a+b,0)/1000; const grenzen=[0,T/4,T/2,3*T/4,T+1]; const seg=[[],[],[],[]]; let acc=0;
       rrK.forEach(v=>{acc+=v/1000; const k=Math.min(3,Math.floor(acc/(T/4)-1e-9)); seg[Math.max(0,k)].push(v);});
-      viertel=seg.map((sg,k)=>{ const p=this._poin(sg,{size:330,lo:R.min,hi:R.max,grau:rrK,klein:true,titel:`${this._mmss(grenzen[k])}–${this._mmss(Math.min(T,grenzen[k+1]))} min`});
+      viertel=seg.map((sg,k)=>{ const p=this._poin(sg,{size:300,lo:R.min,hi:R.max,grau:rrK,klein:true,titel:`${this._mmss(grenzen[k])}–${this._mmss(Math.min(T,grenzen[k+1]))} (min:s)`}); if(p) nSum+=p.n;
         return p?`<div class="pr-v">${p.svg}<div class="pr-v-z">SD1 ${this._zk(p.sd.sd1,1)} ms · SD2 ${this._zk(p.sd.sd2,1)} ms · n = ${fmt0(p.n)}</div></div>`:''; }).join(''); }
     const proto=rec.kontext?[rec.kontext.umgebung,rec.kontext.vorbedingung].filter(Boolean).map(x=>({eigene_box:'eigene Box',anbindeplatz:'Anbindeplatz',fremder_stall:'fremder Stall',ruhe_2h:'≥ 2 h ohne Arbeit',nach_bewegung:'nach Bewegung',beim_fressen:'beim Fressen'})[x]||x).map(esc).join(' · '):'';
     const grenzen=[];
-    if(rr.length){ if(!lang17) grenzen.push(`Aufnahmedauer ${fmt1(dauerMin)} min: LF, LF/HF und VLF werden erst ab etwa 17 min berichtet (zehn Wellen der unteren LF-Grenze).`);
+    if(rr.length){ if(!lang17) grenzen.push(`Aufnahmedauer ${fmt1(dauerMin)} min: LF und LF/HF werden erst ab etwa 17 min berichtet (zehn Wellen der unteren LF-Grenze, Task Force 1996).`);
       if(!lang20) grenzen.push('TINN und Triangular-Index werden erst ab 20 min berichtet (Task Force 1996).'); }
-    grenzen.push('DFA α1 und Sample Entropy sind beim Pferd explorativ: Es gibt keine validierten Referenzbereiche.');
+    grenzen.push('DFA α1 und Sample Entropy sind beim Pferd explorativ: Für diese Messkette und Dauer gibt es keine validierten Referenzbereiche.');
+    grenzen.push('RR-Reihen erlauben keine Rhythmusbeurteilung. Lange Pausen sind ein Hinweis, etwa auf einen AV-Block 2. Grades; ob es einer ist, zeigt nur das EKG. Sie beeinflussen RR-basierte Kurzzeit-Kennwerte (Eggensperger & Schwarzwald 2017).');
     grenzen.push(`Die eigene Basis stützt sich auf ${nBasis} frühere ${nBasis===1?'Aufnahme':'Aufnahmen'} der letzten 30 Tage${nBasis<5?' und ist damit vorläufig':''}; einzelne Aufnahmen schwanken beim Pferd von Tag zu Tag mäßig bis deutlich (Eggensperger & Schwarzwald 2017).`);
-    grenzen.push('Min-HF und Max-HF sind Einzelwerte der Aufnahme; wann und wie lange ein Ausschlag dauerte, zeigt Abb. 1.');
+    grenzen.push('Niedrigste und höchste Herzfrequenz sind Einzelwerte der bereinigten Reihe; wann und wie lange ein Ausschlag dauerte, zeigt Abb. 1, Werte außerhalb ihrer Achse sind dort mit Betrag und Zeitpunkt vermerkt.');
     const qr=(d.viral!==false&&typeof QR!=='undefined')?(()=>{try{return QR.svg('https://'+Report.URL,{hell:'#ffffff',dunkel:'#04303a'});}catch(e){return '';}})():'';
     const kontakt=[s.clinicAddr,s.clinicPhone,s.clinicMail,s.clinicWeb].map(x=>(x||'').trim()).filter(Boolean).map(esc);
     const fuss=`${esc(h.name)} · Aufnahme ${fmtDate(rec.startedAt,true)} · erstellt ${erstellt}`;
     document.getElementById('prSeite')?.remove();
     const sty=document.createElement('style'); sty.id='prSeite';
-    sty.textContent=`@page{size:A4;margin:15mm 14mm 17mm 14mm;@bottom-left{content:"Messwertbericht · ${fuss.replace(/"/g,'')} · CARLON Equine";font:8px var(--font-ui);color:#8a9aa8}@bottom-right{content:"Seite " counter(page) " von " counter(pages);font:8px var(--font-ui);color:#8a9aa8}}`;
+    sty.textContent=`@page{size:A4;margin:15mm 14mm 17mm 14mm;@bottom-left{content:"Messwertbericht · ${fuss.replace(/"/g,'')} · CARLON Equine Visite";font:8px var(--font-ui);color:#8a9aa8}@bottom-right{content:"Seite " counter(page) " von " counter(pages);font:8px var(--font-ui);color:#8a9aa8}}`;
     document.head.appendChild(sty);
     $('#printArea').innerHTML=`
       <div class="pr-head">
@@ -8005,44 +8021,49 @@ const Report={
           <div class="pr-adr"><b>${esc(s.clinicName||'')}</b>${(d.vet||s.vetName)?`<span>${esc(d.vet||s.vetName)}</span>`:''}${kontakt.length?`<span>${kontakt.join(' · ')}</span>`:''}</div></div>
         <div class="pr-co"><img src="/assets/equine-mark-512.png" alt="" width="34" height="34"><div class="wm">CARLON<small>EQUINE BIOMETRICS</small></div></div>
       </div>
-      <div class="pr-titel"><span class="pr-art">Messwertbericht · Ruhe-HRV</span><span class="pr-datum">erstellt ${erstellt}</span></div>
+      <div class="pr-titel"><span class="pr-art">${d.muster?'Musterbericht · fiktive Demo-Daten, fiktive Praxis':'Messwertbericht · Ruhe-HRV'}</span><span class="pr-datum">erstellt ${erstellt}</span></div>
       <h1>${esc(h.name)}</h1>
       <div class="sub">${esc(Stamm.rasse(h.breed)||'—')}${h.sex?' · '+esc(Stamm.geschlecht(h.sex)):''}${h.age?' · '+h.age+' Jahre':''}${h.owner?' · Halter: '+esc(h.owner):''}${h.stable?' · '+esc(h.stable):''}</div>
       <div class="pr-kopfzeile">
-        <div class="pr-tri ${tri.level}">Abweichung von der eigenen Basis: ${Triage.LEVELS[tri.level].label}</div>
+        <div class="pr-tri pr-neutral">Lage zur eigenen Basis: ${Triage.LEVELS[tri.level].label.replace(/^./,c=>c.toLowerCase())}${abw!=null?` (${abw>=0?'+':'−'}${fmt0(Math.abs(abw))} %)`:''}</div>
         ${abw!=null?`<div class="pr-basis">${herk.eigenstaendig?'Eigene Basis':'Ausgangswert'} <b>${fmt0(B)} ms</b> · aktuell <b>${fmt0(m.rmssd)} ms</b> (${abw>=0?'+':'−'}${fmt0(Math.abs(abw))} %) · aus ${nBasis} ${nBasis===1?'Aufnahme':'Aufnahmen'} der letzten 30 Tage</div>`:''}
-        <div class="pr-stufen">Stufen ab −20 / −35 / −50 % RMSSD gegen die eigene Basis. Sie beschreiben Messwerte, keinen Gesundheitszustand.</div>
+        <div class="pr-stufen">Stufen ab −20 / −35 / −50 % RMSSD gegen die eigene Basis: festgelegte Beobachtungsmarken, nicht klinisch validiert; sie beschreiben Messwerte, keinen Gesundheitszustand.</div>
       </div>
-      <h2>Messwerte · Aufnahme ${fmtDate(rec.startedAt,true)}</h2>
-      <div class="pr-proto">${proto?`Aufnahmeprotokoll: ${proto} · `:''}${rec.device&&rec.device.model?'Sensor '+esc(rec.device.model)+' · ':''}${rr.length?`${fmt0(rr.length)} Schläge · ${fmt1(dauerMin)} min aus der Rohserie`:''}${m.artifactPct!=null?' · Artefakte '+fmt1(m.artifactPct)+' %':''}${m.avBlock!=null?' · lange Pausen '+m.avBlock:''}</div>
+      <div class="pr-lese"><div><b>Was der Bericht zeigt</b>Messwerte einer Ruheaufnahme und ihren Verlauf gegen die eigene Basis dieses Pferds.</div><div><b>Was er nicht zeigt</b>Keine Diagnose und keine Rhythmusbeurteilung – dafür braucht es Untersuchung und EKG.</div><div><b>Was vergleichbar ist</b>Nur Aufnahmen mit gleichem Protokoll: gleiche Box, ähnliche Tageszeit, Ruhe vorher.</div></div>
+      <h2>Messwerte</h2>
+      <div class="pr-proto">Aufnahme ${fmtDate(rec.startedAt,true)} Uhr · ID ${esc(rec.id)} · ${proto?`Protokoll: ${proto} · `:''}${rec.device&&rec.device.model?'Sensor '+esc(rec.device.model)+' · ':''}${rr.length?`${Report._n0(rr.length)} RR-Intervalle · ${fmt1(dauerMin)} min`:''}${m.artifactPct!=null?' · Artefakte '+fmt1(m.artifactPct)+' %':''}${m.avBlock!=null?' · lange Pausen '+m.avBlock:''}</div>
       <div class="pr-gruppe">Zeitbereich</div>
       <div class="pr-stats">
-        ${st('RMSSD','ms',m.rmssd,0,'Schlag zu Schlag')}${st('SDNN','ms',m.sdnn,0,'Gesamtstreuung')}${st('Mittlere HF','/min',m.meanHR,0,'aus mittlerem RR')}${st('Mittleres RR','ms',meanRR,0,bereinigt?'bereinigte Reihe':'')}
-        ${st('Min-HF','/min',m.minHR,0,'Einzelwert')}${st('Max-HF','/min',m.maxHR,0,'Einzelwert')}${st('pNN50','%',m.pnn50,1)}${st('Artefakte','%',m.artifactPct,1,'ersetzte Schläge')}
+        ${st('RMSSD','ms',m.rmssd,0,'Schlag zu Schlag')}${st('SDNN','ms',m.sdnn,0,'Gesamtstreuung')}${st('pNN50','%',m.pnn50,1,'Differenzen > 50 ms')}${st('Mittleres RR','ms',meanRR,0,bereinigt?'bereinigte Reihe':'')}
+        ${st('Mittlere Herzfrequenz','/min',m.meanHR,0)}${st('Niedrigste Herzfrequenz','/min',hrMin,0,'längstes RR, bereinigt')}${st('Höchste Herzfrequenz','/min',hrMax,0,'kürzestes RR, bereinigt')}
       </div>
-      <div class="pr-gruppe">Poincaré & nichtlinear</div>
-      <div class="pr-stats">
+      <div class="pr-gruppe">Poincaré & Komplexität</div>
+      <div class="pr-stats pr-stats5">
         ${st('SD1','ms',m.sd1,1)}${st('SD2','ms',m.sd2,1)}${st('SD2/SD1','',m.sd2sd1,2)}${st('DFA α<sub>1</sub>','',dfa,2,'explorativ')}
-        ${st('SampEn','',se,2,'m = 2 · r = 0,2·SD · explorativ')}${lang20?st('TINN','ms',tt?tt.tinn:null)+st('Tri-Index','',tt?tt.triIndex:null,1):''}${lang17?st('LF/HF','',lfhf,2):''}${st('Lange Pausen','',m.avBlock,0,'≈ doppelter Abstand')}${st('Signalgüte','/ 100',m.quality,0)}
+        ${st('SampEn','',se,2,'m = 2 · r = 0,2·SD · explorativ')}${lang20?st('TINN','ms',tt?tt.tinn:null)+st('Tri-Index','',tt?tt.triIndex:null,1):''}${lang17?st('LF/HF','',lfhf,2):''}
       </div>
-      ${ta?abb('RR-Tachogramm · jeder Schlagabstand der Aufnahme',ta.svg,`Alle ${fmt0(rr.length)} RR-Intervalle über ${this._zk(ta.T,1)} min. Gestrichelt: Mittelwert (${fmt0(ta.mean)} ms); Band: Mittelwert ± 1 SD (± ${fmt0(ta.sd)} ms). Rohreihe vor der Bereinigung. Bernsteinfarbene Rauten: Schläge, die um mehr als 4 robuste Standardabweichungen (MAD), mindestens 20 %, vom Median der Aufnahme abweichen – hier ${ta.nAf}. Der Artefaktanteil der Kacheln stammt aus der Bereinigung des Rechenkerns (Lipponen & Tarvainen 2019, equine angepasst). Werte außerhalb des 0,4.–99,6.-Perzentils werden am Rand gehalten.`):''}
-      ${psd?abb('Frequenzspektrum · Lomb-Scargle, equine Bänder',HRV.psdChart(psd,{w:720,h:200}),`Leistungsdichte der RR-Schwankungen, Frequenzachse logarithmisch. HF ab 0,07 Hz bis zur halben mittleren Schlagfrequenz (hier ${psd.fN?this._zk(Math.min(0.6,psd.fN),2):'0,6'} Hz); ${lang17?`LF 0,01–0,07 Hz`:`LF ist eingezeichnet, wird bei ${fmt1(dauerMin)} min aber nicht als Zahl berichtet`}. HF-Leistung ${bd?fmt0(bd.hf):'–'} ms²${lang17&&bd?`, LF-Leistung ${fmt0(bd.lf)} ms²`:''}. Bänder nach Kuwahara 1996; Periodogramm nach Lomb 1976 / Scargle 1982 ohne Umrechnung auf ein festes Raster.`):''}
-      ${recs.length>1?abb(`Verlauf der Ruhe-RMSSD · ${recs.length} Aufnahmen`,this._verlauf(series,{w:720,h:180,basis:B}),`Jede Ruheaufnahme dieses Pferds als Punkt auf der Datumsachse, Wert in ms darüber. Gestrichelt: eigene Basis (Mittel aus mindestens drei früheren Aufnahmen der letzten 30 Tage); gepunktet: erste Stufe −20 %. Vergleichbar sind nur Aufnahmen mit gleichem Protokoll.`):''}
+      <div class="pr-gruppe">Datenqualität</div>
+      <div class="pr-stats">
+        ${st('Artefakte','%',m.artifactPct,1,'ersetzte Schläge')}${st('Lange Pausen','',m.avBlock,0,'≈ doppelter Abstand')}${st('Signalgüte','/100',m.quality,0,'Wert der Aufnahme-App')}
+      </div>
+      ${ta?abb('RR-Tachogramm · jeder Schlagabstand der Aufnahme',ta.svg,`Alle ${Report._n0(rr.length)} RR-Intervalle der Rohreihe (vor der Bereinigung) über ${this._zk(ta.T,1)} min. Gestrichelt: Mittelwert der Rohreihe (${Report._n0(ta.mean)} ms); Band: Mittelwert ± 1 SD (± ${Report._n0(ta.sd)} ms). Rauten: Schläge mit |RR − Median| > 4 × 1,4826 × MAD (mindestens 20 % des Medians) – hier ${ta.nAf}.${ta.aus.length?` Dreiecke am Rand: Werte außerhalb der Achse (0,4.–99,6. Perzentil), ${ta.ausTxt}; sie gehen nicht in die bereinigten Kennwerte ein.`:''} Den Artefaktanteil der Kacheln bestimmt die Bereinigung des Rechenkerns (Lipponen & Tarvainen 2019, für das Pferd angepasst).`):''}
+      ${psd?abb('Frequenzspektrum · Lomb-Scargle, equine Bänder',HRV.psdChart(psd,{w:720,h:200}),`Leistungsdichte der RR-Schwankungen (Lomb 1976 / Scargle 1982, direkt auf den Schlagzeitpunkten, auf die Varianz kalibriert), Frequenzachse logarithmisch – die Flächen sind deshalb nicht leistungsproportional, maßgeblich sind die genannten Bandleistungen. LF 0,01–0,07 Hz nach Kuwahara 1996${lang17?'':`; bei ${fmt1(dauerMin)} min eingezeichnet, aber nicht als Zahl berichtet`}. HF ab 0,07 Hz; die Obergrenze liegt abweichend von Kuwahara (0,6 Hz) bei der halben mittleren Schlagfrequenz (hier ${psd.fN?this._zk(Math.min(0.6,psd.fN),2):'0,6'} Hz), weil schnellere Schwankungen aus der Schlagfolge nicht ablesbar sind. HF-Leistung ${bd?Report._n0(bd.hf):'–'} ms²${lang17&&bd?`, LF-Leistung ${Report._n0(bd.lf)} ms²`:''}.${(()=>{try{const f=psd.freqs,pw=psd.power;let tot=0,lo=0;for(let i=1;i<f.length;i++){const a=(pw[i]+pw[i-1])/2*(f[i]-f[i-1]);tot+=a;if(f[i]<=0.01)lo+=a;}return tot>0&&lo>0?` ${fmt0(lo/tot*100)} % der Leistung liegen unter 0,01 Hz (langsame Schwankung, bei dieser Dauer nicht als Band auswertbar).`:'';}catch(e){return '';}})()}`):''}
+      ${recs.length>1?abb(`Verlauf der Ruhe-RMSSD · ${recs.length} Aufnahmen`,this._verlauf(series,{w:720,h:180,basis:B}),`Jede Ruheaufnahme dieses Pferds als Punkt auf der Datumsachse, Wert in ms darüber. Gestrichelt: Basis zur letzten Aufnahme (Mittel der früheren Aufnahmen aus den 30 Tagen davor, gezeichnet über dieses Fenster); gepunktet: erste Stufe −20 %. Vergleichbar sind nur Aufnahmen mit gleichem Protokoll; unterschiedlich lange Aufnahmen verschieben die Werte (Eggensperger & Schwarzwald 2017).`):''}
       <h2>Aufnahme-Historie</h2>
-      <table><thead><tr><th>Datum</th><th>Dauer</th><th class="r">RMSSD</th><th class="r">Mittlere HF</th><th class="r">SDNN</th><th>Einstufung</th></tr></thead>
-      <tbody>${recs.slice().reverse().slice(0,10).map(r=>`<tr><td>${fmtDate(r.startedAt,true)}</td><td>${(Array.isArray(r.rr)&&r.rr.length>20&&!Views.verdichtet(r))?Report._zk(r.rr.reduce((a,b)=>a+b,0)/60000,1)+' min':(r.durationSec?Report._zk(r.durationSec/60,1)+' min':'—')}</td><td class="r">${fmt0(r.metrics.rmssd)} ms</td><td class="r">${fmt0(r.metrics.meanHR)} /min</td><td class="r">${fmt0(r.metrics.sdnn)} ms</td><td>${Triage.LEVELS[r.triage.level].label}</td></tr>`).join('')}</tbody></table>
-      <div class="pr-fig"><h2>Tierärztliche Einschätzung${(d.recom||d.next)?' und Empfehlung':''}</h2>
-      <div class="pr-assess">${d.assess?esc(d.assess).replace(/\n/g,'<br>'):'<i style="color:#8a9aa8">— bitte ergänzen —</i>'}${(d.recom||d.next)?`<div class="pr-empf"><b>Empfehlung.</b> ${d.recom?esc(d.recom).replace(/\n/g,'<br>'):''}${d.next?` Nächste Kontrolle: ${esc(new Date(d.next).toLocaleDateString('de-DE'))}.`:''}</div>`:''}${(d.vet||s.vetName)?`<div class="pr-sign">${esc(d.vet||s.vetName)}${s.clinicName?' · '+esc(s.clinicName):''}</div>`:''}</div></div>
-      ${pz?`<div class="pr-neue-seite"></div>`+abb('Poincaré · Schlag zu Schlag',pz.svg+`<div class="pr-pz-zeile"><div><span>Paare</span><b>${fmt0(pz.n)}</b></div><div><span>Mittleres RR</span><b>${fmt0(pz.mean)}<small> ms</small></b></div><div><span>SD1</span><b>${this._zk(pz.sd.sd1,1)}<small> ms</small></b></div><div><span>SD2</span><b>${this._zk(pz.sd.sd2,1)}<small> ms</small></b></div><div><span>SD2/SD1</span><b>${this._zk(pz.sd.sd2/pz.sd.sd1,2)}</b></div><div><span>S = π·SD1·SD2</span><b>${fmt0(Math.PI*pz.sd.sd1*pz.sd.sd2)}<small> ms²</small></b></div></div>`,`Jedes Paar aufeinanderfolgender RR-Intervalle der ${bereinigt?'bereinigten':'aufgezeichneten'} Reihe als Punkt (RRₙ gegen RRₙ₊₁). Ellipse mit den Halbachsen SD1 (quer zur Identitätslinie, kurzfristige Variabilität) und SD2 (entlang, langfristigere Variabilität), zentriert auf das mittlere RR (Brennan, Palaniswami & Kamen 2001). Ränder: Verteilung von RRₙ (oben) und RRₙ₊₁ (rechts). Beide Achsen haben denselben Bereich, damit die Identitätslinie 45° bleibt. SD1 und SD2 sind dieselben Werte wie in den Kacheln.`):''}
-      ${viertel?abb('Poincaré über die Zeit · vier Viertel der Aufnahme',`<div class="pr-viertel">${viertel}</div>`,`Die Aufnahme in vier aufeinanderfolgende, gleich lange Zeitabschnitte geteilt, auf gemeinsamer Skala, jeder mit eigener SD1/SD2-Ellipse (Brennan 2001, aus dem jeweiligen Abschnitt der ${bereinigt?'bereinigten':'aufgezeichneten'} Reihe). Ein Schlag gehört zu dem Abschnitt, in dem sein Intervall endet; n = Zahl der Paare. Grau: die ganze Aufnahme. Möglich, weil jeder Schlag seinen Zeitpunkt behält.`):''}
-      <h2>Grenzen dieser Aufnahme</h2>
-      <ul class="pr-grenzen">${grenzen.map(x=>`<li>${x}</li>`).join('')}</ul>
+      <table><thead><tr><th>Datum</th><th>Dauer</th><th class="r">RMSSD</th><th class="r">Herzfrequenz</th><th class="r">SDNN</th><th>Einstufung</th></tr></thead>
+      <tbody>${recs.slice().reverse().slice(0,10).map(r=>`<tr><td>${fmtDate(r.startedAt,true)}</td><td>${(Array.isArray(r.rr)&&r.rr.length>20&&!Views.verdichtet(r))?Report._zk(r.rr.reduce((a,b)=>a+b,0)/60000,1)+' min':(r.durationSec?Report._zk(r.durationSec/60,1)+' min':'—')}</td><td class="r">${fmt0(r.metrics.rmssd)} ms</td><td class="r">${fmt0(r.metrics.meanHR)}/min</td><td class="r">${fmt0(r.metrics.sdnn)} ms</td><td>${nVorher(r)>=3?Triage.LEVELS[r.triage.level].label:`Basis im Aufbau (${nVorher(r)} von 3)`}</td></tr>`).join('')}</tbody></table>
+      <div class="pr-fig"><h2>Einschätzung der Praxis${(d.recom||d.next)?' und Empfehlung':''}</h2>
+      <div class="pr-assess">${d.assess?esc(d.assess).replace(/\n/g,'<br>'):'<i style="color:#8a9aa8">— bitte ergänzen —</i>'}${(d.recom||d.next)?`<div class="pr-empf"><b>Empfehlung.</b> ${d.recom?esc(d.recom).replace(/\n/g,'<br>'):''}${d.next?` Nächste Kontrolle: ${esc(new Date(d.next).toLocaleDateString('de-DE'))}.`:''}</div>`:''}${(d.vet||s.vetName)?`<div class="pr-sign">${esc(d.vet||s.vetName)}${s.clinicName?' · '+esc(s.clinicName):''}${d.untersucht?` · Pferd zuletzt von mir untersucht am ${esc(new Date(d.untersucht).toLocaleDateString('de-DE'))}`:''}</div>`:''}<div class="pr-frei">Freitext der Praxis – nicht von der Software erzeugt.</div></div></div>
+<div class="pr-fig">      <h2>Grenzen dieser Aufnahme</h2>
+      <ul class="pr-grenzen">${grenzen.map(x=>`<li>${x}</li>`).join('')}</ul></div>
+      ${qr?`<div class="pr-viral"><div class="pr-qr">${qr}</div><div><div class="pv-h">Erstellt mit CARLON Equine Visite</div><div class="pv-t">Ruhe-HRV aus dem Stall im Verlauf, Tagesroute und Messwertbericht in einer Browser-Anwendung für Pferdepraxen und -kliniken.</div><div class="pv-u">${Report.URL}</div></div></div>`:''}
+      ${pz?`<div class="pr-neue-seite"></div>`+abb('Poincaré · Schlag zu Schlag',pz.svg+`<div class="pr-pz-zeile"><div><span>Paare</span><b>${Report._n0(pz.n)}</b></div><div><span>Mittleres RR</span><b>${Report._n0(meanRR)}<small> ms</small></b></div><div><span>SD1</span><b>${fmt1(m.sd1)}<small> ms</small></b></div><div><span>SD2</span><b>${fmt1(m.sd2)}<small> ms</small></b></div><div><span>SD2/SD1</span><b>${fmt2(m.sd2sd1!=null?m.sd2sd1:pz.sd.sd2/pz.sd.sd1)}</b></div><div><span class="pr-klein">S = π · SD1 · SD2</span><b>${(()=>{const S=Math.PI*pz.sd.sd1*pz.sd.sd2,e=Math.floor(Math.log10(S));return fmt2(S/Math.pow(10,e))+' · 10'+String(e).split('').map(c=>'⁰¹²³⁴⁵⁶⁷⁸⁹'[+c]).join('');})()}<small> ms²</small></b></div></div>`,`Jedes Paar aufeinanderfolgender RR-Intervalle der ${bereinigt?'bereinigten':'aufgezeichneten'} Reihe als Punkt (RRₙ gegen RRₙ₊₁). Ellipse mit den Halbachsen SD1 (quer zur Identitätslinie, kurzfristige Variabilität) und SD2 (entlang, längerfristige Variabilität), zentriert auf das mittlere RR (Brennan, Palaniswami & Kamen 2001). Ränder: Verteilung von RRₙ (oben) und RRₙ₊₁ (rechts). SD1/SD2 beschreiben die Streuung und damit lineare Eigenschaften der Reihe (Brennan 2001). Beide Achsen haben denselben Bereich, damit die Identitätslinie 45° bleibt. SD1 und SD2 sind dieselben Werte wie in den Kacheln.`):''}
+      ${viertel?abb('Poincaré über die Zeit · vier Viertel der Aufnahme',`<div class="pr-viertel">${viertel}</div>`,`Die Aufnahme in vier aufeinanderfolgende, gleich lange Zeitabschnitte geteilt, auf gemeinsamer Skala, jeder mit eigener SD1/SD2-Ellipse (Brennan 2001, aus dem jeweiligen Abschnitt der ${bereinigt?'bereinigten':'aufgezeichneten'} Reihe). Ein Schlag gehört zu dem Abschnitt, in dem sein Intervall endet; n = Zahl der Paare${(rrK.length-1-nSum)>0?` (${rrK.length-1-nSum} Paare über eine Abschnittsgrenze sind keinem Viertel zugeordnet)`:''}. Grau: die ganze Aufnahme.`):''}
       <div class="pr-foot">
-        <b>Methoden.</b> Kennwerte aus der vollständigen Rohserie, Rechenkern ${(()=>{const v=(typeof Neuauswertung!=='undefined'&&Neuauswertung.version())||'';const nr=(v.match(/^[\d.]+/)||[''])[0],dt=(v.match(/\d{4}-\d{2}-\d{2}/)||[''])[0];return esc(nr?('Version '+nr+(dt?' vom '+dt.split('-').reverse().join('.'):'')):'equine-v1');})()}. Artefaktkorrektur nach Lipponen &amp; Tarvainen 2019, an das Pferd angepasst; lange Pausen (1,8- bis 2,2-facher örtlicher Median) werden getrennt gezählt und nicht korrigiert. Zeitbereich nach Task Force 1996. Spektrum: Lomb-Scargle-Periodogramm, auf die Varianz kalibriert; equine Bänder nach Kuwahara 1996 (LF 0,01–0,07 Hz, HF 0,07 Hz bis zur halben mittleren Schlagfrequenz). Poincaré nach Brennan 2001, SampEn nach Richman &amp; Moorman 2000, DFA α1 nach Peng 1995 (n = 4–16 Schläge). Sensor Polar H10: Für ein H10-System liegt eine Vergleichsstudie am ruhenden Pferd vor (Kapteijn 2022, andere Elektroden- und Empfängerkette); diese Messkette ist nicht eigens validiert. Für Ruhe-HRV beim Pferd gibt es keinen Konsens-Normwert; eingeordnet wird gegen die eigene Basis.<br>
-        <b>Wichtiger Hinweis.</b> Dieser Bericht dokumentiert Messwerte und ihren Verlauf – keine tierärztliche Diagnose. Die klinische Beurteilung obliegt der behandelnden Tierärztin oder dem behandelnden Tierarzt.<br>
-        Aufnahme-ID ${esc(rec.id)} · erstellt ${erstellt}
+        <b>Methoden.</b> Kennwerte aus der vollständigen Aufnahme nach Bereinigung, Rechenkern ${(()=>{const v=(typeof Neuauswertung!=='undefined'&&Neuauswertung.version())||'';const nr=(v.match(/^[\d.]+/)||[''])[0],dt=(v.match(/\d{4}-\d{2}-\d{2}/)||[''])[0];return esc(nr?('Version '+nr+(dt?' vom '+dt.split('-').reverse().join('.'):'')):'equine-v1');})()}. Bereinigung nach Lipponen &amp; Tarvainen 2019, für das Pferd angepasst (eigene, nicht gesondert validierte Anpassung); lange Pausen (1,8- bis 2,2-facher örtlicher Median, ± 10 Schläge, unauffällige Nachbarn) werden getrennt gezählt und nicht korrigiert. Zeitbereich nach Task Force 1996. Spektrum (Abb. 2): Lomb-Scargle-Periodogramm, auf die Varianz kalibriert; LF 0,01–0,07 Hz nach Kuwahara 1996, HF ab 0,07 Hz bis zur halben mittleren Schlagfrequenz. Poincaré nach Brennan, Palaniswami &amp; Kamen 2001; Sample Entropy nach Richman &amp; Moorman 2000; DFA α1 nach Peng 1995 (Fenster 4–16 Schläge). Signalgüte: Gütewert der Aufnahme-App (0–100); fehlt er, 100 − 4 × Artefaktanteil in %. Sensor Polar H10: Ein H10-System wurde an 28 Pferden in Ruhe und bei Bodenarbeit gegen Telemetrie-EKG verglichen, nur im Zeitbereich und mit anderen Elektroden und Empfängern (Kapteijn 2022); diese Messkette ist nicht eigens validiert. Referenzintervalle liegen für EKG-Langzeitaufnahmen vor (Eggensperger &amp; Schwarzwald 2017), nicht für diese Messkette und Aufnahmedauer; eingeordnet wird deshalb gegen die eigene Basis.<br>
+        <b>Wichtiger Hinweis.</b> Dieser Bericht dokumentiert Messwerte und ihren Verlauf. Die Software stellt keine Diagnose. Die klinische Beurteilung obliegt der behandelnden Tierärztin oder dem behandelnden Tierarzt.
       </div>
-      ${qr?`<div class="pr-viral"><div class="pr-qr">${qr}</div><div><div class="pv-h">Erstellt mit CARLON Equine Visite</div><div class="pv-t">Ruhe-HRV aus dem Stall im Verlauf, Tagesroute und Messwertbericht in einer Browser-Anwendung für Pferdepraxen und -kliniken.</div><div class="pv-u">${Report.URL}</div></div></div>`:''}`;
+`;
   },
   print(hid){ this.compose(hid); }   // Abwärtskompatibel
 };
@@ -10667,7 +10688,7 @@ const Seed={
           meanHR:base.metrics.meanHR?base.metrics.meanHR/(0.6+f*0.4):null,
           sd2:base.metrics.sd2?base.metrics.sd2*f:null, sd2sd1:base.metrics.sd2sd1?base.metrics.sd2sd1*(0.72+f*0.28):null};
         const n={metrics,clinical:base.clinical,baselineRMSSD:h.baselineRMSSD};
-        const rec={id:'r_hist_'+h.id+'_'+i,horseId:h.id,startedAt:d.toISOString(),durationSec:base.durationSec,
+        const rec={id:'r_hist_'+h.id+'_'+i,horseId:h.id,startedAt:d.toISOString(),durationSec:(Array.isArray(base.rr)&&base.rr.length>20)?Math.round(base.rr.reduce((a,b)=>a+b,0)/1000):base.durationSec,
           beatCount:base.beatCount,intent:'rest',metrics,triage:Triage.score(n),clinical:base.clinical,device:base.device,rr:[]};
         if(!State.recordings.some(r=>r.id===rec.id)){await DB.put('recordings',rec);State.recordings.push(rec);}
       }
@@ -10687,7 +10708,7 @@ const Seed={
         sdnn:base.metrics.sdnn?Math.round((80+f*60)*10)/10:null,
         dfa:null,sd1:null,sd2:null,pnn50:null,minHR:Math.round(hr*0.82),maxHR:Math.round(hr*1.35)};
       const n={metrics,clinical:base.clinical||{},baselineRMSSD:h.baselineRMSSD};
-      const rec={id:'r_cnd_'+h.id+'_'+i,horseId:h.id,startedAt:d.toISOString(),durationSec:base.durationSec,
+      const rec={id:'r_cnd_'+h.id+'_'+i,horseId:h.id,startedAt:d.toISOString(),durationSec:(Array.isArray(base.rr)&&base.rr.length>20)?Math.round(base.rr.reduce((a,b)=>a+b,0)/1000):base.durationSec,
         beatCount:base.beatCount,intent:'rest',metrics,triage:Triage.score(n),clinical:base.clinical||{},device:base.device,rr:[]};
       if(!State.recordings.some(r=>r.id===rec.id)){await DB.put('recordings',rec);State.recordings.push(rec);}
     }
