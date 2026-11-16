@@ -1753,6 +1753,7 @@ svg.viz .sd-lbl{fill:var(--cyan-strong);font-size:10px;font-weight:600;font-fami
   .pr-v-z{font-size:8.5px;font-family:var(--font-mono);color:#00867a;text-align:center;margin-top:1px}
   #printArea th.r,#printArea td.r{text-align:right}
   #printArea .pr-stats.pr-stats5{grid-template-columns:repeat(5,1fr)}
+  .pr-mono{font-family:var(--font-mono);font-size:.95em;letter-spacing:0}
   .pr-lit{margin:4px 0 10px;padding-left:18px;columns:1}.pr-lit li{margin:2px 0}
   #printArea .pr-foot{font-size:9.5px;color:#5a7080;line-height:1.6}
   .pr-lese{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:10px 0 4px}
@@ -6535,12 +6536,13 @@ const Views={
       }
     };
   },
-  exportRec(id){const r=State.recordings.find(x=>x.id===id);if(!r||!r.metrics)return;
+  async exportRec(id){const r=State.recordings.find(x=>x.id===id);if(!r||!r.metrics)return;
     const pferd=State.horses.find(h=>h.id===r.horseId);
     /* Die Quelldaten bleiben unangetastet — der Herkunftsblock kommt
        DANEBEN, nicht hinein. Wer die Datei im Viewer oeffnet, sieht
        dieselben Werte wie bisher. */
     const inhalt=Object.assign({}, r.metrics, { herkunft: Views.herkunft(r, pferd) });
+    { const pw=await Pruefwert.rr(r.rr); if(pw) inhalt.pruefwert={ algorithmus:'SHA-256', ueber:Pruefwert.BESCHREIBUNG, wert:pw }; }
     const blob=new Blob([JSON.stringify(inhalt,null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='carlon-session-'+id+'.json';a.click();
     Toast.show('Für Detail-Analyse: im CARLON Viewer öffnen','info');},
   /* ── ENTLASS-NACHSORGE (Klinik-Stufe, Jan 13.08.2026) ────────────────
@@ -7461,10 +7463,11 @@ const FHIR={
       timestamp:when, entry:entries };
   },
 
-  export(recId){
+  async export(recId){
     const r=State.recordings.find(x=>x.id===recId); if(!r) return;
     const h=State.horses.find(x=>x.id===r.horseId);
     const b=FHIR.bundle(r,h);
+    { const pw=await Pruefwert.rr(r.rr); if(pw) b.identifier={ system:'urn:carlon:rr-sha256', value:pw }; }
     const name=((h&&h.name)||'Pferd').replace(/[^\p{L}\p{N}_-]+/gu,'-');
     const blob=new Blob([JSON.stringify(b,null,2)],{type:'application/fhir+json'});
     const a=document.createElement('a'); a.href=URL.createObjectURL(blob);
@@ -7800,6 +7803,15 @@ const Voice={
   }
 };
 
+/* PRÜFWERT (16.11.2026): Die Visite-Seite verspricht „ein SHA-256-Prüfwert je Datensatz“ – bis heute rechnete ihn niemand.
+   Jetzt: SHA-256 über die RR-Rohreihe (Millisekunden, kommagetrennt, in Aufnahmereihenfolge). Derselbe Wert steht im
+   JSON-Export, im FHIR-Bundle (identifier) und im Messwertbericht – so lässt sich jede Datei gegen den Bericht prüfen. */
+const Pruefwert={
+  BESCHREIBUNG:'SHA-256 über die RR-Rohreihe (ms, kommagetrennt, in Aufnahmereihenfolge)',
+  async rr(arr){ if(!Array.isArray(arr)||!arr.length||!(window.crypto&&crypto.subtle)) return null;
+    const h=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(arr.join(',')));
+    return [...new Uint8Array(h)].map(x=>x.toString(16).padStart(2,'0')).join(''); }
+};
 const Report={
   URL:'vitalkultur.com/carlon-equine-visite',
   QR:'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAUoAAAFKAQMAAABB54RGAAAABlBMVEUAAAD///+l2Z/dAAAAAnRSTlP//8i138cAAAAJcEhZcwAACxIAAAsSAdLdfvwAAAGtSURBVGiB7dpBjsMwCAVQJB8gR/LVc6QcoBKt+YCdqIt2ZRafxch136wYY0hG9OcQUlLSv+glHl1fWHz2muopTeOrRlqFNk+c0T5W8NgbcZEWopY66bZz+Sr2RsZJK9I8cp8U63koaWU6SuXxikJKWpN6gbQTiHuu5cfv9ZV0FxWPnvVy/vAgrUJn4MhJ7EXGPUgr0MxfHxt2sYlVTtX1C9Iq1C+2JcU2muUJXOsr6VY6YraK9t34aOG9CNakBWi0iuFvo5kdSPwmaRG6lsprHc1stRRN0t00t+HjThP5UjRJC1AMzRjI8iMO5DOxpHupHUPkz1bZ7Ju68sYjLUFbtvhjJ3p/tJTjx7PZJ91LMT6f6EBUdT4KWZ7jkxahUwma/bjYnN7+Bkg3U3/iEVPZms5n0STdTlEbMYYhsRIzm3h2SWvQGfYAGG2Iq+lJa9C8zroNabY85vswuTf7pJtpQ1rnu684i1E0lbQSjSTOK+5WNDtpRZqD9GxD4n8ESAvS+fYy1Ii10yTdTXHM8vEhMonKeX+5QrqdRvrQNOKFc4Ic3EhL0F+DlJT0D/oG4v+sQxtodr8AAAAASUVORK5CYII=',
@@ -7868,6 +7880,7 @@ const Report={
       await DB.put('consults',c); State.consults.push(c);
       Toast.show(`Messwertbericht erstellt · Leistung dokumentiert${fee>0?' ('+euro(fee)+')':''}`,'ok');
     } else { Toast.show('Messwertbericht erstellt','ok'); }
+    try{ const rc=State.recsFor(hid).slice(-1)[0]; d.sha=rc?await Pruefwert.rr(rc.rr):null; }catch(e){ d.sha=null; }
     this.render(hid,d);
     const altTitel=document.title; document.title=this.titel(hid);   // Dateiname/PDF-Titel = Pferd + Datum
     setTimeout(()=>{ window.print(); document.title=altTitel; if(typeof Nav!=='undefined'&&Nav.cur==='detail')Nav.refresh(); },160);
@@ -7999,6 +8012,8 @@ const Report={
     const dfa=(m.dfa!=null)?m.dfa:(rrK.length?HRV.dfaAlpha1(rrK):null);
     const psd=rrK.length>=24?HRV.lombPSD(rrK):null; const bd=HRV.bands(psd);
     const se=rrK.length?HRV.sampEn(rrK):null; const tt=rrK.length?HRV.tinnTri(rrK):null;
+    const _rmssd=a=>{let s=0;for(let i=1;i<a.length;i++){const x=a[i]-a[i-1];s+=x*x;}return a.length>1?Math.sqrt(s/(a.length-1)):null;}, _sdnn=a=>{const mu=a.reduce((x,y)=>x+y,0)/a.length;return a.length>1?Math.sqrt(a.reduce((x,y)=>x+(y-mu)*(y-mu),0)/(a.length-1)):null;};
+    const rmssdRoh=rr.length>2?_rmssd(rr):null, sdnnRoh=rr.length>2?_sdnn(rr):null;
     const nNN50=(()=>{let k=0;for(let i=1;i<rrK.length;i++) if(Math.abs(rrK[i]-rrK[i-1])>50) k++; return k;})();
     const meanRR=rrK.length?rrK.reduce((a,b)=>a+b,0)/rrK.length:null;   // bereinigt – wie SD1/SD2 und die Poincaré-Zeile
     /* Min/Max-Herzfrequenz aus der BEREINIGTEN Reihe (B1: 107/min stammte aus einem einzelnen Rohschlag, den keine Abbildung zeigt) */
@@ -8046,11 +8061,11 @@ const Report={
       <div class="pr-head">
         <div class="pr-praxis">${s.logo?`<img class="pr-logo" src="${s.logo}" alt="${esc(s.clinicName||'Praxis')}">`:''}
           <div class="pr-adr"><b>${esc(s.clinicName||'')}</b>${(d.vet||s.vetName)?`<span>${esc(d.vet||s.vetName)}</span>`:''}${kontakt.length?`<span>${kontakt.join(' · ')}</span>`:''}</div></div>
-        <div class="pr-co"><img src="/assets/equine-mark-512.png" alt="" width="34" height="34"><div class="wm">CARLON<small>EQUINE BIOMETRICS</small></div></div>
+        <div class="pr-co"><img src="/assets/equine-mark-512.png" alt="" width="34" height="34"><div class="wm">CARLON<small>EQUINE VISITE</small></div></div>
       </div>
       <div class="pr-titel"><span class="pr-art">${d.muster?'Musterbericht · fiktive Demo-Daten, fiktive Praxis':'Messwertbericht · Ruhe-HRV'}</span><span class="pr-datum">erstellt ${erstellt}</span></div>
       <h1>${esc(h.name)}</h1>
-      <div class="sub">${esc(Stamm.rasse(h.breed)||'—')}${h.sex?' · '+esc(Stamm.geschlecht(h.sex)):''}${h.age?' · '+h.age+' Jahre':''}${h.owner?' · Halter: '+esc(h.owner):''}${h.stable?' · '+esc(h.stable):''}</div>
+      <div class="sub">${esc(Stamm.rasse(h.breed)||'—')}${h.sex?' · '+esc(Stamm.geschlecht(h.sex)):''}${h.age?' · '+h.age+' Jahre':''}${h.owner?' · Halter: '+esc(h.owner):''}${h.stable?' · '+esc(h.stable):''}${(h.extIds&&(h.extIds.ueln||h.extIds.microchip))?`<br>${h.extIds.ueln?'UELN '+esc(h.extIds.ueln):''}${h.extIds.ueln&&h.extIds.microchip?' · ':''}${h.extIds.microchip?'Mikrochip '+esc(h.extIds.microchip):''}`:''}</div>
       <div class="pr-kopfzeile">
         <div class="pr-tri pr-neutral">Lage zur eigenen Basis: ${Triage.LEVELS[tri.level].label.replace(/^./,c=>c.toLowerCase())}${abw!=null?` (${abwTxt})`:''}</div>
         ${abw!=null?`<div class="pr-basis">${herk.eigenstaendig?'Eigene Basis':'Ausgangswert'} <b>${fmt1(B)} ms</b> (Mittel aus ${nBasis} ${nBasis===1?'Aufnahme':'Aufnahmen'}${bVon?`, ${bVon}–${bBis}`:''}) · aktuell <b>${fmt1(m.rmssd)} ms</b> · Abweichung ${abwTxt}</div>`:''}
@@ -8058,7 +8073,7 @@ const Report={
       </div>
       <div class="pr-lese"><div><b>Was der Bericht zeigt</b>Messwerte einer Ruheaufnahme und ihren Verlauf gegen die eigene Basis dieses Pferds.</div><div><b>Was er nicht zeigt</b>Keine Diagnose und keine Rhythmusbeurteilung – dafür braucht es Untersuchung und EKG.</div><div><b>Was vergleichbar ist</b>Nur Aufnahmen mit gleichem Protokoll: gleicher Ort, ähnliche Tageszeit, Ruhe vorher.</div></div>
       <h2>Messwerte</h2>
-      <div class="pr-proto">Aufnahme ${this._dt(rec.startedAt)} · ID ${esc(rec.id)} · ${proto?`Protokoll: ${proto} · `:''}${rec.device&&rec.device.model?'Sensor '+esc(rec.device.model)+' · ':''}${rr.length?`${Report._n0(rr.length)} RR-Intervalle · ${fmt1(dauerMin)} min`:''}</div>
+      <div class="pr-proto">Aufnahme ${this._dt(rec.startedAt)} · ID ${esc(rec.id)}${d.sha?` · Prüfwert SHA-256 <span class="pr-mono">${d.sha.slice(0,16)}…</span>`:''} · ${proto?`Protokoll: ${proto} · `:''}${rec.device&&rec.device.model?'Sensor '+esc(rec.device.model)+' · ':''}${rr.length?`${Report._n0(rr.length)} RR-Intervalle · ${fmt1(dauerMin)} min`:''}</div>
       <div class="pr-gruppe">Zeitbereich</div>
       <div class="pr-stats">
         ${st('RMSSD','ms',m.rmssd,0,'Schlag zu Schlag')}${st('SDNN','ms',m.sdnn,0,'Gesamtstreuung')}${st('pNN50','%',m.pnn50,1,`Differenzen > 50 ms · ${Report._n0(nNN50)} von ${Report._n0(rrK.length-1)}`)}${st('Mittleres RR','ms',meanRR,0,bereinigt?'bereinigte Reihe':'')}
@@ -8067,14 +8082,14 @@ const Report={
       <div class="pr-gruppe">Poincaré & Komplexität</div>
       <div class="pr-stats pr-stats5">
         ${st('SD1','ms',m.sd1,1)}${st('SD2','ms',m.sd2,1)}${st('SD2/SD1','',m.sd2sd1,2)}${st('DFA α<sub>1</sub>','',dfa,2,'explorativ')}
-        ${st('SampEn','',se,2,'m = 2 · r = 0,2 × SD · explorativ')}${lang20?st('TINN','ms',tt?tt.tinn:null)+st('Tri-Index','',tt?tt.triIndex:null,1):''}${lang17?st('LF/HF','',lfhf,2):''}
+        ${st('SampEn','',se,2,'m = 2 · r = 0,2 × SD (bereinigt) · explorativ')}${lang20?st('TINN','ms',tt?tt.tinn:null)+st('Tri-Index','',tt?tt.triIndex:null,1):''}${lang17?st('LF/HF','',lfhf,2):''}
       </div>
-      <div class="pr-gruppe">Datenqualität</div>
-      <div class="pr-stats">
-        ${st('Artefakte','%',m.artifactPct,1,ann?`${idxErs.length} von ${Report._n0(rr.length)} Schlägen ersetzt`:'ersetzte Schläge')}${st('Lange Pausen','',m.avBlock,0,'≈ doppelter Abstand')}${st('Signalgüte','/100',m.quality,0,'Wert der Aufnahme-App, nicht validiert')}
+      <div class="pr-gruppe">Datenqualität · roh und bereinigt</div>
+      <div class="pr-stats pr-stats5">
+        ${st('Artefakte','%',m.artifactPct,1,ann?`${idxErs.length} von ${Report._n0(rr.length)} Schlägen ersetzt`:'ersetzte Schläge')}${st('Lange Pausen','',m.avBlock,0,'≈ doppelter Abstand')}${st('Signalgüte','/100',m.quality,0,'Wert der Aufnahme-App, nicht validiert')}${bereinigt?st('RMSSD roh','ms',rmssdRoh,0,`bereinigt ${fmt0(m.rmssd)} ms`)+st('SDNN roh','ms',sdnnRoh,0,`bereinigt ${fmt0(m.sdnn)} ms`):''}
       </div>
       ${ta?abb('RR-Tachogramm · jeder Schlagabstand der Aufnahme',ta.svg,`Alle ${Report._n0(rr.length)} RR-Intervalle der Rohreihe (vor der Bereinigung) über ${this._zk(ta.T,1)} min, Achse ${Report._n0(ta.mn)}–${Report._n0(ta.mx)} ms. Gestrichelt: Mittelwert der Rohreihe (${Report._n0(ta.mean)} ms); Band: Mittelwert ± 1 SD (± ${Report._n0(ta.sd)} ms). ${ann?`Kreise: von der Bereinigung ersetzte Schläge (${idxErs.length} von ${Report._n0(rr.length)}${idxErs.length&&idxErs.length<=12?': '+Report._zeiten(idxErs.map(i=>ta.t[i]*60)):''}); senkrechte Striche: lange Pausen (${idxPause.length}${idxPause.length&&idxPause.length<=12?': '+Report._zeiten(idxPause.map(i=>ta.t[i]*60)):''}).`:''}${ta.aus.length?` Dreieck am Rand: Wert außerhalb der Achse, ${ta.ausTxt}.`:''} Ersetzt werden Schläge, die die Bereinigung nach Lipponen & Tarvainen 2019 (für das Pferd angepasst) als fehlerhaft erkennt.`):''}
-      ${psd?abb('Frequenzspektrum · Lomb-Scargle, equine Bänder',HRV.psdChart(psd,{w:720,h:200}).replace('FREQUENZ<tspan class="label-unit"> (Hz · log)</tspan>','Frequenz<tspan class="label-unit"> (Hz, logarithmisch)</tspan>').replace('= halbe Schlagfrequenz','= halbe mittlere Schlagfrequenz'),`Leistungsdichte der Schwankungen der bereinigten Reihe: Lomb-Scargle-Periodogramm (Lomb 1976, Scargle 1982) direkt auf den Schlagzeitpunkten, Mittelwert abgezogen, ohne Trendbereinigung, auf die Varianz kalibriert. Frequenzachse logarithmisch – die Flächen sind deshalb nicht leistungsproportional; maßgeblich ist die genannte HF-Leistung. LF 0,01–0,07 Hz nach Kuwahara et al. 1996${lang17?'':`; bei ${fmt1(dauerMin)} min eingezeichnet, aber nicht als Zahl berichtet`}. HF ab 0,07 Hz; die Obergrenze liegt abweichend von Kuwahara (0,6 Hz) bei der halben mittleren Schlagfrequenz (hier ${psd.fN?this._zk(Math.min(0.6,psd.fN),2):'0,6'} Hz), weil schnellere Schwankungen aus der Schlagfolge nicht ablesbar sind. Markiert: Gipfel je Band. HF-Leistung ${bd?Report._sig3(bd.hf):'–'} ms²${lang17&&bd?`, LF-Leistung ${Report._sig3(bd.lf)} ms²`:''}.`):''}
+      ${psd?abb('Frequenzspektrum · Lomb-Scargle, equine Bänder',HRV.psdChart(psd,{w:720,h:200}).replace('FREQUENZ<tspan class="label-unit"> (Hz · log)</tspan>','Frequenz<tspan class="label-unit"> (Hz, logarithmisch)</tspan>').replace('= halbe Schlagfrequenz','= halbe mittlere Schlagfrequenz'),`Leistungsdichte der Schwankungen der bereinigten Reihe: Lomb-Scargle-Periodogramm (Lomb 1976, Scargle 1982) direkt auf den Schlagzeitpunkten, Mittelwert abgezogen, ohne Trendbereinigung, auf die Varianz kalibriert. Frequenzachse logarithmisch – die Flächen sind deshalb nicht leistungsproportional; maßgeblich ist die genannte HF-Leistung. LF 0,01–0,07 Hz nach Kuwahara et al. 1996${lang17?'':`; bei ${fmt1(dauerMin)} min eingezeichnet, aber nicht als Zahl berichtet`}. HF ab 0,07 Hz; die Obergrenze liegt abweichend von Kuwahara (0,6 Hz) bei der halben mittleren Schlagfrequenz (hier ${psd.fN?this._zk(Math.min(0.6,psd.fN),2):'0,6'} Hz), weil schnellere Schwankungen aus der Schlagfolge nicht ablesbar sind. Markiert: Gipfel je Band${(()=>{try{let pk=null;psd.freqs.forEach((f,i)=>{if(f>=0.07&&f<=(psd.fN||0.6)&&(!pk||psd.power[i]>pk.p))pk={f,p:psd.power[i]};});return pk?` (HF-Gipfel ${pk.f.toFixed(3).replace('.',',')} Hz = Periode ${fmt0(1/pk.f)} s, rund ${fmt1(pk.f*60)} Schwankungen je Minute)`:'';}catch(e){return '';}})()}. HF-Leistung ${bd?Report._sig3(bd.hf):'–'} ms²${lang17&&bd?`, LF-Leistung ${Report._sig3(bd.lf)} ms²`:''}.`):''}
       ${recs.length>1?abb(`Verlauf des Ruhe-RMSSD · ${recs.length} Aufnahmen`,this._verlauf(series,{w:720,h:180,basis:B,band:basisRecs.length>1?[Math.min(...basisRecs.map(r=>r.metrics.rmssd)),Math.max(...basisRecs.map(r=>r.metrics.rmssd))]:null}),`Jede Ruheaufnahme dieses Pferds als Punkt auf der Datumsachse, Wert in ms darüber. Gestrichelt: Basis zur letzten Aufnahme (Mittel der früheren Aufnahmen aus den 30 Tagen davor, gezeichnet über dieses Fenster); gepunktet: erste Stufe −20 %; helles Band: Spannweite der Basisaufnahmen (bisherige Schwankung dieses Pferds). Vergleichbar sind nur Aufnahmen mit gleichem Protokoll; unterschiedlich lange Aufnahmen verschieben die Werte (Eggensperger & Schwarzwald 2017).`):''}
       <h2>Aufnahme-Historie</h2>
       <table><thead><tr><th>Datum</th><th>Dauer</th><th class="r">RMSSD</th><th class="r">Herzfrequenz</th><th class="r">SDNN</th><th>Einstufung</th></tr></thead>
@@ -8083,13 +8098,13 @@ const Report={
       <div class="pr-assess">${d.assess?esc(d.assess).replace(/\n/g,'<br>'):'<i style="color:#8a9aa8">— bitte ergänzen —</i>'}${(d.recom||d.next)?`<div class="pr-empf"><b>Empfehlung.</b> ${d.recom?esc(d.recom).replace(/\n/g,'<br>'):''}${d.next?` Nächste Kontrolle: ${this._dt(d.next,false)}.`:''}</div>`:''}${(d.vet||s.vetName)?`<div class="pr-sign">${esc(d.vet||s.vetName)}${s.clinicName?' · '+esc(s.clinicName):''}${d.untersucht?` · Pferd zuletzt von mir untersucht am ${this._dt(d.untersucht,false)}`:''}</div>`:''}<div class="pr-frei">Freitext der Praxis – nicht von der Software erzeugt.</div></div></div>
 <div class="pr-fig">      <h2>Grenzen dieser Aufnahme und des Verfahrens</h2>
       <ul class="pr-grenzen">${grenzen.map(x=>`<li>${x}</li>`).join('')}</ul></div>
-      ${qr?`<div class="pr-viral"><div class="pr-qr">${qr}</div><div><div class="pv-h">Erstellt mit CARLON Equine Visite</div><div class="pv-t">Ruhe-HRV aus dem Stall im Verlauf, Tagesroute und Messwertbericht in einer Browser-Anwendung für Pferdepraxen und -kliniken.</div><div class="pv-u">${Report.URL}</div></div></div>`:''}
+      ${qr?`<div class="pr-viral"><div class="pr-qr">${qr}</div><div><div class="pv-h">Erstellt mit CARLON Equine Visite</div><div class="pv-t">Software zur Aufbereitung von Ruhe-HRV-Aufnahmen beim Pferd (Vitalkultur, Iffezheim). Informationen zur Software:</div><div class="pv-u">${Report.URL}</div></div></div>`:''}
       ${pz?`<div class="pr-neue-seite"></div>`+abb('Poincaré · Schlag zu Schlag',pz.svg+`<div class="pr-pz-zeile"><div><span>Paare</span><b>${Report._n0(pz.n)}</b></div><div><span>Mittleres RR</span><b>${Report._n0(meanRR)}<small> ms</small></b></div><div><span>SD1</span><b>${fmt1(m.sd1)}<small> ms</small></b></div><div><span>SD2</span><b>${fmt1(m.sd2)}<small> ms</small></b></div><div><span>SD2/SD1</span><b>${fmt2(m.sd2sd1!=null?m.sd2sd1:pz.sd.sd2/pz.sd.sd1)}</b></div><div><span class="pr-klein">Ellipsenfläche S = π · SD1 · SD2</span><b>${(()=>{const S=Math.PI*pz.sd.sd1*pz.sd.sd2,e=Math.floor(Math.log10(S));return fmt2(S/Math.pow(10,e))+' · 10'+String(e).split('').map(c=>'⁰¹²³⁴⁵⁶⁷⁸⁹'[+c]).join('');})()}<small> ms²</small></b></div></div>`,`Jedes Paar aufeinanderfolgender RR-Intervalle der ${bereinigt?'bereinigten':'aufgezeichneten'} Reihe als Punkt (RRₙ gegen RRₙ₊₁). Ellipse mit den Halbachsen SD1 (quer zur Identitätslinie, kurzfristige Variabilität) und SD2 (entlang, längerfristige Variabilität), zentriert auf das mittlere RR (Brennan, Palaniswami & Kamen 2001). Ränder: Verteilung von RRₙ (oben) und RRₙ₊₁ (rechts). SD1 und SD2 beschreiben die Streuung und damit lineare Eigenschaften der Reihe (Brennan et al. 2001). Beide Achsen haben denselben Bereich, damit die Identitätslinie 45° bleibt. SD1 und SD2 sind dieselben Werte wie in den Kacheln.`):''}
-      ${viertel?abb('Poincaré über die Zeit · vier Viertel der Aufnahme',`<div class="pr-viertel">${viertel}</div>`,`Die Aufnahme in vier aufeinanderfolgende, gleich lange Zeitabschnitte geteilt, auf gemeinsamer Skala, jeder mit eigener SD1/SD2-Ellipse (Brennan 2001, aus dem jeweiligen Abschnitt der ${bereinigt?'bereinigten':'aufgezeichneten'} Reihe). Ein Schlag gehört zu dem Abschnitt, in dem sein Intervall endet; n = Zahl der Paare${(rrK.length-1-nSum)>0?` (${rrK.length-1-nSum} Paare über eine Abschnittsgrenze sind keinem Viertel zugeordnet)`:''}. Grau: die ganze Aufnahme.`):''}
+      ${viertel?abb('Poincaré über die Zeit · vier Viertel der Aufnahme',`<div class="pr-viertel">${viertel}</div>`,`Die Aufnahme in vier aufeinanderfolgende, gleich lange Zeitabschnitte geteilt, auf gemeinsamer Skala, jeder mit eigener SD1/SD2-Ellipse (Brennan 2001, aus dem jeweiligen Abschnitt der ${bereinigt?'bereinigten':'aufgezeichneten'} Reihe). Ein Schlag gehört zu dem Abschnitt, in dem sein Intervall endet; n = Zahl der Paare${(rrK.length-1-nSum)>0?` (${rrK.length-1-nSum} Paare über eine Abschnittsgrenze sind keinem Viertel zugeordnet)`:''}. Grau: die ganze Aufnahme. Achsen wie Abb. 4: RRₙ (ms) waagrecht, RRₙ₊₁ (ms) senkrecht.`):''}
       <div class="pr-neue-seite"></div><h2>Methoden und Literatur</h2>
       <div class="pr-foot">
         <b>Methoden.</b> Kennwerte aus der vollständigen Aufnahme nach Bereinigung, Rechenkern ${(()=>{const v=(typeof Neuauswertung!=='undefined'&&Neuauswertung.version())||'';const nr=(v.match(/^[\d.]+/)||[''])[0],dt=(v.match(/\d{4}-\d{2}-\d{2}/)||[''])[0];return esc(nr?('Version '+nr+(dt?' vom '+dt.split('-').reverse().join('.'):'')):'equine-v1');})()}. Bereinigung nach Lipponen &amp; Tarvainen 2019, für das Pferd angepasst (eigene, nicht gesondert validierte Anpassung); lange Pausen (1,8- bis 2,2-facher örtlicher Median, ± 10 Schläge, unauffällige Nachbarn; eigene Festlegung, nicht aus der Literatur übernommen) werden getrennt gezählt und für die Kennwerte wie Artefakte per Spline-Interpolation überbrückt. Zeitbereich nach Task Force 1996. Spektrum (Abb. 2): Lomb-Scargle-Periodogramm der bereinigten Reihe, Mittelwert abgezogen, ohne Trendbereinigung, auf die Varianz kalibriert; LF 0,01–0,07 Hz nach Kuwahara et al. 1996, HF ab 0,07 Hz bis zur halben mittleren Schlagfrequenz. Poincaré nach Brennan et al. 2001; Sample Entropy nach Richman &amp; Moorman 2000; DFA α1 nach Peng et al. 1995 (Fenster 4–16 Schläge). Signalgüte: Gütewert der Aufnahme-App (0–100, nicht validiert); fehlt er, 100 − 4 × Artefaktanteil in %. Sensor Polar H10: Ein H10-System wurde an 28 Pferden in Ruhe und bei Bodenarbeit gegen Telemetrie-EKG verglichen, nur im Zeitbereich, nach Artefaktkorrektur in Kubios und mit anderen Elektroden und Empfängern (Kapteijn et al. 2022); diese Messkette ist nicht eigens validiert. Referenzintervalle liegen für EKG-Langzeitaufnahmen vor (Eggensperger &amp; Schwarzwald 2017), nicht für diese Messkette und Aufnahmedauer; eingeordnet wird deshalb gegen die eigene Basis.<br>
-        Rohdaten stehen als Export (JSON, CSV, Kubios-kompatibel) im Cockpit bereit.<br>
+        Rohdaten stehen als Export (JSON, FHIR R5, CSV, Kubios-kompatibel) im Cockpit bereit.${d.sha?` Prüfwert: ${Pruefwert.BESCHREIBUNG}, vollständig <span class="pr-mono">${d.sha}</span> – derselbe Wert steht im JSON- und FHIR-Export.`:''}<br>
         <b>Literatur</b><ol class="pr-lit"><li>Brennan M, Palaniswami M, Kamen P (2001) IEEE Trans Biomed Eng 48:1342–1347, doi:10.1109/10.959330</li><li>Eggensperger BH, Schwarzwald CC (2017) J Vet Cardiol 19:160–174, doi:10.1016/j.jvc.2016.10.006</li><li>Kapteijn CM et al. (2022) Front Vet Sci 9:939534, doi:10.3389/fvets.2022.939534</li><li>Kuwahara M et al. (1996) J Auton Nerv Syst 60:43–48, doi:10.1016/0165-1838(96)00028-8</li><li>Lipponen JA, Tarvainen MP (2019) J Med Eng Technol 43:173–181, doi:10.1080/03091902.2019.1640306</li><li>Lomb NR (1976) Astrophys Space Sci 39:447–462, doi:10.1007/BF00648343</li><li>Peng CK et al. (1995) Chaos 5:82–87, doi:10.1063/1.166141</li><li>Richman JS, Moorman JR (2000) Am J Physiol Heart Circ Physiol 278:H2039–H2049, doi:10.1152/ajpheart.2000.278.6.H2039</li><li>Scargle JD (1982) Astrophys J 263:835–853, doi:10.1086/160554</li><li>Task Force ESC/NASPE (1996) Circulation 93:1043–1065, doi:10.1161/01.CIR.93.5.1043</li></ol>
         <b>Wichtiger Hinweis.</b> Dieser Bericht dokumentiert Messwerte und ihren Verlauf. Die Software stellt keine Diagnose. Die klinische Beurteilung obliegt der behandelnden Tierärztin oder dem behandelnden Tierarzt.
       </div>
