@@ -7,7 +7,7 @@ setTimeout(function(){ if(!document.querySelector('.rev.in'))
   document.documentElement.className=document.documentElement.className.replace(' rev-an',''); },4000);</script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Resting HRV in horses for veterinary practices | CARLON Equine Visite</title>
+<title>Resting HRV in horses and round planning for equine practices | CARLON Equine Visite</title>
 
 <link rel="icon" type="image/png" sizes="16x16" href="/assets/equine-favicon-16.png">
 <link rel="icon" type="image/png" sizes="32x32" href="/assets/equine-favicon-32.png">
@@ -22,7 +22,7 @@ document.head.appendChild(s);})();</script>
 <meta name="description" content="Heart rate variability (resting HRV) in horses as a trend: the owner records in the stable with a Polar H10, your veterinary practice sees signal quality and the deviation from the horse’s own baseline – in the browser, no account. From €149 net per month.">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Vitalkultur">
-<meta property="og:title" content="CARLON Equine Visite – care that doesn’t end at the stable door">
+<meta property="og:title" content="CARLON Equine Visite – resting HRV course and round planning for equine practices">
 <meta property="og:description" content="Heart rate variability (resting HRV) in horses as a trend: the owner records in the stable with a Polar H10, your veterinary practice sees signal quality and the deviation from the horse’s own baseline – in the browser, no account. From €149 net per month.">
 <meta property="og:url" content="https://vitalkultur.com/carlon-equine-visite/en/">
 <meta property="og:image" content="https://vitalkultur.com/carlon-equine/assets/og-equine.png">
@@ -738,6 +738,20 @@ section[id]{scroll-margin-top:76px}
 .berichtsmuster{display:flex;align-items:center;gap:22px;flex-wrap:wrap;margin-top:34px;padding:22px 24px;
   border:1px solid var(--border-subtle);border-radius:16px;
   background:linear-gradient(150deg,rgba(62,207,178,0.05),rgba(62,207,178,0.012))}
+.berichtsmuster{flex-wrap:wrap}
+
+.berichtsmuster .bm-knopf{display:flex;align-items:center;justify-content:center;width:max-content;max-width:100%;margin-top:18px}
+.bm-faecher{position:relative;flex:0 0 auto;width:min(280px,58vw);aspect-ratio:300/250;display:block;margin:10px 40px 10px 54px}
+@media(max-width:720px){.bm-faecher{margin:10px auto 18px}}
+.bm-faecher img{position:absolute;top:0;left:50%;width:58%;height:auto;border-radius:3px;background:#fff;
+  box-shadow:0 18px 40px -12px rgba(0,0,0,.85),0 0 0 1px rgba(255,255,255,.08);transform-origin:50% 100%;transition:transform .35s cubic-bezier(.2,.8,.2,1)}
+.bm-faecher img:nth-child(1){transform:translateX(-50%) rotate(9deg) translate(34%,2%)}
+.bm-faecher img:nth-child(2){transform:translateX(-50%) rotate(-8deg) translate(-34%,3%)}
+.bm-faecher img:nth-child(3){transform:translateX(-50%)}
+.bm-faecher:hover img:nth-child(1){transform:translateX(-50%) rotate(13deg) translate(46%,0)}
+.bm-faecher:hover img:nth-child(2){transform:translateX(-50%) rotate(-12deg) translate(-46%,0)}
+.bm-faecher:hover img:nth-child(3){transform:translateX(-50%) translateY(-6px)}
+@media(prefers-reduced-motion:reduce){.bm-faecher img{transition:none}}
 .berichtsmuster>div{flex:1;min-width:260px}
 .berichtsmuster b{display:block;font-size:17px;color:var(--text-primary);font-weight:500;margin-bottom:6px}
 .berichtsmuster span{font-size:14px;color:var(--text-secondary);font-weight:400;line-height:1.65}
@@ -1065,7 +1079,7 @@ try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; 
         <rect x="47" y="58" width="26" height="9" rx="4.5" class="ab-knopf"/><path d="M52 62.5h16" opacity=".9"/>
         <path d="M54 76h12" opacity=".35"/></svg></div>
         <span class="ab-wer">Owner</span><h3>Open it, no app, no account</h3>
-        <p>One tap and the measuring station runs in the browser. On iPhone and iPad, Apple does not allow Bluetooth in the browser. For that there is your practice measuring set: strap plus an inexpensive Android device.</p></li>
+        <p>One tap and the measuring station runs in the browser – on Android or on a computer with Chrome or Edge. For owners with an iPhone there is your practice measuring set: strap plus an inexpensive Android device.</p></li>
       <li style="--i:2"><div class="ab-bild"><svg viewBox="0 0 120 96" stroke="currentColor" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
         <circle cx="60" cy="40" r="30" opacity=".18"/><circle cx="60" cy="40" r="30" class="ab-ring" pathLength="100" stroke-dasharray="100" transform="rotate(-90 60 40)"/>
         <path d="M33 44h10l3-5 3 5h3l4-17 5 29 3-12h5l3-4 3 4h13" class="ab-ekg" pathLength="100"/>
@@ -1091,7 +1105,7 @@ try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; 
     </ol>
     <div class="ab-nachricht">
       <div class="ab-nachricht-kopf"><svg class="ic" aria-hidden="true"><use href="#i-phone"/></svg>How your link reaches the owner</div>
-      <p class="ab-blase-text">Hello, this is <b>your practice</b>. As discussed, the measuring link for <b>your horse</b>: please record at least seven minutes at rest in the usual stall and share the file with us. You need the Polar H10 strap and an Android phone or a computer with Chrome or Edge – it does not work on the iPhone. The recording is an observation over time and does not replace an examination. If anything worries you, please call us. <span class="ab-url">vitalkultur.com/…/messen.html?…</span></p>
+      <p class="ab-blase-text">Hello, this is <b>your practice</b>. As discussed, the measuring link for <b>your horse</b>: please record at least seven minutes at rest in the usual stall and share the file with us. You need the Polar H10 strap and an Android phone or a computer with Chrome or Edge. If you only have an iPhone, please let us know. The recording is an observation over time and does not replace an examination. If anything worries you, please call us. <span class="ab-url">vitalkultur.com/…/messen.html?…</span></p>
       <p class="ab-nachricht-fuss">The message is prepared in the cockpit, with your practice name and the horse’s name. One tap in the record opens WhatsApp or a text message to the stored number. For all clients there is also a shared link as a QR poster.</p>
     </div>
     <div class="ab-wege m-wisch">
@@ -1143,14 +1157,18 @@ try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; 
     </div>
 
     <div class="berichtsmuster">
+      <a class="bm-faecher" href="../assets/CARLON-Muster-Bericht.pdf" target="_blank" rel="noopener" aria-label="Open sample report (PDF)">
+        <img src="../assets/visite-shots/bericht-s4-v1.webp" width="560" height="792" alt="" loading="lazy" decoding="async">
+        <img src="../assets/visite-shots/bericht-s2-v1.webp" width="560" height="792" alt="" loading="lazy" decoding="async">
+        <img src="../assets/visite-shots/bericht-s1-v1.webp" width="560" height="792" alt="Sample report page 1: practice letterhead, raw and corrected values, reading guide" loading="lazy" decoding="async">
+      </a>
       <div>
         <b>See the report before you decide anything.</b>
-        <span>Six pages from the demo library (fictitious sample data), on your letterhead: key values,
-        RR tachogram on a time axis, spectrum in the equine bands, RMSSD course across weeks,
-        Poincaré with marginal distributions and over four time segments, plus "Limits of this recording" and methods with sources. The sample report is in German.
-        The report delivers the data; the interpretation is up to your practice.</span>
+        <span>Six pages on your letterhead (here fictitious demo data): raw and corrected values,
+        tachogram, spectrum, course over weeks, Poincaré over four time segments, limits of the
+        recording, methods with references and SHA-256 checksum. The interpretation stays with your practice. The sample report is in German.</span>
+        <a class="btn ghost bm-knopf" href="../assets/CARLON-Muster-Bericht.pdf" target="_blank" rel="noopener">View sample report · PDF, 6 pages (German)</a>
       </div>
-      <a class="btn ghost" href="../assets/CARLON-Muster-Bericht.pdf" download>View sample report · PDF, 6 pages</a>
     </div>
 
     <details class="mehr gross" data-spur-auf="mehr-was-im-cockpit-steht"><summary><span>All horse-record features at a glance</span></summary>

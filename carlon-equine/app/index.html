@@ -9215,7 +9215,7 @@ const Praxis={
      (iPhone geht nicht – sonst bricht der erste Tipp ab), „ersetzt keine Untersuchung", Telefon bei Sorgen.
      Bewusst „Ruhemessung" statt „Herzrhythmus" – das klingt nach Rhythmusdiagnostik. */
   nachricht(praxis, pferd){
-    return `Guten Tag${praxis?', hier ist '+praxis:''}. Wie besprochen der Mess-Link${pferd?' für '+pferd:''}: Bitte nehmen Sie mindestens sieben Minuten in Ruhe in der gewohnten Box auf und teilen Sie die Datei mit uns. Sie brauchen den Polar-H10-Gurt und ein Android-Handy oder einen Rechner mit Chrome oder Edge – auf dem iPhone geht es nicht. Die Aufnahme ist eine Verlaufsbeobachtung und ersetzt keine Untersuchung. Macht Ihnen etwas Sorgen, rufen Sie uns bitte an.`;
+    return `Guten Tag${praxis?', hier ist '+praxis:''}. Wie besprochen der Mess-Link${pferd?' für '+pferd:''}: Bitte nehmen Sie mindestens sieben Minuten in Ruhe in der gewohnten Box auf und teilen Sie die Datei mit uns. Sie brauchen den Polar-H10-Gurt und ein Android-Handy oder einen Rechner mit Chrome oder Edge. Haben Sie nur ein iPhone, sagen Sie uns bitte Bescheid. Die Aufnahme ist eine Verlaufsbeobachtung und ersetzt keine Untersuchung. Macht Ihnen etwas Sorgen, rufen Sie uns bitte an.`;
   },
   async anfordern(hid){
     const h=State.horses.find(x=>x.id===hid); if(!h) return null;
