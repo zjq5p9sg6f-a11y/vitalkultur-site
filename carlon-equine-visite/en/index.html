@@ -996,6 +996,14 @@ h1,h2{text-wrap:balance}
 }
 </style>
 <style>
+.abo-inhalt{margin:var(--sp-21) 0 0;padding:18px 22px;border:1px solid var(--border-subtle);border-radius:18px;background:linear-gradient(165deg,rgba(255,255,255,.03),rgba(255,255,255,.008))}
+.abo-inhalt b{display:block;font-family:var(--font-mono);font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--cyan);font-weight:500;margin-bottom:10px}
+.abo-inhalt ul{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px 24px}
+.abo-inhalt li{position:relative;padding-left:18px;color:var(--text-secondary);font-size:14.5px;line-height:1.5}
+.abo-inhalt li::before{content:'';position:absolute;left:2px;top:9px;width:6px;height:6px;border-radius:50%;background:var(--cyan)}
+@media(max-width:720px){.abo-inhalt ul{grid-template-columns:1fr}}
+</style>
+<style>
 
 .nutzen .nu-lead{max-width:62ch;color:var(--text-secondary);line-height:1.6;margin:var(--sp-13) 0 var(--sp-34)}
 .nu-woche{list-style:none;margin:0 0 var(--sp-55);padding:0;display:grid;grid-template-columns:repeat(4,1fr);gap:0;position:relative}
@@ -1790,6 +1798,13 @@ try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; 
       <a class="tarif-neben" href="/carlon-equine/app/?demo=station">See the station wall in the demo →</a>
       <a class="tarif-neben" href="mailto:jan@vitalkultur.com?subject=CARLON%20Equine%20Visite%20%E2%80%93%20Klinik-Einrichtung">Questions about network drive and setup? jan@vitalkultur.com →</a>
     </div>
+    </div>
+    <div class="abo-inhalt">
+      <b>Included on an ongoing basis in every subscription</b>
+      <ul><li>Improvements without updates: open the browser and the new version is there</li>
+        <li>A maintained analysis method with its version stated in every report</li>
+        <li>Personal support at the start and with questions, by e-mail to the developer</li>
+        <li>Daily automatic backup as soon as a team folder is connected</li></ul>
     </div>
     <div class="tarif tarif-fussblock">
       <p class="tarif-fuss">
