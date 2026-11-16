@@ -329,7 +329,8 @@ nav{position:sticky;top:0;z-index:50;background:rgba(0,3,8,0.72);backdrop-filter
 .eyebrow{font-family:var(--font-mono);font-size:var(--t-mark);letter-spacing:0.28em;
   text-transform:uppercase;color:var(--cyan);margin-bottom:var(--sp-21)}
 h1{font-family:var(--font-brand);font-weight:350;font-size:clamp(38px,4vw,56px);
-  line-height:1.08;letter-spacing:-0.02em;margin-bottom:var(--sp-21);
+  line-height:1.14;   /* 16.11.: Jost hat hohe Ober-/Unterlängen – 1,08 ließ Zeilen fast berühren (Jan, iPad) */
+ letter-spacing:-0.02em;margin-bottom:var(--sp-21);
   /* 56 = 72/√φ (die naechste Stufe unter dem Voll-Hero-Grad): in der
      Split-Spalte bricht 72 px mitten im Satz („das / Pferd"). 20ch Bahn
      ergibt die beiden Sinnzeilen: „Betreuung, die nicht" / „an der Stalltür
@@ -439,7 +440,7 @@ section{padding-top:var(--sp-89);padding-bottom:var(--sp-89)}
 .sec-eyebrow{font-family:var(--font-mono);font-size:var(--t-mark);letter-spacing:0.28em;
   text-transform:uppercase;color:var(--cyan);margin-bottom:var(--sp-13);text-align:left}
 h2{font-family:var(--font-brand);font-weight:350;font-size:clamp(28px,3.6vw,var(--t-h2));
-  line-height:1.12;letter-spacing:-0.014em;text-align:left;margin:0;
+  line-height:1.2;letter-spacing:-0.012em;text-align:left;margin:0;
   max-width:20ch;text-wrap:balance}
 .sec-lead{text-align:left;color:var(--text-secondary);max-width:var(--mass);
   margin:var(--sp-21) 0 0;font-weight:400;line-height:1.66;font-size:var(--t-body)}
@@ -599,6 +600,20 @@ details.mehr.gross[open]{padding-bottom:var(--sp-21)}
 .rv{opacity:0;transform:translateY(21px);transition:opacity .766s cubic-bezier(.2,.7,.2,1),transform .766s cubic-bezier(.2,.7,.2,1)}
 .rv.in{opacity:1;transform:none}
 @media(prefers-reduced-motion:reduce){.rv{opacity:1;transform:none;transition:none}}
+/* Messstation-Tour (16.11.2026): gemeinsame App-Tour-Komponente, aber GENERISCHES Telefon (Browser-Produkt, kein Apple-Gerät) */
+.vt{margin-top:var(--sp-34);display:grid;grid-template-columns:minmax(0,1fr) auto;gap:var(--sp-55);align-items:center}
+.vt-liste{list-style:none;margin:0;padding:0;display:grid;gap:10px}
+.vt-liste li{position:relative;border:1px solid var(--border-faint);border-radius:14px;background:var(--bg-surface);overflow:hidden}
+.vt-liste li.on{border-color:rgba(62,207,178,.45)}
+.vt-liste button{all:unset;display:block;cursor:pointer;padding:16px 18px}
+.vt-liste b{display:block;color:var(--text-primary);font-size:1.02em;margin-bottom:4px}.vt-liste span{color:var(--text-secondary);font-size:.93em;line-height:1.5}
+.vt-liste .fort{position:absolute;left:0;bottom:0;height:2px;background:var(--cyan);width:0}
+.vt-geraet{display:flex;flex-direction:column;align-items:center}
+.at-device.at-generisch{width:min(330px,78vw);background:linear-gradient(150deg,#46494f 0%,#2b2e33 24%,#1d1f23 62%,#131417 100%);border-radius:13% / 6.2%;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.16),inset 0 0 0 1px rgba(255,255,255,.05),0 0 0 1px #08090b,0 50px 90px -45px rgba(0,0,0,.95),0 0 60px rgba(62,207,178,.07)}
+.at-generisch .at-screen{left:3.2%;top:1.6%;width:93.6%;height:96.8%;border-radius:10.8% / 5%}
+.vt-hinweis{margin-top:14px;font-size:12.5px;color:var(--text-dim);text-align:center}
+@media(max-width:860px){.vt{grid-template-columns:1fr}.vt-geraet{order:-1}}
 .beleg-bild{margin:var(--sp-21) 0 var(--sp-8);padding:var(--sp-8) var(--sp-8);
   border-radius:8px;background:rgba(255,255,255,.02);overflow:hidden}
 .beleg-bild svg{display:block;max-width:100%;height:auto}
@@ -896,6 +911,7 @@ html.rev-an .rev.in{opacity:1;transform:none}
 .tarif-fuss{max-width:62ch;margin-left:auto;margin-right:auto}
 h1,h2{text-wrap:balance}
 </style>
+<link rel="stylesheet" href="/assets/app-tour/app-tour.css?v=10">
 </head>
 <body>
 <div class="bg-wash"></div>
@@ -1412,37 +1428,22 @@ h1,h2{text-wrap:balance}
       and the comparison with the horse’s own history are there at once.
     </p>
 
-    <div class="shots telefon">
-      <figure class="shot">
-        <div class="frame"><img src="../assets/station-shots/01-start.jpg" loading="lazy"
-          alt="Measuring station in the phone browser: start screen stating that the recording is created on the device and encrypted for the practice"></div>
-        <figcaption>The poster leads here. Horse name, two taps for place and rest time, one button for the belt — no account.</figcaption>
-      </figure>
-      <figure class="shot">
-        <div class="frame"><img src="../assets/station-shots/02-live.jpg" loading="lazy"
-          alt="Recording in progress: pulse, number of captured heartbeats, duration and a signal-quality indicator"></div>
-        <figcaption>During the recording she can see whether the signal holds — not only afterwards.</figcaption>
-      </figure>
-      <figure class="shot">
-        <div class="frame"><img src="../assets/station-shots/04-beleg.jpg" loading="lazy"
-          alt="Recording result: 324 heartbeats, 9:25 minutes, mean pulse 34 bpm, RMSSD 130.3 ms and next to it the value over unremarkable pairs only, 76.2 ms"></div>
-        <figcaption>The result, immediately. <strong>Two RMSSD values instead of one</strong> — the raw one and the one over unremarkable beat pairs only.</figcaption>
-      </figure>
-      <figure class="shot">
-        <div class="frame"><img src="../assets/station-shots/07-protokoll.jpg" loading="lazy"
-          alt="Measurement log: signal quality, 319 of 323 usable beat pairs, recording duration, sensor designation and time resolution of 1/1024 second"></div>
-        <figcaption>The measurement log states <strong>how good</strong> the recording is: usable beat pairs, sensor, time resolution.</figcaption>
-      </figure>
-      <figure class="shot">
-        <div class="frame"><img src="../assets/station-shots/06-tachogramm.jpg" loading="lazy"
-          alt="RR tachogram over 324 beats and below it the breathing curve derived from heartbeat modulation"></div>
-        <figcaption>RR tachogram and breathing curve — the same raw data you then analyse in the cockpit.</figcaption>
-      </figure>
-      <figure class="shot">
-        <div class="frame"><img src="../assets/station-shots/08-senden.jpg" loading="lazy"
-          alt="The send button reading Send to the practice, with the note that the file is created on the device and leaves it by a route of your choosing"></div>
-        <figcaption>One tap opens her phone's share sheet. The sentence below it is the entire privacy commitment.</figcaption>
-      </figure>
+    <div class="vt" data-app-tour>
+      <ol class="vt-liste" data-tour-liste aria-label="How the measuring station works">
+        <li><button data-i="0"><b>One link, no account</b><span>The owner opens your measuring link, enters the horse’s name and connects the belt – that is all.</span></button><i class="fort"></i></li>
+        <li><button data-i="1"><b>She sees whether the signal holds</b><span>Heart rate, beat count and Poincaré run live – here a resting recording in time-lapse.</span></button><i class="fort"></i></li>
+        <li><button data-i="2"><b>The result with its measurement log</b><span>Raw and corrected value, curves, signal quality – and one tap sends the encrypted file to your practice.</span></button><i class="fort"></i></li>
+      </ol>
+      <div class="vt-geraet">
+        <div class="at-device at-generisch">
+          <div class="at-screen">
+            <div class="at-scr at-scroll" data-dauer="12"><div class="at-scroller" tabindex="0"><img src="../assets/station-tour/start-lang.webp" width="660" height="2477" alt="Measuring station in the smartphone browser: start page with horse name and belt connection" loading="lazy" decoding="async"></div></div>
+            <div class="at-scr" data-dauer="16" data-rate="1"><video src="../assets/station-tour/live.mp4" poster="assets/station-tour/live-poster.jpg" muted playsinline preload="metadata" aria-label="Measuring station during a resting recording in time-lapse: heart rate, beat count and Poincaré run along"></video></div>
+            <div class="at-scr at-scroll" data-dauer="20"><div class="at-scroller" tabindex="0"><img src="../assets/station-tour/ergebnis-lang.webp" width="660" height="5965" alt="Measuring-station result: raw and corrected metrics, curves, measurement log and sending to the practice" loading="lazy" decoding="async"></div></div>
+          </div>
+        </div>
+        <p class="vt-hinweis">The measuring station itself – tap the list or scroll inside the device</p>
+      </div>
     </div>
 
     
@@ -2132,5 +2133,6 @@ els.forEach(function(e){var b=e.getBoundingClientRect();if(b.top>innerHeight)e.c
 var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);}});},{rootMargin:'0px 0px -8% 0px'});
 els.forEach(function(e){if(e.classList.contains('rv'))io.observe(e);});})();
 </script>
+<script src="/assets/app-tour/app-tour.js?v=14" defer></script>
 </body>
 </html>

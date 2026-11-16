@@ -391,14 +391,10 @@ tausche(`Bei Ihnen kommt kein Screenshot an, sondern ein Datensatz: alle Schlaga
       not just a number but also <strong>how far you can trust it</strong>.
       The file goes into the cockpit with one move — drag it in, done: signal quality
       and the comparison with the horse’s own history are there at once.`);
-tausche('Der Aushang führt hierher. Pferdename, zwei Tipps für Ort und Ruhezeit, ein Knopf zum Gurt — ohne Konto.',
-        'The poster leads here. Horse name, two taps for place and rest time, one button for the belt — no account.');
-tausche('Während der Aufnahme sieht sie, ob das Signal trägt — nicht erst hinterher.',
-        'During the recording she can see whether the signal holds — not only afterwards.');
-tausche('Das Ergebnis, sofort. <strong>Zwei RMSSD-Werte statt einem</strong> — der rohe und der über nur unauffällige Schlagpaare.',
-        'The result, immediately. <strong>Two RMSSD values instead of one</strong> — the raw one and the one over unremarkable beat pairs only.');
-tausche('Das Messprotokoll sagt, <strong>wie gut</strong> die Aufnahme ist: auswertbare Schlagpaare, Sensor, Zeitauflösung.',
-        'The measurement log states <strong>how good</strong> the recording is: usable beat pairs, sensor, time resolution.');
+
+
+
+
 tausche('Rohwert und bereinigter Wert nebeneinander',
         'Raw and corrected value side by side');
 tausche(`Beim Pferd liegen physiologische Pausen — der AV-Block II° ist beim ruhenden Pferd
@@ -420,10 +416,8 @@ tausche(`Öffnet Ihre Kundin Ihren Mess-Link, ist die Datei schon auf ihrem Ger�
          <strong>against your key</strong> on her device. She sends it by whatever route she
          chooses. We never see it and store it nowhere — in our assessment, therefore, no data
          processing agreement is needed between us.`);
-tausche('RR-Tachogramm und Atemkurve — dieselben Rohdaten, die Sie danach im Cockpit auswerten.',
-        'RR tachogram and breathing curve — the same raw data you then analyse in the cockpit.');
-tausche('Ein Tipp öffnet das Teilen-Blatt ihres Telefons. Der Satz darunter ist die ganze Datenschutz-Zusage.',
-        'One tap opens her phone\'s share sheet. The sentence below it is the entire privacy commitment.');
+
+
 tausche(`Sie können die Station <strong>sofort selbst ausprobieren</strong> — auch ohne Gurt:
       sie spielt eine Ruheaufnahme ab.
       <a href="/carlon-equine/app/messen.html">Messstation öffnen →</a>`,
@@ -432,18 +426,12 @@ tausche(`Sie können die Station <strong>sofort selbst ausprobieren</strong> —
       <a href="/carlon-equine/app/messen.html">Open the measuring station →</a>`);
 /* Die Bildbeschreibungen sind für blinde Leser der einzige Zugang zum Bild —
    auf einer englischen Seite müssen sie englisch sein. */
-tausche('alt="Messstation im Browser des Telefons: Startbildschirm mit dem Hinweis, dass die Aufnahme auf dem Gerät entsteht und für die Praxis verschlüsselt wird"',
-        'alt="Measuring station in the phone browser: start screen stating that the recording is created on the device and encrypted for the practice"');
-tausche('alt="Laufende Messung: Puls, Zahl der erfassten Herzschläge, Dauer und eine Ampel für die Signalgüte"',
-        'alt="Recording in progress: pulse, number of captured heartbeats, duration and a signal-quality indicator"');
-tausche('alt="Ergebnis der Messung: 324 Herzschläge, 9:25 Minuten, Ø Puls 34 bpm, RMSSD 130,3 ms und daneben der Wert über nur unauffällige Paare, 76,2 ms"',
-        'alt="Recording result: 324 heartbeats, 9:25 minutes, mean pulse 34 bpm, RMSSD 130.3 ms and next to it the value over unremarkable pairs only, 76.2 ms"');
-tausche('alt="Messprotokoll: Signalgüte, auswertbare Schlagpaare 319 von 323, Aufnahmedauer, Sensorbezeichnung und Zeitauflösung 1/1024 Sekunde"',
-        'alt="Measurement log: signal quality, 319 of 323 usable beat pairs, recording duration, sensor designation and time resolution of 1/1024 second"');
-tausche('alt="RR-Tachogramm über 324 Schläge und darunter die aus der Herzschlag-Modulation abgeleitete Atemkurve"',
-        'alt="RR tachogram over 324 beats and below it the breathing curve derived from heartbeat modulation"');
-tausche('alt="Der Sende-Knopf An die Praxis senden mit dem Hinweis, dass die Datei auf dem Gerät entsteht und es auf einem selbst gewählten Weg verlässt"',
-        'alt="The send button reading Send to the practice, with the note that the file is created on the device and leaves it by a route of your choosing"');
+
+
+
+
+
+
 tausche(`Die nächste Aufnahme entsteht in derselben Box nach demselben Protokoll. Genau daraus
          entsteht der Verlauf, den eine Momentaufnahme nie liefern kann.`,
         `The next recording is made in the same box under the same protocol. Exactly that
@@ -860,6 +848,14 @@ tausche(`Nein. CARLON sendet keine Alarme, und die Halterin sieht keine Einstufu
 tausche('"text": "Nein. CARLON sendet keine Alarme, und die Halterin sieht keine Einstufung — die entsteht erst in Ihrem Cockpit, wenn Sie es öffnen. Eine zugeschickte Datei ist eine Zusendung wie eine E-Mail: Wann Sie sie sichten, bestimmen Sie und kommunizieren es wie bisher. Für den Notfall gilt, was immer gilt: der Anruf."',
         '"text": "No. CARLON sends no alerts, and the owner sees no classification — it only comes into being in your cockpit, when you open it. A file sent to you is a delivery like an email: when you review it is up to you, communicated to your clients as before. For emergencies, what has always applied still applies: the phone call."');
 tausche('Woher kommt die Baseline?', 'Where does the baseline come from?', 2);
+tausche(`aria-label="So arbeitet die Messstation"`, `aria-label="How the measuring station works"`);
+tausche(`<b>Ein Link, kein Konto</b><span>Die Halterin öffnet Ihren Mess-Link, gibt den Pferdenamen ein und verbindet den Gurt – das ist alles.</span>`, `<b>One link, no account</b><span>The owner opens your measuring link, enters the horse’s name and connects the belt – that is all.</span>`);
+tausche(`<b>Sie sieht, ob das Signal trägt</b><span>Puls, Schlagzahl und Poincaré laufen live mit – hier eine Ruheaufnahme im Zeitraffer.</span>`, `<b>She sees whether the signal holds</b><span>Heart rate, beat count and Poincaré run live – here a resting recording in time-lapse.</span>`);
+tausche(`<b>Das Ergebnis mit Messprotokoll</b><span>Rohwert und bereinigter Wert, Kurven, Signalgüte – und ein Tipp schickt die verschlüsselte Datei an Ihre Praxis.</span>`, `<b>The result with its measurement log</b><span>Raw and corrected value, curves, signal quality – and one tap sends the encrypted file to your practice.</span>`);
+tausche(`alt="Messstation im Browser des Smartphones: Startseite mit Pferdename und Gurt-Verbindung"`, `alt="Measuring station in the smartphone browser: start page with horse name and belt connection"`);
+tausche(`aria-label="Messstation während einer Ruheaufnahme im Zeitraffer: Puls, Schlagzahl und Poincaré laufen mit"`, `aria-label="Measuring station during a resting recording in time-lapse: heart rate, beat count and Poincaré run along"`);
+tausche(`alt="Ergebnis der Messstation: Kennwerte roh und bereinigt, Kurven, Messprotokoll und Senden an die Praxis"`, `alt="Measuring-station result: raw and corrected metrics, curves, measurement log and sending to the practice"`);
+tausche(`<p class="vt-hinweis">Die Messstation selbst – Liste antippen oder im Gerät scrollen</p>`, `<p class="vt-hinweis">The measuring station itself – tap the list or scroll inside the device</p>`);
 tausche('<span>Alle Funktionen der Akte im Überblick</span>', '<span>All horse-record features at a glance</span>');
 tausche('<span>Wofür andere Werkzeuge da sind</span>', '<span>What other tools are for</span>');
 tausche('<span>Die Methode im Detail: Filterkette, Atemmuster-Profil, Grenzen</span>', '<span>The method in detail: filter chain, breathing-pattern profile, limits</span>');
