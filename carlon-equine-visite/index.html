@@ -783,6 +783,24 @@ h1,h2{text-wrap:balance}
 <link rel="stylesheet" href="/assets/app-tour/app-tour.css?v=10">
 </head>
 <body>
+<script>
+// Öffnen beginnt oben (Kanon Research, 16.11.2026 Jan: „Seite startet in der Mitte“). Ein Anker zählt nur,
+// wenn der Besucher von einer anderen Seite kommt; Neu laden, wiederhergestellter Tab und Verlauf beginnen oben.
+try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; } catch (e) {}
+(function () {
+  var von = '';
+  try { von = document.referrer ? new URL(document.referrer).pathname : ''; } catch (e) {}
+  var nav = (performance.getEntriesByType && performance.getEntriesByType('navigation')[0] || {}).type;
+  var fremd = von && von.replace(/en\/$/, '') !== location.pathname.replace(/en\/$/, '');
+  if (location.hash && fremd && nav === 'navigate') return;
+  if (location.hash) try { history.replaceState(null, '', location.pathname + location.search); } catch (e) {}
+  window.scrollTo(0, 0);
+  var selbst = false, merk = function () { selbst = true; };
+  addEventListener('touchstart', merk, { once: true, passive: true }); addEventListener('wheel', merk, { once: true, passive: true }); addEventListener('keydown', merk, { once: true });
+  addEventListener('load', function () { if (!selbst) window.scrollTo(0, 0); });
+  addEventListener('pageshow', function (e) { if (e.persisted && !selbst) window.scrollTo(0, 0); });
+})();
+</script>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><defs>
   <symbol id="i-check" viewBox="0 0 32 32"><circle cx="16" cy="16" r="11.5"/><path d="M10.5 16.5l3.8 3.8 7.4-8"/></symbol>
   <symbol id="i-browser" viewBox="0 0 32 32"><rect x="3.5" y="6" width="25" height="20" rx="3.5"/><path d="M3.5 11.5h25"/><circle cx="7.6" cy="8.8" r=".9" fill="currentColor" stroke="none"/><circle cx="10.6" cy="8.8" r=".9" fill="currentColor" stroke="none"/><path d="M9 19.5h3l1.6-3.6 2.2 6.4 1.6-2.8H23" opacity=".85"/></symbol>
@@ -1439,7 +1457,7 @@ h1,h2{text-wrap:balance}
     </p>
     
     <ol class="kaufschritte">
-      <li><b>Abschluss bei Stripe.</b> Die Rechnung mit ausgewiesener Umsatzsteuer kommt von Link, einem Unternehmen von Stripe.</li>
+      <li><b>Abschluss bei Stripe.</b> Die Rechnung mit ausgewiesener Umsatzsteuer kommt von Link, einem mit Stripe verbundenen Unternehmen.</li>
       <li><b>Sofort freigeschaltet.</b> Nach der Zahlung kehren Sie ins Cockpit zurück – es schaltet sich von selbst frei, ohne Benutzerkonto.</li>
       <li><b>Selbst verwalten.</b> Rechnungen, Zahlungsart und Kündigung jederzeit unter „Abo verwalten“.</li>
     </ol>
@@ -1485,7 +1503,7 @@ h1,h2{text-wrap:balance}
     <div class="tarif tarif-fussblock">
       <p class="tarif-fuss">
         Das Angebot richtet sich ausschließlich an Unternehmer im Sinne des § 14 BGB.
-        Verkäufer im eigenen Namen ist <strong>Link, ein Unternehmen von Stripe</strong> (Merchant of Record); auf dem Kontoauszug steht LINK.COM. Von Link erhalten Sie
+        Zahlung und Rechnung übernimmt <strong>Link</strong> (Sold through Link, LLC), ein mit Stripe verbundenes Unternehmen, als Merchant of Record im Auftrag von Vitalkultur; auf dem Kontoauszug steht LINK.COM. Von Link erhalten Sie
         die Rechnung mit ausgewiesener Umsatzsteuer. Einzelheiten in
         <a href="/agb.html#visite">§ 12a unserer AGB</a> und in der
         <a href="/privacy.html">Datenschutzerklärung</a>.
