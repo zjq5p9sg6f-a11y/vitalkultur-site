@@ -1,12 +1,10 @@
 /* BAUKASTEN Produktseiten – Verhalten (16.11.2026): Leiste, FAQ-/Aufklapper-Zählung, Live-App im Gerät, Einblenden, Galerie. */
-/* Mitlaufende Leiste (C6 Fable: „kein mitlaufender Knopf“) – erscheint, sobald der Kopf verlassen ist, verschwindet am Preis-Abschnitt. */
+/* Mitlaufende Leiste (C6 Fable: „kein mitlaufender Knopf“) – erscheint, sobald der Kopf verlassen ist, verschwindet, sobald der Preis-Abschnitt das untere Drittel erreicht (Schwelle unabhängig von seiner Höhe). */
 (function(){var l=document.getElementById('leiste'),k=document.querySelector('.hero'),p=document.getElementById('preis');if(!l||!k||!('IntersectionObserver' in window))return;
 var imKopf=true,amPreis=false,b=l.querySelector('.leiste-b'),b2=l.querySelector('.leiste-b2'),de=(document.documentElement.lang||'de').indexOf('en')!==0,kauf=false,f=function(){l.hidden=imKopf||amPreis;};
-addEventListener('scroll',function(){var h=document.documentElement,jetzt=(h.scrollTop+innerHeight/2)>h.scrollHeight*0.5;if(jetzt===kauf)return;kauf=jetzt;
- if(kauf){b.textContent=de?'Praxis-Abo wählen · 149 € →':'Choose practice plan · €149 →';b.href='/carlon-equine/app/?kasse=praxis';b2.textContent='Demo';b2.href='/carlon-equine/app/?demo=today';}
- else{b.textContent=de?'Demo öffnen →':'Open demo →';b.href='/carlon-equine/app/?demo=today';b2.textContent=de?'Tarife':'Plans';b2.href='#preis';}},{passive:true});
+/* Ein Ziel, eine Beschriftung (C9: Wechsel mitten auf der Seite verwirrt) – Demo zuerst, Tarife als zweiter Weg. */
 new IntersectionObserver(function(e){imKopf=e[0].isIntersecting;f();}).observe(k);
-if(p)new IntersectionObserver(function(e){amPreis=e[0].isIntersecting;f();},{threshold:.15}).observe(p);})();
+if(p)new IntersectionObserver(function(e){amPreis=e[0].isIntersecting;f();},{rootMargin:'0px 0px -35% 0px'}).observe(p);})();
 
 /* FAQ-Klicks zählen (GoatCounter, cookiefrei, ohne Personenbezug; je Aufruf einmal) – welche Frage interessiert? */
 (function(){var sp=(document.documentElement.lang||'de').indexOf('en')===0?'en':'de',schon={};

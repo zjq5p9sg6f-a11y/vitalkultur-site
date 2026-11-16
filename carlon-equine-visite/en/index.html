@@ -381,6 +381,11 @@ h2{font-family:var(--font-brand);font-weight:350;font-size:clamp(28px,3.6vw,var(
   grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:var(--sp-21)}
 .tarife-grid .tarif{max-width:none;margin:0}
 .rollen-weiche{margin-top:12px;font-size:14px;color:var(--text-secondary)}.rollen-weiche a{color:var(--cyan);border-bottom:1px solid rgba(62,207,178,.35)}
+.kaufschritte{list-style:none;counter-reset:ks;max-width:920px;margin:var(--sp-34,34px) auto 0;padding:0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.kaufschritte li{counter-increment:ks;position:relative;padding:18px 18px 18px 54px;border:1px solid rgba(235,230,220,.14);border-radius:14px;background:rgba(235,230,220,.03);font-size:.95rem;line-height:1.5;color:rgba(235,230,220,.78)}
+.kaufschritte li::before{content:counter(ks);position:absolute;left:18px;top:16px;width:24px;height:24px;border-radius:50%;border:1px solid rgba(62,207,178,.55);color:rgb(62,207,178);font-size:.8rem;font-weight:600;display:flex;align-items:center;justify-content:center}
+.kaufschritte b{display:block;color:rgb(235,230,220);margin-bottom:2px}
+@media (max-width:820px){.kaufschritte{grid-template-columns:1fr}}
 .gruender{max-width:920px;margin:var(--sp-34,34px) auto 0;padding:20px 24px;border:1px solid rgba(62,207,178,.30);border-radius:16px;background:rgba(62,207,178,.05)}
 .gruender .g-k{font-family:var(--font-mono);font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--cyan);margin-bottom:8px}
 .gruender p{font-size:15px;line-height:1.65;color:var(--text-secondary);max-width:70ch}.gruender b{color:var(--text-primary);font-weight:500}
@@ -409,6 +414,7 @@ section[id]{scroll-margin-top:76px}
 .tarif-fuss a{color:var(--text-secondary);text-decoration:underline;text-underline-offset:3px}
 .tarif-fuss a:hover{color:var(--cyan)}
 @media(max-width:720px){.enthalten{grid-template-columns:1fr}}
+.tarif .enthalten{grid-template-columns:1fr}
 
 .usps{margin-top:var(--sp-55);display:grid;gap:var(--sp-21);
   grid-template-columns:repeat(auto-fit,minmax(228px,1fr))}
@@ -678,7 +684,7 @@ html.rev-an .rev.in{opacity:1;transform:none}
 .tarif-fuss{max-width:62ch;margin-left:auto;margin-right:auto}
 h1,h2{text-wrap:balance}
 </style>
-<link rel="stylesheet" href="/assets/baukasten/baukasten.css?v=1">
+<link rel="stylesheet" href="/assets/baukasten/baukasten.css?v=2">
 <link rel="stylesheet" href="/assets/app-tour/app-tour.css?v=10">
 </head>
 <body>
@@ -999,8 +1005,8 @@ h1,h2{text-wrap:balance}
       met every day.
     </p>
     <ul class="studien">
-      <li><b>Transport lowers resting HRV by about a third.</b> RMSSD fell during road transport from 74 to 45&nbsp;ms (3.5&nbsp;h) and from 90 to 59&nbsp;ms (8&nbsp;h). <a href="https://doi.org/10.1016/j.yhbeh.2009.11.003" target="_blank" rel="noopener">Schmidt et&nbsp;al. 2010, Hormones and Behavior</a></li>
-      <li><b>Horses differ more from each other than from day to day.</b> Variability between horses was about 40&nbsp;% higher for heart rate and about 100&nbsp;% higher for HF power than within the same horse – hence the comparison with its own baseline. <a href="https://doi.org/10.2460/ajvr.73.4.515" target="_blank" rel="noopener">Ohmura et&nbsp;al. 2012, American Journal of Veterinary Research</a></li>
+      <li><b>During transport, HRV falls by about a third.</b> RMSSD dropped on road transport from 74 to 45&nbsp;ms (3.5&nbsp;h) and from 90 to 59&nbsp;ms (8&nbsp;h) – measured on the road. <a href="https://doi.org/10.1016/j.yhbeh.2009.11.003" target="_blank" rel="noopener">Schmidt et&nbsp;al. 2010, Hormones and Behavior</a></li>
+      <li><b>Short recordings vary from day to day.</b> In 30 healthy horses, day-to-day variability of HRV was moderate to high in 10- and 60-minute recordings; recording length and time of day influenced most variables, and second-degree AV blocks the RR-based short-term variables – hence identical conditions, comparison with the horse’s own baseline and long pauses reported separately. <a href="https://doi.org/10.1016/j.jvc.2016.10.006" target="_blank" rel="noopener">Eggensperger &amp; Schwarzwald 2017, Journal of Veterinary Cardiology</a></li>
     </ul>
 
     <details class="mehr gross" data-spur-auf="mehr-warum-die-messung-in-den"><summary><span>Why exactly there: protocol and comparability</span></summary>
@@ -1062,9 +1068,9 @@ h1,h2{text-wrap:balance}
     </table>
     
     <p class="sec-lead" style="margin-top:var(--sp-21)">
-      <strong>And the belt?</strong> A Polar&nbsp;H10 is an off-the-shelf device, available everywhere
-      and cheaper than a single call-out. We do <em>not</em> sell it — so you can choose freely and
-      get same-day replacement if one fails, rather than waiting for us. What works well:
+      <strong>And the belt?</strong> A Polar&nbsp;H10 is an off-the-shelf device, sold by regular
+      retailers. We do <em>not</em> sell it — so you can choose freely and source a replacement
+      from a retailer if one fails, rather than waiting for us. What works well:
       <strong>two or three loan belts in the practice</strong> that you hand out; owners with
       several horses usually buy their own. One belt serves any number of horses — it simply
       gets moved.
@@ -1083,7 +1089,7 @@ h1,h2{text-wrap:balance}
           <li><b>R-waves, not a light pulse.</b> The H10 measures the heart’s electrical activity and delivers every beat interval at about 1&nbsp;ms resolution (1/1024&nbsp;s) – optical sensors estimate it from light.</li>
           <li><b>Made for the horse’s body.</b> The Equine belt is sized for the horse’s girth; electrode gel on the coat lowers the coat impedance – that gives a clean signal.</li>
           <li><b>Strongest at rest.</b> Exactly where Visite measures: in the horse’s own stall, without movement.</li>
-          <li><b>Freely available.</b> Not our device, no lock-in – you get a replacement the same day.</li>
+          <li><b>Freely available.</b> Not our device, no lock-in – replacements are sold by retailers.</li>
         </ul>
       </figcaption>
     </figure>
@@ -1236,23 +1242,21 @@ h1,h2{text-wrap:balance}
     <div class="sec-eyebrow">One price, one practice</div>
     
     <h2>Two plans. No fee per horse, user or device.</h2>
-    <p class="sec-lead" style="margin-bottom:0"><strong>Practice €149 net/month or €1,490 net/year · Clinic €349 net/month or €3,490 net/year.</strong></p>
     <p class="sec-lead">
       One business — one practice or one site — with all veterinary staff and on any
       number of that business's devices. There is <strong>no fee per horse, per user or
       per device</strong> and no limit on recordings.
     </p>
     
-    <p class="sec-lead" style="margin-top:var(--sp-21)">
-      No proprietary sensor, no fee per horse:
-      you use an off-the-shelf Polar H10 strap. Try the whole workflow first
-      in the demo cockpit — no account.
-    </p>
+    <ol class="kaufschritte">
+      <li><b>Checkout with Stripe.</b> Invoice with VAT shown, field for your VAT ID.</li>
+      <li><b>Activated at once.</b> After payment you return to the cockpit – it activates itself, no user account.</li>
+      <li><b>Manage it yourself.</b> Invoices, payment method and cancellation any time under “Manage subscription”.</li>
+    </ol>
     <div class="gruender">
       <div class="g-k">Personal, not anonymous</div>
-      <p><b>Built and supported by Jan Rohwedder</b> (Vitalkultur, Iffezheim, Germany). There are no
-         reference logos on this page yet — and we won’t invent any. Instead you reach the
-         developer directly, before and after you buy.</p>
+      <p><b>Built and supported by Jan Rohwedder</b> (Vitalkultur, Iffezheim, Germany). You reach the developer
+         directly, before and after you buy — and can check the method, sample report and demo yourself first.</p>
       <p class="g-kontakt">A question first? Write to <a href="mailto:jan@vitalkultur.com">jan@vitalkultur.com</a> — usually answered the same day.</p>
     </div>
     <p class="b2b-hinweis">For veterinary practices and equine clinics only — orders exclusively as a business (§ 14 BGB).</p>
@@ -1261,9 +1265,8 @@ h1,h2{text-wrap:balance}
       <div class="tarif-name">For equine practices</div>
 
       <div class="tarif-preis"><b>149&nbsp;€</b> <span>net per month · €177.31 incl. 19&nbsp;% German VAT</span></div>
-      <div class="tarif-alt">or €1,490 per year — €124.17 a month, two months saved</div>
+      <div class="tarif-alt">or €1,490 net per year (€1,773.10 incl. VAT) — two months saved</div>
       
-      <div class="tarif-alt">At checkout for practices in Germany: €177.31 a month or €1,773.10 a year, each incl. 19% VAT.</div>
       <ul class="enthalten">
         <li>Unlimited horses, recordings and trends</li>
         <li>All staff, all devices of the business</li>
@@ -1277,11 +1280,10 @@ h1,h2{text-wrap:balance}
     <div class="tarif tarif-klinik">
       <div class="tarif-name">For equine clinics</div>
       <div class="tarif-preis"><b>349&nbsp;€</b> <span>netto im Monat · 415,31&nbsp;€ inkl. 19&nbsp;% USt.</span></div>
-      <div class="tarif-alt">or €3,490 a year — equivalent to €290.83 a month, two months saved</div>
-      <div class="tarif-alt">At checkout for clinics in Germany: €415.31 a month or €4,153.10 a year, each incl. 19&nbsp;% VAT.</div>
+      <div class="tarif-alt">or €3,490 net a year (€4,153.10 incl. VAT) — two months saved</div>
       <ul class="enthalten">
         <li>Everything in the practice plan</li>
-        <li>Shared records via your clinic folder on your existing network drive — every device sees the same state, no cloud (connect the folder on a computer with Chrome or Edge)</li>
+        <li>Shared clinic folder on your network drive — every device sees the same state, no cloud. It is connected once on a computer in Chrome or Edge.</li>
         <li>Station wall for the monitor in the ward</li>
         <li>Several seats in one licence</li>
         <li>A fixed method version per analysis — for archives and studies</li>
@@ -1671,6 +1673,6 @@ if(_lb) _lb.addEventListener('click', function(){
 
 <script src="/assets/app-tour/app-tour.js?v=14" defer></script>
 
-<script src="/assets/baukasten/baukasten.js?v=1"></script>
+<script src="/assets/baukasten/baukasten.js?v=2"></script>
 </body>
 </html>

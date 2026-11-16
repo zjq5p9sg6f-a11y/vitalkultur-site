@@ -381,6 +381,11 @@ h2{font-family:var(--font-brand);font-weight:350;font-size:clamp(28px,3.6vw,var(
   grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:var(--sp-21)}
 .tarife-grid .tarif{max-width:none;margin:0}
 .rollen-weiche{margin-top:12px;font-size:14px;color:var(--text-secondary)}.rollen-weiche a{color:var(--cyan);border-bottom:1px solid rgba(62,207,178,.35)}
+.kaufschritte{list-style:none;counter-reset:ks;max-width:920px;margin:var(--sp-34,34px) auto 0;padding:0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.kaufschritte li{counter-increment:ks;position:relative;padding:18px 18px 18px 54px;border:1px solid rgba(235,230,220,.14);border-radius:14px;background:rgba(235,230,220,.03);font-size:.95rem;line-height:1.5;color:rgba(235,230,220,.78)}
+.kaufschritte li::before{content:counter(ks);position:absolute;left:18px;top:16px;width:24px;height:24px;border-radius:50%;border:1px solid rgba(62,207,178,.55);color:rgb(62,207,178);font-size:.8rem;font-weight:600;display:flex;align-items:center;justify-content:center}
+.kaufschritte b{display:block;color:rgb(235,230,220);margin-bottom:2px}
+@media (max-width:820px){.kaufschritte{grid-template-columns:1fr}}
 .gruender{max-width:920px;margin:var(--sp-34,34px) auto 0;padding:20px 24px;border:1px solid rgba(62,207,178,.30);border-radius:16px;background:rgba(62,207,178,.05)}
 .gruender .g-k{font-family:var(--font-mono);font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--cyan);margin-bottom:8px}
 .gruender p{font-size:15px;line-height:1.65;color:var(--text-secondary);max-width:70ch}.gruender b{color:var(--text-primary);font-weight:500}
@@ -409,6 +414,7 @@ section[id]{scroll-margin-top:76px}
 .tarif-fuss a{color:var(--text-secondary);text-decoration:underline;text-underline-offset:3px}
 .tarif-fuss a:hover{color:var(--cyan)}
 @media(max-width:720px){.enthalten{grid-template-columns:1fr}}
+.tarif .enthalten{grid-template-columns:1fr}
 
 .usps{margin-top:var(--sp-55);display:grid;gap:var(--sp-21);
   grid-template-columns:repeat(auto-fit,minmax(228px,1fr))}
@@ -678,7 +684,7 @@ html.rev-an .rev.in{opacity:1;transform:none}
 .tarif-fuss{max-width:62ch;margin-left:auto;margin-right:auto}
 h1,h2{text-wrap:balance}
 </style>
-<link rel="stylesheet" href="/assets/baukasten/baukasten.css?v=1">
+<link rel="stylesheet" href="/assets/baukasten/baukasten.css?v=2">
 <link rel="stylesheet" href="/assets/app-tour/app-tour.css?v=10">
 </head>
 <body>
@@ -999,8 +1005,8 @@ h1,h2{text-wrap:balance}
       es jeden Tag.
     </p>
     <ul class="studien">
-      <li><b>Fahrt senkt die Ruhe-HRV um rund ein Drittel.</b> RMSSD fiel bei Straßentransport von 74 auf 45&nbsp;ms (3,5&nbsp;h) bzw. von 90 auf 59&nbsp;ms (8&nbsp;h). <a href="https://doi.org/10.1016/j.yhbeh.2009.11.003" target="_blank" rel="noopener">Schmidt et&nbsp;al. 2010, Hormones and Behavior</a></li>
-      <li><b>Pferde unterscheiden sich stärker untereinander als von Tag zu Tag.</b> Die Streuung zwischen Pferden lag bei der Herzfrequenz rund 40&nbsp;% und bei HF-Leistung rund 100&nbsp;% über der beim selben Pferd – darum der Vergleich mit der eigenen Basis. <a href="https://doi.org/10.2460/ajvr.73.4.515" target="_blank" rel="noopener">Ohmura et&nbsp;al. 2012, American Journal of Veterinary Research</a></li>
+      <li><b>Während der Fahrt fällt die HRV um rund ein Drittel.</b> RMSSD sank bei Straßentransport von 74 auf 45&nbsp;ms (3,5&nbsp;h) bzw. von 90 auf 59&nbsp;ms (8&nbsp;h) – gemessen unterwegs. <a href="https://doi.org/10.1016/j.yhbeh.2009.11.003" target="_blank" rel="noopener">Schmidt et&nbsp;al. 2010, Hormones and Behavior</a></li>
+      <li><b>Kurze Aufnahmen schwanken von Tag zu Tag.</b> Bei 30 gesunden Pferden war die Tag-zu-Tag-Variabilität der HRV in 10- und 60-Minuten-Aufnahmen mäßig bis hoch; Dauer und Uhrzeit der Aufnahme beeinflussten die meisten Werte, AV-Blöcke 2.&nbsp;Grades die RR-basierten Kurzzeitwerte – darum gleiche Bedingungen, Vergleich mit der eigenen Basis und lange Pausen getrennt ausgewiesen. <a href="https://doi.org/10.1016/j.jvc.2016.10.006" target="_blank" rel="noopener">Eggensperger &amp; Schwarzwald 2017, Journal of Veterinary Cardiology</a></li>
     </ul>
 
     <details class="mehr gross" data-spur-auf="mehr-warum-die-messung-in-den"><summary><span>Warum genau dort: Protokoll und Vergleichbarkeit</span></summary>
@@ -1062,9 +1068,9 @@ h1,h2{text-wrap:balance}
     </table>
     
     <p class="sec-lead" style="margin-top:var(--sp-21)">
-      <strong>Und der Gurt?</strong> Ein Polar&nbsp;H10 ist ein handelsübliches Gerät, überall
-      erhältlich und billiger als eine einzige Anfahrt. Wir verkaufen ihn <em>nicht</em> — damit
-      Sie ihn frei wählen und bei einem Defekt am selben Tag Ersatz haben, statt auf uns zu warten.
+      <strong>Und der Gurt?</strong> Ein Polar&nbsp;H10 ist ein handelsübliches Gerät, im
+      Fachhandel erhältlich. Wir verkaufen ihn <em>nicht</em> — damit Sie ihn frei wählen und bei
+      einem Defekt Ersatz direkt im Handel beschaffen, statt auf uns zu warten.
       Bewährt hat sich: <strong>zwei bis drei Leihgurte in der Praxis</strong>, die Sie mitgeben;
       Halterinnen mit mehreren Pferden schaffen sich meist selbst einen an. Ein Gurt reicht für
       beliebig viele Pferde — er wird nur umgeschnallt.
@@ -1083,7 +1089,7 @@ h1,h2{text-wrap:balance}
           <li><b>R-Zacken statt Lichtpuls.</b> Der H10 misst die elektrische Herzaktivität und liefert jeden Schlagabstand mit rund 1&nbsp;ms Auflösung (1/1024&nbsp;s) – optische Sensoren schätzen ihn aus Licht.</li>
           <li><b>Für den Pferdekörper gemacht.</b> Der Equine-Gurt ist auf den Brustumfang des Pferds ausgelegt; Elektrodengel auf dem Fell senkt die Fell-Impedanz – so entsteht ein sauberes Signal.</li>
           <li><b>Am stärksten in Ruhe.</b> Genau dort, wo Visite misst: in der eigenen Box, ohne Bewegung.</li>
-          <li><b>Frei erhältlich.</b> Kein Gerät von uns, keine Bindung – Ersatz bekommen Sie am selben Tag.</li>
+          <li><b>Frei erhältlich.</b> Kein Gerät von uns, keine Bindung – Ersatz gibt es im Fachhandel.</li>
         </ul>
       </figcaption>
     </figure>
@@ -1237,23 +1243,21 @@ h1,h2{text-wrap:balance}
     <div class="sec-eyebrow">Ein Preis, eine Praxis</div>
     
     <h2>Zwei Tarife. Keine Gebühr je Pferd, Nutzer oder Gerät.</h2>
-    <p class="sec-lead" style="margin-bottom:0"><strong>Praxis 149&nbsp;€ netto/Monat oder 1.490&nbsp;€ netto/Jahr · Klinik 349&nbsp;€ netto/Monat oder 3.490&nbsp;€ netto/Jahr.</strong></p>
     <p class="sec-lead">
       Ein Betrieb — eine Praxis oder ein Standort — mit allen tierärztlichen und
       tiermedizinischen Mitarbeitenden und auf beliebig vielen Geräten dieses Betriebs.
       Es gibt <strong>keine Gebühr je Pferd, je Nutzer oder je Gerät</strong> und keine Grenze für Aufnahmen.
     </p>
     
-    <p class="sec-lead" style="margin-top:var(--sp-21)">
-      Kein eigener Sensor, keine Gebühr je Pferd:
-      Sie nutzen einen handelsüblichen Polar-H10-Gurt. Testen Sie den ganzen Ablauf vorher
-      im Demo-Cockpit — ohne Konto.
-    </p>
+    <ol class="kaufschritte">
+      <li><b>Abschluss bei Stripe.</b> Rechnung mit ausgewiesener Umsatzsteuer, Feld für Ihre USt-IdNr.</li>
+      <li><b>Sofort freigeschaltet.</b> Nach der Zahlung kehren Sie ins Cockpit zurück – es schaltet sich von selbst frei, ohne Benutzerkonto.</li>
+      <li><b>Selbst verwalten.</b> Rechnungen, Zahlungsart und Kündigung jederzeit unter „Abo verwalten“.</li>
+    </ol>
     <div class="gruender">
       <div class="g-k">Persönlich, nicht anonym</div>
-      <p><b>Entwickelt und betreut von Jan Rohwedder</b> (Vitalkultur, Iffezheim). Es gibt noch keine
-         Referenzlogos auf dieser Seite — und wir erfinden auch keine. Stattdessen erreichen Sie den
-         Entwickler direkt, vor und nach dem Kauf.</p>
+      <p><b>Entwickelt und betreut von Jan Rohwedder</b> (Vitalkultur, Iffezheim). Sie erreichen den Entwickler
+         direkt, vor und nach dem Kauf — und prüfen Methode, Musterbericht und Demo vorab selbst.</p>
       <p class="g-kontakt">Frage vorab? Schreiben Sie an <a href="mailto:jan@vitalkultur.com">jan@vitalkultur.com</a> — Antwort meist am selben Tag.</p>
     </div>
     <p class="b2b-hinweis">Nur für Tierarztpraxen und Pferdekliniken — Bestellung ausschließlich als Unternehmen (§ 14 BGB).</p>
@@ -1262,9 +1266,8 @@ h1,h2{text-wrap:balance}
       <div class="tarif-name">Für Pferdepraxen</div>
 
       <div class="tarif-preis"><b>149&nbsp;€</b> <span>netto im Monat · 177,31&nbsp;€ inkl. 19&nbsp;% USt.</span></div>
-      <div class="tarif-alt">oder 1.490&nbsp;€ im Jahr — entspricht 124,17&nbsp;€ im Monat, zwei Monate gespart</div>
+      <div class="tarif-alt">oder 1.490&nbsp;€ netto im Jahr (1.773,10&nbsp;€ inkl. USt.) — zwei Monate gespart</div>
       
-      <div class="tarif-alt">An der Kasse für Praxen in Deutschland: 177,31&nbsp;€ im Monat bzw. 1.773,10&nbsp;€ im Jahr, jeweils inkl. 19&nbsp;% USt.</div>
       <ul class="enthalten">
         <li>Unbegrenzt Pferde, Aufnahmen und Verläufe</li>
         <li>Ein Standort, alle Geräte — ohne Zuschlag je Gerät</li>
@@ -1278,11 +1281,10 @@ h1,h2{text-wrap:balance}
     <div class="tarif tarif-klinik">
       <div class="tarif-name">Für Pferdekliniken</div>
       <div class="tarif-preis"><b>349&nbsp;€</b> <span>netto im Monat · 415,31&nbsp;€ inkl. 19&nbsp;% USt.</span></div>
-      <div class="tarif-alt">oder 3.490&nbsp;€ im Jahr — entspricht 290,83&nbsp;€ im Monat, zwei Monate gespart</div>
-      <div class="tarif-alt">An der Kasse für Kliniken in Deutschland: 415,31&nbsp;€ im Monat bzw. 4.153,10&nbsp;€ im Jahr, jeweils inkl. 19&nbsp;% USt.</div>
+      <div class="tarif-alt">oder 3.490&nbsp;€ netto im Jahr (4.153,10&nbsp;€ inkl. USt.) — zwei Monate gespart</div>
       <ul class="enthalten">
         <li>Alles aus der Praxis-Stufe</li>
-        <li>Gemeinsamer Bestand über Ihren Klinik-Ordner auf dem vorhandenen Netzlaufwerk — jedes Gerät sieht denselben Stand, ohne Cloud (Ordner verbinden am Rechner mit Chrome oder Edge)</li>
+        <li>Gemeinsamer Klinik-Ordner auf Ihrem Netzlaufwerk — jedes Gerät sieht denselben Stand, ohne Cloud. Verbunden wird er einmal am Rechner in Chrome oder Edge.</li>
         <li>Stationswand für den Monitor im Stationszimmer</li>
         <li>Mehrere Plätze in einer Lizenz</li>
         <li>Feste Methodenversion je Auswertung — für Archiv und Studien</li>
@@ -1674,6 +1676,6 @@ if(_lb) _lb.addEventListener('click', function(){
 
 <script src="/assets/app-tour/app-tour.js?v=14" defer></script>
 
-<script src="/assets/baukasten/baukasten.js?v=1"></script>
+<script src="/assets/baukasten/baukasten.js?v=2"></script>
 </body>
 </html>
