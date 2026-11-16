@@ -1448,6 +1448,10 @@ svg.viz .sd-lbl{fill:var(--cyan-strong);font-size:10px;font-weight:600;font-fami
 .viz-hov .hov-tip.touch{transform:translate(calc(-100% - 14px),calc(-100% - 30px))}
 .viz-hov .hov-tip.touch.tright{transform:translate(14px,calc(-100% - 30px))}
 .viz-hov .hov-tip.on{opacity:1}
+/* Sanft folgen (16.11.2026): Tooltip und Fokuspunkt gleiten kurz nach, statt zu springen – Präzision bleibt, weil der Wert sofort stimmt. */
+.viz-hov .hov-tip{transition:opacity .15s,left .09s ease-out,top .09s ease-out}
+.viz-hov .hov-focus{transition:opacity .15s,cx .09s ease-out,cy .09s ease-out}
+.ts-tip{transition:opacity .15s,left .09s ease-out,top .09s ease-out}
 .viz-hov .hov-tip .tt-date{font-size:10px;color:var(--text-dim);letter-spacing:.04em;margin-bottom:3px}
 .viz-hov .hov-tip .tt-val{font-family:var(--font-mono);font-size:15px;font-weight:600;letter-spacing:-.02em}
 .viz-hov .hov-tip .tt-cls{font-family:var(--font-mono);font-size:12px;font-weight:600;margin-top:1px}
@@ -4028,7 +4032,7 @@ const Chart={
   // (Cyan, rechte Achse) über EINE Zeitachse. Zeigt das Zusammenspiel von Belastung (HF↑) und
   // Erholungsreserve (HRV): gesund = HF↑/HRV↓ synchron · Stress/sEA = HF hoch + HRV niedrig stabil.
   // HF_i = 60000/RR_i · HRV_i = rollendes RMSSD, Fenster 30 Beats (Task Force 1996, adaptiv bei kurzer Aufnahme).
-  dualVitals(rr,{w=720,h=300}={}){
+  dualVitals(rr,{w=720,h=300,live=false}={}){
     if(!rr||rr.length<8) return `<div style="color:var(--text-faint);font-size:12px;text-align:center;padding:30px">Zu wenige Schläge für Dual-Vitals</div>`;
     const n=rr.length;
     const hf=rr.map(v=>60000/v);
@@ -4103,7 +4107,9 @@ const Chart={
     }
     g+=`<text x="${(pad.l-7)}" y="${(pad.t-5).toFixed(0)}" text-anchor="end" class="label-axis" style="fill:${GOLD}">BPM</text>`;
     g+=`<text x="${(w-pad.r+7)}" y="${(pad.t-5).toFixed(0)}" text-anchor="start" class="label-axis" style="fill:${CY}">MS</text>`;
-    g+=Chart._badges(w-pad.r,[
+    /* Endwert-Plaketten nur, solange eine Aufnahme LÄUFT (16.11.2026, Jan: „bei der fertigen Aufnahme überflüssig“):
+       In der fertigen Akte zeigt der letzte Schlag nichts Besonderes – der Wert unter dem Finger zählt. */
+    if(live) g+=Chart._badges(w-pad.r,[
       {y:YH(hf[n-1]),  txt:String(Math.round(hf[n-1])),  col:GOLD},
       {y:YV(hrv[n-1]), txt:String(Math.round(hrv[n-1])), col:CY}], pad.t, h-pad.b);
     g+=`<text x="${(pad.l+plotW/2).toFixed(0)}" y="${h-2}" text-anchor="middle" class="label-axis">ZEIT<tspan class="label-unit"> (s)</tspan></text>`;
