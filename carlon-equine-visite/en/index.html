@@ -1028,6 +1028,22 @@ h1,h2{text-wrap:balance}
 </style>
 <style>
 
+.nu-verben li::before{display:none!important}
+.nu-verben li{padding-top:0!important}
+.nu-verben::before{top:22px!important}
+.nu-ic{display:grid;place-items:center;width:46px;height:46px;border-radius:14px;margin-bottom:14px;position:relative;z-index:1;
+  background:radial-gradient(circle at 30% 25%,rgba(62,207,178,.28),rgba(62,207,178,.06) 70%),#061210;border:1px solid rgba(62,207,178,.45);box-shadow:0 0 18px rgba(62,207,178,.18)}
+.nu-ic .ic{width:24px;height:24px;color:#5fe0c6}
+.nu-historie{margin:var(--sp-21) 0 var(--sp-21);padding:6px 10px;border-radius:18px;border:1px solid var(--border-faint);background:linear-gradient(180deg,rgba(255,255,255,.02),rgba(255,255,255,0))}
+.nu-historie svg{display:block;width:100%;height:auto}
+.nu-stufe svg.ic.nu-kic{width:30px!important;height:30px!important;color:#5fe0c6;display:block;margin-bottom:14px}
+.nu-gold svg.ic.nu-kic{color:#FFC266}
+@media(max-width:560px){.nu-historie{padding:4px 2px}}
+@media(min-width:640px) and (max-width:900px){.nu-kano{grid-template-columns:repeat(3,1fr)!important}}
+@media(max-width:560px){.nu-verben{padding-left:0!important}.nu-verben::before{display:none!important}.nu-verben li{display:grid;grid-template-columns:46px 1fr;column-gap:14px;padding:0 0 18px!important}.nu-verben li .nu-ic{grid-row:span 2;margin:0}}
+</style>
+<style>
+
 .nutzen .nu-lead{max-width:62ch;color:var(--text-secondary);line-height:1.6;margin:var(--sp-13) 0 var(--sp-34)}
 .nu-woche{list-style:none;margin:0 0 var(--sp-55);padding:0;display:grid;grid-template-columns:repeat(4,1fr);gap:0;position:relative}
 .nu-woche::before{content:'';position:absolute;left:8px;right:8px;top:8px;height:1px;background:linear-gradient(90deg,var(--cyan),rgba(62,207,178,.15))}
@@ -1188,7 +1204,7 @@ try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; 
     </p>
     <div class="cta-row">
       <a class="cta-primary" href="/carlon-equine/app/">Open the cockpit with 15&nbsp;demo horses →</a>
-      <a class="btn btn-back" href="#preis">3 horses free · pricing from €149 net ↓</a>
+      <a class="btn btn-back" href="#preis">Pricing from €149 net ↓</a>
     </div>
     <ul class="hero-belege2">
       <li><svg class="ic" aria-hidden="true"><use href="#i-browser"/></svg>Demo without account or installation</li>
@@ -1218,19 +1234,27 @@ try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; 
     <p class="nu-frage"><b>“What has changed since the last visit?”</b></p>
     <p class="nu-lead">Your veterinary assessment needs more than the latest recording. CARLON Equine Visite brings resting HRV measurements from the home stable together into a traceable measurement history – with visible signal quality and the data behind the analysis.</p>
     <ol class="nu-woche nu-verben" aria-label="The workflow">
-      <li><b>Record</b><span>You send the measuring link from the horse’s record. The owner records at least seven minutes at rest.</span></li>
-      <li><b>Compare</b><span>You check signal quality and compare the recording with earlier measurements and the available reference.</span></li>
-      <li><b>Assess</b><span>Raw data and method version stay visible. The veterinary assessment is yours.</span></li>
-      <li><b>Document</b><span>You record the results and your assessment in a report on your practice letterhead.</span></li>
+      <li><span class="nu-ic"><svg class="ic" aria-hidden="true"><use href="#i-link"/></svg></span><b>Record</b><span>You send the measuring link from the horse’s record. The owner records at least seven minutes at rest.</span></li>
+      <li><span class="nu-ic"><svg class="ic" aria-hidden="true"><use href="#i-verlauf"/></svg></span><b>Compare</b><span>You check signal quality and compare the recording with earlier measurements and the available reference.</span></li>
+      <li><span class="nu-ic"><svg class="ic" aria-hidden="true"><use href="#i-signal"/></svg></span><b>Assess</b><span>Raw data and method version stay visible. The veterinary assessment is yours.</span></li>
+      <li><span class="nu-ic"><svg class="ic" aria-hidden="true"><use href="#i-bericht"/></svg></span><b>Document</b><span>You record the results and your assessment in a report on your practice letterhead.</span></li>
     </ol>
     <p class="nu-satz">One connected workflow for care between your visits.</p>
     <h3 class="nu-h3">Not just the last recording. The trend.</h3>
+    <figure class="nu-historie" aria-label="Measurement history: earlier resting recordings as dots over time, the new recording highlighted, band of the own baseline"><svg viewBox="0 0 760 150" role="img" aria-hidden="true">
+        <defs><linearGradient id="nuH" x1="0" x2="1"><stop offset="0" stop-color="#3ECFB2" stop-opacity=".05"/><stop offset="1" stop-color="#3ECFB2" stop-opacity=".55"/></linearGradient></defs>
+        <rect x="20" y="70" width="700" height="34" rx="6" fill="rgba(62,207,178,.06)"/><text x="28" y="128" fill="rgba(235,230,220,.5)" font-size="17" font-family="ui-monospace,Menlo,monospace" letter-spacing="1.5">OWN BASELINE</text>
+        <polyline points="40,96 110,88 180,100 250,84 320,90 390,78 460,82 530,70 600,74 670,62" fill="none" stroke="url(#nuH)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+        <circle cx="40" cy="96" r="6" fill="#06110f" stroke="#3ECFB2" stroke-width="2.5" opacity="0.35"/><circle cx="110" cy="88" r="6" fill="#06110f" stroke="#3ECFB2" stroke-width="2.5" opacity="0.41"/><circle cx="180" cy="100" r="6" fill="#06110f" stroke="#3ECFB2" stroke-width="2.5" opacity="0.47"/><circle cx="250" cy="84" r="6" fill="#06110f" stroke="#3ECFB2" stroke-width="2.5" opacity="0.53"/><circle cx="320" cy="90" r="6" fill="#06110f" stroke="#3ECFB2" stroke-width="2.5" opacity="0.59"/><circle cx="390" cy="78" r="6" fill="#06110f" stroke="#3ECFB2" stroke-width="2.5" opacity="0.65"/><circle cx="460" cy="82" r="6" fill="#06110f" stroke="#3ECFB2" stroke-width="2.5" opacity="0.71"/><circle cx="530" cy="70" r="6" fill="#06110f" stroke="#3ECFB2" stroke-width="2.5" opacity="0.77"/><circle cx="600" cy="74" r="6" fill="#06110f" stroke="#3ECFB2" stroke-width="2.5" opacity="0.83"/>
+        <circle cx="670" cy="62" r="20" fill="rgba(62,207,178,.14)"/><circle cx="670" cy="62" r="9" fill="#3ECFB2"/>
+        <text x="670" y="30" text-anchor="middle" fill="#5fe0c6" font-size="19" font-family="ui-monospace,Menlo,monospace" letter-spacing="2">NEW</text>
+        <path d="M20 136H740" stroke="rgba(255,255,255,.12)"/></svg></figure>
     <div class="nu-kano">
-      <div class="nu-stufe"><span class="nu-tag">Prepare</span>
+      <div class="nu-stufe"><svg class="ic nu-kic" aria-hidden="true"><use href="#i-akte"/></svg><span class="nu-tag">Prepare</span>
         <p>Before the visit you see which recordings are available, how their signal quality looks and what has changed compared with earlier measurements.</p></div>
-      <div class="nu-stufe"><span class="nu-tag">Follow</span>
+      <div class="nu-stufe"><svg class="ic nu-kic" aria-hidden="true"><use href="#i-verlauf"/></svg><span class="nu-tag">Follow</span>
         <p>Between visits, new resting recordings extend the measurement history – for example after a change in housing, feeding or training. You see the measurements in their time context.</p></div>
-      <div class="nu-stufe nu-gold"><span class="nu-tag">Record</span>
+      <div class="nu-stufe nu-gold"><svg class="ic nu-kic" aria-hidden="true"><use href="#i-bericht"/></svg><span class="nu-tag">Record</span>
         <p>In the report you document which measurement data your assessment is based on – on your practice letterhead.</p></div>
     </div>
     <p class="nu-satz">The measurement history complements your examination. It does not replace it.</p>
@@ -1458,7 +1482,7 @@ try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; 
       <svg viewBox="0 0 760 240" fill="none" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
         <text x="24" y="30" class="gr-marke">RMSSD IN MS · ROAD TRANSPORT</text>
         <path d="M70 190h660" class="gr-raster"/><text x="60" y="194" text-anchor="end" class="gr-klein">0</text><path d="M70 152h660" class="gr-raster"/><text x="60" y="156" text-anchor="end" class="gr-klein">25</text><path d="M70 115h660" class="gr-raster"/><text x="60" y="119" text-anchor="end" class="gr-klein">50</text><path d="M70 78h660" class="gr-raster"/><text x="60" y="82" text-anchor="end" class="gr-klein">75</text><path d="M70 40h660" class="gr-raster"/><text x="60" y="44" text-anchor="end" class="gr-klein">100</text>
-        <rect x="150" y="79" width="46" height="111" rx="5" class="gr-balken"/><text x="173" y="69" text-anchor="middle" class="gr-wert">74</text><text x="173" y="212" text-anchor="middle" class="gr-klein">before</text><rect x="214" y="122" width="46" height="68" rx="5" class="gr-balken-gold"/><text x="237" y="112" text-anchor="middle" class="gr-wert">45</text><text x="237" y="212" text-anchor="middle" class="gr-klein">on the road</text>
+        <rect x="150" y="79" width="46" height="111" rx="5" class="gr-balken"/><text x="173" y="69" text-anchor="middle" class="gr-wert">74</text><text x="173" y="212" text-anchor="middle" class="gr-klein">before</text><rect x="214" y="128" width="46" height="68" rx="5" class="gr-balken-gold"/><text x="237" y="112" text-anchor="middle" class="gr-wert">45</text><text x="237" y="212" text-anchor="middle" class="gr-klein">on the road</text>
         <text x="205" y="234" text-anchor="middle" class="gr-gruppe">3.5 h drive</text>
         <rect x="470" y="55" width="46" height="135" rx="5" class="gr-balken"/><text x="493" y="45" text-anchor="middle" class="gr-wert">89,7</text><text x="493" y="212" text-anchor="middle" class="gr-klein">before</text><rect x="534" y="102" width="46" height="88" rx="5" class="gr-balken-gold"/><text x="557" y="92" text-anchor="middle" class="gr-wert">59</text><text x="557" y="212" text-anchor="middle" class="gr-klein">on the road</text>
         <text x="525" y="234" text-anchor="middle" class="gr-gruppe">8 h drive</text>

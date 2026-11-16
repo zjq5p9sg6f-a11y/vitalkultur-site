@@ -1028,6 +1028,22 @@ h1,h2{text-wrap:balance}
 </style>
 <style>
 
+.nu-verben li::before{display:none!important}
+.nu-verben li{padding-top:0!important}
+.nu-verben::before{top:22px!important}
+.nu-ic{display:grid;place-items:center;width:46px;height:46px;border-radius:14px;margin-bottom:14px;position:relative;z-index:1;
+  background:radial-gradient(circle at 30% 25%,rgba(62,207,178,.28),rgba(62,207,178,.06) 70%),#061210;border:1px solid rgba(62,207,178,.45);box-shadow:0 0 18px rgba(62,207,178,.18)}
+.nu-ic .ic{width:24px;height:24px;color:#5fe0c6}
+.nu-historie{margin:var(--sp-21) 0 var(--sp-21);padding:6px 10px;border-radius:18px;border:1px solid var(--border-faint);background:linear-gradient(180deg,rgba(255,255,255,.02),rgba(255,255,255,0))}
+.nu-historie svg{display:block;width:100%;height:auto}
+.nu-stufe svg.ic.nu-kic{width:30px!important;height:30px!important;color:#5fe0c6;display:block;margin-bottom:14px}
+.nu-gold svg.ic.nu-kic{color:#FFC266}
+@media(max-width:560px){.nu-historie{padding:4px 2px}}
+@media(min-width:640px) and (max-width:900px){.nu-kano{grid-template-columns:repeat(3,1fr)!important}}
+@media(max-width:560px){.nu-verben{padding-left:0!important}.nu-verben::before{display:none!important}.nu-verben li{display:grid;grid-template-columns:46px 1fr;column-gap:14px;padding:0 0 18px!important}.nu-verben li .nu-ic{grid-row:span 2;margin:0}}
+</style>
+<style>
+
 .nutzen .nu-lead{max-width:62ch;color:var(--text-secondary);line-height:1.6;margin:var(--sp-13) 0 var(--sp-34)}
 .nu-woche{list-style:none;margin:0 0 var(--sp-55);padding:0;display:grid;grid-template-columns:repeat(4,1fr);gap:0;position:relative}
 .nu-woche::before{content:'';position:absolute;left:8px;right:8px;top:8px;height:1px;background:linear-gradient(90deg,var(--cyan),rgba(62,207,178,.15))}
@@ -1188,7 +1204,7 @@ try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; 
     </p>
     <div class="cta-row">
       <a class="cta-primary" href="/carlon-equine/app/">Cockpit mit 15&nbsp;Demo-Pferden öffnen →</a>
-      <a class="btn btn-back" href="#preis">3 Pferde kostenlos · Preise ab 149&nbsp;€ netto ↓</a>
+      <a class="btn btn-back" href="#preis">Preise ab 149&nbsp;€ netto ↓</a>
     </div>
     <ul class="hero-belege2">
       <li><svg class="ic" aria-hidden="true"><use href="#i-browser"/></svg>Demo ohne Konto und Installation</li>
@@ -1218,19 +1234,27 @@ try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; 
     <p class="nu-frage"><b>„Was hat sich seit dem letzten Besuch verändert?“</b></p>
     <p class="nu-lead">Für Ihre tierärztliche Einordnung zählt mehr als die jüngste Aufnahme. CARLON Equine Visite führt Ruhe-HRV-Messungen aus dem heimischen Stall zu einer nachvollziehbaren Messhistorie zusammen – mit sichtbarer Signalqualität und den Daten hinter der Auswertung.</p>
     <ol class="nu-woche nu-verben" aria-label="Der Arbeitsablauf">
-      <li><b>Aufnehmen</b><span>Sie senden den Mess-Link aus der Pferdeakte. Die Halterin nimmt mindestens sieben Minuten in Ruhe auf.</span></li>
-      <li><b>Vergleichen</b><span>Sie prüfen die Signalgüte und vergleichen die Aufnahme mit früheren Messungen sowie der verfügbaren Vergleichsbasis.</span></li>
-      <li><b>Einordnen</b><span>Rohdaten und Methodenversion bleiben einsehbar. Die tierärztliche Bewertung liegt bei Ihnen.</span></li>
-      <li><b>Dokumentieren</b><span>Sie halten die Ergebnisse und Ihre Einordnung in einem Bericht mit dem Briefkopf Ihrer Praxis fest.</span></li>
+      <li><span class="nu-ic"><svg class="ic" aria-hidden="true"><use href="#i-link"/></svg></span><b>Aufnehmen</b><span>Sie senden den Mess-Link aus der Pferdeakte. Die Halterin nimmt mindestens sieben Minuten in Ruhe auf.</span></li>
+      <li><span class="nu-ic"><svg class="ic" aria-hidden="true"><use href="#i-verlauf"/></svg></span><b>Vergleichen</b><span>Sie prüfen die Signalgüte und vergleichen die Aufnahme mit früheren Messungen sowie der verfügbaren Vergleichsbasis.</span></li>
+      <li><span class="nu-ic"><svg class="ic" aria-hidden="true"><use href="#i-signal"/></svg></span><b>Einordnen</b><span>Rohdaten und Methodenversion bleiben einsehbar. Die tierärztliche Bewertung liegt bei Ihnen.</span></li>
+      <li><span class="nu-ic"><svg class="ic" aria-hidden="true"><use href="#i-bericht"/></svg></span><b>Dokumentieren</b><span>Sie halten die Ergebnisse und Ihre Einordnung in einem Bericht mit dem Briefkopf Ihrer Praxis fest.</span></li>
     </ol>
     <p class="nu-satz">Ein zusammenhängender Ablauf für die Betreuung zwischen Ihren Besuchen.</p>
     <h3 class="nu-h3">Nicht nur die letzte Aufnahme. Der Verlauf.</h3>
+    <figure class="nu-historie" aria-label="Messhistorie: frühere Ruheaufnahmen als Punkte über die Zeit, die neue Aufnahme hervorgehoben, Band der eigenen Basis"><svg viewBox="0 0 760 150" role="img" aria-hidden="true">
+        <defs><linearGradient id="nuH" x1="0" x2="1"><stop offset="0" stop-color="#3ECFB2" stop-opacity=".05"/><stop offset="1" stop-color="#3ECFB2" stop-opacity=".55"/></linearGradient></defs>
+        <rect x="20" y="70" width="700" height="34" rx="6" fill="rgba(62,207,178,.06)"/><text x="28" y="128" fill="rgba(235,230,220,.5)" font-size="17" font-family="ui-monospace,Menlo,monospace" letter-spacing="1.5">EIGENE BASIS</text>
+        <polyline points="40,96 110,88 180,100 250,84 320,90 390,78 460,82 530,70 600,74 670,62" fill="none" stroke="url(#nuH)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+        <circle cx="40" cy="96" r="6" fill="#06110f" stroke="#3ECFB2" stroke-width="2.5" opacity="0.35"/><circle cx="110" cy="88" r="6" fill="#06110f" stroke="#3ECFB2" stroke-width="2.5" opacity="0.41"/><circle cx="180" cy="100" r="6" fill="#06110f" stroke="#3ECFB2" stroke-width="2.5" opacity="0.47"/><circle cx="250" cy="84" r="6" fill="#06110f" stroke="#3ECFB2" stroke-width="2.5" opacity="0.53"/><circle cx="320" cy="90" r="6" fill="#06110f" stroke="#3ECFB2" stroke-width="2.5" opacity="0.59"/><circle cx="390" cy="78" r="6" fill="#06110f" stroke="#3ECFB2" stroke-width="2.5" opacity="0.65"/><circle cx="460" cy="82" r="6" fill="#06110f" stroke="#3ECFB2" stroke-width="2.5" opacity="0.71"/><circle cx="530" cy="70" r="6" fill="#06110f" stroke="#3ECFB2" stroke-width="2.5" opacity="0.77"/><circle cx="600" cy="74" r="6" fill="#06110f" stroke="#3ECFB2" stroke-width="2.5" opacity="0.83"/>
+        <circle cx="670" cy="62" r="20" fill="rgba(62,207,178,.14)"/><circle cx="670" cy="62" r="9" fill="#3ECFB2"/>
+        <text x="670" y="30" text-anchor="middle" fill="#5fe0c6" font-size="19" font-family="ui-monospace,Menlo,monospace" letter-spacing="2">NEU</text>
+        <path d="M20 136H740" stroke="rgba(255,255,255,.12)"/></svg></figure>
     <div class="nu-kano">
-      <div class="nu-stufe"><span class="nu-tag">Vorbereiten</span>
+      <div class="nu-stufe"><svg class="ic nu-kic" aria-hidden="true"><use href="#i-akte"/></svg><span class="nu-tag">Vorbereiten</span>
         <p>Vor dem Besuch sehen Sie, welche Aufnahmen vorliegen, wie ihre Signalqualität ausfällt und was sich gegenüber früheren Messungen verändert hat.</p></div>
-      <div class="nu-stufe"><span class="nu-tag">Begleiten</span>
+      <div class="nu-stufe"><svg class="ic nu-kic" aria-hidden="true"><use href="#i-verlauf"/></svg><span class="nu-tag">Begleiten</span>
         <p>Zwischen den Besuchen ergänzen neue Ruheaufnahmen die Messhistorie – etwa nach einer Umstellung von Haltung, Fütterung oder Training. So betrachten Sie die Messungen im zeitlichen Zusammenhang.</p></div>
-      <div class="nu-stufe nu-gold"><span class="nu-tag">Festhalten</span>
+      <div class="nu-stufe nu-gold"><svg class="ic nu-kic" aria-hidden="true"><use href="#i-bericht"/></svg><span class="nu-tag">Festhalten</span>
         <p>Im Bericht dokumentieren Sie, welche Messdaten Ihrer Einordnung zugrunde liegen – mit dem Briefkopf Ihrer Praxis.</p></div>
     </div>
     <p class="nu-satz">Die Messhistorie ergänzt Ihre Untersuchung. Sie ersetzt sie nicht.</p>
@@ -1460,7 +1484,7 @@ try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; 
       <svg viewBox="0 0 760 240" fill="none" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
         <text x="24" y="30" class="gr-marke">RMSSD IN MS · STRASSENTRANSPORT</text>
         <path d="M70 190h660" class="gr-raster"/><text x="60" y="194" text-anchor="end" class="gr-klein">0</text><path d="M70 152h660" class="gr-raster"/><text x="60" y="156" text-anchor="end" class="gr-klein">25</text><path d="M70 115h660" class="gr-raster"/><text x="60" y="119" text-anchor="end" class="gr-klein">50</text><path d="M70 78h660" class="gr-raster"/><text x="60" y="82" text-anchor="end" class="gr-klein">75</text><path d="M70 40h660" class="gr-raster"/><text x="60" y="44" text-anchor="end" class="gr-klein">100</text>
-        <rect x="150" y="79" width="46" height="111" rx="5" class="gr-balken"/><text x="173" y="69" text-anchor="middle" class="gr-wert">74</text><text x="173" y="212" text-anchor="middle" class="gr-klein">vorher</text><rect x="214" y="122" width="46" height="68" rx="5" class="gr-balken-gold"/><text x="237" y="112" text-anchor="middle" class="gr-wert">45</text><text x="237" y="212" text-anchor="middle" class="gr-klein">unterwegs</text>
+        <rect x="150" y="79" width="46" height="111" rx="5" class="gr-balken"/><text x="173" y="69" text-anchor="middle" class="gr-wert">74</text><text x="173" y="212" text-anchor="middle" class="gr-klein">vorher</text><rect x="214" y="128" width="46" height="68" rx="5" class="gr-balken-gold"/><text x="237" y="112" text-anchor="middle" class="gr-wert">45</text><text x="237" y="212" text-anchor="middle" class="gr-klein">unterwegs</text>
         <text x="205" y="234" text-anchor="middle" class="gr-gruppe">3,5 h Fahrt</text>
         <rect x="470" y="55" width="46" height="135" rx="5" class="gr-balken"/><text x="493" y="45" text-anchor="middle" class="gr-wert">89,7</text><text x="493" y="212" text-anchor="middle" class="gr-klein">vorher</text><rect x="534" y="102" width="46" height="88" rx="5" class="gr-balken-gold"/><text x="557" y="92" text-anchor="middle" class="gr-wert">59</text><text x="557" y="212" text-anchor="middle" class="gr-klein">unterwegs</text>
         <text x="525" y="234" text-anchor="middle" class="gr-gruppe">8 h Fahrt</text>
