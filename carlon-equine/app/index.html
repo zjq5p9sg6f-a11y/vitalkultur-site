@@ -12032,6 +12032,7 @@ const Sprache={
           const v=_p.get('demo'), erlaubt=['today','board','roster','station','map','revenue','coherence'];
           const pf=(_p.get('pferd')||'').toLowerCase(), h=pf&&(State.horses||[]).find(x=>String(x.name||'').toLowerCase()===pf);
           if(h) Views.openHorse(h.id); else Nav.go(erlaubt.includes(v)?v:'today');
+          if(!_p.get('fokus') && _p.has('schaufenster')) setTimeout(()=>{ try{ parent.postMessage({carlonSchaufenster:'bereit'},'*'); }catch(_){} },1500);
           /* &fokus=poincare (16.11.2026): Visite-Seite bettet die echte Akte ein und springt zur Poincaré-Karte mit Zeitregler. */
           if(h && _p.get('fokus')==='poincare') setTimeout(()=>{ const f=document.getElementById('pzAkte'); if(f){ f.scrollIntoView({block:'start'}); window.scrollBy(0,-78); const m=$('#main'); if(m&&m.scrollTop) m.scrollTop-=78; } try{ parent.postMessage({carlonSchaufenster:'bereit'},'*'); }catch(_){} },700);
           /* &fokus=verlauf (16.11.2026): Schaufenster im Hero der Visite-Seite – genau der Ausschnitt des Films, danach selbst bedienbar. */

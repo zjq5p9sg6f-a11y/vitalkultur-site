@@ -387,6 +387,16 @@ svg.ic.vt-ic{grid-row:1 / span 2;width:34px;height:34px;padding:7px;box-sizing:b
 .pz-echt-block{padding-bottom:var(--sp-34)!important}
 @media(max-width:640px){.schau-hinweis{font-size:11px;padding:6px 10px}}
 
+.tour-tablet{display:block;max-width:1120px;margin:var(--sp-55) auto 0}
+.tour-tablet video{display:block;width:100%;height:auto}
+.tour-punkte{display:grid;grid-template-columns:repeat(4,1fr);gap:var(--sp-34);margin-top:calc(var(--sp-55) + 20px)}
+.tp{position:relative;padding-top:46px}
+.tp svg.ic.li-ic{position:absolute;top:0;left:0}
+.tp h3{font-size:var(--t-body);font-weight:500;margin:0 0 var(--sp-8);color:var(--text-primary)}
+.tp p{font-size:var(--t-klein);line-height:1.65;color:var(--text-secondary);margin:0}
+@media(max-width:1000px){.tour-punkte{grid-template-columns:1fr 1fr}}
+@media(max-width:560px){.tour-punkte{grid-template-columns:1fr}}
+
 .ablauf{list-style:none;margin:var(--sp-55) 0 0;padding:0;display:grid;grid-template-columns:repeat(5,1fr);gap:var(--sp-21);counter-reset:ab}
 .ablauf li{position:relative;counter-increment:ab}
 .ab-bild{position:relative;aspect-ratio:5/4;border:1px solid var(--border-faint);border-radius:18px;background:radial-gradient(ellipse at 50% 30%,rgba(62,207,178,.07),transparent 70%),var(--bg-surface);
@@ -1417,44 +1427,16 @@ try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; 
     <p class="sec-lead">The analysis is one half. The other is the day you have to fit it into — and that
        is what decides whether a tool survives its first month.</p>
 
-    <div class="feature">
-      <div class="f-shot"><img src="../assets/visite-shots/05-tagesplan-v2.jpg" loading="lazy"
-        alt="Tagesplan: die Stopps des Tages als Karten in Streckenreihenfolge, mit Fahrzeit und Greifpunkt zum Umsortieren"></div>
-      <div class="f-txt">
-        <div class="f-k">Day plan</div>
-        <h3>The round plans itself by distance and appointment — you set the order.</h3>
-        <ul>
-          <li class="mit-ic"><svg class="ic li-ic" aria-hidden="true"><use href="#i-route"/></svg><b>The default is the shortest route.</b> You change the order by dragging, stop by stop.</li>
-          <li class="mit-ic"><svg class="ic li-ic" aria-hidden="true"><use href="#i-uhr"/></svg><b>Die Fahrzeit zum nächsten Stopp</b> steht an jeder Karte, bevor Sie zusagen.</li>
-          <li class="mit-ic"><svg class="ic li-ic" aria-hidden="true"><use href="#i-schild"/></svg><b>None of it leaves your device on its own</b> — only your tap hands
-            the route to the maps app.</li>
-        </ul>
-      </div>
+    <div class="hero-shot schau-box tour-tablet" data-schau="/carlon-equine/app/?schaufenster=1&amp;demo=map">
+        <video src="../assets/visite-shots/14-tour-film.mp4" poster="assets/visite-shots/14-tour.jpg" width="1600" height="1112" muted playsinline preload="none" aria-label="Map and route in the cockpit: the map flies to each stop, the list follows with drive time and contact"></video>
+        <span class="schau-hinweis" hidden><svg class="ic" aria-hidden="true"><use href="#i-pfeil"/></svg>Drag the map, zoom, tap the stops</span>
+        <a class="schau-voll" href="/carlon-equine/app/?demo=map" title="Open the cockpit full screen">Full screen ↗</a></div>
+    <div class="tour-punkte">
+      <div class="tp"><svg class="ic li-ic" aria-hidden="true"><use href="#i-route"/></svg><h3>Shortest route</h3><p>The round arranges itself by distance and appointment. You change the order by dragging, stop by stop.</p></div>
+      <div class="tp"><svg class="ic li-ic" aria-hidden="true"><use href="#i-uhr"/></svg><h3>Drive time at every stop</h3><p>Arrival, drive time and contact are on every card before you commit.</p></div>
+      <div class="tp"><svg class="ic li-ic" aria-hidden="true"><use href="#i-schild"/></svg><h3>One tap to Google Maps</h3><p>Nothing leaves your device on its own. Only your tap hands the route to the maps app.</p></div>
+      <div class="tp"><svg class="ic li-ic" aria-hidden="true"><use href="#i-akte"/></svg><h3>Logbook and times</h3><p>Services, trips and times are recorded along the way and export as CSV. You do the invoicing – the software promises no revenue.</p></div>
     </div>
-
-    <div class="shots three">
-      <figure class="shot">
-        <div class="frame"><img src="../assets/visite-shots/08-route-v2.jpg" loading="lazy"
-          alt="Abfahrroute auf der Karte in Ihrer Reihenfolge, direkt an Google Maps übergebbar"></div>
-        <figcaption>Map &amp; route — the departure order, handed straight to Google&nbsp;Maps instead of retyping addresses.</figcaption>
-      </figure>
-      <figure class="shot">
-        <div class="frame"><img src="../assets/visite-shots/06-kompakt-v2.jpg" loading="lazy"
-          alt="Kompakte Tagesübersicht: alle Stopps als kleine Karten auf einer Zeitachse mit Fahrzeiten"></div>
-        <figcaption>Compact — the whole day on one timeline, when it has to be quick.</figcaption>
-      </figure>
-      <figure class="shot">
-        <div class="frame"><img src="../assets/visite-shots/07-dokumentation-v2.jpg" loading="lazy"
-          alt="Dokumentation: Fahrtenbuch, Zeiterfassung, erfasste Leistungen und CSV-Ausgabe"></div>
-        <figcaption>Documentation — mileage log, time tracking, recorded services, exported as CSV.</figcaption>
-      </figure>
-    </div>
-
-    <p class="sec-lead" style="margin-top:44px">
-      CARLON records your services, trips and times where they arise, and exports them
-      as CSV. What you invoice and how is your decision, based on the work actually
-      done — the software does not invoice and promises no revenue.
-    </p>
   </div>
 </section>
 
@@ -1954,6 +1936,8 @@ if(_lb) _lb.addEventListener('click', function(){
     addEventListener('message',function(e){ if(fr&&e.source===fr.contentWindow&&e.data&&e.data.carlonSchaufenster==='bereit'){ bereit=true; setTimeout(vielleicht,300); } });
     if(v){ v.addEventListener('timeupdate',function(){ if(v.duration&&v.currentTime>v.duration-5) laden(); }); v.addEventListener('ended',function(){ laden(); vielleicht(); }); }
     ['pointerenter','touchstart'].forEach(function(ev){ box.addEventListener(ev,function(){ wunsch=true; laden(); vielleicht(); },{once:true,passive:true}); });
+    
+    if(v && !v.hasAttribute('autoplay') && !still && 'IntersectionObserver' in window){ var vo=new IntersectionObserver(function(es){ es.forEach(function(x){ if(x.isIntersecting){ v.preload='auto'; var pr=v.play(); if(pr&&pr.catch) pr.catch(function(){}); vo.disconnect(); } }); },{threshold:0.5}); vo.observe(box); }
     if(still){ wunsch=true; laden(); }
     else if(!v && 'IntersectionObserver' in window){ var io=new IntersectionObserver(function(es){ es.forEach(function(x){ if(x.isIntersecting){ laden(); io.disconnect(); } }); },{rootMargin:'300px 0px'}); io.observe(box); }
   });
