@@ -2222,6 +2222,19 @@ const Teilen = {
      beim naechsten Abgleich den echten Handle jedes Geraets ueberschreiben.
      Der Ordner haette sich damit selbst abgeklemmt. */
   GETEILT: ['recordings','horses','consults','coherence'],
+  /* Uhr wie eine Hybrid Logical Clock (Fable-Gutachten 16.11.2026): nie hinter dem jüngsten bereits GESEHENEN Stand.
+     Ein Gerät mit nachgehender Uhr überschreibt so nicht unbemerkt eine spätere Änderung mit einem „älteren“ Stand. */
+  _maxStand:'',
+  neuerStand(){ const jetzt=new Date().toISOString(); let s=jetzt;
+    if(this._maxStand && this._maxStand>=jetzt){ s=new Date(new Date(this._maxStand).getTime()+1).toISOString(); }
+    this._maxStand=s; try{ localStorage.setItem('carlonMaxStand',s); }catch(_){ } return s; },
+  _sieh(s){ if(!s) return; if(!this._maxStand){ try{ this._maxStand=localStorage.getItem('carlonMaxStand')||''; }catch(_){ } }
+    /* Stände weit in der Zukunft (Uhr eines Geräts vorgestellt) ziehen die eigene Uhr nicht unbegrenzt mit. */
+    if(s>this._maxStand && new Date(s).getTime()-Date.now()<10*60000) this._maxStand=s; },
+  _pruef(obj){ return String(hashStr(JSON.stringify(obj))); },
+  _zuletztLesen(){ if(this._zuletzt==null){ try{ this._zuletzt=localStorage.getItem('carlonTeamZuletzt')||''; }catch(_){ this._zuletzt=''; } } return this._zuletzt; },
+  _zuletztSetzen(){ this._zuletzt=this.neuerStand(); try{ localStorage.setItem('carlonTeamZuletzt',this._zuletzt); }catch(_){ } },
+  MUSTER:/^(recordings|horses|consults|coherence)__[\w.-]+\.json$/,
   teilbar(store){ return this.GETEILT.indexOf(store)>=0; },
   _name(store,obj){ return store+'__'+String(obj.id||obj.key||'ohne').replace(/[^\w.-]+/g,'-')+'.json'; },
 
@@ -2233,7 +2246,7 @@ const Teilen = {
       const d=await this.handle.getDirectoryHandle('carlon',{create:true});
       const f=await d.getFileHandle(this._name(store,obj),{create:true});
       const w=await f.createWritable();
-      await w.write(JSON.stringify({store,obj,stand:obj.stand||new Date().toISOString()}));
+      await w.write(JSON.stringify({store,obj,stand:obj.stand||new Date().toISOString(),pruef:this._pruef(obj),geraet:(State.settings&&State.settings.geraeteName)||''}));
       await w.close(); return true;
     }catch(e){ this.letzterFehler=String(e&&e.message||e); return false; }
   },
@@ -2257,19 +2270,32 @@ const Teilen = {
   /* Einlesen, was andere Geräte abgelegt haben: gilt, was JÜNGER ist als der eigene Stand – auch Löschvermerke. */
   async abgleichen(){
     if(!this.aktiv||!this.handle) return 0;
+    /* Ein Tab gleicht ab, nicht zwei gleichzeitig (Web Locks). */
+    if(navigator.locks&&!this._imLock){ return navigator.locks.request('carlon-team-abgleich',async()=>{ this._imLock=true; try{ return await this.abgleichen(); } finally{ this._imLock=false; } }); }
     let neu=0; try{ await this._loeschungenSenden(); }catch(_){ }
     const offen=new Set((await this._offen()).map(x=>x.store+'/'+x.id));
     try{
       const d=await this.handle.getDirectoryHandle('carlon',{create:true});
       for await (const [name,h] of d.entries()){
         if(!name.endsWith('.json')||h.kind!=='file') continue;
+        /* Nur eigene Dateinamen; Temporär- und Sync-Reste (.crswap, .tmp, „(1)“-Konfliktkopien) werden nicht gelesen. */
+        if(!this.MUSTER.test(name)) continue;
         try{
           const satz=JSON.parse(await (await h.getFile()).text());
           if(!satz||!satz.store||!satz.obj||!this.teilbar(satz.store)) continue;
+          /* Prüfsumme: halb synchronisierte oder veränderte Dateien werden nicht übernommen. */
+          if(satz.pruef && !satz.geloescht && satz.pruef!==this._pruef(satz.obj)){ this.letzterFehler='Datei '+name+' unvollständig – übersprungen'; continue; }
+          this._sieh(satz.stand);
           const id=satz.obj.id||satz.obj.key; const sStand=satz.stand||satz.obj.stand||''; if(offen.has(satz.store+'/'+id)) continue;
           const eigen=await DB.get(satz.store,id);
           if(this._stand) this._stand[name]=sStand;
           if(satz.geloescht){ if(eigen && (eigen.stand||'') <= sStand){ await DB.del(satz.store,id,{vonOrdner:true}); neu++; } continue; }
+          /* Konflikt: hier UND dort seit dem letzten Abgleich geändert – die jüngere Fassung gilt, die andere bleibt
+             aufgehoben (Teamkonflikte in den Einstellungen), statt still zu verschwinden. */
+          const zul=this._zuletztLesen();
+          if(zul && eigen && (eigen.stand||'') > zul && sStand > zul && satz.store!=='recordings' && JSON.stringify(eigen.notes||eigen)!==JSON.stringify(satz.obj.notes||satz.obj)){
+            const verlierer=(eigen.stand||'') >= sStand ? satz.obj : eigen;
+            try{ const k=(await DB.get('settings','teamKonflikte'))||{id:'teamKonflikte',liste:[]}; k.liste.push({store:satz.store,id,am:new Date().toISOString(),aufgehoben:verlierer}); k.liste=k.liste.slice(-50); await DB.put('settings',k); this.konflikte=(this.konflikte||0)+1; }catch(_){ } }
           if(eigen && (eigen.stand||'') >= sStand) continue;
           if(!satz.obj.stand) satz.obj.stand=sStand;
           await DB.put(satz.store,satz.obj,{vonOrdner:true}); neu++;
@@ -2321,7 +2347,7 @@ const Teilen = {
         if(n>=grenze) break;
       }
     }catch(e){ this.letzterFehler=String(e&&e.message||e); }
-    this.letzterNachtrag=n;
+    this.letzterNachtrag=n; this._zuletztSetzen();
     return n;
   },
 
@@ -2356,7 +2382,8 @@ const DB = {
       r.onerror=e=>rej(e.target.error);
     });
   },
-  _tx(store,mode){return this._db.transaction(store,mode).objectStore(store);},
+  /* Schreibvorgänge mit durability 'strict' (Chrome ≥ 121 schreibt sonst 'relaxed'): Messdaten überstehen Absturz und Stromausfall. */
+  _tx(store,mode){ let tx; try{ tx=mode==='readwrite'?this._db.transaction(store,mode,{durability:'strict'}):this._db.transaction(store,mode); }catch(_){ tx=this._db.transaction(store,mode); } return tx.objectStore(store);},
   all(store){return new Promise((res,rej)=>{const r=this._tx(store,'readonly').getAll();r.onsuccess=()=>res(r.result);r.onerror=()=>rej(r.error);});},
   /* Der EINE Schreibpunkt — deshalb haengt der Klinik-Ordner hier und nicht
      an fuenfzig Aufrufstellen. Der Spiegel laeuft NACH dem lokalen Erfolg und
@@ -2366,7 +2393,7 @@ const DB = {
   /* Team-Ordner-Prüfstand 16.11.2026: Ohne eigenen Zeitstempel je Datensatz überschrieb der ältere Ordnerstand eine
      Offline-Änderung (Datenverlust). Jetzt trägt jeder geteilte Datensatz `stand`; Einträge AUS dem Ordner
      (opt.vonOrdner) behalten ihren Stand und werden nicht zurückgespiegelt. */
-  put(store,obj,opt){ if(obj&&typeof Teilen!=='undefined'&&Teilen.teilbar(store)&&!(opt&&opt.vonOrdner)) obj.stand=new Date().toISOString();
+  put(store,obj,opt){ if(obj&&typeof Teilen!=='undefined'&&Teilen.teilbar(store)&&!(opt&&opt.vonOrdner)) obj.stand=Teilen.neuerStand();
     return new Promise((res,rej)=>{try{const r=this._tx(store,'readwrite').put(obj);r.onsuccess=()=>{
     if(typeof Teilen!=='undefined'&&Teilen.aktiv&&!(opt&&opt.vonOrdner)){ try{ Teilen.schreiben(store,obj); }catch(_){ } }
     res(obj);};r.onerror=()=>{if(typeof Safe!=='undefined')Safe.writeFailed(store,r.error);rej(r.error);};}catch(e){if(typeof Safe!=='undefined')Safe.writeFailed(store,e);rej(e);}});},
@@ -8513,6 +8540,7 @@ const UI={
         </div>
         <button class="btn ghost" onclick="UI.klinikOrdner()">${Teilen.aktiv?'Ordner wechseln':'Ordner verbinden'}</button>
         ${Teilen.letzterFehler?`<div style="font-size:12px;color:var(--amber);margin-top:6px">Zuletzt: ${esc(Teilen.letzterFehler)}</div>`:''}
+        ${Teilen.aktiv?`<div style="font-size:12px;color:var(--text-dim);margin-top:6px">Tägliche Sicherung im Ordner: ${State.settings.autoSicherung?esc(fmtDate(State.settings.autoSicherung)):'noch keine'}${Teilen.konflikte?` · ${Teilen.konflikte} gleichzeitige Änderung${Teilen.konflikte===1?'':'en'} – ältere Fassung aufgehoben`:''}</div>`:''}
       </div>`:''}
       <div class="field"><label>Praxis-Logo <span style="color:var(--text-dim);font-weight:400">— erscheint auf Ihren Messwertberichten (Ihr Branding, nicht unseres)</span></label>
         <div class="logo-row">
@@ -10488,9 +10516,23 @@ const License={
    BACKUP — vollständige Praxis-Sicherung (lokal, portabel)
    ════════════════════════════════════════════════════════════════════════ */
 const Backup={
+  daten(){ return {app:'carlon-clinic',version:2,exportedAt:new Date().toISOString(),
+      horses:State.horses,recordings:State.recordings,consults:State.consults,coherence:State.coherence,settings:State.settings}; },
+  /* Automatische Sicherung (Fable-Gutachten 16.11.2026, stärkster Hebel): ist ein Team-Ordner verbunden, legt jedes Gerät
+     einmal am Tag eine vollständige Sicherung dort ab – carlon-sicherung/sicherung-JJJJ-MM-TT-<Gerät>.json. Niemand muss
+     an den Knopf denken; sie liegt außerhalb des Browsers und übersteht „Websitedaten löschen“ und Geräteverlust. */
+  async auto(){
+    if(typeof Teilen==='undefined'||!Teilen.aktiv||!Teilen.handle) return false;
+    const heute=new Date().toISOString().slice(0,10); if((State.settings.autoSicherung||'')===heute) return false;
+    try{ const d=await Teilen.handle.getDirectoryHandle('carlon-sicherung',{create:true});
+      const g=String((State.settings.geraeteName)||'geraet').replace(/[^\w.-]+/g,'-');
+      const f=await d.getFileHandle('sicherung-'+heute+'-'+g+'.json',{create:true}); const w=await f.createWritable();
+      const daten=Backup.daten(); const s={...daten,settings:{...daten.settings,license:undefined}};
+      await w.write(JSON.stringify(s)); await w.close();
+      State.settings.autoSicherung=heute; State.settings.lastBackupAt=new Date().toISOString(); await State.saveSettings(); if(typeof Safe!=='undefined') Safe.renderBanner&&Safe.renderBanner();
+      return true; }catch(e){ return false; } },
   async doExport(){
-    const data={app:'carlon-clinic',version:2,exportedAt:new Date().toISOString(),
-      horses:State.horses,recordings:State.recordings,consults:State.consults,coherence:State.coherence,settings:State.settings};
+    const data=Backup.daten();
     const blob=new Blob([JSON.stringify(data)],{type:'application/json'});
     const a=document.createElement('a');a.href=URL.createObjectURL(blob);
     a.download='carlon-clinic-backup-'+new Date().toISOString().slice(0,10)+'.json';a.click();
@@ -12473,6 +12515,7 @@ const Sprache={
            aufgenommen hat, liegt sonst fuer immer nur hier. */
         const nach=await Teilen.nachtragen();
         if(nach){ Toast.show(`${nach} eigene Aufnahme${nach===1?'':'n'} in den Team-Ordner nachgetragen`,'ok'); }
+        try{ await Backup.auto(); }catch(_){ }
       } else if(Teilen.letzterFehler && Teilen.erlaubt()){
         Toast.show('Team-Ordner nicht erreichbar – dieses Gerät arbeitet vorerst allein und gleicht später ab','warn');
       }
@@ -12490,9 +12533,11 @@ const Sprache={
        Funkloch faehrt, ist genau der Moment, in dem nachgeholt werden soll. */
     /* Team-Ordner LAUFEND abgleichen (16.11.2026): bisher nur beim Start – die Kollegin sah neue Aufnahmen erst
        nach dem Neuladen. Jetzt jede Minute und beim Zurückkehren in den Tab; neue Daten erscheinen ohne Zutun. */
-    const teamAbgleich=async()=>{ if(!Teilen.aktiv||document.hidden) return; try{ const a=await Teilen.abgleichen(); const b=await Teilen.nachtragen();
+    const teamAbgleich=async()=>{ if(!Teilen.aktiv||document.hidden) return; try{ const a=await Teilen.abgleichen(); const b=await Teilen.nachtragen(); await Backup.auto();
       if(a){ await State.load(); try{ Nav.refresh(); }catch(_){ } Toast.show(`${a} Änderung${a===1?'':'en'} aus dem Team-Ordner übernommen`,'ok'); } }catch(_){ } };
     setInterval(teamAbgleich,60000); document.addEventListener('visibilitychange',()=>{ if(!document.hidden) teamAbgleich(); });
+    /* persist() bei JEDEM Start erneut anfragen – die Browser entscheiden still nach Nutzung; einmal reicht nicht. */
+    try{ if(!(await Persist.status())) Persist.request(); }catch(_){ }
     window.addEventListener('online', ()=>{
       License.lizenzHolenWennFaellig(); Postfach.abholen(); Postausgang.senden({laut:true});
       /* Der geteilte Ordner haengt am selben Funkloch wie das Postfach —
