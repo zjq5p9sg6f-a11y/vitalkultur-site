@@ -561,6 +561,7 @@ section[id]{scroll-margin-top:76px}
 }
 @media(max-width:600px){.shots.telefon .shot{flex:0 0 64%}}
 @media(min-width:1101px){.shots.telefon{grid-template-columns:repeat(3,1fr)!important;gap:var(--sp-34) var(--sp-55)!important;max-width:860px;margin-left:auto;margin-right:auto}}
+.sr-only{position:absolute!important;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 .beleg-bild{margin:var(--sp-21) 0 var(--sp-8);padding:var(--sp-8) var(--sp-8);
   border-radius:8px;background:rgba(255,255,255,.02);overflow:hidden}
 .beleg-bild svg{display:block;max-width:100%;height:auto}
@@ -938,7 +939,7 @@ h1,h2{text-wrap:balance}
           alt="Pferde-Akte im Cockpit: Kernwerte RMSSD, Ruhe-HF, SDNN und DFA gegen die eigene Vorgeschichte des Pferds, mit Signalgüte und Verlauf"></a>
       <span class="hero-phone" aria-hidden="true"><img src="assets/station-shots/06-tachogramm.jpg" alt=""></span>
       <figcaption>
-        <span class="hero-fluss"><span class="hf-chip">Im Stall gemessen</span><span
+        <span class="hero-fluss"><span class="hf-chip">Im Stall gemessen</span><span class="sr-only"> → </span><span
           class="hf-linie" aria-hidden="true"><i></i></span><span class="hf-chip">In Ihrer Praxis gelesen</span></span>
         Ansichten aus der Anwendung — <b>ein Klick öffnet sie.</b>
       </figcaption>
@@ -973,7 +974,7 @@ h1,h2{text-wrap:balance}
         <p>Ein Tipp auf den Link oder ein Scan, und die Messstation ist da — im Browser,
            ohne App, ohne Konto. Jede Aufnahme ist von der ersten Sekunde an für Ihre
            Praxis verschlüsselt; die Datei schickt die Halterin auf dem Weg, den sie
-           ohnehin nutzt.</p>
+           ohnehin nutzt. Hat sie nur ein iPhone, geben Sie ein <strong>Praxis-Mess-Set</strong> mit: Gurt plus ein günstiges Android-Gerät – Apple lässt Bluetooth im Browser nicht zu.</p>
       </div>
       <div class="usp">
         <div class="u-k">Schritt 3</div>
@@ -1062,7 +1063,7 @@ h1,h2{text-wrap:balance}
              der Copy-CI und beschreibt praezise, was die Software tut. -->
         <h3>Atemmuster-Profil aus der Literatur</h3>
         <p>Fünf HRV-Kennwerte, einzeln aufgeführt, verglichen mit den Gruppenmitteln einer
-           veröffentlichten Vergleichsstudie (Nyerges-Bohák 2025, Equine Veterinary Journal, n&nbsp;=&nbsp;40).
+           veröffentlichten Vergleichsstudie (Quelle unter „Die Methode im Detail“).
            Die Studie berichtet Gruppenunterschiede, <strong>keine Schwellenwerte</strong> — unsere
            Vergleichsgrenzen sind eine eigene Ableitung, offen dokumentiert in der Methodik.
            Ein Messmuster, <strong>keine gesundheitliche Einstufung</strong>.</p>
@@ -1574,7 +1575,7 @@ h1,h2{text-wrap:balance}
            bisher ueber den toten CSS-Klassennamen `.t-netto` — auf der Seite
            selbst stand das Wort nie. -->
       <!-- DIE MONATSRATE FUEHRT (Jan, 13.08.): die grosse Zahl ist der Anker. -->
-      <div class="tarif-preis"><b>149&nbsp;€</b> <span>netto im Monat · USt. weist Stripe aus</span></div>
+      <div class="tarif-preis"><b>149&nbsp;€</b> <span>netto im Monat · 177,31&nbsp;€ inkl. 19&nbsp;% USt.</span></div>
       <div class="tarif-alt">oder 1.490&nbsp;€ im Jahr — entspricht 124,17&nbsp;€ im Monat, zwei Monate gespart</div>
       <!-- KEIN ZAHLENBRUCH AN DER KASSE (05.11.2026, geprüft in der Live-Kasse): Stripe zeigt
            als Verkäufer zuerst den Bruttobetrag. Wer hier nur 149 € liest und dort 177,31 €,
@@ -1592,7 +1593,7 @@ h1,h2{text-wrap:balance}
     </div>
     <div class="tarif tarif-klinik">
       <div class="tarif-name">Für Pferdekliniken</div>
-      <div class="tarif-preis"><b>349&nbsp;€</b> <span>netto im Monat · USt. weist Stripe aus</span></div>
+      <div class="tarif-preis"><b>349&nbsp;€</b> <span>netto im Monat · 415,31&nbsp;€ inkl. 19&nbsp;% USt.</span></div>
       <div class="tarif-alt">oder 3.490&nbsp;€ im Jahr — entspricht 290,83&nbsp;€ im Monat, zwei Monate gespart</div>
       <div class="tarif-alt">An der Kasse für Kliniken in Deutschland: 415,31&nbsp;€ im Monat bzw. 4.153,10&nbsp;€ im Jahr, jeweils inkl. 19&nbsp;% USt.</div>
       <ul class="enthalten">

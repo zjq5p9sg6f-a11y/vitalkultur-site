@@ -457,12 +457,12 @@ tausche(`Anteil auswertbarer Schlagpaare, Artefaktrate, korrigierte AV-Block-Pau
         `Share of usable beat pairs, artefact rate, corrected AV-block pauses.
            A recording that carries nothing tells you so — instead of showing a number.`);
 tausche(`Fünf HRV-Kennwerte, einzeln aufgeführt, verglichen mit den Gruppenmitteln einer
-           veröffentlichten Vergleichsstudie (Nyerges-Bohák 2025, Equine Veterinary Journal, n&nbsp;=&nbsp;40).
+           veröffentlichten Vergleichsstudie (Quelle unter „Die Methode im Detail“).
            Die Studie berichtet Gruppenunterschiede, <strong>keine Schwellenwerte</strong> — unsere
            Vergleichsgrenzen sind eine eigene Ableitung, offen dokumentiert in der Methodik.
            Ein Messmuster, <strong>keine gesundheitliche Einstufung</strong>.`,
         `Five HRV measures, listed individually, compared with the group means of a
-           published comparison study (Nyerges-Bohák 2025, Equine Veterinary Journal, n&nbsp;=&nbsp;40).
+           published comparison study (source under “The method in detail”).
            The study reports group differences, <strong>no threshold values</strong> — our
            comparison limits are our own derivation, documented openly in the methodology.
            A measurement pattern, <strong>not a health classification</strong>.`);
@@ -740,8 +740,8 @@ tausche(`Kein eigener Sensor, keine Gebühr je Pferd:
       you use an off-the-shelf Polar H10 strap. Try the whole workflow first
       in the demo cockpit — no account.`);
 
-tausche('<div class="tarif-preis"><b>149&nbsp;€</b> <span>netto im Monat · USt. weist Stripe aus</span></div>',
-        '<div class="tarif-preis"><b>149&nbsp;€</b> <span>net per month · VAT charged by Stripe</span></div>');
+tausche('<div class="tarif-preis"><b>149&nbsp;€</b> <span>netto im Monat · 177,31&nbsp;€ inkl. 19&nbsp;% USt.</span></div>',
+        '<div class="tarif-preis"><b>149&nbsp;€</b> <span>net per month · €177.31 incl. 19&nbsp;% German VAT</span></div>');
 tausche(`Das Angebot richtet sich ausschließlich an Unternehmer im Sinne des § 14 BGB.
         Für das Browser-Cockpit tritt <strong>Stripe als Verkäufer im eigenen Namen</strong> auf
         (Merchant of Record): Sie erhalten von dort eine Rechnung mit ausgewiesener Umsatzsteuer
@@ -846,6 +846,7 @@ tausche(`Nein. CARLON sendet keine Alarme, und die Halterin sieht keine Einstufu
 tausche('"text": "Nein. CARLON sendet keine Alarme, und die Halterin sieht keine Einstufung — die entsteht erst in Ihrem Cockpit, wenn Sie es öffnen. Eine zugeschickte Datei ist eine Zusendung wie eine E-Mail: Wann Sie sie sichten, bestimmen Sie und kommunizieren es wie bisher. Für den Notfall gilt, was immer gilt: der Anruf."',
         '"text": "No. CARLON sends no alerts, and the owner sees no classification — it only comes into being in your cockpit, when you open it. A file sent to you is a delivery like an email: when you review it is up to you, communicated to your clients as before. For emergencies, what has always applied still applies: the phone call."');
 tausche('Woher kommt die Baseline?', 'Where does the baseline come from?', 2);
+tausche(` Hat sie nur ein iPhone, geben Sie ein <strong>Praxis-Mess-Set</strong> mit: Gurt plus ein günstiges Android-Gerät – Apple lässt Bluetooth im Browser nicht zu.`, ` If she only has an iPhone, lend her a <strong>practice measuring set</strong>: belt plus an inexpensive Android device – Apple does not allow Bluetooth in the browser.`);
 tausche(`    <ul class="studien">
       <li><b>Fahrt senkt die Ruhe-HRV um rund ein Drittel.</b> RMSSD fiel bei Straßentransport von 74 auf 45&nbsp;ms (3,5&nbsp;h) bzw. von 90 auf 59&nbsp;ms (8&nbsp;h). <a href="https://doi.org/10.1016/j.yhbeh.2009.11.003" target="_blank" rel="noopener">Schmidt et&nbsp;al. 2010, Hormones and Behavior</a></li>
       <li><b>Pferde unterscheiden sich stärker untereinander als von Tag zu Tag.</b> Die Streuung zwischen Pferden lag bei der Herzfrequenz rund 40&nbsp;% und bei HF-Leistung rund 100&nbsp;% über der beim selben Pferd – darum der Vergleich mit der eigenen Basis. <a href="https://doi.org/10.2460/ajvr.73.4.515" target="_blank" rel="noopener">Ohmura et&nbsp;al. 2012, American Journal of Veterinary Research</a></li>

@@ -561,6 +561,7 @@ section[id]{scroll-margin-top:76px}
 }
 @media(max-width:600px){.shots.telefon .shot{flex:0 0 64%}}
 @media(min-width:1101px){.shots.telefon{grid-template-columns:repeat(3,1fr)!important;gap:var(--sp-34) var(--sp-55)!important;max-width:860px;margin-left:auto;margin-right:auto}}
+.sr-only{position:absolute!important;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 .beleg-bild{margin:var(--sp-21) 0 var(--sp-8);padding:var(--sp-8) var(--sp-8);
   border-radius:8px;background:rgba(255,255,255,.02);overflow:hidden}
 .beleg-bild svg{display:block;max-width:100%;height:auto}
@@ -939,7 +940,7 @@ h1,h2{text-wrap:balance}
           alt="Horse record in the cockpit: key values RMSSD, resting HR, SDNN and DFA against the horse’s own history, with signal quality and trend"></a>
       <span class="hero-phone" aria-hidden="true"><img src="../assets/station-shots/06-tachogramm.jpg" alt=""></span>
       <figcaption>
-        <span class="hero-fluss"><span class="hf-chip">Recorded in the stable</span><span
+        <span class="hero-fluss"><span class="hf-chip">Recorded in the stable</span><span class="sr-only"> → </span><span
           class="hf-linie" aria-hidden="true"><i></i></span><span class="hf-chip">Read in your practice</span></span>
         Views from the application — <b>one click opens it.</b>
       </figcaption>
@@ -974,7 +975,7 @@ h1,h2{text-wrap:balance}
         <p>One tap on the link or one scan, and the measuring station is there — in the
            browser, no app, no account. Every recording is encrypted for your practice
            from the very first second; the owner sends you the file on whatever channel
-           she already uses.</p>
+           she already uses. If she only has an iPhone, lend her a <strong>practice measuring set</strong>: belt plus an inexpensive Android device – Apple does not allow Bluetooth in the browser.</p>
       </div>
       <div class="usp">
         <div class="u-k">Step 3</div>
@@ -1063,7 +1064,7 @@ h1,h2{text-wrap:balance}
              der Copy-CI und beschreibt praezise, was die Software tut. -->
         <h3>Breathing-pattern profile from the literature</h3>
         <p>Five HRV measures, listed individually, compared with the group means of a
-           published comparison study (Nyerges-Bohák 2025, Equine Veterinary Journal, n&nbsp;=&nbsp;40).
+           published comparison study (source under “The method in detail”).
            The study reports group differences, <strong>no threshold values</strong> — our
            comparison limits are our own derivation, documented openly in the methodology.
            A measurement pattern, <strong>not a health classification</strong>.</p>
@@ -1573,7 +1574,7 @@ h1,h2{text-wrap:balance}
            bisher ueber den toten CSS-Klassennamen `.t-netto` — auf der Seite
            selbst stand das Wort nie. -->
       <!-- DIE MONATSRATE FUEHRT (Jan, 13.08.): die grosse Zahl ist der Anker. -->
-      <div class="tarif-preis"><b>149&nbsp;€</b> <span>net per month · VAT charged by Stripe</span></div>
+      <div class="tarif-preis"><b>149&nbsp;€</b> <span>net per month · €177.31 incl. 19&nbsp;% German VAT</span></div>
       <div class="tarif-alt">or €1,490 per year — €124.17 a month, two months saved</div>
       <!-- KEIN ZAHLENBRUCH AN DER KASSE (05.11.2026, geprüft in der Live-Kasse): Stripe zeigt
            als Verkäufer zuerst den Bruttobetrag. Wer hier nur 149 € liest und dort 177,31 €,
@@ -1591,7 +1592,7 @@ h1,h2{text-wrap:balance}
     </div>
     <div class="tarif tarif-klinik">
       <div class="tarif-name">For equine clinics</div>
-      <div class="tarif-preis"><b>349&nbsp;€</b> <span>netto im Monat · USt. weist Stripe aus</span></div>
+      <div class="tarif-preis"><b>349&nbsp;€</b> <span>netto im Monat · 415,31&nbsp;€ inkl. 19&nbsp;% USt.</span></div>
       <div class="tarif-alt">or €3,490 a year — equivalent to €290.83 a month, two months saved</div>
       <div class="tarif-alt">At checkout for clinics in Germany: €415.31 a month or €4,153.10 a year, each incl. 19&nbsp;% VAT.</div>
       <ul class="enthalten">
