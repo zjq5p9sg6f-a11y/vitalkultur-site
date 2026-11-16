@@ -549,10 +549,6 @@ html.ff-offen .leiste{display:none}
   .grafik.geteilt>svg{display:none!important}
   .grafik-teil{width:100%!important;max-width:none!important;height:auto;display:block;overflow:visible;margin:0 0 14px}
   
-  .hb-geraete{gap:22px!important;padding:8px 10vw 52px!important;align-items:center!important;overscroll-behavior-x:contain}
-  .hb-geraete .hero-shot,.hero-tour{width:80vw!important}
-  .hb-geraete .hero-phone{width:44vw!important;margin:0 18vw}
-  .hb-geraete .g-marke{top:auto!important;bottom:-30px!important;left:50%!important;transform:translateX(-50%);font-size:12.5px!important}
   .hero-buehne .fc-klein{display:none!important}
   .hero-buehne .wisch-punkte{margin-top:2px}
   .hero-buehne .fc-gross{display:block!important;text-align:center;margin:6px 16px 0}
@@ -967,6 +963,31 @@ h1,h2{text-wrap:balance}
 </style>
 <link rel="stylesheet" href="/assets/baukasten/baukasten.css?v=4">
 <link rel="stylesheet" href="/assets/app-tour/app-tour.css?v=10">
+<style>
+
+@media(max-width:720px){
+  .hero-buehne{margin-top:var(--sp-34)!important}
+  .hero-buehne::before{display:none}
+  .hb-geraete{display:flex!important;gap:12px!important;padding:6px 8vw 4px!important;align-items:stretch!important;overscroll-behavior-x:contain;scroll-padding-inline:8vw}
+  .hb-karte{flex:0 0 84vw;box-sizing:border-box;height:min(120vw,560px);display:flex;flex-direction:column;align-items:center;gap:16px;padding:20px 16px 22px;
+    border-radius:26px;border:1px solid rgba(255,255,255,.08);background:radial-gradient(120% 70% at 50% 100%,rgba(62,207,178,.10),transparent 60%),linear-gradient(170deg,rgba(255,255,255,.045),rgba(255,255,255,.012));
+    scroll-snap-align:center;scroll-snap-stop:always}
+  .hb-karte .hk-kopf{text-align:center;width:100%}
+  .hb-karte .g-marke{position:static!important;transform:none!important;justify-content:center;font-size:15px!important;color:var(--text-primary)!important;text-shadow:none!important}
+  .hb-karte .hk-satz{margin:7px auto 0;max-width:30ch;font-size:13px;line-height:1.5;color:var(--text-dim)}
+  .hb-karte .hk-geraet{flex:1;min-height:0;width:100%;display:flex;align-items:center;justify-content:center}
+  .hb-karte .hero-phone{position:relative!important;left:auto!important;bottom:auto!important;margin:0!important;height:100%!important;width:auto!important;max-width:none}
+  .hb-karte .hero-shot,.hb-karte .hero-tour{width:100%!important;margin:0!important}
+  .hero-buehne .wisch-punkte{margin-top:16px!important}
+  .hero-buehne .fc-gross{margin:12px 16px 0!important}
+  
+  .leiste{display:none!important}
+  nav .btn-demo .bd-play{display:none}
+  nav .btn-demo{font-family:var(--font-ui)!important;text-transform:none!important;letter-spacing:.01em!important;font-size:13.5px!important;font-weight:600!important;
+    height:36px;padding:0 16px!important;border-radius:999px!important;display:inline-flex;align-items:center;gap:7px;
+    background:linear-gradient(180deg,#52dcc0,#2fb89d)!important;border:0!important;color:#03140f!important;box-shadow:0 0 0 1px rgba(255,255,255,.18) inset,0 6px 18px -6px rgba(62,207,178,.55)}
+}
+</style>
 </head>
 <body>
 <script>
@@ -1034,7 +1055,7 @@ try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; 
     <div class="nav-actions">
       <a class="nav-equine" href="/carlon-equine-visite/en/" hreflang="en" lang="en">English</a>
       <a class="nav-equine" href="#preis">Preise</a>
-      <a class="btn btn-demo" href="/carlon-equine/app/" title="Live-Cockpit mit Demo-Daten öffnen" >&#9654; Demo-Cockpit</a>
+      <a class="btn btn-demo" href="/carlon-equine/app/" title="Live-Cockpit mit Demo-Daten öffnen" ><span class="bd-play" aria-hidden="true">&#9654; </span>Demo-Cockpit</a>
       
     </div>
   </div>
@@ -2024,6 +2045,13 @@ if(_lb) _lb.addEventListener('click', function(){
 
 (function(){
   if(!(window.matchMedia&&matchMedia('(max-width:720px)').matches)) return;
+  
+  (function(){ var r=document.querySelector('.hb-geraete'); if(!r) return; var EN=(document.documentElement.lang||'de').indexOf('en')===0;
+    var S=EN?['The owner records in the stable: heart rate, HRV and Poincaré live.','In the record: every resting recording against the horse’s own baseline.','Your day route stop by stop, with drive time per stop.']
+            :['Die Halterin nimmt im Stall auf: Puls, HRV und Poincaré live.','In der Akte: jede Ruhemessung gegen die eigene Basis des Pferds.','Ihre Tagesroute Stopp für Stopp, mit Fahrzeit je Stopp.'];
+    [].slice.call(r.children).forEach(function(g,i){ var k=document.createElement('div'); k.className='hb-karte'; var m=g.querySelector('.g-marke');
+      var kopf=document.createElement('div'); kopf.className='hk-kopf'; if(m) kopf.appendChild(m); var p=document.createElement('p'); p.className='hk-satz'; p.textContent=S[i]||''; kopf.appendChild(p);
+      var ge=document.createElement('div'); ge.className='hk-geraet'; r.insertBefore(k,g); ge.appendChild(g); k.appendChild(kopf); k.appendChild(ge); }); })();
   [].slice.call(document.querySelectorAll('.m-wisch,.hb-geraete')).forEach(function(row){
     var kids=[].slice.call(row.children).filter(function(c){return c.offsetWidth>0;}); if(kids.length<2) return;
     var p=document.createElement('div'); p.className='wisch-punkte'; p.setAttribute('aria-hidden','true');
@@ -2082,7 +2110,7 @@ if(_lb) _lb.addEventListener('click', function(){
   var telefon=window.matchMedia&&matchMedia('(max-width: 700px)').matches;
   
   var EN=(document.documentElement.lang||'de').indexOf('en')===0, ff=null;
-  function fokusAuf(box){ var src=box.getAttribute('data-schau')+'&nur=1', titel=(box.querySelector('.g-marke')||{}).textContent||box.getAttribute('data-titel')||'';
+  function fokusAuf(box){ var src=box.getAttribute('data-schau')+'&nur=1', titel=(box.querySelector('.g-marke')||(box.closest('.hb-karte')||box).querySelector('.g-marke')||{}).textContent||box.getAttribute('data-titel')||'';
     titel=titel.replace(/^\d+/,'').trim();
     if(!ff){ ff=document.createElement('div'); ff.className='fokus-fenster'; ff.setAttribute('role','dialog'); ff.setAttribute('aria-modal','true');
       ff.innerHTML='<div class="ff-kopf"><span class="ff-titel"></span><button type="button" class="ff-zu" aria-label="'+(EN?'Close':'Schließen')+'">✕</button></div><div class="ff-lade">'+(EN?'Loading the real cockpit …':'Echtes Cockpit lädt …')+'</div><iframe title="CARLON Cockpit"></iframe><div class="ff-fuss">'+(EN?'Real cockpit · demo horse · stays on this device':'Echtes Cockpit · Demo-Pferd · bleibt auf diesem Gerät')+'</div>';
