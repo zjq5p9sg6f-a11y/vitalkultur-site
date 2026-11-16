@@ -525,14 +525,6 @@ section[id]{scroll-margin-top:76px}
    Weiss-mit-Alpha) auf einer Kante, die nur andeutet. */
 .beleg-breit{margin-top:var(--sp-21);background:var(--bg-surface);
   border:1px solid var(--border-faint);border-radius:14px;padding:var(--sp-21)}
-.faq-liste{display:grid;gap:10px;max-width:860px}
-.faq-item{background:var(--bg-surface);border:1px solid var(--border-faint);border-radius:14px;padding:0 var(--sp-21)}
-.faq-item summary{list-style:none;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:16px;padding:18px 0}
-.faq-item summary::-webkit-details-marker{display:none}
-.faq-item summary h3{margin:0;font-size:1.02em}
-.faq-item summary::after{content:'+';font-size:22px;line-height:1;color:var(--cyan);transition:transform .2s}
-.faq-item[open] summary::after{transform:rotate(45deg)}
-.faq-item .faq-a{padding:0 0 18px;color:var(--text-secondary)}
 .gurt-block{margin-top:var(--sp-34);display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);gap:var(--sp-34);align-items:center;
   background:linear-gradient(160deg,rgba(62,207,178,.05),rgba(62,207,178,0) 60%),var(--bg-surface);border:1px solid var(--border-faint);border-radius:20px;padding:var(--sp-21)}
 .gurt-block img{width:100%;height:auto;display:block;border-radius:14px}
@@ -542,31 +534,8 @@ section[id]{scroll-margin-top:76px}
 .gurt-liste li::before{content:'';position:absolute;left:0;top:.62em;width:7px;height:7px;border-radius:50%;background:var(--cyan)}
 .gurt-liste b{color:var(--text-primary)}
 @media(max-width:860px){.gurt-block{grid-template-columns:1fr}}
-/* GERÄT (15.11.2026, Jan: „nur Screenshots mit Kontur – wirkt billig“; kein Apple-Gerät nachbauen):
-   generisches Tablet in Anthrazit – Aluminium-Verlauf, feine Lichtkante, schmaler Rand, Kamerapunkt
-   an der kurzen Seite (Querformat), Glas mit innerem Rand. Gilt für Hero, Funktionsbilder und Bildreihe. */
-.f-shot,.shots.three .frame,.hero-shot,.pz-live{position:relative;border:0!important;border-radius:24px!important;padding:11px 11px 11px 17px!important;
-  background:linear-gradient(150deg,#45494f 0%,#2c2f34 22%,#1e2024 60%,#141518 100%)!important;
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.16),inset 0 0 0 1px rgba(255,255,255,.05),0 0 0 1px #08090b,
-    0 50px 90px -45px rgba(0,0,0,.95),0 18px 40px -30px rgba(0,0,0,.8),0 0 70px rgba(62,207,178,.07)!important;overflow:visible!important}
-.f-shot::before,.shots.three .frame::before,.hero-shot::after,.pz-live::before{content:''!important;position:absolute!important;left:6px!important;top:50%!important;
-  transform:translateY(-50%)!important;width:5px!important;height:5px!important;border-radius:50%!important;background:#0b0c0f!important;
-  box-shadow:0 0 0 1px rgba(255,255,255,.07),inset 0 0 1px rgba(80,160,200,.6)!important}
-.f-shot img,.shots.three .frame img,.hero-shot img,.pz-live img{display:block;width:100%;height:auto;border-radius:13px!important;box-shadow:0 0 0 1px rgba(0,0,0,.85),0 0 0 2px rgba(255,255,255,.03)}
 /* Bildreihe auf Tablet/Telefon als Wisch-Karussell (natives Scrollen, kein Einrasten – Kanon Breathwork) */
-/* GALERIE – Kanon Breathwork/Research `initGal` 1:1 (16.11.2026, Jan: „Beschleunigungsrampe, ein Bild nach dem anderen“):
-   Einrasten je Bild (scroll-snap mandatory + snap-stop always), Mitte aktiv, Nachbarn gedimmt/verkleinert, Pfeile + Zähler. */
-@media(max-width:1100px){
-  .shots.three{display:flex!important;overflow-x:auto;overflow-y:hidden;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;scrollbar-width:none;
-    overscroll-behavior-x:contain;gap:var(--sp-34);margin:0 calc(50% - 50vw);padding:6px 0 var(--sp-13)}
-  .shots.three::-webkit-scrollbar{display:none}
-  .shots.three::before,.shots.three::after{content:"";flex:0 0 calc(50vw - min(39vw,340px) - var(--sp-34))}
-  .shots.three .shot{flex:0 0 min(78vw,680px);margin:0;scroll-snap-align:center;scroll-snap-stop:always;opacity:.35;transform:scale(.92);transition:opacity .383s cubic-bezier(.2,.7,.2,1),transform .383s cubic-bezier(.2,.7,.2,1)}
-  .shots.three .shot.is-active{opacity:1;transform:none}
-  .gal-nav{display:flex;justify-content:center;align-items:center;gap:13px;margin-top:var(--sp-21);font-size:13px;color:var(--text-dim)}
-  .gal-btn{width:44px;height:44px;border-radius:50%;border:1px solid var(--border-subtle);background:transparent;color:var(--text-primary);cursor:pointer;font-size:18px}
-}
-@media(min-width:1101px){.gal-nav{display:none}}
+
 .pz-block{margin-top:var(--sp-34);display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);gap:var(--sp-34);align-items:center;background:var(--bg-surface);border:1px solid var(--border-faint);border-radius:20px;padding:var(--sp-21)}
 .pz-text h3{margin:6px 0 12px;font-size:1.25em;line-height:1.3}.pz-text p{color:var(--text-secondary);line-height:1.6}
 @media(max-width:860px){.pz-block{grid-template-columns:1fr}}
@@ -574,23 +543,10 @@ section[id]{scroll-margin-top:76px}
   .hf-linie{flex:0 0 22px!important;width:1px;min-width:0!important;height:22px;margin-left:22px}
   .hf-linie i{left:-2.5px!important;top:0;animation:flussPulsV 3.5s ease-in-out infinite!important}}
 @keyframes flussPulsV{0%{top:0;opacity:0}12%{opacity:1}88%{opacity:1}100%{top:calc(100% - 6px);opacity:0}}
-.pz-glas{position:relative;width:100%;aspect-ratio:1180/820;overflow:hidden;border-radius:13px;background:#0b0f14;box-shadow:0 0 0 1px rgba(0,0,0,.85)}
-.pz-glas iframe{position:absolute;left:0;top:0;width:1180px;height:820px;border:0;transform-origin:0 0;display:block}
 .pz-live{position:relative;overflow:hidden!important}
 .pz-start{position:absolute;left:50%;bottom:22px;transform:translateX(-50%);padding:12px 20px;border-radius:999px;border:1px solid rgba(62,207,178,.6);
   background:rgba(8,14,18,.86);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);color:#3ECFB2;font-weight:600;font-size:14px;cursor:pointer;box-shadow:0 12px 30px rgba(0,0,0,.5)}
 .pz-start:hover{background:rgba(62,207,178,.16)}
-.leiste{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(14px + env(safe-area-inset-bottom,0px));z-index:60;display:flex;align-items:center;gap:12px;
-  padding:9px 9px 9px 18px;border-radius:999px;background:rgba(10,16,20,.88);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
-  border:1px solid rgba(62,207,178,.32);box-shadow:0 18px 40px rgba(0,0,0,.55);max-width:calc(100% - 24px)}
-.leiste-t{font-size:13px;color:var(--text-secondary);white-space:nowrap}
-.leiste-b{padding:9px 16px;border-radius:999px;background:var(--cyan);color:#04130f;font-weight:700;font-size:13.5px;white-space:nowrap;text-decoration:none}
-.leiste-b2{font-size:13px;color:var(--cyan);text-decoration:none;white-space:nowrap}
-@media(max-width:560px){.leiste-t{display:none}}
-.geraete{width:100%;max-width:640px;margin:var(--sp-21) 0 0;border-collapse:collapse;font-size:.95em}
-.geraete th{text-align:left;font-weight:600;color:var(--text-dim);font-size:.82em;letter-spacing:.06em;text-transform:uppercase;padding:0 0 8px;border-bottom:1px solid var(--border-faint)}
-.geraete td{padding:11px 0;border-bottom:1px solid var(--border-faint);color:var(--text-secondary)}
-.geraete td.ja{color:var(--cyan);font-weight:600}.geraete td.nein{color:var(--text-dim)}
 /* TELEFON-GEHÄUSE (16.11.2026, Jan: „Screenshots ohne edlen Rahmen“) – generisch, Anthrazit, keine Apple-Form:
    gleichmäßiger Rand, Lautsprecher-Schlitz statt Insel, Glas mit innerem Rand. Bildschirm im Seitenverhältnis 9:19,5. */
 .shots.telefon .frame{position:relative;border:0!important;border-radius:30px!important;padding:5px!important;aspect-ratio:9/19.5;overflow:hidden!important;
@@ -605,33 +561,6 @@ section[id]{scroll-margin-top:76px}
 }
 @media(max-width:600px){.shots.telefon .shot{flex:0 0 64%}}
 @media(min-width:1101px){.shots.telefon{grid-template-columns:repeat(3,1fr)!important;gap:var(--sp-34) var(--sp-55)!important;max-width:860px;margin-left:auto;margin-right:auto}}
-details.mehr.gross{margin-top:var(--sp-34);border:1px solid var(--border-faint);border-radius:16px;background:var(--bg-surface);padding:0 var(--sp-21)}
-details.mehr.gross>summary{list-style:none;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:16px;padding:18px 0;font-weight:600;color:var(--text-primary)}
-details.mehr.gross>summary::-webkit-details-marker{display:none}
-details.mehr.gross>summary::after{content:'+';font-size:22px;line-height:1;color:var(--cyan);transition:transform .2s}
-details.mehr.gross[open]>summary::after{transform:rotate(45deg)}
-details.mehr.gross[open]{padding-bottom:var(--sp-21)}
-/* Einblenden beim Scrollen wie Research/Breathwork (Jan 16.11.: „edler Effekt, einheitlich“) */
-.rv{opacity:0;transform:translateY(21px);transition:opacity .766s cubic-bezier(.2,.7,.2,1),transform .766s cubic-bezier(.2,.7,.2,1)}
-.rv.in{opacity:1;transform:none}
-@media(prefers-reduced-motion:reduce){.rv{opacity:1;transform:none;transition:none}}
-/* Messstation-Tour (16.11.2026): gemeinsame App-Tour-Komponente, aber GENERISCHES Telefon (Browser-Produkt, kein Apple-Gerät) */
-.vt{margin-top:var(--sp-34);display:grid;grid-template-columns:minmax(0,1fr) auto;gap:var(--sp-55);align-items:center}
-.vt-liste{list-style:none;margin:0;padding:0;display:grid;gap:10px}
-.vt-liste li{position:relative;border:1px solid var(--border-faint);border-radius:14px;background:var(--bg-surface);overflow:hidden}
-.vt-liste li.on{border-color:rgba(62,207,178,.45)}
-.vt-liste button{all:unset;display:block;cursor:pointer;padding:16px 18px}
-.vt-liste b{display:block;color:var(--text-primary);font-size:1.02em;margin-bottom:4px}.vt-liste span{color:var(--text-secondary);font-size:.93em;line-height:1.5}
-.vt-liste .fort{position:absolute;left:0;bottom:0;height:2px;background:var(--cyan);width:0}
-.vt-geraet{display:flex;flex-direction:column;align-items:center}
-.at-device.at-generisch{width:min(330px,78vw);background:linear-gradient(150deg,#46494f 0%,#2b2e33 24%,#1d1f23 62%,#131417 100%);border-radius:13% / 6.2%;
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.16),inset 0 0 0 1px rgba(255,255,255,.05),0 0 0 1px #08090b,0 50px 90px -45px rgba(0,0,0,.95),0 0 60px rgba(62,207,178,.07)}
-.at-generisch .at-screen{left:3.2%;top:1.6%;width:93.6%;height:96.8%;border-radius:10.8% / 5%}
-.vt-hinweis{margin-top:14px;font-size:12.5px;color:var(--text-dim);text-align:center}
-@media(max-width:860px){.vt{grid-template-columns:1fr}.vt-geraet{order:-1}}
-.studien{list-style:none;margin:var(--sp-21) 0 0;padding:0;display:grid;gap:12px;max-width:760px}
-.studien li{border-left:2px solid var(--cyan-deep,#1f7f6e);padding:4px 0 4px 16px;color:var(--text-secondary);line-height:1.6}
-.studien b{color:var(--text-primary)}.studien a{color:var(--cyan);font-size:.92em;white-space:nowrap}
 .beleg-bild{margin:var(--sp-21) 0 var(--sp-8);padding:var(--sp-8) var(--sp-8);
   border-radius:8px;background:rgba(255,255,255,.02);overflow:hidden}
 .beleg-bild svg{display:block;max-width:100%;height:auto}
@@ -929,6 +858,7 @@ html.rev-an .rev.in{opacity:1;transform:none}
 .tarif-fuss{max-width:62ch;margin-left:auto;margin-right:auto}
 h1,h2{text-wrap:balance}
 </style>
+<link rel="stylesheet" href="/assets/baukasten/baukasten.css?v=1">
 <link rel="stylesheet" href="/assets/app-tour/app-tour.css?v=10">
 </head>
 <body>
@@ -2124,52 +2054,13 @@ if(_lb) _lb.addEventListener('click', function(){
   }
 })();
 </script>
-<script>
-/* FAQ-Klicks zählen (GoatCounter, cookiefrei, ohne Personenbezug; je Aufruf einmal) – welche Frage interessiert? */
-(function(){var sp=(document.documentElement.lang||'de').indexOf('en')===0?'en':'de',schon={};
-document.querySelectorAll('details[data-spur-auf]').forEach(function(d){d.addEventListener('toggle',function(){
-if(!d.open)return;var n=d.getAttribute('data-spur-auf');if(schon[n])return;var g=window.goatcounter;if(!g||!g.count)return;
-schon[n]=1;g.count({path:'visite-'+sp+'/'+n,title:n,event:true});});});})();
-</script>
-<script>
-/* Live-Akte im Gerät (16.11.2026, Jan: „Original-App, spulbar, zoombar – man muss sehen, was man kauft“).
-   Erst Standbild (schnell), auf Tipp lädt das Cockpit selbst im Tablet-Format 1180×820 – exakt ins Glas eingepasst. */
-(function(){document.querySelectorAll('.pz-live').forEach(function(box){var k=box.querySelector('.pz-start');if(!k)return;
-k.addEventListener('click',function(){var img=box.querySelector('img');
-var glas=document.createElement('div');glas.className='pz-glas';var f=document.createElement('iframe');f.src=box.getAttribute('data-app');f.title=k.textContent;
-glas.appendChild(f);img.replaceWith(glas);k.remove();
-var pass=function(){f.style.transform='scale('+(glas.clientWidth/1180)+')';};pass();addEventListener('resize',pass);
-if(window.goatcounter&&goatcounter.count)goatcounter.count({path:'visite-live-akte',title:'live-akte',event:true});});});})();
-</script>
+
+
 <div class="leiste" id="leiste" hidden><span class="leiste-t">CARLON Equine Visite · ab 149&nbsp;€ netto/Monat</span><a class="leiste-b2" href="#preis">Tarife</a><a class="leiste-b" href="/carlon-equine/app/?demo=today">Demo öffnen →</a></div>
-<script>
-/* Mitlaufende Leiste (C6 Fable: „kein mitlaufender Knopf“) – erscheint, sobald der Kopf verlassen ist, verschwindet am Preis-Abschnitt. */
-(function(){var l=document.getElementById('leiste'),k=document.querySelector('.hero'),p=document.getElementById('preis');if(!l||!k||!('IntersectionObserver' in window))return;
-var imKopf=true,amPreis=false,b=l.querySelector('.leiste-b'),b2=l.querySelector('.leiste-b2'),de=(document.documentElement.lang||'de').indexOf('en')!==0,kauf=false,f=function(){l.hidden=imKopf||amPreis;};
-addEventListener('scroll',function(){var h=document.documentElement,jetzt=(h.scrollTop+innerHeight/2)>h.scrollHeight*0.5;if(jetzt===kauf)return;kauf=jetzt;
- if(kauf){b.textContent=de?'Praxis-Abo wählen · 149 € →':'Choose practice plan · €149 →';b.href='/carlon-equine/app/?kasse=praxis';b2.textContent='Demo';b2.href='/carlon-equine/app/?demo=today';}
- else{b.textContent=de?'Demo öffnen →':'Open demo →';b.href='/carlon-equine/app/?demo=today';b2.textContent=de?'Tarife':'Plans';b2.href='#preis';}},{passive:true});
-new IntersectionObserver(function(e){imKopf=e[0].isIntersecting;f();}).observe(k);
-if(p)new IntersectionObserver(function(e){amPreis=e[0].isIntersecting;f();},{threshold:.15}).observe(p);})();
-</script>
-<script>
-(function(){var sel='section h2,section .sec-lead,.feature,.shots,.gurt-block,.pz-block,.beleg-breit,.tarif,.faq-liste,details.mehr.gross,.geraete';
-var els=[].slice.call(document.querySelectorAll(sel)).filter(function(e){return !e.closest('.hero')&&!e.closest('.rv')});
-if(!('IntersectionObserver' in window)||matchMedia('(prefers-reduced-motion: reduce)').matches)return;
-els.forEach(function(e){var b=e.getBoundingClientRect();if(b.top>innerHeight)e.classList.add('rv');});
-var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);}});},{rootMargin:'0px 0px -8% 0px'});
-els.forEach(function(e){if(e.classList.contains('rv'))io.observe(e);});})();
-</script>
+
+
 <script src="/assets/app-tour/app-tour.js?v=14" defer></script>
-<script>
-/* Galerie – initGal (Kanon Breathwork/Research) auf jede Bildreihe angewandt */
-(function(){document.querySelectorAll('.shots.three').forEach(function(vp){var slides=[].slice.call(vp.querySelectorAll('.shot'));if(slides.length<2)return;
-var nav=document.createElement('div');nav.className='gal-nav';nav.innerHTML='<button class="gal-btn gal-prev" type="button" aria-label="Zurück">‹</button><span class="gal-meta"></span><button class="gal-btn gal-next" type="button" aria-label="Weiter">›</button>';vp.after(nav);
-var meta=nav.querySelector('.gal-meta'),a=0,up=function(i){a=i;slides.forEach(function(x,j){x.classList.toggle('is-active',j===i);});meta.textContent=(i+1)+' / '+slides.length;};
-var pl=false,waehle=function(){pl=false;var c=vp.getBoundingClientRect().left+vp.clientWidth/2,b=0,bd=1e9;slides.forEach(function(x,j){var r=x.getBoundingClientRect(),d=Math.abs(r.left+r.width/2-c);if(d<bd){bd=d;b=j;}});if(b!==a)up(b);};
-vp.addEventListener('scroll',function(){if(!pl){pl=true;requestAnimationFrame(waehle);}},{passive:true});
-var geh=function(i){i=Math.max(0,Math.min(slides.length-1,i));slides[i].scrollIntoView({behavior:'smooth',inline:'center',block:'nearest'});};
-nav.querySelector('.gal-prev').onclick=function(){geh(a-1);};nav.querySelector('.gal-next').onclick=function(){geh(a+1);};up(0);});})();
-</script>
+
+<script src="/assets/baukasten/baukasten.js?v=1"></script>
 </body>
 </html>

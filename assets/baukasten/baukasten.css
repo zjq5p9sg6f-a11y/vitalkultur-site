@@ -1,0 +1,82 @@
+/* BAUKASTEN Produktseiten – vitalkultur.com (16.11.2026). EINE Quelle; Seiten binden ein statt zu kopieren.
+   Farben über Seiten-Variablen (--text-primary, --border-faint, --cyan …); Kanon-Werte: website-werkstatt/BAUKASTEN.md */
+details.mehr.gross{margin-top:var(--sp-34);border:1px solid var(--border-faint);border-radius:16px;background:var(--bg-surface);padding:0 var(--sp-21)}
+details.mehr.gross>summary{list-style:none;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:16px;padding:18px 0;font-weight:600;color:var(--text-primary)}
+details.mehr.gross>summary::-webkit-details-marker{display:none}
+details.mehr.gross>summary::after{content:'+';font-size:22px;line-height:1;color:var(--cyan);transition:transform .2s}
+details.mehr.gross[open]>summary::after{transform:rotate(45deg)}
+details.mehr.gross[open]{padding-bottom:var(--sp-21)}
+/* Einblenden beim Scrollen wie Research/Breathwork (Jan 16.11.: „edler Effekt, einheitlich“) */
+.rv{opacity:0;transform:translateY(21px);transition:opacity .766s cubic-bezier(.2,.7,.2,1),transform .766s cubic-bezier(.2,.7,.2,1)}
+.rv.in{opacity:1;transform:none}
+@media(prefers-reduced-motion:reduce){.rv{opacity:1;transform:none;transition:none}}
+
+.leiste{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(14px + env(safe-area-inset-bottom,0px));z-index:60;display:flex;align-items:center;gap:12px;
+  padding:9px 9px 9px 18px;border-radius:999px;background:rgba(10,16,20,.88);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+  border:1px solid rgba(62,207,178,.32);box-shadow:0 18px 40px rgba(0,0,0,.55);max-width:calc(100% - 24px)}
+.leiste-t{font-size:13px;color:var(--text-secondary);white-space:nowrap}
+.leiste-b{padding:9px 16px;border-radius:999px;background:var(--cyan);color:#04130f;font-weight:700;font-size:13.5px;white-space:nowrap;text-decoration:none}
+.leiste-b2{font-size:13px;color:var(--cyan);text-decoration:none;white-space:nowrap}
+@media(max-width:560px){.leiste-t{display:none}}
+
+.faq-liste{display:grid;gap:10px;max-width:860px}
+.faq-item{background:var(--bg-surface);border:1px solid var(--border-faint);border-radius:14px;padding:0 var(--sp-21)}
+.faq-item summary{list-style:none;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:16px;padding:18px 0}
+.faq-item summary::-webkit-details-marker{display:none}
+.faq-item summary h3{margin:0;font-size:1.02em}
+.faq-item summary::after{content:'+';font-size:22px;line-height:1;color:var(--cyan);transition:transform .2s}
+.faq-item[open] summary::after{transform:rotate(45deg)}
+.faq-item .faq-a{padding:0 0 18px;color:var(--text-secondary)}
+
+/* GALERIE – Kanon Breathwork/Research `initGal` 1:1 (16.11.2026, Jan: „Beschleunigungsrampe, ein Bild nach dem anderen“):
+   Einrasten je Bild (scroll-snap mandatory + snap-stop always), Mitte aktiv, Nachbarn gedimmt/verkleinert, Pfeile + Zähler. */
+@media(max-width:1100px){
+  .shots.three{display:flex!important;overflow-x:auto;overflow-y:hidden;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;scrollbar-width:none;
+    overscroll-behavior-x:contain;gap:var(--sp-34);margin:0 calc(50% - 50vw);padding:6px 0 var(--sp-13)}
+  .shots.three::-webkit-scrollbar{display:none}
+  .shots.three::before,.shots.three::after{content:"";flex:0 0 calc(50vw - min(39vw,340px) - var(--sp-34))}
+  .shots.three .shot{flex:0 0 min(78vw,680px);margin:0;scroll-snap-align:center;scroll-snap-stop:always;opacity:.35;transform:scale(.92);transition:opacity .383s cubic-bezier(.2,.7,.2,1),transform .383s cubic-bezier(.2,.7,.2,1)}
+  .shots.three .shot.is-active{opacity:1;transform:none}
+  .gal-nav{display:flex;justify-content:center;align-items:center;gap:13px;margin-top:var(--sp-21);font-size:13px;color:var(--text-dim)}
+  .gal-btn{width:44px;height:44px;border-radius:50%;border:1px solid var(--border-subtle);background:transparent;color:var(--text-primary);cursor:pointer;font-size:18px}
+}
+@media(min-width:1101px){.gal-nav{display:none}}
+
+/* GERÄT (15.11.2026, Jan: „nur Screenshots mit Kontur – wirkt billig“; kein Apple-Gerät nachbauen):
+   generisches Tablet in Anthrazit – Aluminium-Verlauf, feine Lichtkante, schmaler Rand, Kamerapunkt
+   an der kurzen Seite (Querformat), Glas mit innerem Rand. Gilt für Hero, Funktionsbilder und Bildreihe. */
+.f-shot,.shots.three .frame,.hero-shot,.pz-live{position:relative;border:0!important;border-radius:24px!important;padding:11px 11px 11px 17px!important;
+  background:linear-gradient(150deg,#45494f 0%,#2c2f34 22%,#1e2024 60%,#141518 100%)!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.16),inset 0 0 0 1px rgba(255,255,255,.05),0 0 0 1px #08090b,
+    0 50px 90px -45px rgba(0,0,0,.95),0 18px 40px -30px rgba(0,0,0,.8),0 0 70px rgba(62,207,178,.07)!important;overflow:visible!important}
+.f-shot::before,.shots.three .frame::before,.hero-shot::after,.pz-live::before{content:''!important;position:absolute!important;left:6px!important;top:50%!important;
+  transform:translateY(-50%)!important;width:5px!important;height:5px!important;border-radius:50%!important;background:#0b0c0f!important;
+  box-shadow:0 0 0 1px rgba(255,255,255,.07),inset 0 0 1px rgba(80,160,200,.6)!important}
+.f-shot img,.shots.three .frame img,.hero-shot img,.pz-live img{display:block;width:100%;height:auto;border-radius:13px!important;box-shadow:0 0 0 1px rgba(0,0,0,.85),0 0 0 2px rgba(255,255,255,.03)}
+
+/* Messstation-Tour (16.11.2026): gemeinsame App-Tour-Komponente, aber GENERISCHES Telefon (Browser-Produkt, kein Apple-Gerät) */
+.vt{margin-top:var(--sp-34);display:grid;grid-template-columns:minmax(0,1fr) auto;gap:var(--sp-55);align-items:center}
+.vt-liste{list-style:none;margin:0;padding:0;display:grid;gap:10px}
+.vt-liste li{position:relative;border:1px solid var(--border-faint);border-radius:14px;background:var(--bg-surface);overflow:hidden}
+.vt-liste li.on{border-color:rgba(62,207,178,.45)}
+.vt-liste button{all:unset;display:block;cursor:pointer;padding:16px 18px}
+.vt-liste b{display:block;color:var(--text-primary);font-size:1.02em;margin-bottom:4px}.vt-liste span{color:var(--text-secondary);font-size:.93em;line-height:1.5}
+.vt-liste .fort{position:absolute;left:0;bottom:0;height:2px;background:var(--cyan);width:0}
+.vt-geraet{display:flex;flex-direction:column;align-items:center}
+.at-device.at-generisch{width:min(330px,78vw);background:linear-gradient(150deg,#46494f 0%,#2b2e33 24%,#1d1f23 62%,#131417 100%);border-radius:13% / 6.2%;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.16),inset 0 0 0 1px rgba(255,255,255,.05),0 0 0 1px #08090b,0 50px 90px -45px rgba(0,0,0,.95),0 0 60px rgba(62,207,178,.07)}
+.at-generisch .at-screen{left:3.2%;top:1.6%;width:93.6%;height:96.8%;border-radius:10.8% / 5%}
+.vt-hinweis{margin-top:14px;font-size:12.5px;color:var(--text-dim);text-align:center}
+@media(max-width:860px){.vt{grid-template-columns:1fr}.vt-geraet{order:-1}}
+
+.studien{list-style:none;margin:var(--sp-21) 0 0;padding:0;display:grid;gap:12px;max-width:760px}
+.studien li{border-left:2px solid var(--cyan-deep,#1f7f6e);padding:4px 0 4px 16px;color:var(--text-secondary);line-height:1.6}
+.studien b{color:var(--text-primary)}.studien a{color:var(--cyan);font-size:.92em;white-space:nowrap}
+
+.geraete{width:100%;max-width:640px;margin:var(--sp-21) 0 0;border-collapse:collapse;font-size:.95em}
+.geraete th{text-align:left;font-weight:600;color:var(--text-dim);font-size:.82em;letter-spacing:.06em;text-transform:uppercase;padding:0 0 8px;border-bottom:1px solid var(--border-faint)}
+.geraete td{padding:11px 0;border-bottom:1px solid var(--border-faint);color:var(--text-secondary)}
+.geraete td.ja{color:var(--cyan);font-weight:600}.geraete td.nein{color:var(--text-dim)}
+
+.pz-glas{position:relative;width:100%;aspect-ratio:1180/820;overflow:hidden;border-radius:13px;background:#0b0f14;box-shadow:0 0 0 1px rgba(0,0,0,.85)}
+.pz-glas iframe{position:absolute;left:0;top:0;width:1180px;height:820px;border:0;transform-origin:0 0;display:block}
