@@ -97,7 +97,7 @@
     var fest = null;
     function suche(ev) { var b = cv.getBoundingClientRect(), x = ev.clientX - b.left, y = ev.clientY - b.top, best = -1, bd = 1e9;
       for (var i = 0; i < k; i++) { var dx = X(rr[i]) - x, dy = Y(rr[i + 1]) - y, d = dx * dx + dy * dy; if (d < bd) { bd = d; best = i; } }
-      return (best < 0 || bd > 1600) ? null : best; }
+      return (best < 0 || bd > 4900) ? null : best; }
     function zeige(idx) { fest = idx; if (idx == null) { tipp.hidden = true; zeichne(); return; }
       zeichne(idx); tipp.hidden = false; tipp.style.left = X(rr[idx]) + 'px'; tipp.style.top = Y(rr[idx + 1]) + 'px';
       tipp.innerHTML = '<b>' + T.schlag + ' ' + (idx + 1) + '</b> · ' + fmtZeit(t[idx]) + '<br>' + Math.round(rr[idx]) + ' → ' + Math.round(rr[idx + 1]) + ' ms' + ((av[idx] || av[idx + 1]) ? '<br><span style="color:' + AMBER + '">' + T.av + '</span>' : ''); }
@@ -110,15 +110,21 @@
     cv.addEventListener('dblclick', function (e) { e.preventDefault(); zurueck(); });
     // Zeiger: suchen beim Ziehen; kurzer Tipp auf ein stehendes Fadenkreuz blendet es aus. Gezoomt + Maus ziehen = verschieben.
     var druck = null, zwei = false;
-    cv.addEventListener('pointerdown', function (e) { if (zwei) return; cv.setPointerCapture(e.pointerId);
-      druck = { x: e.clientX, y: e.clientY, t: Date.now(), war: fest, maus: e.pointerType === 'mouse', schieben: e.pointerType === 'mouse' && (vhi - vlo) < (hi - lo) - 1 && e.shiftKey === false && fest == null };
-      if (!druck.schieben && druck.war == null) zeige(suche(e)); });
+    /* Zeiger (16.11.2026, Jan: „reagiert zeitverzögert, störrisch“): Fadenkreuz SOFORT beim Aufsetzen, folgt dem Finger
+       ohne Totzone, je Bildschirmbild höchstens einmal gezeichnet. Ein kurzer Tipp auf denselben Punkt blendet es aus. */
+    var druck = null, zwei = false, rafZ = 0, letztesE = null;
+    function folge(e) { letztesE = e; if (rafZ) return; rafZ = requestAnimationFrame(function () { rafZ = 0; var i = suche(letztesE); if (i != null) zeige(i); }); }
+    cv.addEventListener('pointerdown', function (e) { if (zwei) return; try { cv.setPointerCapture(e.pointerId); } catch (_) {}
+      var gezoomt = (vhi - vlo) < (hi - lo) - 1;
+      druck = { x: e.clientX, y: e.clientY, t: Date.now(), war: fest, schieben: e.pointerType === 'mouse' && gezoomt && e.shiftKey };
+      if (!druck.schieben) { var i = suche(e); druck.idx = i; if (i != null && i !== fest) zeige(i); } });
     cv.addEventListener('pointermove', function (e) { if (zwei) return;
       if (druck) { if (druck.schieben) { schieb(e.clientX - druck.x); druck.x = e.clientX; return; }
-        if (Math.hypot(e.clientX - druck.x, e.clientY - druck.y) > 6) { druck.bewegt = true; zeige(suche(e)); } }
-      else if (e.pointerType === 'mouse' && fest == null) { var i2 = suche(e); if (i2 != null) { zeichne(i2); } else zeichne(); } });
-    cv.addEventListener('pointerup', function (e) { if (!druck) return; var kurz = !druck.bewegt && Date.now() - druck.t < 350;
-      if (kurz && druck.war != null) zeige(null); druck = null; });
+        if (Math.hypot(e.clientX - druck.x, e.clientY - druck.y) > 2) druck.bewegt = true; folge(e); }
+      else if (e.pointerType === 'mouse') folge(e); });
+    cv.addEventListener('pointerleave', function (e) { if (e.pointerType === 'mouse' && !druck) zeige(null); });
+    cv.addEventListener('pointerup', function (e) { if (!druck) return; var kurz = !druck.bewegt && Date.now() - druck.t < 300;
+      if (kurz && druck.war != null && druck.idx === druck.war) zeige(null); druck = null; });
     cv.addEventListener('pointercancel', function () { druck = null; });
     var t2 = null, letzterTipp = 0;
     cv.addEventListener('touchstart', function (e) { if (e.touches.length === 2) { e.preventDefault(); zwei = true; druck = null; var a = e.touches[0], b = e.touches[1]; t2 = { d: Math.hypot(a.clientX - b.clientX, a.clientY - b.clientY), x: (a.clientX + b.clientX) / 2 }; }

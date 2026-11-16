@@ -1820,6 +1820,10 @@ nav.tabs button.on{text-shadow:none}
   .table-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch}
   .ledger{min-width:540px}
 }
+/* SCHAUFENSTER (?schaufenster=1, 16.11.2026): eingebettet im Hero der Visite-Seite – eigene Datenbank,
+   keine Status-Pillen, keine Hinweise, keine Einführung. Nur die echte Oberfläche zum Selbst-Bedienen. */
+html.schau #tierPill,html.schau #speicherPill,html.schau #postPill,html.schau #safeBanner,html.schau #tour,html.schau #splash,
+html.schau #toasts,html.schau [class*=toast],html.schau .pilot-band,html.schau #bottomNav{display:none!important}
 /* KOPF PASST SICH SELBST AN (16.11.2026, Jan: „Demo freischalten geht über den Rand“; Passform-Prüfstand:
    Überlauf 246/160/153 px bei 1280/1366/1600 px). Statt fester Breakpoints misst Kopf.passen() die Leiste und
    verdichtet stufenweise, bis alles passt – auf jedem Tablet- und Telefonformat. */
@@ -2232,7 +2236,7 @@ const DB = {
   _db:null, _c:{},
   async open(){
     return new Promise((res,rej)=>{
-      const r=indexedDB.open(location.search.includes('previewdb')?'carlon_verify':'carlon_clinic',2);
+      const r=indexedDB.open(location.search.includes('previewdb')?'carlon_verify':(location.search.includes('schaufenster')?'carlon_schaufenster':'carlon_clinic'),2);
       r.onupgradeneeded=e=>{
         const db=e.target.result;
         ['horses','recordings','consults','settings','coherence'].forEach(s=>{
@@ -5796,7 +5800,7 @@ const Views={
         </div>
         <div class="detail-full">
           ${Views.voicePanel(h.id)}
-          ${recs.length>1?`<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;flex-wrap:wrap;gap:8px">
+          ${recs.length>1?`<div id="verlaufAkte" style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;flex-wrap:wrap;gap:8px">
             <div style="font-size:13px;font-weight:600;color:var(--text-secondary);display:flex;align-items:center;gap:8px">
               <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--cyan)" stroke-width="2"><path d="M3 3v18h18"/><path d="M7 14l4-4 3 3 5-6"/></svg>
               Historische Werte &amp; Monitoring</div>
@@ -12019,10 +12023,12 @@ const Sprache={
           if(h) Views.openHorse(h.id); else Nav.go(erlaubt.includes(v)?v:'today');
           /* &fokus=poincare (16.11.2026): Visite-Seite bettet die echte Akte ein und springt zur Poincaré-Karte mit Zeitregler. */
           if(h && _p.get('fokus')==='poincare') setTimeout(()=>{ const f=document.getElementById('pzAkte'); if(f) f.scrollIntoView({block:'center'}); },700);
+          /* &fokus=verlauf (16.11.2026): Schaufenster im Hero der Visite-Seite – genau der Ausschnitt des Films, danach selbst bedienbar. */
+          if(h && _p.get('fokus')==='verlauf') setTimeout(()=>{ const f=document.getElementById('verlaufAkte'); if(f){ f.scrollIntoView({block:'start'}); window.scrollBy(0,-78); const m=$('#main'); if(m&&m.scrollTop) m.scrollTop-=78; } try{ parent.postMessage({carlonSchaufenster:'bereit'},'*'); }catch(_){} },700);
         }catch(e){ console.error('demo',e); }
       },300);}
     // Persistenz nochmals nach erster Nutzer-Interaktion anfordern (wird dann eher gewährt) + Banner aktualisieren
-    addEventListener('pointerdown',async function pOnce(){ removeEventListener('pointerdown',pOnce);
+    if(!document.documentElement.classList.contains('schau')) addEventListener('pointerdown',async function pOnce(){ removeEventListener('pointerdown',pOnce);
       try{ if(!(await Persist.status())) await Persist.request(); }catch(e){} Safe.renderBanner(); },{once:true});
     // Nie stiller Datenverlust: unbehandelte DB-Schreibfehler laut melden
     addEventListener('unhandledrejection',e=>{ const m=(e.reason&&(e.reason.name||e.reason.message)||'')+''; if(/quota|abort|constraint|InvalidState|Unknown|Transaction|Data/i.test(m)){ Safe.writeFailed('unbekannt',e.reason);} });
@@ -12038,6 +12044,7 @@ const Sprache={
   }
 })();
 
+if(new URLSearchParams(location.search).has('schaufenster')) document.documentElement.classList.add('schau');
 /* Kopf.passen – verdichtet die Kopfleiste stufenweise (k1…k7), bis nichts mehr übersteht. */
 const Kopf={
   passen(){
