@@ -1055,7 +1055,7 @@ try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; 
         <a class="schau-voll" href="/carlon-equine/app/?demo=map" title="Cockpit im Vollbild öffnen">Vollbild ↗</a></div>
     <div class="tour-punkte m-wisch">
       <div class="tp"><svg class="ic li-ic" aria-hidden="true"><use href="#i-route"/></svg><h3>Kurze Wege – oder Ihre eigene Reihenfolge</h3><p>Standard: Stopp für Stopp zum nächstgelegenen Pferd, mit Ihren Terminen. Auf Wunsch sortieren Sie die Liste rechnerisch nach der Messwert-Abweichung zur eigenen Basis und legen die Reihenfolge danach selbst fest – eine Dringlichkeit stellt die Software nicht fest. Ändern lässt sie sich per Greifpunkt, Stopp für Stopp.</p></div>
-      <div class="tp"><svg class="ic li-ic" aria-hidden="true"><use href="#i-uhr"/></svg><h3>Fahrzeit an jedem Stopp</h3><p>Ankunft, Fahrzeit und Ansprechpartner stehen an jeder Karte, bevor Sie zusagen.</p></div>
+      <div class="tp"><svg class="ic li-ic" aria-hidden="true"><use href="#i-uhr"/></svg><h3>Geschätzte Fahrzeit an jedem Stopp</h3><p>Ankunft, Fahrzeit und Ansprechpartner stehen an jeder Karte, bevor Sie zusagen. Geschätzt im Cockpit selbst (Luftlinie × 1,32 bei 45 km/h), ohne externen Routendienst.</p></div>
       <div class="tp"><svg class="ic li-ic" aria-hidden="true"><use href="#i-schild"/></svg><h3>Ein Tipp zu Google Maps</h3><p>Messdaten und Akten bleiben auf Ihrem Gerät. Für Karte und Adresssuche ruft Ihr Browser Kartenkacheln und die eingegebene Anschrift bei OpenStreetMap ab; an Google Maps geht die Route erst auf Ihren Tipp.</p></div>
       <div class="tp"><svg class="ic li-ic" aria-hidden="true"><use href="#i-akte"/></svg><h3>Termine, Fahrten und Zeiten</h3><p>Termine tragen Sie je Pferd ein; Tagesplan und Termine gehen als Kalenderdatei (.ics) in Ihren Kalender. Leistungen, Fahrten und Zeiten entstehen nebenbei und gehen als CSV heraus (kein steuerliches Fahrtenbuch).</p></div>
     </div>
@@ -1189,8 +1189,7 @@ try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; 
       </div>
       <div class="card">
         <h3>Tachogramm, Poincaré und Spektrum – mit Achsen, Einheiten und Raster</h3>
-        <p>Tachogramm, Poincaré, Spektrum, DFA, Histogramm — dieselben Darstellungen wie
-           in der iOS-App, im Vollbild neu gezeichnet statt hochskaliert.</p>
+        <p>Tachogramm, Poincaré, Spektrum, DFA, Histogramm — im Vollbild neu gezeichnet statt hochskaliert.</p>
       </div>
       <div class="card">
         <h3>Messwertbericht und Dokumentation an einer Stelle</h3>
@@ -1259,12 +1258,7 @@ try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; 
     </figure>
     <h3 class="sub-h">Und warum in der gewohnten Box?</h3>
     <p class="sec-lead">
-      Transport, fremde Umgebung, fremde Menschen — jeder dieser Reize verschiebt genau die
-      autonome Balance, die Sie beobachten wollen. Der Messort ist bei der Ruhe-HRV keine
-      Nebensache, sondern Teil der Methode: Die Auswertung verlangt
-      <strong>mindestens sieben Minuten Ruhe in gewohnter Umgebung</strong> — darunter gibt
-      sie kein Ergebnis aus. Nach Verladung
-      und Fahrt ist das kaum zu erreichen, in der gewohnten Box dagegen jeden Tag.
+      Transport verändert Herzfrequenz und HRV (Schmidt et&nbsp;al. 2010); für fremde Umgebung und fremde Menschen nehmen wir dasselbe an. Der Messort ist bei der Ruhe-HRV deshalb Teil der Methode: Die Messstation empfiehlt <strong>mindestens sieben Minuten ruhige Aufnahme</strong> und zeigt den Fortschritt dorthin – die sieben Minuten sind unsere Festlegung. Ort und Vorbedingung hält die Halterin im Messprotokoll fest. Für die Zeit nach einer Verladung haben wir keinen Beleg; in der gewohnten Box stellt sich die Frage nicht.
     </p>
 <figure class="grafik rev" aria-label="RMSSD vor und während Straßentransport: 74 auf 45 Millisekunden bei 3,5 Stunden, 89,7 auf 59 Millisekunden bei 8 Stunden (Schmidt et al. 2010)">
       <svg viewBox="0 0 760 240" fill="none" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
@@ -1353,8 +1347,7 @@ try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; 
       <p class="beleg">In einer Ruheaufnahme — 642 Schläge, 0,31 % Artefaktrate,
          von der Qualitätsanzeige als <em>exzellent</em> geführt — genügen
          <strong>zwei</strong> Schläge, eine lange Pause mit ihrem kurzen Folgeschlag,
-         um die RMSSD von 24,2 auf 55,5 ms zu heben, <strong>mehr als das Doppelte</strong> –
-         und die Qualitätsanzeige warnt kein einziges Mal. Ein hoher Anteil plausibler Schläge garantiert nicht, dass der Kennwert stimmt (eigene Aufnahme, ein Pferd).</p>
+         um die RMSSD von 24,2 auf 55,5 ms zu heben, <strong>mehr als das Doppelte</strong> – und eine Anzeige, die nur Artefakte zählt, bleibt auf „exzellent“. Deshalb weist Visite lange Pausen getrennt aus. Ein hoher Anteil plausibler Schläge garantiert nicht, dass der Kennwert stimmt (eigene Aufnahme, ein Pferd).</p>
     </div>
     <div class="pz-block pz-echt-block">
       <div class="pz-text">
@@ -1449,7 +1442,7 @@ try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; 
       </picture>
       <figcaption>
         <div class="sec-eyebrow">Der Sensor</div>
-        <h3>Polar H10 mit Equine-Gurt: elektrisch gemessen. Eine Vergleichsstudie am Pferd liegt vor.</h3>
+        <h3>Polar H10 mit Equine-Gurt: elektrisch gemessen. Am Pferd mit dem EKG verglichen – in anderem Aufbau als hier.</h3>
         <ul class="gurt-liste">
           <li class="mit-ic"><svg class="ic li-ic" aria-hidden="true"><use href="#i-ekg"/></svg><b>R-Zacken statt Lichtpuls.</b> Der H10 misst die elektrische Herzaktivität und liefert jeden Schlagabstand mit rund 1&nbsp;ms Auflösung (1/1024&nbsp;s) – optische Sensoren schätzen ihn aus Licht.</li>
           <li class="mit-ic"><svg class="ic li-ic" aria-hidden="true"><use href="#i-gurt"/></svg><b>Für den Pferdekörper gemacht.</b> Der Equine-Gurt ist auf den Brustumfang des Pferds ausgelegt; Elektrodengel auf dem Fell senkt die Fell-Impedanz – das verbessert in der Regel den Kontakt; ob das Signal trägt, zeigt die Messstation live.</li>
@@ -1461,7 +1454,7 @@ try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; 
     <p class="sec-lead" style="margin-top:var(--sp-21)">
       Bei Ihnen kommt kein Screenshot an, sondern ein Datensatz: alle Schlagabstände im
       Rohzustand, die daraus berechneten Kennwerte und die Signalgüte dazu. Sie sehen also
-      nicht nur eine Zahl, sondern auch, <strong>wie sehr Sie ihr trauen können</strong>.
+      nicht nur eine Zahl, sondern auch, <strong>auf wie vielen auswertbaren Schlagpaaren sie beruht</strong>.
       Ins Cockpit kommt die Datei mit einem Handgriff — hineinziehen, fertig: Signalgüte
       und Verlauf stehen sofort da, ab der vierten Aufnahme auch der Vergleich mit der eigenen Basis.
     </p>
@@ -1607,7 +1600,7 @@ try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; 
       <div class="tarif-alt">oder 3.490&nbsp;€ netto im Jahr (4.153,10&nbsp;€ inkl. USt.) — zwei Monate gespart</div>
       <ul class="enthalten">
         <li>Alles aus der Praxis-Stufe</li>
-        <li>Gemeinsamer Klinik-Ordner auf Ihrem Netzlaufwerk — jedes Gerät sieht denselben Stand, ohne Cloud. Verbunden wird er einmal am Rechner in Chrome oder Edge.</li>
+        <li>Gemeinsamer Klinik-Ordner auf Ihrem Netzlaufwerk — die Arbeitsplätze am Rechner sehen denselben Stand, ohne Cloud. Verbunden wird er einmal am Rechner in Chrome oder Edge.</li>
         <li>Stationswand für den Monitor im Stationszimmer, ohne Alarme</li>
         <li>Mehrere Arbeitsplätze im selben Klinik-Ordner</li>
         <li>Feste Methodenversion je Auswertung — für Archiv und Studien</li>

@@ -1054,7 +1054,7 @@ try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; 
         <a class="schau-voll" href="/carlon-equine/app/?demo=map" title="Open the cockpit full screen">Full screen ↗</a></div>
     <div class="tour-punkte m-wisch">
       <div class="tp"><svg class="ic li-ic" aria-hidden="true"><use href="#i-route"/></svg><h3>Short drives – or your own order</h3><p>Default: stop by stop to the nearest horse, with your appointments. If you wish, you sort the list arithmetically by the measured deviation from the own baseline and then set the order yourself – the software does not determine urgency. You change it by dragging, stop by stop.</p></div>
-      <div class="tp"><svg class="ic li-ic" aria-hidden="true"><use href="#i-uhr"/></svg><h3>Drive time at every stop</h3><p>Arrival, drive time and contact are on every card before you commit.</p></div>
+      <div class="tp"><svg class="ic li-ic" aria-hidden="true"><use href="#i-uhr"/></svg><h3>Estimated drive time at every stop</h3><p>Arrival, drive time and contact are on every card before you commit. Estimated in the cockpit itself (straight line × 1.32 at 45 km/h), without an external routing service.</p></div>
       <div class="tp"><svg class="ic li-ic" aria-hidden="true"><use href="#i-schild"/></svg><h3>One tap to Google Maps</h3><p>Measurement data and records stay on your device. For the map and address search your browser fetches map tiles and the address you enter from OpenStreetMap; the route goes to Google Maps only on your tap.</p></div>
       <div class="tp"><svg class="ic li-ic" aria-hidden="true"><use href="#i-akte"/></svg><h3>Appointments, trips and times</h3><p>You enter appointments per horse; the day plan and appointments go to your calendar as a calendar file (.ics). Services, trips and times are recorded along the way and export as CSV (not a tax logbook).</p></div>
     </div>
@@ -1188,8 +1188,7 @@ try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; 
       </div>
       <div class="card">
         <h3>Tachogram, Poincaré and spectrum – with axes, units and grid</h3>
-        <p>Tachogram, Poincaré, spectrum, DFA, histogram — the same views as in the iOS app,
-           redrawn at full size rather than scaled up.</p>
+        <p>Tachogram, Poincaré, spectrum, DFA, histogram — redrawn at full size rather than scaled up.</p>
       </div>
       <div class="card">
         <h3>Measurement report and documentation in one place</h3>
@@ -1257,12 +1256,7 @@ try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; 
     </figure>
     <h3 class="sub-h">And why in the familiar stall?</h3>
     <p class="sec-lead">
-      Transport, unfamiliar surroundings, unfamiliar people — each of these shifts exactly the
-      autonomic balance you want to observe. For resting HRV the place of recording is not a
-      side issue but part of the method: the analysis requires
-      <strong>at least seven minutes of rest in familiar surroundings</strong> — below that it
-      gives no result. After loading
-      and a drive this is hard to achieve; in the familiar stall it is achievable every day.
+      Transport changes heart rate and HRV (Schmidt et&nbsp;al. 2010); for unfamiliar surroundings and people we assume the same. The place of recording is therefore part of the method for resting HRV: the measuring station recommends <strong>at least seven minutes of calm recording</strong> and shows the progress towards it – the seven minutes are our own definition. The owner notes place and prior conditions in the recording log. For the time after loading we have no evidence; in the familiar stall the question does not arise.
     </p>
 <figure class="grafik rev" aria-label="RMSSD before and during road transport: 74 to 45 milliseconds over 3.5 hours, 89.7 to 59 milliseconds over 8 hours (Schmidt et al. 2010)">
       <svg viewBox="0 0 760 240" fill="none" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
@@ -1351,8 +1345,7 @@ try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; 
       <p class="beleg">In a resting recording — 642 beats, 0.31 % artefact rate, rated
          <em>excellent</em> by the quality indicator — <strong>two</strong> beats,
          a long pause with its short follow-on beat, are enough to lift RMSSD from
-         24.2 to 55.5 ms, <strong>more than double</strong> – and the quality
-         indicator never warns. A high share of plausible beats does not guarantee that the metric is right (own recording, one horse).</p>
+         24.2 to 55.5 ms, <strong>more than double</strong> – and an indicator that only counts artefacts stays at “excellent”. That is why Visite reports long pauses separately. A high share of plausible beats does not guarantee that the metric is right (own recording, one horse).</p>
     </div>
     <div class="pz-block pz-echt-block">
       <div class="pz-text">
@@ -1447,7 +1440,7 @@ try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; 
       </picture>
       <figcaption>
         <div class="sec-eyebrow">The sensor</div>
-        <h3>Polar H10 with the Equine belt: measured electrically. A comparison study in horses exists.</h3>
+        <h3>Polar H10 with the Equine belt: measured electrically. Compared with the ECG in horses – in a different set-up than here.</h3>
         <ul class="gurt-liste">
           <li class="mit-ic"><svg class="ic li-ic" aria-hidden="true"><use href="#i-ekg"/></svg><b>R-waves, not a light pulse.</b> The H10 measures the heart’s electrical activity and delivers every beat interval at about 1&nbsp;ms resolution (1/1024&nbsp;s) – optical sensors estimate it from light.</li>
           <li class="mit-ic"><svg class="ic li-ic" aria-hidden="true"><use href="#i-gurt"/></svg><b>Made for the horse’s body.</b> The Equine belt is sized for the horse’s girth; electrode gel on the coat lowers the coat impedance – that usually improves contact; whether the signal holds, the measuring station shows live.</li>
@@ -1459,7 +1452,7 @@ try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; 
     <p class="sec-lead" style="margin-top:var(--sp-21)">
       What reaches you is not a screenshot but a dataset: every beat interval in its
       raw state, the measures computed from it and the signal quality alongside. So you see
-      not just a number but also <strong>how far you can trust it</strong>.
+      not just a number but also <strong>how many usable beat pairs it rests on</strong>.
       The file goes into the cockpit with one move — drag it in, done: signal quality
       and the trend are there at once, and from the fourth recording also the comparison with the horse’s own baseline.
     </p>
@@ -1605,7 +1598,7 @@ try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; 
       <div class="tarif-alt">or €3,490 net a year (€4,153.10 incl. VAT) — two months saved</div>
       <ul class="enthalten">
         <li>Everything in the practice plan</li>
-        <li>Shared clinic folder on your network drive — every device sees the same state, no cloud. It is connected once on a computer in Chrome or Edge.</li>
+        <li>Shared clinic folder on your network drive — workstations on a computer see the same state, no cloud. It is connected once on a computer in Chrome or Edge.</li>
         <li>Station wall for the monitor in the ward, no alerts</li>
         <li>Several workstations in the same clinic folder</li>
         <li>A fixed method version per analysis — for archives and studies</li>
