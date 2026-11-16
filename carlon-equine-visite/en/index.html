@@ -980,6 +980,25 @@ h1,h2{text-wrap:balance}
   .hb-karte .hero-shot,.hb-karte .hero-tour{width:100%!important;margin:0!important}
   .hero-buehne .wisch-punkte{margin-top:16px!important}
   .hero-buehne .fc-gross{margin:12px 16px 0!important}
+  .pz-echt-block .pz-tablet.nur-gross{display:none!important}
+  .pz-hinweis{display:block!important}
+  .pz-hinweis svg.ic{display:inline-block;vertical-align:-5px;margin-right:6px}
+  
+  .at-device{width:min(292px,66vw,calc((100svh - 280px) * 0.49))!important;margin-left:auto;margin-right:auto}
+  
+  .faq-liste{margin-top:var(--sp-34)!important}
+  
+  .export-liste{list-style:none;margin:var(--sp-21) 0 0;padding:18px;border-radius:20px;border:1px solid rgba(62,207,178,.28);background:rgba(62,207,178,.04)}
+  .export-liste .el-kopf{font-family:var(--font-mono);font-size:11px;letter-spacing:.2em;color:var(--cyan);margin-bottom:4px}
+  .export-liste .el-sub{font-size:12.5px;color:var(--text-dim);margin-bottom:12px}
+  .export-liste li{display:flex;justify-content:space-between;gap:12px;align-items:baseline;padding:11px 0;border-top:1px solid var(--border-subtle)}
+  .export-liste li b{font-family:var(--font-mono);font-weight:500;font-size:13.5px;color:var(--text-primary)}
+  .export-liste li span{font-size:12.5px;color:var(--text-dim);text-align:right}
+  figure.grafik.als-liste>svg{display:none!important}
+  figure.grafik.als-liste{overflow:visible!important;margin-right:0!important;padding:0!important;border:0!important;background:none!important}
+  .pz-telefon{margin:0 -4px;padding:16px 12px 14px;border-radius:24px;border:1px solid rgba(255,255,255,.08);background:#000}
+  .pz-telefon .pz{margin:0}
+  .pz-telefon-q{margin:10px 0 0;text-align:center;font-size:12px;color:var(--text-dim);letter-spacing:.02em}
   
   .leiste{display:none!important}
   nav .btn-demo .bd-play{display:none}
@@ -1423,7 +1442,7 @@ try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; 
       <div class="pz-text">
         <div class="sec-eyebrow">Poincaré with time slider</div>
         <h3>Every beat keeps its timestamp – scrub through the recording.</h3>
-        <p>This is the record in the cockpit, not a graphic of it: every beat pair a point, the SD1/SD2 ellipse for the selected time window. As soon as the tablet comes into view, the cloud builds up beat by beat. Long pauses glow amber.</p>
+        <p>This is the component from the record in the cockpit, not a graphic of it: every beat pair a point, the SD1/SD2 ellipse for the selected time window. As soon as the plot comes into view, the cloud builds up beat by beat. Long pauses glow amber.</p>
         <p class="pz-hinweis"><svg class="ic" aria-hidden="true"><use href="#i-pfeil"/></svg>Drag the time slider back and forth. <span class="nur-maus">Point at a dot: the crosshair shows beat, time and both intervals in milliseconds. Mouse wheel zooms, double-click resets.</span><span class="nur-touch">Tap a dot: the crosshair shows beat, time and both intervals in milliseconds. Two fingers zoom, double-tap resets.</span></p>
         <a class="pz-mehr" href="/carlon-equine/app/?demo=roster&amp;pferd=champion&amp;fokus=poincare">Continue in the cockpit with 15 demo horses →</a>
       </div>
@@ -2041,6 +2060,21 @@ if(_lb) _lb.addEventListener('click', function(){
 
 (function(){
   if(!(window.matchMedia&&matchMedia('(max-width:720px)').matches)) return;
+  
+  (function(){ var t=document.querySelector('.pz-echt-block .pz-tablet'); if(!t) return; var EN=(document.documentElement.lang||'de').indexOf('en')===0;
+    var w=document.createElement('div'); w.className='pz-telefon';
+    w.innerHTML='<figure class="pz" data-quelle="/carlon-equine/app/belege/rmssd-roh-vs-korrigiert.json" data-lang="'+(EN?'en':'de')+'"></figure><p class="pz-telefon-q">'+(EN?'Real resting recording of a horse · Polar H10 · 642 beats':'Echte Ruheaufnahme eines Pferds · Polar H10 · 642 Schläge')+'</p>';
+    t.parentNode.insertBefore(w,t); t.classList.add('nur-gross');
+    var s=document.createElement('script'); s.src='/carlon-equine-visite/assets/poincare-zeit.js?v=20261116c'; s.defer=true; document.body.appendChild(s); })();
+  
+  (function(){ var f=document.querySelector('figure.grafik[aria-label^="Eine Aufnahme"],figure.grafik[aria-label^="One recording"]'); if(!f) return;
+    var s=f.querySelector('svg'); if(!s) return; var tx=[].slice.call(s.querySelectorAll('text')).map(function(t){return {c:t.getAttribute('class')||'',t:t.textContent};});
+    var ul=document.createElement('ul'); ul.className='export-liste'; var kopf=tx.filter(function(x){return /gr-marke/.test(x.c);})[0];
+    var sub=tx.filter(function(x){return /gr-klein/.test(x.c);}); var chips=tx.filter(function(x){return /gr-chip-t/.test(x.c);});
+    var h='<div class="el-kopf">'+(kopf?kopf.t:'')+'</div>'; var rest=sub.slice(chips.length);
+    if(sub.length>chips.length) h+='<div class="el-sub">'+sub.slice(0,sub.length-chips.length).map(function(x){return x.t;}).join(' · ')+'</div>';
+    chips.forEach(function(c,i){ h+='<li><b>'+c.t+'</b><span>'+((sub[sub.length-chips.length+i]||{}).t||'')+'</span></li>'; });
+    ul.innerHTML=h; f.appendChild(ul); f.classList.add('als-liste'); })();
   
   (function(){ var r=document.querySelector('.hb-geraete'); if(!r) return; var EN=(document.documentElement.lang||'de').indexOf('en')===0;
     var S=EN?['The owner records in the stable: heart rate, HRV and Poincaré live.','In the record: every resting recording against the horse’s own baseline.','Your day route stop by stop, with drive time per stop.']
