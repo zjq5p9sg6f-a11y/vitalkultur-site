@@ -350,7 +350,9 @@ svg.ic.vt-ic{grid-row:1 / span 2;width:34px;height:34px;padding:7px;box-sizing:b
 .hero-phone img,.hero-phone video{border-radius:calc(var(--r) - var(--b))!important}
 .hero-phone::after{content:'';position:absolute;top:calc(var(--b) + 1.4%);left:50%;width:4.2%;aspect-ratio:1;transform:translateX(-50%);border-radius:50%;background:#000;box-shadow:inset 0 0 0 1px #23262b;z-index:3}
 .hero-phone::before{content:'';position:absolute;right:-4px;top:20%;width:2.5px;height:9%;border-radius:0 2px 2px 0;background:#34383d;box-shadow:0 calc(100% + 14px) 0 0 #34383d}
-.pz-echt-block{align-items:start}
+.pz-echt-block{grid-template-columns:1fr!important;background:none!important;border:0!important;padding:0!important;gap:var(--sp-34)!important}
+.pz-echt-block .pz-text{max-width:760px}
+.pz-echt-block .pz-tablet{max-width:1120px;width:100%;margin:0 auto}
 .pz-echt{padding:clamp(12px,1.6vw,20px)!important;overflow:visible!important}
 .pz-echt .pz{background:#000;border-radius:calc(var(--r) - var(--b));padding:clamp(10px,1.4vw,18px)}
 .pz-hinweis{display:flex;gap:10px;align-items:flex-start;margin-top:var(--sp-21)!important;font-size:var(--t-klein);color:var(--text-dim)!important}
@@ -366,7 +368,9 @@ svg.ic.vt-ic{grid-row:1 / span 2;width:34px;height:34px;padding:7px;box-sizing:b
 .gurt-liste{display:grid!important;grid-template-columns:1fr 1fr;gap:var(--sp-21) var(--sp-34)!important}
 @media(max-width:720px){.gurt-liste{grid-template-columns:1fr}.gurt-block figcaption{padding:0 4px;margin-top:-28px}.gurt-block img{aspect-ratio:4/3}}
 
-.hero-shot{overflow:hidden}
+.hero-shot{overflow:visible}
+.pz-tablet{display:block}
+.pz-tablet img{display:block;width:100%;height:auto}
 .hero-shot .schau-rahmen{position:absolute;left:var(--b);top:var(--b);width:calc(100% - 2 * var(--b));aspect-ratio:1600/1112;overflow:hidden;border-radius:calc(var(--r) - var(--b));opacity:0;transition:opacity .6s ease;background:#000}
 .hero-shot .schau-rahmen.an{opacity:1}
 .hero-shot .schau-rahmen iframe{position:absolute;left:0;top:0;width:1280px;height:890px;border:0;transform-origin:0 0}
@@ -378,6 +382,9 @@ svg.ic.vt-ic{grid-row:1 / span 2;width:34px;height:34px;padding:7px;box-sizing:b
 .schau-voll{position:absolute;right:calc(var(--b) + 10px);top:calc(var(--b) + 10px);z-index:4;font:600 11px var(--font-mono);letter-spacing:.06em;color:var(--text-secondary);
   background:rgba(8,10,12,.8);border:1px solid var(--border-subtle);border-radius:999px;padding:5px 10px;opacity:0;transition:opacity .3s}
 .hero-shot:hover .schau-voll,.hero-shot.schau-an .schau-voll{opacity:1}
+.schau-box .schau-voll{top:auto!important;bottom:-40px;right:2px!important}
+.pz-tablet .schau-hinweis{bottom:auto;top:calc(var(--b) + 13%)}
+.pz-echt-block{padding-bottom:var(--sp-34)!important}
 @media(max-width:640px){.schau-hinweis{font-size:11px;padding:6px 10px}}
 
 .ablauf{list-style:none;margin:var(--sp-55) 0 0;padding:0;display:grid;grid-template-columns:repeat(5,1fr);gap:var(--sp-21);counter-reset:ab}
@@ -918,7 +925,7 @@ try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; 
     <p class="cta-note">Vitalkultur, Iffezheim, Germany<span id="heroBeta"> · We are in beta and accompany every practice personally — join now and you keep your price as a founding partner.</span></p>
     <figure class="hero-buehne">
       <div class="hb-geraete">
-      <div class="hero-shot" data-schau="/carlon-equine/app/?schaufenster=1&amp;demo=roster&amp;pferd=sunny&amp;fokus=verlauf">
+      <div class="hero-shot schau-box" data-schau="/carlon-equine/app/?schaufenster=1&amp;demo=roster&amp;pferd=sunny&amp;fokus=verlauf">
         <video src="../assets/visite-shots/13-verlauf-film-v3.mp4" poster="assets/visite-shots/13-verlauf-v3.jpg" width="1600" height="1112" autoplay muted playsinline preload="auto" aria-label="Record of a demo horse in the cockpit: RMSSD, resting heart rate and SDNN trends over weeks against its own baseline, below it heart rate and HRV of a resting recording beat by beat"></video><span class="schau-hinweis" hidden><svg class="ic" aria-hidden="true"><use href="#i-pfeil"/></svg>Now try it: move over the curves or tap</span>
         <a class="schau-voll" href="/carlon-equine/app/?demo=roster&amp;pferd=sunny" title="Open the cockpit full screen">Full screen ↗</a></div>
       <span class="hero-phone" aria-hidden="true"><video src="../assets/station-tour/live-v4.mp4" poster="assets/station-tour/live-poster-v4.jpg" width="660" height="1428" autoplay muted loop playsinline preload="auto"></video></span>
@@ -1135,13 +1142,14 @@ try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; 
       <div class="pz-text">
         <div class="sec-eyebrow">Poincaré with time slider</div>
         <h3>Every beat keeps its timestamp – scrub through the recording.</h3>
-        <p>The same resting recording as above, as the cockpit shows it: every beat pair a point, the SD1/SD2 ellipse for the selected time window. As soon as the chart comes into view, the cloud builds up beat by beat – the two pairs with the long pause glow amber and visibly jump out of the cloud.</p>
+        <p>This is the record in the cockpit, not a graphic of it: every beat pair a point, the SD1/SD2 ellipse for the selected time window. As soon as the tablet comes into view, the cloud builds up beat by beat. Long pauses glow amber.</p>
         <p class="pz-hinweis"><svg class="ic" aria-hidden="true"><use href="#i-pfeil"/></svg>Drag the time slider back and forth. Point at a dot: the crosshair shows beat, time and both intervals in milliseconds. Mouse wheel zooms, double-click resets.</p>
         <a class="pz-mehr" href="/carlon-equine/app/?demo=roster&amp;pferd=champion&amp;fokus=poincare">Continue in the cockpit with 15 demo horses →</a>
       </div>
-      <div class="pz-live pz-echt">
-        <figure class="pz" data-quelle="/carlon-equine/app/belege/rmssd-roh-vs-korrigiert.json" aria-label="Poincaré plot of the resting recording with 642 beats and time slider"></figure>
-      </div>
+      <div class="hero-shot schau-box pz-tablet" data-schau="/carlon-equine/app/?schaufenster=1&amp;demo=roster&amp;pferd=champion&amp;fokus=poincare">
+        <img src="../assets/visite-shots/12-poincare-app.jpg" width="1600" height="1112" loading="lazy" alt="Record in the cockpit: Poincaré card with time slider, SD1/SD2 ellipse and axes in milliseconds">
+        <span class="schau-hinweis" hidden><svg class="ic" aria-hidden="true"><use href="#i-pfeil"/></svg>Drag the slider, point at a dot</span>
+        <a class="schau-voll" href="/carlon-equine/app/?demo=roster&amp;pferd=champion&amp;fokus=poincare" title="Open the cockpit full screen">Full screen ↗</a></div>
     </div>
     <div class="cta-row" style="margin-top:var(--sp-34,34px)">
       <a class="cta-primary" href="/carlon-equine/app/?demo=board">Check the cleaning yourself on 15 example horses →</a>
@@ -1921,7 +1929,6 @@ if(_lb) _lb.addEventListener('click', function(){
 
 <script src="/assets/app-tour/app-tour.js?v=14" defer></script>
 
-<script src="../assets/poincare-zeit.js?v=3" defer></script>
 <script src="/assets/baukasten/baukasten.js?v=2"></script>
 <script>
 (function(){var t=document.querySelector('.hero-shot video');if(t&&window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches){t.removeAttribute('autoplay');t.pause();}else if(t){var pt=t.play();if(pt&&pt.catch)pt.catch(function(){});}
@@ -1931,25 +1938,25 @@ if(_lb) _lb.addEventListener('click', function(){
   var p=v.play();if(p&&p.catch)p.catch(function(){});})();
 </script>
 <script>
+
 (function(){
-  var box=document.querySelector('.hero-shot[data-schau]'); if(!box) return;
-  var v=box.querySelector('video'), hin=box.querySelector('.schau-hinweis'), geladen=false, bereit=false, wunsch=false, gezeigt=false, rahmen=null;
-  function passen(r){ var f=r.querySelector('iframe'); if(f) f.style.transform='scale('+(r.clientWidth/1280)+')'; }
-  
-  function vielleicht(){ if(gezeigt||!bereit||!(wunsch||!v||v.ended)) return; gezeigt=true;
-    rahmen.classList.add('an'); box.classList.add('schau-an'); if(v) v.pause(); hin.hidden=false; setTimeout(function(){hin.hidden=true;},6000); }
-  function laden(){
-    if(geladen) return; geladen=true;
-    rahmen=document.createElement('div'); rahmen.className='schau-rahmen';
-    var f=document.createElement('iframe'); f.src=box.getAttribute('data-schau'); f.title='CARLON cockpit – demo horse to try';
-    rahmen.appendChild(f); box.insertBefore(rahmen,hin); passen(rahmen);
-    addEventListener('resize',function(){passen(rahmen);});
-  }
-  addEventListener('message',function(e){ if(e.data&&e.data.carlonSchaufenster==='bereit'){ bereit=true; setTimeout(vielleicht,250); } });
-  
-  if(v){ v.addEventListener('timeupdate',function(){ if(v.duration&&v.currentTime>v.duration-5) laden(); }); v.addEventListener('ended',function(){ laden(); vielleicht(); }); }
-  ['pointerenter','touchstart'].forEach(function(ev){ box.addEventListener(ev,function(){ wunsch=true; laden(); vielleicht(); },{once:true,passive:true}); });
-  if(window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches){ wunsch=true; laden(); }
+  var boxen=[].slice.call(document.querySelectorAll('.schau-box[data-schau]')); if(!boxen.length) return;
+  var still=window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches;
+  boxen.forEach(function(box){
+    var v=box.querySelector('video'), hin=box.querySelector('.schau-hinweis'), geladen=false, bereit=false, wunsch=!v, gezeigt=false, rahmen=null, fr=null;
+    function passen(){ if(fr) fr.style.transform='scale('+(rahmen.clientWidth/1280)+')'; }
+    function vielleicht(){ if(gezeigt||!bereit||!(wunsch||v.ended)) return; gezeigt=true;
+      rahmen.classList.add('an'); box.classList.add('schau-an'); if(v) v.pause(); if(hin){ hin.hidden=false; setTimeout(function(){hin.hidden=true;},6000); } }
+    function laden(){ if(geladen) return; geladen=true;
+      rahmen=document.createElement('div'); rahmen.className='schau-rahmen';
+      fr=document.createElement('iframe'); fr.src=box.getAttribute('data-schau'); fr.title='CARLON cockpit – demo horse to try';
+      rahmen.appendChild(fr); box.insertBefore(rahmen,hin||null); passen(); addEventListener('resize',passen); }
+    addEventListener('message',function(e){ if(fr&&e.source===fr.contentWindow&&e.data&&e.data.carlonSchaufenster==='bereit'){ bereit=true; setTimeout(vielleicht,300); } });
+    if(v){ v.addEventListener('timeupdate',function(){ if(v.duration&&v.currentTime>v.duration-5) laden(); }); v.addEventListener('ended',function(){ laden(); vielleicht(); }); }
+    ['pointerenter','touchstart'].forEach(function(ev){ box.addEventListener(ev,function(){ wunsch=true; laden(); vielleicht(); },{once:true,passive:true}); });
+    if(still){ wunsch=true; laden(); }
+    else if(!v && 'IntersectionObserver' in window){ var io=new IntersectionObserver(function(es){ es.forEach(function(x){ if(x.isIntersecting){ laden(); io.disconnect(); } }); },{rootMargin:'300px 0px'}); io.observe(box); }
+  });
 })();
 </script>
 </body>
