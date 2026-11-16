@@ -2048,7 +2048,7 @@ header.k7 #tierPill,header.k7 .post-pill{display:none}
 <script src="aufnahme-herkunft.js"></script>
 <script src="hrv-vorstufe.js"></script>
 <script src="poincare-zeit.js?v=20261116d"></script>
-<script src="carlon-formate.js"></script>
+<script src="carlon-formate.js?v=20261116"></script>
 <script src="asthma.js"></script>
 <script src="krypto.js"></script>
 <script src="qr.js"></script>
@@ -3289,7 +3289,7 @@ const Importer = {
     return {
       schema:{name:'carlon_equine_v1',version:'1.0',via:'fhir'},
       source:{app:'FHIR-Import (Überweisung)', sensor:(res.find(r=>r.resourceType==='Device')||{}).modelNumber||'—'},
-      subject:{ id:pat.id||('fhir_'+Math.abs(hashStr(JSON.stringify(pat))).toString(36)),
+      subject:{ id:idOf('https://carlon.equine/fhir/subject')||pat.id||('fhir_'+Math.abs(hashStr(JSON.stringify(pat))).toString(36)),
         nameAtTime:(pat.name&&pat.name[0]&&pat.name[0].text)||'Überwiesenes Pferd', species:'horse',
         externalIdentifiers:(pat.identifier||[]).map(i=>({system:i.system,value:i.value})) },
       session:{ id:'fhir_'+when, startedAt:when,
@@ -3372,7 +3372,7 @@ const Importer = {
          der App laufen über carlon-formate.js in dieselbe Form wie ein JSON-Export —
          Kennzahlen über die Messstation, nie aus der Rohreihe. Was die Datei nicht
          erkennt, nimmt den bisherigen Weg. */
-      if(typeof CarlonFormate!=='undefined' && /\.(carlon|zip|pdf|csv|json)$/i.test(f.name)){
+      if(typeof CarlonFormate!=='undefined' && /\.(carlon|zip|pdf|csv|json|txt)$/i.test(f.name)){
         let r=null; try{ r=await CarlonFormate.lesen(f.name,new Uint8Array(await f.arrayBuffer())); }catch(e){}
         if(r&&r.erkannt){ for(const raw of r.raws) jsonFiles.push({name:f.name,__raw:raw}); continue; }
         if(r&&r.grund){ skipped.push({name:f.name,reason:r.grund}); continue; }
@@ -7276,21 +7276,22 @@ const Export={
     const lab=(v&&v.beatAnnotations)||[], kor=(v&&v.correctedRR)||[], sha=await Pruefwert.rr(rr);
     const h=State.horses.find(x=>x.id===r.horseId)||{};
     const kopf=['# carlon_equine_research_rr','# horse: '+(h.name||''),'# recorded_at: '+(r.startedAt||''),'# source: CARLON Equine Visite '+BUILD,
-      '# rr_sha256: '+(sha||''),'# rr_unit: ms (unrounded, as recorded)','# label: N normal · A artefact · E ectopic · M missed · ? unclear (CARLON pre-filter)',
+      '# species: horse','# n_beats: '+rr.length,'# rr_sha256: '+(sha||''),'# rr_sha256_input: UTF-8 bytes of the rr_ms values joined by "," (as in this file)','# rr_unit: ms (unrounded, as recorded)','# t_s: cumulative sum of rr_ms in seconds, end of each interval','# label: N normal; A artefact; E ectopic; M missed; ? unclear (CARLON pre-filter)',
       '# rr_corrected_ms: series after the CARLON correction (replaced intervals in place, no beat inserted)'];
     let t=0; const zeilen=rr.map((x,i)=>{ t+=x/1000; return [i+1,t.toFixed(3),Export.zahl(x),(lab[i]||''),(kor[i]!=null?Export.zahl(kor[i]):'')].join(','); });
     return kopf.join('\n')+'\nbeat,t_s,rr_ms,label,rr_corrected_ms\n'+zeilen.join('\n')+'\n';
   },
-  kubiosText(r){ return 'RR_ms\n'+(r.rr||[]).map(Export.zahl).join('\n')+'\n'; },
+  /* Kubios-Handbuch (HRV Scientific User’s Guide 2026, Abschn. 2.2): „RR interval text file“ = nur Zahlen, ms, *.txt; Kopfzeilen nur über den Custom-Import. */
+  kubiosText(r){ return (r.rr||[]).map(Export.zahl).join('\n')+'\n'; },
   async csv(id){ const r=State.recordings.find(x=>x.id===id); if(!r) return; Export.laden('CARLON_'+Export.name(r)+'_rr.csv',await Export.csvText(r),'text/csv;charset=utf-8'); Toast.show('CSV exportiert · RR-Reihe mit Klassen und bereinigter Serie','ok'); },
-  kubios(id){ const r=State.recordings.find(x=>x.id===id); if(!r) return; Export.laden('CARLON_'+Export.name(r)+'_rr_kubios.csv',Export.kubiosText(r),'text/csv;charset=utf-8'); Toast.show('Kubios-Datei exportiert · in Kubios als RR-Daten in ms öffnen','ok'); },
+  kubios(id){ const r=State.recordings.find(x=>x.id===id); if(!r) return; Export.laden('CARLON_'+Export.name(r)+'_rr_ms.txt',Export.kubiosText(r),'text/plain;charset=utf-8'); Toast.show('Kubios-Datei exportiert · in Kubios als RR-Textdatei öffnen (ms)','ok'); },
   menu(id){ const r=State.recordings.find(x=>x.id===id); if(!r) return;
     const z=(f,t,s)=>`<button class="ex-z" onclick="UI.closeModal();${f}"><b>${t}</b><span>${s}</span></button>`;
     UI.modal(`<div class="modal-head"><button class="closex" onclick="UI.closeModal()">${IC.x}</button><h3>Aufnahme exportieren</h3></div>
     <div class="modal-body"><div class="ex-liste">
       ${z(`Views.exportRec('${id}')`,'JSON','Kennwerte, Herkunft, Prüfwert – für den CARLON Viewer')}
       ${z(`Export.csv('${id}')`,'CSV','Jeder Schlag: Zeit, RR in ms, Klasse, bereinigter Wert – für Excel, R, Python')}
-      ${z(`Export.kubios('${id}')`,'Kubios','RR-Reihe in ms, eine Spalte – für Kubios HRV und andere HRV-Software')}
+      ${z(`Export.kubios('${id}')`,'Kubios','RR-Textdatei in ms, eine Zahl je Zeile – öffnet in Kubios HRV und anderer HRV-Software')}
       ${z(`FHIR.export('${id}')`,'FHIR R5','Bundle mit Pferd, Kennwerten und Roh-RR – für Praxis- und Kliniksoftware')}
     </div><p class="ex-fuss">Alle Exporte enthalten die RR-Reihe ungerundet, wie aufgezeichnet. Der Prüfwert (SHA-256) belegt, dass sie unverändert ist.</p></div>`);
   }
@@ -7340,9 +7341,9 @@ const FHIR={
     const entries=[];
     const obs=(code,display,value,unit,ucum,opt={})=>{
       const v=num(value); if(v==null||!isFinite(v)) return;
-      const coding=[]; if(opt.loinc) coding.push({system:'http://loinc.org',code:opt.loinc,display});
+      const coding=[]; if(opt.loinc) coding.push({system:'http://loinc.org',code:opt.loinc,display:opt.loincDisplay||display});
       coding.push({system:FHIR.CS,code,display});
-      const o={ resourceType:'Observation', status:'final',
+      const o={ resourceType:'Observation', status:opt.status||'final',
         category:[{coding:[{system:'http://terminology.hl7.org/CodeSystem/observation-category',
           code:opt.category||'vital-signs'}]}],
         code:{coding,text:display},
@@ -7363,8 +7364,9 @@ const FHIR={
     });
     entries.push({resource:{ resourceType:'Patient', id:pid, identifier:ident,
       name:[{text:(horse&&horse.name)||'Pferd'}],
-      extension:[{url:'https://carlon.equine/fhir/StructureDefinition/animal-species',
-        valueCodeableConcept:{text:'horse'}}] }});
+      /* Standard-Extension statt eigener URL (HL7-Validator 16.11.2026: eigene Extension „nicht bekannt, hier nicht erlaubt“). */
+      extension:[{url:'http://hl7.org/fhir/StructureDefinition/patient-animal',
+        extension:[{url:'species',valueCodeableConcept:{coding:[{system:'http://snomed.info/sct',code:'388445009',display:'Genus Equus'}],text:'Pferd'}}]}] }});
 
     /* ── WAS BEHAUPTET WIRD, MUSS STATTGEFUNDEN HABEN (§5.4.2) ───────────
        Hier stand die Artefaktkorrektur FEST VERDRAHTET: Device.note nannte
@@ -7448,7 +7450,7 @@ const FHIR={
       note:[{text:(!herkunftBekannt?DEV_UNKLAR:(irgendRoh?DEV_ROH:DEV_KORR))
         +'Frequenzbänder nach Visser 2002 (nicht human); nicht-stationäre Metriken werden bewusst nicht berechnet. Kein Medizinprodukt, keine Diagnose.'}] }});
 
-    obs('mean-hr','Mittlere Herzfrequenz',m.meanHR,'beats/minute','/min',{loinc:'8867-4',method:methodeFuer('meanHR')});
+    obs('mean-hr','Mittlere Herzfrequenz',m.meanHR,'beats/minute','/min',{loinc:'8867-4',loincDisplay:'Heart rate',method:methodeFuer('meanHR')});
     obs('resting-hr','Ruhe-Herzfrequenz',m.minHR,'beats/minute','/min');
     obs('peak-hr','Spitzen-Herzfrequenz',m.maxHR,'beats/minute','/min');
     obs('hrv-rmssd','HRV RMSSD',m.rmssd,'ms','ms',{method:methodeFuer('rmssd')});
@@ -7468,8 +7470,8 @@ const FHIR={
        regulierten Medizin einen systematischen Test zur Krankheits-Frueherkennung
        und legt damit eine diagnostische Zweckbestimmung nahe (extern geprueft
        06.08.). Dieses Bundle verlaesst das Haus — hier gilt deskriptive Sprache. */
-    obs('rr-pattern-av-block-2deg','RR-Muster AV-Block-Typ (2°) · Übersicht',m.avBlock,'count','1',
-      {category:'exam',note:'RR-basierte Musteransicht des Herzrhythmus. Beurteilung und Bestätigung ausschließlich im EKG durch die Tierarztpraxis. Keine Diagnose.'});
+    obs('rr-pattern-av-block-2deg','Lange RR-Pausen vom AV-Block-Typ (2°) · Anzahl, Beobachtungshinweis',m.avBlock,'count','1',
+      {category:'procedure',status:'preliminary',note:'RR-basierte Musteransicht des Herzrhythmus. Beurteilung und Bestätigung ausschließlich im EKG durch die Tierarztpraxis. Keine Diagnose.'});
 
     /* ROH-RR MIT INS BUNDLE — schliesst die Luecke zwischen Anspruch und
        Umsetzung: Prinzip 1 des Standards verspricht „Roh-RR liegt offen bei;
@@ -7501,8 +7503,7 @@ const FHIR={
            allein waere eine zu grosse. */
         note:[{text:'Unbearbeitete Schlag-zu-Schlag-Intervalle in Millisekunden, JSON-Array, ungerundet. Grundlage aller abgeleiteten Kennzahlen dieses Bundles — jede davon ist daraus reproduzierbar, wenn das in Device.note genannte Korrekturverfahren angewandt wird.'}],
         valueAttachment:{ contentType:'application/json', language:'de',
-          title:'RR intervals (ms)', data:payload,
-          size:(new TextEncoder().encode(json)).length }
+          title:'RR intervals (ms)', data:payload }
       }});
 
       /* BEAT-KLASSIFIKATION MUSS MITREISEN. Ohne sie sieht die empfangende
@@ -7523,22 +7524,37 @@ const FHIR={
           device:{reference:'Device/carlon-pipeline'},
           note:[{text:'Lauflaengen-kodierte Klassifikation je Schlag, positionsgleich zu rr-intervals-raw: [["N",26],["LS",1],…]. N = normal, LS = Lang-Kurz-Paar, S = vorzeitig, AVB = RR-Muster vom AV-Block-Typ (2°), L = langes RR bei vermutlich ausgefallener R-Zacke, X = verworfen bzw. nicht zuzuordnen. Ein Schlag ohne Klassifikation wird nie als N ausgegeben. Deskriptive Musterzuordnung, keine Diagnose — Beurteilung ausschliesslich im EKG durch die Tierarztpraxis.'}],
           valueAttachment:{ contentType:'application/json', language:'de',
-            title:'Beat labels (RLE)', data:lp,
-            size:(new TextEncoder().encode(lj)).length }
+            title:'Beat labels (RLE)', data:lp }
         }});
       }
     }
 
-    return { resourceType:'Bundle', type:'collection',
-      meta:{ profile:['https://carlon.equine/fhir/StructureDefinition/equine-biometrics-bundle'] },
-      timestamp:when, entry:entries };
+    /* R5-Konformität (HL7-Validator 16.11.2026, 14 Fehler → 0): jede Ressource bekommt eine fullUrl (urn:uuid),
+       Referenzen zeigen darauf (bdl-15); Ressourcen-IDs nur [A-Za-z0-9-.]; Kurztext (dom-6); timestamp = Zeitpunkt
+       des Exports; kein Verweis auf ein unveröffentlichtes Profil. */
+    const uid=()=> (crypto.randomUUID?crypto.randomUUID():'xxxxxxxx-xxxx-4xxx-8xxx-xxxxxxxxxxxx'.replace(/x/g,()=>(Math.random()*16|0).toString(16)));
+    const url={}; const sauber=s=>String(s).replace(/[^A-Za-z0-9\-.]/g,'-').slice(0,64);
+    /* Ausführende Stelle = die Praxis (Validator: „Observations sollten einen Performer haben“). */
+    const st=(typeof State!=='undefined'&&State.settings)||{};
+    entries.push({resource:{resourceType:'Organization',id:'praxis',name:(st.clinicName||'Tierarztpraxis').trim()||'Tierarztpraxis',
+      telecom:[st.clinicPhone?{system:'phone',value:st.clinicPhone}:null,st.clinicMail?{system:'email',value:st.clinicMail}:null].filter(Boolean)}});
+    const esc1=s=>String(s).replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
+    for(const e of entries){ const res=e.resource; e.fullUrl='urn:uuid:'+uid();
+      if(res.resourceType==='Patient'){ url['Patient/'+res.id]=e.fullUrl; res.id=sauber(res.id); }
+      if(res.resourceType==='Device'){ url['Device/'+res.id]=e.fullUrl; res.id=sauber(res.id); }
+      if(res.resourceType==='Organization'){ url.org=e.fullUrl; if(!res.telecom.length) delete res.telecom; }
+      const was=res.resourceType==='Observation'?((res.code&&res.code.text)||'')+(res.valueQuantity?': '+res.valueQuantity.value+' '+(res.valueQuantity.unit||''):''):(res.resourceType==='Patient'?((res.name&&res.name[0]&&res.name[0].text)||'Pferd'):res.resourceType);
+      res.text={status:'generated',div:'<div xmlns="http://www.w3.org/1999/xhtml">'+esc1(was)+'</div>'}; }
+    for(const e of entries){ const res=e.resource; for(const k of ['subject','device']) if(res[k]&&url[res[k].reference]) res[k].reference=url[res[k].reference]; if(res.resourceType==='Observation'&&url.org) res.performer=[{reference:url.org}]; }
+    return { resourceType:'Bundle', type:'collection', identifier:{system:'urn:ietf:rfc:3986',value:'urn:uuid:'+uid()},
+      timestamp:new Date().toISOString().replace(/\.\d+Z$/,'Z'), entry:entries };
   },
 
   async export(recId){
     const r=State.recordings.find(x=>x.id===recId); if(!r) return;
     const h=State.horses.find(x=>x.id===r.horseId);
     const b=FHIR.bundle(r,h);
-    { const pw=await Pruefwert.rr(r.rr); if(pw) b.identifier={ system:'urn:carlon:rr-sha256', value:pw }; }
+    { const pw=await Pruefwert.rr(r.rr); const ro=pw&&b.entry.map(e=>e.resource).find(o=>o.code&&o.code.coding&&o.code.coding.some(c=>c.code==='rr-intervals-raw')); if(ro) ro.identifier=[{ system:'urn:carlon:rr-sha256', value:pw }]; }
     const name=((h&&h.name)||'Pferd').replace(/[^\p{L}\p{N}_-]+/gu,'-');
     const blob=new Blob([JSON.stringify(b,null,2)],{type:'application/fhir+json'});
     const a=document.createElement('a'); a.href=URL.createObjectURL(blob);

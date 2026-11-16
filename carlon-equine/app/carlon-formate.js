@@ -137,6 +137,13 @@
         return { erkannt: true, format: 'forschungspaket',
                  raws: [aufnahme(rr, { id, name: 'Forschungspaket (anonymisiert)', quelle: 'CARLON Equine · Forschungspaket', datei: name })] };
       }
+      /* RR-Textdatei (16.11.2026): eine Zahl je Zeile in ms – Kubios „RR interval text file“, wie Visite sie exportiert. */
+      if (n.endsWith('.txt')) {
+        const z = text(u8).split(/\r?\n/).map(s => s.trim()).filter(Boolean);
+        const rr = z.map(num);
+        if (z.length < 20 || rr.some(v => v == null || v < 150 || v > 6000)) return { erkannt: false };
+        return { erkannt: true, format: 'rr-text', raws: [aufnahme(rr, { name: String(name).replace(/_rr_ms\.txt$|\.txt$/i, '').replace(/^CARLON_/, '').replace(/_/g, ' '), quelle: 'RR-Textdatei', datei: name })] };
+      }
       if (n.endsWith('.csv')) {
         const c = carlonCSV(text(u8));
         if (!c) return { erkannt: false };   // kein CARLON-CSV ⇒ der Importer prüft auf Kontakte
@@ -158,7 +165,7 @@
     return { erkannt: false };
   }
 
-  const api = { lesen, carlonCSV, zipEintraege, VERSION: '2026-11-05' };
+  const api = { lesen, carlonCSV, zipEintraege, VERSION: '2026-11-16' };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   else root.CarlonFormate = api;
 })(typeof window !== 'undefined' ? window : globalThis);
