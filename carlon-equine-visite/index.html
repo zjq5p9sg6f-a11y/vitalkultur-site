@@ -374,18 +374,26 @@ svg.ic.vt-ic{grid-row:1 / span 2;width:34px;height:34px;padding:7px;box-sizing:b
 .hero-shot .schau-rahmen{position:absolute;left:var(--b);top:var(--b);width:calc(100% - 2 * var(--b));aspect-ratio:1600/1112;overflow:hidden;border-radius:calc(var(--r) - var(--b));opacity:0;transition:opacity .6s ease;background:#000}
 .hero-shot .schau-rahmen.an{opacity:1}
 .hero-shot .schau-rahmen iframe{position:absolute;left:0;top:0;width:1280px;height:890px;border:0;transform-origin:0 0}
-.schau-hinweis{position:absolute;left:50%;bottom:calc(var(--b) + 14px);transform:translateX(-50%);z-index:4;display:flex;align-items:center;gap:8px;padding:8px 14px;border-radius:999px;
-  background:rgba(8,14,18,.86);border:1px solid rgba(62,207,178,.5);color:var(--cyan);font-size:13px;font-weight:600;white-space:nowrap;pointer-events:none;
-  -webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);animation:schauPuls 2.4s ease-in-out infinite}
-.schau-hinweis svg.ic{width:16px;height:16px}
-@keyframes schauPuls{0%,100%{box-shadow:0 0 0 0 rgba(62,207,178,.35)}50%{box-shadow:0 0 0 8px rgba(62,207,178,0)}}
-.schau-voll{position:absolute;right:calc(var(--b) + 10px);top:calc(var(--b) + 10px);z-index:4;font:600 11px var(--font-mono);letter-spacing:.06em;color:var(--text-secondary);
-  background:rgba(8,10,12,.8);border:1px solid var(--border-subtle);border-radius:999px;padding:5px 10px;opacity:0;transition:opacity .3s}
+
+.schau-hinweis{position:absolute;left:50%;bottom:calc(var(--b) + 14px);transform:translateX(-50%);z-index:4;display:flex;align-items:center;gap:9px;padding:10px 18px;border-radius:999px;
+  background:linear-gradient(135deg,rgba(255,255,255,.30),rgba(255,255,255,.12));border:1px solid rgba(255,255,255,.55);color:#fff;font-size:14px;font-weight:600;letter-spacing:.005em;
+  text-shadow:0 1px 2px rgba(0,0,0,.45);white-space:nowrap;pointer-events:none;
+  -webkit-backdrop-filter:blur(18px) saturate(1.7);backdrop-filter:blur(18px) saturate(1.7);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.65),inset 0 -1px 0 rgba(255,255,255,.12),0 10px 32px rgba(0,0,0,.5),0 0 26px rgba(255,255,255,.22);
+  animation:schauPuls 2.6s ease-in-out infinite}
+.schau-hinweis svg.ic{width:17px;height:17px;color:#fff;filter:drop-shadow(0 1px 1px rgba(0,0,0,.4))}
+@keyframes schauPuls{0%,100%{box-shadow:inset 0 1px 0 rgba(255,255,255,.65),inset 0 -1px 0 rgba(255,255,255,.12),0 10px 32px rgba(0,0,0,.5),0 0 18px rgba(255,255,255,.16)}
+  50%{box-shadow:inset 0 1px 0 rgba(255,255,255,.65),inset 0 -1px 0 rgba(255,255,255,.12),0 10px 32px rgba(0,0,0,.5),0 0 34px rgba(255,255,255,.34)}}
+@media(prefers-reduced-motion:reduce){.schau-hinweis{animation:none}}
+.schau-voll{position:absolute;right:calc(var(--b) + 10px);top:calc(var(--b) + 10px);z-index:4;font:600 11.5px var(--font-mono);letter-spacing:.06em;color:#fff;
+  background:linear-gradient(135deg,rgba(255,255,255,.22),rgba(255,255,255,.08));border:1px solid rgba(255,255,255,.42);border-radius:999px;padding:6px 12px;opacity:0;transition:opacity .3s;
+  -webkit-backdrop-filter:blur(14px) saturate(1.6);backdrop-filter:blur(14px) saturate(1.6);box-shadow:inset 0 1px 0 rgba(255,255,255,.5),0 0 18px rgba(255,255,255,.14)}
 .hero-shot:hover .schau-voll,.hero-shot.schau-an .schau-voll{opacity:1}
 .schau-box .schau-voll{top:auto!important;bottom:-40px;right:2px!important}
 .pz-tablet .schau-hinweis{bottom:auto;top:calc(var(--b) + 13%)}
+.hero-buehne .hero-shot .schau-hinweis{bottom:auto;top:calc(var(--b) + 9%)}
 .pz-echt-block{padding-bottom:var(--sp-34)!important}
-@media(max-width:700px){.schau-hinweis{font-size:11px;padding:6px 10px;animation:none}.schau-box .schau-voll{display:none}}
+@media(max-width:700px){.schau-hinweis{font-size:12px;padding:7px 12px}.schau-box .schau-voll{display:none}}
 
 .tour-tablet{display:block;max-width:1120px;margin:var(--sp-55) auto 0}
 .tour-tablet video{display:block;width:100%;height:auto}
@@ -493,9 +501,41 @@ svg.ic{width:20px;height:20px;flex:0 0 auto;fill:none;stroke:var(--cyan);stroke-
   background:linear-gradient(150deg,#46494f 0%,#2b2e33 24%,#1d1f23 62%,#131417 100%);
   box-shadow:inset 0 1px 0 rgba(255,255,255,.16),0 0 0 1px #08090b,0 34px 60px -24px rgba(0,0,0,.95);pointer-events:none}
 .hero-phone img,.hero-phone video{width:100%;height:100%;object-fit:cover;object-position:top;display:block;border-radius:clamp(14px,1.9vw,24px);background:#07090a}
-.hero-buehne figcaption{position:relative;z-index:1;margin:var(--sp-34) 0 0 24%;font-size:var(--t-klein);color:var(--text-dim);line-height:1.6;text-align:left}
+
+.hero-buehne{max-width:none!important;width:min(1280px,calc(100vw - 48px));margin-left:calc(50% - min(640px,50vw - 24px))!important;margin-right:0!important}
+.hb-geraete{display:grid;grid-template-columns:minmax(0,1.72fr) minmax(0,1fr);gap:clamp(18px,2.4vw,34px);align-items:end;padding-left:calc(12% - 40px)!important}
+.hb-geraete .hero-phone{width:12%!important;bottom:-8%!important}
+.hero-tour{position:relative;display:block;text-decoration:none;z-index:1}
+.ht-rahmen{display:block;border-radius:clamp(12px,1.6vw,20px);padding:clamp(5px,.8vw,9px);
+  background:linear-gradient(150deg,#46494f 0%,#2b2e33 24%,#1d1f23 62%,#131417 100%);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.16),0 0 0 1px #08090b,0 40px 80px -30px rgba(0,0,0,.95),0 0 50px rgba(62,207,178,.10);transition:transform .18s}
+.hero-tour:hover .ht-rahmen{transform:translateY(-3px)}
+.ht-rahmen video{display:block;width:100%;height:auto;aspect-ratio:1600/1112;border-radius:clamp(7px,1vw,12px);background:#07090a}
+.g-marke{position:absolute;left:50%;top:-15px;transform:translateX(-50%);z-index:5;display:flex;align-items:center;gap:8px;white-space:nowrap;pointer-events:none;
+  padding:6px 14px 6px 7px;border-radius:999px;color:#fff;font-size:12.5px;font-weight:600;letter-spacing:.005em;text-shadow:0 1px 2px rgba(0,0,0,.45);
+  background:linear-gradient(135deg,rgba(255,255,255,.28),rgba(255,255,255,.10));border:1px solid rgba(255,255,255,.5);
+  -webkit-backdrop-filter:blur(16px) saturate(1.6);backdrop-filter:blur(16px) saturate(1.6);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.6),0 8px 26px rgba(0,0,0,.5),0 0 22px rgba(255,255,255,.16)}
+.g-marke i{font-style:normal;display:inline-grid;place-items:center;width:19px;height:19px;border-radius:50%;background:var(--cyan);color:#001a16;font-size:11px;font-weight:700;text-shadow:none}
+.hero-phone .g-marke{top:auto;bottom:-15px}
+.fc-klein{display:none}
+@media(max-width:760px){.fc-gross{display:none}.fc-klein{display:block;text-align:center;font-family:var(--font-mono);font-size:11px;letter-spacing:.06em;color:var(--text-secondary)}}
+.hero-buehne .hero-shot{z-index:1}
+@media(max-width:1100px){.g-marke{font-size:11px;padding:5px 11px 5px 6px}.g-marke i{width:17px;height:17px;font-size:10px}}
+@media(max-width:760px){
+  .hero-buehne{width:100vw;margin-left:calc(50% - 50vw)!important}
+  .hb-geraete{display:flex!important;align-items:center;gap:18px;overflow-x:auto;padding:22px 16px 26px!important;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+  .hb-geraete::-webkit-scrollbar{display:none}
+  .hb-geraete>*{flex:0 0 auto}
+  .hb-geraete .hero-phone{position:relative!important;left:auto!important;bottom:auto!important;width:38vw!important;order:1}
+  .hb-geraete .hero-shot{width:84vw;order:2}
+  .hero-tour{width:84vw;order:3}
+  .hero-phone .g-marke{bottom:-14px}
+  .hero-buehne figcaption{margin:var(--sp-13) 16px 0!important}
+}
+.hero-buehne figcaption{position:relative;z-index:1;margin:var(--sp-55) 0 0 calc(12% - 40px);font-size:var(--t-klein);color:var(--text-dim);line-height:1.6;text-align:left}
 .hero-buehne figcaption b{color:var(--text-secondary);font-weight:500}
-.hero-fluss{display:flex;align-items:center;gap:var(--sp-8);margin-bottom:var(--sp-8);max-width:520px}
+.hero-fluss{display:flex;align-items:center;gap:var(--sp-8);margin-bottom:var(--sp-8);max-width:820px}
 .hf-chip{font-family:var(--font-mono);font-size:var(--t-mark);letter-spacing:0.07em;
   text-transform:uppercase;color:var(--cyan);background:rgba(62,207,178,0.07);
   border:1px solid var(--cyan-deep);border-radius:999px;padding:5px 11px;white-space:nowrap}
@@ -508,8 +548,6 @@ svg.ic{width:20px;height:20px;flex:0 0 auto;fill:none;stroke:var(--cyan);stroke-
   .hero-buehne{margin-top:var(--sp-55)}
   .hb-geraete{padding-left:14%}
   .hero-phone{width:26%;bottom:-14%}
-  .hero-buehne figcaption{margin-left:30%;margin-top:var(--sp-34)}
-  .hero-fluss{flex-wrap:wrap}
   .hf-chip{font-size:9.5px;padding:4px 8px}
   .hf-linie{min-width:22px}
 }
@@ -924,7 +962,7 @@ try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; 
     <div class="eyebrow">Für Pferdepraxen und Pferdekliniken</div>
     <h1>Ruhe-HRV beim Pferd: <em>gemessen im Stall, gelesen in Ihrer Praxis.</em></h1>
     <p class="hero-sub">
-      Die Halterin misst im Stall. Sie sehen vor dem Besuch, <strong>wie weit dieses Pferd von seiner eigenen Basis abweicht</strong> – und wie verlässlich die Aufnahme ist.
+      Die Halterin misst im Stall. Sie sehen vor dem Besuch, <strong>wie weit dieses Pferd von seiner eigenen Basis abweicht</strong> und wie verlässlich die Aufnahme ist – und planen in derselben Ansicht Ihre <strong>Tagesroute mit Fahrzeit je Stopp</strong>.
     </p>
     <div class="cta-row">
       <a class="cta-primary" href="/carlon-equine/app/">Cockpit mit 15&nbsp;Demo-Pferden öffnen →</a>
@@ -932,7 +970,8 @@ try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; 
     </div>
     <ul class="hero-belege2">
       <li><svg class="ic" aria-hidden="true"><use href="#i-browser"/></svg>Ohne Konto, ohne Installation</li>
-      <li><svg class="ic" aria-hidden="true"><use href="#i-schild"/></svg>Daten bleiben in Ihrem Browser</li>
+      <li><svg class="ic" aria-hidden="true"><use href="#i-schild"/></svg>Pferde- und Messdaten bleiben auf Ihrem Gerät</li>
+      <li><svg class="ic" aria-hidden="true"><use href="#i-route"/></svg>Tagesroute inklusive</li>
       <li><svg class="ic" aria-hidden="true"><use href="#i-check"/></svg>Monatlich kündbar</li>
     </ul>
     <p class="rollen-weiche"><a href="#ablauf">So läuft eine Messung ↓</a> · <a href="#arbeitstag">Für Fahrpraxen ↓</a> · <a href="#klinik">Für Pferdekliniken ↓</a> · <a href="#preis">Preise ↓</a></p>
@@ -941,13 +980,12 @@ try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; 
       <div class="hb-geraete">
       <div class="hero-shot schau-box" data-schau="/carlon-equine/app/?schaufenster=1&amp;demo=roster&amp;pferd=sunny&amp;fokus=verlauf">
         <video src="assets/visite-shots/13-verlauf-film-v3.mp4" poster="assets/visite-shots/13-verlauf-v3.jpg" width="1600" height="1112" autoplay muted playsinline preload="auto" aria-label="Akte eines Demo-Pferds im Cockpit: RMSSD-, Ruhe-Herzfrequenz- und SDNN-Verlauf über Wochen gegen die eigene Basis, darunter Herzfrequenz und HRV einer Ruheaufnahme Schlag für Schlag"></video><span class="schau-hinweis" hidden><svg class="ic" aria-hidden="true"><use href="#i-pfeil"/></svg>Jetzt selbst: über die Kurven fahren oder tippen</span>
-        <a class="schau-voll" href="/carlon-equine/app/?demo=roster&amp;pferd=sunny" title="Cockpit im Vollbild öffnen">Vollbild ↗</a></div>
-      <span class="hero-phone" aria-hidden="true"><video src="assets/station-tour/live-v5.mp4" poster="assets/station-tour/live-poster-v5.jpg" width="660" height="1428" autoplay muted loop playsinline preload="auto"></video></span>
+        <a class="schau-voll" href="/carlon-equine/app/?demo=roster&amp;pferd=sunny" title="Cockpit im Vollbild öffnen">Vollbild ↗</a><span class="g-marke"><i>2</i>Verlauf gegen eigene Basis</span></div>
+      <span class="hero-phone"><video src="assets/station-tour/live-v5.mp4" poster="assets/station-tour/live-poster-v5.jpg" width="660" height="1428" autoplay muted playsinline preload="auto" aria-hidden="true"></video><span class="g-marke"><i>1</i>Messung im Stall</span></span>
+      <a class="hero-tour" href="#arbeitstag" aria-label="Zur Tagesroute im Cockpit"><span class="ht-rahmen"><video src="assets/visite-shots/14-tour-film.mp4" poster="assets/visite-shots/14-tour.jpg" width="1600" height="1112" muted playsinline preload="metadata" aria-hidden="true"></video></span><span class="g-marke"><i>3</i>Tagesroute mit Fahrzeit</span></a>
       </div>
       <figcaption>
-        <span class="hero-fluss"><span class="hf-chip">Im Stall gemessen</span><span class="sr-only"> → </span><span
-          class="hf-linie" aria-hidden="true"><i></i></span><span class="hf-chip">In Ihrer Praxis gelesen</span></span>
-        Ansichten aus der Anwendung — <b>ein Klick öffnet sie.</b>
+        <span class="fc-gross">Ansichten aus der Anwendung — <b>ein Klick öffnet sie.</b></span><span class="fc-klein" aria-hidden="true">‹ Wischen: Stall → Verlauf → Tour ›</span>
       </figcaption>
     </figure>
   </div>
@@ -967,6 +1005,27 @@ try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; 
       <div class="ez"><svg class="ic ic-ez" aria-hidden="true"><use href="#i-bericht"/></svg>
         <h3>Für Ihre Kundin</h3>
         <p>Ein Messwertbericht mit Ihrem Briefkopf, aus der Akte heraus erstellt. Im Klinik-Tarif gibt es zusätzlich eine Entlass-Karte mit QR: Nach der Entlassung kann die Halterin Ruheaufnahmen aus der gewohnten Box schicken. Sie ersetzen keine Nachuntersuchung.</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="arbeitstag">
+  <div class="wrap">
+    <div class="sec-eyebrow">Ihr Arbeitstag</div>
+    <h2>Tagesroute, Fahrzeit und Fahrtenliste in einer Ansicht.</h2>
+    <p class="sec-lead">Die Auswertung ist die eine Hälfte. Die andere ist der Tag, an dem
+       Sie sie unterbringen müssen — und der entscheidet, ob ein Werkzeug den ersten
+       Monat überlebt.</p>
+
+    <div class="hero-shot schau-box tour-tablet" data-schau="/carlon-equine/app/?schaufenster=1&amp;demo=map">
+        <video src="assets/visite-shots/14-tour-film.mp4" poster="assets/visite-shots/14-tour.jpg" width="1600" height="1112" muted playsinline preload="none" aria-label="Karte und Abfahrroute im Cockpit: die Karte fährt Stopp für Stopp ab, die Liste läuft mit Fahrzeit und Ansprechpartner mit"></video>
+        <span class="schau-hinweis" hidden><svg class="ic" aria-hidden="true"><use href="#i-pfeil"/></svg>Karte ziehen, zoomen, Stopps antippen</span>
+        <a class="schau-voll" href="/carlon-equine/app/?demo=map" title="Cockpit im Vollbild öffnen">Vollbild ↗</a></div>
+    <div class="tour-punkte">
+      <div class="tp"><svg class="ic li-ic" aria-hidden="true"><use href="#i-route"/></svg><h3>Kurze Wege – oder Abweichung zuerst</h3><p>Standard: Stopp für Stopp zum nächstgelegenen Pferd, mit Ihren Terminen. Auf Wunsch stellen Sie die Pferde mit der deutlichsten Abweichung von ihrer eigenen Basis an den Anfang – diese Reihenfolge wählen Sie, nicht die Software. Ändern lässt sie sich per Greifpunkt, Stopp für Stopp.</p></div>
+      <div class="tp"><svg class="ic li-ic" aria-hidden="true"><use href="#i-uhr"/></svg><h3>Fahrzeit an jedem Stopp</h3><p>Ankunft, Fahrzeit und Ansprechpartner stehen an jeder Karte, bevor Sie zusagen.</p></div>
+      <div class="tp"><svg class="ic li-ic" aria-hidden="true"><use href="#i-schild"/></svg><h3>Ein Tipp zu Google Maps</h3><p>Messdaten verlassen Ihr Gerät nicht. Karte und Adresssuche kommen von OpenStreetMap; erst Ihr Tipp übergibt die Route an Google Maps.</p></div>
+      <div class="tp"><svg class="ic li-ic" aria-hidden="true"><use href="#i-akte"/></svg><h3>Fahrten und Zeiten</h3><p>Leistungen, Fahrten und Zeiten entstehen nebenbei und gehen als CSV heraus (kein steuerliches Fahrtenbuch). Die Abrechnung bleibt bei Ihnen.</p></div>
     </div>
   </div>
 </section>
@@ -1005,7 +1064,7 @@ try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; 
         <rect x="47" y="52" width="20" height="16" rx="3" class="ab-akzent"/><path d="M51 52v-4a6 6 0 0 1 12 0v4" class="ab-akzent"/>
         <path d="M86 60c12-4 16-18 8-30" class="ab-spur" stroke-dasharray="3 4"/><path d="M90 29l4 1 1-4" /></svg></div>
         <span class="ab-wer">Halterin</span><h3>Verschlüsselt zurück</h3>
-        <p>Kommt der Link von Ihrer Praxis, ist die Aufnahme ab der ersten Sekunde nur für Sie lesbar. Die Halterin schickt die Datei auf dem Weg, den sie ohnehin nutzt.</p></li>
+        <p>Kommt der Link von Ihrer Praxis, ist die versandte Datei für Ihre Praxis verschlüsselt – lesen kann sie nur Ihr Cockpit. Die Halterin schickt sie auf dem Weg, den sie ohnehin nutzt.</p></li>
       <li style="--i:4"><div class="ab-bild"><svg viewBox="0 0 120 96" stroke="currentColor" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
         <rect x="10" y="12" width="100" height="70" rx="8" class="ab-rahmen"/>
         <path d="M20 54c14-3 26-3 40-2s24 1 40-2" stroke-width="11" opacity=".14"/>
@@ -1105,7 +1164,7 @@ try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; 
       <div class="card">
         <h3>Export ohne Sackgasse</h3>
         <p>JSON, CSV, Kubios-kompatibel — und <strong>FHIR&nbsp;R5</strong> mit
-           LOINC-Codes für die Praxissoftware.</p>
+           LOINC-Codes. Ob Ihre Praxissoftware FHIR einliest, klärt deren Anbieter.</p>
       </div>
     </div>
     </details>
@@ -1257,7 +1316,7 @@ try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; 
       </div>
       <p class="beleg">In einer Ruheaufnahme — 642 Schläge, 0,31 % Artefaktrate,
          von der Qualitätsanzeige als <em>exzellent</em> geführt — genügen
-         <strong>zwei</strong> Schläge, ein lange Pause mit ihrem kurzen Folgeschlag,
+         <strong>zwei</strong> Schläge, eine lange Pause mit ihrem kurzen Folgeschlag,
          um die RMSSD von 24,2 auf 55,5 ms zu heben, <strong>mehr als das Doppelte</strong> –
          und die Qualitätsanzeige warnt kein einziges Mal. Ein hoher Anteil
          plausibler Schläge sagt nichts darüber, ob der Kennwert stimmt.</p>
@@ -1425,27 +1484,6 @@ try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; 
   </div>
 </section>
 
-<section id="arbeitstag">
-  <div class="wrap">
-    <div class="sec-eyebrow">Ihr Arbeitstag</div>
-    <h2>Tagesroute, Fahrzeit und Fahrtenliste in einer Ansicht.</h2>
-    <p class="sec-lead">Die Auswertung ist die eine Hälfte. Die andere ist der Tag, an dem
-       Sie sie unterbringen müssen — und der entscheidet, ob ein Werkzeug den ersten
-       Monat überlebt.</p>
-
-    <div class="hero-shot schau-box tour-tablet" data-schau="/carlon-equine/app/?schaufenster=1&amp;demo=map">
-        <video src="assets/visite-shots/14-tour-film.mp4" poster="assets/visite-shots/14-tour.jpg" width="1600" height="1112" muted playsinline preload="none" aria-label="Karte und Abfahrroute im Cockpit: die Karte fährt Stopp für Stopp ab, die Liste läuft mit Fahrzeit und Ansprechpartner mit"></video>
-        <span class="schau-hinweis" hidden><svg class="ic" aria-hidden="true"><use href="#i-pfeil"/></svg>Karte ziehen, zoomen, Stopps antippen</span>
-        <a class="schau-voll" href="/carlon-equine/app/?demo=map" title="Cockpit im Vollbild öffnen">Vollbild ↗</a></div>
-    <div class="tour-punkte">
-      <div class="tp"><svg class="ic li-ic" aria-hidden="true"><use href="#i-route"/></svg><h3>Kürzeste Strecke</h3><p>Die Tour ordnet sich nach Strecke und Termin. Die Reihenfolge ändern Sie per Greifpunkt, Stopp für Stopp.</p></div>
-      <div class="tp"><svg class="ic li-ic" aria-hidden="true"><use href="#i-uhr"/></svg><h3>Fahrzeit an jedem Stopp</h3><p>Ankunft, Fahrzeit und Ansprechpartner stehen an jeder Karte, bevor Sie zusagen.</p></div>
-      <div class="tp"><svg class="ic li-ic" aria-hidden="true"><use href="#i-schild"/></svg><h3>Ein Tipp zu Google Maps</h3><p>Messdaten verlassen Ihr Gerät nicht. Karte und Adresssuche kommen von OpenStreetMap; erst Ihr Tipp übergibt die Route an Google Maps.</p></div>
-      <div class="tp"><svg class="ic li-ic" aria-hidden="true"><use href="#i-akte"/></svg><h3>Fahrten und Zeiten</h3><p>Leistungen, Fahrten und Zeiten entstehen nebenbei und gehen als CSV heraus (kein steuerliches Fahrtenbuch). Die Abrechnung bleibt bei Ihnen.</p></div>
-    </div>
-  </div>
-</section>
-
 <section>
   <div class="wrap">
     <div class="sec-eyebrow">Anschluss</div>
@@ -1503,7 +1541,7 @@ try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; 
     </p>
     
     <ol class="kaufschritte">
-      <li><b>Abschluss bei Stripe.</b> Die Rechnung mit ausgewiesener Umsatzsteuer kommt von Link, einem mit Stripe verbundenen Unternehmen.</li>
+      <li><b>Bezahlen bei Stripe.</b> Im gesicherten Bezahlfenster, in rund zwei Minuten. Die Rechnung mit ausgewiesener Umsatzsteuer kommt per E-Mail.</li>
       <li><b>Sofort freigeschaltet.</b> Nach der Zahlung kehren Sie ins Cockpit zurück – es schaltet sich von selbst frei, ohne Benutzerkonto.</li>
       <li><b>Selbst verwalten.</b> Rechnungen, Zahlungsart und Kündigung jederzeit unter „Abo verwalten“.</li>
     </ol>
@@ -1551,8 +1589,7 @@ try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; 
     <div class="tarif tarif-fussblock">
       <p class="tarif-fuss">
         Das Angebot richtet sich ausschließlich an Unternehmer im Sinne des § 14 BGB.
-        Zahlung und Rechnung übernimmt <strong>Link</strong> (Sold through Link, LLC), ein mit Stripe verbundenes Unternehmen, als Merchant of Record im Auftrag von Vitalkultur; auf dem Kontoauszug steht LINK.COM* mit unserer Kurzbezeichnung. Von Link erhalten Sie
-        die Rechnung mit ausgewiesener Umsatzsteuer. Einzelheiten in
+        Zahlung und Rechnung wickelt <strong>Link</strong> (Sold through Link, LLC) ab, ein Unternehmen der Stripe-Gruppe; von Link kommt auch die Rechnung mit ausgewiesener Umsatzsteuer, auf dem Kontoauszug steht LINK.COM* mit unserer Kurzbezeichnung. Die Software stellt Vitalkultur bereit. Einzelheiten in
         <a href="/agb.html#visite">§ 12a unserer AGB</a> und in der
         <a href="/privacy.html">Datenschutzerklärung</a>.
       </p>
@@ -1928,6 +1965,13 @@ if(_lb) _lb.addEventListener('click', function(){
   if(window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches){v.removeAttribute('autoplay');v.pause();return;}
   v.playbackRate=1.5;v.addEventListener('loadedmetadata',function(){v.playbackRate=1.5;});
   var p=v.play();if(p&&p.catch)p.catch(function(){});})();
+(function(){var tv=document.querySelector('.hero-tour video'),hv=document.querySelector('.hero-buehne .hero-shot video');if(!tv)return;
+  if(window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches)return;
+  var los=function(){if(tv.paused&&!tv.ended){var q=tv.play();if(q&&q.catch)q.catch(function(){});}};
+  var telefon=window.matchMedia&&matchMedia('(max-width:760px)').matches;
+  if(!telefon&&hv){hv.addEventListener('ended',los);setTimeout(los,20000);}
+  if('IntersectionObserver' in window){var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.intersectionRatio>=0.6&&(telefon||!hv||hv.ended))los();});},{threshold:[0.6]});io.observe(tv);}
+})();
 </script>
 <script>
 
