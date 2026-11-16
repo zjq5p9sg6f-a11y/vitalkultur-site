@@ -125,7 +125,7 @@ document.head.appendChild(s);})();</script>
      "name": "Ersetzt CARLON eine Untersuchung?",
      "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Nein. CARLON bereitet Verlaufsdaten auf und hilft bei der Reihenfolge. Ob eine klinische Untersuchung, weitere Diagnostik oder eine Behandlung nötig ist, entscheiden ausschließlich Sie."
+      "text": "Nein. CARLON bereitet Messwerte und Verläufe auf. Ob eine klinische Untersuchung, weitere Diagnostik oder eine Behandlung nötig ist, entscheiden ausschließlich Sie."
      }
     },
     {
@@ -149,7 +149,7 @@ document.head.appendChild(s);})();</script>
      "name": "Brauche ich einen Auftragsverarbeitungsvertrag?",
      "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Nein. Das Cockpit läuft vollständig in Ihrem Browser, und auch die Aufnahme der Halterin erreicht uns nicht: Ihre Messstation legt eine Datei auf ihrem eigenen Gerät an, die sie Ihnen selbst schickt. Es gibt keinen Zwischenspeicher bei uns — und damit nichts, worüber ein Auftragsverarbeitungsvertrag zu schließen wäre."
+      "text": "Nach unserer Einschätzung nein. Das Cockpit läuft vollständig in Ihrem Browser, und auch die Aufnahme der Halterin erreicht uns nicht: Ihre Messstation legt eine Datei auf ihrem eigenen Gerät an, die sie Ihnen selbst schickt. Es gibt keinen Zwischenspeicher bei uns — und damit nichts, worüber ein Auftragsverarbeitungsvertrag zu schließen wäre. Prüfen Sie das bitte für Ihre Praxis."
      }
     },
     {
@@ -181,7 +181,7 @@ document.head.appendChild(s);})();</script>
      "name": "Woher kommt die Baseline?",
      "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Aus den Ruhemessungen dieses Pferds selbst: Ab drei eigenen Aufnahmen in 30 Tagen gilt der Wert als individuelle Baseline. Bis dahin zeigt das Cockpit offen an, dass der Vergleichswert noch aus dem Referenz-Datensatz stammt — und wie viele eigene Aufnahmen noch fehlen. Es tut nicht so, als wüsste es schon etwas."
+      "text": "Aus den Ruhemessungen dieses Pferds selbst: Ab drei eigenen Aufnahmen in 30 Tagen gilt der Wert als individuelle Baseline. Bis dahin zeigt das Cockpit den Ausgangswert aus der Datei, ausdrücklich nicht als Basis, und wie viele eigene Aufnahmen noch fehlen. Es tut nicht so, als wüsste es schon etwas."
      }
     },
     {
@@ -300,6 +300,7 @@ h1{font-family:var(--font-brand);font-weight:350;font-size:clamp(38px,4vw,56px);
 .grafik{margin:var(--sp-55) 0 var(--sp-34)}
 .grafik svg{width:100%;height:auto;display:block;overflow:visible}
 .grafik figcaption{margin-top:var(--sp-13);font-size:var(--t-klein);color:var(--text-dim);line-height:1.6;max-width:46em}
+.sub-h{font-family:var(--font-brand);font-weight:400;font-size:clamp(22px,2.4vw,28px);color:var(--text-primary);margin:var(--sp-55) 0 var(--sp-13)}
 .gr-feld{stroke:var(--border-faint);fill:rgba(12,12,13,.6)}
 .gr-marke{font-family:var(--font-mono);font-size:11px;letter-spacing:.16em;fill:var(--cyan);stroke:none}
 .gr-klein{font-family:var(--font-mono);font-size:10.5px;fill:var(--text-dim);stroke:none}
@@ -381,6 +382,12 @@ svg.ic.ic-karte{width:30px;height:30px;margin-bottom:12px;stroke:var(--text-dim)
 .ab-nachricht-kopf{display:flex;align-items:center;gap:8px;font-family:var(--font-mono);font-size:var(--t-mark);letter-spacing:.14em;text-transform:uppercase;color:var(--text-dim);margin-bottom:var(--sp-13)}
 .ab-blase-text{position:relative;background:#0f2a24;border:1px solid rgba(62,207,178,.28);border-radius:16px 16px 16px 4px;padding:14px 16px;font-size:15px;line-height:1.55;color:var(--text-primary);margin:0}
 .ab-url{color:var(--cyan-strong);word-break:break-all}
+.einsatz{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--sp-21);margin-top:var(--sp-34)}
+.ez{border:1px solid var(--border-faint);border-radius:18px;padding:var(--sp-34);background:linear-gradient(160deg,rgba(62,207,178,.05),transparent 55%),var(--bg-surface)}
+.ez h3{font-size:var(--t-body);font-weight:500;margin:var(--sp-13) 0 var(--sp-8)}
+.ez p{font-size:var(--t-klein);color:var(--text-secondary);line-height:1.65;margin:0}
+svg.ic.ic-ez{width:34px;height:34px}
+@media(max-width:900px){.einsatz{grid-template-columns:1fr}}
 .ab-wege{display:grid;grid-template-columns:1fr 1fr;gap:var(--sp-21);margin:var(--sp-34) auto 0;max-width:900px}
 .ab-weg{border:1px solid var(--border-faint);border-radius:18px;padding:var(--sp-21) var(--sp-34);background:var(--bg-surface)}
 .ab-weg h3{font-size:var(--t-body);font-weight:500;margin:0 0 var(--sp-8)}
@@ -793,7 +800,7 @@ h1,h2{text-wrap:balance}
   <symbol id="i-gurt" viewBox="0 0 32 32"><path d="M3 13.5c4 2.2 8.5 3.2 13 3.2s9-1 13-3.2M3 19c4 2.2 8.5 3.2 13 3.2s9-1 13-3.2" opacity=".55"/><rect x="11" y="12.5" width="10" height="11" rx="3"/><circle cx="16" cy="18" r="1.6"/></symbol>
   <symbol id="i-uhr" viewBox="0 0 32 32"><circle cx="16" cy="17.5" r="10.5"/><path d="M13 3.5h6M16 3.5v3.5"/><path d="M16 17.5V11.5M16 17.5l4 2.5"/></symbol>
   <symbol id="i-schloss" viewBox="0 0 32 32"><rect x="7" y="14" width="18" height="13.5" rx="3"/><path d="M11 14v-3.5a5 5 0 0 1 10 0V14"/><circle cx="16" cy="20.5" r="1.7"/></symbol>
-  <symbol id="i-verlauf" viewBox="0 0 32 32"><path d="M4 21.5c5-1.2 9-1.4 12-1.2s7 .4 12-1" opacity=".4" stroke-width="5"/><path d="M5 27h22" opacity=".5"/><circle cx="7" cy="20" r="1.4"/><circle cx="12" cy="21.5" r="1.4"/><circle cx="17" cy="19.5" r="1.4"/><circle cx="22" cy="21" r="1.4"/><circle cx="27" cy="11" r="1.8" fill="currentColor"/></symbol>
+  <symbol id="i-verlauf" viewBox="0 0 32 32"><path d="M4 27h24M4 5v22" opacity=".5"/><path d="M4 20c6-1.5 12-1.5 18-1" opacity=".45" stroke-dasharray="2 2.5"/><path d="M5 21l5-2 5 1.5 5-3 4-6"/><circle cx="26" cy="9" r="2.2"/></symbol>
   <symbol id="i-bericht" viewBox="0 0 32 32"><path d="M8 4h11l5 5v19H8z"/><path d="M19 4v5h5"/><path d="M11.5 22l3-4 3 2 3.5-5" opacity=".85"/><path d="M11.5 12.5h5" opacity=".55"/></symbol>
   <symbol id="i-export" viewBox="0 0 32 32"><path d="M8 4h10l5 5v6"/><path d="M8 4v24h10"/><path d="M18 4v5h5"/><path d="M20 23h9M25.5 19.5L29 23l-3.5 3.5"/></symbol>
   <symbol id="i-qr" viewBox="0 0 32 32"><rect x="4.5" y="4.5" width="9" height="9" rx="1.5"/><rect x="18.5" y="4.5" width="9" height="9" rx="1.5"/><rect x="4.5" y="18.5" width="9" height="9" rx="1.5"/><path d="M18.5 18.5h3v3h-3zM24.5 18.5h3M18.5 24.5v3M22 24.5h5.5v3" /></symbol>
@@ -927,6 +934,24 @@ h1,h2{text-wrap:balance}
   </div>
 </section>
 
+<section id="einsatz">
+  <div class="wrap">
+    <div class="sec-eyebrow">Wofür Praxen Visite einsetzen</div>
+    <h2>Drei Anlässe, bei denen ein Verlauf mehr hilft als die Erinnerung.</h2>
+    <div class="einsatz">
+      <div class="ez"><svg class="ic ic-ez" aria-hidden="true"><use href="#i-verlauf"/></svg>
+        <h3>Nach einer Umstellung</h3>
+        <p>Haltung, Fütterung oder Training ändern sich. Die Halterin misst vorher und danach in derselben Box, und Sie sehen, wie sich die Werte dieses Pferds entwickeln, mit Zeitfenster, Zahl der Aufnahmen und Veränderung als Zahl.</p></div>
+      <div class="ez"><svg class="ic ic-ez" aria-hidden="true"><use href="#i-akte"/></svg>
+        <h3>Zwischen zwei Besuchen</h3>
+        <p>Vor der Anfahrt sehen Sie Signalgüte und Verlauf der letzten Wochen, statt nur der Schilderung am Telefon. Die Aufnahmen liegen in der Akte, wenn Sie das Pferd wiedersehen.</p></div>
+      <div class="ez"><svg class="ic ic-ez" aria-hidden="true"><use href="#i-bericht"/></svg>
+        <h3>Für Ihre Kundin</h3>
+        <p>Ein Messwertbericht mit Ihrem Briefkopf, aus der Akte heraus erstellt. Im Klinik-Tarif gibt es zusätzlich eine Nachsorge-Karte mit QR: Nach der Entlassung misst die Halterin zu Hause weiter, der Verlauf kommt zu Ihnen.</p></div>
+    </div>
+  </div>
+</section>
+
 <section>
   <div class="wrap">
     <div class="sec-eyebrow">Was im Cockpit steht</div>
@@ -941,7 +966,7 @@ h1,h2{text-wrap:balance}
         <div class="f-k">Übersicht</div>
         <h3>Vier Abweichungsstufen, und daneben steht, aus welchem Wert sie folgen.</h3>
         <ul>
-          <li><b>Nach Abweichung sortiert</b>, nicht nach Eingang — jedes Pferd gegen seine eigene Baseline, nicht gegen eine Tabelle.</li>
+          <li><b>Sortierbar nach Name, Datum oder Abweichung</b> von der eigenen Basis – jedes Pferd gegen seine eigene Vorgeschichte, nicht gegen eine Tabelle.</li>
           <li><b>Der Wert steht dabei.</b> Eine Stufe ohne den zugrunde liegenden Wert wäre eine Meinung — sie beschreibt Messwerte, keinen Gesundheitszustand.</li>
           <li><b>Die Halterin ist einen Tipp entfernt</b>, direkt von der Karte aus.</li>
         </ul>
@@ -968,7 +993,7 @@ h1,h2{text-wrap:balance}
         <span>Aus dem Demo-Bestand erzeugt (fiktive Beispieldaten) — Kennwerte, Puls- und HRV-Kurve,
         Poincaré, RR-Verteilung, Leistungsspektrum in den equinen Bandgrenzen und der RMSSD-Verlauf über
         Wochen, dazu „Methode &amp; Grenzen" mit Quellen.
-        Der Bericht liefert die Daten; den Befund macht Ihre Praxis.</span>
+        Der Bericht liefert die Daten; die Einordnung liegt bei Ihrer Praxis.</span>
       </div>
       <a class="btn ghost" href="assets/CARLON-Muster-Bericht.pdf" download>Muster-Bericht als PDF</a>
     </div>
@@ -1052,7 +1077,7 @@ h1,h2{text-wrap:balance}
       <p class="beleg">In einer Ruheaufnahme — 642 Schläge, 0,31 % Artefaktrate,
          von der Qualitätsanzeige als <em>exzellent</em> geführt — genügen
          <strong>zwei</strong> Schläge, ein AV-Block mit seinem kurzen Folgeschlag,
-         um die RMSSD von 24,2 auf 55,5 ms zu heben. <strong>130 % zu hoch</strong> —
+         um die RMSSD von 24,2 auf 55,5 ms zu heben, <strong>mehr als das Doppelte</strong> –
          und die Qualitätsanzeige warnt kein einziges Mal. Ein hoher Anteil
          plausibler Schläge sagt nichts darüber, ob der Kennwert stimmt.</p>
     </div>
@@ -1088,10 +1113,10 @@ h1,h2{text-wrap:balance}
       <div class="usps">
     <div class="usp">
       <h3>Kein Kennwert ohne Signalgüte und Artefaktanteil</h3>
-      <p>AV-Block-Pausen, Bewegungs-Artefakte, unplausible Schläge — die Auswertung
-         erkennt und korrigiert sie, <strong>bevor</strong> ein Kennwert entsteht. Ob
-         eine Aufnahme aus der App kommt oder aus der Browser-Station: Sie bekommen
-         denselben, bereinigten Wert. Und wenn eine Datei die Kette nachweislich
+      <p>Lange Pausen, Bewegungs-Artefakte, unplausible Schläge – die Auswertung
+         markiert sie, <strong>bevor</strong> ein Kennwert entsteht, und zeigt den Wert mit und
+         ohne sie. Ob eine Aufnahme aus der App kommt oder aus der Browser-Station: Die
+         Auswertung ist dieselbe. Und wenn eine Datei die Kette nachweislich
          <em>nicht</em> durchlaufen hat, steht das im Bericht — dann sind es rohe
          Werte, und der Bericht sagt es, statt eine Bereinigung zu behaupten.
          <a href="/carlon-equine/methodik.html">Jede Stufe mit ihrem Schwellenwert →</a></p>
@@ -1116,7 +1141,7 @@ h1,h2{text-wrap:balance}
 
 <section>
   <div class="wrap">
-    <div class="sec-eyebrow">Was eine Momentaufnahme nicht kann</div>
+    <div class="sec-eyebrow">Die Methode</div>
     <h2>Ein Wert sagt wenig. Erst sein Verlauf gibt ihm Kontext.</h2>
     <p class="sec-lead">
       Ein einzelner HRV-Wert beim Pferd sagt wenig — es gibt keinen belastbaren
@@ -1164,36 +1189,14 @@ h1,h2{text-wrap:balance}
         </svg>
       <figcaption>Demo-Pferd „Sunny“ aus dem Cockpit, 14 wöchentliche Aufnahmen. Die Basis rechnet das Cockpit genau so: Mittel und Streuung der vorherigen 30 Tage, ab der vierten Aufnahme; die neue Aufnahme zählt nicht mit.</figcaption>
     </figure>
-    <div class="grid">
-      <div class="card">
-        <h3>Über Wochen statt über Minuten</h3>
-        <p>Jede neue Aufnahme reiht sich ein. Sie sehen, ob sich die Marker verbessern,
-           halten oder verschlechtern — mit Zeitfenster, Anzahl der Messungen und der
-           Veränderung als Zahl.</p>
-      </div>
-      <div class="card">
-        <h3>Nach einer Umstellung sichtbar</h3>
-        <p>Haltung, Fütterung, Management, Training: Die nächste Aufnahme entsteht im
-           eigenen Stall nach demselben Protokoll. Als Beobachtung — die Bewertung
-           bleibt bei Ihnen.</p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<section>
-  <div class="wrap">
-    <div class="sec-eyebrow">Warum die Messung in den Stall gehört</div>
-    
-    <h2>Ruhe-HRV gibt es nur dort, wo Ruhe ist: im eigenen Stall.</h2>
+    <h3 class="sub-h">Und warum in der gewohnten Box?</h3>
     <p class="sec-lead">
       Transport, fremde Umgebung, fremde Menschen — jeder dieser Reize verschiebt genau die
-      autonome Balance, die Sie beurteilen wollen. Der Messort ist bei der Ruhe-HRV keine
+      autonome Balance, die Sie beobachten wollen. Der Messort ist bei der Ruhe-HRV keine
       Nebensache, sondern Teil der Methode: Die Auswertung verlangt
       <strong>mindestens sieben Minuten Ruhe in gewohnter Umgebung</strong> — darunter gibt
       sie kein Ergebnis aus. Nach Verladung
-      und Fahrt ist diese Bedingung systematisch nicht erfüllt — in der eigenen Box ist sie
-      es jeden Tag.
+      und Fahrt ist das kaum zu erreichen, in der gewohnten Box dagegen jeden Tag.
     </p>
 <figure class="grafik rev" aria-label="RMSSD vor und während Straßentransport: 74 auf 45 Millisekunden bei 3,5 Stunden, 90 auf 59 Millisekunden bei 8 Stunden (Schmidt et al. 2010)">
       <svg viewBox="0 0 760 240" fill="none" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
@@ -1256,7 +1259,7 @@ h1,h2{text-wrap:balance}
       als Nachricht bekommen, auf Ihrer Praxis-Website gefunden oder vom Aushang
       gescannt — und die Messstation ist da: im Browser, ohne Anmeldung. Sie verbindet den
       Polar-H10-Gurt, lässt das Pferd stehen und tippt einmal auf Senden.
-      <strong>Kein Onboarding, keine Rückfragen bei Ihnen.</strong> Gemessen wird mit einem
+      <strong>Die Station führt Schritt für Schritt durch die Messung.</strong> Gemessen wird mit einem
       Android-Smartphone oder ‑Tablet oder einem Laptop mit Chrome oder Edge — auf iPhone und iPad lässt Apple
       Bluetooth im Browser nicht zu. Im Stall genügt ein einziges messfähiges Gerät für
       alle Pferde.
@@ -1334,8 +1337,8 @@ h1,h2{text-wrap:balance}
     </div>
     <div class="usp">
       <h3>Rohwert und bereinigter Wert nebeneinander</h3>
-      <p>Beim Pferd liegen physiologische Pausen — der AV-Block II° ist beim ruhenden Pferd
-         normal — und echte Störungen in derselben Serie. Ein Filter kann sie nicht
+      <p>Beim Pferd liegen lange Pausen, wie sie zu einem AV-Block II° passen und in Ruhe
+         häufig sind, und echte Störungen in derselben Serie. Ein Filter kann sie nicht
          unterscheiden, er wirft beides weg. Die Station nennt deshalb den rohen Wert
          <em>und</em> den über unauffällige Paare. Welcher Anteil wovon stammt, entscheiden
          Sie, nicht die Software.</p>
@@ -1372,7 +1375,7 @@ h1,h2{text-wrap:balance}
         <div class="f-k">Tagesplan</div>
         <h3>Die Tour plant sich nach Strecke und Termin — die Reihenfolge bestimmen Sie.</h3>
         <ul>
-          <li><b>Standard ist die kürzeste Strecke.</b> Auf Wunsch sortieren Sie Pferde mit deutlicher Abweichung nach vorn, per Greifpunkt verschieben Sie jeden Stopp — die Software ordnet, Sie entscheiden.</li>
+          <li><b>Standard ist die kürzeste Strecke.</b> Die Reihenfolge ändern Sie per Greifpunkt, Stopp für Stopp.</li>
           <li><b>Die Fahrzeit zum nächsten Stopp</b> steht an jeder Karte, bevor Sie zusagen.</li>
           <li><b>Nichts davon verlässt Ihr Gerät von selbst</b> — erst Ihr Tipp übergibt
             die Route an die Karten-App.</li>
@@ -1603,7 +1606,7 @@ h1,h2{text-wrap:balance}
       <div class="card"><h3>Belastung im Training und Galopp</h3><p>Die Domäne spezialisierter Trainingssysteme mit eigenem Sensor am Sattelgurt.</p></div>
       <div class="card"><h3>Gangbild und Bewegung</h3><p>Die Domäne der Video- und Sensor-Ganganalyse.</p></div>
       <div class="card"><h3>Schneller Live-Puls am Telefon</h3><p>Dafür reicht die kostenlose App des Gurt-Herstellers.</p></div>
-      <div class="card"><h3>Ruhe-HRV im eigenen Stall, als Verlauf</h3><p><strong>CARLON Equine:</strong> wiederholbare Aufnahmen gegen die eigene Vorgeschichte, AV-Pausen sauber getrennt, Auswertung im Browser, FHIR&nbsp;R5 — ein Preis für den Betrieb.</p></div>
+      <div class="card"><h3>Ruhe-HRV im eigenen Stall, als Verlauf</h3><p><strong>CARLON Equine:</strong> wiederholbare Aufnahmen gegen die eigene Vorgeschichte, lange Pausen getrennt ausgewiesen, Auswertung im Browser, FHIR&nbsp;R5 — ein Preis für den Betrieb.</p></div>
     </div>
     </details>
   </div>
@@ -1615,7 +1618,7 @@ h1,h2{text-wrap:balance}
     <h2>Fragen aus der Praxis – kurz beantwortet.</h2>
     <div class="faq-liste">
       <details class="faq-item" data-spur-auf="faq-1"><summary><h3>Ersetzt CARLON eine Untersuchung?</h3></summary>
-        <div class="faq-a"><p>Nein. CARLON bereitet Verlaufsdaten auf und hilft bei der Reihenfolge. Ob eine
+        <div class="faq-a"><p>Nein. CARLON bereitet Messwerte und Verläufe auf. Ob eine
            klinische Untersuchung, weitere Diagnostik oder eine Behandlung nötig ist,
            entscheiden ausschließlich Sie.</p></div>
       </details>
@@ -1630,10 +1633,10 @@ h1,h2{text-wrap:balance}
            gar nicht löschen — sie liegen bei Ihnen.</p></div>
       </details>
       <details class="faq-item" data-spur-auf="faq-4"><summary><h3>Brauche ich einen Auftragsverarbeitungsvertrag?</h3></summary>
-        <div class="faq-a"><p>Nein. Das Cockpit läuft vollständig in Ihrem Browser, und auch die Aufnahme der
+        <div class="faq-a"><p>Nach unserer Einschätzung nein. Das Cockpit läuft vollständig in Ihrem Browser, und auch die Aufnahme der
            Halterin erreicht uns nicht: Ihre Messstation legt eine Datei auf ihrem eigenen
            Gerät an, die sie Ihnen selbst schickt. Es gibt keinen Zwischenspeicher bei uns —
-           und damit nichts, worüber ein Auftragsverarbeitungsvertrag zu schließen wäre.</p></div>
+           und damit nichts, worüber ein Auftragsverarbeitungsvertrag zu schließen wäre. Prüfen Sie das bitte für Ihre Praxis.</p></div>
       </details>
       <details class="faq-item" data-spur-auf="faq-5"><summary><h3>Was taugt eine Messung von Laienhand?</h3></summary>
         <div class="faq-a"><p>Jede Aufnahme bringt ihr Messprotokoll mit: Anteil auswertbarer Schlagpaare,
@@ -1660,9 +1663,8 @@ h1,h2{text-wrap:balance}
       
       <details class="faq-item" data-spur-auf="faq-8"><summary><h3>Woher kommt die Baseline?</h3></summary>
         <div class="faq-a"><p>Aus den Ruhemessungen dieses Pferds selbst: Ab drei eigenen Aufnahmen in 30 Tagen gilt der
-           Wert als individuelle Baseline. Bis dahin zeigt das Cockpit offen an, dass der
-           Vergleichswert noch aus dem Referenz-Datensatz stammt — und wie viele eigene
-           Aufnahmen noch fehlen. Es tut nicht so, als wüsste es schon etwas.</p></div>
+           Wert als individuelle Baseline. Bis dahin zeigt das Cockpit den Ausgangswert aus der Datei,
+           ausdrücklich nicht als Basis, und wie viele eigene Aufnahmen noch fehlen. Es tut nicht so, als wüsste es schon etwas.</p></div>
       </details>
       <details class="faq-item" data-spur-auf="faq-9"><summary><h3>Wo liegen meine Daten, und wie sichere ich sie?</h3></summary>
         <div class="faq-a"><p>Ausschließlich in Ihrem Browser auf Ihrem Gerät – keine Cloud, kein Server von uns. Unter Dokumentation legt „Backup sichern“ eine Sicherungsdatei an; „Backup einspielen“ stellt damit alles auf einem neuen Gerät oder Browser wieder her, samt Freischaltung. Fehlt eine aktuelle Sicherung, zeigt das Cockpit es oben an. Im Klinik-Tarif liegt der Bestand zusätzlich im Klinik-Ordner auf Ihrem Netzlaufwerk.</p></div>
@@ -1687,7 +1689,7 @@ h1,h2{text-wrap:balance}
     <div class="cta-row">
       <a class="cta-primary" href="/carlon-equine/app/">Cockpit mit 15&nbsp;Demo-Pferden öffnen →</a>
     </div>
-    <p class="cta-note">Läuft im Browser. Nichts wird installiert, nichts übertragen, nichts angelegt.</p>
+    <p class="cta-note">Läuft im Browser, ohne Installation und ohne Konto. Messdaten bleiben auf Ihrem Gerät.</p>
 
     <form id="anmeldung" class="anmeldung"
           action="mailto:jan@vitalkultur.com" method="post" enctype="text/plain">

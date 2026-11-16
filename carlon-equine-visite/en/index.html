@@ -125,7 +125,7 @@ document.head.appendChild(s);})();</script>
      "name": "Does CARLON replace an examination?",
      "acceptedAnswer": {
       "@type": "Answer",
-      "text": "No. CARLON prepares trend data and helps with the order of visits. Whether a clinical examination, further diagnostics or treatment is needed is decided by you alone."
+      "text": "No. CARLON prepares measurements and trends. Whether a clinical examination, further diagnostics or treatment is needed is decided by you alone."
      }
     },
     {
@@ -149,7 +149,7 @@ document.head.appendChild(s);})();</script>
      "name": "Do I need a data processing agreement?",
      "acceptedAnswer": {
       "@type": "Answer",
-      "text": "No. The cockpit runs entirely in your browser, and the owner's recording never reaches us either: her measuring station creates a file on her own device, which she sends to you herself. There is no relay at our end — and therefore nothing a data processing agreement could be about."
+      "text": "In our assessment, no. The cockpit runs entirely in your browser, and the owner's recording never reaches us either: her measuring station creates a file on her own device, which she sends to you herself. There is no relay at our end — and therefore nothing a data processing agreement could be about. Please check this for your practice."
      }
     },
     {
@@ -181,7 +181,7 @@ document.head.appendChild(s);})();</script>
      "name": "Where does the baseline come from?",
      "acceptedAnswer": {
       "@type": "Answer",
-      "text": "From this horse's own resting recordings: from three recordings within 30 days, the value counts as an individual baseline. Until then the cockpit openly shows that the comparison value still comes from the reference dataset — and how many of the horse's own recordings are still missing. It does not pretend to know something it does not."
+      "text": "From this horse's own resting recordings: from three recordings within 30 days, the value counts as an individual baseline. Until then the cockpit shows the starting value from the file, explicitly not as a baseline, and how many of the horse's own recordings are still missing. It does not pretend to know something it does not."
      }
     },
     {
@@ -300,6 +300,7 @@ h1{font-family:var(--font-brand);font-weight:350;font-size:clamp(38px,4vw,56px);
 .grafik{margin:var(--sp-55) 0 var(--sp-34)}
 .grafik svg{width:100%;height:auto;display:block;overflow:visible}
 .grafik figcaption{margin-top:var(--sp-13);font-size:var(--t-klein);color:var(--text-dim);line-height:1.6;max-width:46em}
+.sub-h{font-family:var(--font-brand);font-weight:400;font-size:clamp(22px,2.4vw,28px);color:var(--text-primary);margin:var(--sp-55) 0 var(--sp-13)}
 .gr-feld{stroke:var(--border-faint);fill:rgba(12,12,13,.6)}
 .gr-marke{font-family:var(--font-mono);font-size:11px;letter-spacing:.16em;fill:var(--cyan);stroke:none}
 .gr-klein{font-family:var(--font-mono);font-size:10.5px;fill:var(--text-dim);stroke:none}
@@ -381,6 +382,12 @@ svg.ic.ic-karte{width:30px;height:30px;margin-bottom:12px;stroke:var(--text-dim)
 .ab-nachricht-kopf{display:flex;align-items:center;gap:8px;font-family:var(--font-mono);font-size:var(--t-mark);letter-spacing:.14em;text-transform:uppercase;color:var(--text-dim);margin-bottom:var(--sp-13)}
 .ab-blase-text{position:relative;background:#0f2a24;border:1px solid rgba(62,207,178,.28);border-radius:16px 16px 16px 4px;padding:14px 16px;font-size:15px;line-height:1.55;color:var(--text-primary);margin:0}
 .ab-url{color:var(--cyan-strong);word-break:break-all}
+.einsatz{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--sp-21);margin-top:var(--sp-34)}
+.ez{border:1px solid var(--border-faint);border-radius:18px;padding:var(--sp-34);background:linear-gradient(160deg,rgba(62,207,178,.05),transparent 55%),var(--bg-surface)}
+.ez h3{font-size:var(--t-body);font-weight:500;margin:var(--sp-13) 0 var(--sp-8)}
+.ez p{font-size:var(--t-klein);color:var(--text-secondary);line-height:1.65;margin:0}
+svg.ic.ic-ez{width:34px;height:34px}
+@media(max-width:900px){.einsatz{grid-template-columns:1fr}}
 .ab-wege{display:grid;grid-template-columns:1fr 1fr;gap:var(--sp-21);margin:var(--sp-34) auto 0;max-width:900px}
 .ab-weg{border:1px solid var(--border-faint);border-radius:18px;padding:var(--sp-21) var(--sp-34);background:var(--bg-surface)}
 .ab-weg h3{font-size:var(--t-body);font-weight:500;margin:0 0 var(--sp-8)}
@@ -793,7 +800,7 @@ h1,h2{text-wrap:balance}
   <symbol id="i-gurt" viewBox="0 0 32 32"><path d="M3 13.5c4 2.2 8.5 3.2 13 3.2s9-1 13-3.2M3 19c4 2.2 8.5 3.2 13 3.2s9-1 13-3.2" opacity=".55"/><rect x="11" y="12.5" width="10" height="11" rx="3"/><circle cx="16" cy="18" r="1.6"/></symbol>
   <symbol id="i-uhr" viewBox="0 0 32 32"><circle cx="16" cy="17.5" r="10.5"/><path d="M13 3.5h6M16 3.5v3.5"/><path d="M16 17.5V11.5M16 17.5l4 2.5"/></symbol>
   <symbol id="i-schloss" viewBox="0 0 32 32"><rect x="7" y="14" width="18" height="13.5" rx="3"/><path d="M11 14v-3.5a5 5 0 0 1 10 0V14"/><circle cx="16" cy="20.5" r="1.7"/></symbol>
-  <symbol id="i-verlauf" viewBox="0 0 32 32"><path d="M4 21.5c5-1.2 9-1.4 12-1.2s7 .4 12-1" opacity=".4" stroke-width="5"/><path d="M5 27h22" opacity=".5"/><circle cx="7" cy="20" r="1.4"/><circle cx="12" cy="21.5" r="1.4"/><circle cx="17" cy="19.5" r="1.4"/><circle cx="22" cy="21" r="1.4"/><circle cx="27" cy="11" r="1.8" fill="currentColor"/></symbol>
+  <symbol id="i-verlauf" viewBox="0 0 32 32"><path d="M4 27h24M4 5v22" opacity=".5"/><path d="M4 20c6-1.5 12-1.5 18-1" opacity=".45" stroke-dasharray="2 2.5"/><path d="M5 21l5-2 5 1.5 5-3 4-6"/><circle cx="26" cy="9" r="2.2"/></symbol>
   <symbol id="i-bericht" viewBox="0 0 32 32"><path d="M8 4h11l5 5v19H8z"/><path d="M19 4v5h5"/><path d="M11.5 22l3-4 3 2 3.5-5" opacity=".85"/><path d="M11.5 12.5h5" opacity=".55"/></symbol>
   <symbol id="i-export" viewBox="0 0 32 32"><path d="M8 4h10l5 5v6"/><path d="M8 4v24h10"/><path d="M18 4v5h5"/><path d="M20 23h9M25.5 19.5L29 23l-3.5 3.5"/></symbol>
   <symbol id="i-qr" viewBox="0 0 32 32"><rect x="4.5" y="4.5" width="9" height="9" rx="1.5"/><rect x="18.5" y="4.5" width="9" height="9" rx="1.5"/><rect x="4.5" y="18.5" width="9" height="9" rx="1.5"/><path d="M18.5 18.5h3v3h-3zM24.5 18.5h3M18.5 24.5v3M22 24.5h5.5v3" /></symbol>
@@ -928,6 +935,24 @@ h1,h2{text-wrap:balance}
   </div>
 </section>
 
+<section id="einsatz">
+  <div class="wrap">
+    <div class="sec-eyebrow">What practices use Visite for</div>
+    <h2>Three occasions where a trend helps more than memory.</h2>
+    <div class="einsatz">
+      <div class="ez"><svg class="ic ic-ez" aria-hidden="true"><use href="#i-verlauf"/></svg>
+        <h3>After a change</h3>
+        <p>Housing, feeding or training changes. The owner records before and after in the same stall, and you see how this horse’s values develop, with time window, number of recordings and the change as a number.</p></div>
+      <div class="ez"><svg class="ic ic-ez" aria-hidden="true"><use href="#i-akte"/></svg>
+        <h3>Between two visits</h3>
+        <p>Before you drive out you see signal quality and the trend of recent weeks, instead of only a description over the phone. The recordings are in the record when you see the horse again.</p></div>
+      <div class="ez"><svg class="ic ic-ez" aria-hidden="true"><use href="#i-bericht"/></svg>
+        <h3>For your client</h3>
+        <p>A measurement report with your letterhead, created straight from the record. The clinic plan adds an aftercare card with QR: after discharge the owner keeps recording at home, and the trend comes to you.</p></div>
+    </div>
+  </div>
+</section>
+
 <section>
   <div class="wrap">
     <div class="sec-eyebrow">What the cockpit shows</div>
@@ -942,7 +967,7 @@ h1,h2{text-wrap:balance}
         <div class="f-k">Overview</div>
         <h3>Four deviation levels, and next to each the value it follows from.</h3>
         <ul>
-          <li><b>Sorted by deviation</b>, not by arrival — every horse against its own baseline, not against a table.</li>
+          <li><b>Sortable by name, date or deviation</b> from its own baseline – every horse against its own history, not against a table.</li>
           <li><b>The value is shown alongside.</b> A level without its underlying value would be an opinion — it describes measurements, not a state of health.</li>
           <li><b>The owner is one tap away</b>, straight from the card.</li>
         </ul>
@@ -969,7 +994,7 @@ h1,h2{text-wrap:balance}
         <span>Generated from the demo library (fictitious sample data) — key values, heart-rate and HRV
         curve, Poincaré plot, RR distribution, power spectrum in the equine frequency bands and the RMSSD
         trend across weeks, plus a "Method & limits" section naming the sources.
-        The report delivers the data; the findings are made by your practice.</span>
+        The report delivers the data; the interpretation is up to your practice.</span>
       </div>
       <a class="btn ghost" href="../assets/CARLON-Muster-Bericht.pdf" download>Sample report (PDF)</a>
     </div>
@@ -1053,7 +1078,7 @@ h1,h2{text-wrap:balance}
       <p class="beleg">In a resting recording — 642 beats, 0.31 % artefact rate, rated
          <em>excellent</em> by the quality indicator — <strong>two</strong> beats,
          an AV block with its short follow-on beat, are enough to lift RMSSD from
-         24.2 to 55.5 ms. <strong>130 % too high</strong> — and the quality
+         24.2 to 55.5 ms, <strong>more than double</strong> – and the quality
          indicator never warns. A high share of plausible beats says nothing
          about whether the metric is right.</p>
     </div>
@@ -1089,10 +1114,10 @@ h1,h2{text-wrap:balance}
       <div class="usps">
     <div class="usp">
       <h3>No metric without signal quality and artefact rate</h3>
-      <p>AV-block pauses, motion artefacts, implausible beats — the analysis detects
-         and corrects them <strong>before</strong> any metric is computed. Whether a
-         recording comes from the app or from the browser station: you get the same,
-         cleaned value. And where a file demonstrably did <em>not</em> pass through
+      <p>Long pauses, motion artefacts, implausible beats – the analysis
+         flags them <strong>before</strong> any metric is computed and shows the value with and
+         without them. Whether a recording comes from the app or from the browser station: the
+         analysis is the same. And where a file demonstrably did <em>not</em> pass through
          the chain, the report says so — those are raw values, and the report states
          it instead of claiming a correction that never happened.
          <a href="/carlon-equine/methodik.html">Every stage with its threshold →</a></p>
@@ -1117,7 +1142,7 @@ h1,h2{text-wrap:balance}
 
 <section>
   <div class="wrap">
-    <div class="sec-eyebrow">What a snapshot cannot do</div>
+    <div class="sec-eyebrow">The method</div>
     <h2>One value says little. Only its trend gives it context.</h2>
     <p class="sec-lead">
       A single HRV value in a horse says little — there is no robust normal value to
@@ -1164,36 +1189,14 @@ h1,h2{text-wrap:balance}
         </svg>
       <figcaption>Demo horse “Sunny” from the cockpit, 14 weekly recordings. The cockpit computes the baseline exactly like this: mean and spread of the previous 30 days, from the fourth recording; the new recording is not included.</figcaption>
     </figure>
-    <div class="grid">
-      <div class="card">
-        <h3>Over weeks rather than minutes</h3>
-        <p>Every new recording joins the line. You see whether the markers improve, hold or
-           deteriorate — with the time window, the number of measurements and the change
-           as a figure.</p>
-      </div>
-      <div class="card">
-        <h3>Visible after a change</h3>
-        <p>Housing, feeding, management, training: the next recording is made in the
-           horse’s own stable under the same protocol. As an observation — the assessment
-           stays with you.</p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<section>
-  <div class="wrap">
-    <div class="sec-eyebrow">The difference that arises before the measurement</div>
-    
-    <h2>Resting HRV only exists where rest exists: in the horse’s own stable.</h2>
+    <h3 class="sub-h">And why in the familiar stall?</h3>
     <p class="sec-lead">
       Transport, unfamiliar surroundings, unfamiliar people — each of these shifts exactly the
-      autonomic balance you want to assess. For resting HRV the place of recording is not a
+      autonomic balance you want to observe. For resting HRV the place of recording is not a
       side issue but part of the method: the analysis requires
       <strong>at least seven minutes of rest in familiar surroundings</strong> — below that it
       gives no result. After loading
-      and a drive this condition is systematically not met — in the horse’s own box it is
-      met every day.
+      and a drive this is hard to achieve; in the familiar stall it is achievable every day.
     </p>
 <figure class="grafik rev" aria-label="RMSSD before and during road transport: 74 to 45 milliseconds over 3.5 hours, 90 to 59 milliseconds over 8 hours (Schmidt et al. 2010)">
       <svg viewBox="0 0 760 240" fill="none" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
@@ -1256,7 +1259,7 @@ h1,h2{text-wrap:balance}
       received as a message, found on your practice website or scanned from the poster —
       and the measuring station is there: in the browser, no sign-up. She connects the Polar H10 belt, lets
       the horse stand and taps send once.
-      <strong>No onboarding, no questions coming back to you.</strong> Recording works on an
+      <strong>The station guides her step by step through the recording.</strong> Recording works on an
       Android smartphone or tablet, or a laptop with Chrome or Edge — on iPhone and iPad, Apple does not permit
       Bluetooth in the browser. One capable device in the barn is enough for
       all horses.
@@ -1334,8 +1337,8 @@ h1,h2{text-wrap:balance}
     </div>
     <div class="usp">
       <h3>Raw and corrected value side by side</h3>
-      <p>In horses, physiological pauses — second-degree AV block is normal in a resting
-         horse — and genuine artefacts occur in the same series. A filter cannot tell them
+      <p>In horses, long pauses consistent with second-degree AV block, which are common at
+         rest, and genuine artefacts occur in the same series. A filter cannot tell them
          apart; it discards both. The station therefore reports the raw value <em>and</em>
          the one over unremarkable pairs. Which share comes from what is your call, not the
          software's.</p>
@@ -1371,7 +1374,7 @@ h1,h2{text-wrap:balance}
         <div class="f-k">Day plan</div>
         <h3>The round plans itself by distance and appointment — you set the order.</h3>
         <ul>
-          <li><b>The default is the shortest route.</b> If you wish, you move horses with a marked deviation to the front, and drag any stop by its handle — the software arranges, you decide.</li>
+          <li><b>The default is the shortest route.</b> You change the order by dragging, stop by stop.</li>
           <li><b>Die Fahrzeit zum nächsten Stopp</b> steht an jeder Karte, bevor Sie zusagen.</li>
           <li><b>None of it leaves your device on its own</b> — only your tap hands
             the route to the maps app.</li>
@@ -1602,7 +1605,7 @@ h1,h2{text-wrap:balance}
       <div class="card"><h3>Load in training and at the gallop</h3><p>The domain of dedicated training systems with their own sensor on the girth.</p></div>
       <div class="card"><h3>Gait and movement</h3><p>The domain of video and sensor gait analysis.</p></div>
       <div class="card"><h3>A quick live pulse on the phone</h3><p>The strap maker’s free app does that.</p></div>
-      <div class="card"><h3>Resting HRV in the horse’s own stable, as a trend</h3><p><strong>CARLON Equine:</strong> repeatable recordings against the horse’s own history, AV pauses cleanly separated, analysis in the browser, FHIR&nbsp;R5 — one price for the practice.</p></div>
+      <div class="card"><h3>Resting HRV in the horse’s own stable, as a trend</h3><p><strong>CARLON Equine:</strong> repeatable recordings against the horse’s own history, long pauses reported separately, analysis in the browser, FHIR&nbsp;R5 — one price for the practice.</p></div>
     </div>
     </details>
   </div>
@@ -1614,7 +1617,7 @@ h1,h2{text-wrap:balance}
     <h2>Questions from practice – answered briefly.</h2>
     <div class="faq-liste">
       <details class="faq-item" data-spur-auf="faq-1"><summary><h3>Does CARLON replace an examination?</h3></summary>
-        <div class="faq-a"><p>No. CARLON prepares trend data and helps with the order of visits. Whether a
+        <div class="faq-a"><p>No. CARLON prepares measurements and trends. Whether a
            clinical examination, further diagnostics or treatment is needed is decided by
            you alone.</p></div>
       </details>
@@ -1628,10 +1631,10 @@ h1,h2{text-wrap:balance}
            still be opened and exported. We could not delete it — it is with you.</p></div>
       </details>
       <details class="faq-item" data-spur-auf="faq-4"><summary><h3>Do I need a data processing agreement?</h3></summary>
-        <div class="faq-a"><p>No. The cockpit runs entirely in your browser, and the owner's recording never
+        <div class="faq-a"><p>In our assessment, no. The cockpit runs entirely in your browser, and the owner's recording never
            reaches us either: her measuring station creates a file on her own device, which
            she sends to you herself. There is no relay at our end — and therefore nothing a
-           data processing agreement could be about.</p></div>
+           data processing agreement could be about. Please check this for your practice.</p></div>
       </details>
       <details class="faq-item" data-spur-auf="faq-5"><summary><h3>How good can a layperson’s recording be?</h3></summary>
         <div class="faq-a"><p>Every recording carries its own measurement report: share of usable beat pairs,
@@ -1658,9 +1661,8 @@ h1,h2{text-wrap:balance}
       
       <details class="faq-item" data-spur-auf="faq-8"><summary><h3>Where does the baseline come from?</h3></summary>
         <div class="faq-a"><p>From this horse's own resting recordings: from three recordings within 30 days, the value
-           counts as an individual baseline. Until then the cockpit openly shows that the
-           comparison value still comes from the reference dataset — and how many of the
-           horse's own recordings are still missing. It does not pretend to know
+           counts as an individual baseline. Until then the cockpit shows the starting value from the file,
+           explicitly not as a baseline, and how many of the horse's own recordings are still missing. It does not pretend to know
            something it does not.</p></div>
       </details>
       <details class="faq-item" data-spur-auf="faq-9"><summary><h3>Where is my data, and how do I back it up?</h3></summary>
@@ -1685,7 +1687,7 @@ h1,h2{text-wrap:balance}
     <div class="cta-row">
       <a class="cta-primary" href="/carlon-equine/app/">Open the cockpit with 15&nbsp;demo horses →</a>
     </div>
-    <p class="cta-note">Runs in the browser. Nothing installed, nothing transmitted, nothing created.</p>
+    <p class="cta-note">Runs in the browser, no installation and no account. Measurement data stays on your device.</p>
 
     <form id="anmeldung" class="anmeldung"
           action="mailto:jan@vitalkultur.com" method="post" enctype="text/plain">
