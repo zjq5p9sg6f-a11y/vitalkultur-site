@@ -1004,6 +1004,21 @@ h1,h2{text-wrap:balance}
 @media(max-width:720px){.abo-inhalt ul{grid-template-columns:1fr}}
 </style>
 <style>
+.nu-frage{font-size:1.15em;line-height:1.5;color:var(--text-primary);margin:var(--sp-13) 0 0;max-width:60ch}
+.nu-frage b{font-weight:500;color:var(--cyan)}
+.nu-verben b{font-size:13px!important;letter-spacing:.18em!important}
+.nu-satz{margin:-28px 0 var(--sp-55);color:var(--text-primary);font-size:1.05em;max-width:62ch}
+.nu-h3{font-size:1.5em;font-weight:400;font-family:var(--font-brand);margin:0 0 6px}
+.nu-stufe p{margin:0;color:var(--text-secondary);font-size:15px;line-height:1.6}
+.nutzen .nu-kano+.nu-satz{margin:var(--sp-21) 0 0}
+.preis-bruecke{max-width:760px;margin:var(--sp-34) 0 var(--sp-34);padding:24px 26px;border-radius:20px;border:1px solid rgba(62,207,178,.3);background:radial-gradient(120% 90% at 0% 0%,rgba(62,207,178,.08),transparent 60%),rgba(255,255,255,.015)}
+.preis-bruecke h3{font-family:var(--font-brand);font-weight:400;font-size:1.45em;margin:0 0 10px}
+.preis-bruecke p{color:var(--text-secondary);line-height:1.6;margin:0 0 12px}
+.preis-bruecke .pb-satz{color:var(--text-primary);font-size:1.1em;line-height:1.5;border-left:2px solid var(--cyan);padding-left:14px}
+.preis-bruecke .pb-fest{margin:0;color:var(--text-secondary)}.preis-bruecke .pb-fest b{color:var(--text-primary)}
+@media(max-width:560px){.nu-satz{margin-top:-10px}}
+</style>
+<style>
 
 .nutzen .nu-lead{max-width:62ch;color:var(--text-secondary);line-height:1.6;margin:var(--sp-13) 0 var(--sp-34)}
 .nu-woche{list-style:none;margin:0 0 var(--sp-55);padding:0;display:grid;grid-template-columns:repeat(4,1fr);gap:0;position:relative}
@@ -1190,29 +1205,28 @@ try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; 
 
 <section id="nutzen" class="nutzen">
   <div class="wrap">
-    <div class="sec-eyebrow">Was Ihre Praxis davon hat</div>
-    <h2>Sie kennen den Verlauf, bevor Sie in den Stall fahren.</h2>
-    <p class="nu-lead">Statt einer Momentaufnahme beim Termin: Ruhewerte aus dem gewohnten Stall, zwischen zwei Besuchen aufgenommen. Vor dem Besuch öffnen Sie eine fertige Akte.</p>
-    <ol class="nu-woche" aria-label="Eine Woche mit Visite">
-      <li><b>Montag</b><span>Mess-Link aus der Akte senden, per WhatsApp oder SMS, in Ihren Worten</span></li>
-      <li><b>Zwischen den Besuchen</b><span>Die Kundin nimmt im Stall auf, mindestens sieben Minuten in Ruhe</span></li>
-      <li><b>Vor dem Termin</b><span>Akte öffnen: Signalgüte, Verlauf gegen die eigene Basis, Bericht</span></li>
-      <li><b>Beim Termin</b><span>Sie besprechen den Verlauf, nicht nur den Moment</span></li>
+    <div class="sec-eyebrow">Die wiederkehrende Aufgabe</div>
+    <h2>Der Termin endet. Die Verlaufskontrolle geht weiter.</h2>
+    <p class="nu-frage">Zwischen zwei Besuchen bleibt oft dieselbe Frage: <b>„Wie hat sich das Pferd seit dem letzten Termin entwickelt?“</b></p>
+    <p class="nu-lead">CARLON Equine Visite bringt dafür die Ruhe-HRV-Aufnahmen aus dem heimischen Stall in einen nachvollziehbaren Verlauf. Ihre Praxis prüft die Messqualität, vergleicht die Aufnahmen und dokumentiert die tierärztliche Einordnung.</p>
+    <ol class="nu-woche nu-verben" aria-label="Der Arbeitsablauf">
+      <li><b>Aufnehmen</b><span>Mess-Link aus der Akte senden. Die Halterin nimmt im gewohnten Stall auf, mindestens sieben Minuten in Ruhe.</span></li>
+      <li><b>Vergleichen</b><span>Signalgüte prüfen, Verlauf gegen die eigene Basis des Pferds und gegen frühere Aufnahmen.</span></li>
+      <li><b>Einordnen</b><span>Die Bewertung machen Sie – mit Rohdaten, bereinigten Werten und Methodenversion vor Augen.</span></li>
+      <li><b>Dokumentieren</b><span>Messwertbericht mit dem Briefkopf Ihrer Praxis, Export für Ihre Akte.</span></li>
     </ol>
+    <p class="nu-satz">Ein wiederkehrender Arbeitsablauf – statt einzelner Messwerte ohne Zusammenhang.</p>
+    <h3 class="nu-h3">Aus jeder Aufnahme wird ein Verlauf.</h3>
+    <p class="nu-lead">Ein einzelner Wert ist eine Momentaufnahme. Für die weitere Betreuung zählt auch, was davor war.</p>
     <div class="nu-kano">
-      <div class="nu-stufe"><span class="nu-tag">Darauf ist Verlass</span>
-        <ul><li>Signalgüte zu jeder Aufnahme, rohe und bereinigte Werte nebeneinander</li>
-            <li>Im Browser, ohne Konto – Akten und Messdaten liegen auf Ihrem eigenen Gerät</li>
-            <li>Export als JSON, CSV, Kubios-kompatibel und FHIR R5</li></ul></div>
-      <div class="nu-stufe"><span class="nu-tag">Das spart Ihnen Zeit</span>
-        <ul><li>Der Mess-Link geht mit einem Tipp aus der Akte an die hinterlegte Nummer</li>
-            <li>Der Verlauf liegt vor dem Termin bereit – niemand muss sich erinnern</li>
-            <li>Messwertbericht mit Ihrem Briefkopf in einem Schritt, Tagesroute aus denselben Akten</li></ul></div>
-      <div class="nu-stufe nu-gold"><span class="nu-tag">Das begeistert Ihre Kundschaft</span>
-        <ul><li>Die Halterin trägt selbst zur Betreuung bei – im eigenen Stall, mit eigenem Gurt</li>
-            <li>Sie erhält einen Bericht mit Ihrem Logo, den sie aufheben und zeigen kann</li>
-            <li>Jede Aufnahme bleibt Schlag für Schlag nachvollziehbar, bis zum Poincaré mit Zeitregler</li></ul></div>
+      <div class="nu-stufe"><span class="nu-tag">Vor dem Besuch</span>
+        <p>Sie sehen die vorliegenden Aufnahmen und ihre Qualität im Zusammenhang mit den bisherigen Messungen.</p></div>
+      <div class="nu-stufe"><span class="nu-tag">Zwischen den Besuchen</span>
+        <p>Sie ergänzen die Rückmeldungen der Halterinnen und Halter um dokumentierte Ruhe-HRV-Verläufe.</p></div>
+      <div class="nu-stufe nu-gold"><span class="nu-tag">Für die Dokumentation</span>
+        <p>Sie halten Messdaten und Ihre Einordnung in einem Bericht mit dem Briefkopf Ihrer Praxis fest.</p></div>
     </div>
+    <p class="nu-satz">So entsteht mit jeder weiteren Aufnahme eine nachvollziehbare Messhistorie – als Ergänzung zur Untersuchung, nicht als Ersatz.</p>
   </div>
 </section>
 
@@ -1768,7 +1782,13 @@ try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; 
     </div>
     <p class="b2b-hinweis">Nur für Tierarztpraxen und Pferdekliniken — Bestellung ausschließlich als Unternehmen (§ 14 BGB).</p>
     <div class="abo-grenze m-wisch"><div><b>Ohne Abo</b><span>Demo mit 15 Pferden; zugeschickte Dateien ansehen, bis zu 3 eigene Pferde.</span></div><div><b>Mit Abo</b><span>Unbegrenzt Pferde, eigener Mess-Link und QR-Aushang, Messwertbericht mit Briefkopf, CSV- und FHIR-Export, Routenübergabe.</span></div></div>
-<div class="tarife-grid m-wisch">
+<div class="preis-bruecke">
+      <h3>Für eine Aufgabe, die immer wiederkommt.</h3>
+      <p>Verlaufskontrolle ist nicht mit einem Termin erledigt. Neue Aufnahmen müssen geprüft, mit bisherigen Messungen verglichen und dokumentiert werden. Genau diesen wiederkehrenden Teil der Betreuung unterstützt CARLON Equine Visite: vom Mess-Link für die Halterin bis zum Bericht Ihrer Praxis.</p>
+      <p class="pb-satz">Sie bezahlen nicht für einen weiteren Messwert, sondern für einen durchgängigen Arbeitsablauf – von der Aufnahme im Stall bis zum dokumentierten Verlauf in Ihrer Praxis.</p>
+      <p class="pb-fest"><b>Ein fester Monatspreis.</b> Keine zusätzlichen Gebühren pro Pferd oder Aufnahme.</p>
+    </div>
+    <div class="tarife-grid m-wisch">
     <div class="tarif">
       <div class="tarif-name">Für Pferdepraxen</div>
 

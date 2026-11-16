@@ -1004,6 +1004,21 @@ h1,h2{text-wrap:balance}
 @media(max-width:720px){.abo-inhalt ul{grid-template-columns:1fr}}
 </style>
 <style>
+.nu-frage{font-size:1.15em;line-height:1.5;color:var(--text-primary);margin:var(--sp-13) 0 0;max-width:60ch}
+.nu-frage b{font-weight:500;color:var(--cyan)}
+.nu-verben b{font-size:13px!important;letter-spacing:.18em!important}
+.nu-satz{margin:-28px 0 var(--sp-55);color:var(--text-primary);font-size:1.05em;max-width:62ch}
+.nu-h3{font-size:1.5em;font-weight:400;font-family:var(--font-brand);margin:0 0 6px}
+.nu-stufe p{margin:0;color:var(--text-secondary);font-size:15px;line-height:1.6}
+.nutzen .nu-kano+.nu-satz{margin:var(--sp-21) 0 0}
+.preis-bruecke{max-width:760px;margin:var(--sp-34) 0 var(--sp-34);padding:24px 26px;border-radius:20px;border:1px solid rgba(62,207,178,.3);background:radial-gradient(120% 90% at 0% 0%,rgba(62,207,178,.08),transparent 60%),rgba(255,255,255,.015)}
+.preis-bruecke h3{font-family:var(--font-brand);font-weight:400;font-size:1.45em;margin:0 0 10px}
+.preis-bruecke p{color:var(--text-secondary);line-height:1.6;margin:0 0 12px}
+.preis-bruecke .pb-satz{color:var(--text-primary);font-size:1.1em;line-height:1.5;border-left:2px solid var(--cyan);padding-left:14px}
+.preis-bruecke .pb-fest{margin:0;color:var(--text-secondary)}.preis-bruecke .pb-fest b{color:var(--text-primary)}
+@media(max-width:560px){.nu-satz{margin-top:-10px}}
+</style>
+<style>
 
 .nutzen .nu-lead{max-width:62ch;color:var(--text-secondary);line-height:1.6;margin:var(--sp-13) 0 var(--sp-34)}
 .nu-woche{list-style:none;margin:0 0 var(--sp-55);padding:0;display:grid;grid-template-columns:repeat(4,1fr);gap:0;position:relative}
@@ -1190,29 +1205,28 @@ try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; 
 
 <section id="nutzen" class="nutzen">
   <div class="wrap">
-    <div class="sec-eyebrow">What your practice gains</div>
-    <h2>You know the trend before you drive to the stable.</h2>
-    <p class="nu-lead">Instead of a snapshot at the appointment: resting values from the familiar stable, recorded between two visits. Before the visit you open a complete record.</p>
-    <ol class="nu-woche" aria-label="A week with Visite">
-      <li><b>Monday</b><span>Send the measuring link from the record, via WhatsApp or text message, in your own words</span></li>
-      <li><b>Between visits</b><span>Your client records in the stable, at least seven minutes at rest</span></li>
-      <li><b>Before the appointment</b><span>Open the record: signal quality, trend against the horse’s own baseline, report</span></li>
-      <li><b>At the appointment</b><span>You discuss the trend, not just the moment</span></li>
+    <div class="sec-eyebrow">The recurring task</div>
+    <h2>The appointment ends. Follow-up continues.</h2>
+    <p class="nu-frage">Between two visits the same question often remains: <b>“How has the horse developed since the last appointment?”</b></p>
+    <p class="nu-lead">CARLON Equine Visite turns the resting HRV recordings from the home stable into a traceable trend. Your practice checks the recording quality, compares the recordings and documents the veterinary assessment.</p>
+    <ol class="nu-woche nu-verben" aria-label="The workflow">
+      <li><b>Record</b><span>Send the measuring link from the record. The owner records in the familiar stable, at least seven minutes at rest.</span></li>
+      <li><b>Compare</b><span>Check signal quality, the trend against the horse’s own baseline and against earlier recordings.</span></li>
+      <li><b>Assess</b><span>The assessment is yours – with raw data, corrected values and method version in view.</span></li>
+      <li><b>Document</b><span>Measurement report on your practice letterhead, export for your records.</span></li>
     </ol>
+    <p class="nu-satz">A recurring workflow – instead of single values without context.</p>
+    <h3 class="nu-h3">Every recording becomes a trend.</h3>
+    <p class="nu-lead">A single value is a snapshot. For ongoing care, what came before matters too.</p>
     <div class="nu-kano">
-      <div class="nu-stufe"><span class="nu-tag">You can rely on it</span>
-        <ul><li>Signal quality for every recording, raw and corrected values side by side</li>
-            <li>In the browser, no account – horse and measurement data stay on your device</li>
-            <li>Export as JSON, CSV, Kubios-compatible and FHIR R5</li></ul></div>
-      <div class="nu-stufe"><span class="nu-tag">It saves you time</span>
-        <ul><li>One tap in the record sends the measuring link to the stored number</li>
-            <li>The trend is ready before the appointment – nobody has to remember</li>
-            <li>Measurement report on your letterhead in one step, day route from the same records</li></ul></div>
-      <div class="nu-stufe nu-gold"><span class="nu-tag">It delights your clients</span>
-        <ul><li>The owner contributes to the care herself – in her own stable, with her own strap</li>
-            <li>She receives a report with your logo that she can keep and show</li>
-            <li>Every recording stays traceable beat by beat, down to the Poincaré plot with time slider</li></ul></div>
+      <div class="nu-stufe"><span class="nu-tag">Before the visit</span>
+        <p>You see the available recordings and their quality in the context of earlier measurements.</p></div>
+      <div class="nu-stufe"><span class="nu-tag">Between visits</span>
+        <p>You add documented resting HRV trends to what owners tell you.</p></div>
+      <div class="nu-stufe nu-gold"><span class="nu-tag">For the record</span>
+        <p>You keep measurement data and your assessment in a report on your practice letterhead.</p></div>
     </div>
+    <p class="nu-satz">With every further recording a traceable measurement history builds up – as a complement to the examination, not a replacement.</p>
   </div>
 </section>
 
@@ -1766,7 +1780,13 @@ try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; 
     </div>
     <p class="b2b-hinweis">For veterinary practices and equine clinics only — orders exclusively as a business (§ 14 BGB).</p>
     <div class="abo-grenze m-wisch"><div><b>Without a subscription</b><span>Demo with 15 horses; view files sent to you, up to 3 of your own horses.</span></div><div><b>With a subscription</b><span>Unlimited horses, your own measuring link and QR poster, measurement report with letterhead, CSV and FHIR export, route handoff.</span></div></div>
-<div class="tarife-grid m-wisch">
+<div class="preis-bruecke">
+      <h3>For a task that keeps coming back.</h3>
+      <p>Follow-up is not done with one appointment. New recordings have to be checked, compared with earlier measurements and documented. CARLON Equine Visite supports exactly this recurring part of care: from the measuring link for the owner to your practice’s report.</p>
+      <p class="pb-satz">You are not paying for one more measurement value, but for a continuous workflow – from the recording in the stable to the documented trend in your practice.</p>
+      <p class="pb-fest"><b>One fixed monthly price.</b> No extra fees per horse or recording.</p>
+    </div>
+    <div class="tarife-grid m-wisch">
     <div class="tarif">
       <div class="tarif-name">For equine practices</div>
 
