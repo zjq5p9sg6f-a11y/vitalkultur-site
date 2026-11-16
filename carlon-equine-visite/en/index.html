@@ -509,6 +509,8 @@ svg.ic{width:20px;height:20px;flex:0 0 auto;fill:none;stroke:var(--cyan);stroke-
 .verzicht summary{display:flex;align-items:center;gap:14px}.verzicht summary .ic-karte{width:28px;height:28px;flex:0 0 28px;margin:0}
 .verzicht summary h3{margin:0;flex:1;text-align:left}
 .verzicht-liste{margin-top:var(--sp-21)}
+.nur-touch{display:none}
+@media(hover:none){.nur-maus{display:none}.nur-touch{display:inline}}
 
 @media(max-width:720px){
   .m-wisch{display:flex!important;flex-direction:row!important;flex-wrap:nowrap!important;grid-template-columns:none!important;overflow-x:auto;gap:14px!important;
@@ -548,7 +550,7 @@ svg.ic{width:20px;height:20px;flex:0 0 auto;fill:none;stroke:var(--cyan);stroke-
   .hb-geraete{padding-top:36px!important}
   .hero-buehne figcaption{margin:var(--sp-13) 16px 0!important}
 }
-.hero-buehne figcaption{position:relative;z-index:1;margin:calc(var(--sp-55) + 14px) 0 0 calc(12% - 40px);font-size:var(--t-klein);color:var(--text-dim);line-height:1.6;text-align:left}
+.hero-buehne figcaption{position:relative;z-index:1;margin:calc(var(--sp-55) + 34px) 0 0 calc(12% - 40px);font-size:var(--t-klein);color:var(--text-dim);line-height:1.6;text-align:left}
 .hero-buehne figcaption b{color:var(--text-secondary);font-weight:500}
 .hero-fluss{display:flex;align-items:center;gap:var(--sp-8);margin-bottom:var(--sp-8);max-width:820px}
 .hf-chip{font-family:var(--font-mono);font-size:var(--t-mark);letter-spacing:0.07em;
@@ -991,10 +993,10 @@ try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; 
     <p class="cta-note"><span id="heroBeta">We are in beta and accompany every practice personally — join now and you keep your price as a founding partner.</span></p>
     <figure class="hero-buehne">
       <div class="hb-geraete">
+      <span class="hero-phone"><video src="../assets/station-tour/live-v5.mp4" poster="assets/station-tour/live-poster-v5.jpg" width="660" height="1428" autoplay muted playsinline preload="auto" aria-hidden="true"></video><span class="g-marke"><i>1</i>Recorded in the stable</span></span>
       <div class="hero-shot schau-box" data-schau="/carlon-equine/app/?schaufenster=1&amp;demo=roster&amp;pferd=sunny&amp;fokus=verlauf">
         <video src="../assets/visite-shots/13-verlauf-film-v3.mp4" poster="assets/visite-shots/13-verlauf-v3.jpg" width="1600" height="1112" autoplay muted playsinline preload="auto" aria-label="Record of a demo horse in the cockpit: RMSSD, resting heart rate and SDNN trends over weeks against its own baseline, below it heart rate and HRV of a resting recording beat by beat"></video>
         <a class="schau-voll" href="/carlon-equine/app/?demo=roster&amp;pferd=sunny" title="Open the cockpit full screen">Full screen ↗</a><span class="g-marke"><i>2</i>Course against own baseline</span></div>
-      <span class="hero-phone"><video src="../assets/station-tour/live-v5.mp4" poster="assets/station-tour/live-poster-v5.jpg" width="660" height="1428" autoplay muted playsinline preload="auto" aria-hidden="true"></video><span class="g-marke"><i>1</i>Recorded in the stable</span></span>
       <a class="hero-tour" href="#arbeitstag" aria-label="To the day's route in the cockpit"><span class="ht-rahmen"><video src="../assets/visite-shots/14-tour-film.mp4" poster="assets/visite-shots/14-tour.jpg" width="1600" height="1112" muted playsinline preload="metadata" aria-hidden="true"></video></span><span class="g-marke"><i>3</i>Day's route with drive times</span></a>
       </div>
       <figcaption>
@@ -1025,7 +1027,7 @@ try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; 
 <section id="arbeitstag">
   <div class="wrap">
     <div class="sec-eyebrow">Your working day</div>
-    <h2>Daily route, drive time and trip list in one view.</h2>
+    <h2>Round planning for mobile practices: daily route, drive time and trip list in one view.</h2>
     <p class="sec-lead">The analysis is one half. The other is the day you have to fit it into — and that
        is what decides whether a tool survives its first month.</p>
 
@@ -1034,9 +1036,9 @@ try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; 
         <span class="schau-hinweis" hidden><svg class="ic" aria-hidden="true"><use href="#i-pfeil"/></svg>Drag the map, zoom, tap the stops</span>
         <a class="schau-voll" href="/carlon-equine/app/?demo=map" title="Open the cockpit full screen">Full screen ↗</a></div>
     <div class="tour-punkte m-wisch">
-      <div class="tp"><svg class="ic li-ic" aria-hidden="true"><use href="#i-route"/></svg><h3>Short drives – or your own order</h3><p>Default: stop by stop to the nearest horse, with your appointments. If you wish, you put the horses with the clearest deviation from their own baseline first – you choose this order, not the software. You change it by dragging, stop by stop.</p></div>
+      <div class="tp"><svg class="ic li-ic" aria-hidden="true"><use href="#i-route"/></svg><h3>Short drives – or your own order</h3><p>Default: stop by stop to the nearest horse, with your appointments. If you wish, you sort the list arithmetically by the measured deviation from the own baseline and then set the order yourself – the software does not determine urgency. You change it by dragging, stop by stop.</p></div>
       <div class="tp"><svg class="ic li-ic" aria-hidden="true"><use href="#i-uhr"/></svg><h3>Drive time at every stop</h3><p>Arrival, drive time and contact are on every card before you commit.</p></div>
-      <div class="tp"><svg class="ic li-ic" aria-hidden="true"><use href="#i-schild"/></svg><h3>One tap to Google Maps</h3><p>Measurement data never leaves your device. Map and address search come from OpenStreetMap; only your tap hands the route to Google Maps.</p></div>
+      <div class="tp"><svg class="ic li-ic" aria-hidden="true"><use href="#i-schild"/></svg><h3>One tap to Google Maps</h3><p>Measurement data and records stay on your device. For the map and address search your browser fetches map tiles and the address you enter from OpenStreetMap; the route goes to Google Maps only on your tap.</p></div>
       <div class="tp"><svg class="ic li-ic" aria-hidden="true"><use href="#i-akte"/></svg><h3>Appointments, trips and times</h3><p>You enter appointments per horse; the day plan and appointments go to your calendar as a calendar file (.ics). Services, trips and times are recorded along the way and export as CSV (not a tax logbook).</p></div>
     </div>
   </div>
@@ -1196,7 +1198,7 @@ try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; 
         <rect x="1" y="1" width="226" height="298" rx="16" class="gr-feld"/><rect x="247" y="1" width="512" height="298" rx="16" class="gr-feld"/>
         <text x="24" y="36" class="gr-marke">SINGLE VALUE</text>
         <text x="24" y="128" class="gr-gross">86<tspan class="gr-einheit" dx="6">ms</tspan></text><text x="26" y="154" class="gr-klein">RMSSD · 3 Nov</text>
-        <text x="24" y="206" class="gr-gruppe gr-hell">Good or bad?</text><text x="24" y="232" class="gr-klein">Impossible to say without history:</text><text x="24" y="250" class="gr-klein">There is no reliable reference</text><text x="24" y="268" class="gr-klein">value for horses.</text>
+        <text x="24" y="206" class="gr-gruppe gr-hell">Good or bad?</text><text x="24" y="232" class="gr-klein">Impossible to say without history:</text><text x="24" y="250" class="gr-klein">There is no general reference</text><text x="24" y="268" class="gr-klein">value for stall recordings.</text>
         <text x="270" y="36" class="gr-marke">THE SAME VALUE AS A TREND</text>
         <path d="M318 236.0H724" class="gr-raster"/><text x="308" y="240.0" text-anchor="end" class="gr-klein">40</text>
         <path d="M318 201.6H724" class="gr-raster"/><text x="308" y="205.6" text-anchor="end" class="gr-klein">50</text>
@@ -1336,7 +1338,7 @@ try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; 
         <div class="sec-eyebrow">Poincaré with time slider</div>
         <h3>Every beat keeps its timestamp – scrub through the recording.</h3>
         <p>This is the record in the cockpit, not a graphic of it: every beat pair a point, the SD1/SD2 ellipse for the selected time window. As soon as the tablet comes into view, the cloud builds up beat by beat. Long pauses glow amber.</p>
-        <p class="pz-hinweis"><svg class="ic" aria-hidden="true"><use href="#i-pfeil"/></svg>Drag the time slider back and forth. Point at a dot: the crosshair shows beat, time and both intervals in milliseconds. Mouse wheel zooms, double-click resets.</p>
+        <p class="pz-hinweis"><svg class="ic" aria-hidden="true"><use href="#i-pfeil"/></svg>Drag the time slider back and forth. <span class="nur-maus">Point at a dot: the crosshair shows beat, time and both intervals in milliseconds. Mouse wheel zooms, double-click resets.</span><span class="nur-touch">Tap a dot: the crosshair shows beat, time and both intervals in milliseconds. Two fingers zoom, double-tap resets.</span></p>
         <a class="pz-mehr" href="/carlon-equine/app/?demo=roster&amp;pferd=champion&amp;fokus=poincare">Continue in the cockpit with 15 demo horses →</a>
       </div>
       <div class="hero-shot schau-box pz-tablet" data-schau="/carlon-equine/app/?schaufenster=1&amp;demo=roster&amp;pferd=champion&amp;fokus=poincare">
@@ -1525,7 +1527,7 @@ try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; 
         <h3>One screen in the ward office where the whole team sees the same thing.</h3>
         <ul>
           <li class="mit-ic"><svg class="ic li-ic" aria-hidden="true"><use href="#i-wand"/></svg><b>Overview wall without alarms</b> — every box with cleaned RMSSD, resting HR, signal quality and protocol, sorted by deviation from its own baseline.</li>
-          <li class="mit-ic"><svg class="ic li-ic" aria-hidden="true"><use href="#i-ordner"/></svg><b>Shared clinic folder</b> on your existing network drive — every device in the building reads the same state, no cloud.</li>
+          <li class="mit-ic"><svg class="ic li-ic" aria-hidden="true"><use href="#i-ordner"/></svg><b>Shared clinic folder</b> on your existing network drive — workstations on a computer with Chrome or Edge read and write the same state, no cloud.</li>
           <li class="mit-ic"><svg class="ic li-ic" aria-hidden="true"><use href="#i-qr"/></svg><b>After discharge</b> you hand over the recording link: the next resting recordings from the horse’s usual stable land in the same record.</li>
           <li class="mit-ic"><svg class="ic li-ic" aria-hidden="true"><use href="#i-version"/></svg><b>Fixed method version</b> per analysis — for archive and studies.</li>
         </ul>

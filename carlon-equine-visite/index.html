@@ -509,6 +509,8 @@ svg.ic{width:20px;height:20px;flex:0 0 auto;fill:none;stroke:var(--cyan);stroke-
 .verzicht summary{display:flex;align-items:center;gap:14px}.verzicht summary .ic-karte{width:28px;height:28px;flex:0 0 28px;margin:0}
 .verzicht summary h3{margin:0;flex:1;text-align:left}
 .verzicht-liste{margin-top:var(--sp-21)}
+.nur-touch{display:none}
+@media(hover:none){.nur-maus{display:none}.nur-touch{display:inline}}
 
 @media(max-width:720px){
   .m-wisch{display:flex!important;flex-direction:row!important;flex-wrap:nowrap!important;grid-template-columns:none!important;overflow-x:auto;gap:14px!important;
@@ -548,7 +550,7 @@ svg.ic{width:20px;height:20px;flex:0 0 auto;fill:none;stroke:var(--cyan);stroke-
   .hb-geraete{padding-top:36px!important}
   .hero-buehne figcaption{margin:var(--sp-13) 16px 0!important}
 }
-.hero-buehne figcaption{position:relative;z-index:1;margin:calc(var(--sp-55) + 14px) 0 0 calc(12% - 40px);font-size:var(--t-klein);color:var(--text-dim);line-height:1.6;text-align:left}
+.hero-buehne figcaption{position:relative;z-index:1;margin:calc(var(--sp-55) + 34px) 0 0 calc(12% - 40px);font-size:var(--t-klein);color:var(--text-dim);line-height:1.6;text-align:left}
 .hero-buehne figcaption b{color:var(--text-secondary);font-weight:500}
 .hero-fluss{display:flex;align-items:center;gap:var(--sp-8);margin-bottom:var(--sp-8);max-width:820px}
 .hf-chip{font-family:var(--font-mono);font-size:var(--t-mark);letter-spacing:0.07em;
@@ -991,10 +993,10 @@ try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; 
     <p class="cta-note"><span id="heroBeta">Wir sind in der Beta und begleiten jede Praxis persönlich — wer jetzt einsteigt, behält seinen Preis als Gründungspartner.</span></p>
     <figure class="hero-buehne">
       <div class="hb-geraete">
+      <span class="hero-phone"><video src="assets/station-tour/live-v5.mp4" poster="assets/station-tour/live-poster-v5.jpg" width="660" height="1428" autoplay muted playsinline preload="auto" aria-hidden="true"></video><span class="g-marke"><i>1</i>Messung im Stall</span></span>
       <div class="hero-shot schau-box" data-schau="/carlon-equine/app/?schaufenster=1&amp;demo=roster&amp;pferd=sunny&amp;fokus=verlauf">
         <video src="assets/visite-shots/13-verlauf-film-v3.mp4" poster="assets/visite-shots/13-verlauf-v3.jpg" width="1600" height="1112" autoplay muted playsinline preload="auto" aria-label="Akte eines Demo-Pferds im Cockpit: RMSSD-, Ruhe-Herzfrequenz- und SDNN-Verlauf über Wochen gegen die eigene Basis, darunter Herzfrequenz und HRV einer Ruheaufnahme Schlag für Schlag"></video>
         <a class="schau-voll" href="/carlon-equine/app/?demo=roster&amp;pferd=sunny" title="Cockpit im Vollbild öffnen">Vollbild ↗</a><span class="g-marke"><i>2</i>Verlauf gegen eigene Basis</span></div>
-      <span class="hero-phone"><video src="assets/station-tour/live-v5.mp4" poster="assets/station-tour/live-poster-v5.jpg" width="660" height="1428" autoplay muted playsinline preload="auto" aria-hidden="true"></video><span class="g-marke"><i>1</i>Messung im Stall</span></span>
       <a class="hero-tour" href="#arbeitstag" aria-label="Zur Tagesroute im Cockpit"><span class="ht-rahmen"><video src="assets/visite-shots/14-tour-film.mp4" poster="assets/visite-shots/14-tour.jpg" width="1600" height="1112" muted playsinline preload="metadata" aria-hidden="true"></video></span><span class="g-marke"><i>3</i>Tagesroute mit Fahrzeit</span></a>
       </div>
       <figcaption>
@@ -1025,7 +1027,7 @@ try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; 
 <section id="arbeitstag">
   <div class="wrap">
     <div class="sec-eyebrow">Ihr Arbeitstag</div>
-    <h2>Tagesroute, Fahrzeit und Fahrtenliste in einer Ansicht.</h2>
+    <h2>Tourenplanung für die Fahrpraxis: Tagesroute, Fahrzeit und Fahrtenliste in einer Ansicht.</h2>
     <p class="sec-lead">Die Auswertung ist die eine Hälfte. Die andere ist der Tag, an dem
        Sie sie unterbringen müssen — und der entscheidet, ob ein Werkzeug den ersten
        Monat überlebt.</p>
@@ -1035,9 +1037,9 @@ try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; 
         <span class="schau-hinweis" hidden><svg class="ic" aria-hidden="true"><use href="#i-pfeil"/></svg>Karte ziehen, zoomen, Stopps antippen</span>
         <a class="schau-voll" href="/carlon-equine/app/?demo=map" title="Cockpit im Vollbild öffnen">Vollbild ↗</a></div>
     <div class="tour-punkte m-wisch">
-      <div class="tp"><svg class="ic li-ic" aria-hidden="true"><use href="#i-route"/></svg><h3>Kurze Wege – oder Ihre eigene Reihenfolge</h3><p>Standard: Stopp für Stopp zum nächstgelegenen Pferd, mit Ihren Terminen. Auf Wunsch stellen Sie die Pferde mit der deutlichsten Abweichung von ihrer eigenen Basis an den Anfang – diese Reihenfolge wählen Sie, nicht die Software. Ändern lässt sie sich per Greifpunkt, Stopp für Stopp.</p></div>
+      <div class="tp"><svg class="ic li-ic" aria-hidden="true"><use href="#i-route"/></svg><h3>Kurze Wege – oder Ihre eigene Reihenfolge</h3><p>Standard: Stopp für Stopp zum nächstgelegenen Pferd, mit Ihren Terminen. Auf Wunsch sortieren Sie die Liste rechnerisch nach der Messwert-Abweichung zur eigenen Basis und legen die Reihenfolge danach selbst fest – eine Dringlichkeit stellt die Software nicht fest. Ändern lässt sie sich per Greifpunkt, Stopp für Stopp.</p></div>
       <div class="tp"><svg class="ic li-ic" aria-hidden="true"><use href="#i-uhr"/></svg><h3>Fahrzeit an jedem Stopp</h3><p>Ankunft, Fahrzeit und Ansprechpartner stehen an jeder Karte, bevor Sie zusagen.</p></div>
-      <div class="tp"><svg class="ic li-ic" aria-hidden="true"><use href="#i-schild"/></svg><h3>Ein Tipp zu Google Maps</h3><p>Messdaten verlassen Ihr Gerät nicht. Karte und Adresssuche kommen von OpenStreetMap; erst Ihr Tipp übergibt die Route an Google Maps.</p></div>
+      <div class="tp"><svg class="ic li-ic" aria-hidden="true"><use href="#i-schild"/></svg><h3>Ein Tipp zu Google Maps</h3><p>Messdaten und Akten bleiben auf Ihrem Gerät. Für Karte und Adresssuche ruft Ihr Browser Kartenkacheln und die eingegebene Anschrift bei OpenStreetMap ab; an Google Maps geht die Route erst auf Ihren Tipp.</p></div>
       <div class="tp"><svg class="ic li-ic" aria-hidden="true"><use href="#i-akte"/></svg><h3>Termine, Fahrten und Zeiten</h3><p>Termine tragen Sie je Pferd ein; Tagesplan und Termine gehen als Kalenderdatei (.ics) in Ihren Kalender. Leistungen, Fahrten und Zeiten entstehen nebenbei und gehen als CSV heraus (kein steuerliches Fahrtenbuch).</p></div>
     </div>
   </div>
@@ -1198,7 +1200,7 @@ try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; 
         <rect x="1" y="1" width="226" height="298" rx="16" class="gr-feld"/><rect x="247" y="1" width="512" height="298" rx="16" class="gr-feld"/>
         <text x="24" y="36" class="gr-marke">EINZELWERT</text>
         <text x="24" y="128" class="gr-gross">86<tspan class="gr-einheit" dx="6">ms</tspan></text><text x="26" y="154" class="gr-klein">RMSSD · 3. Nov.</text>
-        <text x="24" y="206" class="gr-gruppe gr-hell">Gut oder schlecht?</text><text x="24" y="232" class="gr-klein">Ohne Vorgeschichte nicht zu sagen:</text><text x="24" y="250" class="gr-klein">Einen belastbaren Normwert</text><text x="24" y="268" class="gr-klein">gibt es beim Pferd nicht.</text>
+        <text x="24" y="206" class="gr-gruppe gr-hell">Gut oder schlecht?</text><text x="24" y="232" class="gr-klein">Ohne Vorgeschichte nicht zu sagen:</text><text x="24" y="250" class="gr-klein">Einen allgemeinen Normwert</text><text x="24" y="268" class="gr-klein">für Stallaufnahmen gibt es nicht.</text>
         <text x="270" y="36" class="gr-marke">DERSELBE WERT IM VERLAUF</text>
         <path d="M318 236.0H724" class="gr-raster"/><text x="308" y="240.0" text-anchor="end" class="gr-klein">40</text>
         <path d="M318 201.6H724" class="gr-raster"/><text x="308" y="205.6" text-anchor="end" class="gr-klein">50</text>
@@ -1338,7 +1340,7 @@ try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; 
         <div class="sec-eyebrow">Poincaré mit Zeitregler</div>
         <h3>Jeder Schlag behält seinen Zeitpunkt – spulen Sie durch die Aufnahme.</h3>
         <p>Das ist die Akte im Cockpit, keine Grafik dafür: jedes Schlagpaar ein Punkt, die Ellipse aus SD1 und SD2 für das gewählte Zeitfenster. Sobald das Tablet ins Bild kommt, baut sich die Wolke Schlag für Schlag auf. Lange Pausen leuchten bernsteinfarben.</p>
-        <p class="pz-hinweis"><svg class="ic" aria-hidden="true"><use href="#i-pfeil"/></svg>Ziehen Sie den Zeitregler vor und zurück. Zeigen Sie auf einen Punkt: Das Fadenkreuz nennt Schlag, Zeitpunkt und beide Abstände in Millisekunden. Mausrad zoomt, Doppelklick setzt zurück.</p>
+        <p class="pz-hinweis"><svg class="ic" aria-hidden="true"><use href="#i-pfeil"/></svg>Ziehen Sie den Zeitregler vor und zurück. <span class="nur-maus">Zeigen Sie auf einen Punkt: Das Fadenkreuz nennt Schlag, Zeitpunkt und beide Abstände in Millisekunden. Mausrad zoomt, Doppelklick setzt zurück.</span><span class="nur-touch">Tippen Sie auf einen Punkt: Das Fadenkreuz nennt Schlag, Zeitpunkt und beide Abstände in Millisekunden. Zwei Finger zoomen, Doppeltipp setzt zurück.</span></p>
         <a class="pz-mehr" href="/carlon-equine/app/?demo=roster&amp;pferd=champion&amp;fokus=poincare">Im Cockpit mit 15 Demo-Pferden weiter →</a>
       </div>
       <div class="hero-shot schau-box pz-tablet" data-schau="/carlon-equine/app/?schaufenster=1&amp;demo=roster&amp;pferd=champion&amp;fokus=poincare">
@@ -1527,7 +1529,7 @@ try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; 
         <h3>Ein Bildschirm im Stationszimmer, auf dem das ganze Team dasselbe sieht.</h3>
         <ul>
           <li class="mit-ic"><svg class="ic li-ic" aria-hidden="true"><use href="#i-wand"/></svg><b>Übersichtswand ohne Alarme</b> — jede Box mit bereinigtem RMSSD, Ruhe-HF, Signalgüte und Protokoll, sortiert nach Abweichung von der eigenen Basis.</li>
-          <li class="mit-ic"><svg class="ic li-ic" aria-hidden="true"><use href="#i-ordner"/></svg><b>Gemeinsamer Klinik-Ordner</b> auf Ihrem vorhandenen Netzlaufwerk — jedes Gerät im Haus liest denselben Stand, ohne Cloud.</li>
+          <li class="mit-ic"><svg class="ic li-ic" aria-hidden="true"><use href="#i-ordner"/></svg><b>Gemeinsamer Klinik-Ordner</b> auf Ihrem vorhandenen Netzlaufwerk — die Arbeitsplätze am Rechner mit Chrome oder Edge lesen und schreiben denselben Stand, ohne Cloud.</li>
           <li class="mit-ic"><svg class="ic li-ic" aria-hidden="true"><use href="#i-qr"/></svg><b>Nach der Entlassung</b> geben Sie den Mess-Link mit: Die nächsten Ruheaufnahmen aus der gewohnten Box landen in derselben Akte.</li>
           <li class="mit-ic"><svg class="ic li-ic" aria-hidden="true"><use href="#i-version"/></svg><b>Feste Methodenversion</b> je Auswertung — für Archiv und Studien.</li>
         </ul>
