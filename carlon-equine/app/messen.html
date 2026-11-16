@@ -495,7 +495,8 @@ svg.viz .label-unit{fill:var(--dim);font-weight:400}
   .viz-hov .hov-cross,.viz-hov .hov-focus,.viz-hov .hov-tip{transition:opacity .12s ease}
 }
 /* Sprachumschalter: klein, oben rechts, nie im Weg */
-.langsw{position:fixed;top:calc(10px + env(safe-area-inset-top,0));right:12px;z-index:40;display:flex;
+/* Sprachschalter in der Fußzeile (16.11.2026, Jan: „nimmt oben unnötig Platz“) – die Sprache folgt dem Gerät. */
+.langsw{position:static;display:flex;justify-content:center;width:max-content;margin:var(--s3) auto 0;
   border:1px solid var(--border);border-radius:999px;overflow:hidden;background:rgba(16,16,19,.72);backdrop-filter:blur(8px)}
 .langsw button{font-family:var(--font-mono);font-size:10.5px;letter-spacing:.12em;padding:8px 11px;min-height:34px;
   color:var(--dim);border:0;background:none;cursor:pointer;transition:color .15s,background .15s}
@@ -763,7 +764,6 @@ svg.viz .bezel{stroke:var(--cyan);stroke-opacity:.55;stroke-width:1.1;stroke-lin
   .hint{color:#5C666C}
 }
 </style>
-<div class="langsw"><button id="langBtn" aria-label="Sprache wechseln / Switch language"><b>DE</b><span>EN</span></button></div>
 <div class="bg-atmosphere"></div>
 <div class="bg-flower"></div>
 <div class="bg-vignette"></div>
@@ -1222,6 +1222,7 @@ const HAUS={ appImStore:false, appUrl:'https://carlon.app' };
        Startseite. Und § 305 Abs. 2 BGB: ohne diesen Weg sind die AGB, die die
        Übergabe regeln, gar nicht einbezogen. -->
   <div class="hint rechtsweg" style="max-width:60ch;margin:var(--s3) auto 0" data-i18n="rechtLinks"><a href="/impressum.html">Impressum</a> · <a href="/privacy.html">Datenschutz</a> · <a href="/agb.html">AGB</a></div>
+  <div class="langsw"><button id="langBtn" aria-label="Sprache wechseln / Switch language"><b>DE</b><span>EN</span></button></div>
 </div>
 
 <!-- Vollbild: das Diagramm wird in hoher Aufloesung NEU gezeichnet, nicht
