@@ -745,13 +745,11 @@ tausche('<div class="tarif-preis"><b>149&nbsp;€</b> <span>netto im Monat · US
 tausche(`Das Angebot richtet sich ausschließlich an Unternehmer im Sinne des § 14 BGB.
         Für das Browser-Cockpit tritt <strong>Stripe als Verkäufer im eigenen Namen</strong> auf
         (Merchant of Record): Sie erhalten von dort eine Rechnung mit ausgewiesener Umsatzsteuer
-        für Ihren Vorsteuerabzug.
-        Vitalkultur selbst ist Kleinunternehmer nach § 19 UStG. Einzelheiten in`,
+        für Ihren Vorsteuerabzug. Einzelheiten in`,
 `This offer is directed exclusively at businesses within the meaning of § 14 BGB.
         For the browser cockpit, <strong>Stripe acts as the seller in its own name</strong>
         (merchant of record): you receive an invoice from Stripe showing VAT for your input-tax
-        deduction.
-        Vitalkultur itself is a small business under § 19 UStG. Details in`);
+        deduction. Details in`);
 
 
 /* Positiv behauptet statt doppelt verneint (Copy-CI §12). */
@@ -879,7 +877,7 @@ tausche(`
       <tbody>
         <tr><td>Android-Smartphone oder ‑Tablet (Chrome)</td><td class="ja">ja</td></tr>
         <tr><td>Laptop oder PC mit Chrome oder Edge</td><td class="ja">ja</td></tr>
-        <tr><td>iPhone oder iPad</td><td class="nein">nein – Apple lässt Bluetooth im Browser nicht zu</td></tr>
+        <tr><td>iPhone oder iPad</td><td class="nein">nein – Apple lässt Bluetooth im Browser nicht zu · Ausweg: ein Leihset der Praxis (Gurt + Android-Gerät)</td></tr>
       </tbody>
     </table>`, `
     <table class="geraete">
@@ -887,7 +885,7 @@ tausche(`
       <tbody>
         <tr><td>Android smartphone or tablet (Chrome)</td><td class="ja">yes</td></tr>
         <tr><td>Laptop or PC with Chrome or Edge</td><td class="ja">yes</td></tr>
-        <tr><td>iPhone or iPad</td><td class="nein">no – Apple does not allow Bluetooth in the browser</td></tr>
+        <tr><td>iPhone or iPad</td><td class="nein">no – Apple does not allow Bluetooth in the browser · way out: a loan set from the practice (belt + Android device)</td></tr>
       </tbody>
     </table>`);
 tausche(`<div class="leiste" id="leiste" hidden><span class="leiste-t">CARLON Equine Visite · ab 149&nbsp;€ netto/Monat</span><a class="leiste-b2" href="#preis">Tarife</a><a class="leiste-b" href="/carlon-equine/app/?demo=today">Demo öffnen →</a></div>

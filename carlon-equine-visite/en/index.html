@@ -1407,7 +1407,7 @@ h1,h2{text-wrap:balance}
       <tbody>
         <tr><td>Android smartphone or tablet (Chrome)</td><td class="ja">yes</td></tr>
         <tr><td>Laptop or PC with Chrome or Edge</td><td class="ja">yes</td></tr>
-        <tr><td>iPhone or iPad</td><td class="nein">no – Apple does not allow Bluetooth in the browser</td></tr>
+        <tr><td>iPhone or iPad</td><td class="nein">no – Apple does not allow Bluetooth in the browser · way out: a loan set from the practice (belt + Android device)</td></tr>
       </tbody>
     </table>
     <!-- DIE FRAGE, DIE JEDEN KAUF BLOCKIERT (15.08.2026): Die Seite nannte den
@@ -1680,8 +1680,7 @@ h1,h2{text-wrap:balance}
         This offer is directed exclusively at businesses within the meaning of § 14 BGB.
         For the browser cockpit, <strong>Stripe acts as the seller in its own name</strong>
         (merchant of record): you receive an invoice from Stripe showing VAT for your input-tax
-        deduction.
-        Vitalkultur itself is a small business under § 19 UStG. Details in
+        deduction. Details in
         <a href="/terms.html#visite">§ 12a unserer AGB</a> und in der
         <a href="/privacy-en.html">Datenschutzerklärung</a>.
       </p>
@@ -1701,7 +1700,7 @@ h1,h2{text-wrap:balance}
            zwei Stellen, ein Schalter. */
         var hb = document.getElementById('heroBeta'); if (hb) hb.remove();
         /* Beta-Anmeldung wird zur persönlichen Einführung: wer erst sprechen will, hat einen zweiten Weg zum Abschluss. */
-        var umbau = function(){ var f = document.getElementById('anmeldung');
+        var umbau = function(){ var f = document.getElementById('anmeldung'); if (f) { f.hidden = true; var vor = f.previousElementSibling; return; }
         if (f) {
           var h = f.querySelector('h3'), l = f.querySelector('.anm-lead'), b = f.querySelector('.anm-senden');
           if (h) h.textContent = de ? 'Lieber erst sprechen? Persönliche Einführung' : 'Prefer to talk first? Personal introduction';

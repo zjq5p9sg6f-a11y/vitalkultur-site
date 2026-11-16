@@ -1407,7 +1407,7 @@ h1,h2{text-wrap:balance}
       <tbody>
         <tr><td>Android-Smartphone oder ‑Tablet (Chrome)</td><td class="ja">ja</td></tr>
         <tr><td>Laptop oder PC mit Chrome oder Edge</td><td class="ja">ja</td></tr>
-        <tr><td>iPhone oder iPad</td><td class="nein">nein – Apple lässt Bluetooth im Browser nicht zu</td></tr>
+        <tr><td>iPhone oder iPad</td><td class="nein">nein – Apple lässt Bluetooth im Browser nicht zu · Ausweg: ein Leihset der Praxis (Gurt + Android-Gerät)</td></tr>
       </tbody>
     </table>
     <!-- DIE FRAGE, DIE JEDEN KAUF BLOCKIERT (15.08.2026): Die Seite nannte den
@@ -1681,8 +1681,7 @@ h1,h2{text-wrap:balance}
         Das Angebot richtet sich ausschließlich an Unternehmer im Sinne des § 14 BGB.
         Für das Browser-Cockpit tritt <strong>Stripe als Verkäufer im eigenen Namen</strong> auf
         (Merchant of Record): Sie erhalten von dort eine Rechnung mit ausgewiesener Umsatzsteuer
-        für Ihren Vorsteuerabzug.
-        Vitalkultur selbst ist Kleinunternehmer nach § 19 UStG. Einzelheiten in
+        für Ihren Vorsteuerabzug. Einzelheiten in
         <a href="/agb.html#visite">§ 12a unserer AGB</a> und in der
         <a href="/privacy.html">Datenschutzerklärung</a>.
       </p>
@@ -1702,7 +1701,7 @@ h1,h2{text-wrap:balance}
            zwei Stellen, ein Schalter. */
         var hb = document.getElementById('heroBeta'); if (hb) hb.remove();
         /* Beta-Anmeldung wird zur persönlichen Einführung: wer erst sprechen will, hat einen zweiten Weg zum Abschluss. */
-        var umbau = function(){ var f = document.getElementById('anmeldung');
+        var umbau = function(){ var f = document.getElementById('anmeldung'); if (f) { f.hidden = true; var vor = f.previousElementSibling; return; }
         if (f) {
           var h = f.querySelector('h3'), l = f.querySelector('.anm-lead'), b = f.querySelector('.anm-senden');
           if (h) h.textContent = de ? 'Lieber erst sprechen? Persönliche Einführung' : 'Prefer to talk first? Personal introduction';
