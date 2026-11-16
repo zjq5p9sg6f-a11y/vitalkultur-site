@@ -43,17 +43,16 @@ details.mehr.gross[open]{padding-bottom:var(--sp-21)}
 }
 @media(min-width:1101px){.gal-nav{display:none}}
 
-/* GERÄT (15.11.2026, Jan: „nur Screenshots mit Kontur – wirkt billig“; kein Apple-Gerät nachbauen):
-   generisches Tablet in Anthrazit – Aluminium-Verlauf, feine Lichtkante, schmaler Rand, Kamerapunkt
-   an der kurzen Seite (Querformat), Glas mit innerem Rand. Gilt für Hero, Funktionsbilder und Bildreihe. */
-.f-shot,.shots.three .frame,.hero-shot,.pz-live{position:relative;border:0!important;border-radius:24px!important;padding:11px 11px 11px 17px!important;
-  background:linear-gradient(150deg,#45494f 0%,#2c2f34 22%,#1e2024 60%,#141518 100%)!important;
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.16),inset 0 0 0 1px rgba(255,255,255,.05),0 0 0 1px #08090b,
-    0 50px 90px -45px rgba(0,0,0,.95),0 18px 40px -30px rgba(0,0,0,.8),0 0 70px rgba(62,207,178,.07)!important;overflow:visible!important}
-.f-shot::before,.shots.three .frame::before,.hero-shot::after,.pz-live::before{content:''!important;position:absolute!important;left:6px!important;top:50%!important;
-  transform:translateY(-50%)!important;width:5px!important;height:5px!important;border-radius:50%!important;background:#0b0c0f!important;
-  box-shadow:0 0 0 1px rgba(255,255,255,.07),inset 0 0 1px rgba(80,160,200,.6)!important}
-.f-shot img,.shots.three .frame img,.hero-shot img,.pz-live img{display:block;width:100%;height:auto;border-radius:13px!important;box-shadow:0 0 0 1px rgba(0,0,0,.85),0 0 0 2px rgba(255,255,255,.03)}
+/* GERÄT C13 (16.11.2026, Jan: „Kanten unterschiedlich breit, grottenhässlich“). Generisches Tablet:
+   schwarzer Glasrand überall gleich breit (vorher 11/11/11/17 px), Ecken konzentrisch (außen = innen + Rand),
+   dünne Aluminiumkante als Ring, Kamera mittig im oberen Rand. Gilt für Hero, Funktionsbilder, Bildreihe, Poincaré. */
+.f-shot,.shots.three .frame,.hero-shot,.pz-live{--b:clamp(7px,1vw,12px);--r:clamp(16px,2vw,26px);position:relative;border:0!important;
+  border-radius:var(--r)!important;padding:var(--b)!important;background:#060708!important;overflow:visible!important;
+  box-shadow:0 0 0 1.5px #3b3f45,0 0 0 3px #111316,inset 0 0 0 1px rgba(255,255,255,.07),0 50px 110px -50px rgba(0,0,0,.95),0 0 60px rgba(62,207,178,.06)!important}
+.f-shot::before,.shots.three .frame::before,.hero-shot::after,.pz-live::before{content:''!important;position:absolute!important;left:50%!important;top:calc(var(--b) / 2)!important;
+  transform:translate(-50%,-50%)!important;width:4px!important;height:4px!important;border-radius:50%!important;background:#15171b!important;
+  box-shadow:inset 0 0 0 1px #2a2e33!important;z-index:2}
+.f-shot img,.shots.three .frame img,.hero-shot img,.pz-live img{display:block;width:100%;height:auto;border-radius:calc(var(--r) - var(--b))!important;box-shadow:none!important}
 
 /* Messstation-Tour (16.11.2026): gemeinsame App-Tour-Komponente, aber GENERISCHES Telefon (Browser-Produkt, kein Apple-Gerät) */
 .vt{margin-top:var(--sp-34);display:grid;grid-template-columns:minmax(0,1fr) auto;gap:var(--sp-55);align-items:center}
@@ -64,9 +63,15 @@ details.mehr.gross[open]{padding-bottom:var(--sp-21)}
 .vt-liste b{display:block;color:var(--text-primary);font-size:1.02em;margin-bottom:4px}.vt-liste span{color:var(--text-secondary);font-size:.93em;line-height:1.5}
 .vt-liste .fort{position:absolute;left:0;bottom:0;height:2px;background:var(--cyan);width:0}
 .vt-geraet{display:flex;flex-direction:column;align-items:center}
-.at-device.at-generisch{width:min(330px,78vw);background:linear-gradient(150deg,#46494f 0%,#2b2e33 24%,#1d1f23 62%,#131417 100%);border-radius:13% / 6.2%;
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.16),inset 0 0 0 1px rgba(255,255,255,.05),0 0 0 1px #08090b,0 50px 90px -45px rgba(0,0,0,.95),0 0 60px rgba(62,207,178,.07)}
-.at-generisch .at-screen{left:3.2%;top:1.6%;width:93.6%;height:96.8%;border-radius:10.8% / 5%}
+/* Generisches Android (16.11.2026 C13): Rand überall gleich breit (px), Ecken konzentrisch, Aluminiumkante,
+   Kamera-Loch mittig, Tasten rechts. Bildschirm exakt 9:19,5 wie die Aufnahmen. */
+.at-device.at-generisch{--w:min(330px,78vw);--b:9px;--r:42px;width:var(--w);aspect-ratio:auto;height:calc((var(--w) - 2 * var(--b)) * 19.5 / 9 + 2 * var(--b));
+  background:#060708;border-radius:var(--r);
+  box-shadow:0 0 0 1.5px #3b3f45,0 0 0 3px #111316,inset 0 0 0 1px rgba(255,255,255,.07),0 50px 90px -45px rgba(0,0,0,.95),0 0 60px rgba(62,207,178,.07)}
+.at-device.at-generisch::before{inset:auto;right:-4.5px;top:19%;width:3px;height:9%;border-radius:0 2px 2px 0;background:#34383d;box-shadow:0 calc(100% + 16px) 0 0 #34383d;z-index:0}
+.at-device.at-generisch::after{content:'';position:absolute;top:calc(var(--b) + 9px);left:50%;width:10px;height:10px;transform:translateX(-50%);border-radius:50%;background:#000;box-shadow:inset 0 0 0 1.5px #23262b;z-index:6;pointer-events:none}
+.at-generisch .at-screen{left:var(--b);top:var(--b);width:calc(100% - 2 * var(--b));height:calc(100% - 2 * var(--b));border-radius:calc(var(--r) - var(--b))}
+.at-voll .at-device.at-generisch{--w:min(88vw,calc((84dvh - 18px) * 9 / 19.5 + 18px))}
 .vt-hinweis{margin-top:14px;font-size:12.5px;color:var(--text-dim);text-align:center}
 @media(max-width:860px){.vt{grid-template-columns:1fr}.vt-geraet{order:-1}}
 

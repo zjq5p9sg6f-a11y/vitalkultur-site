@@ -338,6 +338,19 @@ svg.ic.ic-karte{width:30px;height:30px;margin-bottom:12px;stroke:var(--text-dim)
   html.rev-an .grafik-verlauf.in .gr-band{opacity:1}
 }
 
+.feature .f-txt li.mit-ic,.gurt-liste li.mit-ic{padding-left:44px}
+.feature .f-txt li.mit-ic::before,.gurt-liste li.mit-ic::before{display:none}
+svg.ic.li-ic{position:absolute;left:0;top:1px;width:28px;height:28px;padding:5px;box-sizing:border-box;border:1px solid rgba(62,207,178,.28);border-radius:9px;background:rgba(62,207,178,.06)}
+.vt-liste button{display:grid!important;grid-template-columns:34px 1fr!important;column-gap:16px!important;align-items:start}
+.vt-liste button b,.vt-liste button span{grid-column:2}
+svg.ic.vt-ic{grid-row:1 / span 2;width:34px;height:34px;padding:7px;box-sizing:border-box;border:1px solid rgba(62,207,178,.28);border-radius:10px;background:rgba(62,207,178,.06)}
+
+.hero-phone{--b:clamp(5px,.75vw,9px);--r:clamp(22px,3vw,38px);padding:var(--b)!important;border-radius:var(--r)!important;background:#060708!important;
+  box-shadow:0 0 0 1.5px #3b3f45,0 0 0 3px #111316,inset 0 0 0 1px rgba(255,255,255,.07),0 34px 60px -24px rgba(0,0,0,.95)!important}
+.hero-phone img,.hero-phone video{border-radius:calc(var(--r) - var(--b))!important}
+.hero-phone::after{content:'';position:absolute;top:calc(var(--b) + 1.4%);left:50%;width:4.2%;aspect-ratio:1;transform:translateX(-50%);border-radius:50%;background:#000;box-shadow:inset 0 0 0 1px #23262b;z-index:3}
+.hero-phone::before{content:'';position:absolute;right:-4px;top:20%;width:2.5px;height:9%;border-radius:0 2px 2px 0;background:#34383d;box-shadow:0 calc(100% + 14px) 0 0 #34383d}
+
 .ablauf{list-style:none;margin:var(--sp-55) 0 0;padding:0;display:grid;grid-template-columns:repeat(5,1fr);gap:var(--sp-21);counter-reset:ab}
 .ablauf li{position:relative;counter-increment:ab}
 .ab-bild{position:relative;aspect-ratio:5/4;border:1px solid var(--border-faint);border-radius:18px;background:radial-gradient(ellipse at 50% 30%,rgba(62,207,178,.07),transparent 70%),var(--bg-surface);
@@ -779,7 +792,7 @@ html.rev-an .rev.in{opacity:1;transform:none}
 .tarif-fuss{max-width:62ch;margin-left:auto;margin-right:auto}
 h1,h2{text-wrap:balance}
 </style>
-<link rel="stylesheet" href="/assets/baukasten/baukasten.css?v=2">
+<link rel="stylesheet" href="/assets/baukasten/baukasten.css?v=3">
 <link rel="stylesheet" href="/assets/app-tour/app-tour.css?v=10">
 </head>
 <body>
@@ -820,6 +833,14 @@ try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; 
   <symbol id="i-wolke" viewBox="0 0 32 32"><path d="M10 22.5h12.5a4.6 4.6 0 0 0 .5-9.2 6.8 6.8 0 0 0-13.1-1.5 5.4 5.4 0 0 0 .1 10.7z"/></symbol>
   <symbol id="i-glocke" viewBox="0 0 32 32"><path d="M10 21V15a6 6 0 0 1 12 0v6l2 2.5H8z"/><path d="M14 26.5a2.2 2.2 0 0 0 4 0"/></symbol>
   <symbol id="i-akte" viewBox="0 0 32 32"><path d="M4.5 9.5V25a2 2 0 0 0 2 2h19a2 2 0 0 0 2-2V12a2 2 0 0 0-2-2H15l-2.6-3H6.5a2 2 0 0 0-2 2z"/><path d="M10 21l3-3.5 2.5 2 4-5 2.5 2.5" opacity=".85"/></symbol>
+  <symbol id="i-sort" viewBox="0 0 32 32"><path d="M6 8h20M6 14h14M6 20h9M6 26h5"/><path d="M24 17v10M21 24l3 3 3-3" opacity=".85"/></symbol>
+  <symbol id="i-ekg" viewBox="0 0 32 32"><path d="M3 18h6l2-4 2 4h2l2.5-11 3 20 2-9H29"/></symbol>
+  <symbol id="i-signal" viewBox="0 0 32 32"><path d="M6 26v-5M12 26v-9M18 26v-13M24 26V8"/><path d="M4 28.5h24" opacity=".5"/></symbol>
+  <symbol id="i-route" viewBox="0 0 32 32"><circle cx="8" cy="8" r="3"/><circle cx="24" cy="24" r="3"/><path d="M11 8h8a5 5 0 0 1 0 10h-6a5 5 0 0 0 0 10h8" stroke-dasharray="2.5 2.5"/></symbol>
+  <symbol id="i-wand" viewBox="0 0 32 32"><rect x="3.5" y="5" width="25" height="17" rx="2.5"/><path d="M12 27h8M16 22v5"/><path d="M8 10h5v4H8zM15.5 10h4.5v4h-4.5zM22 10h2.5v4H22zM8 16.5h16.5" opacity=".6"/></symbol>
+  <symbol id="i-ordner" viewBox="0 0 32 32"><path d="M4.5 9.5V25a2 2 0 0 0 2 2h19a2 2 0 0 0 2-2V12a2 2 0 0 0-2-2H15l-2.6-3H6.5a2 2 0 0 0-2 2z"/><circle cx="11" cy="19" r="1.6"/><circle cx="21" cy="19" r="1.6"/><path d="M12.6 19h6.8" opacity=".7"/></symbol>
+  <symbol id="i-version" viewBox="0 0 32 32"><path d="M16.5 4.5H26a1.5 1.5 0 0 1 1.5 1.5v9.5L15 28 4 17z"/><circle cx="21.5" cy="10.5" r="2"/><path d="M10 17.5l3 3" opacity=".7"/></symbol>
+  <symbol id="i-tasche" viewBox="0 0 32 32"><path d="M7 11h18l-1.5 16h-15z"/><path d="M12 11V9a4 4 0 0 1 8 0v2"/></symbol>
 </defs></svg>
 <div class="bg-wash"></div>
 
@@ -976,9 +997,9 @@ try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; 
         <div class="f-k">Übersicht</div>
         <h3>Vier Abweichungsstufen, und daneben steht, aus welchem Wert sie folgen.</h3>
         <ul>
-          <li><b>Sortierbar nach Name, Datum oder Abweichung</b> von der eigenen Basis – jedes Pferd gegen seine eigene Vorgeschichte, nicht gegen eine Tabelle.</li>
-          <li><b>Der Wert steht dabei.</b> Eine Stufe ohne den zugrunde liegenden Wert wäre eine Meinung — sie beschreibt Messwerte, keinen Gesundheitszustand.</li>
-          <li><b>Die Halterin ist einen Tipp entfernt</b>, direkt von der Karte aus.</li>
+          <li class="mit-ic"><svg class="ic li-ic" aria-hidden="true"><use href="#i-sort"/></svg><b>Sortierbar nach Name, Datum oder Abweichung</b> von der eigenen Basis – jedes Pferd gegen seine eigene Vorgeschichte, nicht gegen eine Tabelle.</li>
+          <li class="mit-ic"><svg class="ic li-ic" aria-hidden="true"><use href="#i-signal"/></svg><b>Der Wert steht dabei.</b> Eine Stufe ohne den zugrunde liegenden Wert wäre eine Meinung — sie beschreibt Messwerte, keinen Gesundheitszustand.</li>
+          <li class="mit-ic"><svg class="ic li-ic" aria-hidden="true"><use href="#i-phone"/></svg><b>Die Halterin ist einen Tipp entfernt</b>, direkt von der Karte aus.</li>
         </ul>
       </div>
     </div>
@@ -988,9 +1009,9 @@ try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; 
         <div class="f-k">Die Akte</div>
         <h3>Alles, was Sie zum Nachrechnen brauchen — an einer Stelle.</h3>
         <ul>
-          <li><b>Werte gegen die eigene Baseline</b> des Pferds, als Hinweis. Die Deutung bleibt bei Ihnen.</li>
-          <li><b>Signalgüte vor der Zahl</b>: wie viele Schlagpaare tragen die Auswertung überhaupt.</li>
-          <li><b>Beobachtungsnotiz und Messwertbericht</b>, ohne die Akte zu verlassen.</li>
+          <li class="mit-ic"><svg class="ic li-ic" aria-hidden="true"><use href="#i-verlauf"/></svg><b>Werte gegen die eigene Baseline</b> des Pferds, als Hinweis. Die Deutung bleibt bei Ihnen.</li>
+          <li class="mit-ic"><svg class="ic li-ic" aria-hidden="true"><use href="#i-signal"/></svg><b>Signalgüte vor der Zahl</b>: wie viele Schlagpaare tragen die Auswertung überhaupt.</li>
+          <li class="mit-ic"><svg class="ic li-ic" aria-hidden="true"><use href="#i-bericht"/></svg><b>Beobachtungsnotiz und Messwertbericht</b>, ohne die Akte zu verlassen.</li>
         </ul>
       </div>
       <div class="f-shot"><img src="assets/visite-shots/09-akte.jpg" loading="lazy"
@@ -1284,10 +1305,10 @@ try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; 
         <div class="sec-eyebrow">Der Sensor</div>
         <h3>Polar H10 mit Equine-Gurt: elektrisch gemessen, am Pferd geprüft.</h3>
         <ul class="gurt-liste">
-          <li><b>R-Zacken statt Lichtpuls.</b> Der H10 misst die elektrische Herzaktivität und liefert jeden Schlagabstand mit rund 1&nbsp;ms Auflösung (1/1024&nbsp;s) – optische Sensoren schätzen ihn aus Licht.</li>
-          <li><b>Für den Pferdekörper gemacht.</b> Der Equine-Gurt ist auf den Brustumfang des Pferds ausgelegt; Elektrodengel auf dem Fell senkt die Fell-Impedanz – so entsteht ein sauberes Signal.</li>
-          <li><b>Am Pferd geprüft.</b> Bei 28 Pferden stimmten Herzfrequenz und zeitbasierte HRV-Werte eines Polar-H10-Systems in Ruhe und bei Bodenarbeit mit dem EKG überein (<a href="https://doi.org/10.3389/fvets.2022.939534" target="_blank" rel="noopener">Kapteijn et&nbsp;al. 2022</a>; dort mit anderen Elektroden und anderem Empfänger). Eine EKG-Kurve zeigt die Messstation nicht, nur Schlagabstände.</li>
-          <li><b>Frei erhältlich.</b> Kein Gerät von uns, keine Bindung – Ersatz gibt es im Fachhandel.</li>
+          <li class="mit-ic"><svg class="ic li-ic" aria-hidden="true"><use href="#i-ekg"/></svg><b>R-Zacken statt Lichtpuls.</b> Der H10 misst die elektrische Herzaktivität und liefert jeden Schlagabstand mit rund 1&nbsp;ms Auflösung (1/1024&nbsp;s) – optische Sensoren schätzen ihn aus Licht.</li>
+          <li class="mit-ic"><svg class="ic li-ic" aria-hidden="true"><use href="#i-gurt"/></svg><b>Für den Pferdekörper gemacht.</b> Der Equine-Gurt ist auf den Brustumfang des Pferds ausgelegt; Elektrodengel auf dem Fell senkt die Fell-Impedanz – so entsteht ein sauberes Signal.</li>
+          <li class="mit-ic"><svg class="ic li-ic" aria-hidden="true"><use href="#i-check"/></svg><b>Am Pferd geprüft.</b> Bei 28 Pferden stimmten Herzfrequenz und zeitbasierte HRV-Werte eines Polar-H10-Systems in Ruhe und bei Bodenarbeit mit dem EKG überein (<a href="https://doi.org/10.3389/fvets.2022.939534" target="_blank" rel="noopener">Kapteijn et&nbsp;al. 2022</a>; dort mit anderen Elektroden und anderem Empfänger). Eine EKG-Kurve zeigt die Messstation nicht, nur Schlagabstände.</li>
+          <li class="mit-ic"><svg class="ic li-ic" aria-hidden="true"><use href="#i-tasche"/></svg><b>Frei erhältlich.</b> Kein Gerät von uns, keine Bindung – Ersatz gibt es im Fachhandel.</li>
         </ul>
       </figcaption>
     </figure>
@@ -1301,9 +1322,9 @@ try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; 
 
     <div class="vt" data-app-tour>
       <ol class="vt-liste" data-tour-liste aria-label="So arbeitet die Messstation">
-        <li><button data-i="0"><b>Sie sieht, ob das Signal trägt</b><span>Puls, Schlagzahl und Poincaré laufen live mit – hier eine Ruheaufnahme im Zeitraffer.</span></button><i class="fort"></i></li>
-        <li><button data-i="1"><b>Das Ergebnis mit Messprotokoll</b><span>Rohwert und bereinigter Wert, Kurven, Signalgüte – und ein Tipp schickt die Datei an Ihre Praxis.</span></button><i class="fort"></i></li>
-        <li><button data-i="2"><b>Ein Link, kein Konto</b><span>Die Halterin öffnet Ihren Mess-Link, gibt den Pferdenamen ein und verbindet den Gurt – das ist alles.</span></button><i class="fort"></i></li>
+        <li><button data-i="0"><svg class="ic vt-ic" aria-hidden="true"><use href="#i-ekg"/></svg><b>Sie sieht, ob das Signal trägt</b><span>Puls, Schlagzahl und Poincaré laufen live mit – hier eine Ruheaufnahme im Zeitraffer.</span></button><i class="fort"></i></li>
+        <li><button data-i="1"><svg class="ic vt-ic" aria-hidden="true"><use href="#i-bericht"/></svg><b>Das Ergebnis mit Messprotokoll</b><span>Rohwert und bereinigter Wert, Kurven, Signalgüte – und ein Tipp schickt die Datei an Ihre Praxis.</span></button><i class="fort"></i></li>
+        <li><button data-i="2"><svg class="ic vt-ic" aria-hidden="true"><use href="#i-link"/></svg><b>Ein Link, kein Konto</b><span>Die Halterin öffnet Ihren Mess-Link, gibt den Pferdenamen ein und verbindet den Gurt – das ist alles.</span></button><i class="fort"></i></li>
       </ol>
       <div class="vt-geraet">
         <div class="at-device at-generisch">
@@ -1366,9 +1387,9 @@ try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; 
         <div class="f-k">Tagesplan</div>
         <h3>Die Tour plant sich nach Strecke und Termin — die Reihenfolge bestimmen Sie.</h3>
         <ul>
-          <li><b>Standard ist die kürzeste Strecke.</b> Die Reihenfolge ändern Sie per Greifpunkt, Stopp für Stopp.</li>
-          <li><b>Die Fahrzeit zum nächsten Stopp</b> steht an jeder Karte, bevor Sie zusagen.</li>
-          <li><b>Nichts davon verlässt Ihr Gerät von selbst</b> — erst Ihr Tipp übergibt
+          <li class="mit-ic"><svg class="ic li-ic" aria-hidden="true"><use href="#i-route"/></svg><b>Standard ist die kürzeste Strecke.</b> Die Reihenfolge ändern Sie per Greifpunkt, Stopp für Stopp.</li>
+          <li class="mit-ic"><svg class="ic li-ic" aria-hidden="true"><use href="#i-uhr"/></svg><b>Die Fahrzeit zum nächsten Stopp</b> steht an jeder Karte, bevor Sie zusagen.</li>
+          <li class="mit-ic"><svg class="ic li-ic" aria-hidden="true"><use href="#i-schild"/></svg><b>Nichts davon verlässt Ihr Gerät von selbst</b> — erst Ihr Tipp übergibt
             die Route an die Karten-App.</li>
         </ul>
       </div>
@@ -1434,10 +1455,10 @@ try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; 
         <div class="f-k">Stationswand · Klinik-Ordner</div>
         <h3>Ein Bildschirm im Stationszimmer, auf dem das ganze Team dasselbe sieht.</h3>
         <ul>
-          <li><b>Übersichtswand ohne Alarme</b> — jede Box mit bereinigtem RMSSD, Ruhe-HF, Signalgüte und Protokoll, sortiert nach Abweichung von der eigenen Basis.</li>
-          <li><b>Gemeinsamer Klinik-Ordner</b> auf Ihrem vorhandenen Netzlaufwerk — jedes Gerät im Haus liest denselben Stand, ohne Cloud.</li>
-          <li><b>Nach der Entlassung</b> geben Sie den Mess-Link mit: Die nächsten Ruheaufnahmen aus der gewohnten Box landen in derselben Akte.</li>
-          <li><b>Feste Methodenversion</b> je Auswertung — für Archiv, Fallbesprechung und Studien.</li>
+          <li class="mit-ic"><svg class="ic li-ic" aria-hidden="true"><use href="#i-wand"/></svg><b>Übersichtswand ohne Alarme</b> — jede Box mit bereinigtem RMSSD, Ruhe-HF, Signalgüte und Protokoll, sortiert nach Abweichung von der eigenen Basis.</li>
+          <li class="mit-ic"><svg class="ic li-ic" aria-hidden="true"><use href="#i-ordner"/></svg><b>Gemeinsamer Klinik-Ordner</b> auf Ihrem vorhandenen Netzlaufwerk — jedes Gerät im Haus liest denselben Stand, ohne Cloud.</li>
+          <li class="mit-ic"><svg class="ic li-ic" aria-hidden="true"><use href="#i-qr"/></svg><b>Nach der Entlassung</b> geben Sie den Mess-Link mit: Die nächsten Ruheaufnahmen aus der gewohnten Box landen in derselben Akte.</li>
+          <li class="mit-ic"><svg class="ic li-ic" aria-hidden="true"><use href="#i-version"/></svg><b>Feste Methodenversion</b> je Auswertung — für Archiv, Fallbesprechung und Studien.</li>
         </ul>
         <p style="margin-top:14px"><a class="cta-primary" href="/carlon-equine/app/?demo=station">Stationswand im Demo ansehen →</a></p>
       </div>
