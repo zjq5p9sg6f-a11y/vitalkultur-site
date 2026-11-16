@@ -7,7 +7,7 @@ setTimeout(function(){ if(!document.querySelector('.rev.in'))
   document.documentElement.className=document.documentElement.className.replace(' rev-an',''); },4000);</script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Resting HRV in horses and round planning for equine practices | CARLON Equine Visite</title>
+<title>Resting HRV in horses from the home stable – trend view for equine practices | CARLON Equine Visite</title>
 
 <link rel="icon" type="image/png" sizes="16x16" href="/assets/equine-favicon-16.png">
 <link rel="icon" type="image/png" sizes="32x32" href="/assets/equine-favicon-32.png">
@@ -22,7 +22,7 @@ document.head.appendChild(s);})();</script>
 <meta name="description" content="Heart rate variability (resting HRV) in horses as a trend: the owner records in the stable with a Polar H10, your veterinary practice sees signal quality and the deviation from the horse’s own baseline – in the browser, no account. From €149 net per month.">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Vitalkultur">
-<meta property="og:title" content="CARLON Equine Visite – resting HRV course and round planning for equine practices">
+<meta property="og:title" content="CARLON Equine Visite – resting HRV from the home stable, in your practice’s trend view">
 <meta property="og:description" content="Heart rate variability (resting HRV) in horses as a trend: the owner records in the stable with a Polar H10, your veterinary practice sees signal quality and the deviation from the horse’s own baseline – in the browser, no account. From €149 net per month.">
 <meta property="og:url" content="https://vitalkultur.com/carlon-equine-visite/en/">
 <meta property="og:image" content="https://vitalkultur.com/carlon-equine/assets/og-equine.png">
@@ -965,6 +965,31 @@ h1,h2{text-wrap:balance}
 <link rel="stylesheet" href="/assets/app-tour/app-tour.css?v=10">
 <style>
 
+.nutzen .nu-lead{max-width:62ch;color:var(--text-secondary);line-height:1.6;margin:var(--sp-13) 0 var(--sp-34)}
+.nu-woche{list-style:none;margin:0 0 var(--sp-55);padding:0;display:grid;grid-template-columns:repeat(4,1fr);gap:0;position:relative}
+.nu-woche::before{content:'';position:absolute;left:8px;right:8px;top:8px;height:1px;background:linear-gradient(90deg,var(--cyan),rgba(62,207,178,.15))}
+.nu-woche li{position:relative;padding:28px 18px 0 0}
+.nu-woche li::before{content:'';position:absolute;left:2px;top:2px;width:13px;height:13px;border-radius:50%;background:#000;border:2px solid var(--cyan);box-shadow:0 0 12px rgba(62,207,178,.45)}
+.nu-woche b{display:block;font-family:var(--font-mono);font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--cyan);margin-bottom:6px;font-weight:500}
+.nu-woche span{display:block;color:var(--text-secondary);font-size:14.5px;line-height:1.5}
+.nu-kano{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.nu-stufe{border:1px solid var(--border-subtle);border-radius:20px;padding:22px 22px 20px;background:linear-gradient(165deg,rgba(255,255,255,.035),rgba(255,255,255,.008))}
+.nu-tag{display:inline-block;font-family:var(--font-mono);font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;padding:6px 11px;border-radius:999px;border:1px solid rgba(62,207,178,.45);color:var(--cyan);margin-bottom:14px}
+.nu-gold{border-color:rgba(255,181,71,.28);background:radial-gradient(120% 80% at 100% 0%,rgba(255,181,71,.07),transparent 60%),linear-gradient(165deg,rgba(255,255,255,.035),rgba(255,255,255,.008))}
+.nu-gold .nu-tag{border-color:rgba(255,181,71,.55);color:#FFB547}
+.nu-stufe ul{list-style:none;margin:0;padding:0}
+.nu-stufe li{position:relative;padding:9px 0 9px 20px;border-top:1px solid var(--border-faint);color:var(--text-secondary);font-size:14.5px;line-height:1.5}
+.nu-stufe li:first-child{border-top:0}
+.nu-stufe li::before{content:'';position:absolute;left:2px;top:17px;width:7px;height:7px;border-radius:50%;background:var(--cyan)}
+.nu-gold li::before{background:#FFB547}
+.nu-fuss{margin-top:var(--sp-21);font-size:12.5px;color:var(--text-dim)}
+@media(max-width:900px){.nu-kano{grid-template-columns:1fr}.nu-woche{grid-template-columns:1fr 1fr;row-gap:22px}.nu-woche::before{display:none}}
+@media(max-width:560px){.nu-woche{grid-template-columns:1fr;row-gap:0;padding-left:22px}
+  .nu-woche::before{display:block;left:8px;right:auto;top:10px;bottom:10px;width:1px;height:auto;background:linear-gradient(180deg,var(--cyan),rgba(62,207,178,.15))}
+  .nu-woche li{padding:0 0 20px 14px}.nu-woche li::before{left:-20px;top:3px}}
+</style>
+<style>
+
 @media(max-width:720px){
   .hero-buehne{margin-top:var(--sp-34)!important}
   .hero-buehne::before{display:none}
@@ -1085,9 +1110,9 @@ try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; 
     <span class="hero-signet" aria-hidden="true"><img src="/assets/equine-mark-512.png" width="512" height="512" alt="" fetchpriority="high"></span>
     <p class="hero-marke">CARLON<small>EQUINE VISITE</small></p>
     <div class="eyebrow">For equine practices and clinics</div>
-    <h1>Resting HRV in horses: <em>recorded in the stable, read in your practice.</em></h1>
+    <h1>Resting HRV from the home stable – <em>in your practice’s trend view.</em></h1>
     <p class="hero-sub">
-      The owner records in the stable. Before the visit you see the <strong>course against the horse's own baseline</strong> – and in the same application you plan your <strong>day's route</strong>.
+      Your client records in the familiar stable following a fixed protocol. Before the visit you open <strong>raw data, signal quality and the trend against the horse’s own baseline</strong> – with a measurement report on your letterhead. You plan the day’s route in the same application.
     </p>
     <div class="cta-row">
       <a class="cta-primary" href="/carlon-equine/app/">Open the cockpit with 15&nbsp;demo horses →</a>
@@ -1098,7 +1123,7 @@ try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; 
       <li><svg class="ic" aria-hidden="true"><use href="#i-schild"/></svg>Horse and measurement data stay on your device</li>
       <li><svg class="ic" aria-hidden="true"><use href="#i-check"/></svg>Cancel monthly</li>
     </ul>
-    <p class="cta-note"><span id="heroBeta">We are in beta and accompany every practice personally — join now and you keep your price as a founding partner.</span></p>
+    <p class="cta-note"><span id="heroBeta">We are in beta and accompany every practice start personally. Join now as a founding partner and your price stays fixed for 24 months. <a href="#anmeldung">Request a guided start →</a></span></p>
     <figure class="hero-buehne">
       <div class="hb-geraete">
       <span class="hero-phone"><video src="../assets/station-tour/live-v5.mp4" poster="assets/station-tour/live-poster-v5.jpg" width="660" height="1428" autoplay muted playsinline preload="auto" aria-hidden="true"></video><span class="g-marke"><i>1</i>Recorded in the stable</span></span>
@@ -1111,6 +1136,35 @@ try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; 
         <span class="fc-gross">The real application, not a graphic: <b>move over the curves or tap a device.</b></span><span class="fc-klein" aria-hidden="true">‹ Swipe: stable → course → round ›</span>
       </figcaption>
     </figure>
+  </div>
+</section>
+
+<section id="nutzen" class="nutzen">
+  <div class="wrap">
+    <div class="sec-eyebrow">What your practice gains</div>
+    <h2>You know the trend before you drive to the stable.</h2>
+    <p class="nu-lead">Instead of a snapshot at the appointment: resting values from the familiar stable, recorded between two visits. Before the visit you open a complete record.</p>
+    <ol class="nu-woche" aria-label="A week with Visite">
+      <li><b>Monday</b><span>Send the measuring link from the record, via WhatsApp or text message, in your own words</span></li>
+      <li><b>Between visits</b><span>Your client records in the stable, at least seven minutes at rest</span></li>
+      <li><b>Before the appointment</b><span>Open the record: signal quality, trend against the horse’s own baseline, report</span></li>
+      <li><b>At the appointment</b><span>You discuss the trend, not just the moment</span></li>
+    </ol>
+    <div class="nu-kano">
+      <div class="nu-stufe"><span class="nu-tag">You can rely on it</span>
+        <ul><li>Signal quality for every recording, raw and corrected values side by side</li>
+            <li>In the browser, no account – horse and measurement data stay on your device</li>
+            <li>Export as JSON, CSV, Kubios-compatible and FHIR R5</li></ul></div>
+      <div class="nu-stufe"><span class="nu-tag">It saves you time</span>
+        <ul><li>One tap in the record sends the measuring link to the stored number</li>
+            <li>The trend is ready before the appointment – nobody has to remember</li>
+            <li>Measurement report on your letterhead in one step, day route from the same records</li></ul></div>
+      <div class="nu-stufe nu-gold"><span class="nu-tag">It delights your clients</span>
+        <ul><li>The owner contributes to the care herself – in her own stable, with her own strap</li>
+            <li>She receives a report with your logo that she can keep and show</li>
+            <li>Every recording stays traceable beat by beat, down to the Poincaré plot with time slider</li></ul></div>
+    </div>
+    <p class="nu-fuss">Structured by the Kano model: basic, performance and delight features.</p>
   </div>
 </section>
 
@@ -1864,7 +1918,7 @@ try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; 
     <form id="anmeldung" class="anmeldung"
           action="mailto:jan@vitalkultur.com" method="post" enctype="text/plain">
       <h3>Join as a beta practice</h3>
-      <p class="anm-lead">Take part in the beta and you keep your founding-partner price. The developer
+      <p class="anm-lead">Take part in the beta and your founding-partner price stays fixed for 24 months (active subscription, same site). The developer
          reads every registration personally — and replies, usually the
          same day.</p>
 

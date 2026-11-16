@@ -7,7 +7,7 @@ setTimeout(function(){ if(!document.querySelector('.rev.in'))
   document.documentElement.className=document.documentElement.className.replace(' rev-an',''); },4000);</script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Ruhe-HRV beim Pferd und Tourenplanung für Pferdepraxen | CARLON Equine Visite</title>
+<title>Ruhe-HRV beim Pferd aus dem Heimatstall – Verlauf für Pferdepraxen | CARLON Equine Visite</title>
 
 <link rel="icon" type="image/png" sizes="16x16" href="/assets/equine-favicon-16.png">
 <link rel="icon" type="image/png" sizes="32x32" href="/assets/equine-favicon-32.png">
@@ -22,7 +22,7 @@ document.head.appendChild(s);})();</script>
 <meta name="description" content="Herzfrequenzvariabilität (Ruhe-HRV) beim Pferd als Verlauf: Die Halterin misst im Stall mit dem Polar H10, Ihre Tierarztpraxis sieht Signalgüte und die Abweichung von der eigenen Basis – im Browser, ohne Konto. Ab 149 € netto im Monat.">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Vitalkultur">
-<meta property="og:title" content="CARLON Equine Visite – Ruhe-HRV-Verlauf und Tourenplanung für Pferdepraxen">
+<meta property="og:title" content="CARLON Equine Visite – Ruhe-HRV aus dem Heimatstall, im Verlauf Ihrer Praxis">
 <meta property="og:description" content="Herzfrequenzvariabilität (Ruhe-HRV) beim Pferd als Verlauf: Die Halterin misst im Stall mit dem Polar H10, Ihre Tierarztpraxis sieht Signalgüte und die Abweichung von der eigenen Basis – im Browser, ohne Konto. Ab 149 € netto im Monat.">
 <meta property="og:url" content="https://vitalkultur.com/carlon-equine-visite/">
 <meta property="og:image" content="https://vitalkultur.com/carlon-equine/assets/og-equine.png">
@@ -965,6 +965,31 @@ h1,h2{text-wrap:balance}
 <link rel="stylesheet" href="/assets/app-tour/app-tour.css?v=10">
 <style>
 
+.nutzen .nu-lead{max-width:62ch;color:var(--text-secondary);line-height:1.6;margin:var(--sp-13) 0 var(--sp-34)}
+.nu-woche{list-style:none;margin:0 0 var(--sp-55);padding:0;display:grid;grid-template-columns:repeat(4,1fr);gap:0;position:relative}
+.nu-woche::before{content:'';position:absolute;left:8px;right:8px;top:8px;height:1px;background:linear-gradient(90deg,var(--cyan),rgba(62,207,178,.15))}
+.nu-woche li{position:relative;padding:28px 18px 0 0}
+.nu-woche li::before{content:'';position:absolute;left:2px;top:2px;width:13px;height:13px;border-radius:50%;background:#000;border:2px solid var(--cyan);box-shadow:0 0 12px rgba(62,207,178,.45)}
+.nu-woche b{display:block;font-family:var(--font-mono);font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--cyan);margin-bottom:6px;font-weight:500}
+.nu-woche span{display:block;color:var(--text-secondary);font-size:14.5px;line-height:1.5}
+.nu-kano{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.nu-stufe{border:1px solid var(--border-subtle);border-radius:20px;padding:22px 22px 20px;background:linear-gradient(165deg,rgba(255,255,255,.035),rgba(255,255,255,.008))}
+.nu-tag{display:inline-block;font-family:var(--font-mono);font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;padding:6px 11px;border-radius:999px;border:1px solid rgba(62,207,178,.45);color:var(--cyan);margin-bottom:14px}
+.nu-gold{border-color:rgba(255,181,71,.28);background:radial-gradient(120% 80% at 100% 0%,rgba(255,181,71,.07),transparent 60%),linear-gradient(165deg,rgba(255,255,255,.035),rgba(255,255,255,.008))}
+.nu-gold .nu-tag{border-color:rgba(255,181,71,.55);color:#FFB547}
+.nu-stufe ul{list-style:none;margin:0;padding:0}
+.nu-stufe li{position:relative;padding:9px 0 9px 20px;border-top:1px solid var(--border-faint);color:var(--text-secondary);font-size:14.5px;line-height:1.5}
+.nu-stufe li:first-child{border-top:0}
+.nu-stufe li::before{content:'';position:absolute;left:2px;top:17px;width:7px;height:7px;border-radius:50%;background:var(--cyan)}
+.nu-gold li::before{background:#FFB547}
+.nu-fuss{margin-top:var(--sp-21);font-size:12.5px;color:var(--text-dim)}
+@media(max-width:900px){.nu-kano{grid-template-columns:1fr}.nu-woche{grid-template-columns:1fr 1fr;row-gap:22px}.nu-woche::before{display:none}}
+@media(max-width:560px){.nu-woche{grid-template-columns:1fr;row-gap:0;padding-left:22px}
+  .nu-woche::before{display:block;left:8px;right:auto;top:10px;bottom:10px;width:1px;height:auto;background:linear-gradient(180deg,var(--cyan),rgba(62,207,178,.15))}
+  .nu-woche li{padding:0 0 20px 14px}.nu-woche li::before{left:-20px;top:3px}}
+</style>
+<style>
+
 @media(max-width:720px){
   .hero-buehne{margin-top:var(--sp-34)!important}
   .hero-buehne::before{display:none}
@@ -1085,9 +1110,9 @@ try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; 
     <span class="hero-signet" aria-hidden="true"><img src="/assets/equine-mark-512.png" width="512" height="512" alt="" fetchpriority="high"></span>
     <p class="hero-marke">CARLON<small>EQUINE VISITE</small></p>
     <div class="eyebrow">Für Pferdepraxen und Pferdekliniken</div>
-    <h1>Ruhe-HRV beim Pferd: <em>gemessen im Stall, gelesen in Ihrer Praxis.</em></h1>
+    <h1>Ruhe-HRV aus dem Heimatstall – <em>im Verlauf Ihrer Praxis.</em></h1>
     <p class="hero-sub">
-      Die Halterin misst im Stall. Sie sehen vor dem Besuch den <strong>Verlauf gegen die eigene Basis</strong> des Pferds – und planen in derselben Anwendung Ihre <strong>Tagesroute</strong>.
+      Ihre Kundin nimmt nach festem Protokoll im gewohnten Stall auf. Sie öffnen vor dem Besuch <strong>Rohdaten, Signalgüte und den Verlauf gegen die eigene Basis</strong> des Pferds – mit Messwertbericht auf Ihrem Briefkopf. Die Tagesroute planen Sie in derselben Anwendung.
     </p>
     <div class="cta-row">
       <a class="cta-primary" href="/carlon-equine/app/">Cockpit mit 15&nbsp;Demo-Pferden öffnen →</a>
@@ -1098,7 +1123,7 @@ try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; 
       <li><svg class="ic" aria-hidden="true"><use href="#i-schild"/></svg>Pferde- und Messdaten bleiben auf Ihrem Gerät</li>
       <li><svg class="ic" aria-hidden="true"><use href="#i-check"/></svg>Monatlich kündbar</li>
     </ul>
-    <p class="cta-note"><span id="heroBeta">Wir sind in der Beta und begleiten jede Praxis persönlich — wer jetzt einsteigt, behält seinen Preis als Gründungspartner.</span></p>
+    <p class="cta-note"><span id="heroBeta">Wir sind in der Beta und begleiten jeden Praxisstart persönlich. Wer jetzt einsteigt, behält als Gründungspartner seinen Preis 24 Monate lang. <a href="#anmeldung">Begleiteten Start anfragen →</a></span></p>
     <figure class="hero-buehne">
       <div class="hb-geraete">
       <span class="hero-phone"><video src="assets/station-tour/live-v5.mp4" poster="assets/station-tour/live-poster-v5.jpg" width="660" height="1428" autoplay muted playsinline preload="auto" aria-hidden="true"></video><span class="g-marke"><i>1</i>Messung im Stall</span></span>
@@ -1111,6 +1136,35 @@ try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; 
         <span class="fc-gross">Echte Anwendung, keine Grafik: <b>über die Kurven fahren oder ein Gerät antippen.</b></span><span class="fc-klein" aria-hidden="true">‹ Wischen: Stall → Verlauf → Tour ›</span>
       </figcaption>
     </figure>
+  </div>
+</section>
+
+<section id="nutzen" class="nutzen">
+  <div class="wrap">
+    <div class="sec-eyebrow">Was Ihre Praxis davon hat</div>
+    <h2>Sie kennen den Verlauf, bevor Sie in den Stall fahren.</h2>
+    <p class="nu-lead">Statt einer Momentaufnahme beim Termin: Ruhewerte aus dem gewohnten Stall, zwischen zwei Besuchen aufgenommen. Vor dem Besuch öffnen Sie eine fertige Akte.</p>
+    <ol class="nu-woche" aria-label="Eine Woche mit Visite">
+      <li><b>Montag</b><span>Mess-Link aus der Akte senden, per WhatsApp oder SMS, in Ihren Worten</span></li>
+      <li><b>Zwischen den Besuchen</b><span>Die Kundin nimmt im Stall auf, mindestens sieben Minuten in Ruhe</span></li>
+      <li><b>Vor dem Termin</b><span>Akte öffnen: Signalgüte, Verlauf gegen die eigene Basis, Bericht</span></li>
+      <li><b>Beim Termin</b><span>Sie besprechen den Verlauf, nicht nur den Moment</span></li>
+    </ol>
+    <div class="nu-kano">
+      <div class="nu-stufe"><span class="nu-tag">Darauf ist Verlass</span>
+        <ul><li>Signalgüte zu jeder Aufnahme, rohe und bereinigte Werte nebeneinander</li>
+            <li>Im Browser, ohne Konto – Akten und Messdaten liegen auf Ihrem eigenen Gerät</li>
+            <li>Export als JSON, CSV, Kubios-kompatibel und FHIR R5</li></ul></div>
+      <div class="nu-stufe"><span class="nu-tag">Das spart Ihnen Zeit</span>
+        <ul><li>Der Mess-Link geht mit einem Tipp aus der Akte an die hinterlegte Nummer</li>
+            <li>Der Verlauf liegt vor dem Termin bereit – niemand muss sich erinnern</li>
+            <li>Messwertbericht mit Ihrem Briefkopf in einem Schritt, Tagesroute aus denselben Akten</li></ul></div>
+      <div class="nu-stufe nu-gold"><span class="nu-tag">Das begeistert Ihre Kundschaft</span>
+        <ul><li>Die Halterin trägt selbst zur Betreuung bei – im eigenen Stall, mit eigenem Gurt</li>
+            <li>Sie erhält einen Bericht mit Ihrem Logo, den sie aufheben und zeigen kann</li>
+            <li>Jede Aufnahme bleibt Schlag für Schlag nachvollziehbar, bis zum Poincaré mit Zeitregler</li></ul></div>
+    </div>
+    <p class="nu-fuss">Gegliedert nach dem Kano-Modell: Grundmerkmale, Leistungsmerkmale, Begeisterungsmerkmale.</p>
   </div>
 </section>
 
@@ -1867,8 +1921,8 @@ try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; 
     <form id="anmeldung" class="anmeldung"
           action="mailto:jan@vitalkultur.com" method="post" enctype="text/plain">
       <h3>Als Beta-Praxis mitmachen</h3>
-      <p class="anm-lead">Wer in der Beta mitgestaltet, behält seinen Preis als
-         Gründungspartner. Ihre Anmeldung liest der Entwickler selbst — und meldet
+      <p class="anm-lead">Wer in der Beta mitgestaltet, behält als Gründungspartner
+         seinen Preis 24 Monate lang (laufendes Abo, gleicher Standort). Ihre Anmeldung liest der Entwickler selbst — und meldet
          sich persönlich zurück, meist am selben Tag.</p>
 
       <div class="anm-art" role="radiogroup" aria-label="Praxisart">
