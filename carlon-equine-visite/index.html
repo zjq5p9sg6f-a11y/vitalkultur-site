@@ -527,7 +527,7 @@ html.ff-offen .leiste{display:none}
 
 @media(max-width:720px){
   
-  .m-wisch,.hb-geraete{scroll-snap-type:x mandatory;scroll-padding-inline:16px;overscroll-behavior-x:contain}
+  .m-wisch,.hb-geraete{scroll-snap-type:x mandatory;scroll-padding-inline:16px;overscroll-behavior-x:contain;overflow-y:hidden!important}
   .m-wisch.zieht,.hb-geraete.zieht{scroll-snap-type:none!important}
   .m-wisch>*,.hb-geraete>*{scroll-snap-align:center;scroll-snap-stop:always}
   .wisch-punkte{display:flex;justify-content:center;gap:7px;margin:4px 0 0}
@@ -990,11 +990,20 @@ h1,h2{text-wrap:balance}
 </style>
 <style>
 
-@media(max-width:720px){
-  .hero-buehne{margin-top:var(--sp-34)!important}
+@media(max-width:1023px){
+  .hero-buehne{margin-top:var(--sp-34)!important;width:100vw!important;max-width:none!important;margin-left:calc(50% - 50vw)!important;margin-right:0!important}
   .hero-buehne::before{display:none}
-  .hb-geraete{display:flex!important;gap:12px!important;padding:6px 8vw 4px!important;align-items:stretch!important;overscroll-behavior-x:contain;scroll-padding-inline:8vw}
-  .hb-karte{flex:0 0 84vw;box-sizing:border-box;height:min(120vw,560px);display:flex;flex-direction:column;align-items:center;gap:16px;padding:20px 16px 22px;
+  
+  .hb-geraete{overflow-x:auto!important;overflow-y:hidden!important;scrollbar-width:none;scroll-snap-type:x mandatory}
+  .hb-geraete::-webkit-scrollbar{display:none}
+  .hb-geraete>*{scroll-snap-align:center;scroll-snap-stop:always}
+  .hb-geraete.zieht{scroll-snap-type:none!important}
+  .hero-buehne .wisch-punkte{display:flex;justify-content:center;gap:7px}
+  .hero-buehne .wisch-punkte i{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.22);transition:width .25s,background .25s}
+  .hero-buehne .wisch-punkte i.an{width:18px;border-radius:3px;background:var(--cyan)}
+  .hero-buehne .fc-klein,.hero-buehne .swipe-hint{display:none!important}
+  .hb-geraete{display:flex!important;gap:14px!important;padding:6px calc((100vw - min(84vw,540px)) / 2) 4px!important;align-items:stretch!important;overscroll-behavior-x:contain}
+  .hb-karte{flex:0 0 min(84vw,540px);box-sizing:border-box;height:min(120vw,600px);display:flex;flex-direction:column;align-items:center;gap:16px;padding:20px 16px 22px;
     border-radius:26px;border:1px solid rgba(255,255,255,.08);background:radial-gradient(120% 70% at 50% 100%,rgba(62,207,178,.10),transparent 60%),linear-gradient(170deg,rgba(255,255,255,.045),rgba(255,255,255,.012));
     scroll-snap-align:center;scroll-snap-stop:always}
   .hb-karte .hk-kopf{text-align:center;width:100%}
@@ -2117,15 +2126,17 @@ if(_lb) _lb.addEventListener('click', function(){
 <script>
 
 (function(){
-  if(!(window.matchMedia&&matchMedia('(max-width:720px)').matches)) return;
   
-  (function(){ var t=document.querySelector('.pz-echt-block .pz-tablet'); if(!t) return; var EN=(document.documentElement.lang||'de').indexOf('en')===0;
+  var tel=!!(window.matchMedia&&matchMedia('(max-width:720px)').matches), tab=!!(window.matchMedia&&matchMedia('(max-width:1023px)').matches);
+  if(!tab) return;
+  
+  tel&&(function(){ var t=document.querySelector('.pz-echt-block .pz-tablet'); if(!t) return; var EN=(document.documentElement.lang||'de').indexOf('en')===0;
     var w=document.createElement('div'); w.className='pz-telefon';
     w.innerHTML='<figure class="pz" data-quelle="/carlon-equine/app/belege/rmssd-roh-vs-korrigiert.json" data-lang="'+(EN?'en':'de')+'"></figure><p class="pz-telefon-q">'+(EN?'Real resting recording of a horse · Polar H10 · 642 beats':'Echte Ruheaufnahme eines Pferds · Polar H10 · 642 Schläge')+'</p>';
     t.parentNode.insertBefore(w,t); t.classList.add('nur-gross');
     var s=document.createElement('script'); s.src='/carlon-equine-visite/assets/poincare-zeit.js?v=20261116c'; s.defer=true; document.body.appendChild(s); })();
   
-  (function(){ var f=document.querySelector('figure.grafik[aria-label^="Eine Aufnahme"],figure.grafik[aria-label^="One recording"]'); if(!f) return;
+  tel&&(function(){ var f=document.querySelector('figure.grafik[aria-label^="Eine Aufnahme"],figure.grafik[aria-label^="One recording"]'); if(!f) return;
     var s=f.querySelector('svg'); if(!s) return; var tx=[].slice.call(s.querySelectorAll('text')).map(function(t){return {c:t.getAttribute('class')||'',t:t.textContent};});
     var ul=document.createElement('ul'); ul.className='export-liste'; var kopf=tx.filter(function(x){return /gr-marke/.test(x.c);})[0];
     var sub=tx.filter(function(x){return /gr-klein/.test(x.c);}); var chips=tx.filter(function(x){return /gr-chip-t/.test(x.c);});
@@ -2140,7 +2151,7 @@ if(_lb) _lb.addEventListener('click', function(){
     [].slice.call(r.children).forEach(function(g,i){ var k=document.createElement('div'); k.className='hb-karte'; var m=g.querySelector('.g-marke');
       var kopf=document.createElement('div'); kopf.className='hk-kopf'; if(m) kopf.appendChild(m); var p=document.createElement('p'); p.className='hk-satz'; p.textContent=S[i]||''; kopf.appendChild(p);
       var ge=document.createElement('div'); ge.className='hk-geraet'; r.insertBefore(k,g); ge.appendChild(g); k.appendChild(kopf); k.appendChild(ge); }); })();
-  [].slice.call(document.querySelectorAll('.m-wisch,.hb-geraete')).forEach(function(row){
+  [].slice.call(document.querySelectorAll(tel?'.m-wisch,.hb-geraete':'.hb-geraete')).forEach(function(row){
     var kids=[].slice.call(row.children).filter(function(c){return c.offsetWidth>0;}); if(kids.length<2) return;
     var p=document.createElement('div'); p.className='wisch-punkte'; p.setAttribute('aria-hidden','true');
     kids.forEach(function(){p.appendChild(document.createElement('i'));}); row.parentNode.insertBefore(p,row.nextSibling);
@@ -2160,6 +2171,7 @@ if(_lb) _lb.addEventListener('click', function(){
       var rich=(Math.abs(dx)>40||v>0.35)?(dx<0?1:-1):0, k=naechste(rich); setTimeout(function(){ row.classList.remove('zieht'); },520);
       row.scrollTo({left:k.offsetLeft-row.offsetLeft-(row.clientWidth-k.offsetWidth)/2,behavior:'smooth'}); ach=null; },{passive:true});
   });
+  if(!tel) return;
   var teile=[['.grafik-verlauf',['0 0 230 300','245 0 516 300']],['figure.grafik[aria-label^="RMSSD vor und während"]',['0 0 372 240','352 0 408 240']]];
   teile.forEach(function(d){var f=document.querySelector(d[0]); if(!f) return; var s=f.querySelector('svg'); if(!s) return;
     d[1].forEach(function(vb){var c=s.cloneNode(true); c.setAttribute('viewBox',vb); c.classList.add('grafik-teil'); f.insertBefore(c,s);}); f.classList.add('geteilt');});
@@ -2180,6 +2192,9 @@ if(_lb) _lb.addEventListener('click', function(){
   var v=document.querySelector('.hero-phone video');if(!v)return;
   if(window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches){v.removeAttribute('autoplay');v.pause();return;}
   v.playbackRate=1.5;v.addEventListener('loadedmetadata',function(){v.playbackRate=1.5;});
+  
+  v.addEventListener('ended',function(){setTimeout(function(){var r=v.getBoundingClientRect();if(r.bottom>0&&r.top<innerHeight&&r.width>0){v.currentTime=0;v.playbackRate=1.5;var q=v.play();if(q&&q.catch)q.catch(function(){});}else{v.dataset.neu='1';}},1600);});
+  if('IntersectionObserver' in window){new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting&&v.dataset.neu==='1'){v.dataset.neu='';v.currentTime=0;v.playbackRate=1.5;var q=v.play();if(q&&q.catch)q.catch(function(){});}});},{threshold:0.3}).observe(v);}
   var p=v.play();if(p&&p.catch)p.catch(function(){});})();
 (function(){var tv=document.querySelector('.hero-tour video'),hv=document.querySelector('.hero-buehne .hero-shot video');if(!tv)return;
   if(window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches)return;

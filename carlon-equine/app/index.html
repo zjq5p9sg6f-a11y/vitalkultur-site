@@ -1468,10 +1468,10 @@ svg.viz .sd-lbl{fill:var(--cyan-strong);font-size:10px;font-weight:600;font-fami
 .viz-hov .hov-tip.touch{transform:translate(calc(-100% - 14px),calc(-100% - 30px))}
 .viz-hov .hov-tip.touch.tright{transform:translate(14px,calc(-100% - 30px))}
 .viz-hov .hov-tip.on{opacity:1}
-/* Sanft folgen (16.11.2026): Tooltip und Fokuspunkt gleiten kurz nach, statt zu springen – Präzision bleibt, weil der Wert sofort stimmt. */
-.viz-hov .hov-tip{transition:opacity .15s,left .09s ease-out,top .09s ease-out}
-.viz-hov .hov-focus{transition:opacity .15s,cx .09s ease-out,cy .09s ease-out}
-.ts-tip{transition:opacity .15s,left .09s ease-out,top .09s ease-out}
+/* Folgen ohne Nachgleiten (16.11.2026, Jan: „komisch verzögert“): Box und Punkt stehen sofort unter dem Finger. */
+.viz-hov .hov-tip{transition:opacity .12s}
+.viz-hov .hov-focus{transition:opacity .12s}
+.ts-tip{transition:opacity .12s}
 .viz-hov .hov-tip .tt-date{font-size:10px;color:var(--text-dim);letter-spacing:.04em;margin-bottom:3px}
 .viz-hov .hov-tip .tt-val{font-family:var(--font-mono);font-size:15px;font-weight:600;letter-spacing:-.02em}
 .viz-hov .hov-tip .tt-cls{font-family:var(--font-mono);font-size:12px;font-weight:600;margin-top:1px}
