@@ -6932,6 +6932,9 @@ const Views={
     document.body.appendChild(wrap); document.body.style.overflow='hidden';
   },
   editHorse(id){
+    /* Eigene Pferde gehören zum Abo (Jan 16.11.2026: „wir wollen nichts verschenken“). Die Demo-Pferde und das
+       Öffnen zugeschickter Dateien bleiben frei; neu anlegen nur mit Abo bzw. in der Testphase. */
+    if(!id && !(State.settings&&State.settings.demo) && !License.isPaid()){ UI.upgrade('Eigene Pferde anlegen'); return; }
     const h=id?State.horses.find(x=>x.id===id):{};
     const isNew=!id;
     UI.modal(`<div class="modal-head"><button class="closex" onclick="UI.closeModal()">${IC.x}</button><h3>${isNew?'Pferd anlegen':'Stammdaten bearbeiten'}</h3></div>
@@ -10146,7 +10149,7 @@ const License={
     return jetzt>kulanzBis;                        // Kulanz aufgebraucht?
   },
   isPaid(){ return this.tier()!=='demo' && !this.abgelaufen(); },
-  maxHorses(){return this.isPaid()?Infinity:3;},
+  maxHorses(){return this.isPaid()?Infinity:0;},   // eigene Pferde nur mit Abo (Demo-Pferde und zugeschickte Dateien frei)
   PAID_ONLY:['pdf','csv','routeHandoff','coherence','ownerFeedback','sharedFolder'],
   /* WAS DIE STUFEN UNTERSCHEIDET — vorher: nichts.
      can() gab fuer JEDE bezahlte Stufe true zurueck, maxHorses() ebenso.
