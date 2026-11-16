@@ -2183,7 +2183,7 @@ const Teilen = {
   moeglich(){ return typeof window.showDirectoryPicker==='function'; },
 
   async verbinden(){
-    if(!this.erlaubt()) return {ok:false,grund:'Der geteilte Ordner gehört zum Klinik-Zugang.'};
+    if(!this.erlaubt()) return {ok:false,grund:'Der Team-Ordner gehört zum Abo.'};
     if(!this.moeglich()) return {ok:false,grund:'Dieser Browser kann keine Ordner öffnen — Chrome oder Edge nötig.'};
     try{
       const h=await window.showDirectoryPicker({mode:'readwrite',id:'carlon-klinik'});
@@ -2233,16 +2233,32 @@ const Teilen = {
       const d=await this.handle.getDirectoryHandle('carlon',{create:true});
       const f=await d.getFileHandle(this._name(store,obj),{create:true});
       const w=await f.createWritable();
-      await w.write(JSON.stringify({store,obj,stand:new Date().toISOString()}));
+      await w.write(JSON.stringify({store,obj,stand:obj.stand||new Date().toISOString()}));
       await w.close(); return true;
     }catch(e){ this.letzterFehler=String(e&&e.message||e); return false; }
   },
 
-  /* Einlesen, was andere Geräte abgelegt haben. Aufnahmen kommen dazu,
-     Stammdaten nur, wenn sie jünger sind als der eigene Stand. */
+  /* Löschen wirkt auf allen Geräten: statt der Datei steht ein Löschvermerk mit Zeitstempel im Ordner. Ohne ihn
+     kam eine gelöschte Aufnahme vom zweiten Gerät zurück (Prüfstand 16.11.2026, Fall 5). */
+  async loeschen(store,id){
+    if(!this.aktiv||!this.handle||!this.teilbar(store)) return false;
+    try{ const d=await this.handle.getDirectoryHandle('carlon',{create:true});
+      const f=await d.getFileHandle(this._name(store,{id}),{create:true}); const w=await f.createWritable();
+      await w.write(JSON.stringify({store,obj:{id},geloescht:true,stand:new Date().toISOString()})); await w.close(); return true;
+    }catch(e){ this.letzterFehler=String(e&&e.message||e); await this._merkeLoeschung(store,id); return false; } },
+  /* Offline gelöscht: der Vermerk wartet lokal und geht beim nächsten Abgleich hinaus – sonst holte das eigene
+     Gerät den Datensatz aus dem Ordner zurück. */
+  async _offen(){ try{ const s=await DB.get('settings','teilenLoeschen'); return (s&&s.liste)||[]; }catch(_){ return []; } },
+  async _merkeLoeschung(store,id){ const l=await this._offen(); l.push({store,id,stand:new Date().toISOString()}); try{ await DB.put('settings',{id:'teilenLoeschen',liste:l}); }catch(_){ } },
+  async _loeschungenSenden(){ const l=await this._offen(); if(!l.length) return 0; const rest=[];
+    for(const x of l){ try{ const d=await this.handle.getDirectoryHandle('carlon',{create:true}); const f=await d.getFileHandle(this._name(x.store,{id:x.id}),{create:true});
+      const w=await f.createWritable(); await w.write(JSON.stringify({store:x.store,obj:{id:x.id},geloescht:true,stand:x.stand})); await w.close(); }catch(_){ rest.push(x); } }
+    try{ await DB.put('settings',{id:'teilenLoeschen',liste:rest}); }catch(_){ } return l.length-rest.length; },
+  /* Einlesen, was andere Geräte abgelegt haben: gilt, was JÜNGER ist als der eigene Stand – auch Löschvermerke. */
   async abgleichen(){
     if(!this.aktiv||!this.handle) return 0;
-    let neu=0;
+    let neu=0; try{ await this._loeschungenSenden(); }catch(_){ }
+    const offen=new Set((await this._offen()).map(x=>x.store+'/'+x.id));
     try{
       const d=await this.handle.getDirectoryHandle('carlon',{create:true});
       for await (const [name,h] of d.entries()){
@@ -2250,11 +2266,13 @@ const Teilen = {
         try{
           const satz=JSON.parse(await (await h.getFile()).text());
           if(!satz||!satz.store||!satz.obj||!this.teilbar(satz.store)) continue;
-          const id=satz.obj.id||satz.obj.key;
+          const id=satz.obj.id||satz.obj.key; const sStand=satz.stand||satz.obj.stand||''; if(offen.has(satz.store+'/'+id)) continue;
           const eigen=await DB.get(satz.store,id);
-          const unveraenderlich = satz.store==='recordings'||satz.store==='coherence';
-          if(eigen && (unveraenderlich || (eigen.stand||'') >= (satz.stand||''))) continue;
-          await DB.put(satz.store,satz.obj); neu++;
+          if(this._stand) this._stand[name]=sStand;
+          if(satz.geloescht){ if(eigen && (eigen.stand||'') <= sStand){ await DB.del(satz.store,id,{vonOrdner:true}); neu++; } continue; }
+          if(eigen && (eigen.stand||'') >= sStand) continue;
+          if(!satz.obj.stand) satz.obj.stand=sStand;
+          await DB.put(satz.store,satz.obj,{vonOrdner:true}); neu++;
         }catch(_){ /* eine kaputte Datei darf den Abgleich nicht anhalten */ }
       }
     }catch(e){ this.letzterFehler=String(e&&e.message||e); }
@@ -2286,15 +2304,18 @@ const Teilen = {
     let n=0;
     try{
       const d=await this.handle.getDirectoryHandle('carlon',{create:true});
-      const vorhanden=new Set();
+      /* Stand je Datei lesen: nachgetragen wird, was im Ordner FEHLT oder dort ÄLTER ist als hier (Offline-Änderung). */
+      const vorhanden=new Map();
       for await (const [name,h] of d.entries()){
-        if(h.kind==='file'&&name.endsWith('.json')) vorhanden.add(name);
+        if(h.kind!=='file'||!name.endsWith('.json')) continue;
+        let st=''; try{ const s=JSON.parse(await (await h.getFile()).text()); st=(s&&(s.stand||(s.obj&&s.obj.stand)))||''; }catch(_){ }
+        vorhanden.set(name,st);
       }
       for(const store of this.GETEILT){
         let alle=[]; try{ alle=await DB.all(store); }catch(_){ continue; }
         for(const obj of alle){
           if(n>=grenze) break;
-          if(vorhanden.has(this._name(store,obj))) continue;
+          const fs=vorhanden.get(this._name(store,obj)); if(fs!==undefined && (obj.stand||'') <= fs) continue;
           if(await this.schreiben(store,obj)) n++;
         }
         if(n>=grenze) break;
@@ -2342,10 +2363,14 @@ const DB = {
      ohne auf ihn zu warten: ein langsames Netzlaufwerk darf die Behandlung
      nicht bremsen, und ein nicht erreichbarer Ordner darf keine Aufnahme
      verlieren. Faellt er aus, merkt es `Teilen.letzterFehler`. */
-  put(store,obj){return new Promise((res,rej)=>{try{const r=this._tx(store,'readwrite').put(obj);r.onsuccess=()=>{
-    if(typeof Teilen!=='undefined'&&Teilen.aktiv){ try{ Teilen.schreiben(store,obj); }catch(_){ } }
+  /* Team-Ordner-Prüfstand 16.11.2026: Ohne eigenen Zeitstempel je Datensatz überschrieb der ältere Ordnerstand eine
+     Offline-Änderung (Datenverlust). Jetzt trägt jeder geteilte Datensatz `stand`; Einträge AUS dem Ordner
+     (opt.vonOrdner) behalten ihren Stand und werden nicht zurückgespiegelt. */
+  put(store,obj,opt){ if(obj&&typeof Teilen!=='undefined'&&Teilen.teilbar(store)&&!(opt&&opt.vonOrdner)) obj.stand=new Date().toISOString();
+    return new Promise((res,rej)=>{try{const r=this._tx(store,'readwrite').put(obj);r.onsuccess=()=>{
+    if(typeof Teilen!=='undefined'&&Teilen.aktiv&&!(opt&&opt.vonOrdner)){ try{ Teilen.schreiben(store,obj); }catch(_){ } }
     res(obj);};r.onerror=()=>{if(typeof Safe!=='undefined')Safe.writeFailed(store,r.error);rej(r.error);};}catch(e){if(typeof Safe!=='undefined')Safe.writeFailed(store,e);rej(e);}});},
-  del(store,id){return new Promise((res,rej)=>{try{const r=this._tx(store,'readwrite').delete(id);r.onsuccess=()=>res();r.onerror=()=>{if(typeof Safe!=='undefined')Safe.writeFailed(store,r.error);rej(r.error);};}catch(e){if(typeof Safe!=='undefined')Safe.writeFailed(store,e);rej(e);}});},
+  del(store,id,opt){return new Promise((res,rej)=>{try{const r=this._tx(store,'readwrite').delete(id);r.onsuccess=()=>{ if(typeof Teilen!=='undefined'&&Teilen.aktiv&&Teilen.teilbar(store)&&!(opt&&opt.vonOrdner)){ try{ Teilen.loeschen(store,id); }catch(_){ } } res(); };r.onerror=()=>{if(typeof Safe!=='undefined')Safe.writeFailed(store,r.error);rej(r.error);};}catch(e){if(typeof Safe!=='undefined')Safe.writeFailed(store,e);rej(e);}});},
   get(store,id){return new Promise((res,rej)=>{const r=this._tx(store,'readonly').get(id);r.onsuccess=()=>res(r.result);r.onerror=()=>rej(r.error);});},
 };
 
@@ -5044,7 +5069,7 @@ const Views={
       <div class="kpis">
         <div class="kpi ${hints?'amber':'good'}"><div class="lbl">Beobachtungshinweise</div><div class="val">${hints}</div><div class="hint">${hints?'Bitte ansehen — oben gereiht':'Alle im Trend stabil'}</div></div>
         <div class="kpi"><div class="lbl">Pferde auf Station</div><div class="val">${onList.length}</div><div class="hint">auf der Wand</div></div>
-        <div class="kpi"><div class="lbl">Klinik-Ordner</div><div class="val" style="font-size:20px">${(typeof Teilen!=='undefined'&&Teilen.aktiv)?'verbunden':'nicht verbunden'}</div><div class="hint">${available?available+' weitere aufnehmbar':'Profil equine-v1'}</div></div>
+        <div class="kpi"><div class="lbl">Team-Ordner</div><div class="val" style="font-size:20px">${(typeof Teilen!=='undefined'&&Teilen.aktiv)?'verbunden':'nicht verbunden'}</div><div class="hint">${available?available+' weitere aufnehmbar':'Profil equine-v1'}</div></div>
       </div>
       <div class="station-grid">${onList.map(x=>Views.stationTile(x)).join('')}</div>
       <div class="station-note">${IC.info}<span>Trend-Übersicht zur Priorisierung — <b>kein Alarm- oder Diagnosesystem</b>. Hinweise beruhen auf der Abweichung von der individuellen Baseline; die klinische Beurteilung bleibt ärztlich.</span></div>
@@ -8478,12 +8503,13 @@ const UI={
       <div class="field"><label>Praxisname</label><input id="sName" value="${esc(s.clinicName)}"></div>
       <div class="field"><label>Tierarzt / Tierärztin</label><input id="sVet" value="${esc(s.vetName||'')}"></div>
       <label style="display:flex;align-items:center;gap:9px;font-size:13px;margin:-2px 0 12px;cursor:pointer"><input type="checkbox" style="width:auto;accent-color:var(--cyan)" ${document.documentElement.classList.contains('blume-an')?'checked':''} onchange="document.documentElement.classList.toggle('blume-an',this.checked);try{localStorage.setItem('carlon.blume',this.checked?'an':'aus')}catch(e){}"> Hintergrund „Blume des Lebens“ anzeigen</label>
-      ${Teilen.erlaubt()?`<div class="field"><label>Geteilter Klinik-Ordner ${Teilen.aktiv?'<span style="color:var(--good);font-weight:400">— verbunden</span>':'<span style="color:var(--text-dim);font-weight:400">— ein Team, ein Bestand</span>'}</label>
+      ${Teilen.erlaubt()?`<div class="field"><label>Team-Ordner ${Teilen.aktiv?'<span style="color:var(--good);font-weight:400">— verbunden</span>':'<span style="color:var(--text-dim);font-weight:400">— ein Team, ein Bestand</span>'}</label>
         <div style="font-size:12.5px;color:var(--text-dim);line-height:1.5;margin:-4px 0 8px">
-          Wählen Sie einen Ordner, den Ihre Geräte ohnehin teilen — ein Netzlaufwerk oder ein
-          Praxis-Share. Aufnahmen liegen dann <b>bei Ihnen</b>, nicht bei uns, und jedes Gerät
-          Ihres Betriebs sieht denselben Bestand. Jedes Gerät behält zusätzlich seinen eigenen
-          vollständigen Stand — fällt der Ordner aus, arbeitet es weiter.
+          Wählen Sie einen Ordner, den Ihre Geräte ohnehin teilen – in <b>OneDrive, Google Drive,
+          Dropbox</b> oder auf dem Netzlaufwerk. Die Daten liegen dann <b>bei Ihnen</b>, nicht bei uns.
+          Jede Minute gleicht CARLON ab: neue Aufnahmen, Änderungen und Löschungen kommen auf allen
+          Geräten an; was offline erfasst wurde, wird nachgetragen. Jedes Gerät behält zusätzlich seinen
+          vollständigen eigenen Stand. Verbinden: einmal je Rechner in Chrome oder Edge.
         </div>
         <button class="btn ghost" onclick="UI.klinikOrdner()">${Teilen.aktiv?'Ordner wechseln':'Ordner verbinden'}</button>
         ${Teilen.letzterFehler?`<div style="font-size:12px;color:var(--amber);margin-top:6px">Zuletzt: ${esc(Teilen.letzterFehler)}</div>`:''}
@@ -8630,7 +8656,7 @@ const UI={
     if(typeof BETA_GATED!=='undefined'&&BETA_GATED){ return this.betaGate(feature); }
     // EIN Angebot, zwei Laufzeiten. Jahr steht vorn: bindet laenger und kostet pro Monat weniger.
     // Features hier sind gegen PAID_ONLY + maxHorses verifiziert — nichts versprechen, was kein Gate hat.
-    const FEATS=['Unbegrenzt viele Pferde','Tourenplanung mit Ruhe-HRV-Verlauf je Pferd','Aufnahmequalität sichtbar: roh und bereinigt, Artefakte, Methodenversion','Mess-Link für Halter – Aufnahme kommt verschlüsselt zu Ihnen','Messwertbericht (PDF) mit Ihrem Logo, CSV- und FHIR-Export','Auswertung lokal im Browser – keine Pferde-, Halter- oder Messdaten auf unseren Servern'];
+    const FEATS=['Unbegrenzt viele Pferde','Tourenplanung mit Ruhe-HRV-Verlauf je Pferd','Aufnahmequalität sichtbar: roh und bereinigt, Artefakte, Methodenversion','Mess-Link für Halter – Aufnahme kommt verschlüsselt zu Ihnen','Messwertbericht (PDF) mit Ihrem Logo, Export als JSON, CSV, Kubios und FHIR R5','Team-Ordner: alle Tierärzt:innen sehen denselben Stand (OneDrive, Google Drive, Dropbox, Netzlaufwerk)','Auswertung lokal im Browser – keine Pferde-, Halter- oder Messdaten auf unseren Servern'];
     const plans=[
       ['month','Monatsabo',String(License.PREIS.soloMonat),'monatlich kündbar','zum Einstieg'],
       ['year','Jahresabo',(License.PREIS.soloJahr/12).toFixed(2).replace('.',','),`${License.PREIS.soloJahr.toLocaleString('de-DE')} € im Jahr · 12 Monate Laufzeit, zwei Monate günstiger`,'zwei Monate gespart'],
@@ -10093,7 +10119,7 @@ const License={
   },
   isPaid(){ return this.tier()!=='demo' && !this.abgelaufen(); },
   maxHorses(){return this.isPaid()?Infinity:3;},
-  PAID_ONLY:['pdf','csv','routeHandoff','coherence','ownerFeedback'],
+  PAID_ONLY:['pdf','csv','routeHandoff','coherence','ownerFeedback','sharedFolder'],
   /* WAS DIE STUFEN UNTERSCHEIDET — vorher: nichts.
      can() gab fuer JEDE bezahlte Stufe true zurueck, maxHorses() ebenso.
      "vet_clinic" tauchte im gesamten Code nur in zwei Beschriftungstabellen
@@ -10108,7 +10134,7 @@ const License={
   FEATURES:{
     demo:      [],
     research:  ['pdf','csv','coherence'],
-    vet_solo:  ['pdf','csv','routeHandoff','coherence','ownerFeedback'],
+    vet_solo:  ['pdf','csv','routeHandoff','coherence','ownerFeedback','sharedFolder'],   // Team-Ordner auch für die Praxis (Jan 16.11.2026)
     vet_clinic:['pdf','csv','routeHandoff','coherence','ownerFeedback',
                 'multiSeat',        // Lizenz nennt eine Platzzahl; siehe seats()
                 'nachsorge',        // Entlass-Nachsorge-Flow (13.08., s. u.)
@@ -10153,7 +10179,7 @@ const License={
      kuenstlicher Riegel um ein identisches Produkt, sondern beschreibt genau
      den Unterschied: Eine Fahrpraxis hat keine Stationswand, weil sie keine
      Station hat, und keinen geteilten Ordner, weil sie ein Geraet ist. */
-  CLINIC_ONLY:['clinicBranding','multiSeat','nachsorge','station','sharedFolder'],
+  CLINIC_ONLY:['clinicBranding','multiSeat','nachsorge','station'],
   /* Die Platzzahl steht im Schluessel und wird ANGEZEIGT, nicht technisch
      erzwungen — ohne Server laesst sich geraeteuebergreifend nichts durchsetzen,
      und ein Schein-Schutz waere schlechter als eine klare Angabe. Sie ist eine
@@ -11249,7 +11275,7 @@ const Nav={
     try{ const st=$('#speicherTxt'), pill=$('#speicherPill'); if(st&&pill){
       const ordner=(typeof Teilen!=='undefined'&&Teilen.aktiv), b=State.settings.lastBackupAt;
       const tage=b?Math.floor((Date.now()-new Date(b))/86400000):null;
-      st.textContent=ordner?'Klinik-Ordner verbunden':(b?(tage<1?'Lokal · heute gesichert':`Lokal · gesichert vor ${tage} T.`):'Lokal · noch nicht gesichert');
+      st.textContent=ordner?'Team-Ordner verbunden':(b?(tage<1?'Lokal · heute gesichert':`Lokal · gesichert vor ${tage} T.`):'Lokal · noch nicht gesichert');
       pill.classList.toggle('warn',!ordner&&(!b||tage>7)); } }catch(e){}
     /* Klinik-Name im Kopf — nur vet_clinic, nur wenn die Lizenz einen
        Namen traegt. Idempotent bei jedem Render (Lizenzwechsel greift). */
@@ -11925,7 +11951,13 @@ const Sprache={
     'Abbrechen':'Cancel',
     'Schließen':'Close',
     'Feedback senden':'Send feedback',
-    'Fehler melden oder Verbesserung vorschlagen – geht direkt an den Entwickler':'Report a problem or suggest an improvement – goes straight to the developer','Verbessern':'Improve','Verbesserung senden':'Send an improvement','Sie kennen den Praxisalltag – wir bauen danach.':'You know everyday practice – we build to it.',
+    'Fehler melden oder Verbesserung vorschlagen – geht direkt an den Entwickler':'Report a problem or suggest an improvement – goes straight to the developer','Verbessern':'Improve','Team-Ordner':'Team folder','Team-Ordner verbunden':'Team folder connected','Der Team-Ordner gehört zum Abo.':'The team folder is part of the subscription.',
+    'Team-Ordner: alle Tierärzt:innen sehen denselben Stand (OneDrive, Google Drive, Dropbox, Netzlaufwerk)':'Team folder: every vet sees the same state (OneDrive, Google Drive, Dropbox, network drive)',
+    'Messwertbericht (PDF) mit Ihrem Logo, Export als JSON, CSV, Kubios und FHIR R5':'Measurement report (PDF) with your logo, export as JSON, CSV, Kubios and FHIR R5',
+    'Wählen Sie einen Ordner, den Ihre Geräte ohnehin teilen – in':'Choose a folder your devices already share – in','OneDrive, Google Drive, Dropbox':'OneDrive, Google Drive, Dropbox',
+    'oder auf dem Netzlaufwerk. Die Daten liegen dann':'or on the network drive. The data then stays','bei Ihnen':'with you',
+    ', nicht bei uns. Jede Minute gleicht CARLON ab: neue Aufnahmen, Änderungen und Löschungen kommen auf allen Geräten an; was offline erfasst wurde, wird nachgetragen. Jedes Gerät behält zusätzlich seinen vollständigen eigenen Stand. Verbinden: einmal je Rechner in Chrome oder Edge.':', not with us. Every minute CARLON syncs: new recordings, changes and deletions reach every device; anything recorded offline is added later. Each device also keeps its own complete copy. Connect: once per computer in Chrome or Edge.',
+    'Team-Ordner nicht erreichbar – dieses Gerät arbeitet vorerst allein und gleicht später ab':'Team folder not reachable – this device works on its own for now and syncs later','Verbesserung senden':'Send an improvement','Sie kennen den Praxisalltag – wir bauen danach.':'You know everyday practice – we build to it.',
     'Was hat Sie aufgehalten, was fehlt, was war unklar? Zwei Sätze genügen. Jede Nachricht liest Jan Rohwedder selbst, und weil CARLON im Browser läuft, kommt eine Verbesserung ohne Update bei allen an.':'What held you up, what is missing, what was unclear? Two sentences are enough. Jan Rohwedder reads every message himself, and because CARLON runs in the browser, an improvement reaches everyone without an update.',
     'Fehler':'Problem','Idee':'Idea','Fehlt mir':'Missing','Unklar':'Unclear','Das war gut':'That was good','Beschreibung':'Description',
     'Mail an den Entwickler öffnen':'Open mail to the developer','In Zwischenablage':'Copy to clipboard','Erklärung unklar? Sagen Sie es uns':'Explanation unclear? Tell us',
@@ -12436,13 +12468,13 @@ const Sprache={
     try{
       if(await Teilen.wiederaufnehmen()){
         const neu=await Teilen.abgleichen();
-        if(neu){ await State.load(); Toast.show(`${neu} Aufnahme${neu===1?'':'n'} aus dem Klinik-Ordner übernommen`,'ok'); }
+        if(neu){ await State.load(); Toast.show(`${neu} Aufnahme${neu===1?'':'n'} aus dem Team-Ordner übernommen`,'ok'); }
         /* Und in die andere Richtung: was dieses Geraet unterwegs ohne Netz
            aufgenommen hat, liegt sonst fuer immer nur hier. */
         const nach=await Teilen.nachtragen();
-        if(nach){ Toast.show(`${nach} eigene Aufnahme${nach===1?'':'n'} in den Klinik-Ordner nachgetragen`,'ok'); }
+        if(nach){ Toast.show(`${nach} eigene Aufnahme${nach===1?'':'n'} in den Team-Ordner nachgetragen`,'ok'); }
       } else if(Teilen.letzterFehler && Teilen.erlaubt()){
-        Toast.show('Klinik-Ordner nicht erreichbar — dieses Gerät arbeitet vorerst allein','warn');
+        Toast.show('Team-Ordner nicht erreichbar – dieses Gerät arbeitet vorerst allein und gleicht später ab','warn');
       }
     }catch(e){}
     /* Erst die Rueckkehr aus der Kasse abfangen, dann faellige Erneuerung.
@@ -12456,6 +12488,11 @@ const Sprache={
        Reichweite liefe im Stillen ab.
        'online' ist der wichtigste: der Moment, in dem der Wagen aus dem
        Funkloch faehrt, ist genau der Moment, in dem nachgeholt werden soll. */
+    /* Team-Ordner LAUFEND abgleichen (16.11.2026): bisher nur beim Start – die Kollegin sah neue Aufnahmen erst
+       nach dem Neuladen. Jetzt jede Minute und beim Zurückkehren in den Tab; neue Daten erscheinen ohne Zutun. */
+    const teamAbgleich=async()=>{ if(!Teilen.aktiv||document.hidden) return; try{ const a=await Teilen.abgleichen(); const b=await Teilen.nachtragen();
+      if(a){ await State.load(); try{ Nav.refresh(); }catch(_){ } Toast.show(`${a} Änderung${a===1?'':'en'} aus dem Team-Ordner übernommen`,'ok'); } }catch(_){ } };
+    setInterval(teamAbgleich,60000); document.addEventListener('visibilitychange',()=>{ if(!document.hidden) teamAbgleich(); });
     window.addEventListener('online', ()=>{
       License.lizenzHolenWennFaellig(); Postfach.abholen(); Postausgang.senden({laut:true});
       /* Der geteilte Ordner haengt am selben Funkloch wie das Postfach —
@@ -12463,7 +12500,7 @@ const Sprache={
          Fahrpraxis auf dem Geraet des Behandlers liegen. */
       (async()=>{ try{
         const n=await Teilen.nachholenBeiNetz();
-        if(n) Toast.show(`${n} Aufnahme${n===1?'':'n'} in den Klinik-Ordner nachgetragen`,'ok');
+        if(n) Toast.show(`${n} Aufnahme${n===1?'':'n'} in den Team-Ordner nachgetragen`,'ok');
       }catch(_){ } })(); });
     /* Eine Übergabe hat Vorrang vor allem anderen: sie ist der Grund,
        warum diese Person die Seite ueberhaupt geoeffnet hat. */
