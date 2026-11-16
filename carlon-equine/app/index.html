@@ -2055,9 +2055,9 @@ const fmt0 = v => v==null?'—':Math.round(v).toLocaleString('de-DE');
 const poincaShape = (sd1,sd2) => {
   if(sd1==null||sd2==null) return null;
   const r = sd2/Math.max(sd1,0.1);
-  if(sd1>=20) return {name:'Komet',col:'var(--good)',note:'auffächernd · flexibles Herzmuster'};
-  if(r>=2.5)  return {name:'Torpedo',col:'var(--amber)',note:'schmale Zigarre · niedrige Kurzzeit-HRV'};
-  return {name:'Ball',col:'var(--red)',note:'runder Cluster · niedrige Variabilität'};
+  if(sd1>=20) return {name:'Komet',col:'var(--good)',note:'langgestreckt und breit'};
+  if(r>=2.5)  return {name:'Torpedo',col:'var(--amber)',note:'langgestreckt und schmal'};
+  return {name:'Ball',col:'var(--red)',note:'rund und kompakt'};
 };
 const fmtTime = m => { m=Math.round(m); return `${String(Math.floor(m/60)%24).padStart(2,'0')}:${String(((m%60)+60)%60).padStart(2,'0')}`; };
 const parseTime = s => { const [h,mi]=(s||'').split(':').map(Number); return (isNaN(h)?8:h)*60+(isNaN(mi)?0:mi); };
@@ -4597,7 +4597,7 @@ const HRV={
   },
   // Zonen-Legende für die Baevsky-Gauge (√SI, equine — Stucke 2015)
   gaugeZones(si){
-    const Z=[['Ruhig','0–7','var(--good)',0,7],['Aktiv','7–15','var(--cyan)',7,15],['Stress','15–25','var(--amber)',15,25],['Alarm','25+','var(--red)',25,999]];
+    const Z=[['Niedrig','0–7','var(--good)',0,7],['Mittel','7–15','var(--cyan)',7,15],['Hoch','15–25','var(--amber)',15,25],['Sehr hoch','25+','var(--red)',25,999]];
     return `<div class="zone-leg">${Z.map(([n,r,c,a,b])=>{const on=si!=null&&si>=a&&si<b;return `<div class="zl${on?' on':''}"><span class="zl-bar" style="background:${c}"></span><b>${n}</b><span>${r}</span></div>`;}).join('')}</div>`;
   },
   // RR-Histogramm mit Dreiecks-Interpolation (geometrische HRV — Kubios-Signatur, schöner)
@@ -4736,7 +4736,7 @@ const Info={
     tinn:{t:'RR-Histogramm · TINN / Triangular Index',what:'Geometrische HRV aus der RR-Verteilung.',method:'Triangular-Index = Gesamtzahl der Abstände ÷ Höhe der häufigsten Klasse; TINN = Basisbreite der Dreiecks-Interpolation (ms). Klassenbreite 7,8125 ms (1/128 s).',interp:'Unempfindlich gegen einzelne Ausreißer, braucht aber lange Aufnahmen: Die Task Force nennt mindestens 20 Minuten, vorzugsweise 24 Stunden. Kürzere Aufnahmen weist CARLON ohne TINN und Triangular-Index aus.',ref:'Task Force 1996'},
     baseline:{t:'Abstand zur eigenen Basis',what:'Aktuelle RMSSD im Verhältnis zur eigenen Basis dieses Pferds, in Prozent.',method:'Basis = Mittel aus mindestens drei früheren Ruheaufnahmen der letzten 30 Tage.',interp:'Zeigt, wie weit die heutige Aufnahme vom bisherigen Mittel dieses Pferds liegt. Ruhewerte schwanken beim Pferd von Tag zu Tag deutlich; eine Abweichung ist Anlass, Protokoll und Umstände zu prüfen, keine Bewertung.',ref:'Eggensperger & Schwarzwald 2017'},
     conditioning:{t:'Ruhe-Trend über Wochen',what:'Richtung von Ruhe-Herzfrequenz und RMSSD über Wochen bis Monate, aus wiederholten Ruheaufnahmen.',method:'Lineare Regression über die Ruheaufnahmen; ausgewiesen wird die Steigung.',interp:'Rein beschreibend. Eine sinkende Ruhe-Herzfrequenz oder steigende RMSSD ist beim Pferd kein Nachweis besserer Kondition: In Trainingsstudien sank die Ruhe-RMSSD nach 14 Wochen, und die aerobe Leistung nahm zu, ohne dass RMSSD stieg.',equine:'Kein Ersatz für Belastungstest oder Laktatmessung. Tageszeit und Protokoll verschieben die Werte ebenfalls.',ref:'Nyerges-Bohák 2021 · Ringmark 2015'},
-    readiness:{t:'Trainings-Readiness',what:'Ampel, ob die heutige vagale Erholung im individuellen Normbereich des Pferds liegt.',method:'lnRMSSD (natürlicher Log von RMSSD) je Aufnahme · rollender Mittelwert der letzten ~7 · Normband = Mittel ± SWC, mit SWC = 0,5 × SD der lnRMSSD (smallest worthwhile change). Heute vs. Band → Bereit / Moderat / Erholung.',interp:'Im/über Band = autonom erholt, geplante (auch intensivere) Einheit vertretbar · unter Band = relative Belastung, Last reduzieren.',equine:'Goldstandard aus dem Humansport (Plews & Buchheit). Beim Pferd EXPERIMENTELL, auf die individuelle Baseline angewandt — Orientierung, keine Trainingsvorschrift.',ref:'Plews & Buchheit 2013/2014 (human)'},
+    readiness:{t:'Lage zum Wochenband',what:'Wo die heutige Ruhe-HRV (lnRMSSD) im Band der letzten Aufnahmen dieses Pferds liegt.',method:'lnRMSSD (natürlicher Logarithmus der RMSSD) je Aufnahme · rollender Mittelwert der letzten ~7 · Band = Mittel ± SWC mit SWC = 0,5 × SD der lnRMSSD (smallest worthwhile change).',interp:'Rein beschreibend: im Band, knapp darunter (bis 1 SWC) oder darunter. Beim Menschen wird das Band zur Trainingssteuerung genutzt; beim Pferd ist die Methode nicht validiert, CARLON gibt daraus keine Trainingsempfehlung.',ref:'Plews & Buchheit 2013/2014 (Mensch)'},
   },
   // Mini-Poincaré-Illustration (deterministisch) für das Lern-Modal
   miniPoinca(shape){
@@ -4843,9 +4843,9 @@ const Readiness={
     const swc=0.5*sd;                                   // SWC in lnRMSSD-Einheiten (= 0,5 × CV × Mittel)
     const z=sd>0?(today.v-mean)/sd:0;
     let state,label,rec;
-    if(today.v>=mean-swc){ state='ready'; label='Bereit'; rec='Im individuellen Normbereich — die geplante Einheit inkl. höherer Intensität ist vertretbar.'; }
-    else if(today.v>=mean-2*swc){ state='moderate'; label='Moderat'; rec='Leicht unter dem Normband — eher moderate Einheit, Spitzenintensität heute zurücknehmen.'; }
-    else { state='recover'; label='Erholung'; rec='Deutlich unter dem Normband — lockere/Erholungs-Einheit bevorzugen und Trend beobachten.'; }
+    if(today.v>=mean-swc){ state='ready'; label='Im Band'; rec='Die heutige lnRMSSD liegt im Band aus Mittel ± SWC der letzten Aufnahmen.'; }
+    else if(today.v>=mean-2*swc){ state='moderate'; label='Knapp unter dem Band'; rec='Die heutige lnRMSSD liegt bis zu einem SWC unter dem Band.'; }
+    else { state='recover'; label='Unter dem Band'; rec='Die heutige lnRMSSD liegt mehr als ein SWC unter dem Band. Protokoll und Umstände der Aufnahme prüfen; die Einordnung liegt bei Ihnen.'; }
     return {enough:true, n:recs.length, mean, sd, swc, z, state, label, rec,
       todayMs:today.ms, bandLoMs:Math.exp(mean-swc), bandHiMs:Math.exp(mean+swc),
       loMs:Math.exp(mean-3*sd), hiMs:Math.exp(mean+3*sd), meanMs:Math.exp(mean),
@@ -4882,9 +4882,9 @@ const Conditioning={
     let state,label,note;
     const improving=(hrSlopeWk<=-0.15)||(rmSlopeWk>=0.4);
     const declining=(hrSlopeWk>=0.15)&&(rmSlopeWk<=-0.4);
-    if(improving&&!declining){ state='up'; label='Kondition verbessert sich'; note='Ruhe-HF sinkt und/oder HRV steigt über den Zeitraum — Zeichen zunehmender aerober Anpassung.'; }
-    else if(declining){ state='down'; label='Kondition lässt nach'; note='Ruhe-HF steigt bei fallender HRV — mögliche Überlastung oder Trainingslücke. Regeneration prüfen.'; }
-    else { state='flat'; label='Kondition stabil'; note='Weitgehend konstantes autonomes Niveau über den Zeitraum.'; }
+    if(improving&&!declining){ state='up'; label='Ruhe-HF sinkt · RMSSD steigt'; note='Über den Zeitraum sinkt die Ruhe-Herzfrequenz und/oder steigt die RMSSD. Beim Pferd ist das kein Nachweis besserer Kondition.'; }
+    else if(declining){ state='down'; label='Ruhe-HF steigt · RMSSD sinkt'; note='Über den Zeitraum steigt die Ruhe-Herzfrequenz bei sinkender RMSSD. Protokoll und Umstände der Aufnahmen prüfen; die Einordnung liegt bei Ihnen.'; }
+    else { state='flat'; label='Ruhewerte etwa gleichbleibend'; note='Ruhe-Herzfrequenz und RMSSD ändern sich über den Zeitraum kaum.'; }
     return {enough:true,n:recs.length,weeks:Math.round(days/7),days:Math.round(days),
       hr,rm,idx,hrSlopeWk,rmSlopeWk,hrDelta,rmDelta,state,label,note,
       hrStart:hr[0].y,hrEnd:hr[hr.length-1].y,rmStart:rm[0].y,rmEnd:rm[rm.length-1].y};
@@ -5086,12 +5086,12 @@ const Views={
     const R=Readiness.compute(h.id);
     if(!R.enough){
       return `<div class="panel rdy-panel">
-        <div class="rdy-head"><span class="eyebrow">Trainer · HRV-geführt</span><h2>Trainings-Readiness${Info.btn('readiness')}</h2></div>
+        <div class="rdy-head"><span class="eyebrow">lnRMSSD · Bandmethode</span><h2>Lage zum Wochenband${Info.btn('readiness')}</h2></div>
         <div class="rdy-empty">${IC.info}<div>Noch nicht genug Verlauf für ein individuelles Normband. Ab ~${Readiness.MIN}–${Readiness.WINDOW} Aufnahmen über mehrere Tage zeigt CARLON hier die HRV-geführte Bereitschafts-Ampel <span style="opacity:.7">(aktuell ${R.n})</span>.</div></div></div>`;
     }
     const col={ready:'var(--good)',moderate:'var(--amber)',recover:'var(--red)'}[R.state];
     return `<div class="panel rdy-panel">
-      <div class="rdy-head"><span class="eyebrow">Trainer · HRV-geführt</span><h2>Trainings-Readiness${Info.btn('readiness')}</h2></div>
+      <div class="rdy-head"><span class="eyebrow">lnRMSSD · Bandmethode</span><h2>Lage zum Wochenband${Info.btn('readiness')}</h2></div>
       <div class="rdy-top">
         <div class="rdy-badge ${R.state}"><b>${R.label}</b><span>heute</span></div>
         <div class="rdy-nums">
@@ -5102,7 +5102,7 @@ const Views={
       </div>
       ${Views.readinessBand(R)}
       <div class="rdy-rec" style="border-left-color:${col}">${R.rec}</div>
-      <div class="rdy-foot">${IC.info}<span>Adaptiert vom Humansport-Goldstandard (Plews &amp; Buchheit). Beim Pferd experimentell, an die eigene Baseline angelegt — <b>Orientierung, keine Trainingsvorschrift.</b></span></div>
+      <div class="rdy-foot">${IC.info}<span>Bandmethode nach Plews &amp; Buchheit (Mensch). Beim Pferd nicht validiert, an die eigene Basis angelegt — <b>beschreibend, keine Trainingsempfehlung.</b></span></div>
     </div>`;
   },
   readinessBand(R){
@@ -5117,7 +5117,7 @@ const Views={
         <div class="rb-mean" style="left:${mX.toFixed(1)}%" title="7-Tage-Mittel"></div>
         <div class="rb-today" style="left:${tX.toFixed(1)}%" title="Heute"></div>
       </div>
-      <div class="rb-legend"><span class="rb-l red">Erholung</span><span class="rb-l amber">Moderat</span><span class="rb-l green">Bereit ▸</span></div>
+      <div class="rb-legend"><span class="rb-l red">Unter dem Band</span><span class="rb-l amber">Knapp darunter</span><span class="rb-l green">Im Band ▸</span></div>
     </div>`;
   },
   /* ---------------- KONDITIONS-VERLAUF (Trainer · Langzeit) ---------------- */
@@ -5135,16 +5135,16 @@ const Views={
       <div class="cnd-verdict ${C.state}"><span class="cnd-arrow">${arrow}</span><div><b>${C.label}</b><span>über ${C.weeks} Wochen · ${C.n} Messungen</span></div></div>
       <div class="cnd-charts">
         <div class="cnd-metric">
-          <div class="cnd-mlabel">Ruhe-Herzfrequenz <em>(↓ = fitter)</em> <b class="${C.hrDelta<=-1?'good':C.hrDelta>=1?'bad':''}">${C.hrDelta>=0?'+':''}${fmt0(C.hrDelta)} bpm</b></div>
+          <div class="cnd-mlabel">Ruhe-Herzfrequenz <b class="${C.hrDelta<=-1?'good':C.hrDelta>=1?'bad':''}">${C.hrDelta>=0?'+':''}${fmt0(C.hrDelta)} bpm</b></div>
           ${Conditioning.trendChart(C.hr,{goodDir:-1,unit:'bpm'})}
         </div>
         <div class="cnd-metric">
-          <div class="cnd-mlabel">HRV-Baseline (RMSSD) <em>(↑ = fitter)</em> <b class="${C.rmDelta>=2?'good':C.rmDelta<=-2?'bad':''}">${C.rmDelta>=0?'+':''}${fmt0(C.rmDelta)} ms</b></div>
+          <div class="cnd-mlabel">RMSSD (eigene Basis) <b class="${C.rmDelta>=2?'good':C.rmDelta<=-2?'bad':''}">${C.rmDelta>=0?'+':''}${fmt0(C.rmDelta)} ms</b></div>
           ${Conditioning.trendChart(C.rm,{goodDir:1,unit:'ms'})}
         </div>
       </div>
       <div class="cnd-rec" style="border-left-color:${col}">${C.note}</div>
-      <div class="cnd-foot">${IC.info}<span>Aerobe Trainingsanpassung aus wiederholten Ruhe-Messungen (lineare Regression). Orientierung für die Periodisierung — <b>keine Leistungsdiagnostik.</b></span></div>
+      <div class="cnd-foot">${IC.info}<span>Beschreibender Trend aus wiederholten Ruheaufnahmen (lineare Regression) – <b>kein Konditions- oder Leistungsnachweis.</b></span></div>
     </div>`;
   },
   pcard({h,rec,tri}){
@@ -6093,11 +6093,11 @@ const Views={
     const chead=(ico,title,ikey,right,rcol)=>`<div class="ct ct-app"><span class="ct-t"><svg class="ct-ico" viewBox="0 0 24 24" fill="none" stroke="var(--cyan)" stroke-width="2">${CHICO[ico]||''}</svg>${title}</span>${ikey?Info.btn(ikey):''}<span class="ct-sp"></span>${right?`<span class="ct-rt" style="color:${rcol||'var(--cyan)'}">${right}</span>`:''}</div>`;
     return `<div style="margin-bottom:var(--s4)">
       <h2 style="font-size:16px;margin-bottom:16px"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 12h3l2-7 4 15 3-11 2 6h6"/></svg>Signalanalyse · ${fmtDate(rec.startedAt,true)}</h2>
-      <div class="chart-card"><div class="chart-wrap">${chead('tacho','Puls und HRV über die Zeit','dual',`<span style="font-family:var(--font-ui);font-weight:600;font-size:10.5px;letter-spacing:.03em"><span style="color:#FFB547">━ HF bpm</span>&nbsp;&nbsp;<span style="color:var(--cyan)">━ HRV ms</span></span>`)}${Chart.dualVitals(rr)}<div class="chart-hint">Herzfrequenz (Belastung) gegen rollendes RMSSD (Erholungsreserve) über die Zeit. Gesund: HF↑ und HRV↓ synchron · Stress: HF hoch bei niedrigem, starrem HRV. Tippen zeigt beide Werte · <b>⤢</b> Vollbild.</div></div></div>
+      <div class="chart-card"><div class="chart-wrap">${chead('tacho','Puls und HRV über die Zeit','dual',`<span style="font-family:var(--font-ui);font-weight:600;font-size:10.5px;letter-spacing:.03em"><span style="color:#FFB547">━ HF bpm</span>&nbsp;&nbsp;<span style="color:var(--cyan)">━ HRV ms</span></span>`)}${Chart.dualVitals(rr)}<div class="chart-hint">Herzfrequenz und rollendes RMSSD (30 Schläge) über die Zeit. Steigt der Puls kurz an, fällt die HRV oft im selben Moment – so grenzen Sie ruhige Abschnitte ein. Tippen zeigt beide Werte · <b>⤢</b> Vollbild.</div></div></div>
       <div class="chart-card">
         ${chead('scatter','Poincaré-Plot','poincare', (m.sd1!=null&&m.sd2!=null)?`<small>bereinigt</small> SD1 ${fmt1(m.sd1)} · SD2 ${fmt1(m.sd2)} <small>ms · Wolke: alle Paare</small>`:'')}
         ${(Array.isArray(rr)&&rr.length>20)?'<figure class="pz pz-app pz-gross" id="pzAkte"></figure>':`<div class="poinca-plot">${Chart.poincare(rr,{sd1:m.sd1,sd2:m.sd2,size:820})}</div>`}
-        <div class="poinca-cap">Jeder Punkt = ein Herzschlag (RRₙ) gegen den nächsten (RRₙ₊₁). <b style="color:var(--cyan)">SD1</b> (quer zur Diagonale) = Kurzzeit-/Vagus-Variabilität, <b style="color:var(--cyan)">SD2</b> (entlang) = Langzeit-Variabilität. Kompakte Wolke = geringe HRV, breite Wolke = flexibles autonomes Nervensystem.${(()=>{const sh=poincaShape(m.sd1,m.sd2);return sh?` · <b style="color:${sh.col}">Diese Aufnahme: ${sh.name} — ${sh.note}</b>`:'';})()}</div>
+        <div class="poinca-cap">Jeder Punkt = ein Herzschlag (RRₙ) gegen den nächsten (RRₙ₊₁). <b style="color:var(--cyan)">SD1</b> (quer zur Diagonale) = Kurzzeit-/Vagus-Variabilität, <b style="color:var(--cyan)">SD2</b> (entlang) = Langzeit-Variabilität. Kompakte Wolke = geringe Streuung, breite Wolke = große Streuung.${(()=>{const sh=poincaShape(m.sd1,m.sd2);return sh?` · <b style="color:${sh.col}">Diese Aufnahme: ${sh.name} — ${sh.note}</b>`:'';})()}</div>
       </div>
       <div class="chart-card"><div class="chart-wrap">${chead('lungs','Atemkurve · aus dem Herzschlag','atem',`<span style="font-family:var(--font-ui);font-weight:600;font-size:10.5px;letter-spacing:.03em"><span style="color:#F27359">● Inspiration</span>&nbsp;&nbsp;<span style="color:#4DA6F2">● Expiration</span></span>`)}${Chart.breathWave(rr,{dur:rec.durationSec})}<div class="chart-hint">Respiratorische Sinusarrhythmie: Beim Einatmen werden die Schlagabstände kürzer (der Vagus wird kurz gebremst), beim Ausatmen länger. Abgeleitet aus dem Herzschlag, keine direkte Atemmessung.</div></div></div>
       <div class="chart-card"><div class="ct" style="margin-bottom:12px"><span>HRV-Kennwerte</span><span class="ct-sp"></span><span class="vm-hint">Kachel antippen = Erklärung</span></div>
@@ -6114,7 +6114,7 @@ const Views={
         </div>
       </div>
       <div class="chart-card baev-box" data-si="${bv?bv.SI.toFixed(1):''}" data-sqrtsi="${bv?bv.sqrtSI.toFixed(1):''}" data-amo="${bv?bv.AMo.toFixed(1):''}" data-mo="${bv?(bv.Mo*1000).toFixed(0):''}" data-mxdmn="${bv?(bv.MxDMn*1000).toFixed(0):''}">
-        ${(()=>{const si=bv?bv.sqrtSI:null;const z=si==null?['—','var(--text-dim)']:si<7?['Ruhig','#3E8E57']:si<15?['Aktiv','#3E76A0']:si<25?['Stress','#9C6A2E']:['Alarm','#9C3A3A'];return chead('gauge','Baevsky-Index (SI)','baevsky',`<span style="font-weight:700;font-size:10.5px;letter-spacing:.09em;padding:3px 12px;border-radius:99px;background:color-mix(in srgb,${z[1]} 16%,transparent);color:${z[1]};border:1px solid color-mix(in srgb,${z[1]} 55%,transparent)">${z[0].toUpperCase()}</span>`,z[1]);})()}
+        ${(()=>{const si=bv?bv.sqrtSI:null;const z=si==null?['—','var(--text-dim)']:si<7?['Niedrig','#3E8E57']:si<15?['Mittel','#3E76A0']:si<25?['Hoch','#9C6A2E']:['Sehr hoch','#9C3A3A'];return chead('gauge','Baevsky-Index (SI)','baevsky',`<span style="font-weight:700;font-size:10.5px;letter-spacing:.09em;padding:3px 12px;border-radius:99px;background:color-mix(in srgb,${z[1]} 16%,transparent);color:${z[1]};border:1px solid color-mix(in srgb,${z[1]} 55%,transparent)">${z[0].toUpperCase()}</span>`,z[1]);})()}
         <div class="chart-subtitle">√SI · Baevsky 1979 · equine-skaliert (Stucke 2015)</div>
         ${HRV.gauge(bv?bv.sqrtSI:null)}
         <div class="baev-sub">AMo ${bv?fmt1(bv.AMo):'–'} % · Mo ${bv?fmt0(bv.Mo*1000):'–'} ms · √SI ${bv?fmt1(bv.sqrtSI):'–'}<br>
@@ -6735,26 +6735,25 @@ const Views={
     const h=State.horses.find(x=>x.id===hid);const recs=State.recsFor(hid);const rec=recs[recs.length-1];
     if(!rec){Toast.show('Keine Aufnahme vorhanden','warn');return;}
     const m=rec.metrics;const tri=rec.triage;const tr=Triage.trend(hid);
-    const lvl={crit:`zeigt in dieser Messung auffällige Werte, die zeitnah tierärztlich abgeklärt werden sollten`,
-      elev:`zeigt leicht erhöhte Belastungszeichen, die wir im Blick behalten sollten`,
-      watch:`ist weitgehend unauffällig — einzelne Werte beobachten wir weiter`,
-      stable:`zeigt einen stabilen, entspannten Herzrhythmus`}[tri.level];
-    const trend=tr?(tr.dir==='up'?'Erfreulich: Der Verlauf verbessert sich gegenüber der letzten Messung.':tr.dir==='down'?'Hinweis: Der Verlauf zeigt eine Verschlechterung gegenüber der letzten Messung.':'Der Verlauf ist stabil.'):'';
-    const empf={crit:'Bitte vereinbaren Sie zeitnah einen Termin zur klinischen Untersuchung.',
-      elev:'Wir empfehlen eine Kontrollmessung in den nächsten Tagen.',
-      watch:'Eine erneute Messung in der kommenden Woche gibt zusätzliche Sicherheit.',
-      stable:'Weiter so — regelmäßige Messungen helfen, Veränderungen früh zu erkennen.'}[tri.level];
+    /* 16.11.2026 (HWG § 9, Lektorat E3): Die Vorlage BESCHREIBT nur, was gemessen wurde. Bewertung und Empfehlung
+       schreibt die Praxis selbst – die Software urteilt nicht über Wohlbefinden, Erholung oder Dringlichkeit. */
+    const lvl={crit:`lag in dieser Ruheaufnahme deutlich unter seiner eigenen Basis`,
+      elev:`lag in dieser Ruheaufnahme unter seiner eigenen Basis`,
+      watch:`lag in dieser Ruheaufnahme etwas unter seiner eigenen Basis`,
+      stable:`lag in dieser Ruheaufnahme im Bereich seiner eigenen Basis`}[tri.level];
+    const trend=tr?(tr.dir==='up'?'Gegenüber der letzten Aufnahme ist der Wert gestiegen.':tr.dir==='down'?'Gegenüber der letzten Aufnahme ist der Wert gesunken.':'Gegenüber der letzten Aufnahme ist der Wert etwa gleich.'):'';
+    const empf='[Ihre Einschätzung und Empfehlung – bitte ergänzen]';
     const anrede=h.owner?' '+h.owner.split(' ').slice(-1)[0]:'';
     const s=State.settings; const letterhead=s.clinicName?`${s.clinicName}\n${'—'.repeat(Math.min(28,s.clinicName.length))}\n\n`:'';
     const sign=[s.vetName,s.clinicName].filter(Boolean).join('\n');
     let txt=letterhead+`Hallo${anrede},\n\nvielen Dank für die Herzraten-Aufnahme von ${h.name} vom ${fmtDate(rec.startedAt)}.\n\n`+
-      `Zusammenfassung: ${h.name} ${lvl}.\n\nKennwerte dieser Messung:\n`+
+      `Zusammenfassung: Die Ruhe-HRV von ${h.name} ${lvl}.\n\nKennwerte dieser Messung:\n`+
       `• Herzratenvariabilität (RMSSD): ${fmt0(m.rmssd)} ms\n`+
       `• Ruhe-Herzfrequenz: ${fmt0(m.meanHR)} bpm\n`+
       (m.sdnn?`• Gesamtvariabilität (SDNN): ${fmt0(m.sdnn)} ms\n`:'')+
       (trend?`\n${trend}\n`:'')+
       `\nEmpfehlung: ${empf}\n\n`+
-      `Diese Einschätzung basiert auf der Herzratenvariabilität und ersetzt keine tierärztliche Diagnose.\n\n`+
+      `Die Werte beschreiben eine Ruhemessung und ersetzen keine tierärztliche Untersuchung.\n\n`+
       `Herzliche Grüße\n${sign||''}`;
     UI.modal(`<div class="modal-head"><button class="closex" onclick="UI.closeModal()">${IC.x}</button><h3>Rückmeldung an Besitzer</h3></div>
     <div class="modal-body">
@@ -6809,12 +6808,12 @@ const Views={
                        : ' · als Leistung offen erfasst — Honorarsatz noch nicht hinterlegt')
       : '';
     Toast.show((r.sofort
-      ? `Befund an ${h.owner||'den Halter'} zugestellt — verschlüsselt`
+      ? `Messwertbericht an ${h.owner||'die Halterin'} zugestellt — verschlüsselt`
       : `Messwertbericht verschlüsselt im Postausgang — geht raus, sobald das Gerät Netz hat`)+zusatz,
       r.sofort?'ok':'info');
   },
   mailOwner(hid){const h=State.horses.find(x=>x.id===hid);const body=encodeURIComponent($('#ownerTxt').value);
-    const subj=encodeURIComponent(`HRV-Befund ${h.name} · ${State.settings.clinicName||'CARLON Equine'}`);
+    const subj=encodeURIComponent(`Ruhemessung ${h.name} · ${State.settings.clinicName||'CARLON Equine'}`);
     window.open(`mailto:?subject=${subj}&body=${body}`,'_blank');},
   // BESITZER-MODUS — der „iPad umdrehen"-Moment: ruhige Vollbild-Ansicht in Klartext, ohne Fachjargon/Zitate.
   // Große Ampel + ein Satz + einfacher Verlauf. Baut Vertrauen, rechtfertigt das Honorar, bringt den Folgetermin.
@@ -6824,13 +6823,15 @@ const Views={
     if(!rec){Toast.show('Keine Aufnahme vorhanden','warn');return;}
     const tri=rec.triage, lvl=tri.level;
     const COL={crit:'var(--red)',elev:'var(--amber)',watch:'var(--cyan)',stable:'var(--good)'};
-    const STATUS={crit:'Bitte tierärztlich abklären',elev:'Bitte im Blick behalten',watch:'Weitgehend unauffällig',stable:'Alles im grünen Bereich'};
-    const PLAIN={crit:`${h.name} zeigt in dieser Messung auffällige Herzwerte. Wir schauen da am besten zeitnah gemeinsam drauf.`,
-      elev:`${h.name} zeigt leichte Belastungszeichen. Das behalten wir zusammen im Blick.`,
-      watch:`${h.name} ist weitgehend unauffällig — einzelne Werte beobachten wir weiter.`,
-      stable:`${h.name} hat einen ruhigen, entspannten Herzrhythmus. Ein gutes Zeichen für Wohlbefinden und Erholung.`}[lvl];
+    /* 16.11.2026 (HWG § 9): beschreibt die Messung gegen die eigene Basis – keine Aussage über Wohlbefinden,
+       Erholung oder „Herzfitness“. Was der Wert bedeutet, sagt die Tierärztin im Gespräch. */
+    const STATUS={crit:'Deutlich unter der eigenen Basis',elev:'Unter der eigenen Basis',watch:'Etwas unter der eigenen Basis',stable:'Im Bereich der eigenen Basis'};
+    const PLAIN={crit:`Die Ruhemessung von ${h.name} liegt deutlich unter den bisherigen Werten. Was das bedeutet, besprechen wir gemeinsam.`,
+      elev:`Die Ruhemessung von ${h.name} liegt unter den bisherigen Werten. Was das bedeutet, besprechen wir gemeinsam.`,
+      watch:`Die Ruhemessung von ${h.name} liegt etwas unter den bisherigen Werten.`,
+      stable:`Die Ruhemessung von ${h.name} liegt im Bereich der bisherigen Werte.`}[lvl];
     const tr=Triage.trend?Triage.trend(hid):null;
-    const trendTxt=tr?(tr.dir==='up'?'↗ Die Herzfitness verbessert sich':tr.dir==='down'?'↘ Die Herzfitness hat zuletzt nachgelassen':'→ Die Herzfitness bleibt stabil'):'';
+    const trendTxt=tr?(tr.dir==='up'?'↗ Gegenüber der letzten Aufnahme gestiegen':tr.dir==='down'?'↘ Gegenüber der letzten Aufnahme gesunken':'→ Etwa wie bei der letzten Aufnahme'):'';
     const series=recs.map(r=>({x:r.startedAt,y:r.metrics.rmssd})).filter(p=>p.y!=null);
     const chart=series.length>1?Chart.ts(series,{color:COL[lvl],unit:'',h:160,w:660}):'';
     const wrap=document.createElement('div'); wrap.className='owner-mode'; wrap.style.setProperty('--oc',COL[lvl]);
@@ -6842,7 +6843,7 @@ const Views={
         <div class="om-horse">${Views.avatar(h,60)}<div><div class="om-name">${esc(h.name)}</div><div class="om-sub">Herzbericht · ${fmtDate(rec.startedAt)}</div></div></div>
         <div class="om-status"><span class="om-ring"></span><div class="om-st-t"><div class="om-word">${STATUS[lvl]}</div>${trendTxt?`<div class="om-trend">${esc(trendTxt)}</div>`:''}</div></div>
         <p class="om-plain">${esc(PLAIN)}</p>
-        ${chart?`<div class="om-chart"><div class="om-chart-lbl">Herzfitness über die letzten Wochen</div>${chart}</div>`:''}
+        ${chart?`<div class="om-chart"><div class="om-chart-lbl">Ruhe-HRV (RMSSD) über die letzten Wochen</div>${chart}</div>`:''}
         <div class="om-foot">Gemessen mit einem Herzsensor am Sattelgurt — schmerzfrei und ohne Stress fürs Pferd.</div>
       </div>`;
     document.body.appendChild(wrap); document.body.style.overflow='hidden';
@@ -9024,7 +9025,7 @@ const UI={
         </div>
 
         <h1>Was Ihr Pferd Ihnen <em>nicht sagen kann</em></h1>
-        <div class="sub">Sein Herzrhythmus zeigt, wie gut es sich erholt. Sieben Minuten Ruhe genügen —
+        <div class="sub">Eine Ruhemessung zeigt Ihrer Praxis den Verlauf. Sieben Minuten Ruhe genügen —
           beurteilt wird die Messung von jemandem, der Ihr Pferd kennt.</div>
 
         <div class="paar">
@@ -10927,7 +10928,7 @@ const ChartZoom={
     } else if(baev){
       // Dedizierter Baevsky-Vollbild-Viewer: große Gauge + alle Komponenten + Zonen + Formel/Deutung
       const d=host.dataset; const si=parseFloat(d.sqrtsi)||0;
-      const zone=si<7?['Ruhig','var(--good)']:si<15?['Aktiv','var(--cyan)']:si<25?['Stress','var(--amber)']:['Alarm','var(--red)'];
+      const zone=si<7?['Niedrig','var(--good)']:si<15?['Mittel','var(--cyan)']:si<25?['Hoch','var(--amber)']:['Sehr hoch','var(--red)'];
       const gaugeSvg=host.querySelector('svg.viz'); const gclone=gaugeSvg?gaugeSvg.cloneNode(true):document.createElement('div'); gclone.removeAttribute('style');
       body.className='zbody poinca-fs baev-fs'; body.innerHTML='';
       const side=document.createElement('div'); side.className='pfs-side';
@@ -10936,7 +10937,7 @@ const ChartZoom={
         +`<div class="pfs-stat"><span class="k">SI · roh</span><b>${d.si||'–'}</b><span class="s">Baevsky-Index (SI) (unskaliert)</span></div>`
         +`<div class="pfs-stat"><span class="k">Komponenten</span><b style="font-size:17px;line-height:1.3">${d.amo||'–'} % · ${d.mo||'–'} ms · ${d.mxdmn||'–'} ms</b><span class="s">AMo (Modalamplitude) · Mo (Modus) · MxDMn (Variationsbreite)</span></div>`
         +`<div class="pfs-guide"><div class="gh">Zonen · √SI (Stucke 2015)</div>`
-          + [['Ruhig','0–7','var(--good)'],['Aktiv','7–15','var(--cyan)'],['Stress','15–25','var(--amber)'],['Alarm','25+','var(--red)']].map(([n,r,c])=>`<div class="gr"><span style="width:16px;height:4px;border-radius:2px;background:${c};flex:0 0 auto"></span><div class="gt"><b style="color:${c}">${n}</b><span>√SI ${r}</span></div></div>`).join('')
+          + [['Niedrig','0–7','var(--good)'],['Mittel','7–15','var(--cyan)'],['Hoch','15–25','var(--amber)'],['Sehr hoch','25+','var(--red)']].map(([n,r,c])=>`<div class="gr"><span style="width:16px;height:4px;border-radius:2px;background:${c};flex:0 0 auto"></span><div class="gt"><b style="color:${c}">${n}</b><span>√SI ${r}</span></div></div>`).join('')
         +`</div>`
         +`<div class="pfs-hint">√SI = √( AMo / (2 · Mo · MxDMn) )<br>Die Wurzel stabilisiert die Skala. Orientierend, keine equine Norm — individuelle Baseline maßgeblich.</div>`;
       const plot=document.createElement('div'); plot.className='pfs-plot baev-plot'; plot.appendChild(gclone);
@@ -10949,7 +10950,7 @@ const ChartZoom={
       const bb={}; pts.forEach(p=>bb[p.bd]=p);
       const V=bb.VLF||{pw:0,pct:0,f:0}, L=bb.LF||{pw:0,pct:0,f:0}, H=bb.HF||{pw:0,pct:0,f:0};
       const tot=(V.pw+L.pw+H.pw)||1, lfhf=H.pw>0?L.pw/H.pw:0;
-      const ip=lfhf>4?['sympathikoton','var(--amber)']:lfhf<1?['vagoton','var(--good)']:['balanciert','var(--cyan)'];
+      const ip=['beschreibend, kein Balance-Maß','var(--text-secondary)'];   // 16.11.: LF/HF-Balance-Lesart nicht haltbar (Billman 2013)
       const COL={VLF:'#BD85FC',LF:'#FFBD5C',HF:'#66E6FF'};
       const card=(k,fr,mn,d2)=>`<div class="pfs-stat"><span class="k" style="color:${COL[k]}">${k}</span><b>${fmt0(d2.pw)} <small>ms²</small></b><span class="s">${d2.pct}% · ${fr} · ${mn}${d2.f?' · Peak '+d2.f+' Hz':''}</span></div>`;
       body.className='zbody poinca-fs spec-fs'; body.innerHTML='';
@@ -10978,11 +10979,11 @@ const ChartZoom={
       body.className='zbody poinca-fs spec-fs dual-fs'; body.innerHTML='';
       const side=document.createElement('div'); side.className='pfs-side';
       side.innerHTML=`<div class="pfs-hd">Dual-Vitals<span>Belastung (HF) vs. Erholungsreserve (HRV)</span></div>`
-        +`<div class="pfs-stat"><span class="k" style="color:#FFB547">Ø HF</span><b>${fmt0(mHF)} <small>bpm</small></b><span class="s">${fmt0(mnHF)}–${fmt0(mxHF)} bpm · unmittelbare Belastung</span></div>`
-        +(mHV!=null?`<div class="pfs-stat"><span class="k" style="color:var(--cyan)">Ø HRV</span><b>${fmt0(mHV)} <small>ms</small></b><span class="s">${fmt0(mnHV)}–${fmt0(mxHV)} ms · rollendes RMSSD (Reserve)</span></div>`:'')
-        +(corr!=null?`<div class="pfs-stat"><span class="k">Kopplung</span><b style="color:${corr<-0.3?'var(--good)':corr>0.3?'var(--amber)':'var(--text-secondary)'}">r = ${fmt2(corr)}</b><span class="s">${corr<-0.3?'HF↑/HRV↓ gegenläufig — gesundes Reserve-Muster':corr>0.3?'gleichläufig — untypisch, Signal prüfen':'schwach gekoppelt'}</span></div>`:'')
+        +`<div class="pfs-stat"><span class="k" style="color:#FFB547">Ø HF</span><b>${fmt0(mHF)} <small>bpm</small></b><span class="s">${fmt0(mnHF)}–${fmt0(mxHF)} bpm </span></div>`
+        +(mHV!=null?`<div class="pfs-stat"><span class="k" style="color:var(--cyan)">Ø HRV</span><b>${fmt0(mHV)} <small>ms</small></b><span class="s">${fmt0(mnHV)}–${fmt0(mxHV)} ms · rollendes RMSSD</span></div>`:'')
+        +(corr!=null?`<div class="pfs-stat"><span class="k">Kopplung</span><b style="color:${corr<-0.3?'var(--good)':corr>0.3?'var(--amber)':'var(--text-secondary)'}">r = ${fmt2(corr)}</b><span class="s">${corr<-0.3?'HF↑/HRV↓ gegenläufig':corr>0.3?'gleichläufig — Signal prüfen':'schwach gekoppelt'}</span></div>`:'')
         +`<div class="pfs-stat"><span class="k">Schläge</span><b>${n}${af?` <small style="color:var(--amber)">· ${af} Artefakt${af>1?'e':''}</small>`:''}</b><span class="s">${af?'gelbe Rauten = markierte Ausreißer':'keine Artefakte markiert'}</span></div>`
-        +`<div class="pfs-hint">HF = 60000/RR (Gold, links) · HRV = rollendes RMSSD, 30-Beat-Fenster (Cyan, rechts).<br>Gesund: HF und HRV bewegen sich gegenläufig. Stress/sEA: HF hoch bei niedrigem, starrem HRV.</div>`;
+        +`<div class="pfs-hint">HF = 60000/RR (Gold, links) · HRV = rollendes RMSSD, 30-Beat-Fenster (Cyan, rechts).<br>Oft bewegen sich HF und HRV gegenläufig; das beschreibt die Aufnahme, es bewertet sie nicht.</div>`;
       const plot=document.createElement('div'); plot.className='pfs-plot spec-plot'; plot.appendChild(clone);
       body.appendChild(side); body.appendChild(plot);
       $('#zoomTitle').textContent='Dual-Vitals';
@@ -11503,6 +11504,39 @@ const Sprache={
      Der deutsche Satz ist der Schluessel. Sortiert wie die Oberflaeche:
      Navigation, Board, Akte, Station, Karte, Verwaltung, Kauf. */
   WB:{
+    'Im Band':'Within band','Knapp unter dem Band':'Just below the band','Unter dem Band':'Below the band','Knapp darunter':'Just below','Im Band ▸':'Within band ▸','Lage zum Wochenband':'Position in the weekly band','lnRMSSD · Bandmethode':'lnRMSSD · band method',
+    'Die heutige lnRMSSD liegt im Band aus Mittel ± SWC der letzten Aufnahmen.':'Today\'s lnRMSSD lies within the band of mean ± SWC of recent recordings.','Die heutige lnRMSSD liegt bis zu einem SWC unter dem Band.':'Today\'s lnRMSSD lies up to one SWC below the band.','Die heutige lnRMSSD liegt mehr als ein SWC unter dem Band. Protokoll und Umstände der Aufnahme prüfen; die Einordnung liegt bei Ihnen.':'Today\'s lnRMSSD lies more than one SWC below the band. Check protocol and circumstances of the recording; the interpretation is yours.',
+    /* 16.11.2026 – neutrale Panel- und Halter-Texte */
+    'Ruhe-HF sinkt · RMSSD steigt':'Resting HR falling · RMSSD rising',
+    'Ruhe-HF steigt · RMSSD sinkt':'Resting HR rising · RMSSD falling',
+    'Ruhewerte etwa gleichbleibend':'Resting values roughly unchanged',
+    'Über den Zeitraum sinkt die Ruhe-Herzfrequenz und/oder steigt die RMSSD. Beim Pferd ist das kein Nachweis besserer Kondition.':'Over the period resting heart rate falls and/or RMSSD rises. In horses this is not proof of better fitness.',
+    'Über den Zeitraum steigt die Ruhe-Herzfrequenz bei sinkender RMSSD. Protokoll und Umstände der Aufnahmen prüfen; die Einordnung liegt bei Ihnen.':'Over the period resting heart rate rises while RMSSD falls. Check protocol and circumstances of the recordings; the interpretation is yours.',
+    'Ruhe-Herzfrequenz und RMSSD ändern sich über den Zeitraum kaum.':'Resting heart rate and RMSSD barely change over the period.',
+    'RMSSD (eigene Basis)':'RMSSD (own baseline)',
+    'Beschreibender Trend aus wiederholten Ruheaufnahmen (lineare Regression) –':'Descriptive trend from repeated resting recordings (linear regression) –',
+    'kein Konditions- oder Leistungsnachweis.':'no proof of fitness or performance.',
+    'Niedrig':'Low',
+    'Mittel':'Medium',
+    'Hoch':'High',
+    'Sehr hoch':'Very high',
+    'langgestreckt und breit':'elongated and wide',
+    'langgestreckt und schmal':'elongated and narrow',
+    'rund und kompakt':'round and compact',
+    'Herzfrequenz und rollendes RMSSD (30 Schläge) über die Zeit. Steigt der Puls kurz an, fällt die HRV oft im selben Moment – so grenzen Sie ruhige Abschnitte ein. Tippen zeigt beide Werte ·':'Heart rate and rolling RMSSD (30 beats) over time. If the pulse rises briefly, HRV often falls at the same moment – this marks out calm sections. Tap shows both values ·',
+    'HF↑/HRV↓ gegenläufig':'HR↑/HRV↓ opposite',
+    'gleichläufig — Signal prüfen':'in step — check signal',
+    'beschreibend, kein Balance-Maß':'descriptive, not a balance measure',
+    'Deutlich unter der eigenen Basis':'Clearly below own baseline',
+    'Unter der eigenen Basis':'Below own baseline',
+    'Etwas unter der eigenen Basis':'Slightly below own baseline',
+    'Im Bereich der eigenen Basis':'Within own baseline',
+    '↗ Gegenüber der letzten Aufnahme gestiegen':'↗ Higher than the last recording',
+    '↘ Gegenüber der letzten Aufnahme gesunken':'↘ Lower than the last recording',
+    '→ Etwa wie bei der letzten Aufnahme':'→ About the same as the last recording',
+    'Ruhe-HRV (RMSSD) über die letzten Wochen':'Resting HRV (RMSSD) over recent weeks',
+    'Eine Ruhemessung zeigt Ihrer Praxis den Verlauf. Sieben Minuten Ruhe genügen —':'A resting recording shows your practice the course. Seven minutes of rest are enough —',
+
     'Artefakte':'Artefacts',
     'Lange Pausen':'Long pauses',
 
@@ -11919,7 +11953,7 @@ const Sprache={
     'Poincaré-Plot':'Poincaré plot',
     'Jeder Punkt = ein Herzschlag (RRₙ) gegen den nächsten (RRₙ₊₁).':'Each point is one heartbeat (RRₙ) against the next (RRₙ₊₁).',
     '(quer zur Diagonale) = Kurzzeit-/Vagus-Variabilität,':'(across the diagonal) = short-term / vagal variability,',
-    '(entlang) = Langzeit-Variabilität. Kompakte Wolke = geringe HRV, breite Wolke = flexibles autonomes Nervensystem. ·':'(along it) = long-term variability. A compact cloud means low HRV, a wide cloud a flexible autonomic nervous system. ·',
+    '(entlang) = Langzeit-Variabilität. Kompakte Wolke = geringe Streuung, breite Wolke = große Streuung. ·':'(along it) = long-term variability. A compact cloud means low spread, a wide cloud large spread. ·',
     'SD2/SD1-Ratio · sympatho-vagale Balance':'SD2/SD1 ratio · sympatho-vagal balance',
     'Frequenz-Spektrum':'Frequency spectrum',
     'FREQUENZ':'FREQUENCY',
