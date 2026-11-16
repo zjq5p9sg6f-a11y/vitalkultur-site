@@ -124,14 +124,15 @@
     cv.addEventListener('pointerdown', function (e) { if (zwei) return; try { cv.setPointerCapture(e.pointerId); } catch (_) {}
       var gezoomt = (vhi - vlo) < (hi - lo) - 1;
       druck = { x: e.clientX, y: e.clientY, t: Date.now(), war: fest, schieben: e.pointerType === 'mouse' && gezoomt && e.shiftKey };
-      if (!druck.schieben) { var i = suche(e); druck.idx = i; if (i != null && i !== fest) zeige(i); } });
+      /* Wie in der iOS-App (16.11.2026, Jan): steht das Fadenkreuz, blendet ein erneuter Tipp es aus – erst Ziehen setzt es neu. */
+      if (!druck.schieben) { var i = suche(e); druck.idx = i; if ((fest == null || e.pointerType === 'mouse') && i != null && i !== fest) zeige(i); } });
     cv.addEventListener('pointermove', function (e) { if (zwei) return;
       if (druck) { if (druck.schieben) { schieb(e.clientX - druck.x); druck.x = e.clientX; return; }
-        if (Math.hypot(e.clientX - druck.x, e.clientY - druck.y) > 2) druck.bewegt = true; folge(e); }
+        if (Math.hypot(e.clientX - druck.x, e.clientY - druck.y) > (e.pointerType === 'mouse' ? 2 : 8)) druck.bewegt = true; if (druck.bewegt || druck.war == null || e.pointerType === 'mouse') folge(e); }
       else if (e.pointerType === 'mouse') folge(e); });
     cv.addEventListener('pointerleave', function (e) { if (e.pointerType === 'mouse' && !druck) zeige(null); });
     cv.addEventListener('pointerup', function (e) { if (!druck) return; var kurz = !druck.bewegt && Date.now() - druck.t < 300;
-      if (kurz && druck.war != null && druck.idx === druck.war) zeige(null); druck = null; });
+      if (kurz && druck.war != null && (e.pointerType !== 'mouse' || druck.idx === druck.war)) zeige(null); druck = null; });
     cv.addEventListener('pointercancel', function () { druck = null; });
     var t2 = null, letzterTipp = 0;
     cv.addEventListener('touchstart', function (e) { if (e.touches.length === 2) { e.preventDefault(); zwei = true; druck = null; var a = e.touches[0], b = e.touches[1]; t2 = { d: Math.hypot(a.clientX - b.clientX, a.clientY - b.clientY), x: (a.clientX + b.clientX) / 2 }; }
