@@ -3915,7 +3915,9 @@ function onBeat(ev){
   if(flags&0x10){
     S.rrGesehen=true;
     while(off+2<=v.byteLength){
-      const rrMs=Math.round(v.getUint16(off,true)*1000/1024);
+      /* Ungerundet (Kreistest 16.11.2026): der Gurt misst in 1/1024 s (0,977 ms). Auf ganze ms zu runden verlor
+         bis zu 0,5 ms je Schlag und brach die Bit-Identität zur Gurt-Reihe, die Export und Prüfwert zusichern. */
+      const rrMs=v.getUint16(off,true)*1000/1024;
       S.letzterSchlagMs=Date.now(); /* Totmannschalter-Futter (tick) */
       if(S.rr.length<50000) S.rr.push(rrMs);
       off+=2;
