@@ -513,6 +513,54 @@ svg.ic{width:20px;height:20px;flex:0 0 auto;fill:none;stroke:var(--cyan);stroke-
 @media(hover:none){.nur-maus{display:none}.nur-touch{display:inline}}
 .geraete-praxis{margin:var(--sp-13) 0 0;font-size:var(--t-klein,14px);color:var(--text-secondary);line-height:1.6;max-width:62ch}
 
+.fokus-fenster{position:fixed;inset:0;z-index:200;background:#000;display:flex;flex-direction:column;opacity:0;transform:translateY(18px);transition:opacity .3s,transform .35s cubic-bezier(.2,.8,.2,1);padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+.fokus-fenster.auf{opacity:1;transform:none}
+.ff-kopf{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 16px 10px;border-bottom:1px solid var(--border-subtle)}
+.ff-titel{font-family:var(--font-brand);letter-spacing:.08em;font-size:15px;color:var(--text-primary)}
+.ff-zu{width:40px;height:40px;border-radius:50%;border:1px solid rgba(255,255,255,.22);background:rgba(255,255,255,.08);color:#fff;font-size:16px;-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px)}
+.fokus-fenster iframe{flex:1;width:100%;border:0;opacity:0;transition:opacity .4s}
+.fokus-fenster.da iframe{opacity:1}.fokus-fenster.da .ff-lade{display:none}
+.ff-lade{position:absolute;left:0;right:0;top:45%;text-align:center;color:var(--text-dim);font-size:13px;letter-spacing:.04em}
+.ff-fuss{padding:10px 16px 12px;text-align:center;font-size:11.5px;color:var(--text-dim);letter-spacing:.03em;border-top:1px solid var(--border-subtle)}
+html.ff-offen,html.ff-offen body{overflow:hidden}
+html.ff-offen .leiste{display:none}
+
+@media(max-width:720px){
+  
+  .m-wisch,.hb-geraete{scroll-snap-type:x mandatory;scroll-padding-inline:16px}
+  .m-wisch>*,.hb-geraete>*{scroll-snap-align:center;scroll-snap-stop:always}
+  .wisch-punkte{display:flex;justify-content:center;gap:7px;margin:4px 0 0}
+  .wisch-punkte i{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.22);transition:width .25s,background .25s}
+  .wisch-punkte i.an{width:18px;border-radius:3px;background:var(--cyan)}
+  .swipe-hint{display:none!important}
+  
+  .ablauf.m-wisch li{display:block!important;padding:20px 20px 22px;border:1px solid var(--border-subtle);border-radius:16px;background:linear-gradient(160deg,rgba(255,255,255,.035),rgba(255,255,255,.01))}
+  .ablauf.m-wisch li .ab-bild{width:120px;margin:0 0 14px!important}
+  .ablauf.m-wisch li .ab-bild::after{display:none!important}
+  
+  table.geraete thead{display:none}
+  table.geraete tr{display:grid;grid-template-columns:1fr auto;gap:2px 14px;padding:12px 0;border-bottom:1px solid var(--border-subtle)}
+  table.geraete td{display:block;padding:0!important;border:0!important}
+  table.geraete td:first-child{color:var(--text-primary);font-weight:500}
+  table.geraete td.nein{grid-column:1 / -1;font-size:13.5px;line-height:1.5}
+  
+  .grafik.geteilt{overflow:visible!important;margin-right:0!important;padding-right:0!important}
+  .grafik.geteilt>svg{display:none!important}
+  .grafik-teil{width:100%!important;max-width:none!important;height:auto;display:block;overflow:visible;margin:0 0 14px}
+  
+  .hb-geraete{gap:22px!important;padding:8px 10vw 40px!important;align-items:flex-end!important}
+  .hb-geraete .hero-shot,.hero-tour{width:80vw!important}
+  .hb-geraete .hero-phone{width:44vw!important;margin:0 18vw}
+  .hb-geraete .g-marke{top:auto!important;bottom:-30px!important;left:50%!important;transform:translateX(-50%);font-size:12.5px!important}
+  .hero-buehne .fc-klein{display:none!important}
+  .hero-buehne .wisch-punkte{margin-top:-6px}
+  .hero-buehne .fc-gross{display:block!important;text-align:center;margin:6px 16px 0}
+  .hero-buehne{margin-top:var(--sp-34)!important}
+  
+  .leiste{transition:transform .35s cubic-bezier(.2,.8,.2,1),opacity .35s}
+  .leiste.weg{transform:translate(-50%,160%)!important;opacity:0}
+}
+
 @media(max-width:720px){
   .m-wisch{display:flex!important;flex-direction:row!important;flex-wrap:nowrap!important;grid-template-columns:none!important;overflow-x:auto;gap:14px!important;
     margin-left:-16px!important;margin-right:-16px!important;padding:4px 16px 12px!important;scrollbar-width:none;-webkit-overflow-scrolling:touch;list-style:none}
@@ -930,6 +978,7 @@ try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; 
   var nav = (performance.getEntriesByType && performance.getEntriesByType('navigation')[0] || {}).type;
   var fremd = von && von.replace(/en\/$/, '') !== location.pathname.replace(/en\/$/, '');
   if (location.hash && fremd && nav === 'navigate') return;
+  window.vkStartAnker = location.hash;   // für den Web-Prüfstand (Simulator): Anker merken, bevor er entfernt wird
   if (location.hash) try { history.replaceState(null, '', location.pathname + location.search); } catch (e) {}
   window.scrollTo(0, 0);
   var selbst = false, merk = function () { selbst = true; };
@@ -1109,8 +1158,8 @@ try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; 
     </ol>
     <div class="ab-nachricht">
       <div class="ab-nachricht-kopf"><svg class="ic" aria-hidden="true"><use href="#i-phone"/></svg>How your link reaches the owner</div>
-      <p class="ab-blase-text">Hello, this is <b>your practice</b>. As discussed, the measuring link for <b>your horse</b>: please record at least seven minutes at rest in the usual stall and share the file with us. You need the Polar H10 strap and an Android phone or a computer with Chrome or Edge. If you only have an iPhone, please let us know. The recording is an observation over time and does not replace an examination. If anything worries you, please call us. <span class="ab-url">vitalkultur.com/…/messen.html?…</span></p>
-      <p class="ab-nachricht-fuss">The message is prepared in the cockpit, with your practice name and the horse’s name. One tap in the record opens WhatsApp or a text message to the stored number. For all clients there is also a shared link as a QR poster.</p>
+      <p class="ab-blase-text">Hello, this is <b>your practice</b>. As discussed, here is the link for the resting recording of <b>your horse</b>.<br><br>How it works: put on the Polar H10 strap, open the link and record at least seven minutes at rest in the usual stall. Then share the file with us in one tap. You need an Android phone or a computer with Chrome or Edge. If you only have an iPhone, just let us know.<br><br>The recording is for following the trend and does not replace an examination. If anything worries you, please call us: <b>your number</b><br><br>Kind regards<br><b>your name</b><br> <span class="ab-url">vitalkultur.com/…/messen.html?…</span></p>
+      <p class="ab-nachricht-fuss">You write the text once in the practice settings, in your own words, with a preview. The cockpit fills in practice, horse, your name and your number on every send. One tap in the record opens WhatsApp or a text message to the stored number. For all clients there is also a shared link as a QR poster.</p>
     </div>
     <div class="ab-wege m-wisch">
       <div class="ab-weg"><span class="ab-wer">With your link</span><h3>Sealed and already assigned</h3>
@@ -1966,6 +2015,24 @@ if(_lb) _lb.addEventListener('click', function(){
 })();
 </script>
 
+<script>
+
+(function(){
+  if(!(window.matchMedia&&matchMedia('(max-width:720px)').matches)) return;
+  [].slice.call(document.querySelectorAll('.m-wisch,.hb-geraete')).forEach(function(row){
+    var kids=[].slice.call(row.children).filter(function(c){return c.offsetWidth>0;}); if(kids.length<2) return;
+    var p=document.createElement('div'); p.className='wisch-punkte'; p.setAttribute('aria-hidden','true');
+    kids.forEach(function(){p.appendChild(document.createElement('i'));}); row.parentNode.insertBefore(p,row.nextSibling);
+    var setze=function(){var m=row.scrollLeft+row.clientWidth/2,best=0,bd=1e9;kids.forEach(function(k,i){var c=k.offsetLeft+k.offsetWidth/2-row.offsetLeft;var d=Math.abs(c-m);if(d<bd){bd=d;best=i;}});[].forEach.call(p.children,function(d,i){d.classList.toggle('an',i===best);});};
+    var t=null; row.addEventListener('scroll',function(){if(t) cancelAnimationFrame(t); t=requestAnimationFrame(setze);},{passive:true}); setze();
+  });
+  var teile=[['.grafik-verlauf',['0 0 230 300','245 0 516 300']],['figure.grafik[aria-label^="RMSSD vor und während"]',['0 0 372 240','352 0 408 240']]];
+  teile.forEach(function(d){var f=document.querySelector(d[0]); if(!f) return; var s=f.querySelector('svg'); if(!s) return;
+    d[1].forEach(function(vb){var c=s.cloneNode(true); c.setAttribute('viewBox',vb); c.classList.add('grafik-teil'); f.insertBefore(c,s);}); f.classList.add('geteilt');});
+  var l=document.getElementById('leiste'); if(!l) return; var y0=scrollY;
+  addEventListener('scroll',function(){var y=scrollY; if(Math.abs(y-y0)<10) return; l.classList.toggle('weg',y>y0&&y>200); y0=y;},{passive:true});
+})();
+</script>
 <div class="leiste" id="leiste" hidden><span class="leiste-t">CARLON Equine Visite · from €149 net/month</span><a class="leiste-b2" href="#preis">Plans</a><a class="leiste-b" href="/carlon-equine/app/?demo=today">Open demo →</a></div>
 
 <script src="/assets/app-tour/app-tour.js?v=14" defer></script>
@@ -1992,9 +2059,23 @@ if(_lb) _lb.addEventListener('click', function(){
   var still=window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches;
   
   var telefon=window.matchMedia&&matchMedia('(max-width: 700px)').matches;
-  if(telefon){ boxen.forEach(function(box){ var a=box.querySelector('.schau-voll'); var h=box.querySelector('.schau-hinweis');
-      if(h){ h.lastChild.textContent=(document.documentElement.lang||'de').indexOf('en')===0?'Tap to open the cockpit':'Antippen öffnet das Cockpit'; h.hidden=false; }
-      box.style.cursor='pointer'; box.addEventListener('click',function(e){ if(a&&!e.target.closest('a')) location.href=a.href; });
+  
+  var EN=(document.documentElement.lang||'de').indexOf('en')===0, ff=null;
+  function fokusAuf(box){ var src=box.getAttribute('data-schau')+'&nur=1', titel=(box.querySelector('.g-marke')||{}).textContent||box.getAttribute('data-titel')||'';
+    titel=titel.replace(/^\d+/,'').trim();
+    if(!ff){ ff=document.createElement('div'); ff.className='fokus-fenster'; ff.setAttribute('role','dialog'); ff.setAttribute('aria-modal','true');
+      ff.innerHTML='<div class="ff-kopf"><span class="ff-titel"></span><button type="button" class="ff-zu" aria-label="'+(EN?'Close':'Schließen')+'">✕</button></div><div class="ff-lade">'+(EN?'Loading the real cockpit …':'Echtes Cockpit lädt …')+'</div><iframe title="CARLON Cockpit"></iframe><div class="ff-fuss">'+(EN?'Real cockpit · demo horse · stays on this device':'Echtes Cockpit · Demo-Pferd · bleibt auf diesem Gerät')+'</div>';
+      document.body.appendChild(ff); ff.querySelector('.ff-zu').addEventListener('click',fokusZu);
+      ff.querySelector('iframe').addEventListener('load',function(){ setTimeout(function(){ ff.classList.add('da'); },700); }); }
+    ff.querySelector('.ff-titel').textContent=titel; ff.classList.remove('da'); var f=ff.querySelector('iframe'); if(f.getAttribute('src')!==src) f.setAttribute('src',src); else ff.classList.add('da');
+    ff.hidden=false; document.documentElement.classList.add('ff-offen'); requestAnimationFrame(function(){ ff.classList.add('auf'); });
+    try{ history.pushState({ff:1},''); }catch(e){} }
+  function fokusZu(ev){ if(!ff||ff.hidden) return; ff.classList.remove('auf'); document.documentElement.classList.remove('ff-offen'); setTimeout(function(){ ff.hidden=true; },300);
+    if(ev&&ev.type!=='popstate'){ try{ if(history.state&&history.state.ff) history.back(); }catch(e){} } }
+  addEventListener('popstate',fokusZu);
+  if(telefon){ boxen.forEach(function(box){ var a=box.querySelector('.schau-voll'); var h=box.querySelector('.schau-hinweis'); var fokus=/[?&]fokus=/.test(box.getAttribute('data-schau'));
+      if(h){ h.lastChild.textContent=fokus?(EN?'Tap to try it yourself':'Antippen und selbst ausprobieren'):(EN?'Tap to open the cockpit':'Antippen öffnet das Cockpit'); h.hidden=false; }
+      box.style.cursor='pointer'; box.addEventListener('click',function(e){ if(e.target.closest('a')&&!fokus) return; e.preventDefault(); if(fokus) fokusAuf(box); else if(a) location.href=a.href; });
       var v=box.querySelector('video'); if(v&&!v.hasAttribute('autoplay')&&!still&&'IntersectionObserver' in window){ var vo=new IntersectionObserver(function(es){ es.forEach(function(x){ if(x.isIntersecting){ v.preload='auto'; v.loop=true; var pr=v.play(); if(pr&&pr.catch) pr.catch(function(){}); vo.disconnect(); } }); },{threshold:0.5}); vo.observe(box); }
       if(v&&v.hasAttribute('autoplay')) v.loop=true; });
     return; }

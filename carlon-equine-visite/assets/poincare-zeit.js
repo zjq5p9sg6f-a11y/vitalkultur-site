@@ -53,7 +53,7 @@
     function zeichne(hl) {
       var c = cv.getContext('2d'); c.setTransform(dpr, 0, 0, dpr, 0, 0); c.clearRect(0, 0, S, S);
       c.fillStyle = '#0b0b0c'; c.fillRect(M.l, M.t, S - M.l - M.r, S - M.t - M.b);
-      var tk = nett(vlo, vhi, 6), fein = tk.schritt / 2; c.lineWidth = 1;
+      /* Telefon (16.11.): Achsenzahlen nie überlappend – höchstens eine Beschriftung je 64 px */ var tk = nett(vlo, vhi, Math.max(3, Math.min(6, Math.floor((S - M.l - M.r) / 64)))), fein = tk.schritt / 2; c.lineWidth = 1;
       for (var v = Math.ceil(vlo / fein) * fein; v <= vhi; v += fein) { var grob = tk.werte.indexOf(Math.round(v)) >= 0; c.strokeStyle = grob ? GRID2 : GRID;
         c.beginPath(); c.moveTo(X(v), M.t); c.lineTo(X(v), S - M.b); c.stroke(); c.beginPath(); c.moveTo(M.l, Y(v)); c.lineTo(S - M.r, Y(v)); c.stroke(); }
       c.fillStyle = TXT; c.font = '11px ui-monospace, Menlo, monospace'; c.textAlign = 'center';

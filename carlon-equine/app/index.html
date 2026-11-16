@@ -43,6 +43,11 @@
 .pcard .metric{white-space:nowrap}
 .pc-right .trend{display:inline-flex;align-items:baseline}
 @media print{html,body{background:#fff!important}body::before,body::after{display:none!important}}
+html.nur body *:not([data-nur-pfad]):not([data-nur]):not([data-nur] *):not(script):not(style){display:none!important}
+html.nur [data-nur-pfad]:not(html):not(body){padding-top:0!important;margin-top:0!important;border:0!important;background:none!important;box-shadow:none!important}
+html.nur,html.nur body{background:#000!important}
+html.nur body,html.nur #main{padding:10px 12px 28px!important;margin:0!important}
+html.nur .verlauf-grid{grid-template-columns:1fr!important}
 </style>
 <link rel="stylesheet" href="assets/leaflet/leaflet.css">
 <style>
@@ -405,7 +410,7 @@ main{flex:1;overflow-y:auto;overflow-x:hidden;position:relative}
 /* ── Adress-Zeile mit Navi ── */
 .taddr{display:flex;align-items:center;gap:7px;margin-top:8px;padding:5px 4px;width:100%;background:transparent;border:none;border-radius:8px;color:var(--text-secondary);font-size:13px;font-weight:500;text-align:left}
 .taddr>svg{width:14px;height:14px;color:var(--text-dim);flex-shrink:0}
-.taddr>span{flex:1;min-width:0;color:var(--text-secondary);font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.taddr>span{flex:1;min-width:0;color:var(--text-secondary);font-weight:500;overflow-wrap:break-word}
 .taddr>em{display:inline-flex;align-items:center;gap:4px;font-style:normal;font-size:12px;font-weight:600;color:var(--cyan-strong);flex-shrink:0}
 .taddr>em svg{width:13px;height:13px}
 .taddr>em{color:var(--cyan-strong)}
@@ -473,11 +478,11 @@ h2.sech svg{width:17px;height:17px;color:var(--cyan);flex:none}
 .tstop .tname .tdomain{display:inline-flex;align-items:center;gap:5px;font-size:10px;font-weight:700;letter-spacing:.05em;padding:1px 9px 1px 7px;border-radius:6px;text-transform:uppercase;background:color-mix(in srgb,currentColor 15%,transparent);border:1px solid color-mix(in srgb,currentColor 35%,transparent)}
 .tstop .tname .tdomain svg{width:13px;height:13px;flex-shrink:0}
 .tstop.crit .tsev{background:var(--red-g);color:var(--red)}.tstop.elev .tsev{background:var(--amber-g);color:var(--amber)}.tstop.watch .tsev{background:var(--cyan-g3);color:var(--cyan-strong)}.tstop.stable .tsev{background:var(--good-g);color:var(--good)}
-.tstop .tmeta{font-size:12px;color:var(--text-secondary);margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tstop .tmeta{font-size:12px;color:var(--text-secondary);margin-top:3px;overflow-wrap:break-word}
 .tstop .towner{display:flex;align-items:center;gap:7px;font-size:13px;color:var(--text-dim);margin-top:5px;min-width:0}
 .tstop .towner svg{width:14px;height:14px;color:var(--text-dim);flex-shrink:0}
 .tstop .towner .tow-txt{display:flex;flex-direction:column;min-width:0;line-height:1.28}
-.tstop .towner b{color:var(--text-primary);font-weight:600;font-size:14.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tstop .towner b{color:var(--text-primary);font-weight:600;font-size:14.5px;overflow-wrap:break-word}
 .tstop .towner em{font-style:normal;font-size:12px;color:var(--text-dim);font-variant-numeric:tabular-nums}
 @media(max-width:560px){
   .tstop{padding:15px 16px 16px 14px}
@@ -611,8 +616,8 @@ h2.sech svg{width:17px;height:17px;color:var(--cyan);flex:none}
 .admit-row{display:flex;align-items:center;gap:11px;padding:10px 12px;border:1px solid var(--border-faint);background:var(--bg-deep);border-radius:var(--r-m);cursor:pointer;text-align:left;transition:border-color .15s,background .15s}
 .admit-row:hover{border-color:var(--cyan-g2);background:var(--cyan-faint)}
 .admit-row .ar-txt{min-width:0;flex:1}
-.admit-row .ar-txt b{font-size:14px;font-weight:600;display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.admit-row .ar-txt span{font-size:11.5px;color:var(--text-dim);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:block}
+.admit-row .ar-txt b{font-size:14px;font-weight:600;display:block;overflow-wrap:break-word}
+.admit-row .ar-txt span{font-size:11.5px;color:var(--text-dim);overflow-wrap:break-word;display:block}
 .admit-row .ar-add{flex-shrink:0;color:var(--cyan-strong)} .admit-row .ar-add svg{width:18px;height:18px}
 .qs-actions{display:flex;flex-direction:column;gap:6px}
 .qs-act{display:flex;align-items:center;gap:11px;padding:13px 14px;border:1px solid var(--border-faint);background:var(--bg-deep);border-radius:var(--r-m);cursor:pointer;text-align:left;font-size:14px;font-weight:600;color:var(--text-primary);transition:border-color .15s,background .15s}
@@ -625,8 +630,8 @@ h2.sech svg{width:17px;height:17px;color:var(--cyan);flex:none}
 .st-flag svg{width:12px;height:12px}
 .st-ok{display:inline-flex;color:var(--good);opacity:.7} .st-ok svg{width:15px;height:15px}
 .st-id{display:flex;align-items:center;gap:9px;min-width:0}
-.st-name{font-family:var(--font-brand);font-size:16px;font-weight:600;line-height:1.1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.st-stable{font-size:11px;color:var(--text-dim);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.st-name{font-family:var(--font-brand);font-size:16px;font-weight:600;line-height:1.1;overflow-wrap:break-word}
+.st-stable{font-size:11px;color:var(--text-dim);overflow-wrap:break-word}
 .st-vitals{display:flex;gap:14px;align-items:baseline;padding-top:2px}
 .st-hr b,.st-delta b{font-family:var(--font-brand);font-size:24px;font-weight:600;font-variant-numeric:tabular-nums;line-height:1}
 .st-hr small,.st-delta small{display:block;font-size:9.5px;letter-spacing:.05em;text-transform:uppercase;color:var(--text-dim);margin-top:3px}
@@ -637,7 +642,7 @@ h2.sech svg{width:17px;height:17px;color:var(--cyan);flex:none}
 .st-si-fill{height:100%;border-radius:3px;transition:width .4s ease}
 .st-si-lbl{font-size:10px;color:var(--text-dim);letter-spacing:.02em}
 .st-spark{opacity:.9;margin-top:1px}
-.st-foot{font-size:10.5px;color:var(--text-faint);border-top:1px solid var(--border-faint);padding-top:8px;margin-top:auto;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.st-foot{font-size:10.5px;color:var(--text-faint);border-top:1px solid var(--border-faint);padding-top:8px;margin-top:auto;overflow-wrap:break-word}
 .station-note{display:flex;gap:9px;align-items:flex-start;margin-top:var(--s4);padding:13px 15px;background:var(--bg-deep);border:1px solid var(--border-faint);border-radius:var(--r-m);font-size:12px;line-height:1.5;color:var(--text-dim)}
 .station-note svg{width:16px;height:16px;flex-shrink:0;margin-top:1px;color:var(--text-dim)}
 .station-note b{color:var(--text-secondary)}
@@ -700,7 +705,7 @@ h2.sech svg{width:17px;height:17px;color:var(--cyan);flex:none}
 /* Top-Kunden (Umsatz) */
 .cust-list{display:flex;flex-direction:column;gap:12px;margin-top:4px}
 .cust-row .cr-top{display:flex;justify-content:space-between;align-items:baseline;gap:10px;margin-bottom:5px}
-.cust-row .cr-top b{font-size:13.5px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cust-row .cr-top b{font-size:13.5px;font-weight:600;overflow-wrap:break-word}
 .cust-row .cr-top span{font-family:var(--font-brand);font-size:14px;font-weight:600;font-variant-numeric:tabular-nums;flex-shrink:0}
 .cr-bar{height:6px;border-radius:3px;background:var(--bg-elev);overflow:hidden}
 .cr-fill{height:100%;border-radius:3px;background:linear-gradient(90deg,var(--good),var(--cyan))}
@@ -748,8 +753,8 @@ b.mdelta.bad{color:var(--red)}b.mdelta.warn{color:var(--amber)}b.mdelta.ok{color
 .pcard .foot .age{margin-left:auto;color:var(--text-dim)}
 .pcard .pc-owner{display:flex;align-items:center;gap:6px;margin-top:10px;padding-top:10px;border-top:1px solid var(--border-faint);font-size:12px;color:var(--text-dim);min-width:0}
 .pcard .pc-owner>svg{width:13px;height:13px;flex-shrink:0}
-.pcard .pc-owner b{color:var(--text-secondary);font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;flex-shrink:1;min-width:0}
-.pcard .pc-owner>span{color:var(--text-dim);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;flex-shrink:2;min-width:0}
+.pcard .pc-owner{flex-wrap:wrap}.pcard .pc-owner b{color:var(--text-secondary);font-weight:600;overflow-wrap:break-word;flex-shrink:1;min-width:0}
+.pcard .pc-owner>span{color:var(--text-dim);overflow-wrap:break-word;flex-shrink:2;min-width:0}
 .pcard .pc-call{margin-left:auto;width:30px;height:30px;border-radius:8px;display:inline-flex;align-items:center;justify-content:center;background:var(--good-g);border:1px solid var(--good);color:var(--good);flex-shrink:0}
 .pcard .pc-call>svg{width:15px;height:15px}
 .pcard .pc-call:hover{background:var(--good);color:var(--bg-void)}
@@ -790,10 +795,10 @@ h2 svg.ic{width:20px;height:20px}
 .hrow.crit{border-left-color:var(--red)}.hrow.elev{border-left-color:var(--amber)}.hrow.watch{border-left-color:var(--cyan)}.hrow.stable{border-left-color:var(--good)}
 .hrow:hover{border-color:var(--border-strong);box-shadow:0 10px 30px -16px rgba(0,0,0,.8)}
 .hrow .hr-top{display:flex;align-items:center;gap:12px}
-.hrow .hr-name{min-width:0;flex:1}
-.hrow .hr-name b{font-size:16.5px;font-weight:700;display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;cursor:pointer;letter-spacing:-.015em}
+.hrow .hr-top{flex-wrap:wrap}.hrow .hr-name{min-width:0;flex:1 1 170px}.hr-sammel,.chip,.tri-badge{white-space:nowrap}
+.hrow .hr-name b{font-size:16.5px;font-weight:700;display:block;overflow-wrap:break-word;cursor:pointer;letter-spacing:-.015em}
 .hrow .hr-name b:hover{color:var(--cyan-strong)}
-.hrow .hr-name .sub{font-size:12px;color:var(--text-dim);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:1px}
+.hrow .hr-name .sub{font-size:12px;color:var(--text-dim);overflow-wrap:break-word;margin-top:1px}
 .hrow .hr-name .sub a{color:var(--text-secondary)}
 .hrow .hr-top .tri-badge{margin-left:auto;flex-shrink:0}
 .hrow .hr-vitals{display:flex;align-items:center;gap:20px;flex-wrap:wrap;padding-left:52px}
@@ -845,8 +850,8 @@ h2 svg.ic{width:20px;height:20px}
 .ss-item:last-child{border-bottom:0}
 .ss-item:hover,.ss-item.active{background:var(--cyan-faint)}
 .ss-item .ss-txt{flex:1;min-width:0}
-.ss-item .ss-txt b{display:block;font-size:14px;font-weight:600;color:var(--text-primary);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.ss-item .ss-txt span{display:block;font-size:12px;color:var(--text-dim);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ss-item .ss-txt b{display:block;font-size:14px;font-weight:600;color:var(--text-primary);overflow-wrap:break-word}
+.ss-item .ss-txt span{display:block;font-size:12px;color:var(--text-dim);overflow-wrap:break-word}
 .ss-item .ss-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
 .ss-item .ss-dot.crit{background:var(--red)}.ss-item .ss-dot.elev{background:var(--amber)}.ss-item .ss-dot.watch{background:var(--cyan)}.ss-item .ss-dot.stable{background:var(--good)}
 .ss-empty{padding:14px;text-align:center;font-size:12.5px;color:var(--text-dim)}
@@ -973,9 +978,9 @@ h2 svg.ic{width:20px;height:20px}
 .stop .sowner{font-size:12.5px;color:var(--text-dim);display:flex;align-items:center;gap:6px;min-width:0}
 .stop .sowner svg{width:13px;height:13px;flex-shrink:0}
 .stop .sowner .sow-txt{display:flex;flex-direction:column;min-width:0;line-height:1.25}
-.stop .sowner b{color:var(--text-primary);font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.stop .sowner b{color:var(--text-primary);font-weight:600;overflow-wrap:break-word}
 .stop .sowner em{font-style:normal;color:var(--text-dim);font-variant-numeric:tabular-nums}
-.stop .splace{font-size:11.5px;color:var(--text-dim);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.stop .splace{font-size:11.5px;color:var(--text-dim);overflow-wrap:break-word}
 .stop .splace b{color:var(--text-secondary);font-weight:600;font-family:var(--font-mono)}
 .stop .sright{display:flex;flex-direction:column;align-items:flex-end;gap:8px;flex-shrink:0}
 .stop .sdist{font-size:12px;color:var(--text-secondary);font-family:var(--font-mono);font-weight:600;white-space:nowrap}
@@ -994,10 +999,10 @@ h2 svg.ic{width:20px;height:20px}
 .route-stats b{color:var(--text-primary);font-weight:600;font-variant-numeric:tabular-nums}
 .route-stats .rs-late{color:var(--amber);font-weight:700}
 .detail-owner{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-top:12px;padding:10px 12px;background:var(--bg-elev);border:1px solid var(--border-subtle);border-radius:12px;max-width:440px}
-.detail-owner .do-id{display:flex;align-items:center;gap:8px;min-width:0;flex:1}
+/* 16.11.: Name nie abschneiden (Jan: „nicht mal der Name richtig“) – lieber Telefonknopf in die nächste Zeile */ .detail-owner .do-id{display:flex;align-items:center;gap:8px;min-width:0;flex:1 1 190px}
 .detail-owner .do-id>svg{width:16px;height:16px;color:var(--text-dim);flex-shrink:0}
 .detail-owner .do-txt{display:flex;flex-direction:column;min-width:0;line-height:1.25}
-.detail-owner .do-txt b{color:var(--text-primary);font-weight:600;font-size:14.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.detail-owner .do-txt b{color:var(--text-primary);font-weight:600;font-size:14.5px;overflow-wrap:break-word}
 .detail-owner .do-txt span{font-size:11.5px;color:var(--text-dim)}
 .detail-owner .do-call{display:inline-flex;align-items:center;gap:7px;padding:9px 14px;border-radius:10px;background:var(--good-g);border:1px solid var(--good);color:var(--good);font-weight:600;font-size:13.5px;font-variant-numeric:tabular-nums;flex-shrink:0;transition:all .14s}
 .detail-owner .do-call>svg{width:15px;height:15px}
@@ -1091,7 +1096,7 @@ h2 svg.ic{width:20px;height:20px}
 .qa .qa-head{display:flex;align-items:center;gap:12px;padding:18px 20px 16px;border-bottom:1px solid var(--border-faint)}
 .qa .qa-id{flex:1;min-width:0}
 .qa .qa-id b{font-family:var(--font-brand);font-size:17px;font-weight:600;display:block}
-.qa .qa-id span{font-size:12px;color:var(--text-dim);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:block}
+.qa .qa-id span{font-size:12px;color:var(--text-dim);overflow-wrap:break-word;display:block}
 .qa .qa-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:18px 20px 20px}
 .qa-item{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;padding:16px 10px;border-radius:14px;background:var(--bg-deep);border:1px solid var(--border-subtle);color:var(--text-secondary);font-size:13px;font-weight:600;box-shadow:var(--lift-soft);transition:all .15s}
 .qa-item:hover{color:var(--text-primary);border-color:var(--border-strong);transform:translateY(-1px)}
@@ -1722,8 +1727,9 @@ svg.viz .sd-lbl{fill:var(--cyan-strong);font-size:10px;font-weight:600;font-fami
   .pr-adr b{font-size:13.5px;color:#04303a;font-family:var(--font-brand);letter-spacing:.01em}
   .pr-co{display:flex;align-items:center;gap:9px;opacity:.9}
   .pr-co img{width:32px;height:32px}
-  .pr-co .wm{font-family:var(--font-brand);font-weight:600;letter-spacing:.2em;font-size:15px;color:#04303a;line-height:1.1}
-  .pr-co .wm small{display:block;font-size:7px;letter-spacing:.22em;color:#00867a;font-weight:600}
+  .pr-co{text-align:right}
+  .pr-co .wm{font-family:var(--font-brand);font-weight:500;letter-spacing:.34em;font-size:17px;color:#04303a;line-height:1}
+  .pr-co .wm small{display:block;margin-top:5px;font-family:var(--font-ui);font-size:6.8px;letter-spacing:.42em;color:#00867a;font-weight:600;white-space:nowrap}
   .pr-titel{display:flex;justify-content:space-between;font-size:8.5px;letter-spacing:.16em;text-transform:uppercase;color:#00867a;font-weight:700;margin:4px 0 14px}
   .pr-titel .pr-datum{color:#8a9aa8;letter-spacing:.08em}
   #printArea h1{font-size:25px;margin:0 0 2px}
@@ -1901,6 +1907,8 @@ header.k5 nav.tabs button{position:relative}
 header.k5 nav.tabs button .badge{position:absolute;top:-3px;right:-3px;min-width:15px;height:15px}
 header.k6 #tierPill #tierLabel{display:none}
 header.k7 #tierPill,header.k7 .post-pill{display:none}
+/* 16.11.2026 (Jan: „nicht mal der Name richtig angezeigt – grober Patzer im Kano-Grundnutzen“): Namen, Ställe und Adressen werden nie
+   abgeschnitten, sie brechen um. Prüfstand: scratchpad nur/abschnitt.mjs (0 Ellipsen an 390/820 px). */
 </style>
 
 <div class="bg-atmosphere"></div>
@@ -2023,7 +2031,7 @@ header.k7 #tierPill,header.k7 .post-pill{display:none}
      bekamen eine falsche Atemwegs-Einstufung, alle nach oben. -->
 <script src="aufnahme-herkunft.js"></script>
 <script src="hrv-vorstufe.js"></script>
-<script src="poincare-zeit.js?v=20261116b"></script>
+<script src="poincare-zeit.js?v=20261116c"></script>
 <script src="carlon-formate.js"></script>
 <script src="asthma.js"></script>
 <script src="krypto.js"></script>
@@ -3161,7 +3169,7 @@ const Importer = {
     const link = (typeof Praxis!=='undefined') ? await Praxis.einladung() : null;
     if(!link) return;                       // gate() hat bereits erklaert, warum
     const praxis = ((State.settings&&State.settings.clinicName)||'').trim();
-    const text = Praxis.nachricht(praxis, null)+' '+link;
+    const text = Praxis.nachricht(praxis, null)+'\n\n'+link;
     const teilbar = typeof navigator.share==='function';
     $('#impBody').innerHTML=`
       <div style="text-align:center;padding:6px 4px">
@@ -8070,7 +8078,7 @@ const Report={
       <div class="pr-head">
         <div class="pr-praxis">${s.logo?`<img class="pr-logo" src="${s.logo}" alt="${esc(s.clinicName||'Praxis')}">`:''}
           <div class="pr-adr"><b>${esc(s.clinicName||'')}</b>${(d.vet||s.vetName)?`<span>${esc(d.vet||s.vetName)}</span>`:''}${kontakt.length?`<span>${kontakt.join(' · ')}</span>`:''}</div></div>
-        <div class="pr-co"><img src="/assets/equine-mark-512.png" alt="" width="34" height="34"><div class="wm">CARLON<small>EQUINE VISITE</small></div></div>
+        <div class="pr-co"><div class="wm">CARLON<small>EQUINE VISITE</small></div></div>
       </div>
       <div class="pr-titel"><span class="pr-art">${d.muster?'Musterbericht · fiktive Demo-Daten, fiktive Praxis':'Messwertbericht · Ruhe-HRV'}</span><span class="pr-datum">erstellt ${erstellt}</span></div>
       <h1>${esc(h.name)}</h1>
@@ -8383,9 +8391,13 @@ const UI={
       };img.src=r.result;};r.readAsDataURL(f);};
     inp.click();
   },
+  einlVorschau(){ const t=$('#sEinl'), z=$('#sEinlVor'); if(!t||!z) return; const s=State.settings, alt={n:s.clinicName,v:s.vetName,p:s.clinicPhone};
+    s.clinicName=(($('#sName')||{}).value||'').trim(); s.vetName=(($('#sVet')||{}).value||'').trim(); s.clinicPhone=(($('#sPhone')||{}).value||'').trim();
+    z.textContent=Praxis.nachricht('', 'Champion', t.value)+'\n\nvitalkultur.com/carlon-equine/messen.html#…'; s.clinicName=alt.n; s.vetName=alt.v; s.clinicPhone=alt.p; },
   async removeLogo(){ delete State.settings.logo; await State.saveSettings(); const pv=$('#sLogoPrev');if(pv)pv.innerHTML='<span>kein Logo</span>'; Toast.show('Logo entfernt','info'); },
   openSettings(){
     const s=State.settings;
+    setTimeout(()=>{ UI.einlVorschau(); ['sName','sVet','sPhone'].forEach(i=>{ const e=$('#'+i); if(e) e.addEventListener('input',()=>UI.einlVorschau()); }); },60);
     this.modal(`<div class="modal-head"><button class="closex" onclick="UI.closeModal()">${IC.x}</button><h3>Praxis-Einstellungen</h3></div>
     <div class="modal-body">
       <div class="field"><label>Praxisname</label><input id="sName" value="${esc(s.clinicName)}"></div>
@@ -8418,6 +8430,11 @@ const UI={
       <div class="field-row">
         <div class="field"><label>Anschrift für den Aushang</label><input id="sAddr" value="${esc(s.clinicAddr||'')}" placeholder="Musterstr. 1, 76473 Iffezheim"></div>
         <div class="field"><label>Website (optional)</label><input id="sWeb" value="${esc(s.clinicWeb||'')}" placeholder="www.…"></div></div>
+      <div class="field"><label>Einladungstext für Halter:innen <span style="color:var(--text-dim);font-weight:400">— geht mit jedem Mess-Link per WhatsApp, SMS oder Teilen</span></label>
+        <textarea id="sEinl" rows="8" style="width:100%;font:inherit;font-size:13px;line-height:1.5;resize:vertical" oninput="UI.einlVorschau()">${esc(s.einladungText||Praxis.STANDARD)}</textarea>
+        <div class="hint">Platzhalter: <code>{praxis}</code> <code>{pferd}</code> <code>{tierarzt}</code> <code>{telefon}</code> – werden aus den Angaben oben gefüllt, leere fallen weg. <a href="#" onclick="event.preventDefault();$('#sEinl').value=Praxis.STANDARD;UI.einlVorschau()">Standardtext</a></div>
+        <div style="margin-top:8px;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--text-dim)">So kommt er an (Beispiel „Champion“)</div>
+        <div id="sEinlVor" style="margin-top:6px;white-space:pre-line;background:var(--cyan-faint);border:1px solid var(--cyan-g2);border-radius:14px 14px 14px 4px;padding:11px 13px;font-size:13px;line-height:1.5;color:var(--text-primary)"></div></div>
       <div class="field"><label>Startort der Route (Adresse oder Ort)</label>
         <div style="display:flex;gap:8px"><input id="sOrigin" value="${esc(s.originLabel)}" placeholder="z. B. Tierklinik, Musterstr. 1, Rastatt" style="flex:1">
         <button class="btn ghost" style="padding:0 14px;white-space:nowrap" onclick="geoLookup('sOrigin','sLat','sLng',this)">${IC.pin} Suchen</button></div>
@@ -8489,6 +8506,7 @@ const UI={
     } else if(r.grund!=='abgebrochen'){ Toast.show(r.grund,'warn'); }
   },
   async saveSettings(){const s=State.settings;
+    { const e=$('#sEinl'); if(e){ const v=e.value.trim(); s.einladungText=(v&&v!==Praxis.STANDARD)?v:''; } }
     s.clinicName=$('#sName').value;s.vetName=$('#sVet').value;s.originLabel=$('#sOrigin').value;
     /* Kontakt fuer den Aushang — getrimmt, damit ein versehentliches
        Leerzeichen nicht als "vorhanden" durchgeht und eine leere Zeile
@@ -8778,7 +8796,7 @@ const UI={
     const nr=String(h.phone||'').replace(/[^0-9+]/g,'');
     if(nr){
       const wp=nr.replace(/^\+/,'').replace(/^00/,'').replace(/^0/,'49');
-      const voll=encodeURIComponent(text+' '+link);
+      const voll=encodeURIComponent(text+'\n\n'+link);
       z.insertAdjacentHTML('beforeend',`<div style="display:flex;gap:8px;margin-top:8px;flex-wrap:wrap">
         <a class="btn ghost" href="https://wa.me/${wp}?text=${voll}" target="_blank" rel="noopener">${IC.phone} WhatsApp an ${esc(h.owner||nr)}</a>
         <a class="btn ghost" href="sms:${nr}${/(iPhone|iPad|Macintosh)/.test(navigator.userAgent)?'&':'?'}body=${voll}">${IC.phone} SMS</a></div>`);
@@ -9220,8 +9238,19 @@ const Praxis={
   /* Einladungstext (16.11.2026, Recherche Fable 5.2 + § 9 HWG / § 7 UWG geprüft): Absprache, Gerätehinweis
      (iPhone geht nicht – sonst bricht der erste Tipp ab), „ersetzt keine Untersuchung", Telefon bei Sorgen.
      Bewusst „Ruhemessung" statt „Herzrhythmus" – das klingt nach Rhythmusdiagnostik. */
-  nachricht(praxis, pferd){
-    return `Guten Tag${praxis?', hier ist '+praxis:''}. Wie besprochen der Mess-Link${pferd?' für '+pferd:''}: Bitte nehmen Sie mindestens sieben Minuten in Ruhe in der gewohnten Box auf und teilen Sie die Datei mit uns. Sie brauchen den Polar-H10-Gurt und ein Android-Handy oder einen Rechner mit Chrome oder Edge. Haben Sie nur ein iPhone, sagen Sie uns bitte Bescheid. Die Aufnahme ist eine Verlaufsbeobachtung und ersetzt keine Untersuchung. Macht Ihnen etwas Sorgen, rufen Sie uns bitte an.`;
+  /* Personalisierbar (16.11.2026, Jan: „muss durch die Eingabe seiner Daten in Einstellungen perfekt zu personalisieren sein“):
+     Vorlage in State.settings.einladungText, Platzhalter {praxis} {pferd} {tierarzt} {telefon}. Leere Angaben fallen
+     sauber weg statt als Lücke zu erscheinen. */
+  STANDARD:'Guten Tag, hier ist {praxis}. Wie besprochen schicke ich Ihnen den Link zur Ruhemessung für {pferd}.\n\nSo geht es: Polar-H10-Gurt anlegen, Link öffnen und mindestens sieben Minuten in der gewohnten Box in Ruhe aufnehmen. Danach teilen Sie die Datei mit einem Tipp mit uns. Dafür brauchen Sie ein Android-Smartphone oder einen Computer mit Chrome oder Edge. Haben Sie nur ein iPhone, geben Sie uns bitte kurz Bescheid.\n\nDie Aufnahme dient der Verlaufsbeobachtung und ersetzt keine Untersuchung. Wenn Ihnen etwas Sorgen macht, rufen Sie uns bitte an: {telefon}\n\nViele Grüße\n{tierarzt}',
+  nachricht(praxis, pferd, vorlage){
+    const s=State.settings||{}, v=(vorlage!=null?vorlage:(s.einladungText||'')).trim()||this.STANDARD;
+    const w={praxis:(praxis||s.clinicName||'').trim(), pferd:(pferd||'').trim(), tierarzt:(s.vetName||s.clinicName||'').trim(), telefon:(s.clinicPhone||'').trim()};
+    let t=v;
+    if(!w.praxis) t=t.replace(/,?\s*hier ist \{praxis\}/g,'');
+    if(!w.telefon) t=t.replace(/:\s*\{telefon\}/g,'.').replace(/[,]?\s*\{telefon\}/g,'');
+    if(!w.pferd) t=t.replace(/\s*für \{pferd\}/g,' für Ihr Pferd');
+    t=t.replace(/\{(praxis|pferd|tierarzt|telefon)\}/g,(_,k)=>w[k]||'');
+    return t.replace(/[ \t]+\n/g,'\n').replace(/\n{3,}/g,'\n\n').replace(/[ \t]{2,}/g,' ').trim();
   },
   async anfordern(hid){
     const h=State.horses.find(x=>x.id===hid); if(!h) return null;
@@ -12409,9 +12438,17 @@ const Sprache={
           if(h) Views.openHorse(h.id); else Nav.go(erlaubt.includes(v)?v:'today');
           if(!_p.get('fokus') && _p.has('schaufenster')) setTimeout(()=>{ try{ parent.postMessage({carlonSchaufenster:'bereit'},'*'); }catch(_){} },1500);
           /* &fokus=poincare (16.11.2026): Visite-Seite bettet die echte Akte ein und springt zur Poincaré-Karte mit Zeitregler. */
-          if(h && _p.get('fokus')==='poincare') setTimeout(()=>{ const f=document.getElementById('pzAkte'); if(f){ f.scrollIntoView({block:'start'}); window.scrollBy(0,-78); const m=$('#main'); if(m&&m.scrollTop) m.scrollTop-=78; } try{ parent.postMessage({carlonSchaufenster:'bereit'},'*'); }catch(_){} },700);
+          /* &nur=1 (16.11.2026, Jan am iPhone: „öffnet das ganze Programm, statt nur diesen Aspekt“): Fokus-Fenster der Visite-Seite –
+             nur die eine Karte (Verlauf bzw. Poincaré), alles andere ausgeblendet, Breite = Telefon. */
+          const nurZeigen=(els)=>{ els=els.filter(Boolean); if(!els.length) return; els.forEach(e=>{ e.setAttribute('data-nur',''); for(let x=e.parentElement;x&&x.nodeType===1;x=x.parentElement) x.setAttribute('data-nur-pfad',''); });
+            document.documentElement.classList.add('nur'); window.scrollTo(0,0); const m=$('#main'); if(m) m.scrollTop=0; };
+          if(h && _p.has('nur')) setTimeout(()=>{ const fk=_p.get('fokus');
+            if(fk==='verlauf'){ const a=document.getElementById('verlaufAkte'); nurZeigen([a,a&&a.nextElementSibling]); }
+            if(fk==='poincare'){ const p=document.getElementById('pzAkte'); nurZeigen([p&&(p.closest('.panel')||p)]); }
+            try{ parent.postMessage({carlonSchaufenster:'bereit'},'*'); }catch(_){} },650);
+          else if(h && _p.get('fokus')==='poincare') setTimeout(()=>{ const f=document.getElementById('pzAkte'); if(f){ f.scrollIntoView({block:'start'}); window.scrollBy(0,-78); const m=$('#main'); if(m&&m.scrollTop) m.scrollTop-=78; } try{ parent.postMessage({carlonSchaufenster:'bereit'},'*'); }catch(_){} },700);
           /* &fokus=verlauf (16.11.2026): Schaufenster im Hero der Visite-Seite – genau der Ausschnitt des Films, danach selbst bedienbar. */
-          if(h && _p.get('fokus')==='verlauf') setTimeout(()=>{ const f=document.getElementById('verlaufAkte'); if(f){ f.scrollIntoView({block:'start'}); window.scrollBy(0,-78); const m=$('#main'); if(m&&m.scrollTop) m.scrollTop-=78; } try{ parent.postMessage({carlonSchaufenster:'bereit'},'*'); }catch(_){} },700);
+          if(h && !_p.has('nur') && _p.get('fokus')==='verlauf') setTimeout(()=>{ const f=document.getElementById('verlaufAkte'); if(f){ f.scrollIntoView({block:'start'}); window.scrollBy(0,-78); const m=$('#main'); if(m&&m.scrollTop) m.scrollTop-=78; } try{ parent.postMessage({carlonSchaufenster:'bereit'},'*'); }catch(_){} },700);
         }catch(e){ console.error('demo',e); }
       },300);}
     // Persistenz nochmals nach erster Nutzer-Interaktion anfordern (wird dann eher gewährt) + Banner aktualisieren
