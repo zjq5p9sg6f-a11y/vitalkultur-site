@@ -527,7 +527,8 @@ html.ff-offen .leiste{display:none}
 
 @media(max-width:720px){
   
-  .m-wisch,.hb-geraete{scroll-snap-type:x mandatory;scroll-padding-inline:16px}
+  .m-wisch,.hb-geraete{scroll-snap-type:x mandatory;scroll-padding-inline:16px;overscroll-behavior-x:contain}
+  .m-wisch.zieht,.hb-geraete.zieht{scroll-snap-type:none!important}
   .m-wisch>*,.hb-geraete>*{scroll-snap-align:center;scroll-snap-stop:always}
   .wisch-punkte{display:flex;justify-content:center;gap:7px;margin:4px 0 0}
   .wisch-punkte i{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.22);transition:width .25s,background .25s}
@@ -548,12 +549,12 @@ html.ff-offen .leiste{display:none}
   .grafik.geteilt>svg{display:none!important}
   .grafik-teil{width:100%!important;max-width:none!important;height:auto;display:block;overflow:visible;margin:0 0 14px}
   
-  .hb-geraete{gap:22px!important;padding:8px 10vw 40px!important;align-items:flex-end!important}
+  .hb-geraete{gap:22px!important;padding:8px 10vw 52px!important;align-items:center!important;overscroll-behavior-x:contain}
   .hb-geraete .hero-shot,.hero-tour{width:80vw!important}
   .hb-geraete .hero-phone{width:44vw!important;margin:0 18vw}
   .hb-geraete .g-marke{top:auto!important;bottom:-30px!important;left:50%!important;transform:translateX(-50%);font-size:12.5px!important}
   .hero-buehne .fc-klein{display:none!important}
-  .hero-buehne .wisch-punkte{margin-top:-6px}
+  .hero-buehne .wisch-punkte{margin-top:2px}
   .hero-buehne .fc-gross{display:block!important;text-align:center;margin:6px 16px 0}
   .hero-buehne{margin-top:var(--sp-34)!important}
   
@@ -2025,12 +2026,28 @@ if(_lb) _lb.addEventListener('click', function(){
     kids.forEach(function(){p.appendChild(document.createElement('i'));}); row.parentNode.insertBefore(p,row.nextSibling);
     var setze=function(){var m=row.scrollLeft+row.clientWidth/2,best=0,bd=1e9;kids.forEach(function(k,i){var c=k.offsetLeft+k.offsetWidth/2-row.offsetLeft;var d=Math.abs(c-m);if(d<bd){bd=d;best=i;}});[].forEach.call(p.children,function(d,i){d.classList.toggle('an',i===best);});};
     var t=null; row.addEventListener('scroll',function(){if(t) cancelAnimationFrame(t); t=requestAnimationFrame(setze);},{passive:true}); setze();
+    
+    var x0=0,y0=0,s0=0,ach=null,t0=0;
+    var naechste=function(rich){ var m=row.scrollLeft+row.clientWidth/2,best=0,bd=1e9;kids.forEach(function(k,i){var c=k.offsetLeft+k.offsetWidth/2-row.offsetLeft;var d=Math.abs(c-m);if(d<bd){bd=d;best=i;}});
+      if(rich) { var a0=0,bd0=1e9; kids.forEach(function(k,i){var c=k.offsetLeft+k.offsetWidth/2-row.offsetLeft;var d=Math.abs(c-(s0+row.clientWidth/2));if(d<bd0){bd0=d;a0=i;}}); best=Math.max(0,Math.min(kids.length-1,a0+rich)); }
+      return kids[best]; };
+    row.addEventListener('touchstart',function(e){ if(e.touches.length!==1) return; x0=e.touches[0].clientX; y0=e.touches[0].clientY; s0=row.scrollLeft; ach=null; t0=Date.now(); },{passive:true});
+    row.addEventListener('touchmove',function(e){ if(e.touches.length!==1) return; var dx=e.touches[0].clientX-x0, dy=e.touches[0].clientY-y0;
+      
+      if(ach===null){ if(Math.abs(dx)<6&&Math.abs(dy)<6) return; ach=Math.abs(dx)>Math.abs(dy)?'x':'y'; if(ach==='x') row.classList.add('zieht'); }
+      if(ach==='x'&&e.cancelable){ e.preventDefault(); row.scrollLeft=s0-dx; } },{passive:false});
+    row.addEventListener('touchend',function(e){ if(ach!=='x') { ach=null; return; } var dx=(e.changedTouches[0]||{}).clientX-x0, v=Math.abs(dx)/Math.max(1,Date.now()-t0);
+      var rich=(Math.abs(dx)>40||v>0.35)?(dx<0?1:-1):0, k=naechste(rich); setTimeout(function(){ row.classList.remove('zieht'); },520);
+      row.scrollTo({left:k.offsetLeft-row.offsetLeft-(row.clientWidth-k.offsetWidth)/2,behavior:'smooth'}); ach=null; },{passive:true});
   });
   var teile=[['.grafik-verlauf',['0 0 230 300','245 0 516 300']],['figure.grafik[aria-label^="RMSSD vor und während"]',['0 0 372 240','352 0 408 240']]];
   teile.forEach(function(d){var f=document.querySelector(d[0]); if(!f) return; var s=f.querySelector('svg'); if(!s) return;
     d[1].forEach(function(vb){var c=s.cloneNode(true); c.setAttribute('viewBox',vb); c.classList.add('grafik-teil'); f.insertBefore(c,s);}); f.classList.add('geteilt');});
   var l=document.getElementById('leiste'); if(!l) return; var y0=scrollY;
-  addEventListener('scroll',function(){var y=scrollY; if(Math.abs(y-y0)<10) return; l.classList.toggle('weg',y>y0&&y>200); y0=y;},{passive:true});
+  
+  l.classList.add('weg'); var lz=null;
+  addEventListener('scroll',function(){var y=scrollY; if(Math.abs(y-y0)<10) return; var hoch=y<y0&&y>200; l.classList.toggle('weg',!hoch); y0=y;
+    clearTimeout(lz); if(hoch) lz=setTimeout(function(){ l.classList.add('weg'); },3500);},{passive:true});
 })();
 </script>
 <div class="leiste" id="leiste" hidden><span class="leiste-t">CARLON Equine Visite · from €149 net/month</span><a class="leiste-b2" href="#preis">Plans</a><a class="leiste-b" href="/carlon-equine/app/?demo=today">Open demo →</a></div>
