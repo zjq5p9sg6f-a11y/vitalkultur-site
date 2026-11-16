@@ -1108,16 +1108,6 @@ const HAUS={ appImStore:false, appUrl:'https://carlon.app' };
       <div id="dTacho"></div>
     </div>
 
-    <div class="chart-wrap" style="margin-top:var(--s2)">
-      <div class="ct">
-        <svg class="ic" style="color:#4DA6F2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><path d="M3 14c2.5 0 2.5-6 5-6s2.5 6 5 6 2.5-6 5-6 2.5 6 5 6"/></svg>
-        <b id="ctBreath">Atemkurve<button class="info-i" data-info="breath" aria-label="Was zeigt dieses Diagramm?"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 16v-5M12 8h.01"/><circle cx="12" cy="12" r="9"/></svg></button></b><i id="dBreathN"></i>
-      </div>
-      <button class="chart-zoombtn" data-zoom="breath" aria-label="Vollbild"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg></button>
-      <div id="dBreath"></div>
-      <div class="capt" id="breathCap"></div>
-    </div>
-
     <!-- Rohform links, verschlossene Deutung rechts: die beiden gehoeren
          nebeneinander, weil genau dazwischen die Praxis steht.             -->
     <div class="belegrow">
@@ -1147,6 +1137,16 @@ const HAUS={ appImStore:false, appUrl:'https://carlon.app' };
       <button class="proto-row" data-info="sensor"><span data-i18n="pSensor">Sensor</span><b id="pSensor">–</b></button>
       <button class="proto-row" data-info="res"><span data-i18n="pRes">Zeitauflösung</span><b data-i18n="pResV">1/1024 s · ≈1 ms</b></button>
     </div>
+    </div>
+
+    <div class="chart-wrap" style="margin-top:var(--s2)">
+      <div class="ct">
+        <svg class="ic" style="color:#4DA6F2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><path d="M3 14c2.5 0 2.5-6 5-6s2.5 6 5 6 2.5-6 5-6 2.5 6 5 6"/></svg>
+        <b id="ctBreath">Atemkurve<button class="info-i" data-info="breath" aria-label="Was zeigt dieses Diagramm?"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 16v-5M12 8h.01"/><circle cx="12" cy="12" r="9"/></svg></button></b><i id="dBreathN"></i>
+      </div>
+      <button class="chart-zoombtn" data-zoom="breath" aria-label="Vollbild"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg></button>
+      <div id="dBreath"></div>
+      <div class="capt" id="breathCap"></div>
     </div>
     </div>
 
