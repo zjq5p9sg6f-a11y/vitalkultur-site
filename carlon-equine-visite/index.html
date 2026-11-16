@@ -212,6 +212,14 @@ document.head.appendChild(s);})();</script>
       "@type": "Answer",
       "text": "Ausschließlich in Ihrem Browser auf Ihrem Gerät – keine Cloud, kein Server von uns. Unter Dokumentation legt „Backup sichern“ eine Sicherungsdatei an; „Backup einspielen“ stellt damit alles auf einem neuen Gerät oder Browser wieder her, samt Freischaltung. Fehlt eine aktuelle Sicherung, zeigt das Cockpit es oben an. Im Klinik-Tarif liegt der Bestand zusätzlich im Klinik-Ordner auf Ihrem Netzlaufwerk."
      }
+    },
+    {
+     "@type": "Question",
+     "name": "Kann ich die Sichtung einer Aufnahme berechnen?",
+     "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Das entscheiden Sie nach der Gebührenordnung für Tierärzte – eine eigene GOT-Position für Telemedizin gibt es derzeit nicht. CARLON liefert Messwerte, Verlauf und einen Messwertbericht; ob daraus eine Beratung wird und wie Sie sie berechnen, liegt bei Ihnen. Eine Untersuchung ersetzt die Sichtung nicht."
+     }
     }
    ]
   }
@@ -614,6 +622,9 @@ details.mehr.gross[open]{padding-bottom:var(--sp-21)}
 .at-generisch .at-screen{left:3.2%;top:1.6%;width:93.6%;height:96.8%;border-radius:10.8% / 5%}
 .vt-hinweis{margin-top:14px;font-size:12.5px;color:var(--text-dim);text-align:center}
 @media(max-width:860px){.vt{grid-template-columns:1fr}.vt-geraet{order:-1}}
+.studien{list-style:none;margin:var(--sp-21) 0 0;padding:0;display:grid;gap:12px;max-width:760px}
+.studien li{border-left:2px solid var(--cyan-deep,#1f7f6e);padding:4px 0 4px 16px;color:var(--text-secondary);line-height:1.6}
+.studien b{color:var(--text-primary)}.studien a{color:var(--cyan);font-size:.92em;white-space:nowrap}
 .beleg-bild{margin:var(--sp-21) 0 var(--sp-8);padding:var(--sp-8) var(--sp-8);
   border-radius:8px;background:rgba(255,255,255,.02);overflow:hidden}
 .beleg-bild svg{display:block;max-width:100%;height:auto}
@@ -1311,6 +1322,10 @@ h1,h2{text-wrap:balance}
       und Fahrt ist diese Bedingung systematisch nicht erfüllt — in der eigenen Box ist sie
       es jeden Tag.
     </p>
+    <ul class="studien">
+      <li><b>Fahrt senkt die Ruhe-HRV um rund ein Drittel.</b> RMSSD fiel bei Straßentransport von 74 auf 45&nbsp;ms (3,5&nbsp;h) bzw. von 90 auf 59&nbsp;ms (8&nbsp;h). <a href="https://doi.org/10.1016/j.yhbeh.2009.11.003" target="_blank" rel="noopener">Schmidt et&nbsp;al. 2010, Hormones and Behavior</a></li>
+      <li><b>Pferde unterscheiden sich stärker untereinander als von Tag zu Tag.</b> Die Streuung zwischen Pferden lag bei der Herzfrequenz rund 40&nbsp;% und bei HF-Leistung rund 100&nbsp;% über der beim selben Pferd – darum der Vergleich mit der eigenen Basis. <a href="https://doi.org/10.2460/ajvr.73.4.515" target="_blank" rel="noopener">Ohmura et&nbsp;al. 2012, American Journal of Veterinary Research</a></li>
+    </ul>
     
     
   
@@ -1837,6 +1852,9 @@ h1,h2{text-wrap:balance}
       </details>
       <details class="faq-item" data-spur-auf="faq-9"><summary><h3>Wo liegen meine Daten, und wie sichere ich sie?</h3></summary>
         <div class="faq-a"><p>Ausschließlich in Ihrem Browser auf Ihrem Gerät – keine Cloud, kein Server von uns. Unter Dokumentation legt „Backup sichern“ eine Sicherungsdatei an; „Backup einspielen“ stellt damit alles auf einem neuen Gerät oder Browser wieder her, samt Freischaltung. Fehlt eine aktuelle Sicherung, zeigt das Cockpit es oben an. Im Klinik-Tarif liegt der Bestand zusätzlich im Klinik-Ordner auf Ihrem Netzlaufwerk.</p></div>
+      </details>
+      <details class="faq-item" data-spur-auf="faq-10"><summary><h3>Kann ich die Sichtung einer Aufnahme berechnen?</h3></summary>
+        <div class="faq-a"><p>Das entscheiden Sie nach der Gebührenordnung für Tierärzte – eine eigene GOT-Position für Telemedizin gibt es derzeit nicht. CARLON liefert Messwerte, Verlauf und einen Messwertbericht; ob daraus eine Beratung wird und wie Sie sie berechnen, liegt bei Ihnen. Eine Untersuchung ersetzt die Sichtung nicht.</p></div>
       </details>
     </div>
   </div>

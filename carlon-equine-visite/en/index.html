@@ -212,6 +212,14 @@ document.head.appendChild(s);})();</script>
       "@type": "Answer",
       "text": "Only in your browser on your device – no cloud, no server of ours. Under Documentation, “Back up” creates a backup file; “Restore backup” brings everything back on a new device or browser, including your activation. If a recent backup is missing, the cockpit shows it at the top. On the clinic plan the records are also kept in the clinic folder on your network drive."
      }
+    },
+    {
+     "@type": "Question",
+     "name": "Can I charge for reviewing a recording?",
+     "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "You decide that under the German fee schedule for veterinarians (GOT) – there is currently no dedicated GOT item for telemedicine. CARLON delivers measurements, trends and a measurement report; whether this becomes a consultation and how you charge for it is up to you. Reviewing does not replace an examination."
+     }
     }
    ]
   }
@@ -614,6 +622,9 @@ details.mehr.gross[open]{padding-bottom:var(--sp-21)}
 .at-generisch .at-screen{left:3.2%;top:1.6%;width:93.6%;height:96.8%;border-radius:10.8% / 5%}
 .vt-hinweis{margin-top:14px;font-size:12.5px;color:var(--text-dim);text-align:center}
 @media(max-width:860px){.vt{grid-template-columns:1fr}.vt-geraet{order:-1}}
+.studien{list-style:none;margin:var(--sp-21) 0 0;padding:0;display:grid;gap:12px;max-width:760px}
+.studien li{border-left:2px solid var(--cyan-deep,#1f7f6e);padding:4px 0 4px 16px;color:var(--text-secondary);line-height:1.6}
+.studien b{color:var(--text-primary)}.studien a{color:var(--cyan);font-size:.92em;white-space:nowrap}
 .beleg-bild{margin:var(--sp-21) 0 var(--sp-8);padding:var(--sp-8) var(--sp-8);
   border-radius:8px;background:rgba(255,255,255,.02);overflow:hidden}
 .beleg-bild svg{display:block;max-width:100%;height:auto}
@@ -1311,6 +1322,10 @@ h1,h2{text-wrap:balance}
       and a drive this condition is systematically not met — in the horse’s own box it is
       met every day.
     </p>
+    <ul class="studien">
+      <li><b>Transport lowers resting HRV by about a third.</b> RMSSD fell during road transport from 74 to 45&nbsp;ms (3.5&nbsp;h) and from 90 to 59&nbsp;ms (8&nbsp;h). <a href="https://doi.org/10.1016/j.yhbeh.2009.11.003" target="_blank" rel="noopener">Schmidt et&nbsp;al. 2010, Hormones and Behavior</a></li>
+      <li><b>Horses differ more from each other than from day to day.</b> Variability between horses was about 40&nbsp;% higher for heart rate and about 100&nbsp;% higher for HF power than within the same horse – hence the comparison with its own baseline. <a href="https://doi.org/10.2460/ajvr.73.4.515" target="_blank" rel="noopener">Ohmura et&nbsp;al. 2012, American Journal of Veterinary Research</a></li>
+    </ul>
     
     
   
@@ -1836,6 +1851,9 @@ h1,h2{text-wrap:balance}
       </details>
       <details class="faq-item" data-spur-auf="faq-9"><summary><h3>Where is my data, and how do I back it up?</h3></summary>
         <div class="faq-a"><p>Only in your browser on your device – no cloud, no server of ours. Under Documentation, “Back up” creates a backup file; “Restore backup” brings everything back on a new device or browser, including your activation. If a recent backup is missing, the cockpit shows it at the top. On the clinic plan the records are also kept in the clinic folder on your network drive.</p></div>
+      </details>
+      <details class="faq-item" data-spur-auf="faq-10"><summary><h3>Can I charge for reviewing a recording?</h3></summary>
+        <div class="faq-a"><p>You decide that under the German fee schedule for veterinarians (GOT) – there is currently no dedicated GOT item for telemedicine. CARLON delivers measurements, trends and a measurement report; whether this becomes a consultation and how you charge for it is up to you. Reviewing does not replace an examination.</p></div>
       </details>
     </div>
   </div>
