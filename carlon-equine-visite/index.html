@@ -976,6 +976,12 @@ html.rev-an .rev.in{opacity:1;transform:none}
 .tarif-preis b,.u-zahl,table,.tarif-alt,.enthalten li{font-variant-numeric:tabular-nums lining-nums}
 .tarif-fuss{max-width:62ch;margin-left:auto;margin-right:auto}
 h1,h2{text-wrap:balance}
+
+:root{--stille:var(--cyan);--glow:var(--cyan-strong);--line:var(--border-faint);--line2:var(--border-subtle);--t:var(--text-primary);--t3:var(--text-secondary);--t4:var(--text-dim);--ease:cubic-bezier(.4,0,.2,1);--s8:8px;--s13:13px;--s21:21px}
+.vis-nav{z-index:50}.vis-nav .wrap{max-width:1240px;margin:0 auto;padding:0 clamp(16px,4vw,32px)}
+.vis-nav .crumb{text-decoration:none;cursor:pointer}.vis-nav .crumb b{font-family:var(--font-brand);letter-spacing:.14em}
+.vis-nav .crumb .zeile2{color:var(--cyan);letter-spacing:.12em}
+.vis-nav .lang{text-decoration:none}
 </style>
 <link rel="stylesheet" href="/assets/baukasten/baukasten.css?v=4">
 <link rel="stylesheet" href="/assets/app-tour/app-tour.css?v=10">
@@ -1146,6 +1152,7 @@ h1,h2{text-wrap:balance}
     background:linear-gradient(180deg,#52dcc0,#2fb89d)!important;border:0!important;color:#03140f!important;box-shadow:0 0 0 1px rgba(255,255,255,.18) inset,0 6px 18px -6px rgba(62,207,178,.55)}
 }
 </style>
+<link rel="stylesheet" href="/assets/kapitel/kapitel.css?v=7">
 </head>
 <body>
 <script>
@@ -1197,27 +1204,28 @@ try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; 
 </defs></svg>
 <div class="bg-wash"></div>
 
-<nav>
-  <div class="nav-inner">
-    <a class="wordmark" href="/carlon-equine/" title="Zu CARLON Equine">
-      <span class="wordmark-logo"></span>
-      <span class="wordmark-text">
-        <span class="brand">CARLON</span>
-        <span class="sub">EQUINE BIOMETRICS</span>
-      </span>
-    </a>
-    <div class="nav-madein" title="Iffezheim">
-      <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s7-6.5 7-11a7 7 0 0 0-14 0c0 4.5 7 11 7 11z"/><circle cx="12" cy="10" r="2.4"/></svg>
-      <span>Made in Iffezheim</span>
+<nav class="nav vis-nav">
+  <div class="wrap">
+    <a class="crumb" href="#oben" aria-label="CARLON Equine Visite – zum Seitenanfang"><img class="mark" src="/assets/equine-mark-112.png" width="26" height="26" alt=""><b>CARLON <span class="zeile2">Equine Visite</span></b></a>
+    <div class="kapitel" role="navigation" aria-label="Kapitel">
+      <button class="kap-knopf" id="kapKnopf" type="button" aria-expanded="false" aria-controls="kapListe"><span class="kap-nr">01</span><span class="kap-name">Nutzen</span><svg viewBox="0 0 12 12" aria-hidden="true"><path d="M3 4.5l3 3 3-3" fill="none" stroke="currentColor" stroke-width="1.5"/></svg></button>
+      <ol class="kap-liste" id="kapListe">
+        <li><a href="#nutzen"><span class="kap-nr">01</span><span class="kap-titel">Nutzen</span><span class="kap-was">Verlauf zwischen zwei Besuchen</span></a></li>
+        <li><a href="#arbeitstag"><span class="kap-nr">02</span><span class="kap-titel">Arbeitstag</span><span class="kap-was">Tour · Verspätung · Doku · Wegegeld</span></a></li>
+        <li><a href="#ablauf"><span class="kap-nr">03</span><span class="kap-titel">Messstation</span><span class="kap-was">Mess-Link · Station · Datenweg</span></a></li>
+        <li><a href="#methode"><span class="kap-nr">04</span><span class="kap-titel">Methode</span><span class="kap-was">Eigene Basis · Pausen · Exporte</span></a></li>
+        <li><a href="#preis"><span class="kap-nr">05</span><span class="kap-titel">Preise</span><span class="kap-was">Praxis · Klinik · 14 Tage testen</span></a></li>
+        <li><a href="#fragen"><span class="kap-nr">06</span><span class="kap-titel">Fragen</span><span class="kap-was">FAQ · Grenzen</span></a></li>
+      </ol>
     </div>
-    <div class="nav-actions">
-      <a class="nav-equine" href="/carlon-equine-visite/en/" hreflang="en" lang="en">English</a>
-      <a class="nav-equine" href="#preis">Preise</a>
-      <a class="btn btn-demo" href="/carlon-equine/app/" title="Live-Cockpit mit Demo-Daten öffnen" ><span class="bd-play" aria-hidden="true">&#9654; </span>Demo-Cockpit</a>
-      
+    <div class="nav-r">
+      <a class="lang" href="/carlon-equine-visite/en/" hreflang="en" lang="en"><span class="on">DE</span> · <span>EN</span></a>
+      <a class="pill" href="/carlon-equine/app/" title="Live-Cockpit mit Demo-Daten öffnen">Demo-Cockpit</a>
     </div>
   </div>
+  <div class="kap-fort" aria-hidden="true"></div>
 </nav>
+<div class="kap-dimm" aria-hidden="true"></div>
 
 <section class="hero">
   <div class="wrap">
@@ -1455,7 +1463,7 @@ try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; 
   </div>
 </section>
 
-<section>
+<section id="methode">
   <div class="wrap">
     <div class="sec-eyebrow">Die Methode</div>
     <h2>Ein Wert sagt wenig. Erst sein Verlauf gibt ihm Kontext.</h2>
@@ -1968,7 +1976,7 @@ try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; 
   </div>
 </section>
 
-<section>
+<section id="fragen">
   <div class="wrap">
     <div class="sec-eyebrow">Häufige Fragen</div>
     <h2>Fragen aus der Praxis – kurz beantwortet.</h2>
@@ -2359,6 +2367,12 @@ if(_lb) _lb.addEventListener('click', function(){
       else if((v.__lief||v.hasAttribute('autoplay'))&&v.paused&&!v.ended&&!v.__blockiert){ v.__lief=false; var pr=v.play(); if(pr&&pr.catch) pr.catch(function(){ v.__blockiert=true; v.classList.add('kein-autoplay'); }); } }); },{rootMargin:'120px 0px'});
     [].forEach.call(document.querySelectorAll('video'),function(v){ if(!v.closest('[data-app-tour]')) vio.observe(v); }); }
   
+  (function(){ var wieder=function(){ [].forEach.call(document.querySelectorAll('video'),function(v){
+      if(v.closest('[data-app-tour]')||!(v.hasAttribute('autoplay')||v.__lief)||!v.paused||v.ended) return;
+      var r=v.getBoundingClientRect(); if(!(r.bottom>0&&r.top<innerHeight&&r.right>0&&r.left<innerWidth&&r.width>0)) return;
+      var pr=v.play(); if(pr&&pr.then) pr.then(function(){ v.__blockiert=false; v.classList.remove('kein-autoplay'); }).catch(function(){}); }); };
+    ['touchend','click','keydown'].forEach(function(ev){ document.addEventListener(ev,wieder,{passive:true}); }); })();
+  
   [].forEach.call(document.querySelectorAll('[data-station]'),function(el){ el.style.cursor='pointer'; el.setAttribute('role','button'); el.setAttribute('tabindex','0');
     var auf=function(e){ if(e) e.preventDefault(); el.setAttribute('data-schau',el.getAttribute('data-station')+(EN?'&lang=en':'')); fokusAuf(el); };
     el.addEventListener('click',auf); el.addEventListener('keydown',function(e){ if(e.key==='Enter'||e.key===' ') auf(e); }); });
@@ -2396,5 +2410,7 @@ if(_lb) _lb.addEventListener('click', function(){
   });
 })();
 </script>
+<script src="/assets/kapitel/kapitel.js?v=4"></script>
+<script>(function(){var c=document.querySelector('.vis-nav .crumb');if(c)c.addEventListener('click',function(e){e.preventDefault();scrollTo({top:0,behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth'});});})();</script>
 </body>
 </html>
