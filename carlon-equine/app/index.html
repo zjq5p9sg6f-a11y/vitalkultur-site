@@ -11857,7 +11857,7 @@ const Sprache={
      Navigation, Board, Akte, Station, Karte, Verwaltung, Kauf. */
   WB:{
     /* 17.11.2026: Lücken aus der Sprachprobe (nur/enrest.mjs) */
-    "deutl. Abweichung":"marked dev.", "Sortierung: Strecke":"Sort: distance", "Sortierung: Abweichung":"Sort: deviation",
+    "deutl. Abweichung":"marked dev.", "Einsatzplanung":"Dispatch planning", "Stopps ·":"stops ·", "Stopps":"stops", "Dokumentation":"Records", "Sortierung: Strecke":"Sort: distance", "Sortierung: Abweichung":"Sort: deviation",
     "Ihr Januar mit CARLON":"Your January with CARLON",
     "Ihr Februar mit CARLON":"Your February with CARLON",
     "Ihr März mit CARLON":"Your March with CARLON",
@@ -12515,7 +12515,7 @@ const Sprache={
 
   /* Einzelwoerter — NUR in der Navigation. Ausserhalb waere „Station"
      womoeglich der Name eines Pferdes. */
-  NAV:{'Heute':'Today','Board':'Overview','Übersicht':'Overview','Station':'Ward','Karte':'Map','Pferde':'Horses','Verwaltung':'Admin'},
+  NAV:{'Dokumentation':'Records','Heute':'Today','Board':'Overview','Übersicht':'Overview','Station':'Ward','Karte':'Map','Pferde':'Horses','Verwaltung':'Admin'},
 
   /* ── Erzeugte Muster ─────────────────────────────────────────────────
      Zeichenketten, die aus Daten UND festem Text zusammengesetzt werden.
@@ -12524,6 +12524,10 @@ const Sprache={
      Regel gewinnt. */
   REGELN:[
     /* 17.11.2026 Sprachprobe */
+    [/^· vor (\d+) Tg$/,'· $1 d ago'],
+    [/^vor (\d+) Tg$/,'$1 d ago'],
+    [/^Signalanalyse · (.+)$/,'Signal analysis · $1'],
+    [/^(7|30|90) T$/,'$1 d'],
     [/^Tagestour · (\d+) Stopps · (\d+) mit deutlicher Abweichung$/,'Day round · $1 stops · $2 with marked deviation'],
     [/^Grund: RMSSD ([-+−]?\d+ %) — (\d+) ms gegen eigene Basis (\d+) ms$/,'Reason: RMSSD $1 — $2 ms against own baseline $3 ms'],
     [/^Grund: Atemmuster-Profil abweichend \((\d+)\/(\d+) Kriterien\)$/,'Reason: breathing pattern profile deviates ($1/$2 criteria)'],
@@ -12672,13 +12676,20 @@ const Sprache={
        kein Schoenheitsfehler, das ist eine falsche Zahl im Befund.
        Angewandt NUR auf durchgereichte deutsche Zeichenketten: was aus dem
        Woerterbuch kommt, ist bereits englisch geschrieben. */
-    const zahlen=(x)=>x.replace(/\d[\d.,]*\d/g,m=>{
-      if(!/[.,]/.test(m)) return m;
+    const MON=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+    const zahlen=(x)=>x.replace(/\d[\d.,]*\d\.?/g,m0=>{
+      /* 17.11.2026: Datum („05.08.“, „12.11.2026“) ist keine Zahl – vorher wurde daraus „0,508.“ (Achsen im EN-Cockpit). */
+      const dm=m0.match(/^(\d{1,2})\.(\d{1,2})\.(\d{2,4})?$/);
+      if(dm&&+dm[2]>=1&&+dm[2]<=12) return (+dm[1])+' '+MON[+dm[2]-1]+(dm[3]?' '+dm[3]:'');
+      const punkt=/\.$/.test(m0)&&!/,/.test(m0); const m=punkt?m0.slice(0,-1):m0;
+      if(!/[.,]/.test(m)) return m0;
+      /* Punkte nur als Tausender lesen, wenn sie echte Dreiergruppen trennen („1.275“, „12.500,5“) */
+      if(/\./.test(m) && !/^\d{1,3}(\.\d{3})+(,\d+)?$/.test(m)) return m0;
       const roh=m.replace(/\./g,'').replace(',','.');
       if(isNaN(Number(roh))) return m;
       const [g,d]=roh.split('.');
       const gg=g.replace(/\B(?=(\d{3})+(?!\d))/g,',');
-      return d!==undefined?gg+'.'+d:gg;
+      return (d!==undefined?gg+'.'+d:gg)+(punkt?'.':'');
     });
     const teile=k.split(/(?<=[a-zäöüß0-9]{2}\.) (?=[A-ZÄÖÜ])/);
     if(teile.length>1&&!teile.some(p=>this.istRecht(p))){
