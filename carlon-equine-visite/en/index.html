@@ -1090,7 +1090,8 @@ h1,h2{text-wrap:balance}
     scroll-snap-align:center;scroll-snap-stop:always}
   .hb-karte .hk-kopf{text-align:center;width:100%}
   .hb-karte .g-marke{position:static!important;transform:none!important;justify-content:center;font-size:15px!important;color:var(--text-primary)!important;text-shadow:none!important}
-  .hb-karte .hk-satz{margin:7px auto 0;max-width:30ch;font-size:13px;line-height:1.5;color:var(--text-dim)}
+  .hb-karte .hk-satz{margin:8px auto 0;max-width:34ch;font-size:14px;line-height:1.55;color:rgba(235,230,220,.8)}
+  .hb-karte .hk-kopf{padding-top:4px}
   .hb-karte .hk-geraet{flex:1;min-height:0;width:100%;display:flex;align-items:center;justify-content:center}
   .hb-karte .hero-phone{position:relative!important;left:auto!important;bottom:auto!important;margin:0!important;height:100%!important;width:auto!important;max-width:none}
   .hb-karte .hero-shot,.hb-karte .hero-tour{width:100%!important;margin:0!important}
@@ -2221,11 +2222,14 @@ if(_lb) _lb.addEventListener('click', function(){
     ul.innerHTML=h; f.appendChild(ul); f.classList.add('als-liste'); })();
   
   (function(){ var r=document.querySelector('.hb-geraete'); if(!r) return; var EN=(document.documentElement.lang||'de').indexOf('en')===0;
-    var S=EN?['The owner records in the stable: heart rate, HRV and Poincaré live.','In the record: every resting recording against the horse’s own baseline.','Your day route stop by stop, with drive time per stop.']
-            :['Die Halterin nimmt im Stall auf: Puls, HRV und Poincaré live.','In der Akte: jede Ruhemessung gegen die eigene Basis des Pferds.','Ihre Tagesroute Stopp für Stopp, mit Fahrzeit je Stopp.'];
+    var T=EN?['The owner records in the stable','You see the trend in the record','You plan the round']
+            :['Die Halterin misst im Stall','Sie sehen den Verlauf in der Akte','Sie planen die Tour'];
+    var S=EN?['With your measuring link and a Polar H10 strap, at least seven minutes at rest. The recording reaches your practice encrypted.','Every new recording against the horse’s own baseline and earlier measurements – with signal quality, before the visit.','The horses of the day stop by stop, with drive time per stop.']
+            :['Mit Ihrem Mess-Link und dem Polar-H10-Gurt, mindestens sieben Minuten in Ruhe. Die Aufnahme kommt verschlüsselt in Ihre Praxis.','Jede neue Aufnahme gegen die eigene Basis des Pferds und frühere Messungen – mit Signalgüte, schon vor dem Besuch.','Die Pferde des Tages Stopp für Stopp, mit Fahrzeit je Stopp.'];
     [].slice.call(r.children).forEach(function(g,i){ var k=document.createElement('div'); k.className='hb-karte'; var m=g.querySelector('.g-marke');
-      var kopf=document.createElement('div'); kopf.className='hk-kopf'; if(m) kopf.appendChild(m); var p=document.createElement('p'); p.className='hk-satz'; p.textContent=S[i]||''; kopf.appendChild(p);
-      var ge=document.createElement('div'); ge.className='hk-geraet'; r.insertBefore(k,g); ge.appendChild(g); k.appendChild(kopf); k.appendChild(ge); }); })();
+      var kopf=document.createElement('div'); kopf.className='hk-kopf'; if(m){ if(m.lastChild&&m.lastChild.nodeType===3) m.lastChild.textContent=T[i]||m.lastChild.textContent; kopf.appendChild(m); }
+      var p=document.createElement('p'); p.className='hk-satz'; p.textContent=S[i]||''; kopf.appendChild(p);
+      var ge=document.createElement('div'); ge.className='hk-geraet'; r.insertBefore(k,g); ge.appendChild(g); k.appendChild(ge); k.appendChild(kopf); }); })();
   [].slice.call(document.querySelectorAll(tel?'.m-wisch,.hb-geraete':'.hb-geraete')).forEach(function(row){
     var kids=[].slice.call(row.children).filter(function(c){return c.offsetWidth>0;}); if(kids.length<2) return;
     var p=document.createElement('div'); p.className='wisch-punkte'; p.setAttribute('aria-hidden','true');
@@ -2284,8 +2288,8 @@ if(_lb) _lb.addEventListener('click', function(){
 (function(){
   var boxen=[].slice.call(document.querySelectorAll('.schau-box[data-schau]')); if(!boxen.length) return;
   var still=window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches;
-  
-  var telefon=window.matchMedia&&matchMedia('(max-width: 700px)').matches;
+
+  var telefon=window.matchMedia&&matchMedia('(max-width: 1023px)').matches;
   
   var EN=(document.documentElement.lang||'de').indexOf('en')===0, ff=null;
   function fokusAuf(box){ var src=box.getAttribute('data-schau')+'&nur=1', titel=(box.querySelector('.g-marke')||(box.closest('.hb-karte')||box).querySelector('.g-marke')||{}).textContent||box.getAttribute('data-titel')||'';
