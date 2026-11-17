@@ -245,6 +245,9 @@ main{flex:1;overflow-y:auto;overflow-x:hidden;position:relative}
 
 /* ---- KPI strip ---- */
 .kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:var(--s3);margin-bottom:var(--s5)}
+.wert-band{display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 18px;margin:calc(-1 * var(--s3)) 0 var(--s5);padding:10px 14px;border-radius:12px;border:1px solid var(--border-faint);background:linear-gradient(90deg,rgba(62,207,178,.07),transparent 70%);font-size:13px;color:var(--text-secondary)}
+.wert-band .wb-t{font-family:var(--font-mono);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--cyan)}
+.wert-band b{color:var(--text-primary);font-variant-numeric:tabular-nums}
 .kpi{background:linear-gradient(160deg,rgba(26,26,30,.72),rgba(22,22,26,.64));border:1px solid var(--border-faint);
   border-radius:var(--r-m);padding:var(--s4);position:relative;overflow:hidden;display:block;width:100%;text-align:left;
   font:inherit;color:inherit;-webkit-tap-highlight-color:transparent}
@@ -2376,6 +2379,23 @@ const Teilen = {
    NICHT-DESTRUKTIV: Dateien werden nie verschoben oder gelöscht – gemerkt wird, was schon gelesen ist
    (Name·Größe·Änderungszeit). Doppelt Ankommendes erkennt der Importer selbst (Aufnahme-Kennung).
    Grenze, offen: Ordnerzugriff gibt es nur in Chrome/Edge am Rechner (showDirectoryPicker); Safari/iPad nicht. */
+/* MONATSWERT (17.11.2026, Jan: „warum bezahle ich im Monat?“ muss beantwortet sein – auch IN der App, jeden Monat).
+   Nur Gezähltes, nie Geschätztes: Aufnahmen mit Aufnahmedatum in diesem Monat, Pferde mit mindestens zwei Aufnahmen
+   (ein Verlauf), erstellte Berichte und von selbst übernommene Aufnahmen (Zähler auf diesem Gerät). */
+const Wert = {
+  _k(d=new Date()){ return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0'); },
+  zaehle(art,n=1){ const s=State.settings; const w=s.wert||{}; const k=this._k(); w[k]=w[k]||{}; w[k][art]=(w[k][art]||0)+n; s.wert=w; State.saveSettings(); },
+  monat(){ const k=this._k(), jetzt=new Date(); const recs=State.recordings.filter(r=>r.startedAt&&this._k(new Date(r.startedAt))===k);
+    const proPferd={}; State.recordings.forEach(r=>{ proPferd[r.horseId]=(proPferd[r.horseId]||0)+1; });
+    const imMonat=new Set(recs.map(r=>r.horseId)); const verlauf=[...imMonat].filter(id=>proPferd[id]>=2).length;
+    const z=(State.settings.wert||{})[k]||{};
+    return {name:jetzt.toLocaleDateString('de-DE',{month:'long'}), aufnahmen:recs.length, pferde:imMonat.size, verlauf, berichte:z.berichte||0, eingang:z.eingang||0}; },
+  html(){ const m=this.monat(); if(!m.aufnahmen && !m.berichte) return '';
+    const t=[[m.aufnahmen,m.aufnahmen===1?'Aufnahme eingegangen':'Aufnahmen eingegangen'],[m.verlauf,m.verlauf===1?'Pferd im Verlauf':'Pferde im Verlauf'],[m.berichte,m.berichte===1?'Bericht erstellt':'Berichte erstellt']];
+    if(m.eingang) t.push([m.eingang,'kamen von selbst über den Eingang']);
+    return `<div class="wert-band" title="Gezählt auf diesem Gerät, ohne Schätzung"><span class="wb-t">Ihr ${esc(m.name)} mit CARLON</span>${t.filter(([n])=>n>0).map(([n,l])=>`<span class="wb-z"><b>${n}</b> ${l}</span>`).join('')}</div>`; }
+};
+
 const Eingang = {
   handle:null, aktiv:false, letzterFehler:null, _laeuft:false, _beob:null, zuletzt:null, gesamt:0,
   moeglich(){ return typeof window.showDirectoryPicker==='function'; },
@@ -2436,7 +2456,7 @@ const Eingang = {
         this._merke(gesehen);
         if(neu){ await State.load(); if(typeof Praxis!=='undefined') await Praxis.anfrageErledigen(pferde); try{ Nav.refresh(); }catch(_){ } }
       }
-      this.letzterFehler=null; this.zuletzt=new Date().toISOString(); this.gesamt+=neu;
+      this.letzterFehler=null; this.zuletzt=new Date().toISOString(); this.gesamt+=neu; if(neu){ try{ Wert.zaehle('eingang',neu); }catch(_){ } }
     }catch(e){ this.letzterFehler=String(e&&e.message||e); }
     finally{ this._laeuft=false; }
     if(neu && laut){ const id=[...pferde][0];
@@ -5117,6 +5137,7 @@ const Views={
         <button class="kpi act" onclick="Views.kpiGo('horses')" title="Alle Pferde"><div class="lbl">Betreute Pferde</div><div class="val">${horses.length}</div><div class="hint">${State.horses.length} gesamt im System</div><span class="go">${IC.arrow}</span></button>
         <button class="kpi act" onclick="Views.kpiGo('recs')" title="Zuletzt gemessene Pferde"><div class="lbl">Aufnahmen</div><div class="val">${totalRecs}</div><div class="hint">Aufnahmen gesamt</div><span class="go">${IC.arrow}</span></button>
       </div>
+      ${Wert.html()}
       <div class="board">
         ${colDef.map(([k,label])=>`
           <div class="col ${k}">
@@ -8108,6 +8129,7 @@ const Report={
     try{ const rc=State.recsFor(hid).slice(-1)[0]; d.sha=rc?await Pruefwert.rr(rc.rr):null; }catch(e){ d.sha=null; }
     this.render(hid,d);
     const altTitel=document.title; document.title=this.titel(hid);   // Dateiname/PDF-Titel = Pferd + Datum
+    try{ Wert.zaehle('berichte'); }catch(_){ }
     setTimeout(()=>{ window.print(); document.title=altTitel; if(typeof Nav!=='undefined'&&Nav.cur==='detail')Nav.refresh(); },160);
   },
   /* ═══ MESSWERTBERICHT C17 (16.11.2026) ═════════════════════════════════════════
@@ -8645,6 +8667,9 @@ const UI={
         <label style="display:block;font-size:12px;font-weight:600;color:var(--text-secondary);margin:12px 0 6px">Erinnerung für die Halterin</label>
         <select id="sRhythmus" style="width:auto">${[[0,'keine'],[7,'alle 7 Tage'],[14,'alle 14 Tage'],[30,'alle 30 Tage']].map(([v,l])=>`<option value="${v}" ${Number(s.messRhythmus||0)===v?'selected':''}>${l}</option>`).join('')}</select>
         <div style="font-size:12px;color:var(--text-dim);margin-top:4px">Die Messstation schlägt nach dem Senden den nächsten Termin für den Kalender der Halterin vor.</div>
+        <label style="display:block;font-size:12px;font-weight:600;color:var(--text-secondary);margin:12px 0 6px">Was die Halterin nach der Messung sieht</label>
+        <select id="sAnsicht" style="width:auto"><option value="signal" ${s.halterAnsicht!=='voll'?'selected':''}>Signalgüte und „gelungen“ – die Einordnung bleibt bei Ihnen (empfohlen)</option><option value="voll" ${s.halterAnsicht==='voll'?'selected':''}>Alle Kennwerte und Kurven</option></select>
+        <div style="font-size:12px;color:var(--text-dim);margin-top:4px">Gilt für Ihre Mess-Links. Einzelne HRV-Werte ohne Verlauf verunsichern leicht – so kommen weniger Rückfragen.</div>
       </div>
       <div class="field"><label>Praxis-Logo <span style="color:var(--text-dim);font-weight:400">— erscheint auf Ihren Messwertberichten (Ihr Branding, nicht unseres)</span></label>
         <div class="logo-row">
@@ -8747,6 +8772,7 @@ const UI={
     { const e=$('#sEinl'); if(e){ const v=e.value.trim(); s.einladungText=(v&&v!==Praxis.STANDARD)?v:''; } }
     { const e=$('#sEingangLink'); if(e){ const v=e.value.trim(); s.eingangLink=/^https:\/\/\S+$/.test(v)?v:''; if(v&&!s.eingangLink) Toast.show('Upload-Link bitte mit https:// einfügen','warn'); } }
     { const e=$('#sRhythmus'); if(e) s.messRhythmus=Number(e.value)||0; }
+    { const e=$('#sAnsicht'); if(e) s.halterAnsicht=e.value==='voll'?'voll':'signal'; }
     s.clinicName=$('#sName').value;s.vetName=$('#sVet').value;s.originLabel=$('#sOrigin').value;
     /* Kontakt fuer den Aushang — getrimmt, damit ein versehentliches
        Leerzeichen nicht als "vorhanden" durchgeht und eine leere Zeile
@@ -9460,6 +9486,7 @@ const Praxis={
     const st=State.settings||{}; const zus=[];
     if(st.eingangLink && /^https:\/\//.test(st.eingangLink)) zus.push('ab='+encodeURIComponent(st.eingangLink));
     if(st.messRhythmus>0) zus.push('rh='+Math.round(st.messRhythmus));
+    if(st.halterAnsicht==='voll') zus.push('an=v');
     const frag=[anhang.replace(/^#/,'')].concat(zus).filter(Boolean).join('&');
     return basis+'messen.html?fach='+encodeURIComponent(ich.fach)+'&k='+encodeURIComponent(ich.boxPub)+(frag?'#'+frag:'');
   },
@@ -11792,6 +11819,88 @@ const Sprache={
      Der deutsche Satz ist der Schluessel. Sortiert wie die Oberflaeche:
      Navigation, Board, Akte, Station, Karte, Verwaltung, Kauf. */
   WB:{
+    /* 17.11.2026: Lücken aus der Sprachprobe (nur/enrest.mjs) */
+    "Ihr Januar mit CARLON":"Your January with CARLON",
+    "Ihr Februar mit CARLON":"Your February with CARLON",
+    "Ihr März mit CARLON":"Your March with CARLON",
+    "Ihr April mit CARLON":"Your April with CARLON",
+    "Ihr Mai mit CARLON":"Your May with CARLON",
+    "Ihr Juni mit CARLON":"Your June with CARLON",
+    "Ihr Juli mit CARLON":"Your July with CARLON",
+    "Ihr August mit CARLON":"Your August with CARLON",
+    "Ihr September mit CARLON":"Your September with CARLON",
+    "Ihr Oktober mit CARLON":"Your October with CARLON",
+    "Ihr November mit CARLON":"Your November with CARLON",
+    "Ihr Dezember mit CARLON":"Your December with CARLON",
+    "Aufnahme eingegangen":"recording received",
+    "Aufnahmen eingegangen":"recordings received",
+    "Pferd im Verlauf":"horse with a trend",
+    "Pferde im Verlauf":"horses with a trend",
+    "Bericht erstellt":"report created",
+    "Berichte erstellt":"reports created",
+    "kamen von selbst über den Eingang":"arrived by themselves via the inbox",
+    "im Plan":"on schedule",
+    "Karte & Abfahrroute":"Map & route",
+    "Karte offline nicht verfügbar.":"Map not available offline.",
+    "Routenliste rechts & Google-Maps-Übergabe funktionieren.":"The route list on the right and the Google Maps hand-over still work.",
+    "ab ·":"departure ·",
+    "km ≈ Straße ·":"km ≈ road ·",
+    "· fertig":"· done",
+    "In Google Maps öffnen":"Open in Google Maps",
+    "Alle Kunden":"All clients",
+    "Pferd":"Horse",
+    "* geschätzt (kein „Angekommen\"-Tap)":"* estimated (no “arrived” tap)",
+    "Rückfahrt Praxis":"Return to practice",
+    "Praxis-Dokumentation":"Practice records",
+    "Leistungen, Besuchs- und Zeitprotokoll, Fahrtenbuch und Datensicherung — fertig zur Übergabe an Ihre Praxissoftware.":"Services, visit and time log, mileage log and backup — ready to hand over to your practice software.",
+    "dokumentierte Einträge":"documented entries",
+    "Einträge seit dem 1.":"entries since the 1st",
+    "Summe der Einträge":"sum of entries",
+    "noch keine – jetzt sichern":"none yet – back up now",
+    "Dokumentierte Einträge":"Documented entries",
+    "Anzahl dokumentierter Einträge der letzten 6 Monate.":"Number of documented entries over the last 6 months.",
+    "Pferd / Paar":"Horse / pair",
+    "RMSSD im Bereich der eigenen Basis dieses Pferds. Die Einordnung liegt bei Ihnen.":"RMSSD within this horse’s own baseline range. The interpretation is yours.",
+    "Bandmethode nach Plews & Buchheit (Mensch). Beim Pferd nicht validiert, an die eigene Basis angelegt —":"Band method after Plews & Buchheit (human). Not validated in horses, applied to the own baseline —",
+    "beschreibend, keine Trainingsempfehlung.":"descriptive, not a training recommendation.",
+    "eigene Basis":"own baseline",
+    "Diese Aufnahme: Komet — langgestreckt und breit":"This recording: comet — elongated and wide",
+    "Detrended Fluctuation Analysis (4–16 Schläge): Korrelationsstruktur der Schlagfolge. 0.5 = weißes Rauschen · 1.0 = 1/f · 1.5 = brownsches Rauschen (Peng et al. 1995). Beim Pferd gibt es keine validierten Zielbereiche – vergleichen Sie mit der eigenen Vorgeschichte.":"Detrended fluctuation analysis (4–16 beats): correlation structure of the beat sequence. 0.5 = white noise · 1.0 = 1/f · 1.5 = Brownian noise (Peng et al. 1995). There are no validated target ranges in horses – compare with the horse’s own history.",
+    "Equine Bänder VLF 0–0,01 · LF 0,01–0,07 · HF 0,07–0,6 Hz (Kuwahara 1996). Lomb-Scargle-Spektrum & Kennwerte aus der Schlag-für-Schlag-Reihe des Polar H10. Poincaré SD1/SD2 (Brennan 2001), Formmuster n. Woo 1992 · Baevsky (1984, equine-skaliert Stucke 2015) · SampEn (Richman 2000). Priorisierungshilfe, keine Diagnose.":"Equine bands VLF 0–0.01 · LF 0.01–0.07 · HF 0.07–0.6 Hz (Kuwahara 1996). Lomb–Scargle spectrum and values from the Polar H10 beat-to-beat series. Poincaré SD1/SD2 (Brennan 2001), shape patterns after Woo 1992 · Baevsky (1984, equine-scaled Stucke 2015) · SampEn (Richman 2000). Prioritisation aid, not a diagnosis.",
+    "Trainings-Steuerung auf HRV-Basis gegen die individuelle Baseline des Pferds — Trainings-Domäne, keine tierärztliche Beurteilung.":"HRV-based training guidance against the horse’s individual baseline — training domain, not a veterinary assessment.",
+    "Noch nicht genug Messungen für einen belastbaren Konditions-Trend. Ab ~6 Aufnahmen über mind. 28 Tage zeigt CARLON hier Ruhe-HF- und HRV-Anpassung über Wochen/Monate":"Not enough recordings yet for a reliable fitness trend. From about 6 recordings over at least 28 days, CARLON shows resting HR and HRV adaptation over weeks/months here",
+    "HRV unter dem individuellen Normalniveau des Pferds — Belastung im Blick behalten, vor harter Einheit erneut messen.":"HRV below the horse’s individual normal level — keep an eye on the workload, measure again before a hard session.",
+    "Eingang für Aufnahmen":"Inbox for recordings",
+    "— übernimmt von selbst":"— takes them in by itself",
+    "— ohne Hineinziehen":"— no dragging in",
+    "Neue Aufnahmen landen in einem Ordner Ihrer Praxis – CARLON übernimmt sie":"New recordings land in a folder of your practice – CARLON takes them",
+    "von selbst":"by itself",
+    "in die Akte. Zwei Wege, beide ohne Server von uns:":"into the record. Two ways, neither uses a server of ours:",
+    "① Upload-Link:":"① Upload link:",
+    "In Dropbox eine":"In Dropbox, create a",
+    "Dateianfrage":"file request",
+    "anlegen (oder OneDrive für Arbeit „Dateien anfordern“, Nextcloud „Datei-Drop“) und den Link unten einfügen – er reist im Mess-Link mit, die Halterin lädt ohne Konto hoch.":"(or OneDrive for work “Request files”, Nextcloud “File drop”) and paste the link below – it travels with the measuring link, and the owner uploads without an account.",
+    "② Download-Ordner:":"② Downloads folder:",
+    "Was per WhatsApp Web oder Mail kommt, nur noch anklicken. Dann hier den Ordner wählen (den Dateianfrage-Ordner auf diesem Rechner bzw. „Downloads“). Gelesen wird nur; nichts wird verschoben oder gelöscht.":"Whatever arrives via WhatsApp Web or e-mail, just click it. Then choose the folder here (the file-request folder on this computer, or “Downloads”). It is only read; nothing is moved or deleted.",
+    "Ordner wählen":"Choose folder",
+    "Ordner wechseln":"Change folder",
+    "Trennen":"Disconnect",
+    "Freigeben":"Allow",
+    "Erinnerung für die Halterin":"Reminder for the owner",
+    "keine":"none",
+    "alle 7 Tage":"every 7 days",
+    "alle 14 Tage":"every 14 days",
+    "alle 30 Tage":"every 30 days",
+    "Die Messstation schlägt nach dem Senden den nächsten Termin für den Kalender der Halterin vor.":"After sending, the measuring station suggests the next date for the owner’s calendar.",
+    "Was die Halterin nach der Messung sieht":"What the owner sees after recording",
+    "Signalgüte und „gelungen“ – die Einordnung bleibt bei Ihnen (empfohlen)":"Signal quality and “recording OK” – the interpretation stays with you (recommended)",
+    "Alle Kennwerte und Kurven":"All values and charts",
+    "Gilt für Ihre Mess-Links. Einzelne HRV-Werte ohne Verlauf verunsichern leicht – so kommen weniger Rückfragen.":"Applies to your measuring links. Single HRV values without a trend easily cause worry – this means fewer follow-up questions.",
+    "Ordner beobachten geht am Rechner in Chrome oder Edge – hier bitte Dateien öffnen.":"Watching a folder works on a computer in Chrome or Edge – here, please open files.",
+    "Einladungstext für Halter:innen":"Invitation text for owners",
+    "— geht mit jedem Mess-Link per WhatsApp, SMS oder Teilen":"— goes with every measuring link via WhatsApp, SMS or sharing",
+    "– werden aus den Angaben oben gefüllt, leere fallen weg.":"– filled from the details above; empty ones are left out.",
+    "Ansehen":"View",
     'Im Band':'Within band','Knapp unter dem Band':'Just below the band','Unter dem Band':'Below the band','Knapp darunter':'Just below','Im Band ▸':'Within band ▸','Lage zum Wochenband':'Position in the weekly band','lnRMSSD · Bandmethode':'lnRMSSD · band method',
     'Die heutige lnRMSSD liegt im Band aus Mittel ± SWC der letzten Aufnahmen.':'Today\'s lnRMSSD lies within the band of mean ± SWC of recent recordings.','Die heutige lnRMSSD liegt bis zu einem SWC unter dem Band.':'Today\'s lnRMSSD lies up to one SWC below the band.','Die heutige lnRMSSD liegt mehr als ein SWC unter dem Band. Protokoll und Umstände der Aufnahme prüfen; die Einordnung liegt bei Ihnen.':'Today\'s lnRMSSD lies more than one SWC below the band. Check protocol and circumstances of the recording; the interpretation is yours.',
     /* 16.11.2026 – neutrale Panel- und Halter-Texte */
@@ -12376,6 +12485,18 @@ const Sprache={
      jeder Praxis anders lautet. Reihenfolge zaehlt: die erste passende
      Regel gewinnt. */
   REGELN:[
+    /* 17.11.2026 Sprachprobe */
+    [/^Tagestour · (\d+) Stopps · (\d+) mit deutlicher Abweichung$/,'Day round · $1 stops · $2 with marked deviation'],
+    [/^Grund: RMSSD ([-+−]?\d+ %) — (\d+) ms gegen eigene Basis (\d+) ms$/,'Reason: RMSSD $1 — $2 ms against own baseline $3 ms'],
+    [/^Grund: Atemmuster-Profil abweichend \((\d+)\/(\d+) Kriterien\)$/,'Reason: breathing pattern profile deviates ($1/$2 criteria)'],
+    [/^Grund: Noch keine eigene Basis \((\d+) von (\d+) Aufnahmen in 30 Tagen\) – Einstufung höchstens „beobachten“$/,'Reason: no own baseline yet ($1 of $2 recordings in 30 days) – rating at most “watch”'],
+    [/^Route ab (.+)$/,'Route from $1'],
+    [/^Basis (\d+)$/,'Baseline $1'],
+    [/^(\d+) Werte außerhalb$/,'$1 values outside'],
+    [/^(\d+) Einträge$/,'$1 entries'],
+    [/^in dieser Praxis aus der Aufnahme gerechnet · Artefakte ([\d.,]+) %$/,'calculated from the recording in this practice · artefacts $1 %'],
+    [/^(\d+) neue Aufnahmen? aus dem Eingang übernommen$/,'$1 new recording(s) taken in from the inbox'],
+    [/^— Browser könnte Daten bei langer Nichtnutzung löschen · (.+) belegt$/,'— the browser could delete data after long non-use · $1 used'],
     [/^(.+) — Akte öffnen$/,'$1 — open record'],
     [/^(.+) anrufen$/,'Call $1'],
     [/^Baevsky-Index (\d[\d.,]*)$/,'Stress index $1'],
@@ -12474,7 +12595,9 @@ const Sprache={
     const n=Number(t); return Number.isFinite(n)?'€'+n.toLocaleString('en-GB',{minimumFractionDigits:/\./.test(t)?2:0,maximumFractionDigits:2}):x; },
   istRecht(t){
     if(t.length<8) return false;
-    return this.RECHT.some(r=>r.includes(t)||t.includes(r));
+    /* 17.11.2026: Nur echte Satz-BRUCHSTÜCKE (≥ 24 Zeichen) zählen als Rechtstext. Vorher blockierte jedes Wort, das irgendwo
+       in einem Rechtssatz vorkommt („Übersicht“, „eigene Basis“) – das EN-Cockpit blieb an diesen Stellen deutsch. */
+    return this.RECHT.some(r=>(t.length>=24&&r.includes(t))||t.includes(r));
   },
 
   /* Der eigentliche Uebersetzer: erst das Woerterbuch, dann die Muster.
@@ -12541,10 +12664,12 @@ const Sprache={
       while((n=lauf.nextNode())){
         const el=n.parentElement;
         if(!el||el.closest('script,style,[data-nolang]')) continue;
-        if(n.__de!==undefined) continue;                 // schon uebersetzt
+        /* Schon übersetzt – AUSSER die App hat denselben Knoten inzwischen neu beschrieben (17.11.2026: Reiter mit Zähler
+           blieben deutsch, weil __de vom ersten Durchgang hängen blieb). */
+        if(n.__de!==undefined && n.nodeValue===n.__en) continue;
         const imNavi=!!el.closest('#tabs,#bottomNav');
         const neu=this.ueber(n.nodeValue||'',imNavi);
-        if(neu!==null&&neu!==n.nodeValue){ n.__de=n.nodeValue; n.nodeValue=neu; }
+        if(neu!==null&&neu!==n.nodeValue){ n.__de=n.nodeValue; n.nodeValue=neu; n.__en=neu; }
       }
       document.querySelectorAll('[title],[placeholder],[aria-label]').forEach(el=>{
         if(el.closest('[data-nolang]')) return;
@@ -12569,7 +12694,7 @@ const Sprache={
   zurueck(){
     const lauf=document.createTreeWalker(document.body,NodeFilter.SHOW_TEXT);
     let n; this._am=true;
-    while((n=lauf.nextNode())){ if(n.__de!==undefined){ n.nodeValue=n.__de; delete n.__de; } }
+    while((n=lauf.nextNode())){ if(n.__de!==undefined){ if(n.nodeValue===n.__en) n.nodeValue=n.__de; delete n.__de; delete n.__en; } }
     document.querySelectorAll('[title],[placeholder],[aria-label]').forEach(el=>{
       for(const a of ['title','placeholder','aria-label']){
         const merk='__de_'+a;

@@ -384,6 +384,9 @@ p.sub{color:var(--sec);font-size:clamp(13px,1.15vw,15px);margin:0 auto clamp(var
   letter-spacing:.08em;color:var(--dim);opacity:.7}
 .dach a:hover{opacity:1;color:var(--cyan)}
 .dach span{font-size:11.5px;color:var(--dim);line-height:1.6}
+/* 17.11.2026: unter 375 px stand die Zeile 13–23 px über den Rand (Marke nowrap, Text schrumpfte nicht) */
+.dach>*:not(.dm){min-width:0;overflow-wrap:anywhere}
+@media(max-width:374px){.dach{flex-wrap:wrap}}
 /* Die Lage-Karte schliesst den Kreis: sie sagt dem Besitzer, dass etwas
    laeuft, ohne ihm eine Handlung abzuverlangen. Sie verschwindet, sobald der
    Befund da ist — dann spricht der Befund. */
@@ -391,6 +394,12 @@ p.sub{color:var(--sec);font-size:clamp(13px,1.15vw,15px);margin:0 auto clamp(var
   border:1px solid var(--cyan-g2,rgba(62,207,178,.3));border-radius:14px;
   background:linear-gradient(135deg,rgba(62,207,178,.09),rgba(62,207,178,.02))}
 .lage.hidden{display:none}
+.von-visite{max-width:720px;margin:0 auto var(--s4);padding:12px 16px;border-radius:14px;border:1px solid rgba(62,207,178,.4);background:rgba(62,207,178,.07);font-size:13.5px;line-height:1.5}
+.von-visite b{display:block;font-size:14.5px;color:var(--text);margin-bottom:2px}.von-visite a{color:var(--cyan);text-decoration:none;white-space:nowrap}
+.im-rahmen .von-visite a.vv-zurueck{display:none}
+.praxis-modus #belegBody .chart-wrap,.praxis-modus .tile[data-info=rmssd],.praxis-modus .tile[data-info=sdnn]{display:none!important}
+.pm-hinweis{display:none}.praxis-modus .pm-hinweis{display:block;max-width:560px;margin:4px auto 14px;font-size:14px;line-height:1.55;color:var(--sec);text-align:center}
+.pm-hinweis b{color:var(--text)}
 .lage.ablage .lg-punkt{background:#E8A33D}
 .lage.ablage .ab-knopf{margin-top:10px}
 .hl-box{text-align:left;max-width:520px;margin:4px auto 0;padding:14px 16px;border-radius:14px;border:1px solid rgba(62,207,178,.35);background:rgba(62,207,178,.06)}
@@ -782,6 +791,7 @@ svg.viz .bezel{stroke:var(--cyan);stroke-opacity:.55;stroke-width:1.1;stroke-lin
      der Grund ist, warum jemand diese Seite ein zweites Mal oeffnet.
      Die Praxis steht darueber, nicht wir: der Stallnachbar, dem das gezeigt
      wird, soll seine eigene Tieraerztin fragen — nicht uns. -->
+<div id="vonVisite" class="von-visite" hidden></div>
 <div id="lageKarte" class="lage hidden"></div>
 <div id="ablageKarte" class="lage ablage hidden" role="status"></div>
 <div id="uebergabeKarte" class="uebergabe hidden"></div>
@@ -919,10 +929,10 @@ const HAUS={ appImStore:false, appUrl:'https://carlon.app' };
     <!-- GEFÜHRTES RUHEPROTOKOLL (13.11.2026, Gemini Runde 1 + Recherche 13-04: Haltung/Umgebung beeinflussen
          die Ruhe-HRV – erst gleiche Bedingungen machen zwei Aufnahmen vergleichbar). Zwei Tipps, landen im Datensatz. -->
     <div class="field kontext" id="kontext">
-      <label>Wo wird gemessen?</label>
-      <div class="chipzeile" data-feld="umgebung"><button type="button" data-w="eigene_box" class="an">Eigene Box</button><button type="button" data-w="anbindeplatz">Anbindeplatz</button><button type="button" data-w="fremder_stall">Fremder Stall</button></div>
-      <label style="margin-top:10px">Davor</label>
-      <div class="chipzeile" data-feld="vorbedingung"><button type="button" data-w="ruhe_2h" class="an">≥ 2 h ohne Arbeit</button><button type="button" data-w="nach_bewegung">Nach Bewegung</button><button type="button" data-w="beim_fressen">Beim Fressen</button></div>
+      <label data-i18n="kxWo">Wo wird gemessen?</label>
+      <div class="chipzeile" data-feld="umgebung"><button type="button" data-w="eigene_box" class="an" data-i18n="kxBox">Eigene Box</button><button type="button" data-w="anbindeplatz" data-i18n="kxAnbinde">Anbindeplatz</button><button type="button" data-w="fremder_stall" data-i18n="kxFremd">Fremder Stall</button></div>
+      <label style="margin-top:10px" data-i18n="kxDavor">Davor</label>
+      <div class="chipzeile" data-feld="vorbedingung"><button type="button" data-w="ruhe_2h" class="an" data-i18n="kxRuhe">≥ 2 h ohne Arbeit</button><button type="button" data-w="nach_bewegung" data-i18n="kxBeweg">Nach Bewegung</button><button type="button" data-w="beim_fressen" data-i18n="kxFressen">Beim Fressen</button></div>
     </div>
     <button class="btn" id="btnConnect">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"><path d="M6.5 8.5L17.5 15.5L12 20V4l5.5 4.5L6.5 15.5"/></svg>
@@ -1095,6 +1105,7 @@ const HAUS={ appImStore:false, appUrl:'https://carlon.app' };
     <!-- Bei zu wenigen Schlaegen gibt es nichts zu zeigen — dann bleibt dieser
          ganze Block weg statt leere Rahmen zu praesentieren. -->
     <div id="belegBody">
+    <p class="pm-hinweis" id="pmHinweis"></p>
     <!-- Die Kurve ist das Beweisstueck — sie bekommt die volle Breite. -->
     <div class="chart-wrap">
       <div class="ct">
@@ -1518,6 +1529,9 @@ de:{
  hlT:'Noch drei Tipps auf der Seite deiner Praxis:', hl1:'„Datei auswählen“ (bzw. „Dateien hinzufügen“) antippen.', hl2:'Die oberste Datei wählen: {d}', hl3:'„Hochladen“ antippen – dann hierher zurück.', hlJa:'Hochgeladen ✓', hlNochmal:'Seite nochmal öffnen',
  icsPferd:'dein Pferd', icsTitel:'Ruhemessung {p}', icsText:'Nächste Ruhemessung für {x} – mindestens 7 Minuten in der gewohnten Box. Messstation:', icsPraxis:'deine Praxis',
  kalT:'Nächste Messung: {d}', kalSub:'Deine Praxis wünscht alle {n} Tage eine Aufnahme.', kalKnopf:'In meinen Kalender',
+ kxWo:'Wo wird gemessen?', kxBox:'Eigene Box', kxAnbinde:'Anbindeplatz', kxFremd:'Fremder Stall', kxDavor:'Davor', kxRuhe:'≥ 2 h ohne Arbeit', kxBeweg:'Nach Bewegung', kxFressen:'Beim Fressen',
+ vvT:'Das ist die Messstation Ihrer Kundinnen.', vvSub:'So sieht sie aus, wenn sie Ihren Mess-Link öffnen – mit Ihrem Praxisnamen. „Eine echte Messung ansehen“ spielt eine echte Stallaufnahme ab.', vvZurueck:'← CARLON Equine Visite',
+ pmHinweis:'Die Auswertung übernimmt {p}: Verlauf, Kennwerte und Einordnung sieht deine Tierärztin. Hier siehst du, ob die Aufnahme gut geworden ist.',
  abOffen1:'1 Aufnahme ist noch nicht bei deiner Praxis', abOffenN:'{n} Aufnahmen sind noch nicht bei deiner Praxis',
  abOffenSub:'Sicher auf diesem Gerät gespeichert ({x}). Ein Tipp schickt sie los – auch später, wenn im Stall kein Netz war.', abSenden:'Jetzt an die Praxis senden', abGesendet:'✓ Weitergegeben – auf diesem Gerät bleibt eine Kopie.',
  lgWeiter1:'Aufnahme weitergegeben', lgWeiterN:'{n} Aufnahmen weitergegeben',
@@ -1701,6 +1715,9 @@ en:{
  hlT:'Three more taps on your practice’s page:', hl1:'Tap “Choose files” (or “Add files”).', hl2:'Pick the newest file: {d}', hl3:'Tap “Upload” – then come back here.', hlJa:'Uploaded ✓', hlNochmal:'Open the page again',
  icsPferd:'your horse', icsTitel:'Resting recording {p}', icsText:'Next resting recording for {x} – at least 7 minutes in the usual stall. Measuring station:', icsPraxis:'your practice',
  kalT:'Next recording: {d}', kalSub:'Your practice would like a recording every {n} days.', kalKnopf:'Add to my calendar',
+ kxWo:'Where are you recording?', kxBox:'Own stall', kxAnbinde:'Tie-up area', kxFremd:'Unfamiliar stable', kxDavor:'Beforehand', kxRuhe:'≥ 2 h without work', kxBeweg:'After exercise', kxFressen:'While eating',
+ vvT:'This is the measuring station your clients get.', vvSub:'This is what they see when they open your measuring link – with your practice name. “Watch a real recording” plays back a real stable recording.', vvZurueck:'← CARLON Equine Visite',
+ pmHinweis:'{p} does the analysis: your vet sees the trend, the values and what they mean. Here you can see whether the recording turned out well.',
  abOffen1:'1 recording has not reached your practice yet', abOffenN:'{n} recordings have not reached your practice yet',
  abOffenSub:'Safely stored on this device ({x}). One tap sends it – also later, if there was no signal in the stable.', abSenden:'Send to the practice now', abGesendet:'✓ Passed on – a copy stays on this device.',
  lgWeiter1:'Recording passed on', lgWeiterN:'{n} recordings passed on',
@@ -1758,6 +1775,7 @@ en:{
    ══════════════════════════════════════════════════════════════════════ */
 const LANGS={de:'Deutsch',en:'English'};
 let LANG=(()=>{
+  try{ const u=new URLSearchParams(location.search).get('lang'); if(u&&LANGS[u]) return u; }catch(e){}   /* von der englischen Praxis-Seite */
   try{ const s=localStorage.getItem('vk.lang'); if(s&&LANGS[s]) return s; }catch(e){}
   return (navigator.language||'de').toLowerCase().startsWith('de')?'de':'en';
 })();
@@ -3027,7 +3045,14 @@ const _frag=(k)=>{ const m=String(location.hash||'').match(new RegExp('(?:^#|&)'
 const _gleichePraxis=!_q.get('fach') && _gemerkt&&_gemerkt.fach===fach;   /* frischer Link = sein Fragment gilt; ohne Link = das Gemerkte */
 const praxisAb=(function(){ const v=_frag('ab')||(_gleichePraxis&&_gemerkt.ab)||''; return /^https:\/\/\S+$/.test(v)?v:''; })();
 const praxisRh=(function(){ const v=Number(_frag('rh')||(_gleichePraxis&&_gemerkt.rh)||0); return v>0&&v<=90?Math.round(v):0; })();
-if(fach){ try{ const g=JSON.parse(localStorage.getItem('carlon.meinePraxis')||'null'); if(g&&g.fach===fach){ if(praxisAb) g.ab=praxisAb; else delete g.ab; if(praxisRh) g.rh=praxisRh; else delete g.rh; localStorage.setItem('carlon.meinePraxis',JSON.stringify(g)); } }catch(_){ } }
+/* PRAXIS-AUFNAHMEMODUS (17.11.2026): Kommt die Aufnahme für eine Praxis, sieht die Halterin Signalgüte, Dauer, Puls und
+   „gelungen“ – die HRV-Zahlen und Kurven deutet ihre Tierärztin. Das hält die Einordnung dort, wo sie hingehört, und
+   erspart der Praxis Rückfragen zu einzelnen Werten. Die Praxis kann die volle Ansicht freigeben (#an=v).
+   Ohne Praxis (Selbstmessung) bleibt alles sichtbar. */
+const praxisAn=(function(){ const v=_frag('an')||(_gleichePraxis&&_gemerkt.an)||''; return v==='v'?'v':''; })();
+const praxisModus=!!(fach&&praxisKey) && praxisAn!=='v';
+if(praxisModus) document.documentElement.classList.add('praxis-modus');
+if(fach){ try{ const g=JSON.parse(localStorage.getItem('carlon.meinePraxis')||'null'); if(g&&g.fach===fach){ if(praxisAn) g.an=praxisAn; else delete g.an; if(praxisAb) g.ab=praxisAb; else delete g.ab; if(praxisRh) g.rh=praxisRh; else delete g.rh; localStorage.setItem('carlon.meinePraxis',JSON.stringify(g)); } }catch(_){ } }
 /* MEHRERE PRAXEN (17.11.2026, Jan: „Klinik UND mobiler Tierarzt – beide müssen die Datei öffnen können“): Jede Praxis, deren
    Mess-Link die Halterin einmal geöffnet hat, steht in „meinePraxen“. Die Datei wird für ALLE versiegelt (je Praxis ein
    Umschlag in einer Hülle) – die Halterin schickt dieselbe Datei an jede Praxis, jede öffnet nur ihren Teil. */
@@ -3691,6 +3716,16 @@ function befundZeigen(b){
   ablageZeigen();
 })();
 document.addEventListener('visibilitychange',()=>{ if(!document.hidden) ablageZeigen(); });
+/* VON DER PRAXIS-SEITE (17.11.2026, Jan: „man checkt nicht, dass das zusammengehört“): Kommt eine Tierärztin von
+   CARLON Equine Visite (?von=visite), sagt die Station, was sie ist – die Seite, die ihre Kundinnen bekommen – und führt
+   zurück. ?beispiel=1 spielt die echte Beispielmessung von selbst ab (Fokus-Fenster der Praxis-Seite). */
+(function(){ const q=new URLSearchParams(location.search); if(q.get('von')!=='visite') return;
+  try{ if(window.self!==window.top) document.documentElement.classList.add('im-rahmen'); }catch(_){ document.documentElement.classList.add('im-rahmen'); }
+  const k=$('#vonVisite'); if(!k) return;
+  const zur=LANG==='en'?'../../carlon-equine-visite/en/':'../../carlon-equine-visite/';
+  k.innerHTML=`<b>${t('vvT')}</b>${t('vvSub')} <a class="vv-zurueck" href="${zur}">${t('vvZurueck')}</a>`; k.hidden=false;
+  if(q.get('beispiel')==='1' && !fach) setTimeout(()=>{ const b=$('#btnBeispiel'); if(b&&b.offsetParent) b.click(); },900);
+})();
 befundHolen();
 window.addEventListener('online', befundHolen);
 document.addEventListener('visibilitychange', ()=>{ if(!document.hidden) befundHolen(); });
@@ -4391,6 +4426,7 @@ function finish(){
      Ergebnis wird weder uebergeben noch weitergezeigt.                     */
   $('#belegBody').classList.remove('hidden');
   $('.share').classList.remove('hidden');
+  if(praxisModus){ const pn=(_gemerkt&&_gemerkt.name)||(meinePraxen[0]&&meinePraxen[0].name)||t('icsPraxis'); $('#pmHinweis').innerHTML=t('pmHinweis').replace('{p}','<b>'+esc(pn)+'</b>'); }
   // Zustand aus einem vorherigen Fehlversuch zuruecknehmen: sonst bleibt
   // "Senden" gesperrt, obwohl diese Aufnahme in Ordnung ist.
   $('#btnSend').disabled=false; $('#btnSave').disabled=false;

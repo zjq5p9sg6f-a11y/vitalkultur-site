@@ -79,13 +79,17 @@
       beimZeigen.forEach(function (f) { f(i); });
     }
 
+    var schlaeft = false;
     function tick(now) {
+      /* 17.11.2026 (Jan: „Scroll-Aussetzer“): Unsichtbar lief die Schleife mit 60 Bildern/s weiter und nahm Safari den
+         Hauptthread. Jetzt schläft sie, bis die Tour wieder in Sicht kommt; die Uhr steht dabei still (halt). */
+      if (!sichtbar && !reduce && cur >= 0) { if (halt === null) halt = now - t0; schlaeft = true; return; }
       if (cur >= 0) {
         var d = dauer(cur);
         // Die Uhr der Station hält nur an, wenn die Tour nicht zu sehen ist. Wer bedient, sperrt bloß das
         // WEITERSCHALTEN (29.10.2026: nach einem Tipp in der Liste standen Vorführung und Bildtexte 14 s still).
         var pausiert = reduce || !sichtbar;
-        if (pausiert) { if (halt === null) halt = now - t0; t0 = now - halt; } else { halt = null; }
+        if (pausiert) { if (halt === null) halt = now - t0; t0 = now - halt; } else { if (halt !== null) t0 = now - halt; halt = null; }
         var p = Math.min(1, (now - t0) / d);
         var sek = reduce ? 1 : p * d / 1000;
         var akt = null; calls[cur].forEach(function (c) { if (sek >= parseFloat(c.dataset.ab) && sek < parseFloat(c.dataset.bis)) akt = c; }); zeigeCall(akt);
@@ -156,7 +160,7 @@
     }
     if ('IntersectionObserver' in window) {
       new IntersectionObserver(function (es) { es.forEach(function (e) {
-        sichtbar = e.isIntersecting; var v = video(cur);
+        sichtbar = e.isIntersecting; if (sichtbar && schlaeft) { schlaeft = false; requestAnimationFrame(tick); } var v = video(cur);
         if (v) { if (sichtbar) v.play().catch(function () {}); else v.pause(); }
       }); }, { threshold: 0.3 }).observe(root.querySelector('.at-device') || root);
     }
