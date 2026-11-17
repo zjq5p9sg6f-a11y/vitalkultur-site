@@ -399,6 +399,7 @@ main{flex:1;overflow-y:auto;overflow-x:hidden;position:relative}
 .tstop.late{border-left-color:var(--red)}
 .tstop.next{border-color:var(--cyan);box-shadow:0 0 0 1px var(--cyan-g2),0 6px 20px -8px var(--cyan-g1)}
 .tstop.next::after{content:"JETZT DRAN";position:absolute;top:-8px;right:12px;background:var(--cyan);color:var(--bg-void);font-size:9px;font-weight:700;letter-spacing:.08em;padding:2px 8px;border-radius:6px}
+html[lang=en] .tstop.next::after{content:"UP NOW"}
 .tstop{position:relative}
 .tstop.overdue{opacity:.72}
 .tstop.overdue .tl-eta{color:var(--amber)!important}
@@ -5932,6 +5933,7 @@ const Views={
         </select></label>
         <span class="tt-end">${esc(dayLabel)}</span>
       </div>
+      ${Logbook.wegegeldHtml(d)}
       ${r.visits.length?`
       <div class="today-log" style="margin:0 0 16px">
         <div class="tlog-h">${IC.doc}<span>Tagesbilanz</span></div>
@@ -10823,6 +10825,41 @@ const Logbook={
     this.download('carlon-timesheet-'+d+'.csv',this.toCsv(rows));
     Toast.show('Timesheet-CSV exportiert','ok');
   },
+  /* WEGEGELD NACH § 10 GOT (17.11.2026; Perplexity-Ranking Platz 1, Wortlaut gegen gesetze-im-internet.de geprüft):
+     „je Doppelkilometer 3,50 Euro, insgesamt jedoch mindestens 13 Euro. Werden auf einer Fahrt mehrere Tierhalter besucht,
+     so ist das Wegegeld anteilig zu berechnen.“ Doppelkilometer = 1 km hin + 1 km zurück → gefahrene km ÷ 2.
+     VORSCHLAG, keine Abrechnungsempfehlung: km sind geschätzt (Luftlinie × 1,32) und lassen sich durch Tacho-km ersetzen;
+     der Verteilschlüssel (gleiche Anteile je Halter) und die Auslegung des Mindestbetrags bei anteiliger Berechnung liegen
+     bei der Praxis. Erschwerte Fahrten (1- bis 3-fach) setzt die Praxis selbst. */
+  SATZ:3.5, MINDEST:13,
+  wegegeld(d){
+    const r=this.forDate(d); const ist=((State.settings.wegKm||{})[d]);
+    const km=(ist!=null&&ist>0)?ist:r.driveKm; const geschaetzt=!(ist>0);
+    const halter={}; r.visits.forEach(v=>{ const k=(v.owner||'').trim()||('Halter von '+v.horseName); (halter[k]=halter[k]||[]).push(v.horseName); });
+    const namen=Object.keys(halter), n=namen.length||1;
+    /* in ganzen Cent: km auf 0,1 genau × 17,5 Cent je 0,1 km (= 3,50 € je Doppel-km), kaufmännisch gerundet */
+    const gesamt=Math.round(Math.round(km*10)*17.5)/100;
+    /* cent-genau: Restcent auf die ersten Anteile, damit die Anteile exakt die Summe ergeben */
+    const ct=Math.round(gesamt*100), basis=Math.floor(ct/n), rest=ct-basis*n;
+    return {km, geschaetzt, doppelKm:Math.round(km*10)/20, gesamt, zeilen:namen.map((h,i)=>{ const betrag=(basis+(i<rest?1:0))/100; return {halter:h,pferde:halter[h],betrag,unterMindest:betrag<this.MINDEST}; })};
+  },
+  async wegKmSetzen(d,v){ const n=parseFloat(String(v).replace(',','.')); State.settings.wegKm=State.settings.wegKm||{}; if(n>0) State.settings.wegKm[d]=Math.round(n*10)/10; else delete State.settings.wegKm[d]; await State.saveSettings(); Nav.refresh(); },
+  wegegeldHtml(d){ const w=this.wegegeld(d); if(!w.zeilen.length) return '';
+    const e=x=>x.toFixed(2).replace('.',',')+' €';
+    return `<div class="panel weg-panel" style="margin-bottom:16px">
+      <h2 style="font-size:16px;margin-bottom:4px">Wegegeld nach § 10 GOT – Vorschlag</h2>
+      <div style="font-size:12.5px;color:var(--text-secondary);margin-bottom:10px">${this._num(w.km)} km gefahren${w.geschaetzt?' (geschätzt)':' (Ihre Angabe)'} = ${this._num(w.doppelKm)} Doppel-km × 3,50 € = <b style="color:var(--text-primary)">${e(w.gesamt)}</b>, anteilig auf ${w.zeilen.length} Halter${w.zeilen.length===1?'':'innen und Halter'} dieser Tour.</div>
+      <table class="weg-tab" style="width:100%;border-collapse:collapse;font-size:13px">${w.zeilen.map(z=>`<tr style="border-top:1px solid var(--border-faint)"><td style="padding:6px 4px">${esc(z.halter)}</td><td style="padding:6px 4px;color:var(--text-dim)">${esc(z.pferde.join(', '))}</td><td style="padding:6px 4px;text-align:right;font-variant-numeric:tabular-nums">${e(z.betrag)}${z.unterMindest?' <span title="Mindestbetrag 13 € nach § 10 Abs. 2 GOT – Auslegung bei anteiliger Berechnung bitte selbst prüfen" style="color:var(--amber)">*</span>':''}</td></tr>`).join('')}</table>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:10px">
+        <label style="font-size:12.5px;color:var(--text-secondary)">Tacho-km <input type="text" inputmode="decimal" value="${w.geschaetzt?'':this._num(w.km)}" placeholder="${this._num(w.km)}" style="width:80px" onchange="Logbook.wegKmSetzen('${d}',this.value)"></label>
+        <button class="btn ghost" style="font-size:12.5px" onclick="Logbook.exportWegegeld('${d}')">${IC.download||''} Wegegeld als CSV</button>
+      </div>
+      <div style="font-size:11.5px;color:var(--text-dim);margin-top:8px;line-height:1.5">Vorschlag zur Übernahme in Ihre Abrechnung, keine Abrechnungsempfehlung. Geschätzte km (Luftlinie × 1,32) bitte durch Tacho-km ersetzen. Verteilschlüssel: gleiche Anteile je Halter. ${w.zeilen.some(z=>z.unterMindest)?'* unter dem Mindestbetrag von 13 € – wie er bei anteiliger Berechnung gilt, entscheiden Sie. ':''}Erschwerte Fahrten (bis 3-fach) setzen Sie selbst.</div></div>`; },
+  exportWegegeld(d){ const w=this.wegegeld(d);
+    const rows=[['Datum','Halter','Pferde','Anteil Wegegeld (€)','Hinweis']];
+    w.zeilen.forEach(z=>rows.push([d,z.halter,z.pferde.join(', '),this._num(z.betrag.toFixed(2)),z.unterMindest?'unter 13 € Mindestbetrag – Auslegung prüfen':'']));
+    rows.push([]); rows.push(['Summe','',this._num(w.km)+' km ('+(w.geschaetzt?'geschätzt':'Tacho')+') = '+this._num(w.doppelKm)+' Doppel-km',this._num(w.gesamt.toFixed(2)),'§ 10 Abs. 2 GOT: 3,50 € je Doppelkilometer, anteilig']);
+    this.download('carlon-wegegeld-'+d+'.csv',this.toCsv(rows)); Toast.show('Wegegeld-CSV exportiert','ok'); },
   exportFahrtenbuch(d){
     const r=this.forDate(d);
     const rows=[['Datum','Von','Nach','km','Zweck','Uhrzeit']];
@@ -11820,6 +11857,7 @@ const Sprache={
      Navigation, Board, Akte, Station, Karte, Verwaltung, Kauf. */
   WB:{
     /* 17.11.2026: Lücken aus der Sprachprobe (nur/enrest.mjs) */
+    "deutl. Abweichung":"marked dev.", "Sortierung: Strecke":"Sort: distance", "Sortierung: Abweichung":"Sort: deviation",
     "Ihr Januar mit CARLON":"Your January with CARLON",
     "Ihr Februar mit CARLON":"Your February with CARLON",
     "Ihr März mit CARLON":"Your March with CARLON",
