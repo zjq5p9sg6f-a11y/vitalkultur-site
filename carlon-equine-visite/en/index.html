@@ -2224,8 +2224,8 @@ if(_lb) _lb.addEventListener('click', function(){
   (function(){ var r=document.querySelector('.hb-geraete'); if(!r) return; var EN=(document.documentElement.lang||'de').indexOf('en')===0;
     var T=EN?['The owner records in the stable','You see the trend in the record','You plan the round']
             :['Die Halterin misst im Stall','Sie sehen den Verlauf in der Akte','Sie planen die Tour'];
-    var S=EN?['With your measuring link and a Polar H10 strap, at least seven minutes at rest. The recording reaches your practice encrypted.','Every new recording against the horse’s own baseline and earlier measurements – with signal quality, before the visit.','The horses of the day stop by stop, with drive time per stop.']
-            :['Mit Ihrem Mess-Link und dem Polar-H10-Gurt, mindestens sieben Minuten in Ruhe. Die Aufnahme kommt verschlüsselt in Ihre Praxis.','Jede neue Aufnahme gegen die eigene Basis des Pferds und frühere Messungen – mit Signalgüte, schon vor dem Besuch.','Die Pferde des Tages Stopp für Stopp, mit Fahrzeit je Stopp.'];
+    var S=EN?['With your measuring link and a Polar H10 strap, at least seven minutes at rest – then she sends the recording to your practice.','Every new recording against the horse’s own baseline and earlier measurements – with signal quality, before the visit.','The horses of the day stop by stop, with drive time per stop.']
+            :['Mit Ihrem Mess-Link und dem Polar-H10-Gurt, mindestens sieben Minuten in Ruhe – dann schickt sie die Aufnahme an Ihre Praxis.','Jede neue Aufnahme gegen die eigene Basis des Pferds und frühere Messungen – mit Signalgüte, schon vor dem Besuch.','Die Pferde des Tages Stopp für Stopp, mit Fahrzeit je Stopp.'];
     [].slice.call(r.children).forEach(function(g,i){ var k=document.createElement('div'); k.className='hb-karte'; var m=g.querySelector('.g-marke');
       var kopf=document.createElement('div'); kopf.className='hk-kopf'; if(m){ if(m.lastChild&&m.lastChild.nodeType===3) m.lastChild.textContent=T[i]||m.lastChild.textContent; kopf.appendChild(m); }
       var p=document.createElement('p'); p.className='hk-satz'; p.textContent=S[i]||''; kopf.appendChild(p);
