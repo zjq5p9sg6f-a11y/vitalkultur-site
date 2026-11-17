@@ -1,0 +1,33 @@
+{
+  "id": "carlon-messstation",
+  "name": "CARLON Messstation",
+  "short_name": "Messstation",
+  "description": "Ruhemessung im Stall mit dem Polar-H10-Gurt – die Aufnahme geht verschlüsselt an Ihre Tierarztpraxis.",
+  "lang": "de",
+  "start_url": "messen.html",
+  "scope": "messen",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#02080d",
+  "theme_color": "#02080d",
+  "icons": [
+    {
+      "src": "assets/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "assets/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "assets/icon-maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}

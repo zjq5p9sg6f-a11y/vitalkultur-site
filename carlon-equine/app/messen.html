@@ -3,7 +3,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Messung für den Tierarzt — CARLON</title>
-<link rel="manifest" href="manifest.webmanifest">
+<link rel="manifest" href="manifest-messen.webmanifest">
 <meta name="theme-color" content="#0A0A0C">
 <!-- Die Station war `noindex`, stand in keiner sitemap und wurde von keiner
      Seite verlinkt: erreichbar ausschliesslich ueber einen gedruckten
@@ -1303,8 +1303,9 @@ const HAUS={ appImStore:false, appUrl:'https://carlon.app' };
     let name='';
     try{
       const m=String(location.hash||'').match(/(?:^#|&)p=([^&]+)/);
-      if(m){ const n=decodeURIComponent(m[1]).trim().slice(0,60);
-             if(!/[<>{}\\]/.test(n)) name=n; }
+      let n=m?decodeURIComponent(m[1]).trim().slice(0,60):'';
+      if(!n && !new URLSearchParams(location.search).get('fach')){ try{ const g=JSON.parse(localStorage.getItem('carlon.meinePraxis')||'null'); n=(g&&g.name)||''; }catch(_){ } }
+      if(n && !/[<>{}\\]/.test(n)) name=n;
     }catch(_){ }
     if(!name) return;
     const praxisName=name;
@@ -2987,7 +2988,14 @@ const room=new URLSearchParams(location.search).get('room');
    Der alte Raumcode wird weiter erkannt, damit bereits verschickte Links
    nicht ins Leere laufen. */
 const _q=new URLSearchParams(location.search);
-const fach=_q.get('fach'), praxisKey=_q.get('k');
+/* MEINE PRAXIS BLEIBT (17.11.2026, Jan: „voreinstellen, an wen gesendet wird – wie ein geschlossenes System“): Der erste
+   Mess-Link der Praxis wird auf DIESEM Gerät gemerkt (Fach, öffentlicher Schlüssel, Praxisname – nichts Geheimes, alles aus
+   dem Link). Öffnet die Halterin die Station später ohne Link – vom Startbildschirm –, misst und versiegelt sie trotzdem für
+   ihre Praxis. Ein neuer Link einer anderen Praxis ersetzt die gemerkte. */
+const _gemerkt=(function(){ try{ return JSON.parse(localStorage.getItem('carlon.meinePraxis')||'null'); }catch(_){ return null; } })();
+if(_q.get('fach')&&_q.get('k')){ try{ const pm=String(location.hash||'').match(/(?:^#|&)p=([^&]+)/);
+  localStorage.setItem('carlon.meinePraxis',JSON.stringify({fach:_q.get('fach'),k:_q.get('k'),name:pm?decodeURIComponent(pm[1]).slice(0,60):((_gemerkt&&_gemerkt.fach===_q.get('fach')&&_gemerkt.name)||''),seit:new Date().toISOString()})); }catch(_){ } }
+const fach=_q.get('fach')||(_gemerkt&&_gemerkt.fach)||null, praxisKey=_q.get('k')||(_gemerkt&&_gemerkt.k)||null;
 const POSTFACH='https://postfach.carlon.app';
 /* Kommt aus live.js — der EINEN Stelle, die auch das Cockpit und das
    Impressum lesen. false = Dateiweg (Regelfall), true = Zwischenspeicher.
@@ -3035,8 +3043,9 @@ const hatPraxis=!!(fach&&praxisKey);
 const praxisName=(function(){
   try{
     const m=String(location.hash||'').match(/(?:^#|&)p=([^&]+)/);
-    if(!m) return '';
-    const n=decodeURIComponent(m[1]).trim().slice(0,60);
+    let n=m?decodeURIComponent(m[1]).trim().slice(0,60):'';
+    if(!n && !_q.get('fach') && _gemerkt && _gemerkt.name) n=String(_gemerkt.name).trim().slice(0,60);
+    if(!n) return '';
     /* Nur harmlose Zeichen anzeigen — der Wert kommt aus einer Adresse, die
        jeder verändern kann. Kein Markup, keine Steuerzeichen. */
     return /[<>{}\\]/.test(n) ? '' : n;
@@ -5162,5 +5171,16 @@ $('#btnAgain').addEventListener('click',()=>{
    aus sw.js gilt unveraendert (sw-version.mjs leitet sie aus dem Inhalt
    ab). Nach allem anderen registriert — die Messung haengt nie daran. */
 if('serviceWorker' in navigator){ try{ navigator.serviceWorker.register('sw.js'); }catch(e){} }
+/* AUF DEN STARTBILDSCHIRM (17.11.2026): Android/Chrome bietet die Installation an – dann öffnet ein Tipp aufs Symbol direkt die
+   Station, mit gemerkter Praxis. Der Knopf erscheint nur, wenn der Browser es anbietet und eine Praxis gemerkt ist. */
+(function(){ let ang=null; const de=(document.documentElement.lang||'de').indexOf('en')!==0;
+  window.addEventListener('beforeinstallprompt',function(e){ e.preventDefault(); ang=e;
+    let g=null; try{ g=JSON.parse(localStorage.getItem('carlon.meinePraxis')||'null'); }catch(_){ }
+    if(!g||document.getElementById('installKnopf')) return;
+    const b=document.createElement('button'); b.id='installKnopf'; b.className='btn ghost'; b.style.cssText='margin:14px auto 0;display:block';
+    b.textContent=de?('Messstation auf den Startbildschirm'+(g.name?' – für '+g.name:'')):('Add the station to the home screen'+(g.name?' – for '+g.name:''));
+    b.addEventListener('click',async function(){ if(!ang) return; ang.prompt(); try{ await ang.userChoice; }catch(_){ } ang=null; b.remove(); });
+    const ziel=document.getElementById('vReady')||document.body; ziel.appendChild(b); });
+})();
 </script>
 </html>
