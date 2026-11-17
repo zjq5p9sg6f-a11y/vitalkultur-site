@@ -181,7 +181,7 @@ document.head.appendChild(s);})();</script>
      "name": "Where is my data, and how do I back it up?",
      "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Only in your browser on your device – no cloud, no server of ours. Under Documentation, “Back up” creates a backup file; “Restore backup” brings everything back on a new device or browser, including your activation. If a recent backup is missing, the cockpit shows it at the top. With a subscription, the records can also live in a team folder your practice already uses – OneDrive, Google Drive, Dropbox or a network drive. Then every vet sees the same state."
+      "text": "Only in your browser on your device – no cloud, no server of ours. Under Documentation, “Back up” creates a backup file; “Restore backup” brings everything back on a new device or browser, including your activation. If a recent backup is missing, the cockpit shows it at the top. With a subscription, the records can also live in a team folder your practice already uses – OneDrive, Google Drive, Dropbox or a network drive. Then every vet sees the same state – on computers with Chrome or Edge; iPad and iPhone sync via the backup file."
      }
     },
     {
@@ -1092,14 +1092,16 @@ h1,h2{text-wrap:balance}
   .hb-karte .g-marke{position:static!important;transform:none!important;justify-content:center;font-size:15px!important;color:var(--text-primary)!important;text-shadow:none!important}
   .hb-karte .hk-satz{margin:8px auto 0;max-width:34ch;font-size:14px;line-height:1.55;color:rgba(235,230,220,.8)}
   .hb-karte .hk-kopf{padding-top:4px}
-  .hero-bericht{display:flex;justify-content:center;align-items:center;height:100%;width:100%;text-decoration:none}
-  .hb-papier{display:block;height:100%;max-height:100%;aspect-ratio:210/297;border-radius:6px;overflow:hidden;background:#fff;box-shadow:0 18px 40px -14px rgba(0,0,0,.8),0 0 0 1px rgba(255,255,255,.12);transform:rotate(-1.2deg)}
-  .hb-papier img{display:block;width:100%;height:100%;object-fit:cover;object-position:top}
+  .hb-karte .hero-faecher{width:100%;max-width:min(80%,320px);max-height:100%}
   .hb-karte .hk-geraet{flex:1;min-height:0;width:100%;display:flex;align-items:center;justify-content:center}
   .hb-karte .hero-phone{position:relative!important;left:auto!important;bottom:auto!important;margin:0!important;height:100%!important;width:auto!important;max-width:none}
   .hb-karte .hero-shot,.hb-karte .hero-tour{width:100%!important;margin:0!important}
   .hero-buehne .wisch-punkte{margin-top:16px!important}
-  .hero-buehne .fc-gross{margin:12px 16px 0!important}
+  
+  .hero-buehne figcaption{display:none!important}
+  .hb-karte .ht-rahmen{padding:clamp(8px,1.3vw,15px)!important;border-radius:clamp(16px,2.4vw,30px)!important;
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.16),inset 0 0 0 1px rgba(255,255,255,.05),0 0 0 1px #08090b,0 50px 110px -50px rgba(0,0,0,.95),0 0 60px rgba(62,207,178,.08)!important}
+  .hb-karte .ht-rahmen video{border-radius:clamp(9px,1.2vw,16px)!important;box-shadow:0 0 0 1px rgba(0,0,0,.85)}
   .pz-echt-block .pz-tablet.nur-gross{display:none!important}
   .pz-hinweis{display:block!important}
   .pz-hinweis svg.ic{display:inline-block;vertical-align:-5px;margin-right:6px}
@@ -1218,7 +1220,7 @@ try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; 
       <li><svg class="ic" aria-hidden="true"><use href="#i-schild"/></svg>Horse and measurement data stay on your device</li>
       <li><svg class="ic" aria-hidden="true"><use href="#i-check"/></svg>14-day trial, cancel monthly</li>
     </ul>
-    <p class="cta-note"><span id="heroBeta">We are in beta and accompany every practice start personally. Join now as a founding partner and your price stays fixed for 24 months. <a href="#anmeldung">Request a guided start →</a></span></p>
+    
     <figure class="hero-buehne">
       <div class="hb-geraete">
       <span class="hero-phone"><video src="../assets/station-tour/live-v5.mp4" poster="assets/station-tour/live-poster-v5.jpg" width="660" height="1428" autoplay muted playsinline preload="auto" aria-hidden="true"></video><span class="g-marke"><i>1</i>Recorded in the stable</span></span>
@@ -1388,9 +1390,9 @@ try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; 
 
     <div class="berichtsmuster">
       <a class="bm-faecher" href="../assets/CARLON-Muster-Bericht.pdf" target="_blank" rel="noopener" aria-label="Open sample report (PDF)">
-        <img src="../assets/visite-shots/bericht-s4-v1.webp" width="560" height="792" alt="" loading="lazy" decoding="async">
-        <img src="../assets/visite-shots/bericht-s2-v1.webp" width="560" height="792" alt="" loading="lazy" decoding="async">
-        <img src="../assets/visite-shots/bericht-s1-v1.webp" width="560" height="792" alt="Sample report page 1: practice letterhead, raw and corrected values, reading guide" loading="lazy" decoding="async">
+        <img src="../assets/visite-shots/bericht-s4-v3.webp" width="560" height="792" alt="" loading="lazy" decoding="async">
+        <img src="../assets/visite-shots/bericht-s2-v3.webp" width="560" height="792" alt="" loading="lazy" decoding="async">
+        <img src="../assets/visite-shots/bericht-s1-v3.webp" width="560" height="792" alt="Sample report page 1: practice letterhead, raw and corrected values, reading guide" loading="lazy" decoding="async">
       </a>
       <div>
         <b>See the report before you decide anything.</b>
@@ -1693,7 +1695,7 @@ try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; 
           <div class="at-screen">
             <div class="at-scr" data-dauer="25" data-rate="1.5"><video src="../assets/station-tour/live-v5.mp4" poster="assets/station-tour/live-poster-v5.jpg" muted playsinline preload="metadata" aria-label="Measuring station during a resting recording in time-lapse: heart rate, beat count and Poincaré run along"></video></div>
             <div class="at-scr at-scroll" data-dauer="20"><div class="at-scroller" tabindex="0"><img src="../assets/station-tour/ergebnis-lang-v3.webp" width="660" height="5992" alt="Measuring-station result: raw and corrected metrics, curves, measurement log and sending to the practice" loading="lazy" decoding="async"></div></div>
-            <div class="at-scr at-scroll" data-dauer="12"><div class="at-scroller" tabindex="0"><img src="../assets/station-tour/start-lang-v2.webp" width="660" height="1975" alt="Measuring station in the smartphone browser: start page with horse name and belt connection" loading="lazy" decoding="async"></div></div>
+            <div class="at-scr at-scroll" data-dauer="12"><div class="at-scroller" tabindex="0"><img src="../assets/station-tour/start-lang-v3.webp" width="660" height="1975" alt="Measuring station in the smartphone browser: start page with horse name and belt connection" loading="lazy" decoding="async"></div></div>
           </div>
         </div>
         <p class="vt-hinweis">The measuring station itself – tap the list or scroll inside the device</p>
@@ -1815,7 +1817,7 @@ try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; 
       <ul class="enthalten">
         <li>Unlimited horses, recordings and trends</li>
         <li>All staff, all devices of the business</li>
-        <li>Team folder for the whole practice: OneDrive, Google Drive, Dropbox or a network drive – everyone sees the same state</li>
+        <li>Team folder for the whole practice: OneDrive, Google Drive, Dropbox or a network drive – every computer with Chrome or Edge sees the same state</li>
         <li>Measurement report on your own letterhead</li>
         <li>Export as JSON, CSV, Kubios and FHIR&nbsp;R5</li>
         <li>Monthly plan with a 14-day free trial, then cancellable monthly; annual plan at the end of its term</li>
@@ -1984,7 +1986,7 @@ try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; 
            something it does not.</p></div>
       </details>
       <details class="faq-item" data-spur-auf="faq-9"><summary><h3>Where is my data, and how do I back it up?</h3></summary>
-        <div class="faq-a"><p>Only in your browser on your device – no cloud, no server of ours. Under Documentation, “Back up” creates a backup file; “Restore backup” brings everything back on a new device or browser, including your activation. If a recent backup is missing, the cockpit shows it at the top. With a subscription, the records can also live in a team folder your practice already uses – OneDrive, Google Drive, Dropbox or a network drive. Then every vet sees the same state.</p></div>
+        <div class="faq-a"><p>Only in your browser on your device – no cloud, no server of ours. Under Documentation, “Back up” creates a backup file; “Restore backup” brings everything back on a new device or browser, including your activation. If a recent backup is missing, the cockpit shows it at the top. With a subscription, the records can also live in a team folder your practice already uses – OneDrive, Google Drive, Dropbox or a network drive. Then every vet sees the same state – on computers with Chrome or Edge; iPad and iPhone sync via the backup file.</p></div>
       </details>
       <details class="faq-item" data-spur-auf="faq-10"><summary><h3>Can I charge for reviewing a recording?</h3></summary>
         <div class="faq-a"><p>Whether and how you charge for reviewing a recording is your decision under the German fee schedule for veterinarians (GOT); we give no recommendation on this. CARLON delivers measurements, trends and a measurement report; whether this becomes a consultation and how you charge for it is up to you. Reviewing does not replace an examination.</p></div>
@@ -2226,14 +2228,15 @@ if(_lb) _lb.addEventListener('click', function(){
   
   (function(){ var r=document.querySelector('.hb-geraete'); if(!r) return; var EN=(document.documentElement.lang||'de').indexOf('en')===0;
     var tour=r.querySelector('.hero-tour');
-    var ber=document.createElement('a'); ber.className='hero-bericht'; ber.href=(EN?'../':'')+'assets/CARLON-Muster-Bericht.pdf'; ber.target='_blank'; ber.rel='noopener';
+    var ber=document.createElement('a'); ber.className='bm-faecher hero-faecher'; ber.href=(EN?'../':'')+'assets/CARLON-Muster-Bericht.pdf'; ber.target='_blank'; ber.rel='noopener';
     ber.setAttribute('aria-label',EN?'Sample measurement report (PDF)':'Muster-Messwertbericht (PDF)');
-    ber.innerHTML='<span class="hb-papier"><img src="'+(EN?'../':'')+'assets/visite-shots/bericht-s1-v1.webp" alt="" loading="lazy"></span><span class="g-marke"><i>3</i>Bericht</span>';
+    var P=(EN?'../':'')+'assets/visite-shots/bericht-s';
+    ber.innerHTML='<img src="'+P+'4-v3.webp" width="560" height="792" alt="" loading="lazy"><img src="'+P+'2-v3.webp" width="560" height="792" alt="" loading="lazy"><img src="'+P+'1-v3.webp" width="560" height="792" alt="" loading="lazy"><span class="g-marke"><i>3</i>Bericht</span>';
     if(tour){ r.insertBefore(ber,tour); var gm=tour.querySelector('.g-marke i'); if(gm) gm.textContent='4'; }
     var T=EN?['The owner records in the stable','You see what has changed','You document on your letterhead','You plan the round']
             :['Die Halterin misst im Stall','Sie sehen, was sich verändert hat','Sie dokumentieren mit Ihrem Briefkopf','Sie planen die Tour'];
-    var S=EN?['With your measuring link and a Polar H10 strap, at least seven minutes at rest – then she sends the recording to your practice.','Before the visit: every new recording against the horse’s own baseline and earlier measurements, with signal quality. You arrive prepared.','A measurement report with your logo: what you reviewed, traceably recorded – for the file, for the owner and as evidence when you charge for the review under your fee scale.','The horses of the day stop by stop, with drive time per stop.']
-            :['Mit Ihrem Mess-Link und dem Polar-H10-Gurt, mindestens sieben Minuten in Ruhe – dann schickt sie die Aufnahme an Ihre Praxis.','Vor dem Besuch: jede neue Aufnahme gegen die eigene Basis des Pferds und frühere Messungen, mit Signalgüte. Sie fahren vorbereitet hin.','Ein Messwertbericht mit Ihrem Logo: was Sie gesichtet haben, nachvollziehbar festgehalten – für die Akte, für die Halterin und als Beleg, wenn Sie die Sichtung nach GOT berechnen.','Die Pferde des Tages Stopp für Stopp, mit Fahrzeit je Stopp.'];
+    var S=EN?['With your measuring link and a Polar H10 strap, at least seven minutes at rest – the recording goes to your practice.','Before the visit: the new recording next to the horse’s own baseline and earlier measurements, with signal quality. You arrive prepared.','A measurement report on your letterhead records what you reviewed – for the file and the owner, and as evidence if you charge for the review under your fee scale.','The horses of the day as a route – with drive time and measurement status per stop.']
+            :['Mit Ihrem Mess-Link und dem Polar-H10-Gurt, mindestens sieben Minuten in Ruhe – die Aufnahme geht an Ihre Praxis.','Vor dem Besuch: die neue Aufnahme neben eigener Basis und früheren Messungen des Pferds, mit Signalgüte. Sie fahren vorbereitet hin.','Ein Messwertbericht mit Ihrem Briefkopf hält fest, was Sie gesichtet haben – für Akte und Halterin, und als Beleg, falls Sie die Sichtung nach GOT berechnen.','Die Pferde des Tages als Route – mit Fahrzeit und Messstand je Stopp.'];
     [].slice.call(r.children).forEach(function(g,i){ var k=document.createElement('div'); k.className='hb-karte'; var m=g.querySelector('.g-marke');
       var kopf=document.createElement('div'); kopf.className='hk-kopf'; if(m){ if(m.lastChild&&m.lastChild.nodeType===3) m.lastChild.textContent=T[i]||m.lastChild.textContent; kopf.appendChild(m); }
       var p=document.createElement('p'); p.className='hk-satz'; p.textContent=S[i]||''; kopf.appendChild(p);

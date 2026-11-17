@@ -1746,6 +1746,7 @@ svg.viz .sd-lbl{fill:var(--cyan-strong);font-size:10px;font-weight:600;font-fami
   .pr-co{text-align:right}
   .pr-co .wm{font-family:var(--font-brand);font-weight:500;letter-spacing:.34em;font-size:17px;color:#04303a;line-height:1}
   .pr-co .wm small{display:block;margin-top:5px;font-family:var(--font-ui);font-size:6.8px;letter-spacing:.42em;color:#00867a;font-weight:600;white-space:nowrap}
+  .pr-co .pr-wm{display:block;overflow:visible}   /* C21 (Jan 17.11.): Unterzeile exakt so breit wie CARLON (CI-Master §Store-Lockup), per textLength statt Sperrung */
   .pr-titel{display:flex;justify-content:space-between;font-size:8.5px;letter-spacing:.16em;text-transform:uppercase;color:#00867a;font-weight:700;margin:4px 0 14px}
   .pr-titel .pr-datum{color:#8a9aa8;letter-spacing:.08em}
   #printArea h1{font-size:25px;margin:0 0 2px}
@@ -8208,7 +8209,7 @@ const Report={
       <div class="pr-head">
         <div class="pr-praxis">${s.logo?`<img class="pr-logo" src="${s.logo}" alt="${esc(s.clinicName||'Praxis')}">`:''}
           <div class="pr-adr"><b>${esc(s.clinicName||'')}</b>${(d.vet||s.vetName)?`<span>${esc(d.vet||s.vetName)}</span>`:''}${kontakt.length?`<span>${kontakt.join(' · ')}</span>`:''}</div></div>
-        <div class="pr-co"><div class="wm">CARLON<small>EQUINE VISITE</small></div></div>
+        <div class="pr-co"><svg class="pr-wm" viewBox="0 0 124 27" width="124" height="27" role="img" aria-label="CARLON Equine Visite"><text x="0" y="15.5" textLength="124" lengthAdjust="spacing" style="font-family:var(--font-brand);font-weight:500;font-size:19px" fill="#04303a">CARLON</text><text x="0.3" y="26" textLength="122.7" lengthAdjust="spacing" style="font-family:var(--font-ui);font-weight:600;font-size:7px" fill="#00867a">EQUINE VISITE</text></svg></div>
       </div>
       <div class="pr-titel"><span class="pr-art">${d.muster?'Musterbericht · fiktive Demo-Daten, fiktive Praxis':'Messwertbericht · Ruhe-HRV'}</span><span class="pr-datum">erstellt ${erstellt}</span></div>
       <h1>${esc(h.name)}</h1>
