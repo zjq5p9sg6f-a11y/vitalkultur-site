@@ -27,11 +27,11 @@
   <!-- Die kanonische Tierarzt-Verkaufsseite (Visite) — DE und EN. -->
   <url>
     <loc>https://vitalkultur.com/carlon-equine-visite/</loc>
-    <lastmod>2026-11-15</lastmod>
+    <lastmod>2026-11-17</lastmod>
   </url>
   <url>
     <loc>https://vitalkultur.com/carlon-equine-visite/en/</loc>
-    <lastmod>2026-11-15</lastmod>
+    <lastmod>2026-11-17</lastmod>
   </url>
   <!-- Die Messstation. Sie stand bis 07.08.2026 auf noindex und in keiner
        sitemap — die eine Seite, die sich von selbst verbreitet, war fuer
@@ -41,14 +41,14 @@
   </url>
   <url>
     <loc>https://vitalkultur.com/hrv-research/</loc>
-    <lastmod>2026-11-15</lastmod>
+    <lastmod>2026-11-17</lastmod>
     <xhtml:link rel="alternate" hreflang="en" href="https://vitalkultur.com/hrv-research/"/>
     <xhtml:link rel="alternate" hreflang="de" href="https://vitalkultur.com/hrv-research/de/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://vitalkultur.com/hrv-research/"/>
   </url>
   <url>
     <loc>https://vitalkultur.com/hrv-research/de/</loc>
-    <lastmod>2026-11-15</lastmod>
+    <lastmod>2026-11-17</lastmod>
     <xhtml:link rel="alternate" hreflang="en" href="https://vitalkultur.com/hrv-research/"/>
     <xhtml:link rel="alternate" hreflang="de" href="https://vitalkultur.com/hrv-research/de/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://vitalkultur.com/hrv-research/"/>
@@ -73,7 +73,7 @@
   </url>
   <url>
     <loc>https://vitalkultur.com/terms.html</loc>
-    <lastmod>2026-11-15</lastmod>
+    <lastmod>2026-11-16</lastmod>
   </url>
   <url>
     <loc>https://vitalkultur.com/impressum.html</loc>
@@ -88,7 +88,7 @@
   </url>
   <url>
     <loc>https://vitalkultur.com/agb.html</loc>
-    <lastmod>2026-11-15</lastmod>
+    <lastmod>2026-11-16</lastmod>
   </url>
   <url>
     <loc>https://vitalkultur.com/privacy-en.html</loc>
