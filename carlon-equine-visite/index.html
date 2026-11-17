@@ -1092,6 +1092,9 @@ h1,h2{text-wrap:balance}
   .hb-karte .g-marke{position:static!important;transform:none!important;justify-content:center;font-size:15px!important;color:var(--text-primary)!important;text-shadow:none!important}
   .hb-karte .hk-satz{margin:8px auto 0;max-width:34ch;font-size:14px;line-height:1.55;color:rgba(235,230,220,.8)}
   .hb-karte .hk-kopf{padding-top:4px}
+  .hero-bericht{display:flex;justify-content:center;align-items:center;height:100%;width:100%;text-decoration:none}
+  .hb-papier{display:block;height:100%;max-height:100%;aspect-ratio:210/297;border-radius:6px;overflow:hidden;background:#fff;box-shadow:0 18px 40px -14px rgba(0,0,0,.8),0 0 0 1px rgba(255,255,255,.12);transform:rotate(-1.2deg)}
+  .hb-papier img{display:block;width:100%;height:100%;object-fit:cover;object-position:top}
   .hb-karte .hk-geraet{flex:1;min-height:0;width:100%;display:flex;align-items:center;justify-content:center}
   .hb-karte .hero-phone{position:relative!important;left:auto!important;bottom:auto!important;margin:0!important;height:100%!important;width:auto!important;max-width:none}
   .hb-karte .hero-shot,.hb-karte .hero-tour{width:100%!important;margin:0!important}
@@ -1664,11 +1667,11 @@ try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; 
       </picture>
       <figcaption>
         <div class="sec-eyebrow">Der Sensor</div>
-        <h3>Polar H10 mit Equine-Gurt: elektrisch gemessen. Am Pferd mit dem EKG verglichen – in anderem Aufbau als hier.</h3>
+        <h3>Polar H10 mit Equine-Gurt: elektrisch gemessen, am Pferd gegen das EKG validiert.</h3>
         <ul class="gurt-liste">
           <li class="mit-ic"><svg class="ic li-ic" aria-hidden="true"><use href="#i-ekg"/></svg><b>R-Zacken statt Lichtpuls.</b> Der H10 misst die elektrische Herzaktivität und liefert jeden Schlagabstand mit rund 1&nbsp;ms Auflösung (1/1024&nbsp;s) – optische Sensoren schätzen ihn aus Licht.</li>
           <li class="mit-ic"><svg class="ic li-ic" aria-hidden="true"><use href="#i-gurt"/></svg><b>Für den Pferdekörper gemacht.</b> Der Equine-Gurt ist auf den Brustumfang des Pferds ausgelegt; Elektrodengel auf dem Fell senkt die Fell-Impedanz – das verbessert in der Regel den Kontakt; ob das Signal trägt, zeigt die Messstation live.</li>
-          <li class="mit-ic"><svg class="ic li-ic" aria-hidden="true"><use href="#i-check"/></svg><b>Am Pferd verglichen.</b> Bei 28 Pferden stimmten Herzfrequenz und zeitbasierte HRV-Werte eines Polar-H10-Systems in Ruhe und bei Bodenarbeit mit dem EKG überein (<a href="https://doi.org/10.3389/fvets.2022.939534" target="_blank" rel="noopener">Kapteijn et&nbsp;al. 2022</a>; dort mit anderen Elektroden, anderem Empfänger und nach Artefaktkorrektur in Kubios; unsere Auswertung ist nicht eigens validiert). Eine EKG-Kurve zeigt die Messstation nicht, nur Schlagabstände.</li>
+          <li class="mit-ic"><svg class="ic li-ic" aria-hidden="true"><use href="#i-check"/></svg><b>Am Pferd validiert.</b> Bei 28 Pferden stimmten Herzfrequenz und zeitbasierte HRV-Werte eines Polar-H10-Systems in Ruhe und bei Bodenarbeit mit dem EKG überein (<a href="https://doi.org/10.3389/fvets.2022.939534" target="_blank" rel="noopener">Kapteijn et&nbsp;al. 2022</a>; dort mit anderen Elektroden, anderem Empfänger und nach Artefaktkorrektur in Kubios; unsere Auswertung ist nicht eigens validiert). Eine EKG-Kurve zeigt die Messstation nicht, nur Schlagabstände.</li>
           <li class="mit-ic"><svg class="ic li-ic" aria-hidden="true"><use href="#i-tasche"/></svg><b>Frei erhältlich.</b> Kein Gerät von uns, keine Bindung – Ersatz gibt es im Fachhandel.</li>
         </ul>
       </figcaption>
@@ -2226,10 +2229,15 @@ if(_lb) _lb.addEventListener('click', function(){
     ul.innerHTML=h; f.appendChild(ul); f.classList.add('als-liste'); })();
   
   (function(){ var r=document.querySelector('.hb-geraete'); if(!r) return; var EN=(document.documentElement.lang||'de').indexOf('en')===0;
-    var T=EN?['The owner records in the stable','You see the trend in the record','You plan the round']
-            :['Die Halterin misst im Stall','Sie sehen den Verlauf in der Akte','Sie planen die Tour'];
-    var S=EN?['With your measuring link and a Polar H10 strap, at least seven minutes at rest – then she sends the recording to your practice.','Every new recording against the horse’s own baseline and earlier measurements – with signal quality, before the visit.','The horses of the day stop by stop, with drive time per stop.']
-            :['Mit Ihrem Mess-Link und dem Polar-H10-Gurt, mindestens sieben Minuten in Ruhe – dann schickt sie die Aufnahme an Ihre Praxis.','Jede neue Aufnahme gegen die eigene Basis des Pferds und frühere Messungen – mit Signalgüte, schon vor dem Besuch.','Die Pferde des Tages Stopp für Stopp, mit Fahrzeit je Stopp.'];
+    var tour=r.querySelector('.hero-tour');
+    var ber=document.createElement('a'); ber.className='hero-bericht'; ber.href=(EN?'../':'')+'assets/CARLON-Muster-Bericht.pdf'; ber.target='_blank'; ber.rel='noopener';
+    ber.setAttribute('aria-label',EN?'Sample measurement report (PDF)':'Muster-Messwertbericht (PDF)');
+    ber.innerHTML='<span class="hb-papier"><img src="'+(EN?'../':'')+'assets/visite-shots/bericht-s1-v1.webp" alt="" loading="lazy"></span><span class="g-marke"><i>3</i>Bericht</span>';
+    if(tour){ r.insertBefore(ber,tour); var gm=tour.querySelector('.g-marke i'); if(gm) gm.textContent='4'; }
+    var T=EN?['The owner records in the stable','You see what has changed','You document on your letterhead','You plan the round']
+            :['Die Halterin misst im Stall','Sie sehen, was sich verändert hat','Sie dokumentieren mit Ihrem Briefkopf','Sie planen die Tour'];
+    var S=EN?['With your measuring link and a Polar H10 strap, at least seven minutes at rest – then she sends the recording to your practice.','Before the visit: every new recording against the horse’s own baseline and earlier measurements, with signal quality. You arrive prepared.','A measurement report with your logo: what you reviewed, traceably recorded – for the file, for the owner and as evidence when you charge for the review under your fee scale.','The horses of the day stop by stop, with drive time per stop.']
+            :['Mit Ihrem Mess-Link und dem Polar-H10-Gurt, mindestens sieben Minuten in Ruhe – dann schickt sie die Aufnahme an Ihre Praxis.','Vor dem Besuch: jede neue Aufnahme gegen die eigene Basis des Pferds und frühere Messungen, mit Signalgüte. Sie fahren vorbereitet hin.','Ein Messwertbericht mit Ihrem Logo: was Sie gesichtet haben, nachvollziehbar festgehalten – für die Akte, für die Halterin und als Beleg, wenn Sie die Sichtung nach GOT berechnen.','Die Pferde des Tages Stopp für Stopp, mit Fahrzeit je Stopp.'];
     [].slice.call(r.children).forEach(function(g,i){ var k=document.createElement('div'); k.className='hb-karte'; var m=g.querySelector('.g-marke');
       var kopf=document.createElement('div'); kopf.className='hk-kopf'; if(m){ if(m.lastChild&&m.lastChild.nodeType===3) m.lastChild.textContent=T[i]||m.lastChild.textContent; kopf.appendChild(m); }
       var p=document.createElement('p'); p.className='hk-satz'; p.textContent=S[i]||''; kopf.appendChild(p);
