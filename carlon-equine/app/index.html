@@ -2367,6 +2367,84 @@ const Teilen = {
   }
 };
 
+/* ══ EINGANG (17.11.2026, Jan: „Reibung so genial wie möglich rausnehmen“) ═════════════════════════════
+   Ein Ordner, in dem neue Aufnahmen ankommen – und das Cockpit übernimmt sie von selbst. Typische Ordner:
+   • der Ordner einer Dropbox-Dateianfrage bzw. eines OneDrive-„Dateien anfordern“ / Nextcloud-Datei-Drops
+     (Halterin lädt ohne Konto hoch, die Datei liegt in der Praxis-Cloud; deren Sync-Client legt sie auf den Rechner),
+   • der Download-Ordner (Anhänge aus WhatsApp Web, Mail).
+   Wir speichern nichts dazwischen: der Weg läuft über die Cloud der Praxis, gelesen wird nur der gewählte Ordner.
+   NICHT-DESTRUKTIV: Dateien werden nie verschoben oder gelöscht – gemerkt wird, was schon gelesen ist
+   (Name·Größe·Änderungszeit). Doppelt Ankommendes erkennt der Importer selbst (Aufnahme-Kennung).
+   Grenze, offen: Ordnerzugriff gibt es nur in Chrome/Edge am Rechner (showDirectoryPicker); Safari/iPad nicht. */
+const Eingang = {
+  handle:null, aktiv:false, letzterFehler:null, _laeuft:false, _beob:null, zuletzt:null, gesamt:0,
+  moeglich(){ return typeof window.showDirectoryPicker==='function'; },
+  _gesehen(){ try{ return new Set(JSON.parse(localStorage.getItem('carlonEingangGesehen')||'[]')); }catch(_){ return new Set(); } },
+  _merke(set){ try{ localStorage.setItem('carlonEingangGesehen',JSON.stringify([...set].slice(-800))); }catch(_){ } },
+  async verbinden(){
+    if(!this.moeglich()) return {ok:false,grund:'Dieser Browser kann keine Ordner beobachten – am Rechner Chrome oder Edge verwenden.'};
+    try{
+      const h=await window.showDirectoryPicker({mode:'read',id:'carlon-eingang',startIn:'downloads'});
+      /* Merken für den nächsten Start; scheitert das (Browser kann den Handle nicht ablegen), gilt der Eingang für diese Sitzung. */
+      try{ await DB.put('settings',{id:'eingangOrdner',handle:h,seit:new Date().toISOString()}); }catch(e){ console.warn('Eingang merken',e); }
+      this.handle=h; this.aktiv=true; this.letzterFehler=null; this.beobachten();
+      const r=await this.pruefen({laut:false});
+      return {ok:true,name:h.name,neu:r.neu};
+    }catch(e){ return {ok:false,grund:e&&e.name==='AbortError'?'abgebrochen':String(e&&e.message||e)}; }
+  },
+  async trennen(){ try{ await DB.del('settings','eingangOrdner'); }catch(_){ } this.handle=null; this.aktiv=false; if(this._beob){ try{ this._beob.disconnect(); }catch(_){ } this._beob=null; } },
+  async wiederaufnehmen(){
+    if(!this.moeglich()) return false;
+    try{ const s=await DB.get('settings','eingangOrdner'); if(!s||!s.handle) return false;
+      const p=await s.handle.queryPermission({mode:'read'});
+      this.handle=s.handle;
+      if(p!=='granted'){ this.letzterFehler='freigeben'; return false; }
+      this.aktiv=true; this.beobachten(); return true;
+    }catch(e){ this.letzterFehler=String(e&&e.message||e); return false; }
+  },
+  /* Nach einem Browser-Neustart verlangt Chrome oft EINEN Klick zur erneuten Freigabe – nie still. */
+  async freigeben(){ if(!this.handle) return false; try{ const p=await this.handle.requestPermission({mode:'read'}); if(p==='granted'){ this.aktiv=true; this.letzterFehler=null; this.beobachten(); await this.pruefen({laut:true}); return true; } }catch(_){ } return false; },
+  beobachten(){
+    if(this._takt) return;
+    this._takt=setInterval(()=>{ if(!document.hidden) this.pruefen({laut:true}); },30000);
+    document.addEventListener('visibilitychange',()=>{ if(!document.hidden) this.pruefen({laut:true}); });
+    /* Chrome 133+: der Browser meldet neue Dateien sofort (FileSystemObserver); sonst reicht der 30-s-Takt. */
+    try{ if(typeof FileSystemObserver==='function' && this.handle && !this._beob){
+      this._beob=new FileSystemObserver(()=>{ clearTimeout(this._fs); this._fs=setTimeout(()=>this.pruefen({laut:true}),1500); });
+      this._beob.observe(this.handle).catch(()=>{ this._beob=null; }); } }catch(_){ this._beob=null; }
+  },
+  async pruefen({laut=true}={}){
+    if(!this.aktiv||!this.handle||this._laeuft) return {neu:0};
+    this._laeuft=true; let neu=0, schonDa=0; const pferde=new Set();
+    try{
+      const gesehen=this._gesehen(), kandidaten=[], schluessel={};
+      for await (const [name,e] of this.handle.entries()){
+        if(e.kind!=='file' || !/\.(json|carlon)$/i.test(name) || name.startsWith('.')) continue;
+        const f=await e.getFile(); const key=name+'|'+f.size+'|'+(f.lastModified||0);
+        if(gesehen.has(key)) continue;
+        if(f.size>25*1048576){ gesehen.add(key); continue; }   /* kein Aufnahme-Format; nie in den Speicher ziehen */
+        kandidaten.push(f); schluessel[name]=key;
+      }
+      if(kandidaten.length){
+        const {parsed,skipped}=await Importer.scan(kandidaten);
+        /* Halb geschriebene Datei (Sync-Client noch dabei) NICHT als gelesen merken – beim nächsten Takt erneut. */
+        const spaeter=new Set((skipped||[]).filter(x=>/unvollständig|beschädigt/i.test(x.reason||'')).map(x=>x.name));
+        for(const n in schluessel) if(!spaeter.has(n)) gesehen.add(schluessel[n]);
+        for(const x of parsed){ try{
+          if(x.kind==='coh'){ await Coherence.ingest(x.raw); neu++; }
+          else { const r=await Importer.ingest(x.n); pferde.add(r.horseId); if(r.dup) schonDa++; else neu++; } }catch(_){ } }
+        this._merke(gesehen);
+        if(neu){ await State.load(); if(typeof Praxis!=='undefined') await Praxis.anfrageErledigen(pferde); try{ Nav.refresh(); }catch(_){ } }
+      }
+      this.letzterFehler=null; this.zuletzt=new Date().toISOString(); this.gesamt+=neu;
+    }catch(e){ this.letzterFehler=String(e&&e.message||e); }
+    finally{ this._laeuft=false; }
+    if(neu && laut){ const id=[...pferde][0];
+      Toast.show(`${neu} neue Aufnahme${neu===1?'':'n'} aus dem Eingang übernommen`,'ok', id?{label:'Ansehen',fn:()=>Views.openHorse(id)}:null); }
+    return {neu,schonDa};
+  }
+};
+
 const DB = {
   _db:null, _c:{},
   async open(){
@@ -8550,6 +8628,24 @@ const UI={
         ${Teilen.letzterFehler?`<div style="font-size:12px;color:var(--amber);margin-top:6px">Zuletzt: ${esc(Teilen.letzterFehler)}</div>`:''}
         ${Teilen.aktiv?`<div style="font-size:12px;color:var(--text-dim);margin-top:6px">Tägliche Sicherung im Ordner: ${State.settings.autoSicherung?esc(fmtDate(State.settings.autoSicherung)):'noch keine'}${Teilen.konflikte?` · ${Teilen.konflikte} gleichzeitige Änderung${Teilen.konflikte===1?'':'en'} – ältere Fassung aufgehoben`:''}</div>`:''}
       </div>`:''}
+      <div class="field" id="eingangFeld"><label>Eingang für Aufnahmen ${Eingang.aktiv?'<span style="color:var(--good);font-weight:400">— übernimmt von selbst</span>':'<span style="color:var(--text-dim);font-weight:400">— ohne Hineinziehen</span>'}</label>
+        <div style="font-size:12.5px;color:var(--text-dim);line-height:1.5;margin:-4px 0 8px">
+          Neue Aufnahmen landen in einem Ordner Ihrer Praxis – CARLON übernimmt sie <b>von selbst</b> in die Akte. Zwei Wege, beide ohne Server von uns:
+          <b>①&nbsp;Upload-Link:</b> In Dropbox eine <b>Dateianfrage</b> anlegen (oder OneDrive für Arbeit „Dateien anfordern“, Nextcloud „Datei-Drop“) und den Link unten einfügen – er reist im Mess-Link mit, die Halterin lädt ohne Konto hoch.
+          <b>②&nbsp;Download-Ordner:</b> Was per WhatsApp Web oder Mail kommt, nur noch anklicken.
+          Dann hier den Ordner wählen (den Dateianfrage-Ordner auf diesem Rechner bzw. „Downloads“). Gelesen wird nur; nichts wird verschoben oder gelöscht.
+        </div>
+        <input id="sEingangLink" placeholder="https://www.dropbox.com/request/…  (optional)" value="${esc(s.eingangLink||'')}" style="margin-bottom:8px">
+        <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
+          ${Eingang.moeglich()?`<button class="btn ghost" onclick="UI.eingangOrdner()">${Eingang.aktiv?'Ordner wechseln':'Ordner wählen'}</button>`:`<span style="font-size:12px;color:var(--amber)">Ordner beobachten geht am Rechner in Chrome oder Edge – hier bitte Dateien öffnen.</span>`}
+          ${Eingang.letzterFehler==='freigeben'?`<button class="btn ghost" onclick="Eingang.freigeben().then(()=>{UI.closeModal();UI.openSettings();})">Freigeben</button>`:''}
+          ${Eingang.aktiv?`<button class="btn ghost" style="font-size:12px" onclick="Eingang.trennen().then(()=>{UI.closeModal();UI.openSettings();})">Trennen</button>`:''}
+        </div>
+        ${Eingang.aktiv&&Eingang.handle?`<div style="font-size:12px;color:var(--text-dim);margin-top:6px">Beobachtet: „${esc(Eingang.handle.name)}“${Eingang.zuletzt?' · zuletzt geprüft '+esc(new Date(Eingang.zuletzt).toLocaleTimeString('de-DE',{hour:'2-digit',minute:'2-digit'}))+' Uhr':''}</div>`:''}
+        <label style="display:block;font-size:12px;font-weight:600;color:var(--text-secondary);margin:12px 0 6px">Erinnerung für die Halterin</label>
+        <select id="sRhythmus" style="width:auto">${[[0,'keine'],[7,'alle 7 Tage'],[14,'alle 14 Tage'],[30,'alle 30 Tage']].map(([v,l])=>`<option value="${v}" ${Number(s.messRhythmus||0)===v?'selected':''}>${l}</option>`).join('')}</select>
+        <div style="font-size:12px;color:var(--text-dim);margin-top:4px">Die Messstation schlägt nach dem Senden den nächsten Termin für den Kalender der Halterin vor.</div>
+      </div>
       <div class="field"><label>Praxis-Logo <span style="color:var(--text-dim);font-weight:400">— erscheint auf Ihren Messwertberichten (Ihr Branding, nicht unseres)</span></label>
         <div class="logo-row">
           <div class="logo-prev" id="sLogoPrev">${s.logo?`<img src="${s.logo}" alt="Logo">`:'<span>kein Logo</span>'}</div>
@@ -8633,6 +8729,11 @@ const UI={
      anders. Genau das ist die Eigenschaft, die diesen Weg tragfaehig macht:
      wir koennen nicht heimlich woanders hinschreiben, und die Klinik sieht
      im Dateimanager jederzeit, was dort liegt. */
+  async eingangOrdner(){
+    const r=await Eingang.verbinden();
+    if(r.ok){ Toast.show(`Eingang „${r.name}“ verbunden${r.neu?` · ${r.neu} Aufnahme${r.neu===1?'':'n'} übernommen`:' · neue Aufnahmen kommen ab jetzt von selbst'}`,'ok'); this.closeModal(); this.openSettings(); Nav.refresh(); }
+    else if(r.grund!=='abgebrochen'){ Toast.show(r.grund,'warn'); }
+  },
   async klinikOrdner(){
     const r=await Teilen.verbinden();
     if(r.ok){
@@ -8644,6 +8745,8 @@ const UI={
   },
   async saveSettings(){const s=State.settings;
     { const e=$('#sEinl'); if(e){ const v=e.value.trim(); s.einladungText=(v&&v!==Praxis.STANDARD)?v:''; } }
+    { const e=$('#sEingangLink'); if(e){ const v=e.value.trim(); s.eingangLink=/^https:\/\/\S+$/.test(v)?v:''; if(v&&!s.eingangLink) Toast.show('Upload-Link bitte mit https:// einfügen','warn'); } }
+    { const e=$('#sRhythmus'); if(e) s.messRhythmus=Number(e.value)||0; }
     s.clinicName=$('#sName').value;s.vetName=$('#sVet').value;s.originLabel=$('#sOrigin').value;
     /* Kontakt fuer den Aushang — getrimmt, damit ein versehentliches
        Leerzeichen nicht als "vorhanden" durchgeht und eine leere Zeile
@@ -9353,7 +9456,12 @@ const Praxis={
        etwas zu suchen, auch nicht in dem des Hosters. */
     const praxis=((State.settings&&State.settings.clinicName)||'').trim();
     const anhang=praxis ? '#p='+encodeURIComponent(praxis.slice(0,60)) : '';
-    return basis+'messen.html?fach='+encodeURIComponent(ich.fach)+'&k='+encodeURIComponent(ich.boxPub)+anhang;
+    /* Upload-Link der Praxis (Dateianfrage) und Mess-Rhythmus reisen ebenfalls im FRAGMENT – nie in Server-Protokolle. */
+    const st=State.settings||{}; const zus=[];
+    if(st.eingangLink && /^https:\/\//.test(st.eingangLink)) zus.push('ab='+encodeURIComponent(st.eingangLink));
+    if(st.messRhythmus>0) zus.push('rh='+Math.round(st.messRhythmus));
+    const frag=[anhang.replace(/^#/,'')].concat(zus).filter(Boolean).join('&');
+    return basis+'messen.html?fach='+encodeURIComponent(ich.fach)+'&k='+encodeURIComponent(ich.boxPub)+(frag?'#'+frag:'');
   },
 
   /* ── MESSUNG ANFORDERN ───────────────────────────────────────────────
@@ -12528,6 +12636,9 @@ const Sprache={
         Toast.show('Team-Ordner nicht erreichbar – dieses Gerät arbeitet vorerst allein und gleicht später ab','warn');
       }
     }catch(e){}
+    /* EINGANG (17.11.2026): beobachteten Ordner wieder aufnehmen; nach Browser-Neustart einmal freigeben lassen. */
+    try{ if(await Eingang.wiederaufnehmen()) await Eingang.pruefen({laut:true});
+      else if(Eingang.letzterFehler==='freigeben') Toast.show('Eingangs-Ordner: einmal freigeben, dann kommen neue Aufnahmen wieder von selbst','info',{label:'Freigeben',fn:()=>Eingang.freigeben()}); }catch(_){ }
     /* Erst die Rueckkehr aus der Kasse abfangen, dann faellige Erneuerung.
        Beides still — wer die App oeffnet, will arbeiten, nicht verwalten. */
     await License.geraetUebernehmen();

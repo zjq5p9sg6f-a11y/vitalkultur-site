@@ -391,6 +391,16 @@ p.sub{color:var(--sec);font-size:clamp(13px,1.15vw,15px);margin:0 auto clamp(var
   border:1px solid var(--cyan-g2,rgba(62,207,178,.3));border-radius:14px;
   background:linear-gradient(135deg,rgba(62,207,178,.09),rgba(62,207,178,.02))}
 .lage.hidden{display:none}
+.lage.ablage .lg-punkt{background:#E8A33D}
+.lage.ablage .ab-knopf{margin-top:10px}
+.hl-box{text-align:left;max-width:520px;margin:4px auto 0;padding:14px 16px;border-radius:14px;border:1px solid rgba(62,207,178,.35);background:rgba(62,207,178,.06)}
+.hl-box b{display:block;font-size:15px;margin-bottom:6px}
+.hl-schritte{margin:0 0 12px 18px;padding:0;font-size:14px;line-height:1.55}
+.hl-schritte li{margin:3px 0}
+.hl-datei{font-family:var(--font-mono,monospace);font-size:12.5px;word-break:break-all}
+.hl-knoepfe{display:flex;gap:8px;flex-wrap:wrap}
+.kal-box{margin-top:14px;padding-top:12px;border-top:1px solid rgba(255,255,255,.08);display:flex;flex-direction:column;gap:4px;align-items:flex-start}
+.kal-box b{font-size:14.5px}.kal-box span{font-size:13px;color:var(--sec)}.kal-box .btn{margin-top:6px}
 .lage .lg-punkt{width:8px;height:8px;border-radius:50%;background:var(--cyan);margin-top:6px;flex:none;
   box-shadow:0 0 10px var(--cyan);animation:lgPuls 2.6s ease-in-out infinite}
 @keyframes lgPuls{0%,100%{opacity:1}50%{opacity:.3}}
@@ -773,6 +783,7 @@ svg.viz .bezel{stroke:var(--cyan);stroke-opacity:.55;stroke-width:1.1;stroke-lin
      Die Praxis steht darueber, nicht wir: der Stallnachbar, dem das gezeigt
      wird, soll seine eigene Tieraerztin fragen — nicht uns. -->
 <div id="lageKarte" class="lage hidden"></div>
+<div id="ablageKarte" class="lage ablage hidden" role="status"></div>
 <div id="uebergabeKarte" class="uebergabe hidden"></div>
 <div id="weiterKarte" class="uebergabe weiter hidden"></div>
 <div id="befundKarte" class="befund hidden"></div>
@@ -1504,6 +1515,11 @@ de:{
  /* Lage-Karte. Zaehltexte als GANZE Saetze je Numerus — kein zusammen-
     gesetztes „{n} + Restsatz", das in einer Sprache bricht. */
  lgHeute:'heute', lgGestern:'gestern', lgVorTagen:'vor {n} Tagen',
+ hlT:'Noch drei Tipps auf der Seite deiner Praxis:', hl1:'„Datei auswählen“ (bzw. „Dateien hinzufügen“) antippen.', hl2:'Die oberste Datei wählen: {d}', hl3:'„Hochladen“ antippen – dann hierher zurück.', hlJa:'Hochgeladen ✓', hlNochmal:'Seite nochmal öffnen',
+ icsPferd:'dein Pferd', icsTitel:'Ruhemessung {p}', icsText:'Nächste Ruhemessung für {x} – mindestens 7 Minuten in der gewohnten Box. Messstation:', icsPraxis:'deine Praxis',
+ kalT:'Nächste Messung: {d}', kalSub:'Deine Praxis wünscht alle {n} Tage eine Aufnahme.', kalKnopf:'In meinen Kalender',
+ abOffen1:'1 Aufnahme ist noch nicht bei deiner Praxis', abOffenN:'{n} Aufnahmen sind noch nicht bei deiner Praxis',
+ abOffenSub:'Sicher auf diesem Gerät gespeichert ({x}). Ein Tipp schickt sie los – auch später, wenn im Stall kein Netz war.', abSenden:'Jetzt an die Praxis senden', abGesendet:'✓ Weitergegeben – auf diesem Gerät bleibt eine Kopie.',
  lgWeiter1:'Aufnahme weitergegeben', lgWeiterN:'{n} Aufnahmen weitergegeben',
  lgWeiterSub:'{x} · deine Tierärztin meldet sich auf ihrem üblichen Weg.',
  lgPraxis1:'Deine Aufnahme ist bei der Praxis', lgPraxisN:'{n} Aufnahmen sind bei der Praxis',
@@ -1682,6 +1698,11 @@ en:{
  swT:'What happens next',
  swListe:['Your practice will get back to you on their usual channel — nothing more for you to do.','Your copy stays on this device — any time under “Save as a file”.','In calm weeks, measure about once a month — that builds a baseline for your horse.'],
  lgHeute:'today', lgGestern:'yesterday', lgVorTagen:'{n} days ago',
+ hlT:'Three more taps on your practice’s page:', hl1:'Tap “Choose files” (or “Add files”).', hl2:'Pick the newest file: {d}', hl3:'Tap “Upload” – then come back here.', hlJa:'Uploaded ✓', hlNochmal:'Open the page again',
+ icsPferd:'your horse', icsTitel:'Resting recording {p}', icsText:'Next resting recording for {x} – at least 7 minutes in the usual stall. Measuring station:', icsPraxis:'your practice',
+ kalT:'Next recording: {d}', kalSub:'Your practice would like a recording every {n} days.', kalKnopf:'Add to my calendar',
+ abOffen1:'1 recording has not reached your practice yet', abOffenN:'{n} recordings have not reached your practice yet',
+ abOffenSub:'Safely stored on this device ({x}). One tap sends it – also later, if there was no signal in the stable.', abSenden:'Send to the practice now', abGesendet:'✓ Passed on – a copy stays on this device.',
  lgWeiter1:'Recording passed on', lgWeiterN:'{n} recordings passed on',
  lgWeiterSub:'{x} · your vet will get back to you on their usual channel.',
  lgPraxis1:'Your recording is with the practice', lgPraxisN:'{n} recordings are with the practice',
@@ -2999,6 +3020,14 @@ const _gemerkt=(function(){ try{ return JSON.parse(localStorage.getItem('carlon.
 if(_q.get('fach')&&_q.get('k')){ try{ const pm=String(location.hash||'').match(/(?:^#|&)p=([^&]+)/);
   localStorage.setItem('carlon.meinePraxis',JSON.stringify({fach:_q.get('fach'),k:_q.get('k'),name:pm?decodeURIComponent(pm[1]).slice(0,60):((_gemerkt&&_gemerkt.fach===_q.get('fach')&&_gemerkt.name)||''),seit:new Date().toISOString()})); }catch(_){ } }
 const fach=_q.get('fach')||(_gemerkt&&_gemerkt.fach)||null, praxisKey=_q.get('k')||(_gemerkt&&_gemerkt.k)||null;
+/* UPLOAD-LINK UND RHYTHMUS DER PRAXIS (17.11.2026): stehen im Fragment des Mess-Links (#ab=…&rh=7) und werden wie die Praxis
+   gemerkt. ab = Dateianfrage-Link der Praxis-Cloud (Dropbox/OneDrive/Nextcloud) – die Halterin lädt ohne Konto dorthin hoch;
+   rh = Tage bis zur nächsten Messung (Kalendervorschlag). Nur https-Links; alles andere wird ignoriert. */
+const _frag=(k)=>{ const m=String(location.hash||'').match(new RegExp('(?:^#|&)'+k+'=([^&]+)')); try{ return m?decodeURIComponent(m[1]):null; }catch(_){ return null; } };
+const _gleichePraxis=!_q.get('fach') && _gemerkt&&_gemerkt.fach===fach;   /* frischer Link = sein Fragment gilt; ohne Link = das Gemerkte */
+const praxisAb=(function(){ const v=_frag('ab')||(_gleichePraxis&&_gemerkt.ab)||''; return /^https:\/\/\S+$/.test(v)?v:''; })();
+const praxisRh=(function(){ const v=Number(_frag('rh')||(_gleichePraxis&&_gemerkt.rh)||0); return v>0&&v<=90?Math.round(v):0; })();
+if(fach){ try{ const g=JSON.parse(localStorage.getItem('carlon.meinePraxis')||'null'); if(g&&g.fach===fach){ if(praxisAb) g.ab=praxisAb; else delete g.ab; if(praxisRh) g.rh=praxisRh; else delete g.rh; localStorage.setItem('carlon.meinePraxis',JSON.stringify(g)); } }catch(_){ } }
 /* MEHRERE PRAXEN (17.11.2026, Jan: „Klinik UND mobiler Tierarzt – beide müssen die Datei öffnen können“): Jede Praxis, deren
    Mess-Link die Halterin einmal geöffnet hat, steht in „meinePraxen“. Die Datei wird für ALLE versiegelt (je Praxis ein
    Umschlag in einer Hülle) – die Halterin schickt dieselbe Datei an jede Praxis, jede öffnet nur ihren Teil. */
@@ -3314,6 +3343,50 @@ const Verlauf={
     return l.filter((x,i)=>x.art==='gesendet' && i>letzter).length; },
 };
 
+/* ABLAGE (17.11.2026, Jan: „dass niemals etwas verloren geht“).
+   Bis heute lebte eine fertige Aufnahme nur im Arbeitsspeicher: Tab zu, Akku leer
+   oder Teilen weggetippt – und sieben Minuten Stillstehen waren verloren. Jetzt
+   liegt jede Aufnahme im Moment des Fertigwerdens als die FERTIGE Datei (schon
+   für die Praxis versiegelt) in IndexedDB. Gesendet wird genau diese Datei –
+   sofort oder später; offen bleibt sie, bis ein Teilen wirklich aufgelöst hat. */
+const Ablage={
+  _db:null,
+  _open(){ if(this._db) return this._db; this._db=new Promise((ok,nein)=>{ const r=indexedDB.open('carlon-station',1);
+    r.onupgradeneeded=()=>{ r.result.createObjectStore('aufnahmen',{keyPath:'id'}); }; r.onsuccess=()=>ok(r.result); r.onerror=()=>nein(r.error); }); return this._db; },
+  async _st(modus,f){ const d=await this._open(); return new Promise((ok,nein)=>{ const tx=d.transaction('aufnahmen',modus,{durability:'strict'});
+    let erg; const q=f(tx.objectStore('aufnahmen')); if(q) q.onsuccess=()=>{ erg=q.result; }; tx.oncomplete=()=>ok(erg); tx.onerror=()=>nein(tx.error); tx.onabort=()=>nein(tx.error); }); },
+  legen(e){ return this._st('readwrite',st=>st.put(e)); },
+  alle(){ return this._st('readonly',st=>st.getAll()).then(l=>(l||[]).sort((a,b)=>String(a.zeit).localeCompare(String(b.zeit)))); },
+  async offene(){ return (await this.alle()).filter(e=>e.status==='offen'); },
+  async markieren(ids,status){ for(const id of ids){ const e=await this._st('readonly',st=>st.get(id)); if(e){ e.status=status; e[status+'Am']=new Date().toISOString(); await this.legen(e); } } },
+  datei(e){ return new File([e.inhalt],e.name,{type:e.typ||'application/json'}); },
+  /* Aufräumen nur unter Gesendetem und nur weit hinten: die letzten 30 bleiben als Kopie. */
+  async aufraeumen(){ const g=(await this.alle()).filter(e=>e.status==='gesendet'); for(const e of g.slice(0,Math.max(0,g.length-30))) await this._st('readwrite',st=>st.delete(e.id)); }
+};
+async function ablageZeigen(){
+  const k=$('#ablageKarte'); if(!k) return;
+  let off=[]; try{ off=await Ablage.offene(); }catch(_){ }
+  if(S.ablageId && !S.ablageGezeigt) off=off.filter(e=>e.id!==S.ablageId);   /* die gerade fertige Aufnahme hat ihren eigenen Senden-Knopf */
+  if(!off.length){ k.classList.add('hidden'); k.innerHTML=''; return; }
+  const n=off.length, juengste=off[off.length-1];
+  const d=new Date(juengste.zeit), wann=d.toLocaleDateString(LANG==='en'?'en-GB':'de-DE',{day:'numeric',month:'short'})+', '+d.toLocaleTimeString(LANG==='en'?'en-GB':'de-DE',{hour:'2-digit',minute:'2-digit'});
+  k.innerHTML=`<span class="lg-punkt"></span><div><b>${n===1?t('abOffen1'):t('abOffenN').replace('{n}',String(n))}</b>`
+    +`<span>${t('abOffenSub').replace('{x}',esc(off.map(e=>e.pferd).filter((x,i,a)=>a.indexOf(x)===i).join(', ')+' · '+wann))}</span>`
+    +`<div class="ab-knopf"><button class="btn" id="abSenden">${t('abSenden')}</button></div></div>`;
+  k.classList.remove('hidden');
+  $('#abSenden').onclick=async()=>{
+    const dateien=off.map(e=>Ablage.datei(e));
+    if(praxisAb && meinePraxen.length<=1){ hochladenFluss(dateien,off.map(e=>e.id),async()=>{ off.forEach(()=>Verlauf.hinzu({art:'gesendet'})); lageZeigen(); ablageZeigen(); }); return; }
+    if(!(navigator.canShare && navigator.canShare({files:dateien}))){ dateien.forEach(dateiHerunterladen); return; }
+    try{ await navigator.share({title:t('shareTitel'), text:t('shareMsgVerschl'), files:dateien}); }
+    catch(err){ return; }                       /* weggetippt = nicht gesendet; die Karte bleibt */
+    await Ablage.markieren(off.map(e=>e.id),'gesendet');
+    off.forEach(()=>Verlauf.hinzu({art:'gesendet'})); lageZeigen();
+    k.innerHTML=`<span class="lg-punkt" style="background:var(--cyan)"></span><div><b>${t('abGesendet')}</b></div>`;
+    setTimeout(()=>ablageZeigen(),4000);
+  };
+}
+
 /* ÜBERGABE-KARTE. Der Moment, in dem der Besitzer für uns wirbt — ohne dass
    wir ihn darum bitten müssen. Er hat gerade selbst gemessen, findet es gut
    und will es zeigen. Ein Knopf, kein Formular, kein Konto.
@@ -3615,7 +3688,9 @@ function befundZeigen(b){
   const letzter=[...Verlauf.lesen()].reverse().find(x=>x.art==='befund');
   if(letzter) befundZeigen(letzter.b);
   lageZeigen();
+  ablageZeigen();
 })();
+document.addEventListener('visibilitychange',()=>{ if(!document.hidden) ablageZeigen(); });
 befundHolen();
 window.addEventListener('online', befundHolen);
 document.addEventListener('visibilitychange', ()=>{ if(!document.hidden) befundHolen(); });
@@ -3878,6 +3953,12 @@ function onDrop(){
   S.abrissBeginn = S.abrissBeginn || Date.now();
   const rb=$('#btnReconnect');
   if(rb){ rb.classList.remove('hidden'); rb.disabled=false; rb.textContent=t('reconn'); }
+  /* Selbst wiederverbinden (17.11.2026): dreht sich das Pferd, schattet der Körper den Funk oft nur Sekunden ab. Fünf
+     Versuche mit wachsendem Abstand; der Knopf bleibt für Hand-Versuche. Die Lücke zählt wie bisher ehrlich mit. */
+  if(!S.autoReconnect){ S.autoReconnect=true; let n=0;
+    const versuch=()=>{ if(S.stopped || !S.abrissBeginn || n>=5){ S.autoReconnect=false; return; }
+      n++; if(rb && !rb.disabled) rb.click(); setTimeout(versuch, 2000*n); };
+    setTimeout(versuch,1500); }
 }
 
 /* Wiederverbinden am BESTEHENDEN Geraet: kein neuer Chooser, kein neues
@@ -3913,13 +3994,14 @@ function startSession(){
   if(S.batt!=null) $('#batt').textContent=S.batt+'%';
   S.timer=setInterval(tick,1000);
   // Bildschirm wach halten: schläft er ein, stoppt der Bluetooth-Strom.
+  /* 17.11.2026: Das System GIBT die Sperre frei, sobald die Seite kurz verdeckt ist (Anruf, App-Wechsel). Bisher hiess
+     „S.wake gesetzt“ = gesperrt – die freigegebene Sperre wurde nie erneuert, danach konnte der Bildschirm einschlafen
+     und die Messung abbrechen. Jetzt: Freigabe-Ereignis löscht S.wake, Rückkehr holt die Sperre neu. */
   if('wakeLock' in navigator){
-    navigator.wakeLock.request('screen').then(l=>{S.wake=l;}).catch(()=>{});
-    document.addEventListener('visibilitychange',()=>{
-      if(document.visibilityState==='visible' && !S.wake && !S.stopped){
-        navigator.wakeLock.request('screen').then(l=>{S.wake=l;}).catch(()=>{});
-      }
-    });
+    const wach=()=>{ if(S.stopped || (S.wake && !S.wake.released)) return;
+      navigator.wakeLock.request('screen').then(l=>{ S.wake=l; S.wakeN=(S.wakeN||0)+1; l.addEventListener('release',()=>{ if(S.wake===l) S.wake=null; }); }).catch(()=>{}); };
+    wach();
+    if(!S.wachHoerer){ S.wachHoerer=true; document.addEventListener('visibilitychange',()=>{ if(document.visibilityState==='visible') wach(); }); }
   }
 }
 
@@ -4376,6 +4458,12 @@ function finish(){
   const payload=buildExport(name,rr,m,secs);
   S.blob=new Blob([JSON.stringify(payload)],{type:'application/json'});
   S.fname=`${name.replace(/[^\p{L}\p{N}_-]+/gu,'-')}_HRV-Session_${S.startedAt.toISOString().slice(0,10)}.json`;
+  /* Sofort sichern – bevor irgendwer an Senden denkt (Ablage, 17.11.2026). */
+  if(!S.demo){ S.ablageId='a_'+S.startedAt.getTime(); S.ablageGezeigt=false; S.ablageBereit=(async()=>{ const w=await weggabeDatei();
+      await Ablage.legen({id:S.ablageId, name:w.datei.name, typ:w.datei.type, inhalt:await w.datei.text(), verschluesselt:w.verschluesselt,
+        pferd:name, zeit:S.startedAt.toISOString(), schlaege:rr.length, status:'offen'});
+      try{ if(navigator.storage&&navigator.storage.persist) navigator.storage.persist(); }catch(_){ } return w; })()
+      .catch(e=>{ console.warn('Ablage',e); return null; }); }
   show('vDone');
 }
 
@@ -4674,6 +4762,67 @@ function dateiHerunterladen(datei){
   setTimeout(()=>URL.revokeObjectURL(a.href),4000);
 }
 
+/* HOCHLADEN IN DIE PRAXIS-CLOUD (17.11.2026). Hat die Praxis einen Upload-Link (Dateianfrage), geht die Datei dorthin:
+   Datei sichern → Link öffnen (im selben Tipp, sonst blockt der Browser das Fenster) → dort „Datei auswählen“, die oberste
+   CARLON-Datei, „Hochladen“. Ob das Hochladen geklappt hat, kann diese Seite nicht sehen – darum fragt sie ehrlich nach,
+   statt „gesendet“ zu behaupten. Bis zum Ja bleibt die Aufnahme in der Ablage offen. */
+function hochladenFluss(dateien, ids, fertig){
+  dateien.forEach(dateiHerunterladen);
+  let fenster=null; try{ fenster=window.open(praxisAb,'_blank','noopener'); }catch(_){ }
+  const ziel=$('#status'); ziel.innerHTML=`<div class="hl-box"><b>${t('hlT')}</b><ol class="hl-schritte">`
+    +`<li>${t('hl1')}</li><li>${t('hl2').replace('{d}','<span class="hl-datei">'+esc(dateien.map(d=>d.name).join(', '))+'</span>')}</li><li>${t('hl3')}</li></ol>`
+    +`<div class="hl-knoepfe"><button class="btn" id="hlJa">${t('hlJa')}</button><button class="btn ghost" id="hlNochmal">${t('hlNochmal')}</button></div></div>`;
+  $('#hlNochmal').onclick=()=>{ dateien.forEach(dateiHerunterladen); try{ window.open(praxisAb,'_blank','noopener'); }catch(_){ } };
+  $('#hlJa').onclick=async()=>{ try{ await Ablage.markieren(ids,'gesendet'); await Ablage.aufraeumen(); }catch(_){ } if(fertig) await fertig(); };
+  return fenster;
+}
+/* Kalender statt Push-Server: der nächste Messtermin als .ics – das Telefon legt ihn mit Erinnerung in den eigenen Kalender. */
+function kalenderDatei(tage){
+  const d=new Date(Date.now()+tage*86400000); d.setHours(17,0,0,0);
+  const p=n=>String(n).padStart(2,'0'), lok=x=>x.getFullYear()+p(x.getMonth()+1)+p(x.getDate())+'T'+p(x.getHours())+p(x.getMinutes())+'00';
+  const e=new Date(d.getTime()+15*60000), jetzt=new Date(), z=x=>x.toISOString().replace(/[-:]/g,'').slice(0,15)+'Z';
+  const pferd=($('#horse').value.trim()||t('icsPferd')), praxis=(_gemerkt&&_gemerkt.name)||'';
+  const url=new URL('messen.html',location.href).toString();
+  const ie=x=>String(x).replace(/[\\;,]/g,m=>'\\'+m).replace(/\r?\n/g,'\\n');   /* RFC 5545 §3.3.11 */
+  const falte=z=>{ const u=new TextEncoder(); let aus='', zeile=''; for(const ch of z){ if(u.encode(zeile+ch).length>73){ aus+=zeile+'\r\n '; zeile=''; } zeile+=ch; } return aus+zeile; };
+  const txt=['BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//Vitalkultur//CARLON Messstation//DE','CALSCALE:GREGORIAN','BEGIN:VEVENT',
+    'UID:carlon-'+jetzt.getTime()+'@vitalkultur.com','DTSTAMP:'+z(jetzt),'DTSTART:'+lok(d),'DTEND:'+lok(e),
+    'SUMMARY:'+ie(t('icsTitel').replace('{p}',pferd)),'DESCRIPTION:'+ie(t('icsText').replace('{x}',praxis||t('icsPraxis')))+'\\n'+ie(url),'URL:'+url,
+    'BEGIN:VALARM','ACTION:DISPLAY','DESCRIPTION:'+ie(t('icsTitel').replace('{p}',pferd)),'TRIGGER:PT0M','END:VALARM','END:VEVENT','END:VCALENDAR'].map(falte).join('\r\n')+'\r\n';
+  return {datei:new File([txt],'CARLON-naechste-Messung.ics',{type:'text/calendar'}), wann:d};
+}
+function kalenderAnbieten(){
+  if(!praxisRh) return; const ort=$('#soWeiter'); if(!ort||$('#kalKnopf')) return;
+  const {wann}=kalenderDatei(praxisRh);
+  const box=document.createElement('div'); box.className='kal-box';
+  box.innerHTML=`<b>${t('kalT').replace('{d}',esc(wann.toLocaleDateString(LANG==='en'?'en-GB':'de-DE',{weekday:'long',day:'numeric',month:'long'})))}</b>`
+    +`<span>${t('kalSub').replace('{n}',String(praxisRh))}</span><button class="btn ghost" id="kalKnopf">${t('kalKnopf')}</button>`;
+  ort.appendChild(box);
+  $('#kalKnopf').onclick=async()=>{ const {datei}=kalenderDatei(praxisRh);
+    if(navigator.canShare&&navigator.canShare({files:[datei]})){ try{ await navigator.share({files:[datei],title:t('kalKnopf')}); return; }catch(e){ if(e&&e.name==='AbortError') return; } }
+    dateiHerunterladen(datei); };
+}
+
+async function versandAbschliessen(geteilt,verschluesselt){
+  $('#status').innerHTML='<span class="done">✓ '
+    +(geteilt?t('sendGeteilt'):t('sendGespeichert'))+'</span>'
+    +'<div style="font-size:12px;color:var(--sec);margin-top:6px">'
+    +(geteilt
+      ? (verschluesselt ? t('sendGeteiltVerschl') : t('sendGeteiltOffen'))
+      : t('sendDownload'))
+    +'</div>';
+  /* Nur ein aufgeloestes share() ist ein Versand; der Download ist eine
+     Kopie in den eigenen Haenden — die Lage-Karte zaehlt nur Gesendetes. */
+  Verlauf.hinzu({art: geteilt?'gesendet':'gespeichert'}); lageZeigen();
+  if(geteilt && S.ablageId){ try{ await Ablage.markieren([S.ablageId],'gesendet'); await Ablage.aufraeumen(); }catch(_){ } }
+  /* „So geht's weiter" nur nach echtem Versand — beim Download-Fallback
+     hat die Praxis noch nichts, und Zeile 1 waere gelogen. */
+  if(geteilt){ const sw=$('#soWeiter'); if(sw) sw.hidden=false; kalenderAnbieten(); }
+  weitersagenZeigen();
+  $('#btnSend').classList.add('hidden'); $('#btnSave').disabled=false;
+  $('#btnAgain').classList.remove('hidden');
+}
+
 /* ── Übergabe ──────────────────────────────────────────────────────────── */
 $('#btnSend').addEventListener('click', async ()=>{
   /* Das eigentliche Tor. Ein deaktivierter Knopf haelt niemanden auf, der
@@ -4697,12 +4846,17 @@ $('#btnSend').addEventListener('click', async ()=>{
        sichtbar, mit Erklaerung, nicht still. */
     if(!POSTFACH_AN && !room){
       $('#status').textContent=t('sendVorbereiten'); $('#pb').style.width='40%';
-      const {datei,verschluesselt}=await weggabeDatei();
+      /* Gesendet wird die schon gesicherte Datei – dieselbe, die in der Ablage liegt. */
+      const gesichert=S.ablageBereit?await S.ablageBereit:null;
+      const {datei,verschluesselt}=gesichert||await weggabeDatei();
       $('#pb').style.width='100%';
       const text=verschluesselt
         ? t('shareMsgVerschl')
         : t('shareMsgOffen').replace('{x}',
             (window.CARLON_KANON||new URL('index.html',location.href).toString()));
+      /* Upload-Link der Praxis vorhanden (eine Praxis): dorthin, statt über das Teilen-Blatt. */
+      if(praxisAb && meinePraxen.length<=1){ $('#barWrap').classList.add('hidden');
+        hochladenFluss([datei],[S.ablageId].filter(Boolean),()=>versandAbschliessen(true,verschluesselt)); return; }
       let geteilt=false, abgebrochen=false;
       if(navigator.canShare && navigator.canShare({files:[datei]})){
         try{
@@ -4725,22 +4879,7 @@ $('#btnSend').addEventListener('click', async ()=>{
         return;
       }
       if(!geteilt) dateiHerunterladen(datei);
-      $('#status').innerHTML='<span class="done">✓ '
-        +(geteilt?t('sendGeteilt'):t('sendGespeichert'))+'</span>'
-        +'<div style="font-size:12px;color:var(--sec);margin-top:6px">'
-        +(geteilt
-          ? (verschluesselt ? t('sendGeteiltVerschl') : t('sendGeteiltOffen'))
-          : t('sendDownload'))
-        +'</div>';
-      /* Nur ein aufgeloestes share() ist ein Versand; der Download ist eine
-         Kopie in den eigenen Haenden — die Lage-Karte zaehlt nur Gesendetes. */
-      Verlauf.hinzu({art: geteilt?'gesendet':'gespeichert'}); lageZeigen();
-      /* „So geht's weiter" nur nach echtem Versand — beim Download-Fallback
-         hat die Praxis noch nichts, und Zeile 1 waere gelogen. */
-      if(geteilt){ const sw=$('#soWeiter'); if(sw) sw.hidden=false; }
-      weitersagenZeigen();
-      $('#btnSend').classList.add('hidden'); $('#btnSave').disabled=false;
-      $('#btnAgain').classList.remove('hidden');
+      await versandAbschliessen(geteilt,verschluesselt);
       return;
     }
     if(POSTFACH_AN && fach&&praxisKey){   /* Schalter auch hier: sonst schickte ein alter ?room=-Link mit Fach doch ans Postfach */
@@ -5161,6 +5300,7 @@ $('#shOwner').addEventListener('click',()=>share('owner'));
 $('#shVet').addEventListener('click',()=>share('vet'));
 
 $('#btnAgain').addEventListener('click',()=>{
+  S.ablageId=null; S.ablageBereit=null; setTimeout(ablageZeigen,0);   /* eine ungesendete Vorgängerin bleibt sichtbar */
   S.rr=[]; S.hr=0; S.blob=null; S.startedAt=null; S.stopped=false; S.hrMin=null; S.hrMax=null; S.hrFenster=[];
   $('#hrRange').textContent='–'; $('#recFill').style.width='0';
   $('#pb').style.width='0'; $('#status').textContent=''; $('#err').textContent='';
