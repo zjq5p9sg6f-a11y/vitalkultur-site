@@ -3394,12 +3394,12 @@ const Importer = {
      Geraet hat die Praxis-Sicherung nie eingespielt. Beides kann sie sofort
      selbst aufloesen, wenn es dasteht. */
   async umschlagOeffnen(raw){
-    if(!raw || raw.art!=='carlon-umschlag' || !raw.umschlag) return {ok:true, raw};
+    if(!raw || raw.art!=='carlon-umschlag' || (!raw.umschlag && !Array.isArray(raw.an))) return {ok:true, raw};
     /* Die Umschlag-Version wurde geschrieben (v:1), aber nie gelesen —
        eine kuenftige Station v2 (anderes Format) waere als „liess sich
        mit dem Schluessel dieses Geraets nicht oeffnen" fehldiagnostiziert
        worden, und die Tieraerztin haette am falschen Ort gesucht. */
-    if(raw.v && raw.v>1)
+    if(raw.v && raw.v>2)   // v2 = mehrere Praxen (17.11.2026)
       return {ok:false, grund:'Diese Aufnahme stammt aus einer neueren Fassung der Messstation — bitte das Cockpit neu laden (Strg+F5), dann klappt es'};
     if(typeof Krypto==='undefined' || typeof Praxis==='undefined')
       return {ok:false, grund:'Verschlüsselte Aufnahme — das Schlüsselmodul fehlt in dieser Fassung'};
@@ -3409,6 +3409,10 @@ const Importer = {
     /* Die Fachnummer VOR dem Entschluesseln vergleichen. Sonst scheitert die
        Entschluesselung an der Bindung und meldet dasselbe wie ein defektes
        Chiffrat — die Tieraerztin suchte dann einen Fehler, wo keiner ist. */
+    /* v2 (17.11.2026): eine Hülle, je Praxis ein Umschlag – die eigene Fachnummer suchen. */
+    if(Array.isArray(raw.an)){ const e=raw.an.find(x=>x&&x.fach===ich.fach);
+      if(!e) return {ok:false, grund:'An andere Praxen adressiert — diese Aufnahme kann nur mit deren Schlüssel geöffnet werden'};
+      raw={...raw, fach:e.fach, umschlag:e.umschlag}; }
     if(raw.fach && ich.fach && raw.fach!==ich.fach)
       return {ok:false, grund:'An eine andere Praxis adressiert — diese Aufnahme kann nur mit deren Schlüssel geöffnet werden'};
     let klar;

@@ -1311,9 +1311,12 @@ const HAUS={ appImStore:false, appUrl:'https://carlon.app' };
     const praxisName=name;
     const sicher=document.createElement('b');
     sicher.textContent=praxisName;              // textContent, nie innerHTML
+    let mehr=[]; try{ mehr=JSON.parse(localStorage.getItem('carlon.meinePraxen')||'[]').map(p=>p.name).filter(n=>n&&n!==praxisName); }catch(_){ }
     pb.appendChild(document.createTextNode('Messung für '));
     pb.appendChild(sicher);
-    pb.appendChild(document.createTextNode(' — die Aufnahme geht an diese Praxis.'));
+    if(mehr.length){ const z=document.createElement('b'); z.textContent=mehr.slice(0,3).join(', '); pb.appendChild(document.createTextNode(' und ')); pb.appendChild(z);
+      pb.appendChild(document.createTextNode(' — jede dieser Praxen kann die Aufnahme öffnen.')); }
+    else pb.appendChild(document.createTextNode(' — die Aufnahme geht an diese Praxis.'));
     pb.hidden=false;
   })();
   const d=document.getElementById('dach'); if(!d) return;
@@ -2996,6 +2999,14 @@ const _gemerkt=(function(){ try{ return JSON.parse(localStorage.getItem('carlon.
 if(_q.get('fach')&&_q.get('k')){ try{ const pm=String(location.hash||'').match(/(?:^#|&)p=([^&]+)/);
   localStorage.setItem('carlon.meinePraxis',JSON.stringify({fach:_q.get('fach'),k:_q.get('k'),name:pm?decodeURIComponent(pm[1]).slice(0,60):((_gemerkt&&_gemerkt.fach===_q.get('fach')&&_gemerkt.name)||''),seit:new Date().toISOString()})); }catch(_){ } }
 const fach=_q.get('fach')||(_gemerkt&&_gemerkt.fach)||null, praxisKey=_q.get('k')||(_gemerkt&&_gemerkt.k)||null;
+/* MEHRERE PRAXEN (17.11.2026, Jan: „Klinik UND mobiler Tierarzt – beide müssen die Datei öffnen können“): Jede Praxis, deren
+   Mess-Link die Halterin einmal geöffnet hat, steht in „meinePraxen“. Die Datei wird für ALLE versiegelt (je Praxis ein
+   Umschlag in einer Hülle) – die Halterin schickt dieselbe Datei an jede Praxis, jede öffnet nur ihren Teil. */
+const meinePraxen=(function(){ let l=[]; try{ l=JSON.parse(localStorage.getItem('carlon.meinePraxen')||'[]'); }catch(_){ }
+  if(_gemerkt&&!l.some(p=>p.fach===_gemerkt.fach)) l.push({fach:_gemerkt.fach,k:_gemerkt.k,name:_gemerkt.name||''});
+  if(_q.get('fach')&&_q.get('k')){ const pm=String(location.hash||'').match(/(?:^#|&)p=([^&]+)/); const nm=pm?decodeURIComponent(pm[1]).slice(0,60):'';
+    l=l.filter(p=>p.fach!==_q.get('fach')); l.unshift({fach:_q.get('fach'),k:_q.get('k'),name:nm||((_gemerkt&&_gemerkt.fach===_q.get('fach')&&_gemerkt.name)||'')}); }
+  l=l.filter(p=>p&&p.fach&&p.k).slice(0,5); try{ localStorage.setItem('carlon.meinePraxen',JSON.stringify(l)); }catch(_){ } return l; })();
 const POSTFACH='https://postfach.carlon.app';
 /* Kommt aus live.js — der EINEN Stelle, die auch das Cockpit und das
    Impressum lesen. false = Dateiweg (Regelfall), true = Zwischenspeicher.
@@ -4636,6 +4647,11 @@ async function weggabeDatei(opt){
   if(!wegA){
     return { datei:new File([JSON.stringify(satz)],dname,{type:'application/json'}),
              verschluesselt:false };
+  }
+  if(meinePraxen.length>1){
+    const an=[]; for(const p of meinePraxen){ an.push({fach:p.fach, umschlag:await Krypto.versiegeln(p.k, JSON.stringify(satz), p.fach)}); }
+    const huelle2={ art:'carlon-umschlag', v:2, an };
+    return { datei:new File([JSON.stringify(huelle2)],dname,{type:'application/json'}), verschluesselt:true, praxen:meinePraxen.length };
   }
   const umschlag=await Krypto.versiegeln(praxisKey, JSON.stringify(satz), fach);
   /* Die Huelle bleibt JSON und traegt `art` — daran erkennt das Cockpit sie
