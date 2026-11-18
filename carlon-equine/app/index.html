@@ -245,6 +245,13 @@ main{flex:1;overflow-y:auto;overflow-x:hidden;position:relative}
 
 /* ---- KPI strip ---- */
 .kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:var(--s3);margin-bottom:var(--s5)}
+.erste-schritte{max-width:640px;margin:clamp(20px,6vh,64px) auto;padding:0 4px}.erste-schritte h1{margin:8px 0 22px}
+.erste-schritte ol{list-style:none;margin:0;padding:0;display:grid;gap:14px}
+.es-schritt{display:grid;grid-template-columns:36px 1fr;gap:14px;padding:16px 18px;border:1px solid var(--border-faint);border-radius:16px;background:var(--bg-surface,rgba(255,255,255,.02))}
+.es-nr{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;background:rgba(62,207,178,.14);color:var(--cyan);font-weight:650}
+.es-schritt b{display:block;font-size:16px;color:var(--text-primary);margin-bottom:3px}.es-schritt span{display:block;font-size:13.5px;line-height:1.5;color:var(--text-secondary)}
+.es-schritt .btn{margin-top:12px}.es-knoepfe{display:flex;gap:8px;flex-wrap:wrap}.es-knoepfe .btn{margin-top:12px}
+.es-fuss{margin-top:18px;font-size:12.5px;color:var(--text-dim);line-height:1.5}.es-fuss a{color:var(--cyan)}
 .wert-band{display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 18px;margin:calc(-1 * var(--s3)) 0 var(--s5);padding:10px 14px;border-radius:12px;border:1px solid var(--border-faint);background:linear-gradient(90deg,rgba(62,207,178,.07),transparent 70%);font-size:13px;color:var(--text-secondary)}
 .wert-band .wb-t{font-family:var(--font-mono);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--cyan)}
 .wert-band b{color:var(--text-primary);font-variant-numeric:tabular-nums}
@@ -2713,6 +2720,7 @@ const Normalizer = {
    Vitale 2020 · Gehlen 2020). Kein Diagnosewerkzeug — Priorisierungshilfe.
    ════════════════════════════════════════════════════════════════════════ */
 const Triage = {
+  label(t){ if(!t) return ''; return t.ohneBasis?'Basis im Aufbau':((this.LEVELS[t.level]||{}).label||''); },
   LEVELS:{crit:{k:'crit',label:'Deutliche Abweichung',rank:3},elev:{k:'elev',label:'Mäßige Abweichung',rank:2},
           watch:{k:'watch',label:'Geringe Abweichung',rank:1},stable:{k:'stable',label:'Im Eigenbereich',rank:0}},
   score(n){
@@ -2754,6 +2762,7 @@ const Triage = {
        Basis (30 Tage, ≥ 3 Aufnahmen). Ohne eigene Basis nur gegen den Ausgangswert der Datei und höchstens
        „beobachten“ – mit offenem Hinweis, wie viele eigene Aufnahmen fehlen. Grenzen: −20 / −35 / −50 %. */
     const base=n.baselineRMSSD, eigen=n.baselineEigen!==false&&n.baselineEigen!=null;
+    const ohneBasis=(rm!=null && !rmRoh) && (!eigen || !(base>0));
     if(rm!=null && !rmRoh){
       if(base>0){
         const d=(rm-base)/base, pz=Math.round(d*100), tx=`${fmt0(rm)} ms gegen ${eigen?'eigene Basis':'Ausgangswert'} ${fmt0(base)} ms`;
@@ -2796,7 +2805,8 @@ const Triage = {
       if(Triage.LEVELS[level].rank<1) level='watch';
       if(!flags.includes('nicht beurteilbar')) flags.push('nicht beurteilbar');
     }
-    return {level,score:Math.round(score),reasons,flags};
+    /* „Basis im Aufbau“ (18.11.2026, Kundenreise): eine erste Aufnahme ohne eigene Basis ist keine „Abweichung“ – nur der Name ändert sich, Rang und Spalte bleiben. */
+    return {level,score:Math.round(score),reasons,flags,ohneBasis:!!(ohneBasis&&level==='watch'&&!forced)};
   },
   // Klinische Domäne der Auffälligkeit — zeigt dem Vet auf einen Blick WARUM (Atemweg/Rhythmus/Kolik/autonom).
   // Verbindet die Wissenschaft (Triage-Gründe) mit dem Feld-Blick (Route/Board). Mentale Vorbereitung vor Ort.
@@ -3624,7 +3634,7 @@ const Importer = {
       </div>
       <div class="frecs">
         ${g.items.slice().sort((a,b)=>new Date(a.n.startedAt)-new Date(b.n.startedAt)).map(i=>{const t=Triage.score(i.n);const c={crit:'#ff5263',elev:'#ffb547',watch:'#3ECFB2',stable:'#3fe0a4'}[t.level];
-          return `<div class="frec ${i.dup?'dupd':''}"><span class="fdot" style="background:${c}"></span>${fmtDate(i.n.startedAt)}<span class="fspacer">${i.dup?'bereits vorhanden':`<span class="ftag" style="background:${c}22;color:${c}">${Triage.LEVELS[t.level].label}</span>`}</span></div>`;}).join('')}
+          return `<div class="frec ${i.dup?'dupd':''}"><span class="fdot" style="background:${c}"></span>${fmtDate(i.n.startedAt)}<span class="fspacer">${i.dup?'bereits vorhanden':`<span class="ftag" style="background:${c}22;color:${c}">${Triage.label(t)}</span>`}</span></div>`;}).join('')}
       </div>
     </div>`;
   },
@@ -5480,7 +5490,7 @@ const Views={
             <b onclick="Views.openHorse('${h.id}')">${esc(h.name)}</b>
             <div class="sub">${esc(Stamm.rasse(h.breed)||'—')}${h.age?' · '+h.age+' J':''}${place?' · '+esc(place):''}${sammel?' <span class="hr-sammel">Sammelstall</span>':''}${Views.keyFlag(tri)}</div>
           </div>
-          <span class="tri-badge tri-${tri.level}" style="padding:4px 10px;font-size:11px"><span class="dot"></span>${Triage.LEVELS[tri.level].label}</span>
+          <span class="tri-badge tri-${tri.level}" style="padding:4px 10px;font-size:11px"><span class="dot"></span>${Triage.label(tri)}</span>
         </div>
         <div class="hr-owner">${IC.owner}<b>${esc(h.owner||'Halter unbekannt')}</b>${h.phone?`<a href="tel:${esc(h.phone)}" onclick="event.stopPropagation()" class="hr-phone">${esc(h.phone)}</a>`:''}${sib?`<span class="hr-sib">+${sib} weitere${sib>1?'':''} dieses Halters</span>`:''}</div>
         <div class="hr-vitals">
@@ -5531,7 +5541,7 @@ const Views={
           ${Views.avatar(h,46)}
           <div style="min-width:0"><div class="nm">${esc(h.name)}</div><div class="brd">${esc(Stamm.rasse(h.breed)||'—')}${h.age?' · '+h.age+' J':''}</div></div>
         </div>
-        <span class="tri-badge tri-${tri.level}" style="padding:4px 9px;font-size:11px"><span class="dot"></span>${Triage.LEVELS[tri.level].label}</span>
+        <span class="tri-badge tri-${tri.level}" style="padding:4px 9px;font-size:11px"><span class="dot"></span>${Triage.label(tri)}</span>
       </div>
       ${(h.lat==null||h.lng==null)?`<div class="chips" style="margin-top:10px"><span class="chip amber">Standort fehlt</span></div>`:''}
       <div class="foot" style="margin-top:12px">
@@ -5673,6 +5683,7 @@ const Views={
     clusters.forEach(([p,n])=>rationale.push(`Sammelbesuch ${p} (${n})`));
     const why=`<div class="today-why">${rationale.length?`<span class="rz"><span class="dot">◆</span> Reihenfolge: ${rationale.map(esc).join(' · ')}</span>`:'<span></span>'}<span class="off"><span class="d"></span> Offline-fähig · Daten bleiben auf diesem Gerät</span></div>`;
 
+    if(!State.horses.length) return Views.emptyMain();
     if(!order.length && !noLoc.length){
       const doneMsg=doneToday>0?`<div class="today-empty"><div style="color:var(--good);margin-bottom:10px" class="done-check">${IC.checkCircle}</div><div style="font-size:16px;color:var(--good);font-weight:600;margin-bottom:6px">Tag geschafft — alle ${doneToday} Besuche erledigt</div><div style="font-size:12.5px;max-width:340px;margin:0 auto">Neue Besuche markieren Sie im Board oder in der Liste – oder Sie schieben einen Analog-Patienten ein.</div><div style="margin-top:20px"><button class="btn primary" onclick="Views.insertAnalog()">+ Pferd ohne Aufnahme einschieben</button></div></div>`
         :`<div class="today-empty">${IC.route}<div style="font-size:14px;margin:12px 0 6px;color:var(--text-secondary)">Kein Besuch für heute markiert.</div>
@@ -5702,7 +5713,7 @@ const Views={
 
     const sch=Dispatch.schedule(order); const srows=sch.rows;
     const stops=order.map((x,i)=>{
-      const h=x.h, lvl=x.tri.level, lbl=Triage.LEVELS[lvl].label; const r=srows[i];
+      const h=x.h, lvl=x.tri.level, lbl=Triage.label(x.tri); const r=srows[i];
       const flag=(x.tri.flags&&x.tri.flags[0])?`<div class="tflag">${IC.warn} ${esc(x.tri.flags[0])}</div>`:'';
       const remoteOk=remoteOkFn(x);
       return `<div class="tstop ${lvl}${r.lateBy?' late':''}${remoteOk?' remote-ok':''}" data-sort="${h.id}" data-eta="${r.arrive}" data-depart="${r.depart}" data-arrived="${h.arrivedAt?'1':'0'}">
@@ -5810,7 +5821,7 @@ const Views={
     // EIN-TAP-DOKU: Besuchsnotiz + abrechnungsbereite Rechnung entstehen automatisch — der Verwaltungsmist verschwindet.
     const rec=State.latestFor(id); const m=rec?rec.metrics:{}; const tri=rec?rec.triage:null;
     const reason=(tri&&tri.reasons&&tri.reasons[0])?tri.reasons[0]:'Messwerte im Eigenbereich';
-    const note=`Praxisbesuch ${fmtDate(now.toISOString())} · ${Triage.LEVELS[lvl]?Triage.LEVELS[lvl].label:lvl}`
+    const note=`Praxisbesuch ${fmtDate(now.toISOString())} · ${tri?Triage.label(tri):(Triage.LEVELS[lvl]?Triage.LEVELS[lvl].label:lvl)}`
       +(m.rmssd!=null?` · RMSSD ${fmt0(m.rmssd)} ms`:'')+(m.meanHR!=null?`, Ruhe-HF ${fmt0(m.meanHR)} bpm`:'')
       +`. ${reason}.`;
     const fee=State.settings.tariff||State.settings.tariffVisit||0;
@@ -6069,7 +6080,7 @@ const Views={
               <h1 style="font-size:28px">${esc(h.name)}</h1>
               <div class="sub" style="margin-top:4px">${esc(Stamm.rasse(h.breed)||'—')}${h.sex?' · '+esc(Stamm.geschlecht(h.sex)):''}${h.age?' · '+h.age+' J':''}${h.weightKg?' · '+h.weightKg+' kg':''}</div>
               <div style="margin-top:8px;display:flex;gap:8px;align-items:center;flex-wrap:wrap">
-                <span class="tri-badge tri-${tri.level}"><span class="dot"></span>${Triage.LEVELS[tri.level].label}</span>
+                <span class="tri-badge tri-${tri.level}"><span class="dot"></span>${Triage.label(tri)}</span>
                 ${h.needsVisit?'<span class="chip visit">Auf der Tour</span>':''}
                 ${(tri.flags||[]).map(f=>`<span class="chip ${/Rhythmus|Kolik/.test(f)?'red':/Asthma|Atemweg|Signal/.test(f)?'amber':'cyan'}">${esc(Triage.zeig(f))}</span>`).join('')}
               </div>
@@ -6145,7 +6156,7 @@ const Views={
                 <div class="rmini">
                   <div class="m"><b>${fmt0(r.metrics.rmssd)}</b><span>RMSSD</span></div>
                   <div class="m"><b>${fmt0(r.metrics.meanHR)}</b><span>HF</span></div>
-                  <div class="m"><span class="tri-badge tri-${r.triage.level}" style="padding:2px 8px;font-size:10px"><span class="dot"></span>${Triage.LEVELS[r.triage.level].label}</span></div>
+                  <div class="m"><span class="tri-badge tri-${r.triage.level}" style="padding:2px 8px;font-size:10px"><span class="dot"></span>${Triage.label(r.triage)}</span></div>
                 </div>
                 <button class="icon-btn" title="Exportieren: JSON, CSV, Kubios, FHIR R5" onclick="event.stopPropagation();Export.menu('${r.id}')">${IC.download}</button>
                 <button class="icon-btn" title="Bericht als eigenständige Datei weitergeben — Besitzer, Überweisungsklinik, Studie" onclick="event.stopPropagation();Handoff.build('${r.id}')">${IC.share||IC.download}</button>
@@ -6216,7 +6227,7 @@ const Views={
   // Antwort vor Tiefe (nicht chart-first). Der Sofort-Faktor-5 beim Öffnen einer Akte.
   verdictHero(h,rec,tri){
     if(!tri)return '';
-    const lvl=tri.level, L=Triage.LEVELS[lvl]||{label:'—'};
+    const lvl=tri.level, L=Object.assign({},Triage.LEVELS[lvl]||{label:'—'},{label:Triage.label(tri)||'—'});
     const COL={crit:'var(--red)',elev:'var(--amber)',watch:'var(--cyan)',stable:'var(--good)'};
     const col=COL[lvl]||'var(--cyan)';
     const HEAD={crit:'Deutliche Abweichung von der Eigenbasis',elev:'Mäßige Abweichung von der Eigenbasis',watch:'Geringe Abweichung',stable:'Im Eigenbereich'};
@@ -6660,15 +6671,21 @@ const Views={
     await DB.put('consults',con);State.consults.push(con);UI.closeModal();Toast.show('Coaching erfasst · '+euro(con.fee),'ok');Nav.refresh();
   },
 
+  /* ERSTE SCHRITTE (18.11.2026, Kundenreise: „eine neue Praxis kann kein Pferd anlegen“). Vorher sagte der leere Bestand
+     „Importieren Sie die Exporte … aus der App“ – Text der iOS-App, ohne Weg zum ersten eigenen Pferd. Jetzt führen Heute,
+     Übersicht und Pferde gleich: Pferd anlegen → Messung anfordern → Aufnahme kommt an. */
   emptyMain(){
-    return `<div class="view"><div class="empty-state">
-      <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 12h4l3 8 4-16 3 8h4"/></svg>
-      <h3>Noch keine Aufnahmen</h3>
-      <p>Importieren Sie die CARLON-Equine-Exporte, die Ihnen Pferdebesitzer aus der App senden. Alles bleibt lokal auf diesem Gerät — es werden keine Gesundheitsdaten an einen Server übertragen.</p>
-      <button class="btn primary" onclick="Importer.open()">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
-        Aufnahmen importieren</button>
-      <div style="margin-top:20px"><button class="btn ghost" onclick="Seed.load()">Demo-Bibliothek laden (15 Pferde · validierte Sessions + Verlauf)</button></div>
+    const s=State.settings||{}, praxis=(s.clinicName&&s.clinicName!=='Meine Pferdepraxis')?esc(s.clinicName):'';
+    const schritt=(nr,titel,text,knopf)=>`<li class="es-schritt"><span class="es-nr">${nr}</span><div><b>${titel}</b><span>${text}</span>${knopf||''}</div></li>`;
+    return `<div class="view"><div class="erste-schritte">
+      <span class="eyebrow">${praxis?praxis+' · ':''}Erste Schritte</span>
+      <h1>So kommt das erste Pferd in den Verlauf.</h1>
+      <ol>
+        ${schritt(1,'Pferd anlegen','Name, Halterin, Telefon und Stall – das Pferd steht dann auch für die Tour bereit.',`<button class="btn primary" onclick="Views.editHorse()">+ Pferd anlegen</button>`)}
+        ${schritt(2,'Messung anfordern','In der Akte des Pferds: „Messung anfordern“ schickt der Halterin Ihren Mess-Link per WhatsApp oder SMS – mit Ihrem Praxisnamen.','')}
+        ${schritt(3,'Aufnahme kommt an','Die Halterin misst sieben Minuten im Stall und sendet. Sie öffnen die Datei hier – oder richten einen Eingangs-Ordner ein, dann kommt sie von selbst.',`<div class="es-knoepfe"><button class="btn ghost" onclick="Importer.open()">Datei öffnen</button><button class="btn ghost" onclick="UI.openSettings();setTimeout(()=>{const e=document.getElementById('eingangFeld');if(e)e.scrollIntoView({block:'center'});},200)">Eingang einrichten</button></div>`)}
+      </ol>
+      <p class="es-fuss">Alles bleibt auf diesem Gerät bzw. in Ihrem eigenen Team-Ordner – kein Server von uns. <a href="?schaufenster=1&amp;demo=today" target="_blank" rel="noopener">Lieber erst die Demo mit 15 Pferden ansehen</a> (eigener Tab, getrennt von Ihren Daten)</p>
     </div></div>`;
   },
 
@@ -6836,7 +6853,7 @@ const Views={
   fernCheck(hid){
     const h=State.horses.find(x=>x.id===hid); if(!h)return;
     const rec=State.latestFor(hid); const m=rec?rec.metrics:{}; const tri=rec?rec.triage:{level:'stable',reasons:[]};
-    const lvl=tri.level, L=Triage.LEVELS[lvl];
+    const lvl=tri.level, L=Object.assign({},Triage.LEVELS[lvl],{label:Triage.label(tri)});
     let km=null,min=null; try{const pd=Dispatch.plannedDay();const idx=pd.order.findIndex(x=>x.h.id===hid);if(idx>=0){km=pd.order[idx].dist;min=pd.sch.rows[idx].driveMin;}}catch(e){}
     const dfa=(m.dfa!=null)?m.dfa:(rec&&rec.rr?HRV.dfaAlpha1(rec.rr):null);
     const met=(k,v,u)=>v==null?'':`<div class="fc-m"><span>${k}</span><b>${u==='2'?fmt2(v):fmt0(v)}${(u&&u!=='2')?`<small> ${u}</small>`:''}</b></div>`;
@@ -7827,7 +7844,7 @@ const Dispatch={
         <div class="ord">${i+1}</div>
         <div class="stime"><b>${fmtTime(row.arrive)}</b><span>${i===0?'ab Praxis':(row.driveMin?'+'+row.driveMin+' min':'gleicher Stall')}</span></div>
         <div class="sinfo">
-          <b>${esc(h.name)} <span class="stri tri-${x.tri.level}"><span class="dot"></span>${Triage.LEVELS[x.tri.level].label}</span></b>
+          <b>${esc(h.name)} <span class="stri tri-${x.tri.level}"><span class="dot"></span>${Triage.label(x.tri)}</span></b>
           <span class="sowner">${IC.owner}<span class="sow-txt"><b>${esc(h.owner||'—')}</b>${h.phone?`<em>${esc(h.phone)}</em>`:''}</span></span>
           <span class="splace">${esc(h.place||h.stable||'—')}${m.rmssd!=null?` · RMSSD <b>${fmt0(m.rmssd)}</b> · HF <b>${fmt0(m.meanHR)}</b>${rec?' · vor '+relTime(rec.startedAt):''}`:' · keine Messung'}</span>
           ${flag}
@@ -7874,7 +7891,7 @@ const Dispatch={
       const h=x.h; const rec=State.latestFor(h.id); const m=rec?rec.metrics:{};
       const pop=`<div class="mappop">
         <div class="mp-h"><span class="mp-ord tri-${x.tri.level}">${i+1}</span><b>${esc(h.name)}</b></div>
-        <div class="mp-tri tri-${x.tri.level}">${Triage.LEVELS[x.tri.level].label} · ${fmt1(x.dist)} km</div>
+        <div class="mp-tri tri-${x.tri.level}">${Triage.label(x.tri)} · ${fmt1(x.dist)} km</div>
         <div class="mp-row"><b>Halter:</b> ${esc(h.owner||'—')}${h.phone?` · ${esc(h.phone)}`:''}</div>
         ${h.place||h.stable?`<div class="mp-row"><b>Stall:</b> ${esc(h.place||h.stable)}</div>`:''}
         ${m.rmssd!=null?`<div class="mp-row"><b>HRV:</b> RMSSD ${fmt0(m.rmssd)} · HF ${fmt0(m.meanHR)}${rec?' · vor '+relTime(rec.startedAt):''}</div>`:'<div class="mp-row">keine Messung</div>'}
@@ -7892,7 +7909,7 @@ const Dispatch={
         const rec=State.latestFor(h.id); const lvl=rec?rec.triage.level:'stable';
         const pop=`<div class="mappop">
           <div class="mp-h"><b>${esc(h.name)}</b></div>
-          <div class="mp-tri tri-${lvl}">${Triage.LEVELS[lvl].label}${rec?' · vor '+relTime(rec.startedAt):' · keine Messung'}</div>
+          <div class="mp-tri tri-${lvl}">${rec&&rec.triage?Triage.label(rec.triage):Triage.LEVELS[lvl].label}${rec?' · vor '+relTime(rec.startedAt):' · keine Messung'}</div>
           <div class="mp-row"><b>Halter:</b> ${esc(h.owner||'—')}${h.phone?` · ${esc(h.phone)}`:''}</div>
           ${h.place||h.stable?`<div class="mp-row"><b>Stall:</b> ${esc(h.place||h.stable)}</div>`:''}
           <div class="mp-act"><a href="#" onclick="Dispatch.planFromMap('${h.id}');return false"><b style="color:var(--cyan-strong)">+ Besuch einplanen</b></a>${h.phone?`<a href="tel:${esc(h.phone)}">Anrufen</a>`:''}<a href="#" onclick="Views.openHorse('${h.id}');return false">Akte</a></div>
@@ -7933,7 +7950,7 @@ const Dispatch={
   exportRoute(){
     const order=this._order;if(!order||!order.length){Toast.show('Keine Route','warn');return;}
     let txt=`CARLON Abfahrroute — ab ${State.settings.originLabel}\n\n`;
-    order.forEach((x,i)=>txt+=`${i+1}. ${x.h.name} — ${x.h.place||''} (${Triage.LEVELS[x.tri.level].label}, ${fmt1(x.dist)} km)\n   ${x.h.owner||''} ${x.h.phone||''}\n`);
+    order.forEach((x,i)=>txt+=`${i+1}. ${x.h.name} — ${x.h.place||''} (${Triage.label(x.tri)}, ${fmt1(x.dist)} km)\n   ${x.h.owner||''} ${x.h.phone||''}\n`);
     navigator.clipboard.writeText(txt).then(()=>Toast.show('Route kopiert','ok'));
   },
 };
@@ -8085,7 +8102,7 @@ const Report={
         <div class="field-row"><div class="field"><label>Telefon</label><input id="bfPhone" value="${esc(s.clinicPhone||'')}" placeholder="07229 …"></div>
           <div class="field"><label>E-Mail</label><input id="bfMail" value="${esc(s.clinicMail||'')}" placeholder="praxis@…"></div>
           <div class="field"><label>Website</label><input id="bfWeb" value="${esc(s.clinicWeb||'')}" placeholder="www.…"></div></div>
-        <div class="hint">Rechts oben steht klein „CARLON Equine Biometrics“ – so sieht jede Empfängerin, womit der Bericht erstellt wurde.</div>
+        <div class="hint">Rechts oben steht klein „CARLON Equine Visite“ – so sieht jede Empfängerin, womit der Bericht erstellt wurde.</div>
       </div>
       <div class="field"><label>Tierärztliche Einschätzung (von Ihnen)</label><textarea id="bfAssess" rows="4" placeholder="Ihre Beurteilung…">${esc(suggest)}</textarea></div>
       <div class="field"><label>Empfehlung / weiteres Vorgehen</label><textarea id="bfRec" rows="2" placeholder="z. B. nächste Ruhe-Vergleichsaufnahme in 14 Tagen im gewohnten Stallprotokoll …"></textarea></div>
@@ -8317,7 +8334,7 @@ const Report={
       <h1>${esc(h.name)}</h1>
       <div class="sub">${esc(Stamm.rasse(h.breed)||'—')}${h.sex?' · '+esc(Stamm.geschlecht(h.sex)):''}${h.age?' · '+h.age+' Jahre':''}${h.owner?' · Halter: '+esc(h.owner):''}${h.stable?' · '+esc(h.stable):''}${(h.extIds&&(h.extIds.ueln||h.extIds.microchip))?`<br>${h.extIds.ueln?'UELN '+esc(h.extIds.ueln):''}${h.extIds.ueln&&h.extIds.microchip?' · ':''}${h.extIds.microchip?'Mikrochip '+esc(h.extIds.microchip):''}`:''}</div>
       <div class="pr-kopfzeile">
-        <div class="pr-tri pr-neutral">Lage zur eigenen Basis: ${Triage.LEVELS[tri.level].label.replace(/^./,c=>c.toLowerCase())}${abw!=null?` (${abwTxt})`:''}</div>${tri.level==='stable'?'<span class="pr-def">im Eigenbereich = weniger als 20 % unter der eigenen Basis</span>':''}
+        <div class="pr-tri pr-neutral">Lage zur eigenen Basis: ${Triage.label(tri).replace(/^./,c=>c.toLowerCase())}${abw!=null?` (${abwTxt})`:''}</div>${tri.level==='stable'?'<span class="pr-def">im Eigenbereich = weniger als 20 % unter der eigenen Basis</span>':''}
         ${abw!=null?`<div class="pr-basis">${herk.eigenstaendig?'Eigene Basis':'Ausgangswert'} <b>${fmt1(B)} ms</b> (Mittel aus ${nBasis} ${nBasis===1?'Aufnahme':'Aufnahmen'}${bVon?`, ${bVon}–${bBis}`:''}) · aktuell <b>${fmt1(m.rmssd)} ms</b> · Abweichung ${abwTxt} (aus ungerundeten Werten)</div>`:''}
         <div class="pr-stufen">Stufen ab −20 / −35 / −50 % RMSSD gegen die eigene Basis: festgelegte Beobachtungsmarken, nicht klinisch validiert; sie beschreiben Messwerte, keinen Gesundheitszustand. Anstiege werden nicht gestuft, sind aber ebenso beobachtungswürdig.</div>
       </div>
@@ -8343,7 +8360,7 @@ const Report={
       ${recs.length>1?abb(`Verlauf des Ruhe-RMSSD · ${recs.length} Aufnahmen`,this._verlauf(series,{w:720,h:180,basis:B,band:basisRecs.length>1?[Math.min(...basisRecs.map(r=>r.metrics.rmssd)),Math.max(...basisRecs.map(r=>r.metrics.rmssd))]:null}),`Jede Ruheaufnahme dieses Pferds als Punkt auf der Datumsachse, Wert in ms darüber. Gestrichelt: Basis zur letzten Aufnahme (Mittel der früheren Aufnahmen aus den 30 Tagen davor, gezeichnet über dieses Fenster); gepunktet: erste Stufe −20 %; helles Band: Spannweite der Basisaufnahmen (bisherige Schwankung dieses Pferds). Vergleichbar sind nur Aufnahmen mit gleichem Protokoll; unterschiedlich lange Aufnahmen verschieben die Werte (Eggensperger & Schwarzwald 2017).`):''}
       <h2>Aufnahme-Historie</h2>
       <table><thead><tr><th>Datum</th><th>Dauer</th><th class="r">RMSSD</th><th class="r">Herzfrequenz</th><th class="r">SDNN</th><th>Einstufung</th></tr></thead>
-      <tbody>${recs.slice().reverse().slice(0,10).map(r=>`<tr><td>${this._dt(r.startedAt)}</td><td>${(Array.isArray(r.rr)&&r.rr.length>20&&!Views.verdichtet(r))?Report._zk(r.rr.reduce((a,b)=>a+b,0)/60000,1)+' min':(r.durationSec?Report._zk(r.durationSec/60,1)+' min':'—')}</td><td class="r">${fmt0(r.metrics.rmssd)} ms</td><td class="r">${fmt0(r.metrics.meanHR)}/min</td><td class="r">${fmt0(r.metrics.sdnn)} ms</td><td>${nVorher(r)>=3?Triage.LEVELS[r.triage.level].label:`Basis im Aufbau (${nVorher(r)} von 3)`}</td></tr>`).join('')}</tbody></table>
+      <tbody>${recs.slice().reverse().slice(0,10).map(r=>`<tr><td>${this._dt(r.startedAt)}</td><td>${(Array.isArray(r.rr)&&r.rr.length>20&&!Views.verdichtet(r))?Report._zk(r.rr.reduce((a,b)=>a+b,0)/60000,1)+' min':(r.durationSec?Report._zk(r.durationSec/60,1)+' min':'—')}</td><td class="r">${fmt0(r.metrics.rmssd)} ms</td><td class="r">${fmt0(r.metrics.meanHR)}/min</td><td class="r">${fmt0(r.metrics.sdnn)} ms</td><td>${nVorher(r)>=3?Triage.label(r.triage):`Basis im Aufbau (${nVorher(r)} von 3)`}</td></tr>`).join('')}</tbody></table>
       <div class="pr-fig"><h2>Einschätzung der Praxis${(d.recom||d.next)?' und Empfehlung':''}</h2>
       <div class="pr-assess">${d.assess?esc(d.assess).replace(/\n/g,'<br>'):'<i style="color:#8a9aa8">— bitte ergänzen —</i>'}${(d.recom||d.next)?`<div class="pr-empf"><b>Empfehlung.</b> ${d.recom?esc(d.recom).replace(/\n/g,'<br>'):''}${d.next?` Nächste Kontrolle: ${this._dt(d.next,false)}.`:''}</div>`:''}${(d.vet||s.vetName)?`<div class="pr-sign">${esc(d.vet||s.vetName)}${s.clinicName?' · '+esc(s.clinicName):''}${d.untersucht?` · Pferd zuletzt von mir untersucht am ${this._dt(d.untersucht,false)}`:''}</div>`:''}<div class="pr-frei">Freitext der Praxis – nicht von der Software erzeugt.</div></div></div>
 <div class="pr-fig">      <h2>Grenzen dieser Aufnahme und des Verfahrens</h2>
@@ -8854,7 +8871,7 @@ const UI={
     ]:[];
     this.modal(`<div class="modal-head"><button class="closex" onclick="UI.closeModal()">${IC.x}</button><h3>CARLON Equine freischalten</h3></div>
     <div class="modal-body">
-      ${feature?`<div class="demo-ribbon" style="margin-bottom:14px"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg><div><b>${esc(feature)}</b> ist Teil der Vollversion.</div></div>`:''}
+      ${feature?`<div class="demo-ribbon" style="margin-bottom:14px"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg><div><b>${esc(feature)}</b> gehört zum Abo – <b>die ersten 14 Tage sind kostenlos</b>, danach monatlich kündbar.</div></div>`:''}
       
       <label class="kauf-b2b"><input type="checkbox" id="kaufB2B" onchange="document.querySelectorAll('.kauf-link').forEach(l=>l.setAttribute('aria-disabled',this.checked?'false':'true'))"> <span>Ich bestelle als <b>Unternehmer (§ 14 BGB)</b> für meine Praxis oder Klinik und akzeptiere die <a href="/agb.html" target="_blank" rel="noopener">AGB</a>.</span></label>
       <p class="kauf-kurz">Preise netto · Rechnung mit ausgewiesener USt. von Stripe · nach der Zahlung sofort freigeschaltet — kein Schlüssel, keine E-Mail.<br><b style="color:var(--text-primary)">14 Tage kostenlos testen</b> mit dem Monatsabo – volles Cockpit, eigene Pferde, Mess-Link. Kündigen Sie in den 14 Tagen, zahlen Sie nichts. Vorher ohne Karte: Demo mit Beispielpferden. Das Monatsabo ist jederzeit zum Monatsende kündbar.</p>
@@ -10768,7 +10785,7 @@ const Cal={
       const h=r.h; const rec=State.latestFor(h.id); const m=rec?rec.metrics:{};
       const start=r.appt!=null?at(r.appt):at(r.arrive);
       const end=new Date(start.getTime()+(r.visitMin||20)*60000);
-      const title=`${i+1}. ${h.name} — ${Triage.LEVELS[r.tri.level].label}`;
+      const title=`${i+1}. ${h.name} — ${Triage.label(r.tri)}`;
       const navi=(h.lat!=null&&h.lng!=null)?`https://www.google.com/maps/dir/?api=1&destination=${h.lat},${h.lng}&travelmode=driving`:'';
       const desc=[h.owner?`Halter: ${h.owner}`:'',h.phone?`Tel: ${h.phone}`:'',
         m.rmssd!=null?`RMSSD ${fmt0(m.rmssd)} · Ruhe-HF ${fmt0(m.meanHR)} bpm`:'',
@@ -11532,7 +11549,7 @@ const Nav={
       const fnd=License.isFounder()||(rn&&rn.founder);
       if(rn&&rn.state==='expired'){ tl.textContent=(fnd?'Partner':'Lizenz')+' abgelaufen · verlängern'; tp.className='tier-pill expired'; tp.setAttribute('onclick','License.renew()'); }
       else if(rn&&rn.state==='expiring'){ tl.textContent=(t.name)+' · läuft in '+rn.days+'d ab'; tp.className='tier-pill expiring'; tp.setAttribute('onclick','License.renew()'); }
-      else { tl.textContent=paid?(fnd?'Gründungs-Partner':t.name):'Demo · freischalten'; tp.className='tier-pill '+(paid?'paid':'demo'); tp.setAttribute('onclick','License.isPaid()?UI.licenseInfo():UI.upgrade()'); }}
+      else { tl.textContent=paid?(fnd?'Gründungs-Partner':t.name):((State.settings&&State.settings.isDemo)?'Demo · freischalten':'14 Tage kostenlos testen'); tp.className='tier-pill '+(paid?'paid':'demo'); tp.setAttribute('onclick','License.isPaid()?UI.licenseInfo():UI.upgrade()'); }}
     UI.postStatus();
   }
 };
@@ -11857,6 +11874,13 @@ const Sprache={
      Navigation, Board, Akte, Station, Karte, Verwaltung, Kauf. */
   WB:{
     /* 17.11.2026: Lücken aus der Sprachprobe (nur/enrest.mjs) */
+    "gehört zum Abo –":"is part of the subscription –", "die ersten 14 Tage sind kostenlos":"the first 14 days are free", ", danach monatlich kündbar.":", then cancel monthly.",
+    "Basis im Aufbau":"Baseline building", "Erste Schritte":"First steps", "So kommt das erste Pferd in den Verlauf.":"How the first horse gets into the trend.", "Pferd anlegen":"Add a horse", "+ Pferd anlegen":"+ Add a horse",
+    "Name, Halterin, Telefon und Stall – das Pferd steht dann auch für die Tour bereit.":"Name, owner, phone and stable – the horse is then ready for the round, too.",
+    "Messung anfordern":"Request a recording", "In der Akte des Pferds: „Messung anfordern“ schickt der Halterin Ihren Mess-Link per WhatsApp oder SMS – mit Ihrem Praxisnamen.":"In the horse’s record, “Request a recording” sends the owner your measuring link via WhatsApp or SMS – with your practice name.",
+    "Aufnahme kommt an":"The recording arrives", "Die Halterin misst sieben Minuten im Stall und sendet. Sie öffnen die Datei hier – oder richten einen Eingangs-Ordner ein, dann kommt sie von selbst.":"The owner records for seven minutes in the stable and sends it. You open the file here – or set up an inbox folder and it arrives by itself.",
+    "Datei öffnen":"Open file", "Eingang einrichten":"Set up inbox", "Lieber erst die Demo mit 15 Pferden ansehen":"See the demo with 15 horses first", "(eigener Tab, getrennt von Ihren Daten)":"(own tab, separate from your data)",
+    "Alles bleibt auf diesem Gerät bzw. in Ihrem eigenen Team-Ordner – kein Server von uns.":"Everything stays on this device or in your own team folder – no server of ours.", "14 Tage kostenlos testen":"14-day free trial",
     "deutl. Abweichung":"marked dev.", "Einsatzplanung":"Dispatch planning", "Stopps ·":"stops ·", "Stopps":"stops", "Dokumentation":"Records", "Sortierung: Strecke":"Sort: distance", "Sortierung: Abweichung":"Sort: deviation",
     "Ihr Januar mit CARLON":"Your January with CARLON",
     "Ihr Februar mit CARLON":"Your February with CARLON",
