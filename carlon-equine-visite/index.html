@@ -1130,9 +1130,10 @@ h1,h2{text-wrap:balance}
   .hb-karte .hk-satz{margin:8px auto 0;max-width:34ch;font-size:14px;line-height:1.55;color:rgba(235,230,220,.8)}
   .hb-karte .hk-kopf{padding-top:4px}
   
-  .hb-karte .hero-heute{display:flex!important;align-items:center;justify-content:center;width:100%!important;height:100%;min-height:0}
-  .hb-karte .hero-heute .ht-rahmen{height:100%;max-height:100%;width:auto;max-width:100%;aspect-ratio:1600/1400;box-sizing:border-box}
-  .hb-karte .hero-heute .ht-rahmen img{display:block;width:100%;height:100%;object-fit:cover;object-position:top;border-radius:clamp(9px,1.2vw,16px)}
+  .hb-karte .hero-shot,.hb-karte .ht-rahmen{--b:8px;--r:22px;padding:var(--b)!important;border-radius:var(--r)!important;background:#060708!important;
+    box-shadow:0 0 0 1.5px #3b3f45,0 0 0 3px #111316,inset 0 0 0 1px rgba(255,255,255,.07),0 34px 60px -24px rgba(0,0,0,.95)!important;box-sizing:border-box;display:block;width:100%!important;height:auto!important}
+  .hb-karte .hero-shot video,.hb-karte .hero-shot img,.hb-karte .ht-rahmen video,.hb-karte .ht-rahmen img{display:block;width:100%!important;height:auto!important;aspect-ratio:1600/1112;object-fit:cover;object-position:top;border-radius:calc(var(--r) - var(--b))!important;box-shadow:none!important}
+  .hb-karte .hero-tour,.hb-karte .hero-heute{display:block!important;width:100%!important}
   .hb-karte .hero-faecher{width:100%;max-width:min(80%,320px);max-height:100%}
   .hb-karte .hk-geraet{flex:1;min-height:0;width:100%;display:flex;align-items:center;justify-content:center}
   .hb-karte .hero-phone{position:relative!important;left:auto!important;bottom:auto!important;margin:0!important;height:100%!important;width:auto!important;max-width:none}
@@ -1140,9 +1141,6 @@ h1,h2{text-wrap:balance}
   .hero-buehne .wisch-punkte{margin-top:16px!important}
   
   .hero-buehne figcaption{display:none!important}
-  .hb-karte .ht-rahmen{padding:clamp(8px,1.3vw,15px)!important;border-radius:clamp(16px,2.4vw,30px)!important;
-    box-shadow:inset 0 1px 0 rgba(255,255,255,.16),inset 0 0 0 1px rgba(255,255,255,.05),0 0 0 1px #08090b,0 50px 110px -50px rgba(0,0,0,.95),0 0 60px rgba(62,207,178,.08)!important}
-  .hb-karte .ht-rahmen video{border-radius:clamp(9px,1.2vw,16px)!important;box-shadow:0 0 0 1px rgba(0,0,0,.85)}
   .pz-echt-block .pz-tablet.nur-gross{display:none!important}
   .pz-hinweis{display:block!important}
   .pz-hinweis svg.ic{display:inline-block;vertical-align:-5px;margin-right:6px}
@@ -2302,7 +2300,7 @@ if(_lb) _lb.addEventListener('click', function(){
     if(tour){ r.insertBefore(ber,tour); var gm=tour.querySelector('.g-marke i'); if(gm) gm.textContent='4'; }
     
     var heu=document.createElement('a'); heu.className='hero-tour hero-heute'; heu.href='#arbeitstag'; heu.setAttribute('aria-label',EN?'To your working day':'Zum Arbeitstag');
-    heu.innerHTML='<span class="ht-rahmen"><img src="'+(EN?'../':'')+'assets/visite-shots/15-heute-'+(EN?'en':'de')+'.webp" width="1600" height="1400" alt="" loading="lazy"></span><span class="g-marke"><i>5</i>Heute</span>';
+    heu.innerHTML='<span class="ht-rahmen"><img src="'+(EN?'../':'')+'assets/visite-shots/15-heute-v2-'+(EN?'en':'de')+'.webp" width="1600" height="1112" alt="" loading="lazy"></span><span class="g-marke"><i>5</i>Heute</span>';
     r.appendChild(heu);
     var T=EN?['The owner records in the stable','You see what has changed','You document on your letterhead','Your round is planned','Nothing left open in the evening']
             :['Die Halterin misst im Stall','Sie sehen, was sich verändert hat','Sie dokumentieren mit Ihrem Briefkopf','Ihre Tour ist geplant','Abends ist nichts mehr offen'];
