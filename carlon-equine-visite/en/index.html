@@ -1114,7 +1114,10 @@ h1,h2{text-wrap:balance}
   .hb-karte .g-marke{position:static!important;transform:none!important;justify-content:center;font-size:15px!important;color:var(--text-primary)!important;text-shadow:none!important}
   .hb-karte .hk-satz{margin:8px auto 0;max-width:34ch;font-size:14px;line-height:1.55;color:rgba(235,230,220,.8)}
   .hb-karte .hk-kopf{padding-top:4px}
-  .hb-karte .hero-heute .ht-rahmen img{display:block;width:100%;height:auto;aspect-ratio:1600/1400;border-radius:clamp(9px,1.2vw,16px)}
+  
+  .hb-karte .hero-heute{display:flex!important;align-items:center;justify-content:center;width:100%!important;height:100%;min-height:0}
+  .hb-karte .hero-heute .ht-rahmen{height:100%;max-height:100%;width:auto;max-width:100%;aspect-ratio:1600/1400;box-sizing:border-box}
+  .hb-karte .hero-heute .ht-rahmen img{display:block;width:100%;height:100%;object-fit:cover;object-position:top;border-radius:clamp(9px,1.2vw,16px)}
   .hb-karte .hero-faecher{width:100%;max-width:min(80%,320px);max-height:100%}
   .hb-karte .hk-geraet{flex:1;min-height:0;width:100%;display:flex;align-items:center;justify-content:center}
   .hb-karte .hero-phone{position:relative!important;left:auto!important;bottom:auto!important;margin:0!important;height:100%!important;width:auto!important;max-width:none}
