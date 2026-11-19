@@ -3402,6 +3402,9 @@ const Importer = {
     const messCSV=new Set();
     for(const f of files) if(await istMessCSV(f)) messCSV.add(f);
     const kontakte=[...files].filter(f=>/\.(vcf|csv)$/i.test(f.name||'') && !messCSV.has(f));
+    /* Nur eine Tabelle (keine Messung, kein Adressbuch dabei) = ein Bestand: in die Vorschau, wo man sieht, was wohin kommt. */
+    if(kontakte.length===1 && [...files].length===1 && !/\.vcf$/i.test(kontakte[0].name||'')){
+      UI.closeModal(); Bestand.oeffnen(); if($('#stammBody')) await Bestand.dateiGewaehlt(kontakte[0]); return; }
     if(kontakte.length){
       const r=await Kunden.ausDateien(kontakte);
       Toast.show(r.neu
@@ -5382,6 +5385,7 @@ const Views={
           <div class="sub">Alle betreuten Pferde mit Besitzer, Standort und Aufnahme-Historie.</div></div>
         <div style="display:flex;gap:8px;flex-wrap:wrap">
           <button class="btn ghost" onclick="Dispatch._showAll=true;Nav.go('map')" title="Alle Kunden auf der Karte">${IC.nav} Alle auf Karte</button>
+          <button class="btn ghost" onclick="Bestand.oeffnen()">Bestand übernehmen</button>
           <button class="btn ghost" onclick="Views.editHorse()">+ Neues Pferd anlegen</button>
         </div>
       </div>
@@ -6003,7 +6007,7 @@ const Views={
       <div class="field-row"><div class="field"><label>Ort / Adresse</label><input id="anPlace" placeholder="Ort, PLZ"></div>
         <div class="field" style="max-width:120px"><label>&nbsp;</label><button class="btn ghost" style="width:100%" onclick="geoLookup('anPlace','anLat','anLng',this)">${IC.pin} Suchen</button></div></div>
       <div class="field-row"><div class="field"><label>Breitengrad</label><input id="anLat" placeholder="auto"></div><div class="field"><label>Längengrad</label><input id="anLng" placeholder="auto"></div></div>
-      <div class="field"><label>Einordnung (Ihre Einschätzung)</label><select id="anLevel"><option value="crit">Deutliche Abweichung</option><option value="elev" selected>Mäßige Abweichung</option><option value="watch">Geringe Abweichten</option></select></div>
+      <div class="field"><label>Einordnung (Ihre Einschätzung)</label><select id="anLevel"><option value="crit">Deutliche Abweichung</option><option value="elev" selected>Mäßige Abweichung</option><option value="watch">Geringe Abweichung</option></select></div>
     </div>
     <div class="modal-foot"><button class="btn ghost" onclick="UI.closeModal()">Abbrechen</button><button class="btn primary" onclick="Views.saveAnalog()">Einschieben & Route optimieren</button></div>`);
   },
@@ -6681,7 +6685,7 @@ const Views={
       <span class="eyebrow">${praxis?praxis+' · ':''}Erste Schritte</span>
       <h1>So kommt das erste Pferd in den Verlauf.</h1>
       <ol>
-        ${schritt(1,'Pferd anlegen','Name, Halterin, Telefon und Stall – das Pferd steht dann auch für die Tour bereit.',`<button class="btn primary" onclick="Views.editHorse()">+ Pferd anlegen</button>`)}
+        ${schritt(1,'Pferde anlegen','Einzeln – oder den ganzen Bestand aus Praxissoftware oder Excel übernehmen. Jedes Pferd steht dann auch für die Tour bereit.',`<div class="es-knoepfe"><button class="btn primary" onclick="Views.editHorse()">+ Pferd anlegen</button><button class="btn ghost" onclick="Bestand.oeffnen()">Bestand übernehmen (CSV)</button></div>`)}
         ${schritt(2,'Messung anfordern','In der Akte des Pferds: „Messung anfordern“ schickt der Halterin Ihren Mess-Link per WhatsApp oder SMS – mit Ihrem Praxisnamen.','')}
         ${schritt(3,'Aufnahme kommt an','Die Halterin misst sieben Minuten im Stall und sendet. Sie öffnen die Datei hier – oder richten einen Eingangs-Ordner ein, dann kommt sie von selbst.',`<div class="es-knoepfe"><button class="btn ghost" onclick="Importer.open()">Datei öffnen</button><button class="btn ghost" onclick="UI.openSettings();setTimeout(()=>{const e=document.getElementById('eingangFeld');if(e)e.scrollIntoView({block:'center'});},200)">Eingang einrichten</button></div>`)}
       </ol>
@@ -9708,6 +9712,206 @@ const Kunden={
   },
 };
 
+/* ══ BESTAND ÜBERNEHMEN (19.11.2026) ═══════════════════════════════════════
+   Eine Praxis hat ihren Bestand schon: in der Praxissoftware, in Excel, im
+   Adressbuch. Ihn Pferd für Pferd abzutippen ist die größte Hürde vor dem
+   ersten echten Tourtag (Audit 19.11.: „Wie kommen meine Pferde ins Cockpit?“).
+   Darum: CSV aus jedem Programm (Excel „Speichern unter → CSV“), Spalten
+   werden erkannt und in der Vorschau sichtbar zugeordnet, nichts wird
+   überschrieben – vorhandene Pferde werden nur in LEEREN Feldern ergänzt.
+   Erkennung über Kennung (Praxis-Nr., UELN, Chip), sonst Name + Halterin.  */
+const Bestand={
+  FELDER:[
+    ['name','Pferd',['pferd','pferdename','tiername','patient','patientenname','nameDesPferdes','horse','horsename','rufname','tier']],
+    ['owner','Halterin / Besitzer',['besitzer','halter','halterin','eigentümer','eigentuemer','kunde','kundin','kundenname','tierhalter','tierbesitzer','owner','client','kontakt']],
+    ['vorname','Vorname (Halterin)',['vorname','firstname']],
+    ['nachname','Nachname (Halterin)',['nachname','familienname','lastname','surname']],
+    ['phone','Telefon',['telefon','tel','handy','mobil','mobiltelefon','telefonnummer','phone','mobile']],
+    ['mail','E-Mail',['email','mail','emailadresse']],
+    ['stable','Stall',['stall','stallname','betrieb','hof','reitstall','stable','yard']],
+    ['street','Straße',['straße','strasse','str','adresse','anschrift','address','street','stalladresse']],
+    ['plz','PLZ',['plz','postleitzahl','zip','postcode']],
+    ['ort','Ort',['ort','wohnort','stadt','city','town','gemeinde']],
+    ['breed','Rasse',['rasse','breed']],
+    ['clinicPMS','Patienten-Nr. (Praxissoftware)',['patientennummer','patientennr','patientenid','patnr','tiernummer','tiernr','pmsid','id','nr','nummer']],
+    ['ueln','UELN',['ueln','lebensnummer']],
+    ['microchip','Mikrochip',['chip','mikrochip','transponder','microchip','chipnummer']],
+    ['passport','Equidenpass-Nr.',['pass','equidenpass','passnummer','passnr','passport']],
+    ['lat','Breitengrad',['lat','breitengrad','latitude','breite']],
+    ['lng','Längengrad',['lng','lon','laengengrad','längengrad','longitude','laenge']],
+    ['notes','Notiz',['notiz','notizen','bemerkung','bemerkungen','hinweis','notes']],
+  ],
+  _norm(s){ return String(s||'').toLowerCase().replace(/^﻿/,'').replace(/[^a-z0-9äöüß]/g,''); },
+  /* Excel unter Windows speichert CSV oft in Windows-1252 – als UTF-8 gelesen
+     würden aus „Müller“ Fragezeichen. Erst streng UTF-8, sonst 1252. */
+  async text(datei){
+    const b=await datei.arrayBuffer();
+    try{ return new TextDecoder('utf-8',{fatal:true}).decode(b); }catch(e){ return new TextDecoder('windows-1252').decode(b); }
+  },
+  /* RFC-4180-Leser: Trennzeichen ; , oder Tab, Anführungszeichen, Zeilenumbrüche in Feldern. */
+  zerlege(text){
+    const t=String(text).replace(/^﻿/,'');
+    const kopf=t.split(/\r?\n/)[0]||'';
+    const zahl=c=>kopf.split(c).length;
+    const trenn=[';','\t',','].sort((a,b)=>zahl(b)-zahl(a))[0];
+    const zeilen=[]; let z=[], f='', inQ=false;
+    for(let i=0;i<t.length;i++){
+      const c=t[i];
+      if(inQ){ if(c==='"'){ if(t[i+1]==='"'){ f+='"'; i++; } else inQ=false; } else if(c==='\r'&&t[i+1]==='\n'){ f+='\n'; i++; } else f+=c; continue; }
+      if(c==='"') inQ=true;
+      else if(c===trenn){ z.push(f); f=''; }
+      else if(c==='\n'||c==='\r'){ if(c==='\r'&&t[i+1]==='\n') i++; z.push(f); f=''; if(z.some(x=>x.trim())) zeilen.push(z.map(x=>x.trim())); z=[]; }
+      else f+=c;
+    }
+    z.push(f); if(z.some(x=>x.trim())) zeilen.push(z.map(x=>x.trim()));
+    return zeilen;
+  },
+  /* Spalte → Feld. Jede Spalte bekommt das Feld mit dem SPEZIFISCHSTEN Treffer (exakt vor „enthält“, längeres
+     Muster vor kürzerem): „Besitzer Vorname“ ist der Vorname, nicht die Halterin. Jedes Feld höchstens einmal. */
+  zuordnen(kopf){
+    const k=kopf.map(h=>this._norm(h)), map=kopf.map(()=>''), kand=[];
+    k.forEach((h,i)=>{ for(const [feld,,muster] of this.FELDER) for(const m of muster){ const n=this._norm(m);
+      if(h===n) kand.push({i,feld,w:1000+n.length}); else if(n.length>=4&&h.includes(n)) kand.push({i,feld,w:n.length+(feld==='vorname'||feld==='nachname'?20:0)}); } });   // „Besitzer Vorname“ = Vorname
+    kand.sort((a,b)=>b.w-a.w); const belegt=new Set();
+    for(const x of kand){ if(map[x.i]||belegt.has(x.feld)) continue; map[x.i]=x.feld; belegt.add(x.feld); }
+    /* Eine Spalte nur „Name“: mit Halterin-Spalte ist es das Pferd, sonst die Halterin (reines Adressbuch). */
+    const iName=k.findIndex((h,j)=>!map[j]&&(h==='name'||h==='namen'));
+    if(iName>=0) map[iName]=belegt.has('name')?(belegt.has('owner')?'':'owner'):(belegt.has('owner')||belegt.has('nachname')?'name':'owner');
+    return map;
+  },
+  zeilenZuDaten(zeilen,map){
+    return zeilen.map(z=>{
+      const d={}; map.forEach((feld,i)=>{ if(feld&&z[i]) d[feld]=(d[feld]?d[feld]+' ':'')+z[i]; });
+      if(!d.owner&&(d.vorname||d.nachname)) d.owner=[d.vorname,d.nachname].filter(Boolean).join(' ');
+      d.place=[d.street,[d.plz,d.ort].filter(Boolean).join(' ')].filter(Boolean).join(', ');
+      return d;
+    });
+  },
+  _schluessel(d){
+    const id=x=>String(x||'').trim().toLowerCase();
+    return [d.clinicPMS&&'p:'+id(d.clinicPMS), d.ueln&&'u:'+id(d.ueln).replace(/\s/g,''), d.microchip&&'c:'+id(d.microchip).replace(/\s/g,''),
+            d.name&&'n:'+id(d.name)+'|'+id(d.owner)].filter(Boolean);
+  },
+  _findeVorhanden(d){
+    const sch=new Set(this._schluessel(d));
+    return State.horses.find(h=>this._schluessel({name:h.name,owner:h.owner,...(h.extIds||{})}).some(s=>sch.has(s)));
+  },
+  plan(daten){
+    const p={neu:[],ergaenzt:[],gleich:[],ohneName:0,kunden:[]};
+    const gesehen=new Set();
+    for(const d of daten){
+      if(d.owner) p.kunden.push({name:d.owner,tel:d.phone||'',mail:d.mail||'',ort:d.place||''});
+      if(!d.name){ p.ohneName++; continue; }
+      const k=this._schluessel(d)[0]; if(gesehen.has(k)) { p.gleich.push(d); continue; } gesehen.add(k);
+      const h=this._findeVorhanden(d);
+      if(!h){ p.neu.push(d); continue; }
+      const leer=this._ergaenzbar(h,d); (leer.length?p.ergaenzt:p.gleich).push({h,d,leer});
+    }
+    return p;
+  },
+  _ergaenzbar(h,d){
+    const e=h.extIds||{}, out=[];
+    for(const f of ['owner','phone','stable','place','breed']) if(d[f]&&!h[f]) out.push(f);
+    for(const f of ['clinicPMS','ueln','microchip','passport']) if(d[f]&&!e[f]) out.push(f);
+    if(num(d.lat)!=null&&num(d.lng)!=null&&(h.lat==null||h.lng==null)) out.push('lat');
+    return out;
+  },
+  async ausfuehren(p){
+    const jetzt=new Date().toISOString();
+    for(const d of p.neu){
+      const h={id:'h_imp_'+Math.abs(hashStr((d.clinicPMS||'')+d.name+(d.owner||'')+performance.now())).toString(36),
+        subjectId:'import:'+(d.clinicPMS||d.ueln||d.microchip||d.name), createdAt:jetzt, needsVisit:false, importiert:jetzt,
+        name:d.name, owner:d.owner||'', phone:d.phone||'', stable:d.stable||'', place:d.place||'', breed:d.breed||'',
+        lat:num(d.lat), lng:num(d.lng), notes:d.notes||'',
+        extIds:{clinicPMS:d.clinicPMS||'',ueln:d.ueln||'',microchip:d.microchip||'',passport:d.passport||''}};
+      State.horses.push(h); await DB.put('horses',h);
+    }
+    for(const {h,d,leer} of p.ergaenzt){
+      h.extIds=h.extIds||{};
+      for(const f of leer){
+        if(f==='lat'){ h.lat=num(d.lat); h.lng=num(d.lng); }
+        else if(['clinicPMS','ueln','microchip','passport'].includes(f)) h.extIds[f]=d[f];
+        else h[f]=d[f];
+      }
+      await DB.put('horses',h);
+    }
+    const kNeu=await Kunden.hinzufuegen(p.kunden);
+    return {neu:p.neu.length, ergaenzt:p.ergaenzt.length, kunden:kNeu};
+  },
+  ohneStandort(){ return State.horses.filter(h=>(h.lat==null||h.lng==null)&&(h.place||'').trim()); },
+
+  /* ---------- Oberfläche ---------- */
+  oeffnen(){
+    if(!(State.settings&&State.settings.demo) && !License.isPaid()){ UI.upgrade('Bestand übernehmen'); return; }
+    UI.modal(`<div class="modal-head"><button class="closex" onclick="UI.closeModal()">${IC.x}</button><h3>Bestand übernehmen</h3></div>
+    <div class="modal-body" id="stammBody">
+      <p style="margin:0 0 12px;color:var(--text-dim);line-height:1.55">Pferde und Halterinnen aus Ihrer Praxissoftware, aus Excel oder aus dem Adressbuch – als CSV-Datei (in Excel: „Speichern unter → CSV“). Sie sehen vor dem Übernehmen, was wohin kommt; vorhandene Pferde werden nur in leeren Feldern ergänzt.</p>
+      <label class="btn primary" style="display:inline-flex;cursor:pointer">CSV-Datei wählen<input type="file" id="stammDatei" accept=".csv,.txt,.tsv,text/csv" style="display:none" onchange="Bestand.dateiGewaehlt(this.files[0])"></label>
+      <button class="btn ghost" style="margin-left:8px" onclick="Bestand.vorlage()">Vorlage laden</button>
+    </div>
+    <div class="modal-foot" id="stammFuss"><button class="btn ghost" onclick="UI.closeModal()">Abbrechen</button></div>`,{wide:true});
+  },
+  vorlage(){
+    const t='﻿Pferd;Halterin;Telefon;Stall;Straße;PLZ;Ort;Rasse;Patienten-Nr.;UELN;Mikrochip\r\n'
+           +'Mistral;Anna Weber;+49 170 1234567;Reitstall Sonnenhof;Hofweg 3;76473;Iffezheim;Hannoveraner;10234;276098765432109;276098106543210\r\n';
+    const a=document.createElement('a'); a.href=URL.createObjectURL(new Blob([t],{type:'text/csv;charset=utf-8'}));
+    a.download='CARLON-Bestand-Vorlage.csv'; document.body.appendChild(a); a.click(); a.remove();
+  },
+  async dateiGewaehlt(datei){ if(!datei) return; this._zeilen=this.zerlege(await this.text(datei)); this._datei=datei.name;
+    if(this._zeilen.length<2){ Toast.show('Die Datei enthält keine Datenzeilen','warn'); return; }
+    this._map=this.zuordnen(this._zeilen[0]); this.vorschau(); },
+  vorschau(){
+    const kopf=this._zeilen[0], daten=this.zeilenZuDaten(this._zeilen.slice(1),this._map), p=this.plan(daten); this._p=p;
+    const opt=i=>`<select data-spalte="${i}" onchange="Bestand._map[${i}]=this.value;Bestand.vorschau()" style="padding:7px 10px"><option value="">– nicht übernehmen –</option>${this.FELDER.map(([f,l])=>`<option value="${f}"${this._map[i]===f?' selected':''}>${esc(l)}</option>`).join('')}</select>`;
+    const bsp=i=>esc((this._zeilen.slice(1).find(z=>z[i])||[])[i]||'');
+    const ohneName=!this._map.includes('name');
+    $('#stammBody').innerHTML=`
+      <div style="font-size:12.5px;color:var(--text-dim);margin-bottom:10px">${esc(this._datei||'')} · <b>${this._zeilen.length-1}</b> Zeilen</div>
+      <div class="imp-stats" style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px">
+        <div class="imp-stat new"><b>${p.neu.length}</b><span>Neue Pferde</span></div>
+        <div class="imp-stat"><b>${p.ergaenzt.length}</b><span>Ergänzt</span></div>
+        <div class="imp-stat"><b>${p.gleich.length}</b><span>Schon vorhanden</span></div>
+        <div class="imp-stat"><b>${new Set(p.kunden.map(k=>k.name.toLowerCase())).size}</b><span>Halterinnen</span></div>
+      </div>
+      ${ohneName?`<div class="hint" style="color:var(--amber);margin-bottom:10px">Keine Spalte als „Pferd“ zugeordnet – übernommen werden dann nur die Halterinnen als Kontakte. Ordnen Sie die Spalte mit dem Pferdenamen unten zu.</div>`:''}
+      <div style="overflow-x:auto"><table style="width:100%;border-collapse:collapse;font-size:13px">
+        <tr><th style="text-align:left;padding:6px 4px">Spalte in Ihrer Datei</th><th style="text-align:left;padding:6px 4px">Beispiel</th><th style="text-align:left;padding:6px 4px;min-width:180px">Kommt nach</th></tr>
+        ${kopf.map((h,i)=>`<tr style="border-top:1px solid var(--border-faint)"><td style="padding:6px 4px">${esc(h||'(ohne Titel)')}</td><td style="padding:6px 4px;color:var(--text-dim);max-width:220px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${bsp(i)}</td><td style="padding:4px" class="field">${opt(i)}</td></tr>`).join('')}
+      </table></div>
+      ${p.ohneName&&!ohneName?`<div class="hint" style="margin-top:10px">Zeilen ohne Pferdenamen: <b>${p.ohneName}</b> – daraus werden nur Kontakte.</div>`:''}`;
+    const n=p.neu.length+p.ergaenzt.length;
+    $('#stammFuss').innerHTML=`<button class="btn ghost" onclick="UI.closeModal()">Abbrechen</button><button class="btn primary" id="stammLos" onclick="Bestand.uebernehmen()"${n||p.kunden.length?'':' disabled'}>Übernehmen</button>`;
+  },
+  async uebernehmen(){
+    const b=$('#stammLos'); if(b) b.disabled=true;
+    const r=await this.ausfuehren(this._p);
+    this._ergebnis=r; Nav.refresh(); this.ergebnis();
+  },
+  ergebnis(){
+    const r=this._ergebnis||{neu:0,ergaenzt:0,kunden:0}, offen=this.ohneStandort().length;
+    $('#stammBody').innerHTML=`<div class="imp-stats" style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px">
+        <div class="imp-stat new"><b>${r.neu}</b><span>Pferde angelegt</span></div>
+        <div class="imp-stat"><b>${r.ergaenzt}</b><span>Pferde ergänzt</span></div>
+        <div class="imp-stat"><b>${r.kunden}</b><span>Kontakte neu</span></div></div>
+      ${offen?`<p style="margin:0 0 8px;line-height:1.55"><b>${offen}</b> Pferde haben eine Adresse, aber noch keinen Kartenpunkt. Für Route und Fahrzeit ermittelt das Cockpit ihn über OpenStreetMap – eine Adresse pro Sekunde.</p>
+        <div id="stammGeo" style="font-size:12.5px;color:var(--text-dim)"></div>`:'<p style="margin:0;line-height:1.55">Alle übernommenen Pferde mit Adresse stehen auf der Karte.</p>'}`;
+    $('#stammFuss').innerHTML=`<button class="btn ghost" onclick="Bestand._abbruch=true;UI.closeModal();Nav.go('roster')">Fertig</button>${offen?`<button class="btn primary" id="stammGeoLos" onclick="Bestand.verorten()">Kartenpunkte ermitteln</button>`:''}`;
+  },
+  async verorten(){
+    const liste=this.ohneStandort(); this._abbruch=false; const b=$('#stammGeoLos'); if(b) b.disabled=true;
+    let ok=0, nicht=0;
+    for(let i=0;i<liste.length;i++){
+      if(this._abbruch||!$('#stammGeo')) break;
+      const h=liste[i]; $('#stammGeo').textContent=`${i+1} / ${liste.length} · ${h.name}`;
+      const g=await geocode(h.place);
+      if(g){ h.lat=g.lat; h.lng=g.lng; await DB.put('horses',h); ok++; } else nicht++;
+      if(i<liste.length-1) await new Promise(r=>setTimeout(r,1100));     // Nutzungsregel OpenStreetMap: höchstens 1 Anfrage/s
+    }
+    if($('#stammGeo')) $('#stammGeo').innerHTML=`Kartenpunkt gefunden: <b>${ok}</b>${nicht?` · nicht gefunden: <b>${nicht}</b> (Adresse in der Akte prüfen)`:''}`;
+    if(b){ b.remove(); } Nav.refresh();
+  },
+};
+
 const Postausgang={
   async _alle(){ return (State.settings.postausgang||[]); },
   async _setzen(l){ State.settings.postausgang=l; await State.saveSettings(); },
@@ -11875,7 +12079,7 @@ const Sprache={
   WB:{
     /* 17.11.2026: Lücken aus der Sprachprobe (nur/enrest.mjs) */
     "gehört zum Abo –":"is part of the subscription –", "die ersten 14 Tage sind kostenlos":"the first 14 days are free", ", danach monatlich kündbar.":", then cancel monthly.",
-    "Basis im Aufbau":"Baseline building", "Erste Schritte":"First steps", "So kommt das erste Pferd in den Verlauf.":"How the first horse gets into the trend.", "Pferd anlegen":"Add a horse", "+ Pferd anlegen":"+ Add a horse",
+    "Basis im Aufbau":"Baseline building", "Pferde anlegen":"Add horses", "Einzeln – oder den ganzen Bestand aus Praxissoftware oder Excel übernehmen. Jedes Pferd steht dann auch für die Tour bereit.":"One by one – or bring in your whole list from practice software or Excel. Every horse is then ready for the round too.", "Bestand übernehmen (CSV)":"Import your list (CSV)", "Bestand übernehmen":"Import your list", "Pferde und Halterinnen aus Ihrer Praxissoftware, aus Excel oder aus dem Adressbuch – als CSV-Datei (in Excel: „Speichern unter → CSV“). Sie sehen vor dem Übernehmen, was wohin kommt; vorhandene Pferde werden nur in leeren Feldern ergänzt.":"Horses and owners from your practice software, Excel or address book – as a CSV file (in Excel: “Save as → CSV”). Before importing you see what goes where; existing horses are only completed in empty fields.", "CSV-Datei wählen":"Choose CSV file", "Vorlage laden":"Download template", "Zeilen":"rows", "Neue Pferde":"New horses", "Ergänzt":"Completed", "Schon vorhanden":"Already there", "Halterinnen":"Owners", "Keine Spalte als „Pferd“ zugeordnet – übernommen werden dann nur die Halterinnen als Kontakte. Ordnen Sie die Spalte mit dem Pferdenamen unten zu.":"No column assigned to “Horse” – only the owners will be imported as contacts. Assign the column with the horse name below.", "Spalte in Ihrer Datei":"Column in your file", "Beispiel":"Example", "Kommt nach":"Goes to", "– nicht übernehmen –":"– don’t import –", "(ohne Titel)":"(untitled)", "Zeilen ohne Pferdenamen:":"Rows without a horse name:", "– daraus werden nur Kontakte.":"– these become contacts only.", "Übernehmen":"Import", "Pferde angelegt":"Horses added", "Pferde ergänzt":"Horses completed", "Kontakte neu":"New contacts", "Pferde haben eine Adresse, aber noch keinen Kartenpunkt. Für Route und Fahrzeit ermittelt das Cockpit ihn über OpenStreetMap – eine Adresse pro Sekunde.":"horses have an address but no map point yet. For route and driving time the cockpit looks it up via OpenStreetMap – one address per second.", "Alle übernommenen Pferde mit Adresse stehen auf der Karte.":"All imported horses with an address are on the map.", "Fertig":"Done", "Kartenpunkte ermitteln":"Find map points", "Kartenpunkt gefunden:":"Map point found:", "· nicht gefunden:":"· not found:", "(Adresse in der Akte prüfen)":"(check the address in the record)", "Die Datei enthält keine Datenzeilen":"The file contains no data rows", "Halterin / Besitzer":"Owner", "Vorname (Halterin)":"First name (owner)", "Nachname (Halterin)":"Last name (owner)", "Telefon":"Phone", "E-Mail":"Email", "Stall":"Stable", "Straße":"Street", "PLZ":"Postcode", "Ort":"Town", "Rasse":"Breed", "Patienten-Nr. (Praxissoftware)":"Patient no. (practice software)", "UELN":"UELN", "Mikrochip":"Microchip", "Equidenpass-Nr.":"Equine passport no.", "Breitengrad":"Latitude", "Längengrad":"Longitude", "Notiz":"Note", "Erste Schritte":"First steps", "So kommt das erste Pferd in den Verlauf.":"How the first horse gets into the trend.", "Pferd anlegen":"Add a horse", "+ Pferd anlegen":"+ Add a horse",
     "Name, Halterin, Telefon und Stall – das Pferd steht dann auch für die Tour bereit.":"Name, owner, phone and stable – the horse is then ready for the round, too.",
     "Messung anfordern":"Request a recording", "In der Akte des Pferds: „Messung anfordern“ schickt der Halterin Ihren Mess-Link per WhatsApp oder SMS – mit Ihrem Praxisnamen.":"In the horse’s record, “Request a recording” sends the owner your measuring link via WhatsApp or SMS – with your practice name.",
     "Aufnahme kommt an":"The recording arrives", "Die Halterin misst sieben Minuten im Stall und sendet. Sie öffnen die Datei hier – oder richten einen Eingangs-Ordner ein, dann kommt sie von selbst.":"The owner records for seven minutes in the stable and sends it. You open the file here – or set up an inbox folder and it arrives by itself.",

@@ -149,10 +149,26 @@ document.head.appendChild(s);})();</script>
     },
     {
      "@type": "Question",
+     "name": "How do my horses get into the cockpit?",
+     "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "As a CSV file from your practice software, from Excel (“Save as → CSV”) or from your address book. The cockpit recognises the columns, shows what goes where before importing and creates nothing twice; existing horses are only completed in empty fields. It then finds the map points for the route from the addresses. You add single horses directly."
+     }
+    },
+    {
+     "@type": "Question",
      "name": "Does the cockpit work without signal?",
      "acceptedAnswer": {
       "@type": "Answer",
       "text": "Yes. After the first visit the cockpit also starts without a network: records, today’s route, appointments and “Done” work on the device, and whatever you enter offline is kept. Without a network only the map view and address search are missing; the route list remains."
+     }
+    },
+    {
+     "@type": "Question",
+     "name": "What if CARLON no longer exists one day?",
+     "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Then your data is not gone: it lies on your device or in your own team folder, not on a server of ours, and can be exported at any time as JSON, CSV and FHIR R5. The backup restores everything in any Chrome or Edge."
      }
     },
     {
@@ -1337,7 +1353,7 @@ try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; 
       <div class="tp"><svg class="ic li-ic" aria-hidden="true"><use href="#i-uhr"/></svg><h3>Running late, one tap</h3><p>If a visit takes longer, one tap opens WhatsApp or SMS with a ready message to the next owner – new arrival time, your name, your location if you like. You send it yourself. Instead of three phone calls from the stable aisle.</p></div>
       <div class="tp"><svg class="ic li-ic" aria-hidden="true"><use href="#i-check"/></svg><h3>“Done” – and the visit is recorded</h3><p>One tap as you leave: visit, treatment time and distance are in the records, the service is in the list ready for billing – as CSV for your practice software. You can dictate a note through your phone keyboard’s microphone. Nobody types it up in the evening.</p></div>
       <div class="tp"><svg class="ic li-ic" aria-hidden="true"><use href="#i-route"/></svg><h3>Mileage fee proposal under § 10 GOT</h3><p>Your round produces a proposal for the German fee scale: double kilometres × €3.50, split per owner, amounts below the €13 minimum flagged – with your odometer km, as CSV. What you charge is your decision.</p></div>
-      <div class="tp"><svg class="ic li-ic" aria-hidden="true"><use href="#i-akte"/></svg><h3>Owners and horses at hand</h3><p>Every horse with owner, stable, phone and identifiers (practice no., UELN, microchip). Call or WhatsApp straight from the record and the route – no searching through chats.</p></div>
+      <div class="tp"><svg class="ic li-ic" aria-hidden="true"><use href="#i-akte"/></svg><h3>Owners and horses at hand</h3><p>Bring in your list as CSV from practice software or Excel – with owner, stable, phone and identifiers (practice no., UELN, microchip). Call or WhatsApp straight from the record and the route – no searching through chats.</p></div>
       <div class="tp"><svg class="ic li-ic" aria-hidden="true"><use href="#i-schild"/></svg><h3>Google Maps and calendar</h3><p>The route goes to Google Maps when you tap, the day plan and appointments go to your calendar as an .ics file. Records stay on your device; for the map and address search your browser asks OpenStreetMap. Trips and times as CSV (not a tax mileage log).</p></div>
     </div>
   </div>
@@ -2029,8 +2045,14 @@ try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; 
       <details class="faq-item" data-spur-auf="faq-3"><summary><h3>What happens after cancellation?</h3></summary>
         <div class="faq-a"><p>Your horses, recordings and records stay readable on the device; backup, JSON and FHIR export keep working. Locked are new horses of your own, receiving new recordings, the PDF report, CSV export, hand-off to Google Maps and the team folder. We could not delete your data anyway — it is with you.</p></div>
       </details>
+      <details class="faq-item" data-spur-auf="faq-bestand"><summary><h3>How do my horses get into the cockpit?</h3></summary>
+        <div class="faq-a"><p>As a CSV file from your practice software, from Excel (“Save as → CSV”) or from your address book. The cockpit recognises the columns, shows what goes where before importing and creates nothing twice; existing horses are only completed in empty fields. It then finds the map points for the route from the addresses. You add single horses directly.</p></div>
+      </details>
       <details class="faq-item" data-spur-auf="faq-offline"><summary><h3>Does the cockpit work without signal?</h3></summary>
         <div class="faq-a"><p>Yes. After the first visit the cockpit also starts without a network: records, today’s route, appointments and “Done” work on the device, and whatever you enter offline is kept. Without a network only the map view and address search are missing; the route list remains.</p></div>
+      </details>
+      <details class="faq-item" data-spur-auf="faq-anbieter"><summary><h3>What if CARLON no longer exists one day?</h3></summary>
+        <div class="faq-a"><p>Then your data is not gone: it lies on your device or in your own team folder, not on a server of ours, and can be exported at any time as JSON, CSV and FHIR R5. The backup restores everything in any Chrome or Edge.</p></div>
       </details>
       <details class="faq-item" data-spur-auf="faq-4"><summary><h3>Do I need a data processing agreement?</h3></summary>
         <div class="faq-a"><p>In our assessment, no. The cockpit runs entirely in your browser, and the owner's recording never
