@@ -7,7 +7,7 @@ setTimeout(function(){ if(!document.querySelector('.rev.in'))
   document.documentElement.className=document.documentElement.className.replace(' rev-an',''); },4000);</script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Round cockpit and resting HRV for equine practices | CARLON Equine Visite</title>
+<title>Visit planning and resting HRV for equine practices | CARLON Equine Visite</title>
 
 <link rel="icon" type="image/png" sizes="16x16" href="/assets/equine-favicon-16.png">
 <link rel="icon" type="image/png" sizes="32x32" href="/assets/equine-favicon-32.png">
@@ -144,7 +144,7 @@ document.head.appendChild(s);})();</script>
      "name": "What happens after cancellation?",
      "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Your horses, recordings and records stay readable on the device; backup, JSON, CSV and FHIR export keep working. Locked are new horses of your own, the daily round with records, receiving via measuring link and inbox folder, the PDF report, hand-off to Google Maps and the team folder. We could not delete your data anyway, because it is with you."
+      "text": "Your horses, recordings and records stay readable on the device; backup, JSON, CSV and FHIR export keep working. What is then locked: adding new horses, the daily round with records, receiving via measuring link and inbox folder, the PDF report, hand-off to Google Maps and the team folder. We could not delete your data anyway, because it is with you."
      }
     },
     {
@@ -152,7 +152,7 @@ document.head.appendChild(s);})();</script>
      "name": "How do my horses get into the cockpit?",
      "acceptedAnswer": {
       "@type": "Answer",
-      "text": "As a CSV file from your practice software, from Excel (“Save as → CSV”) or from your address book. The cockpit recognises the columns, shows what goes where before importing and creates nothing twice; existing horses are only completed in empty fields. It then looks up the map points for the route once, one address per second via OpenStreetMap. Coordinates in the file are taken over directly. You add single horses directly."
+      "text": "As a CSV file from your practice software, from Excel (“Save as → CSV”) or from your address book. The cockpit recognises the columns, shows what goes where before importing and creates nothing twice; existing horses are only completed in empty fields. It then looks up the map points for the route once, one address per second via OpenStreetMap. Coordinates in the file are used as they are. You can also add single horses by hand."
      }
     },
     {
@@ -192,7 +192,7 @@ document.head.appendChild(s);})();</script>
      "name": "Does this create a duty to keep watching?",
      "acceptedAnswer": {
       "@type": "Answer",
-      "text": "No. CARLON sends no alerts, and the owner sees no classification. It only comes into being in your cockpit, when you open it. When you review a file sent to you is up to you and agreed with your clients; which duties of care follow from it, clarify with your chamber and professional liability insurer if in doubt. For emergencies, what has always applied still applies: the phone call."
+      "text": "No. CARLON sends no alerts, and the owner sees no classification. It is only calculated in your cockpit, when you open it. When you review a file sent to you is up to you and agreed with your clients; which duties of care follow from it, check with your veterinary chamber and professional indemnity insurer if in doubt. For emergencies, what has always applied still applies: the phone call."
      }
     },
     {
@@ -1272,9 +1272,9 @@ try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; 
     <span class="hero-signet" aria-hidden="true"><img src="/assets/equine-mark-512.png" width="512" height="512" alt="" fetchpriority="high"></span>
     <p class="hero-marke">CARLON<small>EQUINE VISITE</small></p>
     <div class="eyebrow">For equine practices and clinics</div>
-    <h1>Your day on the road at a glance. <em>Before the visit: the resting recording from the stable.</em></h1>
+    <h1>Your rounds at a glance. <em>Before each visit: the resting recording from the stable.</em></h1>
     <p class="hero-sub">
-      Route from the current time, delay message, visit records and a mileage-fee proposal. On top, the owner records her horse for seven minutes with a chest strap and sends you the recording. You see the trend against the horse’s own baseline.
+      Routes that start from the current time, delay messages, visit records and a mileage-fee proposal. In addition, the owner records her horse for seven minutes with a chest strap and sends you the recording. You see the trend against the horse’s own baseline.
     </p>
     <div class="cta-row">
       <a class="cta-primary" href="/carlon-equine/app/?lang=en">Open the cockpit with 15&nbsp;demo horses →</a>
@@ -1291,7 +1291,7 @@ try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; 
       <span class="hero-phone"><video src="../assets/station-tour/live-v6-en.mp4" poster="../assets/station-tour/live-poster-v6-en.jpg" width="660" height="1428" autoplay muted playsinline preload="auto" aria-hidden="true"></video><span class="g-marke"><i>1</i>Recorded in the stable</span></span>
       <div class="hero-shot schau-box" data-schau="/carlon-equine/app/?schaufenster=1&amp;demo=roster&amp;pferd=sunny&amp;fokus=verlauf&amp;lang=en">
         <video src="../assets/visite-shots/13-verlauf-film-en.mp4" poster="../assets/visite-shots/13-verlauf-en.jpg" width="1600" height="1112" autoplay muted playsinline preload="auto" aria-label="Record of a demo horse in the cockpit: RMSSD, resting heart rate and SDNN trends over weeks against its own baseline, below it heart rate and HRV of a resting recording beat by beat"></video>
-        <a class="schau-voll" href="/carlon-equine/app/?demo=roster&amp;pferd=sunny&amp;lang=en" title="Open the cockpit full screen">Full screen ↗</a><span class="g-marke"><i>2</i>Course against own baseline</span></div>
+        <a class="schau-voll" href="/carlon-equine/app/?demo=roster&amp;pferd=sunny&amp;lang=en" title="Open the cockpit full screen">Full screen ↗</a><span class="g-marke"><i>2</i>Trend against own baseline</span></div>
       <a class="hero-tour" href="#arbeitstag" aria-label="To the day's route in the cockpit"><span class="ht-rahmen"><video src="../assets/visite-shots/14-tour-film-v2-en.mp4" poster="../assets/visite-shots/14-tour-v2-en.jpg" width="1600" height="1112" muted playsinline preload="metadata" aria-hidden="true"></video></span><span class="g-marke"><i>3</i>Day's route with drive times</span></a>
       </div>
       <figcaption>
@@ -1338,8 +1338,8 @@ try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; 
 <section id="arbeitstag">
   <div class="wrap">
     <div class="sec-eyebrow">Your working day</div>
-    <h2>The cockpit helps from your first day on the road, even before any owner records.</h2>
-    <p class="sec-lead">You use route, appointments, owner contacts, delay message and visit records on every day on the road. When an owner records her horse, the recording sits in the same horse record as appointments and visits.</p>
+    <h2>The cockpit is useful from your first round, even before any owner has recorded.</h2>
+    <p class="sec-lead">You use route, appointments, owner contacts, delay message and visit records on every round. When an owner records her horse, the recording sits in the same horse record as appointments and visits.</p>
 
     <div class="hero-shot schau-box tour-tablet" data-schau="/carlon-equine/app/?schaufenster=1&amp;demo=map&amp;lang=en">
         <video src="../assets/visite-shots/14-tour-film-v2-en.mp4" poster="../assets/visite-shots/14-tour-v2-en.jpg" width="1600" height="1112" muted playsinline preload="none" aria-label="Map and route in the cockpit: the map flies to each stop, the list follows with drive time and contact"></video>
@@ -1350,7 +1350,7 @@ try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; 
       <div class="tp"><svg class="ic li-ic" aria-hidden="true"><use href="#i-uhr"/></svg><h3>Arrival and appointment at a glance</h3><p>Every stop shows arrival time, drive time and contact. The route counts from the current time, so you see at once whether you are on time. At first the cockpit estimates drive time from the distance. With every documented visit the times get more accurate, because it learns how long you usually need for a horse and how long your drives actually take.</p></div>
       <div class="tp"><svg class="ic li-ic" aria-hidden="true"><use href="#i-uhr"/></svg><h3>Report a delay with a ready-written message</h3><p>If a visit takes longer, one tap opens WhatsApp or a text message with a ready-written message to the next owner. It contains the new arrival time and your name, and your location if you like. You send the message yourself. In the same way you let the owner know you are on your way, so the horse is ready.</p></div>
       <div class="tp"><svg class="ic li-ic" aria-hidden="true"><use href="#i-akte"/></svg><h3>What else is due at the same stable</h3><p>You enter due vaccinations, dewormings and dental checks or import them via CSV. At every stop you see what else is due at this stable in the next 30 days. That way you get more done in one trip.</p></div>
-      <div class="tp"><svg class="ic li-ic" aria-hidden="true"><use href="#i-check"/></svg><h3>One tap on “Done” records the visit</h3><p>As you leave, you tap “Done”. Visit, treatment time and distance are then recorded, and the service is in the service list. You pass this list to your practice software as CSV; you write the invoice there as usual. You dictate notes through your phone keyboard’s microphone. Whether your practice program can read the CSV is something its vendor can tell you.</p></div>
+      <div class="tp"><svg class="ic li-ic" aria-hidden="true"><use href="#i-check"/></svg><h3>One tap on “Done” records the visit</h3><p>As you leave, you tap “Done”. Visit, treatment time and distance are then recorded, and the service is in the service list. You pass this list to your practice software as CSV; you write the invoice there as usual. You dictate notes through your phone keyboard’s microphone. Your practice software vendor can tell you whether it imports the CSV.</p></div>
       <div class="tp"><svg class="ic li-ic" aria-hidden="true"><use href="#i-route"/></svg><h3>Mileage fee proposal under § 10 GOT</h3><p>From the round you drove, the cockpit calculates a proposal under the German fee scale: €3.50 per double kilometre, split between the owners. Amounts below the €13 minimum are flagged. You enter your odometer kilometres and get the result as CSV. What you charge is your decision.</p></div>
       <div class="tp"><svg class="ic li-ic" aria-hidden="true"><use href="#i-akte"/></svg><h3>Owners and horses at hand</h3><p>You import your list as CSV from practice software or Excel, with owner, stable, phone and identifiers such as practice number, UELN and microchip. You start calls and WhatsApp straight from the record and from the route.</p></div>
       <div class="tp"><svg class="ic li-ic" aria-hidden="true"><use href="#i-schild"/></svg><h3>Google Maps and calendar</h3><p>One tap hands the route to Google Maps. You add the day plan and appointments to your calendar as an .ics file. The records stay on your device. For the map and address search your browser asks OpenStreetMap; only the address is sent, no name. Trips and times are available as CSV (not a tax mileage log).</p></div>
@@ -1385,7 +1385,7 @@ try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; 
         <path d="M33 44h10l3-5 3 5h3l4-17 5 29 3-12h5l3-4 3 4h13" class="ab-ekg" pathLength="100"/>
         <text x="60" y="92" text-anchor="middle" class="ab-zahl">≥ 7 MIN</text></svg></div>
         <span class="ab-wer">In the stable</span><h3>Strap on, at least 7 minutes of rest</h3>
-        <p>Polar H10 on the horse, in its own stall, at the usual time. The station shows live whether the signal holds.</p></li>
+        <p>Polar H10 on the horse, in its own stall, at the usual time. The station shows live whether the signal is good.</p></li>
       <li style="--i:3"><div class="ab-bild"><svg viewBox="0 0 120 96" stroke="currentColor" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
         <path d="M34 12h32l14 14v52H34z" class="ab-rahmen"/><path d="M66 12v14h14" opacity=".55"/>
         <path d="M42 36h22M42 42h16" opacity=".4"/>
@@ -1412,7 +1412,7 @@ try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; 
       <div class="ab-weg"><span class="ab-wer">With your link</span><h3>Sealed and already assigned</h3>
         <p>Only the key from your cockpit can decrypt the file. If you request a recording for a specific horse, it is already in the link and the recording lands in the right record.</p></div>
       <div class="ab-weg"><span class="ab-wer ab-wer-gold">Without a link</span><h3>The owner records on her own</h3>
-        <p>Owners also find the measuring station on their own. Then they send you an open file with as little information as possible. You open it in the cockpit, even without a subscription, and see what Visite does for your practice.</p></div>
+        <p>Owners also find the measuring station on their own. They then send you an unencrypted file with as few details as possible. You open it in the cockpit, even without a subscription, and see what Visite does for your practice.</p></div>
     </div>
     <div class="cta-row ab-ctas">
       <a class="cta-primary" href="/carlon-equine/app/messen.html?von=visite&amp;lang=en" data-station="/carlon-equine/app/messen.html?von=visite&amp;beispiel=1">Try it as the owner: sample recording →</a>
@@ -1424,8 +1424,8 @@ try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; 
 <section>
   <div class="wrap">
     <div class="sec-eyebrow">What the cockpit shows</div>
-    <h2>First the overview, below it the numbers behind it</h2>
-    <p class="sec-lead">At the top the deviation from the horse’s own history and the value it follows from. Below it
+    <h2>The overview first, with the underlying numbers below</h2>
+    <p class="sec-lead">At the top the deviation from the horse’s own history and the value it is based on. Below it
        everything you need to check the maths.</p>
 
     <div class="feature">
@@ -1433,7 +1433,7 @@ try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; 
         alt="Übersicht: jedes Pferd als Karte mit seiner Abweichung von der eigenen Vorgeschichte, mit Anruf-Knopf beim Halter"></div>
       <div class="f-txt">
         <div class="f-k">Overview</div>
-        <h3>Four deviation levels, and next to each the value it follows from.</h3>
+        <h3>Four deviation levels, each shown with the value it is based on.</h3>
         <ul>
           <li class="mit-ic"><svg class="ic li-ic" aria-hidden="true"><use href="#i-sort"/></svg><b>Sortable by name, date or deviation</b> from its own baseline. Every horse is compared with its own history, not with a table.</li>
           <li class="mit-ic"><svg class="ic li-ic" aria-hidden="true"><use href="#i-signal"/></svg><b>Every level shows the value</b> it follows from. The level describes measurements, not a state of health.</li>
@@ -1448,7 +1448,7 @@ try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; 
         <h3>Everything you need to check the maths, in one place.</h3>
         <ul>
           <li class="mit-ic"><svg class="ic li-ic" aria-hidden="true"><use href="#i-verlauf"/></svg><b>Values against the horse's own baseline</b>, as an indication. The interpretation stays with you.</li>
-          <li class="mit-ic"><svg class="ic li-ic" aria-hidden="true"><use href="#i-signal"/></svg><b>Signal quality before the number</b>: how many beat pairs actually carry the analysis.</li>
+          <li class="mit-ic"><svg class="ic li-ic" aria-hidden="true"><use href="#i-signal"/></svg><b>Signal quality before the number</b>: how many beat pairs the analysis is based on.</li>
           <li class="mit-ic"><svg class="ic li-ic" aria-hidden="true"><use href="#i-bericht"/></svg><b>Observation note and measurement report</b>, without leaving the record.</li>
         </ul>
       </div>
@@ -1465,7 +1465,7 @@ try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; 
       <div>
         <b>See the report first</b>
         <span>Six pages on your letterhead (here fictitious demo data): raw and corrected values,
-        tachogram, spectrum, course over weeks, Poincaré over four time segments, limits of the
+        tachogram, spectrum, trend over weeks, Poincaré over four time segments, limits of the
         recording, methods with references and SHA-256 checksum. The interpretation stays with your practice. The sample report is in German.</span>
         <a class="bm-knopf" href="../assets/CARLON-Muster-Bericht.pdf" target="_blank" rel="noopener">Sample report · PDF, 6 pages (German)</a>
       </div>
@@ -1474,7 +1474,7 @@ try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; 
     <details class="mehr gross" data-spur-auf="mehr-was-im-cockpit-steht"><summary><span>All horse-record features at a glance</span></summary>
       <div class="grid">
       <div class="card">
-        <h3>Deviation with its reason</h3>
+        <h3>Deviation with the underlying value</h3>
         <p>Four levels from “within own range” to “marked deviation”, always with the value they follow from, and with the deviation from <em>this</em> horse’s baseline instead of a&nbsp;textbook value.</p>
       </div>
       <div class="card">
@@ -1494,7 +1494,7 @@ try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; 
       <div class="card">
         <h3>Export to open formats</h3>
         <p>JSON, CSV, Kubios-compatible and <strong>FHIR&nbsp;R5</strong> with
-           LOINC codes. Whether your practice software reads FHIR is a question for its vendor.</p>
+           LOINC codes. Your software vendor can tell you whether it imports FHIR.</p>
       </div>
     </div>
     </details>
@@ -1606,10 +1606,10 @@ try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; 
 
 <section>
   <div class="wrap">
-    <div class="sec-eyebrow">Why the numbers hold</div>
+    <div class="sec-eyebrow">Why the numbers can be trusted</div>
     <h2>Long pauses between beats are flagged and reported separately.</h2>
     <p class="sec-lead">
-      HRV is not a readout of a state. For a trend to hold, every single value has to be clean. That is exactly where long pauses between two beats interfere.
+      HRV is not a direct readout of the horse’s condition. For a trend to hold, every single value has to be clean. That is exactly where long pauses between two beats interfere.
     </p>
 
     <div class="beleg-breit">
@@ -1656,8 +1656,7 @@ try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; 
   
     <details class="mehr gross" data-spur-auf="mehr-warum-die-zahlen-tragen"><summary><span>The method in detail: filter chain and limits</span></summary>
       <p class="sec-lead" style="margin-top:var(--sp-21)">
-      A resting horse often shows long pauses between two beats, frequently due to a second-degree AV block; only an ECG shows what it is exactly. Count them in
-      raw and SDNN and RMSSD rise markedly; a low value can then appear high.
+      A resting horse often shows long pauses between two beats, frequently due to a second-degree AV block; only an ECG shows what it is exactly. Included without correction, they raise SDNN and RMSSD markedly; a low value can then appear high.
     </p>
       <div class="usps">
     <div class="usp">
@@ -1670,7 +1669,7 @@ try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; 
       
     </div>
     <div class="usp">
-      <h3>Implausible outliers are flagged, not taken over</h3>
+      <h3>Implausible outliers are flagged and excluded</h3>
       <p>Unfiltered, long pauses change the RR-based short-term values markedly
          (Eggensperger &amp; Schwarzwald 2017). So the data is cleaned first and compared second,
          so that measurement errors appear as deviations less often. Normal day-to-day variation remains.</p>
@@ -1678,7 +1677,7 @@ try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; 
     <div class="usp">
       <h3>If signal quality or resting time falls short, it says so</h3>
       <p>With too few beats, too short a rest or too many artefacts, it says “insufficient data”
-         and gives no verdict.</p>
+         instead of a rating.</p>
     </div>
     </div>
     </details>
@@ -1697,7 +1696,7 @@ try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; 
         <ol class="st-schritte">
           <li><b>Fit the sensor</b><span>Buckle the Polar H10 in the Equine strap and wet the contact areas with water or electrode gel</span></li>
           <li><b>Open the measuring link</b><span>in the browser on Android or a computer, no app and no account</span></li>
-          <li><b>7 minutes at rest, then send</b><span>the station shows live whether the signal holds</span></li>
+          <li><b>7 minutes at rest, then send</b><span>the station shows live whether the signal is good</span></li>
         </ol>
         <p class="st-link"><a href="/carlon-equine/app/messen.html?von=visite&amp;lang=en" target="_blank" rel="noopener"><svg class="ic" aria-hidden="true"><use href="#i-phone"/></svg><span>vitalkultur.com/carlon-equine/app/messen.html</span><b>Open the measuring station ↗</b></a></p>
       </div>
@@ -1737,7 +1736,7 @@ try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; 
         <h3>Polar H10 in the Equine belt: it measures electrically and has been validated against the ECG in a study in horses.</h3>
         <ul class="gurt-liste">
           <li class="mit-ic"><svg class="ic li-ic" aria-hidden="true"><use href="#i-ekg"/></svg><b>R-waves, not a light pulse.</b> The H10 measures the heart’s electrical activity and delivers every beat interval at about 1&nbsp;ms resolution (1/1024&nbsp;s). Optical sensors estimate it from light instead.</li>
-          <li class="mit-ic"><svg class="ic li-ic" aria-hidden="true"><use href="#i-gurt"/></svg><b>Made for the horse’s body.</b> The Equine belt is sized for the horse’s girth; electrode gel on the coat lowers the impedance and usually improves contact. The measuring station shows live whether the signal holds.</li>
+          <li class="mit-ic"><svg class="ic li-ic" aria-hidden="true"><use href="#i-gurt"/></svg><b>Made for the horse’s body.</b> The Equine belt is sized for the horse’s girth; electrode gel on the coat lowers the impedance and usually improves contact. The measuring station shows live whether the signal is good.</li>
           <li class="mit-ic"><svg class="ic li-ic" aria-hidden="true"><use href="#i-check"/></svg><b>Validated in a study in horses.</b> In 28 horses, heart rate and time-domain HRV values from a Polar H10 system agreed with the ECG at rest and during groundwork (<a href="https://doi.org/10.3389/fvets.2022.939534" target="_blank" rel="noopener">Kapteijn et&nbsp;al. 2022</a>; with different electrodes, a different receiver and after artefact correction in Kubios; our analysis is not separately validated). The measuring station shows beat intervals, not an ECG trace.</li>
           <li class="mit-ic"><svg class="ic li-ic" aria-hidden="true"><use href="#i-tasche"/></svg><b>Freely available.</b> You buy the belt from regular retailers.</li>
         </ul>
@@ -1746,14 +1745,14 @@ try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; 
     <p class="sec-lead" style="margin-top:var(--sp-21)">
       What reaches you is not a screenshot but a dataset: every beat interval in its
       raw state, the measures computed from it and the signal quality alongside. So you see
-      not just a number but also <strong>how many usable beat pairs it rests on</strong>.
+      not just a number but also <strong>how many usable beat pairs it is based on</strong>.
       You drag the file into the cockpit, and signal quality
       and the trend are there at once, and from the fourth recording also the comparison with the horse’s own baseline.
     </p>
 
     <div class="vt" data-app-tour>
       <ol class="vt-liste" data-tour-liste aria-label="How the measuring station works">
-        <li><button data-i="0"><svg class="ic vt-ic" aria-hidden="true"><use href="#i-ekg"/></svg><b>She sees whether the signal holds</b><span>Heart rate, beat count and Poincaré run live. Here you see a resting recording in time-lapse.</span></button><i class="fort"></i></li>
+        <li><button data-i="0"><svg class="ic vt-ic" aria-hidden="true"><use href="#i-ekg"/></svg><b>She sees whether the signal is good</b><span>Heart rate, beat count and Poincaré run live. Here you see a resting recording in time-lapse.</span></button><i class="fort"></i></li>
         <li><button data-i="1"><svg class="ic vt-ic" aria-hidden="true"><use href="#i-bericht"/></svg><b>The result with its measurement log</b><span>Raw and corrected value, curves and signal quality. With one tap the owner sends the file to your practice.</span></button><i class="fort"></i></li>
         <li><button data-i="2"><svg class="ic vt-ic" aria-hidden="true"><use href="#i-link"/></svg><b>One link, no account</b><span>The owner opens your measuring link, enters the horse’s name and connects the belt. Nothing else is needed.</span></button><i class="fort"></i></li>
       </ol>
@@ -1784,9 +1783,7 @@ try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; 
     <div class="usp">
       <h3>Raw and corrected value side by side</h3>
       <p>In horses, long pauses consistent with second-degree AV block, which are common at
-         rest, and genuine artefacts occur in the same series. A filter alone cannot reliably tell them apart. The station therefore reports the raw value <em>and</em>
-         the one over unremarkable pairs. Which share comes from what is your call, not the
-         software's.</p>
+         rest, and genuine artefacts occur in the same series. A filter alone cannot reliably tell them apart. The station therefore reports the raw value <em>and</em> the value calculated from unremarkable pairs. You decide which share comes from what, not the software.</p>
     </div>
     <div class="usp">
       <h3>The recording does not pass through our servers</h3>
@@ -1830,7 +1827,7 @@ try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; 
 <section id="klinik">
   <div class="wrap">
     <div class="sec-eyebrow">For equine clinics</div>
-    <h2>The same picture on the ward. At home the trend continues.</h2>
+    <h2>The same view on the ward, and the trend continues at home.</h2>
     <div class="feature">
       <div class="f-shot"><img src="../assets/visite-shots/11-station-v2.jpg" loading="lazy"
         alt="Ward wall: all recorded horses as tiles with cleaned RMSSD, resting HR, deviation from their own baseline, signal quality and protocol"></div>
@@ -1838,12 +1835,12 @@ try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; 
         <div class="f-k">Ward wall · clinic folder</div>
         <h3>One screen in the ward office where the whole team sees the same thing.</h3>
         <ul>
-          <li class="mit-ic"><svg class="ic li-ic" aria-hidden="true"><use href="#i-wand"/></svg><b>Overview wall without alarms:</b> every box with cleaned RMSSD, resting HR, signal quality and protocol, sorted by deviation from its own baseline.</li>
+          <li class="mit-ic"><svg class="ic li-ic" aria-hidden="true"><use href="#i-wand"/></svg><b>Ward display without alarms:</b> every box with cleaned RMSSD, resting HR, signal quality and recording log, sorted by deviation from its own baseline.</li>
           <li class="mit-ic"><svg class="ic li-ic" aria-hidden="true"><use href="#i-ordner"/></svg><b>Shared clinic folder</b> on your existing network drive. Workstations on a computer with Chrome or Edge read and write the same state, no cloud.</li>
           <li class="mit-ic"><svg class="ic li-ic" aria-hidden="true"><use href="#i-qr"/></svg><b>After discharge</b> you hand over the recording link: the next resting recordings from the horse’s usual stable land in the same record.</li>
           <li class="mit-ic"><svg class="ic li-ic" aria-hidden="true"><use href="#i-version"/></svg><b>Method version</b> in every report, for archives and studies.</li>
         </ul>
-        <p style="margin-top:14px"><a class="cta-primary" href="/carlon-equine/app/?demo=station&amp;lang=en">See the station wall in the demo →</a></p>
+        <p style="margin-top:14px"><a class="cta-primary" href="/carlon-equine/app/?demo=station&amp;lang=en">See the ward display in the demo →</a></p>
       </div>
     </div>
   </div>
@@ -1874,10 +1871,10 @@ try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; 
     <p class="b2b-hinweis">For veterinary practices and equine clinics only. Orders exclusively as a business (§ 14 BGB).</p>
     <div class="abo-grenze m-wisch"><div><b>Without a subscription</b><span>Demo with 15 horses; view files sent to you.</span></div><div><b>With a subscription</b><span>Day round with appointments and delay messages, visit records and mileage-fee proposal; plus unlimited horses, your own measuring link and QR poster, measurement report on letterhead as PDF, hand-off to Google Maps and team folder.</span></div></div>
 <div class="preis-bruecke">
-      <h3>From the day on the road to the trend report.</h3>
+      <h3>From planning the round to the trend report.</h3>
       <p>Plan the round, report delays with one tap, record visits. Where you want to follow a trend, you check recordings and document them on your practice letterhead.</p>
       <p class="pb-fest"><b>One fixed monthly price.</b> No extra fees per horse or recording. During the beta, founding partners keep their price for 24 months.</p>
-      <p class="pb-fest"><b>Not included:</b> invoicing under the GOT fee scale, DATEV, drug and dispensing records, online booking, stock. Your practice program remains responsible for those. Live sync on iPhone and iPad: there by file via the inbox folder.</p>
+      <p class="pb-fest"><b>Not included:</b> invoicing under the GOT fee scale, DATEV, drug and dispensing records, online booking, stock. Your practice program remains responsible for those. Live sync on iPhone and iPad: these devices sync by file through the inbox folder.</p>
     </div>
     <div class="tarife-grid m-wisch">
     <div class="tarif">
@@ -1900,15 +1897,15 @@ try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; 
     </div>
     <div class="tarif tarif-klinik">
       <div class="tarif-name">For equine clinics</div>
-      <div class="tarif-preis"><b>349&nbsp;€</b> <span>netto im Monat · 415,31&nbsp;€ inkl. 19&nbsp;% USt.</span></div>
+      <div class="tarif-preis"><b>349&nbsp;€</b> <span>net per month · €415.31 incl. 19&nbsp;% German VAT</span></div>
       <div class="tarif-alt">or €3,490 net a year (€4,153.10 incl. VAT), two months saved</div>
       <ul class="enthalten">
         <li>Everything in the practice plan</li>
         <li>Team folder for wards and the wall monitor too, with the same state across the whole hospital</li>
-        <li>Station wall for the monitor in the ward, no alerts</li>
+        <li>Ward display for the monitor on the ward, no alerts</li>
       </ul>
       <a class="cta-primary tarif-knopf" href="/carlon-equine/app/?kasse=klinik&amp;lang=en">Try 14 days free · then €349 / month →</a>
-      <a class="tarif-neben" href="/carlon-equine/app/?demo=station&amp;lang=en">See the station wall in the demo →</a>
+      <a class="tarif-neben" href="/carlon-equine/app/?demo=station&amp;lang=en">See the ward display in the demo →</a>
       <a class="tarif-neben" href="mailto:jan@vitalkultur.com?subject=CARLON%20Equine%20Visite%20%E2%80%93%20Klinik-Einrichtung">Questions about network drive and setup? jan@vitalkultur.com →</a>
     </div>
     </div>
@@ -1924,8 +1921,8 @@ try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; 
       <p class="tarif-fuss">
         This offer is directed exclusively at businesses within the meaning of § 14 BGB.
         Payment and invoicing are handled by <strong>Link</strong> (Sold through Link, LLC), a Stripe group company; Link also issues the invoice showing VAT, and your statement shows LINK.COM* followed by our short name. The software is provided by Vitalkultur. Details in
-        <a href="/terms.html#visite">§ 12a unserer AGB</a> und in der
-        <a href="/privacy-en.html">Datenschutzerklärung</a>.
+        <a href="/terms.html#visite">section 12a of our terms (in German)</a> and in our
+        <a href="/privacy-en.html">privacy policy</a>.
       </p>
 
     <div id="kaufweg" style="margin-top:22px"></div>
@@ -1991,7 +1988,7 @@ try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; 
            sends you a file. If she used your measuring link, the file is encrypted for your
            practice from the very first second.</p></div></details>
       <details class="faq-item verzicht"><summary><svg class="ic ic-karte" aria-hidden="true"><use href="#i-glocke"/><use href="#i-kein"/></svg><h3>Not an emergency channel</h3></summary>
-        <div class="faq-a"><p>A file someone sends you is not a phone call. In acute cases the usual rule applies: act veterinarily at once.</p></div></details>
+        <div class="faq-a"><p>A file someone sends you is not a phone call. In acute cases the usual rule applies: examine and treat the horse without delay.</p></div></details>
     </div>
   </div>
 </section>
@@ -2012,10 +2009,10 @@ try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; 
            browser; the page directs you to a capable device there.</p></div>
       </details>
       <details class="faq-item" data-spur-auf="faq-3"><summary><h3>What happens after cancellation?</h3></summary>
-        <div class="faq-a"><p>Your horses, recordings and records stay readable on the device; backup, JSON, CSV and FHIR export keep working. Locked are new horses of your own, the daily round with records, receiving via measuring link and inbox folder, the PDF report, hand-off to Google Maps and the team folder. We could not delete your data anyway, because it is with you.</p></div>
+        <div class="faq-a"><p>Your horses, recordings and records stay readable on the device; backup, JSON, CSV and FHIR export keep working. What is then locked: adding new horses, the daily round with records, receiving via measuring link and inbox folder, the PDF report, hand-off to Google Maps and the team folder. We could not delete your data anyway, because it is with you.</p></div>
       </details>
       <details class="faq-item" data-spur-auf="faq-bestand"><summary><h3>How do my horses get into the cockpit?</h3></summary>
-        <div class="faq-a"><p>As a CSV file from your practice software, from Excel (“Save as → CSV”) or from your address book. The cockpit recognises the columns, shows what goes where before importing and creates nothing twice; existing horses are only completed in empty fields. It then looks up the map points for the route once, one address per second via OpenStreetMap. Coordinates in the file are taken over directly. You add single horses directly.</p></div>
+        <div class="faq-a"><p>As a CSV file from your practice software, from Excel (“Save as → CSV”) or from your address book. The cockpit recognises the columns, shows what goes where before importing and creates nothing twice; existing horses are only completed in empty fields. It then looks up the map points for the route once, one address per second via OpenStreetMap. Coordinates in the file are used as they are. You can also add single horses by hand.</p></div>
       </details>
       <details class="faq-item" data-spur-auf="faq-offline"><summary><h3>Does the cockpit work without signal?</h3></summary>
         <div class="faq-a"><p>Yes. After the first visit the cockpit also starts without a network: records, today’s route, appointments and “Done” work on the device, and whatever you enter offline is kept. Without a network the map view and address search are missing; messages, the Maps hand-off and team sync go out as soon as there is signal again. The licence carries up to 28 days without signal.</p></div>
@@ -2037,7 +2034,7 @@ try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; 
       </details>
       
       <details class="faq-item" data-spur-auf="faq-7"><summary><h3>Does this create a duty to keep watching?</h3></summary>
-        <div class="faq-a"><p>No. CARLON sends no alerts, and the owner sees no classification. It only comes into being in your cockpit, when you open it. When you review a file sent to you is up to you and agreed with your clients; which duties of care follow from it, clarify with your chamber and professional liability insurer if in doubt. For emergencies, what has always applied still applies:
+        <div class="faq-a"><p>No. CARLON sends no alerts, and the owner sees no classification. It is only calculated in your cockpit, when you open it. When you review a file sent to you is up to you and agreed with your clients; which duties of care follow from it, check with your veterinary chamber and professional indemnity insurer if in doubt. For emergencies, what has always applied still applies:
            the phone call.</p></div>
       </details>
       
@@ -2089,7 +2086,7 @@ try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; 
     <a href="/" aria-label="Vitalkultur" style="display:inline-block;margin-bottom:11px"><img src="/assets/vitalkultur-wordmark.png" alt="Vitalkultur" style="height:26px;width:auto;opacity:0.82"></a>
     <div class="fam-label" data-en="Part of the Vitalkultur app family" data-de="Part of the Vitalkultur app family">Part of the Vitalkultur app family</div>
   </div>
-  <div class="copyright">© 2026 Vitalkultur · <span data-en="Iffezheim, Germany" data-de="Iffezheim, Deutschland">Iffezheim, Deutschland</span></div>
+  <div class="copyright">© 2026 Vitalkultur · <span data-en="Iffezheim, Germany" data-de="Iffezheim, Deutschland">Iffezheim, Germany</span></div>
 </footer>
 
 <div class="lb-overlay" id="lightbox" role="dialog" aria-modal="true" aria-label="Image view">
@@ -2263,7 +2260,7 @@ if(_lb) _lb.addEventListener('click', function(){
     r.appendChild(heu);
     var T=EN?['The owner records in her own stable','Before the visit you see what has changed','You record what you reviewed','Your round is planned','In the evening nothing is left open']
             :['Die Halterin misst im eigenen Stall','Vor dem Besuch sehen Sie, was sich verändert hat','Sie halten fest, was Sie gesichtet haben','Ihre Tour ist geplant','Abends ist nichts mehr offen'];
-    var S=EN?['With your measuring link and a Polar H10 chest strap she records her horse for seven minutes at rest and sends the recording to your practice.','The new recording sits next to earlier measurements and the horse’s own baseline, with signal quality. You arrive prepared, and the interpretation is yours.','A measurement report on your letterhead documents which data you reviewed, for the file and for the owner.','The route shows drive time and appointment per stop and counts from now. If a stable takes longer, you send the next owner the new arrival time as a ready message.','One tap on “Done” records visit, time and distance; service list and mileage-fee proposal are ready. This helps from your first day on the road, even before any owner records.']
+    var S=EN?['With your measuring link and a Polar H10 chest strap she records her horse for seven minutes at rest and sends the recording to your practice.','The new recording sits next to earlier measurements and the horse’s own baseline, with signal quality. You arrive prepared, and the interpretation is yours.','A measurement report on your letterhead documents which data you reviewed, for the file and for the owner.','The route shows drive time and appointment per stop and counts from now. If a stable takes longer, you send the next owner the new arrival time as a ready message.','One tap on “Done” records visit, time and distance; service list and mileage-fee proposal are ready. This helps from your first round, even before any owner has recorded.']
             :['Mit Ihrem Mess-Link und einem Polar-H10-Brustgurt misst sie ihr Pferd sieben Minuten in Ruhe und schickt Ihnen die Aufnahme in die Praxis.','Die neue Aufnahme steht neben den früheren Messungen und der eigenen Basis des Pferds, mit Signalgüte. Sie fahren vorbereitet hin, die Einordnung machen Sie.','Ein Messwertbericht mit Ihrem Briefkopf dokumentiert, welche Messdaten Sie gesichtet haben, für die Akte und für die Halterin.','Die Route zeigt Fahrzeit und Termin je Stopp und rechnet ab jetzt. Dauert ein Stall länger, schicken Sie der nächsten Halterin die neue Ankunftszeit als fertige Nachricht.','Ein Tipp auf „Erledigt“ dokumentiert Besuch, Zeit und Strecke; Leistungsliste und Wegegeld-Vorschlag liegen bereit. Das hilft ab dem ersten Tourtag, auch wenn noch keine Halterin misst.'];
     [].slice.call(r.children).forEach(function(g,i){ var k=document.createElement('div'); k.className='hb-karte'; var m=g.querySelector('.g-marke');
       var kopf=document.createElement('div'); kopf.className='hk-kopf'; if(m){ if(m.lastChild&&m.lastChild.nodeType===3) m.lastChild.textContent=T[i]||m.lastChild.textContent; kopf.appendChild(m); }
