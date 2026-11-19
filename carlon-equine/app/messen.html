@@ -1060,11 +1060,9 @@ const HAUS={ appImStore:false, appUrl:'https://carlon.app' };
          Erscheint bewusst erst mit der Atemkurve, also dann, wenn es
          wirklich etwas zu zeigen gibt. Geteilt wird NUR die Station, nie
          die laufende Messung. -->
-    <div class="jetzt-teilen" id="jetztTeilen" hidden>
-      <div class="jt-txt"><b data-i18n="jtTitel">Messstation weitergeben</b>
-        <span data-i18n="jtSub">Nur der Link zur Messstation, ohne deine Daten.</span></div>
-      <button class="btn ghost" id="jtBtn" data-i18n="jtBtn">Weitersagen</button>
-    </div>
+    <!-- 19.11.2026 (Jan): „Messqualität ist wichtig, danach weiterempfehlen.“ Kein Weitersagen-Knopf mehr WÄHREND
+         der Messung (ein Teilen-Blatt kann die Bluetooth-Verbindung unterbrechen). Weitersagen kommt nach der Aufnahme
+         (weitersagenZeigen, #weiterKarte). -->
 
     <!-- Beantwortet die Frage, die im Stall wirklich zaehlt: wann darf ich
          aufhoeren? Ohne diese Anzeige raet der Besitzer — und bricht meistens
@@ -4285,8 +4283,6 @@ function drawSpark(){
       narrow()?{w:380,h:250}:{w:640,h:250});
   } else if(b){ b.hidden=true; }
 
-  const jt=$('#jetztTeilen');
-  if(jt && !S._teilenWeg) jt.hidden = S.rr.length<60;
 }
 
 /* WEITERSAGEN, ohne die Messung zu gefaehrden.

@@ -160,14 +160,15 @@
                    raws: [aufnahme(j.rr_intervals_ms, { pferdId: j.subject_id, name: j.subject_label, art: j.species, rasse: j.breed,
                      id: j.session_id, start: j.started_at, dauer: j.duration_sec, quelle: 'CARLON Equine · Roh-RR', datei: name })] };
         }
-        // 19.11.2026 (Export-Kreis Equine): das Forschungs-JSON („Teilen / Export → JSON“) trägt die
-        // Rohreihe in rrData[].rrMs; ersetzte Schläge stehen zusätzlich in rrCorrectedMs (Rechenweg der
-        // App bleibt beim Importeur, wie bei CSV und Roh-JSON).
-        const sn = j && j.schema && (j.schema.name || j.schema);
-        if (j && Array.isArray(j.rrData) && j.rrData.length && /^carlon_equine/.test(String(sn)) && j.session) {
+        // 19.11.2026 (Export-Kreis Equine, Format-Vertrag): Forschungs-JSON („Teilen / Export → JSON“).
+        // Kennung: exportHead.format (ab 2.0.0) oder schema.name (bis 1.14). Rohreihe in rrData[].rrMs;
+        // ersetzte Schläge zusätzlich in rrCorrectedMs – gerechnet wird wie bei CSV/Roh-JSON aus der Rohreihe.
+        const kennungFj = (j && j.exportHead && j.exportHead.format) || (j && j.schema && (j.schema.name || j.schema));
+        if (j && Array.isArray(j.rrData) && j.rrData.length && /^carlon_equine/.test(String(kennungFj)) && j.session) {
           const rr = j.rrData.map(b => num(b.rrMs)).filter(v => v != null && v > 0);
           const su = j.subject || {}, se = j.session;
           return { erkannt: rr.length > 0, format: 'forschung-json',
+                   schemaVersion: (j.exportHead && j.exportHead.schemaVersion) || null,
                    raws: [aufnahme(rr, { pferdId: su.id, name: su.nameAtTime || su.name, art: su.species, rasse: su.breed,
                      id: se.id, start: se.startedAt, dauer: se.durationSec, quelle: 'CARLON Equine · Forschungs-JSON', datei: name })] };
         }
