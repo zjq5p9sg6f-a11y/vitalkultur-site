@@ -144,7 +144,15 @@ document.head.appendChild(s);})();</script>
      "name": "Was passiert nach einer Kündigung?",
      "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Die Anwendung wechselt in einen funktionsreduzierten Modus. Ihre Daten bleiben auf dem Gerät und lassen sich weiterhin öffnen und exportieren. Wir könnten sie gar nicht löschen — sie liegen bei Ihnen."
+      "text": "Ihre Pferde, Aufnahmen und Ihre Dokumentation bleiben auf dem Gerät lesbar; Backup, JSON- und FHIR-Export gehen weiter. Gesperrt sind dann neue eigene Pferde, der Empfang neuer Messungen, Messwertbericht als PDF, CSV-Export, Übergabe an Google Maps und der Team-Ordner. Löschen könnten wir Ihre Daten gar nicht — sie liegen bei Ihnen."
+     }
+    },
+    {
+     "@type": "Question",
+     "name": "Funktioniert das Cockpit im Funkloch?",
+     "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Ja. Nach dem ersten Öffnen startet das Cockpit auch ohne Netz: Akten, Tagesroute, Termine und „Erledigt“ arbeiten auf dem Gerät, und was Sie offline erfassen, bleibt gespeichert. Ohne Netz fehlen nur die Kartenansicht und die Adresssuche; die Routenliste bleibt."
      }
     },
     {
@@ -1326,9 +1334,9 @@ try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; 
     <div class="tour-punkte m-wisch">
       <div class="tp"><svg class="ic li-ic" aria-hidden="true"><use href="#i-route"/></svg><h3>Kurze Wege – oder Ihre eigene Reihenfolge</h3><p>Standard: Stopp für Stopp zum nächstgelegenen Pferd, mit Ihren Terminen. Auf Wunsch sortieren Sie die Liste rechnerisch nach der Messwert-Abweichung zur eigenen Basis und legen die Reihenfolge danach selbst fest – eine Dringlichkeit stellt die Software nicht fest. Ändern lässt sie sich per Greifpunkt, Stopp für Stopp.</p></div>
       <div class="tp"><svg class="ic li-ic" aria-hidden="true"><use href="#i-uhr"/></svg><h3>Ankunft und Termin im Blick</h3><p>An jeder Karte stehen Ankunft, Fahrzeit und Ansprechpartner; die Route zeigt, ob Sie pünktlich zum Termin sind, Puffer haben oder hinterherhängen. Geschätzt im Cockpit selbst (Luftlinie × 1,32 bei 45 km/h).</p></div>
-      <div class="tp"><svg class="ic li-ic" aria-hidden="true"><use href="#i-uhr"/></svg><h3>Verspätung mit einem Tipp</h3><p>Dauert ein Stalltermin länger, geht die neue Ankunftszeit per WhatsApp oder SMS an die nächste Halterin – vorformuliert mit Ihrem Namen, auf Wunsch mit Standort. Statt drei Telefonaten aus der Stallgasse.</p></div>
+      <div class="tp"><svg class="ic li-ic" aria-hidden="true"><use href="#i-uhr"/></svg><h3>Verspätung mit einem Tipp</h3><p>Dauert ein Stalltermin länger, öffnet ein Tipp WhatsApp oder SMS mit fertiger Nachricht an die nächste Halterin – neue Ankunftszeit, Ihr Name, auf Wunsch der Standort. Sie senden selbst. Statt drei Telefonaten aus der Stallgasse.</p></div>
       <div class="tp"><svg class="ic li-ic" aria-hidden="true"><use href="#i-check"/></svg><h3>„Erledigt“ – und der Besuch ist dokumentiert</h3><p>Ein Tipp beim Gehen: Besuch, Behandlungszeit und Fahrstrecke stehen in der Dokumentation, die Leistung steht abrechnungsbereit in der Liste – als CSV zur Übergabe an Ihre Praxissoftware. Eine Beobachtung sprechen Sie einfach über das Mikrofon Ihrer Handy-Tastatur ein. Abends tippt niemand mehr nach.</p></div>
-      <div class="tp"><svg class="ic li-ic" aria-hidden="true"><use href="#i-route"/></svg><h3>Wegegeld als Vorschlag nach § 10 GOT</h3><p>Aus der gefahrenen Tour entsteht ein Vorschlag: Doppelkilometer × 3,50 €, anteilig je Halterin – mit Ihren Tacho-km, als CSV. Was Sie berechnen, entscheiden Sie.</p></div>
+      <div class="tp"><svg class="ic li-ic" aria-hidden="true"><use href="#i-route"/></svg><h3>Wegegeld als Vorschlag nach § 10 GOT</h3><p>Aus der gefahrenen Tour entsteht ein Vorschlag: Doppelkilometer × 3,50 €, anteilig je Halterin, Beträge unter dem Mindestbetrag von 13 € markiert – mit Ihren Tacho-km, als CSV. Was Sie berechnen, entscheiden Sie.</p></div>
       <div class="tp"><svg class="ic li-ic" aria-hidden="true"><use href="#i-akte"/></svg><h3>Halterinnen und Pferde griffbereit</h3><p>Jedes Pferd mit Halterin, Stall, Telefon und Kennungen (Praxis-Nr., UELN, Mikrochip). Anrufen oder WhatsApp direkt aus Akte und Route – kein Suchen in Chatverläufen.</p></div>
       <div class="tp"><svg class="ic li-ic" aria-hidden="true"><use href="#i-schild"/></svg><h3>Google Maps und Kalender</h3><p>Die Route geht auf Ihren Tipp an Google Maps, Tagesplan und Termine als Kalenderdatei (.ics) in Ihren Kalender. Akten bleiben auf Ihrem Gerät; für Karte und Adresssuche fragt Ihr Browser OpenStreetMap. Fahrten und Zeiten als CSV (kein steuerliches Fahrtenbuch).</p></div>
     </div>
@@ -1356,7 +1364,7 @@ try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; 
         <rect x="47" y="58" width="26" height="9" rx="4.5" class="ab-knopf"/><path d="M52 62.5h16" opacity=".9"/>
         <path d="M54 76h12" opacity=".35"/></svg></div>
         <span class="ab-wer">Halterin</span><h3>Öffnen, ohne App und Konto</h3>
-        <p>Ein Tipp, und die Messstation läuft im Browser – auf Android oder am Rechner mit Chrome oder Edge. Für Halterinnen mit iPhone gibt es Ihr Praxis-Mess-Set: Gurt plus günstiges Android-Gerät.</p></li>
+        <p>Ein Tipp, und die Messstation läuft im Browser – auf Android oder am Rechner mit Chrome oder Edge. Für Halterinnen mit iPhone stellen Sie ein Praxis-Mess-Set zum Mitgeben zusammen: Gurt plus günstiges Android-Gerät, beides aus dem Handel.</p></li>
       <li style="--i:2"><div class="ab-bild"><svg viewBox="0 0 120 96" stroke="currentColor" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
         <circle cx="60" cy="40" r="30" opacity=".18"/><circle cx="60" cy="40" r="30" class="ab-ring" pathLength="100" stroke-dasharray="100" transform="rotate(-90 60 40)"/>
         <path d="M33 44h10l3-5 3 5h3l4-17 5 29 3-12h5l3-4 3 4h13" class="ab-ekg" pathLength="100"/>
@@ -1462,7 +1470,7 @@ try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; 
       </div>
       <div class="card">
         <h3>Tachogramm, Poincaré und Spektrum – mit Achsen, Einheiten und Raster</h3>
-        <p>Tachogramm, Poincaré, Spektrum, DFA, Histogramm — im Vollbild neu gezeichnet statt hochskaliert.</p>
+        <p>Tachogramm, Poincaré, Spektrum, DFA, Histogramm — jede Grafik auch im Vollbild.</p>
       </div>
       <div class="card">
         <h3>Messwertbericht und Dokumentation an einer Stelle</h3>
@@ -2020,9 +2028,10 @@ try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; 
            die Seite führt dort auf ein messfähiges Gerät.</p></div>
       </details>
       <details class="faq-item" data-spur-auf="faq-3"><summary><h3>Was passiert nach einer Kündigung?</h3></summary>
-        <div class="faq-a"><p>Die Anwendung wechselt in einen funktionsreduzierten Modus. Ihre Daten bleiben
-           auf dem Gerät und lassen sich weiterhin öffnen und exportieren. Wir könnten sie
-           gar nicht löschen — sie liegen bei Ihnen.</p></div>
+        <div class="faq-a"><p>Ihre Pferde, Aufnahmen und Ihre Dokumentation bleiben auf dem Gerät lesbar; Backup, JSON- und FHIR-Export gehen weiter. Gesperrt sind dann neue eigene Pferde, der Empfang neuer Messungen, Messwertbericht als PDF, CSV-Export, Übergabe an Google Maps und der Team-Ordner. Löschen könnten wir Ihre Daten gar nicht — sie liegen bei Ihnen.</p></div>
+      </details>
+      <details class="faq-item" data-spur-auf="faq-offline"><summary><h3>Funktioniert das Cockpit im Funkloch?</h3></summary>
+        <div class="faq-a"><p>Ja. Nach dem ersten Öffnen startet das Cockpit auch ohne Netz: Akten, Tagesroute, Termine und „Erledigt“ arbeiten auf dem Gerät, und was Sie offline erfassen, bleibt gespeichert. Ohne Netz fehlen nur die Kartenansicht und die Adresssuche; die Routenliste bleibt.</p></div>
       </details>
       <details class="faq-item" data-spur-auf="faq-4"><summary><h3>Brauche ich einen Auftragsverarbeitungsvertrag?</h3></summary>
         <div class="faq-a"><p>Nach unserer Einschätzung nein. Das Cockpit läuft vollständig in Ihrem Browser, und auch die Aufnahme der

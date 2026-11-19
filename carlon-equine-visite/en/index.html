@@ -144,7 +144,15 @@ document.head.appendChild(s);})();</script>
      "name": "What happens after cancellation?",
      "acceptedAnswer": {
       "@type": "Answer",
-      "text": "The application switches to a reduced mode. Your data stays on the device and can still be opened and exported. We could not delete it — it is with you."
+      "text": "Your horses, recordings and records stay readable on the device; backup, JSON and FHIR export keep working. Locked are new horses of your own, receiving new recordings, the PDF report, CSV export, hand-off to Google Maps and the team folder. We could not delete your data anyway — it is with you."
+     }
+    },
+    {
+     "@type": "Question",
+     "name": "Does the cockpit work without signal?",
+     "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Yes. After the first visit the cockpit also starts without a network: records, today’s route, appointments and “Done” work on the device, and whatever you enter offline is kept. Without a network only the map view and address search are missing; the route list remains."
      }
     },
     {
@@ -1326,9 +1334,9 @@ try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; 
     <div class="tour-punkte m-wisch">
       <div class="tp"><svg class="ic li-ic" aria-hidden="true"><use href="#i-route"/></svg><h3>Short drives – or your own order</h3><p>Default: stop by stop to the nearest horse, with your appointments. If you wish, you sort the list arithmetically by the measured deviation from the own baseline and then set the order yourself – the software does not determine urgency. You change it by dragging, stop by stop.</p></div>
       <div class="tp"><svg class="ic li-ic" aria-hidden="true"><use href="#i-uhr"/></svg><h3>Arrival and appointment at a glance</h3><p>Every card shows arrival, drive time and contact; the route shows whether you are on time, have a buffer or are running late. Estimated in the cockpit itself (straight line × 1.32 at 45 km/h).</p></div>
-      <div class="tp"><svg class="ic li-ic" aria-hidden="true"><use href="#i-uhr"/></svg><h3>Running late, one tap</h3><p>If a visit takes longer, the new arrival time goes to the next owner via WhatsApp or SMS – pre-written with your name, with your location if you like. Instead of three phone calls from the stable aisle.</p></div>
+      <div class="tp"><svg class="ic li-ic" aria-hidden="true"><use href="#i-uhr"/></svg><h3>Running late, one tap</h3><p>If a visit takes longer, one tap opens WhatsApp or SMS with a ready message to the next owner – new arrival time, your name, your location if you like. You send it yourself. Instead of three phone calls from the stable aisle.</p></div>
       <div class="tp"><svg class="ic li-ic" aria-hidden="true"><use href="#i-check"/></svg><h3>“Done” – and the visit is recorded</h3><p>One tap as you leave: visit, treatment time and distance are in the records, the service is in the list ready for billing – as CSV for your practice software. You can dictate a note through your phone keyboard’s microphone. Nobody types it up in the evening.</p></div>
-      <div class="tp"><svg class="ic li-ic" aria-hidden="true"><use href="#i-route"/></svg><h3>Mileage fee proposal under § 10 GOT</h3><p>Your round produces a proposal for the German fee scale: double kilometres × €3.50, split per owner – with your odometer km, as CSV. What you charge is your decision.</p></div>
+      <div class="tp"><svg class="ic li-ic" aria-hidden="true"><use href="#i-route"/></svg><h3>Mileage fee proposal under § 10 GOT</h3><p>Your round produces a proposal for the German fee scale: double kilometres × €3.50, split per owner, amounts below the €13 minimum flagged – with your odometer km, as CSV. What you charge is your decision.</p></div>
       <div class="tp"><svg class="ic li-ic" aria-hidden="true"><use href="#i-akte"/></svg><h3>Owners and horses at hand</h3><p>Every horse with owner, stable, phone and identifiers (practice no., UELN, microchip). Call or WhatsApp straight from the record and the route – no searching through chats.</p></div>
       <div class="tp"><svg class="ic li-ic" aria-hidden="true"><use href="#i-schild"/></svg><h3>Google Maps and calendar</h3><p>The route goes to Google Maps when you tap, the day plan and appointments go to your calendar as an .ics file. Records stay on your device; for the map and address search your browser asks OpenStreetMap. Trips and times as CSV (not a tax mileage log).</p></div>
     </div>
@@ -1356,7 +1364,7 @@ try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; 
         <rect x="47" y="58" width="26" height="9" rx="4.5" class="ab-knopf"/><path d="M52 62.5h16" opacity=".9"/>
         <path d="M54 76h12" opacity=".35"/></svg></div>
         <span class="ab-wer">Owner</span><h3>Open it, no app, no account</h3>
-        <p>One tap and the measuring station runs in the browser – on Android or on a computer with Chrome or Edge. For owners with an iPhone there is your practice measuring set: strap plus an inexpensive Android device.</p></li>
+        <p>One tap and the measuring station runs in the browser – on Android or on a computer with Chrome or Edge. For owners with an iPhone you put together a practice measuring set to lend out: strap plus an inexpensive Android device, both from regular retail.</p></li>
       <li style="--i:2"><div class="ab-bild"><svg viewBox="0 0 120 96" stroke="currentColor" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
         <circle cx="60" cy="40" r="30" opacity=".18"/><circle cx="60" cy="40" r="30" class="ab-ring" pathLength="100" stroke-dasharray="100" transform="rotate(-90 60 40)"/>
         <path d="M33 44h10l3-5 3 5h3l4-17 5 29 3-12h5l3-4 3 4h13" class="ab-ekg" pathLength="100"/>
@@ -1444,7 +1452,7 @@ try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; 
         <span>Six pages on your letterhead (here fictitious demo data): raw and corrected values,
         tachogram, spectrum, course over weeks, Poincaré over four time segments, limits of the
         recording, methods with references and SHA-256 checksum. The interpretation stays with your practice. The sample report is in German.</span>
-        <a class="bm-knopf" href="../assets/CARLON-Muster-Bericht.pdf" target="_blank" rel="noopener">View sample report · PDF, 6 pages (German)</a>
+        <a class="bm-knopf" href="../assets/CARLON-Muster-Bericht.pdf" target="_blank" rel="noopener">Sample report · PDF, 6 pages (German)</a>
       </div>
     </div>
 
@@ -1462,7 +1470,7 @@ try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; 
       </div>
       <div class="card">
         <h3>Tachogram, Poincaré and spectrum – with axes, units and grid</h3>
-        <p>Tachogram, Poincaré, spectrum, DFA, histogram — redrawn at full size rather than scaled up.</p>
+        <p>Tachogram, Poincaré, spectrum, DFA, histogram — every chart also full screen.</p>
       </div>
       <div class="card">
         <h3>Measurement report and documentation in one place</h3>
@@ -2019,8 +2027,10 @@ try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; 
            browser; the page directs you to a capable device there.</p></div>
       </details>
       <details class="faq-item" data-spur-auf="faq-3"><summary><h3>What happens after cancellation?</h3></summary>
-        <div class="faq-a"><p>The application switches to a reduced mode. Your data stays on the device and can
-           still be opened and exported. We could not delete it — it is with you.</p></div>
+        <div class="faq-a"><p>Your horses, recordings and records stay readable on the device; backup, JSON and FHIR export keep working. Locked are new horses of your own, receiving new recordings, the PDF report, CSV export, hand-off to Google Maps and the team folder. We could not delete your data anyway — it is with you.</p></div>
+      </details>
+      <details class="faq-item" data-spur-auf="faq-offline"><summary><h3>Does the cockpit work without signal?</h3></summary>
+        <div class="faq-a"><p>Yes. After the first visit the cockpit also starts without a network: records, today’s route, appointments and “Done” work on the device, and whatever you enter offline is kept. Without a network only the map view and address search are missing; the route list remains.</p></div>
       </details>
       <details class="faq-item" data-spur-auf="faq-4"><summary><h3>Do I need a data processing agreement?</h3></summary>
         <div class="faq-a"><p>In our assessment, no. The cockpit runs entirely in your browser, and the owner's recording never
