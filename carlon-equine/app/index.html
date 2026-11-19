@@ -2488,6 +2488,45 @@ const Eingang = {
   }
 };
 
+/* SELBST MESSEN (19.11.2026, Jan: „der Tierarzt muss auch selbst die H10-Messung machen können“).
+   Kein zweiter Messweg: Die Messstation misst, versiegelt für DIESE Praxis und legt die
+   fertige Datei in ihre Ablage (IndexedDB 'carlon-station'). Station und Cockpit haben
+   dieselbe Herkunft, also liest das Cockpit diese Ablage beim Zurückkommen, übernimmt
+   über den normalen Import (Umschlag, Dubletten, Anfrage erledigt) und markiert als gesendet. */
+const Selbst={
+  async messen(hid){
+    let bt=false; try{ bt=!!(navigator.bluetooth&&await navigator.bluetooth.getAvailability()); }catch(_){ }
+    if(!bt){ Toast.show('Dieses Gerät kann im Browser kein Bluetooth (iPhone, iPad, Safari). Den Mess-Link auf einem Android-Handy oder Laptop mit Chrome oder Edge öffnen.','info'); return UI.messungAnfordern(hid); }
+    const link=await Praxis.anfordern(hid); if(!link) return;
+    /* Station auf DIESER Herkunft öffnen (nicht der Kanon-Adresse im Link): nur so teilen Station und Cockpit die Ablage. */
+    const u=new URL(link), hier=new URL('messen.html',location.href); hier.search=u.search; hier.hash=u.hash;
+    window.open(hier.href,'_blank','noopener');
+    Toast.show('Messstation geöffnet. Nach der Messung zu diesem Tab zurückkehren, die Aufnahme kommt von selbst in die Akte.','ok');
+  },
+  _db(){ return new Promise((ok,nein)=>{ const r=indexedDB.open('carlon-station',1);
+    r.onupgradeneeded=()=>{ r.result.createObjectStore('aufnahmen',{keyPath:'id'}); };   /* gleiches Schema wie messen.html */
+    r.onsuccess=()=>ok(r.result); r.onerror=()=>nein(r.error); }); },
+  async abholen(){
+    if(this._laeuft||typeof indexedDB==='undefined') return 0; this._laeuft=true; let neu=0; const pferde=new Set();
+    try{
+      const d=await this._db();
+      const alle=await new Promise((ok,nein)=>{ const q=d.transaction('aufnahmen','readonly').objectStore('aufnahmen').getAll(); q.onsuccess=()=>ok(q.result||[]); q.onerror=()=>nein(q.error); });
+      for(const e of alle.filter(x=>x.status==='offen')){
+        const datei=new File([e.inhalt],e.name,{type:e.typ||'application/json'});
+        const {parsed}=await Importer.scan([datei]); if(!parsed||!parsed.length) continue;   /* fremde Praxis: liegen lassen */
+        for(const x of parsed){ const r=await Importer.ingest(x.n); pferde.add(r.horseId); if(!r.dup) neu++; }
+        e.status='gesendet'; e.gesendetAm=new Date().toISOString(); e.weg='cockpit';
+        await new Promise((ok,nein)=>{ const tx=d.transaction('aufnahmen','readwrite'); tx.objectStore('aufnahmen').put(e); tx.oncomplete=ok; tx.onerror=()=>nein(tx.error); });
+      }
+      d.close();
+      if(neu){ await State.load(); await Praxis.anfrageErledigen(pferde); try{ Nav.refresh(); }catch(_){ }
+        const id=[...pferde][0]; Toast.show(`${neu} eigene Messung${neu===1?'':'en'} übernommen`,'ok',id?{label:'Ansehen',fn:()=>Views.openHorse(id)}:null); }
+    }catch(_){ } finally{ this._laeuft=false; }
+    return neu;
+  }
+};
+document.addEventListener('visibilitychange',()=>{ if(!document.hidden&&State.horses) Selbst.abholen(); });
+
 const DB = {
   _db:null, _c:{},
   async open(){
@@ -3788,6 +3827,7 @@ const Importer = {
 
 /* ---------- SVG Icons ---------- */
 const IC={
+  heart:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M20.8 4.6a5.5 5.5 0 00-7.8 0L12 5.7l-1.1-1.1a5.5 5.5 0 00-7.8 7.8L12 21.2l8.8-8.8a5.5 5.5 0 000-7.8z"/></svg>',
   /* Nachgetragen fuer Postfach, Einladung und Aushang — vorher trugen diese
      Knoepfe als einzige im Cockpit kein Symbol und fielen dadurch auf. */
   drucker:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M6 9V3h12v6"/><path d="M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2"/><rect x="6" y="14" width="12" height="7" rx="1"/></svg>',
@@ -6132,6 +6172,7 @@ const Views={
         <div style="display:flex;gap:8px;flex-wrap:wrap">
           <button class="btn primary" onclick="Report.print('${h.id}')" title="Messwertbericht als PDF mit Ihrem Logo">${IC.check||''} Messwertbericht erstellen</button>
           <button class="btn ghost" onclick="UI.messungAnfordern('${h.id}')" title="Mess-Link für dieses Pferd an die Halterin schicken – Pferd und Akte stehen schon im Link">${IC.owner} Messung anfordern</button>
+          <button class="btn ghost" onclick="Selbst.messen('${h.id}')" title="Mit Ihrem eigenen Polar H10 jetzt selbst messen. Die Aufnahme landet von selbst in dieser Akte">${IC.heart||''} Selbst messen</button>
           <button class="btn ghost" onclick="Views.logConsult('${h.id}')" title="Beratung ohne PDF erfassen">Beratung erfassen</button>
           <button class="btn ghost" onclick="Views.planVisit('${h.id}')" title="Termin in Google/Apple Kalender">${IC.calendar} Termin</button>
           <button class="btn ghost" onclick="Views.ownerMode('${h.id}')" title="Vollbild zum Zeigen für den Besitzer — iPad umdrehen">${IC.eye||''} Besitzer-Modus</button>
@@ -12216,7 +12257,7 @@ const Sprache={
     "gehört zum Abo –":"is part of the subscription –", "die ersten 14 Tage sind kostenlos":"the first 14 days are free", ", danach monatlich kündbar.":", then cancel monthly.",
     "Basis im Aufbau":"Baseline building", "Abgleich an die Praxis senden":"Send sync to the practice", "Abgleich an die Praxis":"Sync to the practice", "Teilen → im Eingangsordner der Praxis speichern; der Praxisrechner übernimmt es von selbst":"Share → save into the practice inbox folder; the practice computer picks it up by itself", "Abgleich geteilt – im Eingangsordner der Praxis speichern":"Sync shared – save it in the practice inbox folder", "Abgleich gespeichert – in den Eingangsordner der Praxis legen":"Sync saved – put it into the practice inbox folder", "Impfung":"Vaccination", "Entwurmung":"Deworming", "Zahnkontrolle":"Dental check", "Impfung fällig":"Vaccination due", "Entwurmung fällig":"Deworming due", "Zahnkontrolle fällig":"Dental check due", "Von Ihnen gesetzt – das Cockpit zeigt sie nur an, wenn Sie in diesem Stall sind.":"Set by you – the cockpit only shows them when you are at this stable.", "Im selben Stall:":"Same stable:", "gelernt":"learned", "Unterwegs":"On my way", "Unterwegs melden":"Tell the owner you're on your way", "Zeiten aus Ihren":"Times learned from your", "dokumentierten Besuchen gelernt: Behandlung meist":"documented visits: treatment usually", "· Fahrzeit ×":"· driving time ×", "Aus Ihren bisherigen Besuchen gelernt":"Learned from your previous visits", "Halterin: Sie sind unterwegs, Pferd bitte bereithalten":"Owner: you are on your way, please have the horse ready", "Pferde anlegen":"Add horses", "Einzeln – oder den ganzen Bestand aus Praxissoftware oder Excel übernehmen. Jedes Pferd steht dann auch für die Tour bereit.":"One by one – or bring in your whole list from practice software or Excel. Every horse is then ready for the round too.", "Bestand übernehmen (CSV)":"Import your list (CSV)", "Bestand übernehmen":"Import your list", "Pferde und Halterinnen aus Ihrer Praxissoftware, aus Excel oder aus dem Adressbuch – als CSV-Datei (in Excel: „Speichern unter → CSV“). Sie sehen vor dem Übernehmen, was wohin kommt; vorhandene Pferde werden nur in leeren Feldern ergänzt.":"Horses and owners from your practice software, Excel or address book – as a CSV file (in Excel: “Save as → CSV”). Before importing you see what goes where; existing horses are only completed in empty fields.", "CSV-Datei wählen":"Choose CSV file", "Vorlage laden":"Download template", "Zeilen":"rows", "Neue Pferde":"New horses", "Ergänzt":"Completed", "Schon vorhanden":"Already there", "Halterinnen":"Owners", "Keine Spalte als „Pferd“ zugeordnet – übernommen werden dann nur die Halterinnen als Kontakte. Ordnen Sie die Spalte mit dem Pferdenamen unten zu.":"No column assigned to “Horse” – only the owners will be imported as contacts. Assign the column with the horse name below.", "Spalte in Ihrer Datei":"Column in your file", "Beispiel":"Example", "Kommt nach":"Goes to", "– nicht übernehmen –":"– don’t import –", "(ohne Titel)":"(untitled)", "Zeilen ohne Pferdenamen:":"Rows without a horse name:", "– daraus werden nur Kontakte.":"– these become contacts only.", "Übernehmen":"Import", "Pferde angelegt":"Horses added", "Pferde ergänzt":"Horses completed", "Kontakte neu":"New contacts", "Pferde haben eine Adresse, aber noch keinen Kartenpunkt. Für Route und Fahrzeit ermittelt das Cockpit ihn über OpenStreetMap – eine Adresse pro Sekunde.":"horses have an address but no map point yet. For route and driving time the cockpit looks it up via OpenStreetMap – one address per second.", "Alle übernommenen Pferde mit Adresse stehen auf der Karte.":"All imported horses with an address are on the map.", "Fertig":"Done", "Kartenpunkte ermitteln":"Find map points", "Kartenpunkt gefunden:":"Map point found:", "· nicht gefunden:":"· not found:", "(Adresse in der Akte prüfen)":"(check the address in the record)", "Die Datei enthält keine Datenzeilen":"The file contains no data rows", "Halterin / Besitzer":"Owner", "Vorname (Halterin)":"First name (owner)", "Nachname (Halterin)":"Last name (owner)", "Telefon":"Phone", "E-Mail":"Email", "Stall":"Stable", "Straße":"Street", "PLZ":"Postcode", "Ort":"Town", "Rasse":"Breed", "Patienten-Nr. (Praxissoftware)":"Patient no. (practice software)", "UELN":"UELN", "Mikrochip":"Microchip", "Equidenpass-Nr.":"Equine passport no.", "Breitengrad":"Latitude", "Längengrad":"Longitude", "Notiz":"Note", "Erste Schritte":"First steps", "So kommt das erste Pferd in den Verlauf.":"How the first horse gets into the trend.", "Pferd anlegen":"Add a horse", "+ Pferd anlegen":"+ Add a horse",
     "Name, Halterin, Telefon und Stall – das Pferd steht dann auch für die Tour bereit.":"Name, owner, phone and stable – the horse is then ready for the round, too.",
-    "Messung anfordern":"Request a recording", "In der Akte des Pferds: „Messung anfordern“ schickt der Halterin Ihren Mess-Link per WhatsApp oder SMS – mit Ihrem Praxisnamen.":"In the horse’s record, “Request a recording” sends the owner your measuring link via WhatsApp or SMS – with your practice name.",
+    "Messung anfordern":"Request a recording", "Selbst messen":"Measure yourself", "Mit Ihrem eigenen Polar H10 jetzt selbst messen. Die Aufnahme landet von selbst in dieser Akte":"Measure now with your own Polar H10. The recording goes straight into this record", "Dieses Gerät kann im Browser kein Bluetooth (iPhone, iPad, Safari). Den Mess-Link auf einem Android-Handy oder Laptop mit Chrome oder Edge öffnen.":"This device has no Bluetooth in the browser (iPhone, iPad, Safari). Open the measuring link on an Android phone or a laptop with Chrome or Edge.", "Messstation geöffnet. Nach der Messung zu diesem Tab zurückkehren, die Aufnahme kommt von selbst in die Akte.":"Measuring station opened. Come back to this tab after the recording; it goes into the record by itself.", "In der Akte des Pferds: „Messung anfordern“ schickt der Halterin Ihren Mess-Link per WhatsApp oder SMS – mit Ihrem Praxisnamen.":"In the horse’s record, “Request a recording” sends the owner your measuring link via WhatsApp or SMS – with your practice name.",
     "Aufnahme kommt an":"The recording arrives", "Die Halterin misst sieben Minuten im Stall und sendet. Sie öffnen die Datei hier – oder richten einen Eingangs-Ordner ein, dann kommt sie von selbst.":"The owner records for seven minutes in the stable and sends it. You open the file here – or set up an inbox folder and it arrives by itself.",
     "Datei öffnen":"Open file", "Eingang einrichten":"Set up inbox", "Lieber erst die Demo mit 15 Pferden ansehen":"See the demo with 15 horses first", "(eigener Tab, getrennt von Ihren Daten)":"(own tab, separate from your data)",
     "Alles bleibt auf diesem Gerät bzw. in Ihrem eigenen Team-Ordner – kein Server von uns.":"Everything stays on this device or in your own team folder – no server of ours.", "14 Tage kostenlos testen":"14-day free trial",
@@ -13173,6 +13214,7 @@ const Sprache={
         Toast.show('Team-Ordner nicht erreichbar – dieses Gerät arbeitet vorerst allein und gleicht später ab','warn');
       }
     }catch(e){}
+    try{ await Selbst.abholen(); }catch(_){ }
     /* EINGANG (17.11.2026): beobachteten Ordner wieder aufnehmen; nach Browser-Neustart einmal freigeben lassen. */
     try{ if(await Eingang.wiederaufnehmen()) await Eingang.pruefen({laut:true});
       else if(Eingang.letzterFehler==='freigeben') Toast.show('Eingangs-Ordner: einmal freigeben, dann kommen neue Aufnahmen wieder von selbst','info',{label:'Freigeben',fn:()=>Eingang.freigeben()}); }catch(_){ }
