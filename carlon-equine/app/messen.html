@@ -102,6 +102,7 @@
 /* Fluchtlinie (13.11.2026, Gemini R3): unter der Wortmarke alles linksbündig wie das Formular */
 #vReady h1,#vReady .sub,#vReady > p,#vReady .lead,#vReady ul{text-align:left}
 #vReady p.sub,#vReady > p,#vReady .brauchst{margin-left:0;margin-right:auto;align-self:flex-start}
+.als-app{margin:16px 0 0;border:1px solid rgba(255,255,255,.12);border-radius:12px;padding:10px 14px;background:rgba(255,255,255,.03)}.als-app summary{cursor:pointer;font-weight:600;font-size:15px;line-height:1.4}.als-app-inhalt{text-align:left}.als-app ol{margin:10px 0 6px 20px;padding:0;line-height:1.55;font-size:14.5px}.als-app li{margin:4px 0}.als-app-fuss{font-size:13px;opacity:.75;margin:6px 0 2px}
 </style>
 <style>
 /* ============================================================================
@@ -948,6 +949,21 @@ const HAUS={ appImStore:false, appUrl:'https://carlon.app' };
     <!-- Weg zum Gurt — erscheint nur, wenn der Besuch ueber einen Haendler
          kam und wir dessen Adresse kennen. Sonst bleibt es leer. -->
     <div id="gurtWeg" class="hidden" style="margin-top:14px"></div>
+    <!-- ALS APP AUFS HANDY (19.11.2026, Jan: „auch für weniger IT-affine Laien“). Android/Chrome bietet die Installation
+         nicht immer selbst an; deshalb steht die Anleitung immer da, der Knopf nur, wenn der Browser es anbietet.
+         Im App-Modus (schon installiert) und auf iPhone/iPad (dort misst der Browser nicht) bleibt die Box weg. -->
+    <details id="alsApp" class="als-app hidden">
+      <summary id="alsAppTitel">Messstation als App auf dem Handy speichern</summary>
+      <div class="als-app-inhalt">
+        <div id="alsAppKnopfPlatz"></div>
+        <ol id="alsAppSchritte">
+          <li>Oben rechts im Chrome-Menü auf die drei Punkte <b>⋮</b> tippen.</li>
+          <li><b>„Zum Startbildschirm hinzufügen“</b> oder <b>„App installieren“</b> wählen und bestätigen.</li>
+          <li>Ab jetzt öffnest du die Messstation über das Symbol <b>„Messstation“</b> auf deinem Startbildschirm, auch ohne Netz im Stall.</li>
+        </ol>
+        <p class="als-app-fuss" id="alsAppFuss">Samsung-Browser: Menü ≡ → „Seite hinzufügen zu“ → „Startbildschirm“.</p>
+      </div>
+    </details>
     <div class="hint" data-i18n="readyHint">Der Gurt muss angelegt und die Elektrodenfläche <b>gut angefeuchtet</b> sein — sonst bricht das Signal ab. Halte das Gerät während der Messung in der Nähe und lass den Bildschirm an.</div>
   </div>
 
@@ -5366,16 +5382,27 @@ $('#btnAgain').addEventListener('click',()=>{
    aus sw.js gilt unveraendert (sw-version.mjs leitet sie aus dem Inhalt
    ab). Nach allem anderen registriert — die Messung haengt nie daran. */
 if('serviceWorker' in navigator){ try{ navigator.serviceWorker.register('sw.js'); }catch(e){} }
-/* AUF DEN STARTBILDSCHIRM (17.11.2026): Android/Chrome bietet die Installation an – dann öffnet ein Tipp aufs Symbol direkt die
-   Station, mit gemerkter Praxis. Der Knopf erscheint nur, wenn der Browser es anbietet und eine Praxis gemerkt ist. */
+/* AUF DEN STARTBILDSCHIRM (17.11.2026, erweitert 19.11.): Anleitung immer sichtbar (Android/Rechner, nicht im App-Modus,
+   nicht auf iPhone/iPad); den Knopf gibt es zusätzlich, sobald Chrome die Installation anbietet. Ein Tipp aufs Symbol öffnet
+   danach die Station direkt, mit gemerkter Praxis. */
 (function(){ let ang=null; const de=(document.documentElement.lang||'de').indexOf('en')!==0;
+  const box=document.getElementById('alsApp'); if(!box) return;
+  const standalone=(window.matchMedia&&matchMedia('(display-mode: standalone)').matches)||navigator.standalone===true;
+  const ios=/iPhone|iPad|iPod/.test(navigator.userAgent)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1);
+  if(standalone||ios) return;
+  if(!de){ const T=(id,h)=>{ const e=document.getElementById(id); if(e) e.innerHTML=h; };
+    T('alsAppTitel','Save the measuring station as an app on your phone');
+    T('alsAppSchritte','<li>Tap the three dots <b>⋮</b> at the top right of the Chrome menu.</li><li>Choose <b>“Add to home screen”</b> or <b>“Install app”</b> and confirm.</li><li>From now on you open the station via the <b>“Messstation”</b> icon on your home screen, even without signal in the stable.</li>');
+    T('alsAppFuss','Samsung browser: menu ≡ → “Add page to” → “Home screen”.'); }
+  box.classList.remove('hidden');
   window.addEventListener('beforeinstallprompt',function(e){ e.preventDefault(); ang=e;
+    if(document.getElementById('installKnopf')) return;
     let g=null; try{ g=JSON.parse(localStorage.getItem('carlon.meinePraxis')||'null'); }catch(_){ }
-    if(!g||document.getElementById('installKnopf')) return;
-    const b=document.createElement('button'); b.id='installKnopf'; b.className='btn ghost'; b.style.cssText='margin:14px auto 0;display:block';
-    b.textContent=de?('Messstation auf den Startbildschirm'+(g.name?' – für '+g.name:'')):('Add the station to the home screen'+(g.name?' – for '+g.name:''));
+    const b=document.createElement('button'); b.id='installKnopf'; b.className='btn'; b.style.cssText='margin:10px 0 4px;width:100%';
+    b.textContent=de?('Jetzt auf den Startbildschirm legen'+(g&&g.name?' (für '+g.name+')':'')):('Add to home screen now'+(g&&g.name?' (for '+g.name+')':''));
     b.addEventListener('click',async function(){ if(!ang) return; ang.prompt(); try{ await ang.userChoice; }catch(_){ } ang=null; b.remove(); });
-    const ziel=document.getElementById('vReady')||document.body; ziel.appendChild(b); });
+    document.getElementById('alsAppKnopfPlatz').appendChild(b); box.open=true; });
+  window.addEventListener('appinstalled',function(){ box.classList.add('hidden'); });
 })();
 </script>
 </html>
