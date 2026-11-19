@@ -2462,6 +2462,12 @@ const Eingang = {
         if(f.size>25*1048576){ gesehen.add(key); continue; }   /* kein Aufnahme-Format; nie in den Speicher ziehen */
         kandidaten.push(f); schluessel[name]=key;
       }
+      /* Abgleich- und Sicherungsdateien anderer Geräte: zusammenführen statt als Messung lesen. */
+      let abgl=0; const nurMessung=[];
+      for(const f of kandidaten){ if(!/^carlon-(abgleich|sicherung|clinic-backup)/i.test(f.name)){ nurMessung.push(f); continue; }
+        try{ const d=JSON.parse(await f.text()); if(d&&d.app==='carlon-clinic'&&Array.isArray(d.horses)){ const r=await Backup.zusammenfuehren(d); abgl+=r.neu; } }catch(_){ } }
+      if(abgl){ await State.load(); try{ Nav.refresh(); }catch(_){ } if(laut) Toast.show(`Abgleich übernommen · ${abgl} Einträge neuer als hier`,'ok'); }
+      kandidaten.length=0; kandidaten.push(...nurMessung);
       if(kandidaten.length){
         const {parsed,skipped}=await Importer.scan(kandidaten);
         /* Halb geschriebene Datei (Sync-Client noch dabei) NICHT als gelesen merken – beim nächsten Takt erneut. */
@@ -5810,13 +5816,19 @@ const Views={
     btn.innerHTML=`${IC.warn}Wirklich raus?`;
     btn._t=setTimeout(()=>{ if(!btn.isConnected)return; btn.dataset.armed=''; btn.classList.remove('armed'); btn.innerHTML=`${IC.clock}Nicht heute`; },3200);
   },
+  /* KEIN HINTEREINGANG (Kassen-Prüfkreis 19.11.2026): Ohne Abo legte eine zugeschickte Datei ein Pferd an, dessen
+     Stammdaten sich bearbeiten ließen – und damit lief die ganze Tagestour samt Dokumentation kostenlos. Ansehen bleibt
+     frei (so versprochen), die Tour ist Abo. In der Demo-Umgebung gilt das nicht. */
+  _tourErlaubt(){ if((State.settings&&State.settings.demo)||License.isPaid()) return true; UI.upgrade('Tagestour mit Dokumentation'); return false; },
   async arrive(id){
+    if(!Views._tourErlaubt()) return;
     const h=State.horses.find(x=>x.id===id); if(!h)return;
     h.arrivedAt=new Date().toISOString(); await DB.put('horses',h);
     Toast.show(`Angekommen bei ${h.name} · ${fmtTime(new Date().getHours()*60+new Date().getMinutes())}`,'ok');
     Nav.refresh();
   },
   async completeStop(id){
+    if(!Views._tourErlaubt()) return;
     const h=State.horses.find(x=>x.id===id); if(!h)return;
     const now=new Date();
     // Fahrsegment aus der aktuellen Planung (für Fahrtenbuch)
@@ -5855,6 +5867,7 @@ const Views={
   toggleCompact(){ Views._compactStops=!Views._compactStops; Nav.refresh(); },
   // Verspätung: Halter mit neuer ETA benachrichtigen (WhatsApp/SMS/Anruf) + optional Standort teilen
   notifyDelay(id, etaMin, art){
+    if(!Views._tourErlaubt()) return;
     const h=State.horses.find(x=>x.id===id); if(!h)return;
     const eta=fmtTime(etaMin);
     const vet=(State.settings.vetName||State.settings.clinicName||'').trim();
@@ -6409,6 +6422,7 @@ const Views={
           <button class="btn primary" onclick="Nav.go('logbook')">${IC.doc} Fahrtenbuch &amp; Zeiten</button>
           <button class="btn ghost" onclick="Revenue.exportCSV()">${IC.download} Leistungen als CSV</button>
           <button class="btn ghost" onclick="Backup.doExport()" title="Praxis-Backup jetzt sichern">${IC.download} Backup sichern</button>
+          ${(typeof Teilen==='undefined'||!Teilen.aktiv)?`<button class="btn ghost" onclick="Backup.abgleichSenden()" title="Teilen → im Eingangsordner der Praxis speichern; der Praxisrechner übernimmt es von selbst">${IC.upload} Abgleich an die Praxis</button>`:''}
         </div>
       </div>
       <div class="kpis">
@@ -8779,6 +8793,7 @@ const UI={
         <div style="display:flex;gap:8px;flex-wrap:wrap">
           <button class="btn ghost" style="font-size:13px" onclick="Backup.doExport()">${IC.download} Backup exportieren</button>
           <button class="btn ghost" style="font-size:13px" onclick="$('#backupFile').click()">${IC.upload} Backup einspielen</button>
+          ${(typeof Teilen==='undefined'||!Teilen.aktiv)?`<button class="btn ghost" style="font-size:13px" onclick="Backup.abgleichSenden()">${IC.upload} Abgleich an die Praxis senden</button>`:''}
           <input type="file" id="backupFile" accept=".json" style="display:none" onchange="Backup.doImport(this.files[0])">
         </div>
         <div class="privacy-note" style="justify-content:flex-start;margin-top:14px"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
@@ -10567,7 +10582,7 @@ const License={
   abgelaufen(){
     const l=State.license||{};
     if(!l.exp) return false;                       // kein Ablauf hinterlegt
-    const jetzt=Math.floor(Date.now()/1000);
+    const jetzt=Math.floor(this.ZEIT.jetzt()/1000);   // Zeitwächter: Zurückdrehen der Uhr verlängert nichts (Kassen-Prüfkreis 19.11.)
     if(jetzt<=l.exp) return false;                 // laeuft noch
     const abgelehnt=!!(State.settings.license||{}).abgelehntSeit;
     if(abgelehnt) return true;                     // Absage → sofort Schluss
@@ -10577,7 +10592,9 @@ const License={
   },
   isPaid(){ return this.tier()!=='demo' && !this.abgelaufen(); },
   maxHorses(){return this.isPaid()?Infinity:0;},   // eigene Pferde nur mit Abo (Demo-Pferde und zugeschickte Dateien frei)
-  PAID_ONLY:['pdf','csv','routeHandoff','coherence','ownerFeedback','sharedFolder'],
+  /* CSV raus (19.11.2026, Audit Runde 2): „Export ohne Sackgasse“ gilt auch nach einer Kündigung – die eigene Leistungs-
+     und Fahrtenliste mitnehmen zu können, ist Vertrauen, kein Geschenk. Eigene Pferde anlegen bleibt im Abo. */
+  PAID_ONLY:['pdf','routeHandoff','coherence','ownerFeedback','sharedFolder'],
   /* WAS DIE STUFEN UNTERSCHEIDET — vorher: nichts.
      can() gab fuer JEDE bezahlte Stufe true zurueck, maxHorses() ebenso.
      "vet_clinic" tauchte im gesamten Code nur in zwei Beschriftungstabellen
@@ -10872,7 +10889,7 @@ const License={
          koennten. Erst wenn der Dienst tatsaechlich "kein Abo" gesagt hat
          (abgelehntSeit), oder die Kulanz aufgebraucht ist, wird gesperrt. */
       const kulanzBis=r.exp+this.KULANZ_TAGE*86400;
-      if(Math.floor(Date.now()/1000)<kulanzBis){
+      if(Math.floor(this.ZEIT.jetzt()/1000)<kulanzBis){
         State.license={provider:'offline',tier:r.tier,lic:r.lic,exp:r.exp,key:l.key,
           founder:r.founder,seats:r.seats,hatAbo:true,
           kulanzBis, kulanz:true};
@@ -10969,21 +10986,37 @@ const Backup={
     if(typeof Safe!=='undefined')Safe.markBackup();
     Toast.show('Praxis-Backup exportiert · sicher aufbewahren','ok');
   },
+  /* Jüngerer `stand` gewinnt; gibt zurück, wie viel neu war. Für Einspielen (mit Rückfrage) und Abgleich (ohne). */
+  async zusammenfuehren(d){
+    let neu=0, gleich=0;
+    const rein=async(store,o)=>{ if(!o||!o.id) return; const eigen=await DB.get(store,o.id);
+      if(eigen && (eigen.stand||'') >= (o.stand||'') && (eigen.stand||o.stand)){ gleich++; return; }
+      await DB.put(store,o,{standBehalten:!!o.stand}); neu++; };
+    for(const h of d.horses||[]) await rein('horses',h);
+    for(const r of d.recordings||[]) await rein('recordings',r);
+    for(const c of d.consults||[]) await rein('consults',c);
+    for(const c of d.coherence||[]) await rein('coherence',c);
+    for(const e of d.daylog||[]) if(String(e.id||'').indexOf('log:')===0) await rein('settings',e);
+    return {neu,gleich};
+  },
+  /* ABGLEICH VOM HANDY (19.11.2026, Audit Runde 2: „iPhone gleicht nur per Datei ab – Handarbeit“). Ohne eigenen Server
+     gibt es keinen Live-Abgleich auf iOS; der kürzeste Weg: Teilen → in den Eingangsordner der Praxis (iCloud Drive,
+     OneDrive …) – der Praxisrechner führt die Datei von selbst zusammen. Zurück holt sich das Handy die tägliche
+     Sicherung aus dem Team-Ordner. Keine Lizenz und keine Geräte-Einstellungen in der Datei. */
+  abgleichDatei(){ const d=Backup.daten(); const g=String(State.settings.geraeteName||'Handy').replace(/[^\w.-]+/g,'-');
+    const n=new Date(); const z=ortsDatum(n)+'-'+String(n.getHours()).padStart(2,'0')+String(n.getMinutes()).padStart(2,'0');
+    return new File([JSON.stringify({...d,abgleich:true,geraet:State.settings.geraeteName||'',settings:undefined})],`carlon-abgleich-${g}-${z}.json`,{type:'application/json'}); },
+  async abgleichSenden(){ const f=Backup.abgleichDatei();
+    try{ if(navigator.canShare&&navigator.canShare({files:[f]})){ await navigator.share({files:[f],title:'CARLON-Abgleich'}); Toast.show('Abgleich geteilt – im Eingangsordner der Praxis speichern','ok'); return; } }catch(e){ if(e&&e.name==='AbortError') return; }
+    const a=document.createElement('a'); a.href=URL.createObjectURL(f); a.download=f.name; document.body.appendChild(a); a.click(); a.remove();
+    Toast.show('Abgleich gespeichert – in den Eingangsordner der Praxis legen','ok'); },
   async doImport(file){
     let d;try{d=JSON.parse(await file.text());}catch(e){Toast.show('Datei nicht lesbar','warn');return;}
     if(!d||!Array.isArray(d.horses)){Toast.show('Kein gültiges CARLON-Clinic-Backup','warn');return;}
     if(!confirm(`Backup vom ${fmtDate(d.exportedAt)} einspielen?\n${d.horses.length} Pferde, ${(d.recordings||[]).length} Aufnahmen, ${(d.daylog||[]).length} Besuche. Zusammengeführt: Was hier neuer ist, bleibt.`))return;
     /* ZUSAMMENFÜHREN statt ersetzen (19.11.2026): iPhone und iPad gleichen über diese Datei mit dem Rechner ab. Ersetzen
        hätte eine neuere Änderung auf diesem Gerät mit dem älteren Stand der Datei überschrieben. Jüngerer `stand` gewinnt. */
-    let gleich=0;
-    const rein=async(store,o)=>{ if(!o||!o.id) return; const eigen=await DB.get(store,o.id);
-      if(eigen && (eigen.stand||'') >= (o.stand||'') && (eigen.stand||o.stand)){ gleich++; return; }
-      await DB.put(store,o,{standBehalten:!!o.stand}); };
-    for(const h of d.horses||[]) await rein('horses',h);
-    for(const r of d.recordings||[]) await rein('recordings',r);
-    for(const c of d.consults||[]) await rein('consults',c);
-    for(const c of d.coherence||[]) await rein('coherence',c);
-    for(const e of d.daylog||[]) if(String(e.id||'').indexOf('log:')===0) await rein('settings',e);
+    await Backup.zusammenfuehren(d);
     if(d.settings){State.settings={...State.settings,...d.settings};await State.saveSettings();}
     await State.load();
     /* Die Sicherung traegt den Abo-Token mit — ohne diesen Aufruf bliebe die
@@ -12150,7 +12183,7 @@ const Sprache={
   WB:{
     /* 17.11.2026: Lücken aus der Sprachprobe (nur/enrest.mjs) */
     "gehört zum Abo –":"is part of the subscription –", "die ersten 14 Tage sind kostenlos":"the first 14 days are free", ", danach monatlich kündbar.":", then cancel monthly.",
-    "Basis im Aufbau":"Baseline building", "Impfung":"Vaccination", "Entwurmung":"Deworming", "Zahnkontrolle":"Dental check", "Impfung fällig":"Vaccination due", "Entwurmung fällig":"Deworming due", "Zahnkontrolle fällig":"Dental check due", "Von Ihnen gesetzt – das Cockpit zeigt sie nur an, wenn Sie in diesem Stall sind.":"Set by you – the cockpit only shows them when you are at this stable.", "Im selben Stall:":"Same stable:", "gelernt":"learned", "Unterwegs":"On my way", "Unterwegs melden":"Tell the owner you're on your way", "Zeiten aus Ihren":"Times learned from your", "dokumentierten Besuchen gelernt: Behandlung meist":"documented visits: treatment usually", "· Fahrzeit ×":"· driving time ×", "Aus Ihren bisherigen Besuchen gelernt":"Learned from your previous visits", "Halterin: Sie sind unterwegs, Pferd bitte bereithalten":"Owner: you are on your way, please have the horse ready", "Pferde anlegen":"Add horses", "Einzeln – oder den ganzen Bestand aus Praxissoftware oder Excel übernehmen. Jedes Pferd steht dann auch für die Tour bereit.":"One by one – or bring in your whole list from practice software or Excel. Every horse is then ready for the round too.", "Bestand übernehmen (CSV)":"Import your list (CSV)", "Bestand übernehmen":"Import your list", "Pferde und Halterinnen aus Ihrer Praxissoftware, aus Excel oder aus dem Adressbuch – als CSV-Datei (in Excel: „Speichern unter → CSV“). Sie sehen vor dem Übernehmen, was wohin kommt; vorhandene Pferde werden nur in leeren Feldern ergänzt.":"Horses and owners from your practice software, Excel or address book – as a CSV file (in Excel: “Save as → CSV”). Before importing you see what goes where; existing horses are only completed in empty fields.", "CSV-Datei wählen":"Choose CSV file", "Vorlage laden":"Download template", "Zeilen":"rows", "Neue Pferde":"New horses", "Ergänzt":"Completed", "Schon vorhanden":"Already there", "Halterinnen":"Owners", "Keine Spalte als „Pferd“ zugeordnet – übernommen werden dann nur die Halterinnen als Kontakte. Ordnen Sie die Spalte mit dem Pferdenamen unten zu.":"No column assigned to “Horse” – only the owners will be imported as contacts. Assign the column with the horse name below.", "Spalte in Ihrer Datei":"Column in your file", "Beispiel":"Example", "Kommt nach":"Goes to", "– nicht übernehmen –":"– don’t import –", "(ohne Titel)":"(untitled)", "Zeilen ohne Pferdenamen:":"Rows without a horse name:", "– daraus werden nur Kontakte.":"– these become contacts only.", "Übernehmen":"Import", "Pferde angelegt":"Horses added", "Pferde ergänzt":"Horses completed", "Kontakte neu":"New contacts", "Pferde haben eine Adresse, aber noch keinen Kartenpunkt. Für Route und Fahrzeit ermittelt das Cockpit ihn über OpenStreetMap – eine Adresse pro Sekunde.":"horses have an address but no map point yet. For route and driving time the cockpit looks it up via OpenStreetMap – one address per second.", "Alle übernommenen Pferde mit Adresse stehen auf der Karte.":"All imported horses with an address are on the map.", "Fertig":"Done", "Kartenpunkte ermitteln":"Find map points", "Kartenpunkt gefunden:":"Map point found:", "· nicht gefunden:":"· not found:", "(Adresse in der Akte prüfen)":"(check the address in the record)", "Die Datei enthält keine Datenzeilen":"The file contains no data rows", "Halterin / Besitzer":"Owner", "Vorname (Halterin)":"First name (owner)", "Nachname (Halterin)":"Last name (owner)", "Telefon":"Phone", "E-Mail":"Email", "Stall":"Stable", "Straße":"Street", "PLZ":"Postcode", "Ort":"Town", "Rasse":"Breed", "Patienten-Nr. (Praxissoftware)":"Patient no. (practice software)", "UELN":"UELN", "Mikrochip":"Microchip", "Equidenpass-Nr.":"Equine passport no.", "Breitengrad":"Latitude", "Längengrad":"Longitude", "Notiz":"Note", "Erste Schritte":"First steps", "So kommt das erste Pferd in den Verlauf.":"How the first horse gets into the trend.", "Pferd anlegen":"Add a horse", "+ Pferd anlegen":"+ Add a horse",
+    "Basis im Aufbau":"Baseline building", "Abgleich an die Praxis senden":"Send sync to the practice", "Abgleich an die Praxis":"Sync to the practice", "Teilen → im Eingangsordner der Praxis speichern; der Praxisrechner übernimmt es von selbst":"Share → save into the practice inbox folder; the practice computer picks it up by itself", "Abgleich geteilt – im Eingangsordner der Praxis speichern":"Sync shared – save it in the practice inbox folder", "Abgleich gespeichert – in den Eingangsordner der Praxis legen":"Sync saved – put it into the practice inbox folder", "Impfung":"Vaccination", "Entwurmung":"Deworming", "Zahnkontrolle":"Dental check", "Impfung fällig":"Vaccination due", "Entwurmung fällig":"Deworming due", "Zahnkontrolle fällig":"Dental check due", "Von Ihnen gesetzt – das Cockpit zeigt sie nur an, wenn Sie in diesem Stall sind.":"Set by you – the cockpit only shows them when you are at this stable.", "Im selben Stall:":"Same stable:", "gelernt":"learned", "Unterwegs":"On my way", "Unterwegs melden":"Tell the owner you're on your way", "Zeiten aus Ihren":"Times learned from your", "dokumentierten Besuchen gelernt: Behandlung meist":"documented visits: treatment usually", "· Fahrzeit ×":"· driving time ×", "Aus Ihren bisherigen Besuchen gelernt":"Learned from your previous visits", "Halterin: Sie sind unterwegs, Pferd bitte bereithalten":"Owner: you are on your way, please have the horse ready", "Pferde anlegen":"Add horses", "Einzeln – oder den ganzen Bestand aus Praxissoftware oder Excel übernehmen. Jedes Pferd steht dann auch für die Tour bereit.":"One by one – or bring in your whole list from practice software or Excel. Every horse is then ready for the round too.", "Bestand übernehmen (CSV)":"Import your list (CSV)", "Bestand übernehmen":"Import your list", "Pferde und Halterinnen aus Ihrer Praxissoftware, aus Excel oder aus dem Adressbuch – als CSV-Datei (in Excel: „Speichern unter → CSV“). Sie sehen vor dem Übernehmen, was wohin kommt; vorhandene Pferde werden nur in leeren Feldern ergänzt.":"Horses and owners from your practice software, Excel or address book – as a CSV file (in Excel: “Save as → CSV”). Before importing you see what goes where; existing horses are only completed in empty fields.", "CSV-Datei wählen":"Choose CSV file", "Vorlage laden":"Download template", "Zeilen":"rows", "Neue Pferde":"New horses", "Ergänzt":"Completed", "Schon vorhanden":"Already there", "Halterinnen":"Owners", "Keine Spalte als „Pferd“ zugeordnet – übernommen werden dann nur die Halterinnen als Kontakte. Ordnen Sie die Spalte mit dem Pferdenamen unten zu.":"No column assigned to “Horse” – only the owners will be imported as contacts. Assign the column with the horse name below.", "Spalte in Ihrer Datei":"Column in your file", "Beispiel":"Example", "Kommt nach":"Goes to", "– nicht übernehmen –":"– don’t import –", "(ohne Titel)":"(untitled)", "Zeilen ohne Pferdenamen:":"Rows without a horse name:", "– daraus werden nur Kontakte.":"– these become contacts only.", "Übernehmen":"Import", "Pferde angelegt":"Horses added", "Pferde ergänzt":"Horses completed", "Kontakte neu":"New contacts", "Pferde haben eine Adresse, aber noch keinen Kartenpunkt. Für Route und Fahrzeit ermittelt das Cockpit ihn über OpenStreetMap – eine Adresse pro Sekunde.":"horses have an address but no map point yet. For route and driving time the cockpit looks it up via OpenStreetMap – one address per second.", "Alle übernommenen Pferde mit Adresse stehen auf der Karte.":"All imported horses with an address are on the map.", "Fertig":"Done", "Kartenpunkte ermitteln":"Find map points", "Kartenpunkt gefunden:":"Map point found:", "· nicht gefunden:":"· not found:", "(Adresse in der Akte prüfen)":"(check the address in the record)", "Die Datei enthält keine Datenzeilen":"The file contains no data rows", "Halterin / Besitzer":"Owner", "Vorname (Halterin)":"First name (owner)", "Nachname (Halterin)":"Last name (owner)", "Telefon":"Phone", "E-Mail":"Email", "Stall":"Stable", "Straße":"Street", "PLZ":"Postcode", "Ort":"Town", "Rasse":"Breed", "Patienten-Nr. (Praxissoftware)":"Patient no. (practice software)", "UELN":"UELN", "Mikrochip":"Microchip", "Equidenpass-Nr.":"Equine passport no.", "Breitengrad":"Latitude", "Längengrad":"Longitude", "Notiz":"Note", "Erste Schritte":"First steps", "So kommt das erste Pferd in den Verlauf.":"How the first horse gets into the trend.", "Pferd anlegen":"Add a horse", "+ Pferd anlegen":"+ Add a horse",
     "Name, Halterin, Telefon und Stall – das Pferd steht dann auch für die Tour bereit.":"Name, owner, phone and stable – the horse is then ready for the round, too.",
     "Messung anfordern":"Request a recording", "In der Akte des Pferds: „Messung anfordern“ schickt der Halterin Ihren Mess-Link per WhatsApp oder SMS – mit Ihrem Praxisnamen.":"In the horse’s record, “Request a recording” sends the owner your measuring link via WhatsApp or SMS – with your practice name.",
     "Aufnahme kommt an":"The recording arrives", "Die Halterin misst sieben Minuten im Stall und sendet. Sie öffnen die Datei hier – oder richten einen Eingangs-Ordner ein, dann kommt sie von selbst.":"The owner records for seven minutes in the stable and sends it. You open the file here – or set up an inbox folder and it arrives by itself.",

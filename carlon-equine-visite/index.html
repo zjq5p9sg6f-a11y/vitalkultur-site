@@ -144,7 +144,7 @@ document.head.appendChild(s);})();</script>
      "name": "Was passiert nach einer Kündigung?",
      "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Ihre Pferde, Aufnahmen und Ihre Dokumentation bleiben auf dem Gerät lesbar; Backup, JSON- und FHIR-Export gehen weiter. Gesperrt sind dann neue eigene Pferde, der Empfang neuer Messungen, Messwertbericht als PDF, CSV-Export, Übergabe an Google Maps und der Team-Ordner. Löschen könnten wir Ihre Daten gar nicht — sie liegen bei Ihnen."
+      "text": "Ihre Pferde, Aufnahmen und Ihre Dokumentation bleiben auf dem Gerät lesbar; Backup, JSON-, CSV- und FHIR-Export gehen weiter. Gesperrt sind dann neue eigene Pferde, der Empfang über Mess-Link und Eingangsordner, Messwertbericht als PDF, Übergabe an Google Maps und der Team-Ordner. Löschen könnten wir Ihre Daten gar nicht — sie liegen bei Ihnen."
      }
     },
     {
@@ -168,7 +168,7 @@ document.head.appendChild(s);})();</script>
      "name": "Was ist, wenn es CARLON eines Tages nicht mehr gibt?",
      "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Dann sind Ihre Daten nicht weg: Sie liegen auf Ihrem Gerät bzw. in Ihrem eigenen Team-Ordner, nicht auf einem Server von uns, und lassen sich jederzeit als JSON und FHIR R5 exportieren. Das Backup stellt alles in jedem Chrome oder Edge wieder her."
+      "text": "Dann sind Ihre Daten nicht weg: Sie liegen auf Ihrem Gerät bzw. in Ihrem eigenen Team-Ordner, nicht auf einem Server von uns, und lassen sich jederzeit als JSON, CSV und FHIR R5 exportieren. Das Backup stellt alles in jedem Chrome oder Edge wieder her."
      }
     },
     {
@@ -200,7 +200,7 @@ document.head.appendChild(s);})();</script>
      "name": "Woher kommt die Baseline?",
      "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Aus den Ruhemessungen dieses Pferds selbst: Drei eigene Aufnahmen innerhalb von 30 Tagen bilden die Basis; ab der vierten zeigt das Cockpit die Abweichung davon. Bis dahin zeigt das Cockpit den Ausgangswert aus der Datei, ausdrücklich nicht als Basis, und wie viele eigene Aufnahmen noch fehlen. Es tut nicht so, als wüsste es schon etwas."
+      "text": "Aus den Ruhemessungen dieses Pferds selbst: Drei eigene Aufnahmen innerhalb von 30 Tagen bilden die Basis; ab der vierten zeigt das Cockpit die Abweichung davon. Bis dahin zeigt das Cockpit den Ausgangswert aus der Datei, ausdrücklich nicht als Basis, und wie viele eigene Aufnahmen noch fehlen."
      }
     },
     {
@@ -208,7 +208,7 @@ document.head.appendChild(s);})();</script>
      "name": "Wo liegen meine Daten, und wie sichere ich sie?",
      "acceptedAnswer": {
       "@type": "Answer",
-      "text": "In Ihrem Browser auf Ihrem Gerät – kein Server von uns. Unter Dokumentation legt „Backup sichern“ eine Sicherungsdatei an; „Backup einspielen“ stellt damit alles auf einem neuen Gerät oder Browser wieder her, samt Freischaltung. Fehlt eine aktuelle Sicherung, zeigt das Cockpit es oben an. Mit Abo kann der Bestand zusätzlich in einem Team-Ordner liegen, den Ihre Praxis ohnehin nutzt – OneDrive, Google Drive, Dropbox oder Netzlaufwerk. Dann sehen alle Tierärztinnen und Tierärzte denselben Stand – an Rechnern mit Chrome oder Edge; iPad und iPhone gleichen über die Sicherungsdatei ab, die zusammenführt statt überschreibt: Was auf dem Gerät neuer ist, bleibt – samt Besuchsdokumentation."
+      "text": "In Ihrem Browser auf Ihrem Gerät – kein Server von uns. Unter Dokumentation legt „Backup sichern“ eine Sicherungsdatei an; „Backup einspielen“ stellt damit alles auf einem neuen Gerät oder Browser wieder her, samt Freischaltung. Fehlt eine aktuelle Sicherung, zeigt das Cockpit es oben an. Mit Abo kann der Bestand zusätzlich in einem Team-Ordner liegen, den Ihre Praxis ohnehin nutzt – OneDrive, Google Drive, Dropbox oder Netzlaufwerk. Dann sehen alle Tierärztinnen und Tierärzte denselben Stand – an Rechnern mit Chrome oder Edge; iPad und iPhone gleichen per Datei ab: „Abgleich an die Praxis“ legt sie mit einem Tipp in den Eingangsordner, der Praxisrechner führt sie von selbst zusammen – was neuer ist, bleibt, samt Besuchsdokumentation. Zurück holt sich das Handy die tägliche Sicherung aus dem Team-Ordner."
      }
     },
     {
@@ -1341,7 +1341,7 @@ try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; 
     <h2>Hilft ab dem ersten Tourtag – auch bevor die erste Halterin misst.</h2>
     <p class="sec-lead">Schon Ihr ganz normaler Dienstag auf Tour läuft hier: Route, Termine,
        Halterkontakte, Verspätungen und Besuchsdokumentation in einem Cockpit. Die Ruhe-HRV kommt dazu,
-       sobald ein Fall Verlauf braucht – in derselben Akte, ohne zweites Programm.</p>
+       sobald ein Fall Verlauf braucht – in derselben Akte.</p>
 
     <div class="hero-shot schau-box tour-tablet" data-schau="/carlon-equine/app/?schaufenster=1&amp;demo=map">
         <video src="assets/visite-shots/14-tour-film.mp4" poster="assets/visite-shots/14-tour.jpg" width="1600" height="1112" muted playsinline preload="none" aria-label="Karte und Abfahrroute im Cockpit: die Karte fährt Stopp für Stopp ab, die Liste läuft mit Fahrzeit und Ansprechpartner mit"></video>
@@ -1349,13 +1349,13 @@ try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; 
         <a class="schau-voll" href="/carlon-equine/app/?demo=map" title="Cockpit im Vollbild öffnen">Vollbild ↗</a></div>
     <div class="tour-punkte m-wisch">
       <div class="tp"><svg class="ic li-ic" aria-hidden="true"><use href="#i-route"/></svg><h3>Kurze Wege – oder Ihre eigene Reihenfolge</h3><p>Standard: Stopp für Stopp zum nächstgelegenen Pferd, mit Ihren Terminen. Auf Wunsch sortieren Sie die Liste rechnerisch nach der Messwert-Abweichung zur eigenen Basis und legen die Reihenfolge danach selbst fest – eine Dringlichkeit stellt die Software nicht fest. Ändern lässt sie sich per Greifpunkt, Stopp für Stopp.</p></div>
-      <div class="tp"><svg class="ic li-ic" aria-hidden="true"><use href="#i-uhr"/></svg><h3>Ankunft und Termin im Blick</h3><p>An jeder Karte stehen Ankunft, Fahrzeit und Ansprechpartner; die Route rechnet ab der aktuellen Uhrzeit und zeigt, ob Sie pünktlich sind, Puffer haben oder hinterherhängen. Die Zeiten lernen aus Ihrer eigenen Dokumentation: wie lange Sie bei diesem Pferd meist brauchen und wie lange Ihre Fahrten wirklich dauern.</p></div>
+      <div class="tp"><svg class="ic li-ic" aria-hidden="true"><use href="#i-uhr"/></svg><h3>Ankunft und Termin im Blick</h3><p>An jeder Karte stehen Ankunft, Fahrzeit und Ansprechpartner; die Route rechnet ab der aktuellen Uhrzeit und zeigt, ob Sie pünktlich sind, Puffer haben oder hinterherhängen. Los geht es mit einer Schätzung (Luftlinie × 1,32 bei 45 km/h, 20 min je Besuch); danach lernen die Zeiten aus Ihrer eigenen Dokumentation: wie lange Sie bei diesem Pferd meist brauchen und wie lange Ihre Fahrten wirklich dauern.</p></div>
       <div class="tp"><svg class="ic li-ic" aria-hidden="true"><use href="#i-uhr"/></svg><h3>Verspätung mit einem Tipp</h3><p>Dauert ein Stalltermin länger, öffnet ein Tipp WhatsApp oder SMS mit fertiger Nachricht an die nächste Halterin – neue Ankunftszeit, Ihr Name, auf Wunsch der Standort. Sie senden selbst. Vor der Abfahrt geht genauso „Unterwegs“ hinaus: Das Pferd steht bereit, der Pass liegt da.</p></div>
       <div class="tp"><svg class="ic li-ic" aria-hidden="true"><use href="#i-akte"/></svg><h3>Was im selben Stall noch fällig ist</h3><p>Impfung, Entwurmung, Zahnkontrolle: Sie tragen die Fälligkeit ein oder übernehmen sie per CSV. Stehen Sie in einem Stall, zeigt der Stopp, was dort in den nächsten 30 Tagen sonst noch ansteht – eine Anfahrt statt zwei.</p></div>
-      <div class="tp"><svg class="ic li-ic" aria-hidden="true"><use href="#i-check"/></svg><h3>„Erledigt“ – und der Besuch ist dokumentiert</h3><p>Ein Tipp beim Gehen: Besuch, Behandlungszeit und Fahrstrecke stehen in der Dokumentation, die Leistung steht in der Leistungsliste – als CSV zur Übergabe an Ihre Praxissoftware; die Rechnung schreibt weiter Ihr Praxisprogramm. Eine Beobachtung sprechen Sie einfach über das Mikrofon Ihrer Handy-Tastatur ein. Abends suchen Sie nichts mehr zusammen.</p></div>
+      <div class="tp"><svg class="ic li-ic" aria-hidden="true"><use href="#i-check"/></svg><h3>„Erledigt“ – und der Besuch ist dokumentiert</h3><p>Ein Tipp beim Gehen: Besuch, Behandlungszeit und Fahrstrecke stehen in der Dokumentation, die Leistung steht in der Leistungsliste – als CSV zur Übergabe an Ihre Praxissoftware; die Rechnung schreibt weiter Ihr Praxisprogramm. Eine Beobachtung sprechen Sie einfach über das Mikrofon Ihrer Handy-Tastatur ein. Ob Ihr Praxisprogramm die CSV einliest, klärt dessen Anbieter.</p></div>
       <div class="tp"><svg class="ic li-ic" aria-hidden="true"><use href="#i-route"/></svg><h3>Wegegeld als Vorschlag nach § 10 GOT</h3><p>Aus der gefahrenen Tour entsteht ein Vorschlag: Doppelkilometer × 3,50 €, anteilig je Halterin, Beträge unter dem Mindestbetrag von 13 € markiert – mit Ihren Tacho-km, als CSV. Was Sie berechnen, entscheiden Sie.</p></div>
       <div class="tp"><svg class="ic li-ic" aria-hidden="true"><use href="#i-akte"/></svg><h3>Halterinnen und Pferde griffbereit</h3><p>Ihren Bestand übernehmen Sie als CSV aus Praxissoftware oder Excel – mit Halterin, Stall, Telefon und Kennungen (Praxis-Nr., UELN, Mikrochip). Anrufen oder WhatsApp direkt aus Akte und Route – kein Suchen in Chatverläufen.</p></div>
-      <div class="tp"><svg class="ic li-ic" aria-hidden="true"><use href="#i-schild"/></svg><h3>Google Maps und Kalender</h3><p>Die Route geht auf Ihren Tipp an Google Maps, Tagesplan und Termine als Kalenderdatei (.ics) in Ihren Kalender. Akten bleiben auf Ihrem Gerät; für Karte und Adresssuche fragt Ihr Browser OpenStreetMap. Fahrten und Zeiten als CSV (kein steuerliches Fahrtenbuch).</p></div>
+      <div class="tp"><svg class="ic li-ic" aria-hidden="true"><use href="#i-schild"/></svg><h3>Google Maps und Kalender</h3><p>Die Route geht auf Ihren Tipp an Google Maps, Tagesplan und Termine als Kalenderdatei (.ics) in Ihren Kalender. Akten bleiben auf Ihrem Gerät; für Karte und Adresssuche fragt Ihr Browser OpenStreetMap – dabei geht nur die Adresse hinaus, kein Name. Fahrten und Zeiten als CSV (kein steuerliches Fahrtenbuch).</p></div>
     </div>
   </div>
 </section>
@@ -1614,9 +1614,7 @@ try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; 
     <div class="sec-eyebrow">Warum die Zahlen tragen</div>
     <h2>Lange Pausen zwischen zwei Schlägen werden markiert – und getrennt ausgewiesen.</h2>
     <p class="sec-lead">
-      Die Herzfrequenzvariabilität (HRV, auch Herzratenvariabilität) wird mit der Aktivität des autonomen Nervensystems in
-      Verbindung gebracht — dem Wechselspiel aus Sympathikus und Parasympathikus. Sie ist
-      damit kein Ablesen eines Zustands. Damit der Verlauf trägt, muss jeder einzelne Wert sauber sein –
+      HRV ist kein Ablesen eines Zustands. Damit der Verlauf trägt, muss jeder einzelne Wert sauber sein –
       und genau dort stören lange Pausen zwischen zwei Schlägen.
     </p>
 
@@ -1691,7 +1689,7 @@ try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; 
     <div class="usp">
       <h3>Reicht Signalgüte oder Ruhedauer nicht, steht es dabei</h3>
       <p>Zu wenige Schläge, zu kurz, zu viele Artefakte — dann steht „Datengrundlage zu
-         klein" und kein Urteil. Ein Werkzeug, das immer etwas sagt, ist kein Werkzeug.</p>
+         klein" und kein Urteil.</p>
     </div>
     </div>
     </details>
@@ -1750,7 +1748,7 @@ try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; 
       </picture>
       <figcaption>
         <div class="sec-eyebrow">Der Sensor</div>
-        <h3>Polar H10 mit Equine-Gurt: elektrisch gemessen, am Pferd gegen das EKG validiert.</h3>
+        <h3>Polar H10 mit Equine-Gurt: elektrisch gemessen, in einer Studie am Pferd gegen das EKG validiert.</h3>
         <ul class="gurt-liste">
           <li class="mit-ic"><svg class="ic li-ic" aria-hidden="true"><use href="#i-ekg"/></svg><b>R-Zacken statt Lichtpuls.</b> Der H10 misst die elektrische Herzaktivität und liefert jeden Schlagabstand mit rund 1&nbsp;ms Auflösung (1/1024&nbsp;s) – optische Sensoren schätzen ihn aus Licht.</li>
           <li class="mit-ic"><svg class="ic li-ic" aria-hidden="true"><use href="#i-gurt"/></svg><b>Für den Pferdekörper gemacht.</b> Der Equine-Gurt ist auf den Brustumfang des Pferds ausgelegt; Elektrodengel auf dem Fell senkt die Fell-Impedanz – das verbessert in der Regel den Kontakt; ob das Signal trägt, zeigt die Messstation live.</li>
@@ -1793,7 +1791,7 @@ try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; 
       <div class="usps">
       <div class="usp">
       
-      <h3>Ihre Kundin erlebt Ihre Praxis, nicht unsere Software</h3>
+      <h3>Ihre Kundin misst auf Ihre Empfehlung</h3>
       <p>Sie misst über Ihren Mess-Link auf Ihre Empfehlung, und die Rückmeldung trägt
          Ihren Briefkopf. </p>
     </div>
@@ -1877,7 +1875,7 @@ try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; 
     </p>
     
     <ol class="kaufschritte m-wisch">
-      <li><b>Bezahlen über Stripe.</b> Im gesicherten Bezahlfenster, in rund zwei Minuten. Beim Monatsabo sind die ersten 14 Tage kostenlos. Die Rechnung mit ausgewiesener Umsatzsteuer kommt per E-Mail.</li>
+      <li><b>Bezahlen über Link (Stripe-Gruppe).</b> Im gesicherten Bezahlfenster, in rund zwei Minuten. Beim Monatsabo sind die ersten 14 Tage kostenlos. Die Rechnung mit ausgewiesener Umsatzsteuer kommt per E-Mail.</li>
       <li><b>Sofort freigeschaltet.</b> Nach der Zahlung kehren Sie ins Cockpit zurück – es schaltet sich von selbst frei, ohne Benutzerkonto. Weitere Geräte schalten Sie mit einem Geräte-Link vom ersten Gerät frei.</li>
       <li><b>Selbst verwalten.</b> Rechnungen, Zahlungsart und Kündigung jederzeit unter „Abo verwalten“.</li>
     </ol>
@@ -1888,12 +1886,12 @@ try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; 
       <p class="g-kontakt">Frage vorab? Schreiben Sie an <a href="mailto:jan@vitalkultur.com">jan@vitalkultur.com</a> — Antwort meist am selben Tag.</p>
     </div>
     <p class="b2b-hinweis">Nur für Tierarztpraxen und Pferdekliniken — Bestellung ausschließlich als Unternehmen (§ 14 BGB).</p>
-    <div class="abo-grenze m-wisch"><div><b>Ohne Abo</b><span>Demo mit 15 Pferden; zugeschickte Dateien ansehen.</span></div><div><b>Mit Abo</b><span>Tagestour mit Termin und Verspätungsnachricht, Besuchsdokumentation und Wegegeld-Vorschlag; dazu unbegrenzt Pferde, eigener Mess-Link und QR-Aushang, Messwertbericht mit Briefkopf, CSV- und FHIR-Export.</span></div></div>
+    <div class="abo-grenze m-wisch"><div><b>Ohne Abo</b><span>Demo mit 15 Pferden; zugeschickte Dateien ansehen.</span></div><div><b>Mit Abo</b><span>Tagestour mit Termin und Verspätungsnachricht, Besuchsdokumentation und Wegegeld-Vorschlag; dazu unbegrenzt Pferde, eigener Mess-Link und QR-Aushang, Messwertbericht mit Briefkopf als PDF, Übergabe an Google Maps und Team-Ordner.</span></div></div>
 <div class="preis-bruecke">
       <h3>Vom Tourtag bis zum Verlaufsbericht.</h3>
       <p>Tour planen, Verspätungen mit einem Tipp melden, Besuche dokumentieren – und wo ein Fall Verlauf braucht, Aufnahmen prüfen und mit dem Briefkopf Ihrer Praxis dokumentieren.</p>
       <p class="pb-fest"><b>Ein fester Monatspreis.</b> Keine zusätzlichen Gebühren pro Pferd oder Aufnahme. In der Beta behalten Gründungspartner ihren Preis 24 Monate.</p>
-      <p class="pb-fest"><b>Nicht enthalten:</b> Rechnungsstellung nach GOT, DATEV, Arzneimittel- und Abgabebelege, Online-Terminbuchung, Lager – dafür bleibt Ihr Praxisprogramm.</p>
+      <p class="pb-fest"><b>Nicht enthalten:</b> Rechnungsstellung nach GOT, DATEV, Arzneimittel- und Abgabebelege, Online-Terminbuchung, Lager – dafür bleibt Ihr Praxisprogramm. Live-Abgleich auf iPhone und iPad: dort per Datei über den Eingangsordner.</p>
     </div>
     <div class="tarife-grid m-wisch">
     <div class="tarif">
@@ -2014,22 +2012,6 @@ try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; 
   </div>
 </section>
 
-<section class="sec" id="abgrenzung">
-  <div class="wrap">
-    <div class="eyebrow">Einordnung</div>
-    <h2>Wofür CARLON gebaut ist — und wofür andere Werkzeuge da sind.</h2>
-
-    <details class="mehr gross" data-spur-auf="mehr-einordnung"><summary><span>Wofür andere Werkzeuge da sind</span></summary>
-      <div class="grid">
-      <div class="card"><h3>Belastung im Training und Galopp</h3><p>Die Domäne spezialisierter Trainingssysteme mit eigenem Sensor am Sattelgurt.</p></div>
-      <div class="card"><h3>Gangbild und Bewegung</h3><p>Die Domäne der Video- und Sensor-Ganganalyse.</p></div>
-      <div class="card"><h3>Schneller Live-Puls am Telefon</h3><p>Dafür reicht die kostenlose App des Gurt-Herstellers.</p></div>
-      <div class="card"><h3>Ruhe-HRV im eigenen Stall, als Verlauf</h3><p><strong>CARLON Equine:</strong> wiederholbare Aufnahmen gegen die eigene Vorgeschichte, lange Pausen getrennt ausgewiesen, Auswertung im Browser, FHIR&nbsp;R5 — ein Preis für den Betrieb.</p></div>
-    </div>
-    </details>
-  </div>
-</section>
-
 <section id="fragen">
   <div class="wrap">
     <div class="sec-eyebrow">Häufige Fragen</div>
@@ -2046,7 +2028,7 @@ try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; 
            die Seite führt dort auf ein messfähiges Gerät.</p></div>
       </details>
       <details class="faq-item" data-spur-auf="faq-3"><summary><h3>Was passiert nach einer Kündigung?</h3></summary>
-        <div class="faq-a"><p>Ihre Pferde, Aufnahmen und Ihre Dokumentation bleiben auf dem Gerät lesbar; Backup, JSON- und FHIR-Export gehen weiter. Gesperrt sind dann neue eigene Pferde, der Empfang neuer Messungen, Messwertbericht als PDF, CSV-Export, Übergabe an Google Maps und der Team-Ordner. Löschen könnten wir Ihre Daten gar nicht — sie liegen bei Ihnen.</p></div>
+        <div class="faq-a"><p>Ihre Pferde, Aufnahmen und Ihre Dokumentation bleiben auf dem Gerät lesbar; Backup, JSON-, CSV- und FHIR-Export gehen weiter. Gesperrt sind dann neue eigene Pferde, der Empfang über Mess-Link und Eingangsordner, Messwertbericht als PDF, Übergabe an Google Maps und der Team-Ordner. Löschen könnten wir Ihre Daten gar nicht — sie liegen bei Ihnen.</p></div>
       </details>
       <details class="faq-item" data-spur-auf="faq-bestand"><summary><h3>Wie kommen meine Pferde ins Cockpit?</h3></summary>
         <div class="faq-a"><p>Als CSV-Datei aus Ihrer Praxissoftware, aus Excel („Speichern unter → CSV“) oder aus dem Adressbuch. Das Cockpit erkennt die Spalten, zeigt vor dem Übernehmen, was wohin kommt, und legt nichts doppelt an; vorhandene Pferde werden nur in leeren Feldern ergänzt. Aus den Adressen ermittelt es danach die Kartenpunkte für die Route. Einzelne Pferde legen Sie direkt an.</p></div>
@@ -2055,7 +2037,7 @@ try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; 
         <div class="faq-a"><p>Ja. Nach dem ersten Öffnen startet das Cockpit auch ohne Netz: Akten, Tagesroute, Termine und „Erledigt“ arbeiten auf dem Gerät, und was Sie offline erfassen, bleibt gespeichert. Ohne Netz fehlen nur die Kartenansicht und die Adresssuche; die Routenliste bleibt.</p></div>
       </details>
       <details class="faq-item" data-spur-auf="faq-anbieter"><summary><h3>Was ist, wenn es CARLON eines Tages nicht mehr gibt?</h3></summary>
-        <div class="faq-a"><p>Dann sind Ihre Daten nicht weg: Sie liegen auf Ihrem Gerät bzw. in Ihrem eigenen Team-Ordner, nicht auf einem Server von uns, und lassen sich jederzeit als JSON und FHIR R5 exportieren. Das Backup stellt alles in jedem Chrome oder Edge wieder her.</p></div>
+        <div class="faq-a"><p>Dann sind Ihre Daten nicht weg: Sie liegen auf Ihrem Gerät bzw. in Ihrem eigenen Team-Ordner, nicht auf einem Server von uns, und lassen sich jederzeit als JSON, CSV und FHIR R5 exportieren. Das Backup stellt alles in jedem Chrome oder Edge wieder her.</p></div>
       </details>
       <details class="faq-item" data-spur-auf="faq-4"><summary><h3>Brauche ich einen Auftragsverarbeitungsvertrag?</h3></summary>
         <div class="faq-a"><p>Nach unserer Einschätzung nein. Das Cockpit läuft vollständig in Ihrem Browser, und auch die Aufnahme der
@@ -2079,10 +2061,10 @@ try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; 
       <details class="faq-item" data-spur-auf="faq-8"><summary><h3>Woher kommt die Baseline?</h3></summary>
         <div class="faq-a"><p>Aus den Ruhemessungen dieses Pferds selbst: Drei eigene Aufnahmen innerhalb von 30 Tagen bilden die
            Basis; ab der vierten zeigt das Cockpit die Abweichung davon. Bis dahin zeigt das Cockpit den Ausgangswert aus der Datei,
-           ausdrücklich nicht als Basis, und wie viele eigene Aufnahmen noch fehlen. Es tut nicht so, als wüsste es schon etwas.</p></div>
+           ausdrücklich nicht als Basis, und wie viele eigene Aufnahmen noch fehlen.</p></div>
       </details>
       <details class="faq-item" data-spur-auf="faq-9"><summary><h3>Wo liegen meine Daten, und wie sichere ich sie?</h3></summary>
-        <div class="faq-a"><p>In Ihrem Browser auf Ihrem Gerät – kein Server von uns. Unter Dokumentation legt „Backup sichern“ eine Sicherungsdatei an; „Backup einspielen“ stellt damit alles auf einem neuen Gerät oder Browser wieder her, samt Freischaltung. Fehlt eine aktuelle Sicherung, zeigt das Cockpit es oben an. Mit Abo kann der Bestand zusätzlich in einem Team-Ordner liegen, den Ihre Praxis ohnehin nutzt – OneDrive, Google Drive, Dropbox oder Netzlaufwerk. Dann sehen alle Tierärztinnen und Tierärzte denselben Stand – an Rechnern mit Chrome oder Edge; iPad und iPhone gleichen über die Sicherungsdatei ab, die zusammenführt statt überschreibt: Was auf dem Gerät neuer ist, bleibt – samt Besuchsdokumentation.</p></div>
+        <div class="faq-a"><p>In Ihrem Browser auf Ihrem Gerät – kein Server von uns. Unter Dokumentation legt „Backup sichern“ eine Sicherungsdatei an; „Backup einspielen“ stellt damit alles auf einem neuen Gerät oder Browser wieder her, samt Freischaltung. Fehlt eine aktuelle Sicherung, zeigt das Cockpit es oben an. Mit Abo kann der Bestand zusätzlich in einem Team-Ordner liegen, den Ihre Praxis ohnehin nutzt – OneDrive, Google Drive, Dropbox oder Netzlaufwerk. Dann sehen alle Tierärztinnen und Tierärzte denselben Stand – an Rechnern mit Chrome oder Edge; iPad und iPhone gleichen per Datei ab: „Abgleich an die Praxis“ legt sie mit einem Tipp in den Eingangsordner, der Praxisrechner führt sie von selbst zusammen – was neuer ist, bleibt, samt Besuchsdokumentation. Zurück holt sich das Handy die tägliche Sicherung aus dem Team-Ordner.</p></div>
       </details>
       <details class="faq-item" data-spur-auf="faq-10"><summary><h3>Kann ich die Sichtung einer Aufnahme berechnen?</h3></summary>
         <div class="faq-a"><p>Ob und wie Sie die Sichtung einer Aufnahme berechnen, entscheiden Sie nach der Gebührenordnung für Tierärzte (GOT); wir geben dazu keine Empfehlung. CARLON liefert Messwerte, Verlauf und einen Messwertbericht; ob daraus eine Beratung wird und wie Sie sie berechnen, liegt bei Ihnen. Eine Untersuchung ersetzt die Sichtung nicht.</p></div>
