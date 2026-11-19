@@ -8708,7 +8708,7 @@ const UI={
     const b=$('#fieldBtn'); if(b)b.classList.toggle('on',on);
     Toast.show(on?'Feldmodus an — Hochkontrast & große Touch-Ziele':'Feldmodus aus','info');
   },
-  // Praxis-Logo hochladen (auf 320px skaliert, lokal gespeichert) → erscheint auf Befund-PDFs im eigenen Branding
+  // Praxis-Logo hochladen (auf 320px skaliert, lokal gespeichert) → erscheint auf Messwertberichten im eigenen Branding
   uploadLogo(){
     const inp=el('input');inp.type='file';inp.accept='image/*';
     inp.onchange=()=>{const f=inp.files[0];if(!f)return;const r=new FileReader();
@@ -10915,7 +10915,7 @@ const License={
       /* KULANZ. Die Lizenz ist abgelaufen, ABER wir haben nie eine Absage
          bekommen — wir konnten schlicht nicht fragen. Ein Tierarzt im
          Funkloch darf davon nichts merken ausser einem ruhigen Hinweis; ihn
-         mitten in der Visite auf drei Pferde und kein Befund-PDF
+         mitten in der Visite auf drei Pferde und keinen Messwertbericht
          herunterzustufen waere der schlimmste Moment, den wir waehlen
          koennten. Erst wenn der Dienst tatsaechlich "kein Abo" gesagt hat
          (abgelehntSeit), oder die Kulanz aufgebraucht ist, wird gesperrt. */
