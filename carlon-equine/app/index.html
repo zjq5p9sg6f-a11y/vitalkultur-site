@@ -7895,7 +7895,7 @@ const Dispatch={
     const totalDist=order.reduce((s,x)=>s+x.dist,0);
     const durMin=sch.end-sch.start;
     const hm=m=>{m=Math.round(m);const h=Math.floor(m/60),mm=m%60;return h?(mm?`${h} h ${mm} min`:`${h} h`):`${mm} min`;};
-    $('#routeStats').innerHTML=`<b>${fmtTime(sch.start)}</b> ab · <b>${order.length}</b> Stopps · <b>${fmt1(totalDist)}</b> km ≈ Straße · <b>${hm(durMin)}</b> · fertig <b>${fmtTime(sch.end)}</b>${sch.anyLate?` · <span class="rs-late">Terminkonflikt</span>`:''}`;
+    $('#routeStats').innerHTML=`<b>${fmtTime(sch.start)}</b> ab · ${(()=>{ const en=typeof Sprache!=='undefined'&&Sprache.cur==='en'; const n=new Set(order.map(x=>(+x.h.lat).toFixed(4)+','+(+x.h.lng).toFixed(4))).size; return `<b>${order.length}</b> ${en?'horses':'Pferde'}`+(n<order.length?` ${en?'at':'an'} <b>${n}</b> ${en?'stops':'Anfahrten'}`:''); })()} · <b>${fmt1(totalDist)}</b> km ≈ Straße · <b>${hm(durMin)}</b> · fertig <b>${fmtTime(sch.end)}</b>${sch.anyLate?` · <span class="rs-late">Terminkonflikt</span>`:''}`;
     $('#gmapsBtn').disabled=false;
     const excluded=State.horses.filter(h=>h.needsVisit&&(h.lat==null||h.lng==null));
     const exHtml=excluded.length?`<div class="chip amber" style="margin:0 0 8px;display:block">${IC.warn} ${excluded.length} markierte${excluded.length>1?'s':''} Pferd${excluded.length>1?'e':''} ohne Standort — nicht in Route (${excluded.map(h=>esc(h.name)).join(', ')})</div>`:'';
@@ -7950,6 +7950,7 @@ const Dispatch={
     L.marker([origin.lat,origin.lng],{icon:L.divIcon({className:'',html:`<div style="width:16px;height:16px;border-radius:50%;background:#fff;border:3px solid var(--cyan);box-shadow:0 0 12px var(--cyan)"></div>`,iconSize:[16,16],iconAnchor:[8,8]})}).addTo(this._layer).bindPopup(`<b>${esc(State.settings.originLabel||'Praxis')}</b><br>Startpunkt`);
     const colors={crit:'#ff5263',elev:'#ffb547',watch:'#3ECFB2',stable:'#3fe0a4'};
     const latlngs=[[origin.lat,origin.lng]];
+    const ort={};
     order.forEach((x,i)=>{
       latlngs.push([x.h.lat,x.h.lng]);
       const h=x.h; const rec=State.latestFor(h.id); const m=rec?rec.metrics:{};
@@ -7961,7 +7962,18 @@ const Dispatch={
         ${m.rmssd!=null?`<div class="mp-row"><b>HRV:</b> RMSSD ${fmt0(m.rmssd)} · HF ${fmt0(m.meanHR)}${rec?' · vor '+relTime(rec.startedAt):''}</div>`:'<div class="mp-row">keine Messung</div>'}
         <div class="mp-act">${h.phone?`<a href="tel:${esc(h.phone)}">Anrufen</a>`:''}<a href="#" onclick="Views.openHorse('${h.id}');return false">Akte öffnen</a></div>
       </div>`;
-      L.marker([h.lat,h.lng],{icon:pin(colors[x.tri.level],i+1)}).addTo(this._layer).bindPopup(pop);
+      /* EIN STALL = EIN PUNKT (Jan 19.11.2026: „4 Punkte auf der Karte, 8 in der Liste – man denkt, es fehlen Anfahrten“).
+         Pferde am selben Ort lagen als Stecknadeln exakt übereinander. Jetzt: ein Punkt je Anfahrt mit den Nummern aus der
+         Liste („2–4“) und einem Zähler, das Fenster nennt alle Pferde dort. */
+      const k=(+h.lat).toFixed(4)+','+(+h.lng).toFixed(4); (ort[k]=ort[k]||{h,lvl:[],nr:[],pops:[]});
+      ort[k].nr.push(i+1); ort[k].lvl.push(x.tri.level); ort[k].pops.push(pop);
+    });
+    const rang={crit:3,elev:2,watch:1,stable:0};
+    Object.values(ort).forEach(o=>{
+      const n=o.nr, lab=n.length===1?String(n[0]):(n[n.length-1]-n[0]===n.length-1?n[0]+'–'+n[n.length-1]:n.join('·'));
+      const lvl=o.lvl.sort((a,b)=>(rang[b]||0)-(rang[a]||0))[0];
+      const icon=n.length===1?pin(colors[lvl],lab):L.divIcon({className:'',html:`<div style="position:relative;display:inline-flex;align-items:center;gap:5px;padding:4px 9px 4px 7px;border-radius:14px;background:${colors[lvl]};border:2px solid #fff;box-shadow:0 2px 8px rgba(0,0,0,.5);color:#fff;font-weight:700;font-size:12.5px;font-family:var(--font-brand);white-space:nowrap;transform:translate(-50%,-100%)">${lab}<span style="font-weight:600;font-size:10.5px;opacity:.92;background:rgba(0,0,0,.22);border-radius:8px;padding:1px 6px">${n.length} ${(typeof Sprache!=='undefined'&&Sprache.cur==='en')?'horses':'Pferde'}</span></div>`,iconSize:[0,0],iconAnchor:[0,0]});
+      L.marker([o.h.lat,o.h.lng],{icon}).addTo(this._layer).bindPopup(n.length===1?o.pops[0]:`<div class="mappop-gruppe"><div style="font-size:12px;color:var(--text-dim);margin-bottom:6px">${n.length} ${(typeof Sprache!=='undefined'&&Sprache.cur==='en')?'horses at this stop':'Pferde an dieser Anfahrt'}</div>${o.pops.join('')}</div>`);
     });
     if(latlngs.length>1)L.polyline(latlngs,{color:'#3ECFB2',weight:2.5,opacity:.7,dashArray:'6 8'}).addTo(this._layer);
     // Auto-Zoom auf die Tagesroute (Bounding-Box aller Stopps + Praxis) beim ersten Öffnen der Karte
