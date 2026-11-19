@@ -8915,12 +8915,12 @@ const UI={
   },
   upgrade(feature){
     if(typeof BETA_GATED!=='undefined'&&BETA_GATED){ return this.betaGate(feature); }
-    // EIN Angebot, zwei Laufzeiten. Jahr steht vorn: bindet laenger und kostet pro Monat weniger.
+    // EIN Angebot, zwei Laufzeiten. Kein Rabatt-Wording (Jan 19.11.2026: premium, seriös, stringent).
     // Features hier sind gegen PAID_ONLY + maxHorses verifiziert — nichts versprechen, was kein Gate hat.
     const FEATS=['Unbegrenzt viele Pferde','Tourenplanung mit Ruhe-HRV-Verlauf je Pferd','Aufnahmequalität sichtbar: roh und bereinigt, Artefakte, Methodenversion','Mess-Link für Halter – Aufnahme kommt verschlüsselt zu Ihnen','Messwertbericht (PDF) mit Ihrem Logo, Export als JSON, CSV, Kubios und FHIR R5','Team-Ordner: alle Tierärzt:innen sehen denselben Stand (OneDrive, Google Drive, Dropbox, Netzlaufwerk)','Auswertung lokal im Browser – keine Pferde-, Halter- oder Messdaten auf unseren Servern'];
     const plans=[
       ['month','Monatsabo',String(License.PREIS.soloMonat),'14 Tage kostenlos testen, danach monatlich kündbar','14 Tage gratis'],
-      ['year','Jahresabo',(License.PREIS.soloJahr/12).toFixed(2).replace('.',','),`${License.PREIS.soloJahr.toLocaleString('de-DE')} € im Jahr · 12 Monate Laufzeit, zwei Monate günstiger`,'zwei Monate gespart'],
+      ['year','Jahresabo',(License.PREIS.soloJahr/12).toFixed(2).replace('.',','),`${License.PREIS.soloJahr.toLocaleString('de-DE')} € im Jahr · 12 Monate Laufzeit`,''],
     ];
     /* Klinik-Stufe (AP3): eigener Block unter der Praxis — der Magnet ist
        der Entlasstag (Nachsorge-Flow), nicht die Platzzahl.
@@ -8944,7 +8944,7 @@ const UI={
     const KLINIK_SELBSTKAUF = true;
     const kplans=KLINIK_SELBSTKAUF?[
       ['clinicMonth','Klinik · Monatsabo',String(License.PREIS.klinikMonat),'14 Tage kostenlos testen, danach monatlich kündbar','14 Tage gratis'],
-      ['clinicYear','Klinik · Jahresabo',(License.PREIS.klinikJahr/12).toFixed(2).replace('.',','),`${License.PREIS.klinikJahr.toLocaleString('de-DE')} € im Jahr · 12 Monate Laufzeit, zwei Monate günstiger`,''],
+      ['clinicYear','Klinik · Jahresabo',(License.PREIS.klinikJahr/12).toFixed(2).replace('.',','),`${License.PREIS.klinikJahr.toLocaleString('de-DE')} € im Jahr · 12 Monate Laufzeit`,''],
     ]:[];
     this.modal(`<div class="modal-head"><button class="closex" onclick="UI.closeModal()">${IC.x}</button><h3>CARLON Equine freischalten</h3></div>
     <div class="modal-body">
@@ -12830,7 +12830,7 @@ const Sprache={
     'Aufnahme ansehen':'View recording', 'Erfassen':'Record', '✓ Aus der heutigen Tour genommen · Datensichtung dokumentiert':'✓ Removed from today’s route · data review documented', 'Beobachtung, Empfehlung…':'Observation, recommendation…', 'Datensichtung (Aufnahme)':'Data review (recording)',
     'Zusätzlich als Leistung in Ihrer Dokumentation erfassen':'Also record as a service in your documentation', 'Betrag für Ihre eigene Dokumentation (optional, €)':'Amount for your own records (optional, €)',
     'Messwertbericht erstellt':'Measurement report created',
-    'Weiter zur Kasse →':'Continue to checkout →', 'zum Einstieg':'to start', 'zwei Monate gespart':'two months saved',
+    'Weiter zur Kasse →':'Continue to checkout →', 'zum Einstieg':'to start',
     'Ohne Gurt umsehen (Beispielpferde)':'Look around without a belt (example horses)',
     'Preise netto · Rechnung mit ausgewiesener USt. von Stripe · nach der Zahlung sofort freigeschaltet — kein Schlüssel, keine E-Mail.':'Prices net · invoice with VAT shown, issued by Stripe · unlocked right after payment — no key, no email.',
     'Vorher kostenlos testen':'Try it free first','14 Tage kostenlos testen, danach monatlich kündbar':'14 days free trial, then cancel monthly','14 Tage gratis':'14 days free','14 Tage kostenlos testen':'Try 14 days free',
@@ -12945,7 +12945,7 @@ const Sprache={
     [/^Tagestour · (\d+) Stopps · (\d+) kritisch$/,'Day route · $1 stops · $2 critical'],
     [/^An der Kasse für Praxen in Deutschland inkl\.\s19\s%\sUSt\.: Praxis (.+?) im Monat bzw\. (.+?) im Jahr · Klinik (.+?) im Monat bzw\. (.+?) im Jahr\.$/,
      (m,a,b,c,d)=>`At checkout for practices in Germany incl. 19% VAT: practice ${Sprache.euroEN(a)} a month or ${Sprache.euroEN(b)} a year · clinic ${Sprache.euroEN(c)} a month or ${Sprache.euroEN(d)} a year.`],
-    [/^([\d.,]+)\s€ im Jahr · 12 Monate Laufzeit, zwei Monate günstiger$/,(m,a)=>`${Sprache.euroEN(a)} a year · 12-month term, two months cheaper`],
+    [/^([\d.,]+)\s€ im Jahr · 12 Monate Laufzeit$/,(m,a)=>`${Sprache.euroEN(a)} a year · 12-month term`],
     [/^spart die Anfahrt zu (.+)$/,'saves the trip to $1'],
     [/^(\d+) Termine mit Zeiten, Adressen & Erinnerung$/,'$1 appointments with times, addresses & reminders'],
     [/^Was wird mitgeschickt\? \((\d+) technische Angaben\)$/,'What is sent along? ($1 technical details)'],
