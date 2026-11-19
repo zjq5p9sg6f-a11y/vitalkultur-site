@@ -506,8 +506,9 @@ svg.ic.ic-ez{width:34px;height:34px}
 .hero-marke{font-family:var(--font-brand);font-weight:400;letter-spacing:.34em;font-size:clamp(20px,2.2vw,28px);color:#bfeee2;margin:0 0 4px;padding-left:.34em}
 .hero-marke small{display:block;font-size:.5em;letter-spacing:.42em;color:var(--cyan);margin-top:8px;font-weight:500}
 .hero .eyebrow{margin:var(--sp-34) auto var(--sp-21);max-width:none}
-.hero h1{margin-left:auto;margin-right:auto;font-size:clamp(40px,5.4vw,72px);max-width:16ch}
-.hero h1 em{font-style:normal;color:var(--cyan)}
+.hero h1{margin-left:auto;margin-right:auto;font-size:clamp(34px,4.6vw,62px);max-width:20ch}
+
+.hero h1 em{display:block;font-style:normal;color:var(--cyan);font-size:.5em;font-weight:400;line-height:1.35;letter-spacing:-0.005em;max-width:32ch;margin:.7em auto 0;text-wrap:balance}
 .hero .hero-sub{margin:0 auto var(--sp-34);max-width:34em;font-size:clamp(17px,1.5vw,19px)}
 .hero .cta-row{justify-content:center}
 .hero-belege2{display:flex;flex-wrap:wrap;justify-content:center;gap:10px 22px;margin:var(--sp-34) auto 0;padding:0;list-style:none}
@@ -1563,7 +1564,7 @@ try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; 
         <path d="M70 190h660" class="gr-raster"/><text x="60" y="194" text-anchor="end" class="gr-klein">0</text><path d="M70 152h660" class="gr-raster"/><text x="60" y="156" text-anchor="end" class="gr-klein">25</text><path d="M70 115h660" class="gr-raster"/><text x="60" y="119" text-anchor="end" class="gr-klein">50</text><path d="M70 78h660" class="gr-raster"/><text x="60" y="82" text-anchor="end" class="gr-klein">75</text><path d="M70 40h660" class="gr-raster"/><text x="60" y="44" text-anchor="end" class="gr-klein">100</text>
         <rect x="150" y="79" width="46" height="111" rx="5" class="gr-balken"/><text x="173" y="69" text-anchor="middle" class="gr-wert">74</text><text x="173" y="212" text-anchor="middle" class="gr-klein">before</text><rect x="214" y="128" width="46" height="68" rx="5" class="gr-balken-gold"/><text x="237" y="112" text-anchor="middle" class="gr-wert">45</text><text x="237" y="212" text-anchor="middle" class="gr-klein">on the road</text>
         <text x="205" y="234" text-anchor="middle" class="gr-gruppe">3.5 h drive</text>
-        <rect x="470" y="55" width="46" height="135" rx="5" class="gr-balken"/><text x="493" y="45" text-anchor="middle" class="gr-wert">89,7</text><text x="493" y="212" text-anchor="middle" class="gr-klein">before</text><rect x="534" y="102" width="46" height="88" rx="5" class="gr-balken-gold"/><text x="557" y="92" text-anchor="middle" class="gr-wert">59</text><text x="557" y="212" text-anchor="middle" class="gr-klein">on the road</text>
+        <rect x="470" y="55" width="46" height="135" rx="5" class="gr-balken"/><text x="493" y="45" text-anchor="middle" class="gr-wert">89.7</text><text x="493" y="212" text-anchor="middle" class="gr-klein">before</text><rect x="534" y="102" width="46" height="88" rx="5" class="gr-balken-gold"/><text x="557" y="92" text-anchor="middle" class="gr-wert">59</text><text x="557" y="212" text-anchor="middle" class="gr-klein">on the road</text>
         <text x="525" y="234" text-anchor="middle" class="gr-gruppe">8 h drive</text>
         <text x="274" y="127" class="gr-wert gr-gold">−39%</text>
         <text x="594" y="106" class="gr-wert gr-gold">−34%</text>
@@ -1736,11 +1737,11 @@ try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; 
       </picture>
       <figcaption>
         <div class="sec-eyebrow">The sensor</div>
-        <h3>Polar H10 in the Equine belt: it measures electrically and has been validated against the ECG in a study in horses.</h3>
+        <h3>Polar H10 in the Equine belt: it measures electrically and was compared with the ECG in a study of 28 horses.</h3>
         <ul class="gurt-liste">
           <li class="mit-ic"><svg class="ic li-ic" aria-hidden="true"><use href="#i-ekg"/></svg><b>Measured electrically.</b> The H10 measures the heart’s electrical activity and delivers every beat interval at about 1&nbsp;ms resolution (1/1024&nbsp;s). Optical sensors estimate it from light instead.</li>
           <li class="mit-ic"><svg class="ic li-ic" aria-hidden="true"><use href="#i-gurt"/></svg><b>Made for the horse’s body.</b> The Equine belt is sized for the horse’s girth; electrode gel on the coat lowers the impedance and usually improves contact. The measuring station shows live whether the signal is good.</li>
-          <li class="mit-ic"><svg class="ic li-ic" aria-hidden="true"><use href="#i-check"/></svg><b>Validated in a study in horses.</b> In 28 horses, heart rate and time-domain HRV values from a Polar H10 system agreed with the ECG at rest and during groundwork (<a href="https://doi.org/10.3389/fvets.2022.939534" target="_blank" rel="noopener">Kapteijn et&nbsp;al. 2022</a>; with different electrodes, a different receiver and after artefact correction in Kubios; our analysis is not separately validated). The measuring station shows beat intervals, not an ECG trace.</li>
+          <li class="mit-ic"><svg class="ic li-ic" aria-hidden="true"><use href="#i-check"/></svg><b>Compared with the ECG.</b> In 28 horses, heart rate and time-domain HRV values from a Polar H10 system agreed with the ECG at rest and during groundwork (<a href="https://doi.org/10.3389/fvets.2022.939534" target="_blank" rel="noopener">Kapteijn et&nbsp;al. 2022</a>; with different electrodes, a different receiver and after artefact correction in Kubios; our analysis is not separately validated). The measuring station shows beat intervals, not an ECG trace.</li>
           <li class="mit-ic"><svg class="ic li-ic" aria-hidden="true"><use href="#i-tasche"/></svg><b>Freely available.</b> You buy the belt from regular retailers.</li>
         </ul>
       </figcaption>
@@ -1885,7 +1886,7 @@ try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; 
     <div class="tarif">
       <div class="tarif-name">For equine practices</div>
 
-      <div class="tarif-preis"><b>149&nbsp;€</b> <span>net per month · €177.31 incl. 19&nbsp;% German VAT</span></div>
+      <div class="tarif-preis"><b>€149</b> <span>net per month · €177.31 incl. 19&nbsp;% German VAT</span></div>
       <div class="tarif-alt">or €1,490 net per year (€1,773.10 incl. VAT)</div>
       
       <ul class="enthalten">
@@ -1902,7 +1903,7 @@ try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; 
     </div>
     <div class="tarif tarif-klinik">
       <div class="tarif-name">For equine clinics</div>
-      <div class="tarif-preis"><b>349&nbsp;€</b> <span>net per month · €415.31 incl. 19&nbsp;% German VAT</span></div>
+      <div class="tarif-preis"><b>€349</b> <span>net per month · €415.31 incl. 19&nbsp;% German VAT</span></div>
       <div class="tarif-alt">or €3,490 net a year (€4,153.10 incl. VAT)</div>
       <ul class="enthalten">
         <li>Everything in the practice plan</li>

@@ -850,12 +850,12 @@ const HAUS={ appImStore:false, appUrl:'https://carlon.app' };
   <div id="vUnsupported" class="hidden">
     <span class="eyebrow" data-i18n="unsupEyebrow">Dieses Gerät misst nicht direkt</span>
     <h1 data-i18n="unsupH1">So misst du trotzdem</h1>
-    <p class="sub" data-i18n="unsupSub">Apple lässt Bluetooth im Browser grundsätzlich nicht zu — auf iPhone und iPad gilt das für Safari genauso wie für Chrome. Drei Wege führen trotzdem zum Ziel.</p>
+    <p class="sub" data-i18n="unsupSub">Apple lässt Bluetooth im Browser grundsätzlich nicht zu. Auf iPhone und iPad gilt das für Safari genauso wie für Chrome. Drei Wege führen trotzdem zum Ziel.</p>
 
     <div class="ways">
       <div class="way">
         <div class="wi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="2" width="12" height="20" rx="2.5"/><path d="M10.5 18.5h3"/></svg></div>
-        <div class="wt"><b data-i18n="wayAndroidT">Android-Handy oder Tablet</b><span data-i18n="wayAndroidS">Diesen Link dort in Chrome öffnen — die Messung startet sofort.</span></div>
+        <div class="wt"><b data-i18n="wayAndroidT">Android-Handy oder Tablet</b><span data-i18n="wayAndroidS">Diesen Link dort in Chrome öffnen. Die Messung startet sofort.</span></div>
       </div>
       <div class="way">
         <div class="wi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="12" rx="2"/><path d="M2 20h20"/></svg></div>
@@ -863,7 +863,7 @@ const HAUS={ appImStore:false, appUrl:'https://carlon.app' };
       </div>
       <div class="way">
         <div class="wi gold"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M16.4 12.7c0-2.2 1.8-3.3 1.9-3.4-1-1.5-2.6-1.7-3.2-1.7-1.4-.1-2.7.8-3.3.8-.7 0-1.7-.8-2.8-.8-1.5 0-2.8.8-3.6 2.1-1.5 2.6-.4 6.5 1.1 8.6.7 1 1.6 2.2 2.7 2.1 1.1 0 1.5-.7 2.8-.7s1.7.7 2.8.7c1.2 0 1.9-1 2.6-2.1.8-1.2 1.2-2.4 1.2-2.4s-2.2-.9-2.2-3.2zM14.3 5.9c.6-.7 1-1.7.9-2.7-.9 0-2 .6-2.6 1.3-.6.6-1.1 1.7-.9 2.6 1 .1 2-.5 2.6-1.2z"/></svg></div>
-        <div class="wt"><b id="wayIosT" data-i18n="wayIosT">Apple-Geräte: CARLON EQUINE</b><span id="wayIosS" data-i18n="wayIosS">Die App misst nativ und kann deutlich mehr als diese Seite.</span></div>
+        <div class="wt"><b id="wayIosT" data-i18n="wayIosT">iPhone und iPad: App in Vorbereitung</b><span id="wayIosS" data-i18n="wayIosS">Die iPhone-App CARLON Equine ist in Vorbereitung. Bis dahin misst du mit einem Android-Gerät oder einem Rechner.</span></div>
       </div>
       <script>
       /* Solange die App nicht im Store steht, ist sie kein Weg — dann darf
@@ -872,9 +872,7 @@ const HAUS={ appImStore:false, appUrl:'https://carlon.app' };
       if(!HAUS.appImStore){
         const t=document.getElementById('wayIosT'), u=document.getElementById('wayIosS');
         const k=t&&t.closest('.way');
-        if(t){ t.removeAttribute('data-i18n'); t.textContent='Apple-Geräte: CARLON EQUINE kommt'; }
-        if(u){ u.removeAttribute('data-i18n');
-               u.textContent='Die App ist noch nicht erschienen. Bis dahin führt der Knopf unten zum Ziel.'; }
+        /* Text kommt jetzt aus dem Wörterbuch (wayIosT/wayIosS, DE+EN: „in Vorbereitung“). ⚠ Sobald die App im Store ist: Wörterbuch auf Store-Text + Link umstellen. */
         if(k) k.style.opacity='.55';
       }
       </script>
@@ -900,28 +898,28 @@ const HAUS={ appImStore:false, appUrl:'https://carlon.app' };
          geprueft ist (t-qr.mjs). -->
     <div id="qrWeg" style="margin-top:var(--s4);text-align:center">
       <div id="qrBild" style="display:inline-block;background:#fff;border-radius:12px;padding:10px;width:172px;height:172px"></div>
-      <div class="hint" style="max-width:46ch;margin:10px auto 0" data-i18n="qrHint">Oder mit dem Geraet scannen, das messen soll — Laptop oder Android-Tablet. Dabei verlaesst nichts dein Telefon.</div>
+      <div class="hint" style="max-width:46ch;margin:10px auto 0" data-i18n="qrHint">Oder mit dem Gerät scannen, das messen soll, etwa einem Laptop oder Android-Tablet. Dabei verlässt nichts dein Telefon.</div>
     </div>
     <!-- ⚠ Hier stand „kannst du sie direkt an deine Praxis uebergeben" —
          ein Versprechen auf senden.html, dessen Knopf am 13.08. ausgehaengt
          wurde. Ein Satz, der auf eine tote Interaktion zeigt, trifft genau
          die wertvollste Besucherin: die mit App-Export in der Hand. -->
-    <div class="hint" data-i18n="unsupHint">Du hast schon eine Aufnahme als Datei? Schick sie deiner Praxis direkt — wie ein Foto, auf dem Weg, den ihr ohnehin nutzt.</div>
+    <div class="hint" data-i18n="unsupHint">Du hast schon eine Aufnahme als Datei? Schick sie deiner Praxis direkt, wie ein Foto, auf dem Weg, den ihr ohnehin nutzt.</div>
   </div>
 
   <!-- ── 1) Bereit ── -->
   <div id="vReady" class="hidden">
     <h1 data-i18n="readyH1">Messung für den Tierarzt</h1>
-    <p class="sub" data-i18n="readySub">Verbinde den Polar-H10-Gurt deines Pferds. Die Aufnahme entsteht auf deinem Gerät und wird dort für deine Praxis verschlüsselt — du schickst sie mit einem Tipp, lesen kann sie nur die Praxis.</p>
+    <p class="sub" data-i18n="readySub">Verbinde den Polar-H10-Gurt deines Pferds. Die Aufnahme entsteht auf deinem Gerät und wird dort für deine Praxis verschlüsselt. Du schickst sie mit einem Tipp, lesen kann sie nur die Praxis.</p>
     <!-- Erwartung VOR dem Knopf, nicht danach. Die sieben Minuten standen
        bisher erst im Fortschrittstext — wer sie erst nach dem Start liest,
        hat das Pferd schon angebunden und plant mit drei Minuten. Und die
        beiden Zusagen (ohne Konto, verschluesselt) gehoeren dorthin, wo
        jemand entscheidet, ob er anfaengt. -->
   <ul class="brauchst" data-i18n-list="brauchst">
-    <li>Polar-H10-Gurt angelegt und die Elektrodenflaeche angefeuchtet</li>
-    <li>Etwa sieben Minuten Ruhe — kuerzer traegt die Auswertung nicht</li>
-    <li>Ohne Konto, ohne App · die Aufnahme wird verschluesselt uebergeben</li>
+    <li>Polar-H10-Gurt angelegt und die Elektrodenfläche gut angefeuchtet, am besten mit Elektrodengel</li>
+    <li>Mindestens sieben Minuten Ruhe. Kürzere Aufnahmen reichen für die Auswertung nicht</li>
+    <li>Ohne Konto, ohne App · die Aufnahme wird verschlüsselt übergeben</li>
   </ul>
   <div class="room" id="roomLine"></div>
     <div class="field">
@@ -965,7 +963,7 @@ const HAUS={ appImStore:false, appUrl:'https://carlon.app' };
         <p class="als-app-fuss" id="alsAppFuss">Samsung-Browser: Menü ≡ → „Seite hinzufügen zu“ → „Startbildschirm“.</p>
       </div>
     </details>
-    <div class="hint" data-i18n="readyHint">Der Gurt muss angelegt und die Elektrodenfläche <b>gut angefeuchtet</b> sein — sonst bricht das Signal ab. Halte das Gerät während der Messung in der Nähe und lass den Bildschirm an.</div>
+    <div class="hint" data-i18n="readyHint">Der Gurt muss angelegt und die Elektrodenfläche <b>gut angefeuchtet</b> sein, sonst bricht das Signal ab. Halte das Gerät während der Messung in der Nähe und lass den Bildschirm an.</div>
   </div>
 
   <!-- ── 2) Messung läuft ── -->
@@ -977,7 +975,7 @@ const HAUS={ appImStore:false, appUrl:'https://carlon.app' };
          sondern eine Täuschung. -->
     <div class="rrwarn hidden" id="beispielBand"></div>
     <div class="rrwarn hidden" id="rrWarn" role="alert"></div>
-    <p class="sub" id="liveSub" data-i18n="liveSub">Ruhig stehen lassen. Je ruhiger das Pferd, desto aussagekräftiger die Aufnahme.</p>
+    <p class="sub" id="liveSub" data-i18n="liveSub">Ruhig stehen lassen. Bewegung stört das Signal.</p>
 
     <!-- ── MESSWERTE ZUERST ──────────────────────────────────────────────
          Die Kacheln standen unter den Diagrammen. Wer im Stall aufs Telefon
@@ -1063,8 +1061,8 @@ const HAUS={ appImStore:false, appUrl:'https://carlon.app' };
          wirklich etwas zu zeigen gibt. Geteilt wird NUR die Station, nie
          die laufende Messung. -->
     <div class="jetzt-teilen" id="jetztTeilen" hidden>
-      <div class="jt-txt"><b data-i18n="jtTitel">Das sollte deine Stallnachbarin sehen</b>
-        <span data-i18n="jtSub">Der Link zur Messstation — ohne deine Daten.</span></div>
+      <div class="jt-txt"><b data-i18n="jtTitel">Messstation weitergeben</b>
+        <span data-i18n="jtSub">Nur der Link zur Messstation, ohne deine Daten.</span></div>
       <button class="btn ghost" id="jtBtn" data-i18n="jtBtn">Weitersagen</button>
     </div>
 
@@ -1075,7 +1073,7 @@ const HAUS={ appImStore:false, appUrl:'https://carlon.app' };
     <div class="next livepanel">
       <div class="next-h">
         <span class="eyebrow" style="margin-bottom:6px" data-i18n="progressH">Aufnahme-Fortschritt</span>
-        <p id="recTxt" aria-live="polite">Empfohlen sind mindestens sieben Minuten ruhige Messung — erst dann trägt die volle Auswertung.</p>
+        <p id="recTxt" aria-live="polite">Empfohlen sind mindestens sieben Minuten ruhige Messung. Erst dann trägt die volle Auswertung.</p>
       </div>
       <div class="qbar"><i id="recFill"></i></div>
       <div class="proto-row" style="cursor:default">
@@ -1090,7 +1088,7 @@ const HAUS={ appImStore:false, appUrl:'https://carlon.app' };
     <button class="btn hidden" id="btnReconnect" data-i18n="reconn">Gurt erneut verbinden</button>
     <button class="btn stop" id="btnStop" data-i18n="stop">Messung beenden</button>
     <div class="subactions"><button class="btn ghost" id="btnRestart" data-i18n="restart">Verwerfen und neu starten</button></div>
-    <div class="hint" id="liveHint" data-i18n="liveHint">Halte das Gerät in der Nähe und lass den Bildschirm an — schläft er ein, bricht die Bluetooth-Verbindung ab.</div>
+    <div class="hint" id="liveHint" data-i18n="liveHint">Halte das Gerät in der Nähe und lass den Bildschirm an. Schläft er ein, bricht die Bluetooth-Verbindung ab.</div>
   </div>
 
   <!-- ── 3) Fertig / Übergabe ── -->
@@ -1136,7 +1134,7 @@ const HAUS={ appImStore:false, appUrl:'https://carlon.app' };
         <button class="pill cyan" data-info="rmssd" aria-label="HRV-Reihe — erklären"><span class="pd"></span><span class="nm" id="pillHrvNm">HRV</span><span class="rg" id="pillHvRg"></span><span class="av" id="pillHv"></span></button>
       </div>
       <div id="dVitals"></div>
-      <div class="capt" id="vitalsCap">Puls (Gold) und HRV (Cyan) über die gesamte Aufnahme. Die HRV ist ein gleitendes Fenster und reagiert auf Puls-Übergänge — sie zeigt die kurzfristige Dynamik, keinen ruhenden Einzelwert. <b style="color:var(--sec);font-weight:600">Tippen heftet den Wert an, Doppeltippen öffnet das Vollbild.</b></div>
+      <div class="capt" id="vitalsCap">Puls (Gold) und HRV (Cyan) über die gesamte Aufnahme. Die HRV ist ein gleitendes Fenster und reagiert auf Puls-Übergänge. Sie zeigt die kurzfristige Dynamik, keinen ruhenden Einzelwert. <b style="color:var(--sec);font-weight:600">Tippen heftet den Wert an, Doppeltippen öffnet das Vollbild.</b></div>
     </div>
 
     <div class="chart-wrap" style="margin-top:var(--s2)">
@@ -1204,7 +1202,7 @@ const HAUS={ appImStore:false, appUrl:'https://carlon.app' };
          Katalogtext; genau beim Skript-Ausfall blieb die falsche
          Behauptung stehen. Eine Quelle, zwei Ausspielungen: der Fallback
          ist jetzt WORTGLEICH zum Katalog (sendRecht). -->
-    <p class="hint" style="max-width:52ch;margin:var(--s2) auto 0" data-i18n="sendRecht">Die Datei entsteht auf deinem Gerät und verlässt es auf dem Weg, den du selbst wählst — wir bekommen sie nicht zu sehen und legen sie nirgends ab. Was diese Seite tut, steht in der <a href="/privacy.html">Datenschutzerklärung</a>; für die Nutzung gelten die <a href="/agb.html#uebergabe">AGB</a>.</p>
+    <p class="hint" style="max-width:52ch;margin:var(--s2) auto 0" data-i18n="sendRecht">Die Datei entsteht auf deinem Gerät und verlässt es auf dem Weg, den du selbst wählst. Wir bekommen sie nicht zu sehen und legen sie nirgends ab. Was diese Seite tut, steht in der <a href="/privacy.html">Datenschutzerklärung</a>; für die Nutzung gelten die <a href="/agb.html#uebergabe">AGB</a>.</p>
     <div class="subactions">
       <button class="btn ghost" id="btnSave" data-i18n="save">Als Datei speichern</button>
       <button class="btn ghost hidden" id="btnAgain" data-i18n="again">Neue Messung</button>
@@ -1220,9 +1218,9 @@ const HAUS={ appImStore:false, appUrl:'https://carlon.app' };
       <div class="next-h">
         <span class="eyebrow" style="margin-bottom:6px" data-i18n="swT">So geht’s weiter</span>
         <ul class="brauchst" style="margin-left:0" data-i18n-list="swListe">
-          <li>Deine Praxis meldet sich auf ihrem üblichen Weg — du musst nichts weiter tun.</li>
-          <li>Deine Kopie bleibt auf diesem Gerät — jederzeit unter „Als Datei speichern“.</li>
-          <li>Miss in ruhigen Wochen etwa einmal im Monat — so entsteht eine Baseline für dein Pferd.</li>
+          <li>Deine Praxis meldet sich auf ihrem üblichen Weg. Du musst nichts weiter tun.</li>
+          <li>Deine Kopie bleibt auf diesem Gerät und ist jederzeit unter „Als Datei speichern“ zu finden.</li>
+          <li>Miss anfangs einmal pro Woche. Ab der dritten Aufnahme vergleicht deine Praxis mit der eigenen Basis deines Pferds.</li>
         </ul>
       </div>
     </div>
@@ -1250,7 +1248,7 @@ const HAUS={ appImStore:false, appUrl:'https://carlon.app' };
   <!-- Der Fallback ohne JavaScript muss DIESELBE, extern geprüfte MDR-Formulierung
        tragen wie das Wörterbuch — sonst zeigt genau der Ausfall die alte, zu
        breite Fassung („was das Herz tut"). Beide Stellen zusammen ändern. -->
-  <div class="hint" style="max-width:60ch;margin-left:auto;margin-right:auto" data-i18n="footerNote">Diese Seite zeichnet Herzschlag-Daten deines Pferds auf — die medizinische Beurteilung erfolgt ausschließlich durch deine Tierärztin oder deinen Tierarzt.</div>
+  <div class="hint" style="max-width:60ch;margin-left:auto;margin-right:auto" data-i18n="footerNote">Diese Seite zeichnet Herzschlag-Daten deines Pferds auf. Die medizinische Beurteilung erfolgt ausschließlich durch deine Tierärztin oder deinen Tierarzt.</div>
   <!-- Der wahrscheinlichste Vet-Erstkontakt mit CARLON ist DIESE Seite:
        eine Halterin schickt den Link statt der Datei. Bisher musste sich
        genau der Besucher, der zahlen wuerde, den Verkaufsweg selbst
@@ -1376,9 +1374,7 @@ const HAUS={ appImStore:false, appUrl:'https://carlon.app' };
     /* 13.08.2026 (Jan): das Kopplungs-Zitat (Callara, iScience 2024) raus —
        das gehoert zur Kohaerenzmessung, nicht zur Ruhemessung der Station.
        Der Fusssatz traegt jetzt den NUTZEN dieser Seite: Baseline + Verlauf. */
-    +'<span>Ruhemessungen beim Pferd — und mit CARLON auch beim Menschen. '
-    +'Jede Ruhemessung zählt gegen die eigene Basis deines Pferdes — '
-    +'so wird aus Momentaufnahmen ein Verlauf, den deine Praxis lesen kann.'
+    +'<span><span data-i18n="dmText">Ruhemessungen beim Pferd. Jede Messung wird mit der eigenen Basis deines Pferds verglichen. So entsteht aus einzelnen Aufnahmen ein Verlauf, den deine Praxis lesen kann.</span>'
     +(HAUS.appImStore
       ? ' <a href="'+HAUS.appUrl+'" target="_blank" rel="noopener">Für dich selbst messen &rsaquo;</a>'
       : '')
@@ -1391,34 +1387,35 @@ const $=s=>document.querySelector(s);
 /* Katalog. Reihenfolge = Reihenfolge auf der Seite, damit Luecken auffallen. */
 const L={
 de:{
- title:'Messung für den Tierarzt — CARLON',
+ dmText:'Ruhemessungen beim Pferd. Jede Messung wird mit der eigenen Basis deines Pferds verglichen. So entsteht aus einzelnen Aufnahmen ein Verlauf, den deine Praxis lesen kann.',
+ title:'Messung für den Tierarzt · CARLON',
  beatsUnit:'Schläge',
  afterStart:'nach Beginn',
  inhale:'Ein', exhale:'Aus', pause:'Pause', perMin:'/min', axisTime:'ZEIT',
  chartBreath:'Atemkurve',
- chartBreathCap:'Die Atmung moduliert den Herzschlag. Aus dieser Modulation lässt sich die Atemkurve ableiten — Koralle nach oben ist Einatmen, Blau nach unten Ausatmen.',
+ chartBreathCap:'Die Atmung moduliert den Herzschlag. Aus dieser Modulation lässt sich die Atemkurve ableiten. Koralle nach oben ist Einatmen, Blau nach unten Ausatmen.',
  lastBeatsLbl:'Letzte Schläge',
  recRemaining:'Noch {x} bis zu den empfohlenen sieben Minuten.',
- recBeatsMissing:'Die Zeit reicht — es fehlen noch {n} Schläge. Bei einem sehr ruhigen Puls dauert das etwas länger.',
- recReached:'Sieben Minuten und genug Schläge — die Aufnahme trägt jetzt die volle Auswertung. Länger messen schadet nicht, der Verlauf wird ruhiger.',
- sigChecking:'Signal wird geprüft…', sigStable:'Signal stabil', sigNoisy:'Signal unruhig — Gurtsitz und Feuchtigkeit prüfen',
- sigBad:'Signal stark gestört — Gurt neu anfeuchten und nachsetzen',
+ recBeatsMissing:'Die Zeit reicht. Es fehlen noch {n} Schläge. Bei einem sehr ruhigen Puls dauert das etwas länger.',
+ recReached:'Sieben Minuten und genug Schläge. Die Aufnahme trägt jetzt die volle Auswertung. Länger messen schadet nicht, der Verlauf wird ruhiger.',
+ sigChecking:'Signal wird geprüft…', sigStable:'Signal stabil', sigNoisy:'Signal unruhig. Gurtsitz und Feuchtigkeit prüfen',
+ sigBad:'Signal stark gestört. Gurt neu anfeuchten und nachsetzen',
  verdictClean:'Sauberes Signal über die gesamte Aufnahme. Diese Messung kann so weitergegeben werden.',
- verdictCleanShort:'Das Signal ist sauber. Die Aufnahme ist kürzer als sieben Minuten — für einen belastbaren Ruhe-Verlauf darf sie gern länger sein.',
- verdictNoisy:'Das Signal war stellenweise unruhig. Weitergeben ist möglich — eine zweite Messung mit gut angefeuchtetem Gurt wird aber deutlich besser.',
+ verdictCleanShort:'Das Signal ist sauber. Die Aufnahme ist kürzer als sieben Minuten. Für einen belastbaren Ruhe-Verlauf darf sie gern länger sein.',
+ verdictNoisy:'Das Signal war stellenweise unruhig. Weitergeben ist möglich, eine zweite Messung mit gut angefeuchtetem Gurt wird aber deutlich besser.',
  verdictBad:'Das Signal war stark gestört. Wir empfehlen, den Gurt neu anzufeuchten, nachzusetzen und noch einmal zu messen.',
- doneSubRoom:'Die Aufnahme ist fertig — ein Tipp, und du schickst sie deiner Praxis.',
- doneSubFile:'Schick die Messung deiner Tierärztin — sie kann sie sofort öffnen, auch ohne Konto.',
+ doneSubRoom:'Die Aufnahme ist fertig. Ein Tipp, und du schickst sie deiner Praxis.',
+ doneSubFile:'Schick die Messung deiner Tierärztin. Sie kann sie sofort öffnen, auch ohne Konto.',
  tooFew:'Es sind zu wenige Herzschläge erfasst worden, um die Aufnahme sinnvoll weiterzugeben.',
  dropTitle:'Verbindung unterbrochen',
- dropSub:'Der Gurt ist nicht mehr erreichbar. Sitz und Feuchtigkeit prüfen, dann erneut verbinden — die bisher erfassten Schläge bleiben erhalten.',
+ dropSub:'Der Gurt ist nicht mehr erreichbar. Sitz und Feuchtigkeit prüfen, dann erneut verbinden. Die bisher erfassten Schläge bleiben erhalten.',
  dropStop:'Aufnahme abschließen',
  pairsOf:'von',
 
  brandTag:'EQUINE BIOMETRICS',
  /* Empfang */
  readyH1:'Messung für den Tierarzt',
- readySub:'Verbinde den Polar-H10-Gurt deines Pferds. Die Aufnahme entsteht auf deinem Gerät und wird dort für deine Praxis verschlüsselt — du schickst sie mit einem Tipp, lesen kann sie nur die Praxis.',
+ readySub:'Verbinde den Polar-H10-Gurt deines Pferds. Die Aufnahme entsteht auf deinem Gerät und wird dort für deine Praxis verschlüsselt. Du schickst sie mit einem Tipp, lesen kann sie nur die Praxis.',
  /* ── Wer OHNE Aushang hier landet ───────────────────────────────────────
     Der Text darüber ist für den Aushang geschrieben: dort steht das Fach
     der Praxis im Link, „geht direkt an deine Tierärztin" ist dann wahr.
@@ -1428,7 +1425,7 @@ de:{
     uns NEUE Praxen bringt; ihn mit einem falschen Satz zu empfangen wäre
     der teuerste Fehler auf dieser Seite. */
  freiH1:'Ruhe-HRV deines Pferds aufnehmen',
- freiSub:'Verbinde den Polar-H10-Gurt — die Aufnahme entsteht auf deinem Gerät und bleibt dort. Am Ende bekommst du eine Datei, die du deiner Tierärztin oder deinem Tierarzt schickst wie ein Foto. Ohne App, ohne Konto.',
+ freiSub:'Verbinde den Polar-H10-Gurt. Die Aufnahme entsteht auf deinem Gerät und bleibt dort. Am Ende bekommst du eine Datei, die du deiner Tierärztin oder deinem Tierarzt schickst wie ein Foto. Ohne App, ohne Konto.',
  freiTitle:'Ruhe-HRV beim Pferd messen mit Polar H10 | CARLON Messstation',
  roomLabel:'Verbindungscode:',
  horseLabel:'Name des Pferds',
@@ -1448,26 +1445,26 @@ de:{
  beispielTitel:'Beispielmessung läuft',
  beispielSub:'So sieht eine Aufnahme aus, während sie entsteht. Die Werte stammen aus einer echten Messung.',
  beispielName:'Beispiel',
- beispielFertig:'Das war eine Beispielmessung — sie wird nicht verschickt. Für eine eigene Aufnahme brauchst du einen Brustgurt, der Schlag-zu-Schlag-Abstände überträgt: getestet und empfohlen ist der <b>Polar H10</b> mit Pferdegurt und Ultraschallgel unter den Elektroden.',
- readyHint:'Der Gurt muss angelegt und die Elektrodenfläche <b>gut angefeuchtet</b> sein — sonst bricht das Signal ab. Halte das Gerät während der Messung in der Nähe und lass den Bildschirm an.',
+ beispielFertig:'Das war eine Beispielmessung. Sie wird nicht verschickt. Für eine eigene Aufnahme brauchst du einen Brustgurt, der Schlag-zu-Schlag-Abstände überträgt: getestet und empfohlen ist der <b>Polar H10</b> mit Pferdegurt und Ultraschallgel unter den Elektroden.',
+ readyHint:'Der Gurt muss angelegt und die Elektrodenfläche <b>gut angefeuchtet</b> sein, sonst bricht das Signal ab. Halte das Gerät während der Messung in der Nähe und lass den Bildschirm an.',
  /* Kein Web-Bluetooth */
  unsupEyebrow:'Dieses Gerät misst nicht direkt',
  unsupH1:'So misst du trotzdem',
- unsupSub:'Apple lässt Bluetooth im Browser grundsätzlich nicht zu — auf iPhone und iPad gilt das für Safari genauso wie für Chrome. Drei Wege führen trotzdem zum Ziel.',
- wayAndroidT:'Android-Handy oder Tablet', wayAndroidS:'Diesen Link dort in Chrome öffnen — die Messung startet sofort.',
+ unsupSub:'Apple lässt Bluetooth im Browser grundsätzlich nicht zu. Auf iPhone und iPad gilt das für Safari genauso wie für Chrome. Drei Wege führen trotzdem zum Ziel.',
+ wayAndroidT:'Android-Handy oder Tablet', wayAndroidS:'Diesen Link dort in Chrome öffnen. Die Messung startet sofort.',
  wayDesktopT:'Computer mit Chrome oder Edge', wayDesktopS:'Funktioniert genauso, solange der Gurt in Reichweite ist.',
- wayIosT:'Apple-Geräte: CARLON EQUINE', wayIosS:'Die App misst nativ und kann deutlich mehr als diese Seite.',
+ wayIosT:'iPhone und iPad: App in Vorbereitung', wayIosS:'Die iPhone-App CARLON Equine ist in Vorbereitung. Bis dahin misst du mit einem Android-Gerät oder einem Rechner.',
  sendLink:'Link an ein messendes Gerät senden',
  sendFile:'Aufnahme als Datei senden',
  /* Eigenen Sitzungslink an das zweite Geraet reichen (#btnSendLink) */
- linkShareTitel:'CARLON Equine — Messung',
- linkShareText:'Mein Link zur Herzraten-Messung — auf einem Android-Gerät oder Computer in Chrome öffnen:',
- linkKopiertGeraet:'Link kopiert — jetzt an dein Gerät schicken',
+ linkShareTitel:'CARLON Equine: Messung',
+ linkShareText:'Mein Link zur Herzraten-Messung. Auf einem Android-Gerät oder Computer in Chrome öffnen:',
+ linkKopiertGeraet:'Link kopiert. Jetzt an dein Gerät schicken',
  linkKopiert:'Link kopiert',
- unsupHint:'Du hast schon eine Aufnahme als Datei? Schick sie deiner Praxis direkt — wie ein Foto, auf dem Weg, den ihr ohnehin nutzt.',
+ unsupHint:'Du hast schon eine Aufnahme als Datei? Schick sie deiner Praxis direkt, wie ein Foto, auf dem Weg, den ihr ohnehin nutzt.',
  /* Live */
  liveEyebrow:'Aufnahme läuft', liveH1:'Messung läuft',
- liveSub:'Ruhig stehen lassen. Je ruhiger das Pferd, desto aussagekräftiger die Aufnahme.',
+ liveSub:'Ruhig stehen lassen. Bewegung stört das Signal.',
  liveRange:'Bisher', liveRangeUnit:'bpm',
  lastBeats:'Letzte Schläge',
  tBeats:'Herzschläge', tBeatsSub:'bisher erfasst',
@@ -1475,21 +1472,21 @@ de:{
  tDur:'Dauer', tDurSub:'seit dem Start',
  tBatt:'Gurt-Akku', tBattSub:'Ladestand des Senders',
  progressH:'Aufnahme-Fortschritt',
- progressStart:'Empfohlen sind mindestens sieben Minuten ruhige Messung — erst dann trägt die volle Auswertung.',
+ progressStart:'Empfohlen sind mindestens sieben Minuten ruhige Messung. Erst dann trägt die volle Auswertung.',
  stop:'Messung beenden', restart:'Verwerfen und neu starten',
- stopBestaetigen:'Erst {x} gemessen — wirklich beenden? Nochmal tippen.',
- restartToast:'Neu gestartet — der Gurt bleibt verbunden',
+ stopBestaetigen:'Erst {x} gemessen. Wirklich beenden? Nochmal tippen.',
+ restartToast:'Neu gestartet. Der Gurt bleibt verbunden',
  restartConfirm:'Wirklich verwerfen? Nochmal tippen',
- stromStill:'Seit einigen Sekunden kommen keine Herzschläge an — sitzt der Gurt noch? Elektroden nachfeuchten hilft meistens.',
- sendAbgebrochen:'Nichts verschickt — tippe erneut auf „An die Praxis senden".',
- sendFehlerDatei:'Das hat nicht geklappt — tippe auf „Als Datei speichern" und schick die Datei deiner Tierärztin wie ein Foto.',
+ stromStill:'Seit einigen Sekunden kommen keine Herzschläge an. Sitzt der Gurt noch? Elektroden nachfeuchten hilft meistens.',
+ sendAbgebrochen:'Nichts verschickt. Tippe erneut auf „An die Praxis senden".',
+ sendFehlerDatei:'Das hat nicht geklappt. Tippe auf „Als Datei speichern" und schick die Datei deiner Tierärztin wie ein Foto.',
  reconn:'Gurt erneut verbinden', reconnAktiv:'Verbinde…',
- reconnZurueck:'Wieder verbunden — die Lücke wird in der Aufnahme vermerkt, deine Tierärztin sieht sie mit.',
- reconnFehl:'Noch nicht erreichbar — Gurt kurz abnehmen, Elektroden nachfeuchten, wieder anlegen und erneut tippen.',
- liveHint:'Halte das Gerät in der Nähe und lass den Bildschirm an — schläft er ein, bricht die Bluetooth-Verbindung ab.',
+ reconnZurueck:'Wieder verbunden. Die Lücke wird in der Aufnahme vermerkt, deine Tierärztin sieht sie mit.',
+ reconnFehl:'Noch nicht erreichbar. Gurt kurz abnehmen, Elektroden nachfeuchten, wieder anlegen und erneut tippen.',
+ liveHint:'Halte das Gerät in der Nähe und lass den Bildschirm an. Schläft er ein, bricht die Bluetooth-Verbindung ab.',
  /* Weitersagen-Moment waehrend der Messung (#jetztTeilen) */
- jtTitel:'Das sollte deine Stallnachbarin sehen',
- jtSub:'Der Link zur Messstation — ohne deine Daten.',
+ jtTitel:'Messstation weitergeben',
+ jtSub:'Nur der Link zur Messstation, ohne deine Daten.',
  jtBtn:'Weitersagen',
  jtShareTitel:'CARLON EQUINE Messstation',
  jtShareText:'Damit kann man eine Ruhemessung beim Pferd selbst aufnehmen:',
@@ -1503,7 +1500,7 @@ de:{
  tAvBlock:'AV-Block-Pause', tLaengste:'längste', tEktop:'Extraschlag', tBewegung:'Bewegungsstörung',
  tSdnn:'SDNN', tSdnnSub:'Streuung aller Abstände',
  chartVitals:'Puls + HRV · Verlauf',
- chartVitalsCap:'Puls (Gold) und HRV (Cyan) über die gesamte Aufnahme. Die HRV ist ein gleitendes Fenster und reagiert auf Puls-Übergänge — sie zeigt die kurzfristige Dynamik, keinen ruhenden Einzelwert.',
+ chartVitalsCap:'Puls (Gold) und HRV (Cyan) über die gesamte Aufnahme. Die HRV ist ein gleitendes Fenster und reagiert auf Puls-Übergänge. Sie zeigt die kurzfristige Dynamik, keinen ruhenden Einzelwert.',
  chartVitalsCapB:'Tippen heftet den Wert an, Doppeltippen öffnet das Vollbild.',
  chartRr:'RR-Tachogramm', chartPoin:'Poincaré',
  seriesPulse:'Puls', seriesHrv:'HRV',
@@ -1514,32 +1511,32 @@ de:{
  /* Sende-Status + Teilen-Texte des Dateiwegs (Regelweg) */
  sendVorbereiten:'Bereite die Datei vor…',
  sendGeteilt:'Datei weitergegeben', sendGespeichert:'Datei gespeichert',
- sendGeteiltVerschl:'Nur deine Praxis kann sie öffnen — unterwegs ist sie unlesbar.',
+ sendGeteiltVerschl:'Nur deine Praxis kann sie öffnen. Unterwegs ist sie unlesbar.',
  sendGeteiltOffen:'Sie enthält nur die Messung deines Pferds, sonst nichts.',
- sendDownload:'Dein Browser kann Dateien nicht direkt teilen. Die Datei liegt in deinen Downloads — schick sie deiner Tierärztin wie ein Foto.',
+ sendDownload:'Dein Browser kann Dateien nicht direkt teilen. Die Datei liegt in deinen Downloads. Schick sie deiner Tierärztin wie ein Foto.',
  shareTitel:'Messung für die Praxis',
  shareMsgKurz:'Hier ist die Herzfrequenz-Messung von meinem Pferd:',
  /* Weg-A-Datei: gelesen wird die Nachricht von der PRAXIS (Sie-Form) — und
     ohne den Cockpit-Link wüsste sie nicht, womit sie die Datei öffnet. */
- shareMsgVerschl:'Hier ist die Herzfrequenz-Messung von meinem Pferd. Die Datei ist für Ihre Praxis versiegelt — Sie öffnen sie im CARLON-Cockpit: https://vitalkultur.com/carlon-equine/app/',
+ shareMsgVerschl:'Hier ist die Herzfrequenz-Messung von meinem Pferd. Die Datei ist für Ihre Praxis versiegelt. Sie öffnen sie im CARLON-Cockpit: https://vitalkultur.com/carlon-equine/app/',
  shareMsgOffen:'Hier ist die Herzfrequenz-Messung von meinem Pferd. Öffnen mit CARLON: {x}',
  /* Übergabe-Karte */
  ubTitel:'Für deine Tierärztin',
- ubText:'Sie öffnet den Link und sieht deine Messung sofort ausgewertet — ohne Konto, ohne Anmeldung, ohne etwas zu installieren.',
+ ubText:'Sie öffnet den Link und sieht deine Messung sofort ausgewertet, ohne Konto, ohne Anmeldung und ohne etwas zu installieren.',
  ubTeilen:'Link an meine Tierärztin schicken', ubKopieren:'Kopieren', ubKopiert:'Kopiert ✓',
- ubFuss:'Wer diesen Link hat, kann die Messung lesen — gib ihn nur deiner Tierärztin. Er ist 30 Tage gültig; danach löscht sich die Ablage von selbst.',
+ ubFuss:'Wer diesen Link hat, kann die Messung lesen. Gib ihn nur deiner Tierärztin. Er ist 30 Tage gültig; danach löscht sich die Ablage von selbst.',
  /* Weitersagen-Karte */
  wsTitel:'Weitersagen',
  wsNachbarinT:'Einer Stallnachbarin zeigen',
- wsNachbarinS:'Nur die Messstation, ohne deine Daten — sie misst dann ihr eigenes Pferd.',
+ wsNachbarinS:'Nur die Messstation, ohne deine Daten. Sie misst dann ihr eigenes Pferd.',
  wsKarte:'Karte teilen',
  wsStallT:'Aushang für deinen Stall',
- wsStallS:'Ein Blatt für die Stallgasse — damit auch andere Halter ihre Tierärztin nach CARLON fragen können.',
+ wsStallS:'Ein Blatt für die Stallgasse, damit auch andere Halter ihre Tierärztin nach CARLON fragen können.',
  wsStallBtn:'Aushang drucken',
  /* „So geht's weiter" nach dem Versand — die drei Fragen, die im Stall
     offen bleiben: meldet sich jemand? wo ist meine Kopie? wann wieder? */
  swT:'So geht’s weiter',
- swListe:['Deine Praxis meldet sich auf ihrem üblichen Weg — du musst nichts weiter tun.','Deine Kopie bleibt auf diesem Gerät — jederzeit unter „Als Datei speichern“.','Miss in ruhigen Wochen etwa einmal im Monat — so entsteht eine Baseline für dein Pferd.'],
+ swListe:['Deine Praxis meldet sich auf ihrem üblichen Weg. Du musst nichts weiter tun.','Deine Kopie bleibt auf diesem Gerät und ist jederzeit unter „Als Datei speichern“ zu finden.','Miss anfangs einmal pro Woche. Ab der dritten Aufnahme vergleicht deine Praxis mit der eigenen Basis deines Pferds.'],
  /* Lage-Karte. Zaehltexte als GANZE Saetze je Numerus — kein zusammen-
     gesetztes „{n} + Restsatz", das in einer Sprache bricht. */
  lgHeute:'heute', lgGestern:'gestern', lgVorTagen:'vor {n} Tagen',
@@ -1557,7 +1554,7 @@ de:{
  lgPraxisSub:'{x} gesendet · der Befund erscheint hier, sobald deine Tierärztin ihn geschrieben hat.',
  lgAbgeholt:'✓ Deine Tierärztin hat die Messung abgeholt',
  lgBefundFolgt:'Der Befund erscheint hier, sobald sie ihn geschrieben hat.',
- lgVerfallen:'Nach dreißig Tagen verfällt eine Sendung im Postfach — diese ist nicht mehr da.',
+ lgVerfallen:'Nach dreißig Tagen verfällt eine Sendung im Postfach. Diese ist nicht mehr da.',
  lgVerfallen2:'Wenn du magst, miss neu und sende noch einmal.',
  lgOffen:'Deine Aufnahme liegt bereit, wurde aber noch nicht abgeholt.',
  lgOffen2:'Vielleicht nutzt deine Praxis CARLON noch nicht. Der Aushang unten ist genau dafür da.',
@@ -1566,37 +1563,37 @@ de:{
     deshalb hier auch keine Behauptung darüber. Der Satz sagt, was wir
     belegen können: die Datei entsteht hier und geht den Weg, den sie wählt. */
  freiPrivacy:'Bleibt auf deinem Gerät · verschickt wird nur, was du selbst weitergibst',
- brauchst:['Polar-H10-Gurt angelegt und die Elektrodenfläche angefeuchtet','Etwa sieben Minuten Ruhe — kürzer trägt die Auswertung nicht','Ohne Konto, ohne App · die Aufnahme wird verschlüsselt übergeben'],
+ brauchst:['Polar-H10-Gurt angelegt und die Elektrodenfläche gut angefeuchtet, am besten mit Elektrodengel','Mindestens sieben Minuten Ruhe. Kürzere Aufnahmen reichen für die Auswertung nicht','Ohne Konto, ohne App · die Aufnahme wird verschlüsselt übergeben'],
  /* Die dritte Zeile der Liste ist eine ZUSAGE und gilt nur mit Aushang. Ohne
     Schluessel wird nichts verschluesselt, sondern der Datensatz arm gemacht —
     „weniger hineinschreiben statt besser verschluesseln". Was hier steht, ist
     das, was auf BEIDEN Wegen wahr ist. */
  freiZusage:'Ohne Konto, ohne App · am Ende bekommst du eine Datei, die du selbst weitergibst',
- qrHint:'Oder mit dem Gerät scannen, das messen soll — Laptop oder Android-Tablet. Dabei verlässt nichts dein Telefon.',
+ qrHint:'Oder mit dem Gerät scannen, das messen soll, etwa einem Laptop oder Android-Tablet. Dabei verlässt nichts dein Telefon.',
  rechtLinks:'<a href="/impressum.html">Impressum</a> · <a href="/privacy.html">Datenschutz</a> · <a href="/agb.html">AGB</a>',
  /* AUSSAGE ÜBER UNS, NICHT ÜBER DIE DATEN — und das ist der ganze Trick.
     „Kein personenbezogenes Datum" müsste man verteidigen: ein Pferdename ist
     in der Pferdewelt ein kräftiges Merkmal, und den Absender liefert der
     Kanal. „Wir verarbeiten es nicht" muss man nur belegen — und der Beleg ist
     der Code, den die Prüfstrecke bewacht. */
- sendRecht:'Die Datei entsteht auf deinem Gerät und verlässt es auf dem Weg, den du selbst wählst — wir bekommen sie nicht zu sehen und legen sie nirgends ab. Was diese Seite tut, steht in der <a href="/privacy.html">Datenschutzerklärung</a>; für die Nutzung gelten die <a href="/agb.html#uebergabe">AGB</a>.',
+ sendRecht:'Die Datei entsteht auf deinem Gerät und verlässt es auf dem Weg, den du selbst wählst. Wir bekommen sie nicht zu sehen und legen sie nirgends ab. Was diese Seite tut, steht in der <a href="/privacy.html">Datenschutzerklärung</a>; für die Nutzung gelten die <a href="/agb.html#uebergabe">AGB</a>.',
  shareH:'Wenn es dir geholfen hat',
  shareOwner:'Pferdefreunden zeigen', shareVet:'Deiner Praxis empfehlen',
  /* Empfehlung AN die Praxis: gelesen wird sie von der Tierärztin (Sie-Form),
     und das Ziel ist die kanonische Visite-Verkaufsseite — nicht die
     Besitzer-Produktseite. */
- shVetMsg:'Ich habe die Ruhe-Herzrate meines Pferds im Browser gemessen — mit dem Polar-Gurt, die Aufnahme geht als Datei an meine Praxis. Vielleicht ist das auch etwas für Ihre Praxis — so lesen Tierärztinnen und Tierärzte solche Messungen:',
+ shVetMsg:'Ich habe die Ruhe-Herzrate meines Pferds im Browser mit dem Polar-Gurt gemessen. Die Aufnahme geht als Datei an meine Praxis. Vielleicht ist das auch etwas für Ihre Praxis. So lesen Tierärztinnen und Tierärzte solche Messungen:',
  shVetUrl:'https://vitalkultur.com/carlon-equine-visite/',
  /* Empfehlung an andere Halter + note()-Meldungen (share()) */
  shOwnerTitel:'Herzraten-Messung beim Pferd',
- shOwnerMsg:'So sieht der Herzschlag von {x} aus — direkt im Browser mit dem Polar-Gurt gemessen, ohne App. Die Auswertung macht der Tierarzt:',
+ shOwnerMsg:'So sieht der Herzschlag von {x} aus. Direkt im Browser mit dem Polar-Gurt gemessen, ohne App. Die Auswertung macht der Tierarzt:',
  horseFallback:'mein Pferd',
- noteDanke:'Danke — das bedeutet uns viel',
- noteBild:'Bild gespeichert — Text ist kopiert',
- noteText:'Text kopiert — jetzt einfügen und senden',
+ noteDanke:'Danke. Das bedeutet uns viel',
+ noteBild:'Bild gespeichert. Text ist kopiert',
+ noteText:'Text kopiert. Jetzt einfügen und senden',
  /*MDR — extern geprüft 06.08., Perplexity/Recherche: „was das Herz tut" ist umgangssprachlich zu breit;
     Formulierung auf reine Datenerfassung verengt. Nicht ohne erneute Prüfung ändern. */
- footerNote:'Diese Seite zeichnet Herzschlag-Daten deines Pferds auf — die medizinische Beurteilung erfolgt ausschließlich durch deine Tierärztin oder deinen Tierarzt.',
+ footerNote:'Diese Seite zeichnet Herzschlag-Daten deines Pferds auf. Die medizinische Beurteilung erfolgt ausschließlich durch deine Tierärztin oder deinen Tierarzt.',
  vetZeile:'Sie sind Tierärztin oder Tierarzt? So liest Ihre Praxis diese Messungen: <a href="/carlon-equine-visite/">CARLON Equine Visite →</a>',
  disclaimer:'Keine Diagnose und kein Ersatz für eine Untersuchung.',
  /* Vollbild */
@@ -1606,65 +1603,66 @@ de:{
  infoClose:'Verstanden'
 },
 en:{
- title:'Recording for your vet — CARLON',
+ dmText:'Resting recordings for horses. Each recording is compared with your horse’s own baseline, so single snapshots become a trend your practice can read.',
+ title:'Recording for your vet · CARLON',
  beatsUnit:'beats',
  afterStart:'after start',
  inhale:'In', exhale:'Out', pause:'Pause', perMin:'/min', axisTime:'TIME',
  chartBreath:'Breathing curve',
- chartBreathCap:'Breathing modulates the heartbeat. From that modulation the breathing curve can be derived — coral upwards is breathing in, blue downwards breathing out.',
+ chartBreathCap:'Breathing modulates the heartbeat. From that modulation the breathing curve can be derived. Coral upwards is breathing in, blue downwards breathing out.',
  lastBeatsLbl:'Recent beats',
  recRemaining:'Another {x} to reach the recommended seven minutes.',
- recBeatsMissing:'Long enough — {n} more beats to go. With a very calm pulse this takes a little longer.',
- recReached:'Seven minutes and enough beats — the recording now carries the full analysis. Recording longer does no harm, the trend becomes steadier.',
- sigChecking:'Checking signal…', sigStable:'Signal stable', sigNoisy:'Signal unsteady — check belt fit and moisture',
- sigBad:'Signal badly disturbed — re-moisten the belt and reseat it',
+ recBeatsMissing:'Long enough. {n} more beats to go. With a very calm pulse this takes a little longer.',
+ recReached:'Seven minutes and enough beats. The recording now carries the full analysis. Recording longer does no harm, the trend becomes steadier.',
+ sigChecking:'Checking signal…', sigStable:'Signal stable', sigNoisy:'Signal unsteady. Check belt fit and moisture',
+ sigBad:'Signal badly disturbed. Re-moisten the belt and reseat it',
  verdictClean:'Clean signal throughout the recording. This measurement can be passed on as it is.',
- verdictCleanShort:'The signal is clean. The recording is shorter than seven minutes — for a dependable resting trend it may well run longer.',
- verdictNoisy:'The signal was unsteady in places. Passing it on is possible — but a second recording with a well-moistened belt will be considerably better.',
+ verdictCleanShort:'The signal is clean. The recording is shorter than seven minutes. For a dependable resting trend it may well run longer.',
+ verdictNoisy:'The signal was unsteady in places. Passing it on is possible, but a second recording with a well-moistened belt will be considerably better.',
  verdictBad:'The signal was badly disturbed. We recommend re-moistening the belt, reseating it and recording again.',
- doneSubRoom:'The recording is ready — one tap and it goes to your practice.',
- doneSubFile:'Send the recording to your vet — they can open it right away, no account needed.',
+ doneSubRoom:'The recording is ready. One tap and it goes to your practice.',
+ doneSubFile:'Send the recording to your vet. They can open it right away, no account needed.',
  tooFew:'Too few heartbeats were captured to pass this recording on meaningfully.',
  dropTitle:'Connection lost',
- dropSub:'The belt is no longer reachable. Check the fit and moisture, then reconnect — the beats captured so far are kept.',
+ dropSub:'The belt is no longer reachable. Check the fit and moisture, then reconnect. The beats captured so far are kept.',
  dropStop:'Finish recording',
  pairsOf:'of',
 
  brandTag:'EQUINE BIOMETRICS',
  readyH1:'Recording for your vet',
- readySub:'Connect your horse’s Polar H10 belt. The recording is made on your device and encrypted there for your practice — you send it with one tap, and only the practice can read it.',
+ readySub:'Connect your horse’s Polar H10 belt. The recording is made on your device and encrypted there for your practice. You send it with one tap, and only the practice can read it.',
  freiH1:'Record your horse’s resting HRV',
- freiSub:'Connect the Polar H10 belt — the recording is made on your device and stays there. At the end you get a file you send to your vet like a photo. No app, no account.',
+ freiSub:'Connect the Polar H10 belt. The recording is made on your device and stays there. At the end you get a file you send to your vet like a photo. No app, no account.',
  freiTitle:'Measure resting HRV in horses with Polar H10 | CARLON measuring station',
  roomLabel:'Connection code:',
  horseLabel:'Horse’s name',
  horsePh:'e.g. Mistral',
  connect:'Connect Polar H10',
  anfrageH1:'Your vet is asking for a recording',
- anfrageSub:'They asked specifically for a recording of {x}. Fit the belt — the station does the rest.',
+ anfrageSub:'They asked specifically for a recording of {x}. Fit the belt. The station does the rest.',
  btFehler:'Bluetooth error: {x}',
  beispielBtn:'No belt at hand? Watch a real recording',
  beispielBand:'<b>Example recording.</b> A real recording from 24 June 2026 (Polar H10, at rest in the barn), played back at speed. Nothing is being measured right now.',
  beispielTitel:'Example recording running',
  beispielSub:'This is what a recording looks like while it is being made. The values come from a real measurement.',
  beispielName:'Example',
- beispielFertig:'That was an example recording — it will not be sent. For a recording of your own you need a chest belt that transmits beat-to-beat intervals: tested and recommended is the <b>Polar H10</b> with an equine belt and ultrasound gel under the electrodes.',
- readyHint:'The belt must be fitted and the electrode area <b>well moistened</b> — otherwise the signal drops out. Keep the device nearby during the recording and leave the screen on.',
+ beispielFertig:'That was an example recording. It will not be sent. For a recording of your own you need a chest belt that transmits beat-to-beat intervals: tested and recommended is the <b>Polar H10</b> with an equine belt and ultrasound gel under the electrodes.',
+ readyHint:'The belt must be fitted and the electrode area <b>well moistened</b>, otherwise the signal drops out. Keep the device nearby during the recording and leave the screen on.',
  unsupEyebrow:'This device can’t record directly',
  unsupH1:'How to record anyway',
- unsupSub:'Apple does not allow Bluetooth in the browser at all — on iPhone and iPad this applies to Safari just as much as to Chrome. Three routes still get you there.',
- wayAndroidT:'Android phone or tablet', wayAndroidS:'Open this link there in Chrome — recording starts right away.',
+ unsupSub:'Apple does not allow Bluetooth in the browser at all. On iPhone and iPad this applies to Safari just as much as to Chrome. Three routes still get you there.',
+ wayAndroidT:'Android phone or tablet', wayAndroidS:'Open this link there in Chrome. Recording starts right away.',
  wayDesktopT:'Computer with Chrome or Edge', wayDesktopS:'Works the same, as long as the belt is in range.',
- wayIosT:'Apple devices: CARLON EQUINE', wayIosS:'The app records natively and does considerably more than this page.',
+ wayIosT:'iPhone and iPad: app in preparation', wayIosS:'The CARLON Equine iPhone app is in preparation. Until then, record with an Android device or a computer.',
  sendLink:'Send the link to a device that can record',
  sendFile:'Send a recording as a file',
- linkShareTitel:'CARLON Equine — Recording',
- linkShareText:'My link to the heart rate recording — open it in Chrome on an Android device or computer:',
- linkKopiertGeraet:'Link copied — now send it to your device',
+ linkShareTitel:'CARLON Equine: Recording',
+ linkShareText:'My link to the heart rate recording. Open it in Chrome on an Android device or computer:',
+ linkKopiertGeraet:'Link copied. Now send it to your device',
  linkKopiert:'Link copied',
- unsupHint:'Already have a recording as a file? Send it to your practice directly — like a photo, on whatever channel you already use.',
+ unsupHint:'Already have a recording as a file? Send it to your practice directly, like a photo, on whatever channel you already use.',
  liveEyebrow:'Recording in progress', liveH1:'Recording',
- liveSub:'Let the horse stand quietly. The calmer the horse, the more meaningful the recording.',
+ liveSub:'Let the horse stand quietly. Movement disturbs the signal.',
  liveRange:'So far', liveRangeUnit:'bpm',
  lastBeats:'Recent beats',
  tBeats:'Heartbeats', tBeatsSub:'captured so far',
@@ -1672,20 +1670,20 @@ en:{
  tDur:'Duration', tDurSub:'since the start',
  tBatt:'Belt battery', tBattSub:'charge level of the sensor',
  progressH:'Recording progress',
- progressStart:'At least seven minutes of quiet recording is recommended — only then does the full analysis carry.',
+ progressStart:'At least seven minutes of quiet recording is recommended. Only then does the full analysis carry.',
  stop:'Finish recording', restart:'Discard and start over',
- stopBestaetigen:'Only {x} recorded — really finish? Tap again.',
- restartToast:'Started over — the belt stays connected',
+ stopBestaetigen:'Only {x} recorded. Really finish? Tap again.',
+ restartToast:'Started over. The belt stays connected',
  restartConfirm:'Really discard? Tap again',
- stromStill:'No heartbeats have arrived for a few seconds — is the belt still snug? Re-wetting the electrodes usually helps.',
- sendAbgebrochen:'Nothing sent — tap “Send to the practice” again.',
- sendFehlerDatei:'That did not work — tap “Save as file” and send the file to your vet like a photo.',
+ stromStill:'No heartbeats have arrived for a few seconds. Is the belt still snug? Re-wetting the electrodes usually helps.',
+ sendAbgebrochen:'Nothing sent. Tap “Send to the practice” again.',
+ sendFehlerDatei:'That did not work. Tap “Save as file” and send the file to your vet like a photo.',
  reconn:'Reconnect the belt', reconnAktiv:'Connecting…',
- reconnZurueck:'Reconnected — the gap is noted in the recording, your vet sees it too.',
- reconnFehl:'Not reachable yet — take the belt off briefly, re-wet the electrodes, put it back on and tap again.',
- liveHint:'Keep the device nearby and leave the screen on — if it sleeps, the Bluetooth connection drops.',
- jtTitel:'Your barn neighbour should see this',
- jtSub:'The link to the measuring station — none of your data.',
+ reconnZurueck:'Reconnected. The gap is noted in the recording, your vet sees it too.',
+ reconnFehl:'Not reachable yet. Take the belt off briefly, re-wet the electrodes, put it back on and tap again.',
+ liveHint:'Keep the device nearby and leave the screen on. If it sleeps, the Bluetooth connection drops.',
+ jtTitel:'Pass on the measuring station',
+ jtSub:'Only the link to the measuring station, none of your data.',
  jtBtn:'Spread the word',
  jtShareTitel:'CARLON EQUINE measuring station',
  jtShareText:'With this you can record a resting measurement of your horse yourself:',
@@ -1698,7 +1696,7 @@ en:{
  tAvBlock:'AV block pause', tLaengste:'longest', tEktop:'ectopic beat', tBewegung:'motion artefact',
  tSdnn:'SDNN', tSdnnSub:'variation across all intervals',
  chartVitals:'Pulse + HRV · over time',
- chartVitalsCap:'Pulse (gold) and HRV (cyan) across the whole recording. HRV is computed over a rolling window and responds to changes in pulse — it shows short-term dynamics, not a resting value.',
+ chartVitalsCap:'Pulse (gold) and HRV (cyan) across the whole recording. HRV is computed over a rolling window and responds to changes in pulse. It shows short-term dynamics, not a resting value.',
  chartVitalsCapB:'Tap to pin a reading, double-tap for full screen.',
  chartRr:'RR tachogram', chartPoin:'Poincaré',
  seriesPulse:'Pulse', seriesHrv:'HRV',
@@ -1708,26 +1706,26 @@ en:{
  send:'Send to the practice', save:'Save as a file', again:'New recording',
  sendVorbereiten:'Preparing the file…',
  sendGeteilt:'File passed on', sendGespeichert:'File saved',
- sendGeteiltVerschl:'Only your practice can open it — in transit it is unreadable.',
+ sendGeteiltVerschl:'Only your practice can open it. In transit it is unreadable.',
  sendGeteiltOffen:'It contains only your horse’s measurement, nothing else.',
- sendDownload:'Your browser can’t share files directly. The file is in your downloads — send it to your vet like a photo.',
+ sendDownload:'Your browser can’t share files directly. The file is in your downloads. Send it to your vet like a photo.',
  shareTitel:'Recording for the practice',
  shareMsgKurz:'Here is the heart rate recording of my horse:',
- shareMsgVerschl:'Here is the heart rate recording of my horse. The file is sealed for your practice — open it in the CARLON cockpit: https://vitalkultur.com/carlon-equine/app/',
+ shareMsgVerschl:'Here is the heart rate recording of my horse. The file is sealed for your practice. Open it in the CARLON cockpit: https://vitalkultur.com/carlon-equine/app/',
  shareMsgOffen:'Here is the heart rate recording of my horse. Open it with CARLON: {x}',
  ubTitel:'For your vet',
- ubText:'They open the link and see your recording analysed right away — no account, no sign-in, nothing to install.',
+ ubText:'They open the link and see your recording analysed right away, with no account, no sign-in and nothing to install.',
  ubTeilen:'Send the link to my vet', ubKopieren:'Copy', ubKopiert:'Copied ✓',
- ubFuss:'Anyone with this link can read the recording — give it only to your vet. It is valid for 30 days; after that the deposit deletes itself.',
+ ubFuss:'Anyone with this link can read the recording. Give it only to your vet. It is valid for 30 days; after that the deposit deletes itself.',
  wsTitel:'Spread the word',
  wsNachbarinT:'Show a barn neighbour',
- wsNachbarinS:'Only the measuring station, none of your data — she then measures her own horse.',
+ wsNachbarinS:'Only the measuring station, none of your data. She then measures her own horse.',
  wsKarte:'Share the card',
  wsStallT:'A poster for your barn',
- wsStallS:'One sheet for the barn aisle — so other owners can ask their vet about CARLON too.',
+ wsStallS:'One sheet for the barn aisle, so other owners can ask their vet about CARLON too.',
  wsStallBtn:'Print the poster',
  swT:'What happens next',
- swListe:['Your practice will get back to you on their usual channel — nothing more for you to do.','Your copy stays on this device — any time under “Save as a file”.','In calm weeks, measure about once a month — that builds a baseline for your horse.'],
+ swListe:['Your practice will get back to you on their usual channel. Nothing more for you to do.','Your copy stays on this device and is always available under “Save as a file”.','Measure once a week at first. From the third recording on, your practice compares against your horse’s own baseline.'],
  lgHeute:'today', lgGestern:'yesterday', lgVorTagen:'{n} days ago',
  hlT:'Three more taps on your practice’s page:', hl1:'Tap “Choose files” (or “Add files”).', hl2:'Pick the newest file: {d}', hl3:'Tap “Upload” – then come back here.', hlJa:'Uploaded ✓', hlNochmal:'Open the page again',
  icsPferd:'your horse', icsTitel:'Resting recording {p}', icsText:'Next resting recording for {x} – at least 7 minutes in the usual stall. Measuring station:', icsPraxis:'your practice',
@@ -1743,31 +1741,31 @@ en:{
  lgPraxisSub:'sent {x} · the report will appear here as soon as your vet has written it.',
  lgAbgeholt:'✓ Your vet has picked up the recording',
  lgBefundFolgt:'The report will appear here as soon as it has been written.',
- lgVerfallen:'After thirty days a delivery expires in the mailbox — this one is no longer there.',
+ lgVerfallen:'After thirty days a delivery expires in the mailbox. This one is no longer there.',
  lgVerfallen2:'If you like, measure again and send once more.',
  lgOffen:'Your recording is ready, but has not been picked up yet.',
  lgOffen2:'Your practice may not be using CARLON yet. The notice below is there for exactly that.',
  privacyLine:'End-to-end encrypted · no server can read the measurements',
  freiPrivacy:'Stays on your device · only what you pass on ever leaves it',
- brauchst:['Polar H10 belt fitted and the electrode area moistened','About seven minutes of rest — shorter does not carry the assessment','No account, no app · the recording is handed over encrypted'],
+ brauchst:['Polar H10 belt fitted and the electrode area well moistened, ideally with electrode gel','At least seven minutes of rest. Shorter recordings are not enough for the analysis','No account, no app · the recording is handed over encrypted'],
  freiZusage:'No account, no app · at the end you get a file that you pass on yourself',
- qrHint:'Or scan it with the device that should measure — laptop or Android tablet. Nothing leaves your phone.',
+ qrHint:'Or scan it with the device that should measure, such as a laptop or Android tablet. Nothing leaves your phone.',
  rechtLinks:'<a href="/impressum.html">Imprint</a> · <a href="/privacy-en.html">Privacy</a> · <a href="/terms.html">Terms</a>',
- sendRecht:'The file is created on your device and leaves it by a route you choose yourself — we never see it and store it nowhere. What this page does is set out in the <a href="/privacy-en.html">privacy policy</a>; use is governed by the <a href="/terms.html#handover">Terms</a>.',
+ sendRecht:'The file is created on your device and leaves it by a route you choose yourself. We never see it and store it nowhere. What this page does is set out in the <a href="/privacy-en.html">privacy policy</a>; use is governed by the <a href="/terms.html#handover">Terms</a>.',
  shareH:'If this helped you',
  shareOwner:'Show fellow horse people', shareVet:'Recommend to your practice',
- shVetMsg:'I measured my horse’s resting heart rate in the browser — with the Polar belt, and the recording goes to my practice as a file. This might be something for your practice too — this is how veterinarians read these recordings:',
+ shVetMsg:'I measured my horse’s resting heart rate in the browser with the Polar belt. The recording goes to my practice as a file. This might be something for your practice too. This is how veterinarians read these recordings:',
  shVetUrl:'https://vitalkultur.com/carlon-equine-visite/en/',
  shOwnerTitel:'Equine heart rate recording',
- shOwnerMsg:'This is what {x}’s heartbeat looks like — measured right in the browser with the Polar belt, no app. The assessment is made by the vet:',
+ shOwnerMsg:'This is what {x}’s heartbeat looks like. Measured right in the browser with the Polar belt, no app. The assessment is made by the vet:',
  horseFallback:'my horse',
- noteDanke:'Thank you — that means a lot to us',
- noteBild:'Image saved — the text is copied',
- noteText:'Text copied — now paste and send',
+ noteDanke:'Thank you. That means a lot to us',
+ noteBild:'Image saved. The text is copied',
+ noteText:'Text copied. Now paste and send',
  /*MDR — extern geprüft: im anglo-amerikanischen Raum ist die etablierte Formel
     „not intended to diagnose, treat, cure, or prevent any disease" belastbarer als eine
     woertliche Uebersetzung. Nicht ohne erneute Pruefung aendern. */
- footerNote:'This page records heart rate and rhythm data from your horse — any medical assessment is made exclusively by your veterinarian.',
+ footerNote:'This page records heart rate and rhythm data from your horse. Any medical assessment is made exclusively by your veterinarian.',
  vetZeile:'Are you a veterinarian? This is how practices read these recordings: <a href="/carlon-equine-visite/en/">CARLON Equine Visite →</a>',
  disclaimer:'For information only. Not a diagnosis and no substitute for an examination.',
  zFit:'Fit', zWhole:'Whole recording',
@@ -2888,12 +2886,12 @@ de:{
   vitals:{t:'Puls + HRV · Verlauf',r:[
     ['Gold','Der Puls in Schlägen pro Minute, über die gesamte Aufnahme. Linke Achse.'],
     ['Cyan','Die Herzratenvariabilität als gleitendes RMSSD. Rechte Achse, eigene Skala.'],
-    ['Warum zusammen','Nebeneinander gelegt wird sichtbar, wie beide sich zueinander verhalten — zwei getrennte Bilder verstecken genau das.'],
+    ['Warum zusammen','Nebeneinander gelegt wird sichtbar, wie beide sich zueinander verhalten. Zwei getrennte Bilder verstecken genau das.'],
     ['Fenster','Die HRV wird über ein gleitendes Fenster gerechnet und reagiert deshalb auf Puls-Übergänge. Sie ist ein Verlaufsmaß, kein ruhender Einzelwert.'],
-    ['Einordnung','Was der Verlauf für dein Pferd bedeutet, sagt dir deine Tierärztin — dafür braucht es den Vergleich mit früheren Aufnahmen desselben Pferds.']]},
+    ['Einordnung','Was der Verlauf für dein Pferd bedeutet, sagt dir deine Tierärztin. Dafür braucht es den Vergleich mit früheren Aufnahmen desselben Pferds.']]},
   rr:{t:'Herzschlag-Abstände',r:[
     ['Was','Der Abstand zwischen zwei aufeinanderfolgenden Herzschlägen, in Millisekunden. Jeder Punkt der Kurve ist ein einzelner Schlag.'],
-    ['Zickzack','Ein gesundes Herz schlägt nicht wie ein Metronom. Die Abstände schwanken — unter anderem im Takt der Atmung.'],
+    ['Zickzack','Ein gesundes Herz schlägt nicht wie ein Metronom. Die Abstände schwanken. Unter anderem im Takt der Atmung.'],
     ['Rohsignal','Das hier ist die unbearbeitete Messung. Alle anderen Zahlen dieser Seite werden daraus gerechnet.'],
     ['Achse','Unten steht die Schlag-Nummer, die gestrichelte Linie ist der Mittelwert der Aufnahme.']]},
   breath:{t:'Atemkurve',r:[
@@ -2909,19 +2907,19 @@ de:{
   beats:{t:'Herzschläge',r:[
     ['Was','Die Anzahl einzeln erfasster Herzschläge in dieser Aufnahme.'],
     ['Warum wichtig','Je mehr Schläge, desto ruhiger stehen die abgeleiteten Werte. Sehr kurze Aufnahmen schwanken stark.'],
-    ['Erfassung','Der Gurt meldet jeden Schlag einzeln — gezählt wird nicht geschätzt.']]},
+    ['Erfassung','Der Gurt meldet jeden Schlag einzeln. Gezählt wird nicht geschätzt.']]},
   dur:{t:'Aufnahmedauer',r:[
     ['Was','Die Zeit zwischen erstem und letztem erfassten Schlag.'],
     ['Empfehlung','Sieben Minuten in ruhiger Box, mindestens 200 Schläge. Kürzere Aufnahmen sind möglich, aber das Atemmuster-Profil verwirft sie bewusst: Ihre Schwellen stammen aus längeren Ruheaufnahmen und würden auf kurzen Messungen zu häufig anschlagen.'],
-    ['Hinweis','Die Dauer sagt nichts über die Qualität — dafür steht die Signalgüte im Messprotokoll.']]},
+    ['Hinweis','Die Dauer sagt nichts über die Qualität. Dafür steht die Signalgüte im Messprotokoll.']]},
   hr:{t:'Ø Herzfrequenz',r:[
     ['Was','Der durchschnittliche Puls über die Aufnahme, in Schlägen pro Minute.'],
-    ['Rechenweg','Zeitgewichtet gerechnet: 60000 geteilt durch den mittleren Schlagabstand. Den Mittelwert der einzelnen Puls-Werte zu nehmen wäre systematisch zu hoch — ein kurzer, schneller Schlag zählte dort genauso viel wie ein langer, obwohl er weniger Zeit ausfüllt (Jensen-Ungleichung).'],
+    ['Rechenweg','Zeitgewichtet gerechnet: 60000 geteilt durch den mittleren Schlagabstand. Den Mittelwert der einzelnen Puls-Werte zu nehmen wäre systematisch zu hoch. Ein kurzer, schneller Schlag zählte dort genauso viel wie ein langer, obwohl er weniger Zeit ausfüllt (Jensen-Ungleichung).'],
     ['Spannweite','Die Pille über der Grafik zeigt zusätzlich den niedrigsten und höchsten Wert der Aufnahme.'],
-    ['Einordnung','Ob ein Wert für dein Pferd üblich ist, hängt von Alter, Rasse, Training und Situation ab — das beurteilt deine Tierärztin.']]},
+    ['Einordnung','Ob ein Wert für dein Pferd üblich ist, hängt von Alter, Rasse, Training und Situation ab. Das beurteilt deine Tierärztin.']]},
   rmssd:{t:'HRV · RMSSD',r:[
-    ['Warum zwei Zahlen','Die obere Zahl nimmt jeden Schlag. Die untere lässt Paare weg, bei denen der Abstand um mehr als 20 % vom vorigen abweicht (Task Force 1996). Beim Pferd stecken in dieser Lücke zwei völlig verschiedene Dinge: echte Störungen — und der AV-Block zweiten Grades, eine Pause, die beim ruhenden Pferd normal ist. Ein Filter kann beides nicht auseinanderhalten, er wirft es zusammen weg.'],
-    ['Was das bedeutet','Liegen die beiden Zahlen weit auseinander, war die Messung nicht schlecht. Es heißt, dass in dieser Aufnahme etwas steckt, das eine Einordnung braucht — und genau die leistet die tierärztliche Auswertung: sie unterscheidet Pause von Störung. Deshalb darf dort eine dritte Zahl stehen, ohne dass eine der beiden hier falsch wäre.'],
+    ['Warum zwei Zahlen','Die obere Zahl nimmt jeden Schlag. Die untere lässt Paare weg, bei denen der Abstand um mehr als 20 % vom vorigen abweicht (Task Force 1996). Beim Pferd stecken in dieser Lücke zwei völlig verschiedene Dinge: echte Störungen und der AV-Block zweiten Grades, eine Pause, die beim ruhenden Pferd normal ist. Ein Filter kann beides nicht auseinanderhalten, er wirft es zusammen weg.'],
+    ['Was das bedeutet','Liegen die beiden Zahlen weit auseinander, war die Messung nicht schlecht. Es heißt, dass in dieser Aufnahme etwas steckt, das eine Einordnung braucht. Und genau die leistet die tierärztliche Auswertung: sie unterscheidet Pause von Störung. Deshalb darf dort eine dritte Zahl stehen, ohne dass eine der beiden hier falsch wäre.'],
     ['Was','Ein Maß für die Streuung von einem Schlag zum nächsten, in Millisekunden.'],
     ['Rechenweg','Wurzel aus dem Mittel der quadrierten Differenzen aufeinanderfolgender Schlagabstände (Task Force 1996).'],
     ['Lesart','Große Werte heißen: die Abstände ändern sich von Schlag zu Schlag deutlich. Kleine Werte: das Herz läuft gleichmäßiger.'],
@@ -2929,14 +2927,14 @@ de:{
   sdnn:{t:'HRV · SDNN',r:[
     ['Was','Die Standardabweichung aller Schlagabstände der Aufnahme, in Millisekunden.'],
     ['Unterschied','RMSSD schaut auf benachbarte Schläge, SDNN auf die gesamte Aufnahme. SDNN wächst deshalb mit der Länge und mit jedem Wechsel der Belastung.'],
-    ['Lesart','SDNN beschreibt die Gesamt-Spannweite — es ist kein Fitnessmaß.'],
+    ['Lesart','SDNN beschreibt die Gesamt-Spannweite. Es ist kein Fitnessmaß.'],
     ['Achtung','Nur zwischen vergleichbaren Aufnahmen sinnvoll zu vergleichen.']]},
   qual:{t:'Signalgüte',r:[
     ['Was','Der Anteil aufeinanderfolgender Schläge ohne unplausiblen Sprung.'],
-    ['Wofür','Eine rein technische Aussage über die MESSUNG — sitzt der Gurt, ist die Elektrodenfläche feucht genug. Über das Pferd sagt sie nichts.'],
+    ['Wofür','Eine rein technische Aussage über die MESSUNG. Sitzt der Gurt, ist die Elektrodenfläche feucht genug. Über das Pferd sagt sie nichts.'],
     ['Konsequenz','Bei niedriger Güte lohnt eine zweite Aufnahme mehr als jede Auswertung der ersten.']]},
   pairs:{t:'Auswertbare Schlagpaare',r:[
-    ['Was','Wie viele benachbarte Schlag-Paare sauber aufeinanderfolgen — die Grundlage der Schlag-zu-Schlag-Rechnung.'],
+    ['Was','Wie viele benachbarte Schlag-Paare sauber aufeinanderfolgen. Die Grundlage der Schlag-zu-Schlag-Rechnung.'],
     ['Warum Paare','RMSSD und die Poincaré-Wolke entstehen aus Paaren, nicht aus einzelnen Schlägen.']]},
   sensor:{t:'Sensor',r:[
     ['Was','Das Gerät, das die Aufnahme geliefert hat.'],
@@ -2953,12 +2951,12 @@ en:{
   vitals:{t:'Pulse + HRV · over time',r:[
     ['Gold','The pulse in beats per minute, across the whole recording. Left axis.'],
     ['Cyan','Heart rate variability as a rolling RMSSD. Right axis, its own scale.'],
-    ['Why together','Placed side by side, you can see how the two relate to each other — two separate pictures hide exactly that.'],
+    ['Why together','Placed side by side, you can see how the two relate to each other. Two separate pictures hide exactly that.'],
     ['Window','HRV is computed over a rolling window and therefore responds to changes in pulse. It is a measure of the course over time, not a resting single value.'],
-    ['Interpretation','What the course means for your horse is something your veterinarian will tell you — that requires comparison with earlier recordings of the same horse.']]},
+    ['Interpretation','What the course means for your horse is something your veterinarian will tell you. That requires comparison with earlier recordings of the same horse.']]},
   rr:{t:'Beat-to-beat intervals',r:[
     ['What','The interval between two consecutive heartbeats, in milliseconds. Every point on the curve is a single beat.'],
-    ['Zigzag','A healthy heart does not beat like a metronome. The intervals fluctuate — among other things in time with the breathing.'],
+    ['Zigzag','A healthy heart does not beat like a metronome. The intervals fluctuate. Among other things in time with the breathing.'],
     ['Raw signal','This is the unprocessed measurement. Every other number on this page is calculated from it.'],
     ['Axis','Below is the beat number; the dashed line is the mean of the recording.']]},
   breath:{t:'Breathing curve',r:[
@@ -2974,19 +2972,19 @@ en:{
   beats:{t:'Heartbeats',r:[
     ['What','The number of individually captured heartbeats in this recording.'],
     ['Why it matters','The more beats, the steadier the derived values. Very short recordings fluctuate strongly.'],
-    ['Capture','The belt reports every beat individually — counted, not estimated.']]},
+    ['Capture','The belt reports every beat individually. Counted, not estimated.']]},
   dur:{t:'Recording length',r:[
     ['What','The time between the first and the last captured beat.'],
     ['Recommendation','Seven minutes in a quiet box, at least 200 beats. Shorter recordings are possible, but the breathing-pattern profile deliberately discards them: its thresholds come from longer resting recordings and would trigger too often on short ones.'],
-    ['Note','Length says nothing about quality — signal quality in the recording log covers that.']]},
+    ['Note','Length says nothing about quality. Signal quality in the recording log covers that.']]},
   hr:{t:'Average pulse',r:[
     ['What','The average pulse across the recording, in beats per minute.'],
-    ['How it is calculated','Time-weighted: 60000 divided by the mean beat interval. Averaging the individual pulse values would be systematically too high — a short, fast beat would count as much as a long one although it fills less time (Jensen’s inequality).'],
+    ['How it is calculated','Time-weighted: 60000 divided by the mean beat interval. Averaging the individual pulse values would be systematically too high. A short, fast beat would count as much as a long one although it fills less time (Jensen’s inequality).'],
     ['Range','The pill above the chart additionally shows the lowest and highest value of the recording.'],
-    ['Interpretation','Whether a value is usual for your horse depends on age, breed, training and situation — your veterinarian assesses that.']]},
+    ['Interpretation','Whether a value is usual for your horse depends on age, breed, training and situation. Your veterinarian assesses that.']]},
   rmssd:{t:'HRV · RMSSD',r:[
-    ['Why two numbers','The upper number uses every beat. The lower one drops pairs whose interval deviates by more than 20 % from the preceding one (Task Force 1996). In the horse that gap holds two entirely different things: genuine disturbances — and second-degree AV block, a pause that is normal in a resting horse. A filter cannot tell them apart; it discards both together.'],
-    ['What it means','If the two numbers are far apart, the recording was not poor. It means this recording contains something that needs interpreting — which is exactly what the veterinary assessment provides: it separates pause from disturbance. A third number may well appear there without either of these two being wrong.'],
+    ['Why two numbers','The upper number uses every beat. The lower one drops pairs whose interval deviates by more than 20 % from the preceding one (Task Force 1996). In the horse that gap holds two entirely different things: genuine disturbances and second-degree AV block, a pause that is normal in a resting horse. A filter cannot tell them apart; it discards both together.'],
+    ['What it means','If the two numbers are far apart, the recording was not poor. It means this recording contains something that needs interpreting. Which is exactly what the veterinary assessment provides: it separates pause from disturbance. A third number may well appear there without either of these two being wrong.'],
     ['What','A measure of the variation from one beat to the next, in milliseconds.'],
     ['How it is calculated','Root of the mean squared differences between consecutive beat intervals (Task Force 1996).'],
     ['Reading it','Large values mean the intervals change noticeably from beat to beat. Small values: the heart runs more evenly.'],
@@ -2994,14 +2992,14 @@ en:{
   sdnn:{t:'HRV · SDNN',r:[
     ['What','The standard deviation of all beat intervals in the recording, in milliseconds.'],
     ['Difference','RMSSD looks at neighbouring beats, SDNN at the whole recording. SDNN therefore grows with length and with every change in load.'],
-    ['Reading it','SDNN describes the overall spread — it is not a fitness measure.'],
+    ['Reading it','SDNN describes the overall spread. It is not a fitness measure.'],
     ['Caution','Only meaningful to compare between comparable recordings.']]},
   qual:{t:'Signal quality',r:[
     ['What','The share of consecutive beats without an implausible jump.'],
-    ['What it is for','A purely technical statement about the MEASUREMENT — whether the belt sits well and the electrode area is moist enough. It says nothing about the horse.'],
+    ['What it is for','A purely technical statement about the MEASUREMENT. Whether the belt sits well and the electrode area is moist enough. It says nothing about the horse.'],
     ['Consequence','At low quality, a second recording is worth more than any analysis of the first.']]},
   pairs:{t:'Usable beat pairs',r:[
-    ['What','How many neighbouring beat pairs follow one another cleanly — the basis of the beat-to-beat calculation.'],
+    ['What','How many neighbouring beat pairs follow one another cleanly. The basis of the beat-to-beat calculation.'],
     ['Why pairs','RMSSD and the Poincaré cloud arise from pairs, not from individual beats.']]},
   sensor:{t:'Sensor',r:[
     ['What','The device that produced the recording.'],
