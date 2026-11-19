@@ -245,6 +245,8 @@ main{flex:1;overflow-y:auto;overflow-x:hidden;position:relative}
 
 /* ---- KPI strip ---- */
 .kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:var(--s3);margin-bottom:var(--s5)}
+.tfrist{display:flex;gap:8px;align-items:flex-start;font-size:12.5px;line-height:1.45;color:var(--text-secondary);background:var(--cyan-g3,rgba(62,207,178,.08));border-radius:10px;padding:8px 10px;margin:8px 0}.tfrist svg{width:14px;height:14px;flex:none;margin-top:2px;color:var(--cyan)}
+.today-lern{font-size:12.5px;color:var(--text-dim);margin:-4px 0 12px}.today-lern b{color:var(--text-secondary)}.tgelernt{font-size:10px;letter-spacing:.06em;text-transform:uppercase;color:var(--cyan);margin-left:4px}
 .erste-schritte{max-width:640px;margin:clamp(20px,6vh,64px) auto;padding:0 4px}.erste-schritte h1{margin:8px 0 22px}
 .erste-schritte ol{list-style:none;margin:0;padding:0;display:grid;gap:14px}
 .es-schritt{display:grid;grid-template-columns:36px 1fr;gap:14px;padding:16px 18px;border:1px solid var(--border-faint);border-radius:16px;background:var(--bg-surface,rgba(255,255,255,.02))}
@@ -2108,6 +2110,9 @@ function relTime(iso){
   if(days<365) return Math.round(days/30)+' Mon';
   return Math.round(days/365)+' J';
 }
+/* ORTSDATUM (Zeitraffer-Prüfstand 19.11.2026): Das Tagebuch schnitt das Datum aus toISOString() – das ist UTC. Ein
+   Notdienst um 00:40 in Deutschland landete damit im VORTAG (Tour, Wegegeld, Leistungsliste). Tage sind Ortstage. */
+function ortsDatum(d){ d=d?new Date(d):new Date(); return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'); }
 function fmtDate(iso,withTime){
   if(!iso) return '—';
   const d=new Date(iso);
@@ -5689,7 +5694,7 @@ const Views={
     const clusters=Object.entries(placeCount).filter(([,n])=>n>1);
     const rationale=[State.settings.tourSortierung==='abweichung'?(critCount?`Ihre Wahl: deutliche Abweichung zuerst (${critCount})`:'Ihre Wahl: deutliche Abweichung zuerst'):'Kürzeste Strecke'];
     clusters.forEach(([p,n])=>rationale.push(`Sammelbesuch ${p} (${n})`));
-    const why=`<div class="today-why">${rationale.length?`<span class="rz"><span class="dot">◆</span> Reihenfolge: ${rationale.map(esc).join(' · ')}</span>`:'<span></span>'}<span class="off"><span class="d"></span> Offline-fähig · Daten bleiben auf diesem Gerät</span></div>`;
+    const why=`<div class="today-why">${rationale.length?`<span class="rz"><span class="dot">◆</span> Reihenfolge: ${rationale.map(esc).join(' · ')}</span>`:'<span></span>'}<span class="off"><span class="d"></span> Offline-fähig · Daten bleiben auf diesem Gerät</span></div>${(()=>{ const L=Dispatch.lernen(); return L.besuche>=5?`<div class="today-lern">${IC.clock} Zeiten aus Ihren <b>${L.besuche}</b> dokumentierten Besuchen gelernt: Behandlung meist <b>${L.praxis} min</b>${L.fahrten>=5?` · Fahrzeit × <b>${String(L.faktor).replace('.',',')}</b>`:''}</div>`:''; })()}`;
 
     if(!State.horses.length) return Views.emptyMain();
     if(!order.length && !noLoc.length){
@@ -5736,9 +5741,11 @@ const Views={
           ${r.lateBy?`<div class="twarn">${IC.warn} ${r.lateBy} min nach Termin ${fmtTime(r.appt)}<button class="twarn-btn" onclick="event.stopPropagation();Views.notifyDelay('${h.id}',${r.arrive})">${IC.phone}Halter benachrichtigen</button></div>`:(r.wait?`<div class="tbuffer">${IC.clock} ${r.wait} min Puffer bis Termin ${fmtTime(r.appt)}</div>`:'')}
           ${remoteOk?`<div class="tremote" onclick="event.stopPropagation();Views.fernCheck('${h.id}')" title="Aufnahme vor dem Besuch ansehen">${ICremote}<span><b>Aufnahme vorab ansehen</b> — vor dem Besuch in ${esc(h.stable||h.place||'diesem Stall')}.</span><svg class="tremote-go" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 6l6 6-6 6"/></svg></div>`:''}
           ${flag}
+          ${(()=>{ const auf=new Set(order.map(o=>o.h.id)); const eig=Fristen.offen(h), da=Fristen.imStall(h,auf);
+            return eig.length||da.length?`<div class="tfrist">${IC.clock}<span>${eig.length?`<b>${esc(h.name)}:</b> ${eig.map(x=>esc(Fristen.text(x))).join(', ')}`:''}${eig.length&&da.length?' · ':''}${da.length?`<b>Im selben Stall:</b> ${da.map(x=>`${esc(x.h.name)} (${x.f.map(y=>esc(Fristen.text(y))).join(', ')})`).join(' · ')}`:''}</span></div>`:''; })()}
           ${h.arrivedAt?`<div class="tarrived">${IC.check} angekommen ${fmtTime(new Date(h.arrivedAt).getHours()*60+new Date(h.arrivedAt).getMinutes())} — Besuch läuft</div>`:''}
           <div class="tsched">
-            <span class="tvisit"><button onclick="event.stopPropagation();Views.setVisit('${h.id}',-5)">−</button><b>${IC.clock}${r.visitMin} min</b><button onclick="event.stopPropagation();Views.setVisit('${h.id}',5)">+</button></span>
+            <span class="tvisit"><button onclick="event.stopPropagation();Views.setVisit('${h.id}',-5)">−</button><b title="${r.gelernt?'Aus Ihren bisherigen Besuchen gelernt':''}">${IC.clock}${r.visitMin} min${r.gelernt?' <span class="tgelernt">gelernt</span>':''}</b><button onclick="event.stopPropagation();Views.setVisit('${h.id}',5)">+</button></span>
             <button class="tappt${r.appt!=null?' on':''}" onclick="event.stopPropagation();Views.setAppt('${h.id}')">${r.appt!=null?`Termin ${fmtTime(r.appt)}`:'+ Termin'}</button>
           </div>
           <div class="tacts">
@@ -5747,6 +5754,7 @@ const Views={
               : `<button class="tact primary done full" onclick="Views.completeStop('${h.id}')">${IC.check}Erledigt</button>`}
             <div class="tacts-sec">
               <button class="tsec" onclick="Dispatch.navTo('${h.id}')">${IC.nav}<span>Navi</span></button>
+              ${!h.arrivedAt&&h.phone?`<button class="tsec" onclick="event.stopPropagation();Views.notifyDelay('${h.id}',${r.arrive},'unterwegs')" title="Halterin: Sie sind unterwegs, Pferd bitte bereithalten">${IC.clock}<span>Unterwegs</span></button>`:''}
               <a class="tsec call ${h.phone?'':'off'}" ${h.phone?`href="tel:${esc(h.phone)}"`:''}>${IC.phone}<span>Anrufen</span></a>
               <button class="tsec${remoteOk?' remote':''}" onclick="${remoteOk?`Views.fernCheck('${h.id}')`:`Views.logConsult('${h.id}')`}">${remoteOk?ICremote:IC.doc}<span>${remoteOk?'Aufnahme ansehen':'Erfassen'}</span></button>
               <button class="tsec" onclick="Views.openHorse('${h.id}')">${IC.eye}<span>Akte</span></button>
@@ -5757,7 +5765,7 @@ const Views={
       </div>`;
     }).join('');
 
-    const todayStr=now.toISOString().slice(0,10);
+    const todayStr=ortsDatum(now);
     const log=State.daylog.filter(e=>e.date===todayStr);
     const logSummary=log.length?`<div class="today-log" onclick="Nav.go('logbook')" style="cursor:pointer">
       <div class="tlog-h">${IC.doc}<span>Tagebuch heute</span> · ${log.length} erledigt<span style="margin-left:auto;color:var(--cyan-strong);font-weight:600">Logbuch ${IC.arrow}</span></div>
@@ -5817,11 +5825,11 @@ const Views={
     const treatmentMin=arrivedAt?Math.max(1,Math.round((now-arrivedAt)/60000)):(row?row.visitMin:(State.settings.defaultVisitMin||20));
     const lvl=(State.latestFor(id)&&State.latestFor(id).triage&&State.latestFor(id).triage.level)||h.manualLevel||'watch';
     const entry={
-      id:'log:'+now.toISOString().slice(0,10)+':'+id+':'+now.getTime(),
-      date:now.toISOString().slice(0,10), horseId:id, horseName:h.name,
+      id:'log:'+ortsDatum(now)+':'+id+':'+now.getTime(),
+      date:ortsDatum(now), horseId:id, horseName:h.name,
       owner:h.owner||'', place:h.place||h.stable||'',
       arriveAt:arrivedAt?arrivedAt.toISOString():null, departAt:now.toISOString(),
-      treatmentMin, driveKm:row?Math.round((row.dist||0)*10)/10:null, driveMin:row?row.driveMin:null,
+      treatmentMin, driveKm:row?Math.round((row.dist||0)*10)/10:null, driveMin:row?row.driveMin:null, driveMinRoh:row?row.driveRoh:null,
       triageLevel:lvl, estimated:!arrivedAt
     };
     await DB.put('settings',entry); State.daylog.push(entry);
@@ -5846,15 +5854,20 @@ const Views={
   _compactStops:false,
   toggleCompact(){ Views._compactStops=!Views._compactStops; Nav.refresh(); },
   // Verspätung: Halter mit neuer ETA benachrichtigen (WhatsApp/SMS/Anruf) + optional Standort teilen
-  notifyDelay(id, etaMin){
+  notifyDelay(id, etaMin, art){
     const h=State.horses.find(x=>x.id===id); if(!h)return;
     const eta=fmtTime(etaMin);
     const vet=(State.settings.vetName||State.settings.clinicName||'').trim();
-    const greet=h.owner?`Hallo ${esc(h.owner)}, `:'Guten Tag, ';
-    const msg=`${greet}hier ${vet||'Ihre Tierärztin / Ihr Tierarzt'}. Ich verspäte mich etwas — neue Ankunft bei ${h.name} ca. ${eta} Uhr. Ich melde mich, falls sich etwas ändert.`;
+    const greet=h.owner?`Hallo ${h.owner}, `:'Guten Tag, ';   // Klartext: der Textbereich unten escaped selbst
+    const wer=vet||'Ihre Tierärztin / Ihr Tierarzt';
+    /* „Unterwegs“ (Field-Service-Transfer 19.11.2026): Wer weiß, wann die Tierärztin kommt, hat das Pferd bereit –
+       das spart am Stall die Minuten, die sonst mit Suchen und Holen vergehen. Senden tut die Tierärztin selbst. */
+    const msg=art==='unterwegs'
+      ? `${greet}hier ${wer}. Ich bin auf dem Weg und ca. ${eta} Uhr bei ${h.name}. Bitte halten Sie ${h.name} schon bereit – am Halfter, an einem trockenen, hellen Platz – und den Equidenpass griffbereit. Danke!`
+      : `${greet}hier ${wer}. Ich verspäte mich etwas — neue Ankunft bei ${h.name} ca. ${eta} Uhr. Passt Ihnen das nicht, antworten Sie einfach mit einer Uhrzeit, die Ihnen lieber ist.`;
     const hasP=!!(h.phone&&h.phone.trim());
     UI.modal(`<div class="qa">
-      <div class="qa-head"><span style="width:42px;height:42px;border-radius:12px;background:var(--amber-g);color:var(--amber);display:flex;align-items:center;justify-content:center">${IC.clock}</span><div class="qa-id"><b>Verspätung melden</b><span>${esc(h.name)}${h.owner?' · '+esc(h.owner):''} · neue Ankunft ca. ${eta}</span></div></div>
+      <div class="qa-head"><span style="width:42px;height:42px;border-radius:12px;background:var(--amber-g);color:var(--amber);display:flex;align-items:center;justify-content:center">${IC.clock}</span><div class="qa-id"><b>${art==='unterwegs'?'Unterwegs melden':'Verspätung melden'}</b><span>${esc(h.name)}${h.owner?' · '+esc(h.owner):''} · neue Ankunft ca. ${eta}</span></div></div>
       <div style="padding:2px 20px 0"><textarea id="delayMsg" class="delay-msg" rows="4">${esc(msg)}</textarea></div>
       <div class="qa-grid">
         ${hasP?`<button class="qa-item primary" onclick="Views.sendDelay('wa','${esc(h.phone)}')">${IC.phone}<span>WhatsApp</span></button>`:''}
@@ -5939,7 +5952,7 @@ const Views={
   _logDate:null,
   logbook(){
     const dates=Logbook.dates();
-    const d=Views._logDate||dates[0]||new Date().toISOString().slice(0,10);
+    const d=Views._logDate||dates[0]||ortsDatum();
     const r=Logbook.forDate(d);
     const dayLabel=new Date(d).toLocaleDateString('de-DE',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
     const hm=min=>{const h=Math.floor(min/60),m=Math.round(min%60);return h?`${h} h ${m}`:`${m} min`;};
@@ -6913,7 +6926,7 @@ const Views={
       notes:`Aus der Tour genommen · ~${Math.round(km*10)/10} km / ${dmin} min Fahrt`,billed:false,remote:true};
     await DB.put('consults',c); State.consults.push(c);
     // Fahrtenbuch: erledigt, OHNE Fahrt (savedKm dokumentiert den Nutzen)
-    const entry={id:'log:'+now.toISOString().slice(0,10)+':'+hid+':'+now.getTime(),date:now.toISOString().slice(0,10),
+    const entry={id:'log:'+ortsDatum(now)+':'+hid+':'+now.getTime(),date:ortsDatum(now),
       horseId:hid,horseName:h.name,owner:h.owner||'',place:h.place||h.stable||'',arriveAt:null,departAt:now.toISOString(),
       treatmentMin:15,driveKm:0,driveMin:0,savedKm:Math.round(km*10)/10,triageLevel:lvl,remote:true,estimated:true};
     await DB.put('settings',entry); State.daylog.push(entry);
@@ -7088,6 +7101,8 @@ const Views={
       <div class="field-row"><div class="field"><label>Mikrochip (ISO)</label>
           <input id="eIdChip" value="${esc((h.extIds&&h.extIds.microchip)||'')}" placeholder="15-stellige Transpondernummer"></div>
         <div class="field"><label>Equidenpass-Nr.</label><input id="eIdPass" value="${esc((h.extIds&&h.extIds.passport)||'')}"></div></div>
+      <div class="field-row">${Fristen.ARTEN.map(([k,l])=>`<div class="field"><label>${l} fällig</label><input id="eFr_${k}" type="date" value="${esc((h.fristen&&h.fristen[k])||'')}"></div>`).join('')}</div>
+      <div class="hint" style="margin:-6px 0 12px">Von Ihnen gesetzt – das Cockpit zeigt sie nur an, wenn Sie in diesem Stall sind.</div>
       <div class="field-row"><div class="field"><label>Breitengrad</label><input id="eLat" type="number" step="0.00001" value="${h.lat??''}"><div class="hint">Für die Kartenroute (füllt automatisch aus der Adresse)</div></div>
         <div class="field"><label>Längengrad</label><input id="eLng" type="number" step="0.00001" value="${h.lng??''}"></div></div>
     </div>
@@ -7097,6 +7112,7 @@ const Views={
     let h=id?State.horses.find(x=>x.id===id):{id:'h_manual_'+Math.abs(hashStr('m'+performance.now())).toString(36),subjectId:'manual:'+performance.now(),createdAt:new Date().toISOString(),needsVisit:false};
     h.name=$('#eName').value||'Unbenannt';h.breed=$('#eBreed').value;h.owner=$('#eOwner').value;h.phone=$('#ePhone').value;
     h.stable=$('#eStable').value;h.place=$('#ePlace').value;h.lat=num($('#eLat').value);h.lng=num($('#eLng').value);
+    h.fristen={}; for(const [k] of Fristen.ARTEN){ const v=($('#eFr_'+k)?.value||'').trim(); if(v) h.fristen[k]=v; }
     h.extIds={ clinicPMS:($('#eIdClinic')?.value||'').trim(), ueln:($('#eIdUeln')?.value||'').trim(),
                microchip:($('#eIdChip')?.value||'').trim(), passport:($('#eIdPass')?.value||'').trim() };
     await DB.put('horses',h);if(!id)State.horses.push(h);UI.closeModal();Toast.show('Gespeichert','ok');Nav.refresh();
@@ -7788,26 +7804,48 @@ const Dispatch={
     this._order=order;return order;
   },
   // Zeit-Scheduling: ETA-Kaskade ab Abfahrt, Termin-Anker (früh=warten, spät=Konflikt), Fertig-Prognose
+  /* LERNENDE ZEITEN (Branchentransfer Ride-Hailing, 19.11.2026): Die Schätzung „Luftlinie × 1,32 bei 45 km/h“ und
+     „20 min je Besuch“ korrigiert sich aus der EIGENEN Dokumentation – Median der echten Behandlungszeit je Pferd
+     (ab 2 Besuchen), sonst der Praxis (ab 5), und ein Fahrzeit-Faktor aus echten Fahrten zwischen zwei Stopps (ab 5).
+     Median statt Mittel: ein Notfall mit 90 min verzieht den Plan nicht. Nur Besuche mit „Angekommen“ zählen. */
+  _median(a){ if(!a.length) return null; const b=[...a].sort((x,y)=>x-y), m=b.length>>1; return b.length%2?b[m]:(b[m-1]+b[m])/2; },
+  lernen(){
+    const log=(State.daylog||[]).filter(e=>!e.estimated&&e.treatmentMin>0&&e.treatmentMin<240);
+    const jeP={}; log.forEach(e=>{ (jeP[e.horseId]=jeP[e.horseId]||[]).push(e.treatmentMin); });
+    const praxis=log.length>=5?Math.round(this._median(log.map(e=>e.treatmentMin))):null;
+    const tage={}; (State.daylog||[]).forEach(e=>{ if(e.arriveAt&&e.departAt) (tage[e.date]=tage[e.date]||[]).push(e); });
+    const q=[]; Object.values(tage).forEach(l=>{ l.sort((a,b)=>a.arriveAt.localeCompare(b.arriveAt));
+      for(let i=1;i<l.length;i++){ const roh=l[i].driveMinRoh; if(!(roh>=3)) continue; const echt=(new Date(l[i].arriveAt)-new Date(l[i-1].departAt))/60000;
+        if(echt>0&&echt<roh*4) q.push(echt/roh); } });
+    const f=q.length>=5?Math.min(1.8,Math.max(0.8,this._median(q))):1;
+    return {besuch:id=>{ const a=jeP[id]; return a&&a.length>=2?Math.round(this._median(a)):praxis; }, praxis, faktor:Math.round(f*100)/100, besuche:log.length, fahrten:q.length};
+  },
   schedule(order){
-    const s=State.settings;
+    const s=State.settings; const L=this.lernen();
     const start=s.dayStart!=null?s.dayStart:480;
     const dv=s.defaultVisitMin||20;
-    let t=start; let anyLate=false;
-    const rows=order.map(x=>{
-      const driveMin=Math.round((x.dist||0)/45*60);   // ~45 km/h Landstraße
-      t+=driveMin;
+    /* LIVE STATT STARR (Zeitraffer-Prüfstand 19.11.2026): Der Plan rechnete immer ab Tagesbeginn. Dauerte ein Stalltermin
+       95 statt 45 Minuten, blieb der nächste Termin „pünktlich“ – und „Halter benachrichtigen“ erschien nie, genau dann,
+       wenn man es braucht. Jetzt zählt die Uhr: nichts beginnt vor JETZT, ein laufender Besuch endet frühestens jetzt. */
+    const jetzt=new Date(), nowMin=jetzt.getHours()*60+jetzt.getMinutes();
+    let t=Math.max(start,nowMin); let anyLate=false;
+    const rows=order.map((x,i)=>{
+      const laeuft=x.h.arrivedAt && new Date(x.h.arrivedAt).toDateString()===jetzt.toDateString();
+      const driveRoh=Math.round((x.dist||0)/45*60);   // ~45 km/h Landstraße
+      const driveMin=laeuft?0:Math.round(driveRoh*L.faktor);
+      if(laeuft){ const a=new Date(x.h.arrivedAt); t=a.getHours()*60+a.getMinutes(); } else t+=driveMin;
       let arrive=t, wait=0, lateBy=0;
       const appt=(x.h.apptMin!=null)?x.h.apptMin:null;
       if(appt!=null){
         if(arrive<appt){ wait=appt-arrive; arrive=appt; }        // zu früh → Wartezeit
         else if(arrive>appt){ lateBy=arrive-appt; anyLate=true; } // zu spät → Terminkonflikt
       }
-      const visitMin=(x.h.visitMin!=null)?x.h.visitMin:dv;
-      const depart=arrive+visitMin;
+      const gelernt=L.besuch(x.h.id); const visitMin=(x.h.visitMin!=null)?x.h.visitMin:(gelernt||dv);
+      const depart=laeuft?Math.max(arrive+visitMin,nowMin):arrive+visitMin;
       t=depart;
-      return {...x, driveMin, arrive, depart, wait, lateBy, appt, visitMin};
+      return {...x, driveMin, driveRoh, arrive, depart, wait, lateBy, appt, visitMin, gelernt:x.h.visitMin==null&&!!gelernt};
     });
-    return {rows, start, end:t, anyLate, totalVisit:rows.reduce((a,r)=>a+r.visitMin,0), totalDrive:rows.reduce((a,r)=>a+r.driveMin,0)};
+    return {rows, start, end:t, anyLate, lernen:L, totalVisit:rows.reduce((a,r)=>a+r.visitMin,0), totalDrive:rows.reduce((a,r)=>a+r.driveMin,0)};
   },
   // Geplanter Tag: optimierte Reihenfolge + ggf. manuelle Umplanung + Zeitplan (für Log/Fahrtenbuch)
   plannedDay(){
@@ -9744,6 +9782,9 @@ const Bestand={
     ['lat','Breitengrad',['lat','breitengrad','latitude','breite']],
     ['lng','Längengrad',['lng','lon','laengengrad','längengrad','longitude','laenge']],
     ['notes','Notiz',['notiz','notizen','bemerkung','bemerkungen','hinweis','notes']],
+    ['fr_impfung','Impfung fällig',['impfungfällig','impfungfaellig','nächsteimpfung','naechsteimpfung','impfung']],
+    ['fr_wurm','Entwurmung fällig',['entwurmungfällig','wurmkur','entwurmung']],
+    ['fr_zahn','Zahnkontrolle fällig',['zahnkontrolle','zähne','zahn']],
   ],
   _norm(s){ return String(s||'').toLowerCase().replace(/^﻿/,'').replace(/[^a-z0-9äöüß]/g,''); },
   /* Excel unter Windows speichert CSV oft in Windows-1252 – als UTF-8 gelesen
@@ -9788,6 +9829,8 @@ const Bestand={
       const d={}; map.forEach((feld,i)=>{ if(feld&&z[i]) d[feld]=(d[feld]?d[feld]+' ':'')+z[i]; });
       if(!d.owner&&(d.vorname||d.nachname)) d.owner=[d.vorname,d.nachname].filter(Boolean).join(' ');
       d.place=[d.street,[d.plz,d.ort].filter(Boolean).join(' ')].filter(Boolean).join(', ');
+      /* Datum aus Excel: 12.04.2026, 12.4.26 oder 2026-04-12 → ISO */
+      for(const k of ['fr_impfung','fr_wurm','fr_zahn']) if(d[k]){ const m=String(d[k]).match(/^(\d{1,2})\.(\d{1,2})\.(\d{2,4})$/); const iso=m?`${m[3].length===2?'20'+m[3]:m[3]}-${m[2].padStart(2,'0')}-${m[1].padStart(2,'0')}`:(/^\d{4}-\d{2}-\d{2}$/.test(d[k])?d[k]:''); if(iso) d[k]=iso; else delete d[k]; }
       return d;
     });
   },
@@ -9827,6 +9870,7 @@ const Bestand={
         subjectId:'import:'+(d.clinicPMS||d.ueln||d.microchip||d.name), createdAt:jetzt, needsVisit:false, importiert:jetzt,
         name:d.name, owner:d.owner||'', phone:d.phone||'', stable:d.stable||'', place:d.place||'', breed:d.breed||'',
         lat:num(d.lat), lng:num(d.lng), notes:d.notes||'',
+        fristen:Object.fromEntries(['impfung','wurm','zahn'].filter(k=>d['fr_'+k]).map(k=>[k,d['fr_'+k]])),
         extIds:{clinicPMS:d.clinicPMS||'',ueln:d.ueln||'',microchip:d.microchip||'',passport:d.passport||''}};
       State.horses.push(h); await DB.put('horses',h);
     }
@@ -9916,6 +9960,22 @@ const Bestand={
   },
 };
 
+/* ══ STALL-FRISTEN (Branchentransfer Herdenmanagement, 19.11.2026) ═══════
+   Wer ohnehin in einem Stall steht, will wissen, was dort sonst noch fällig ist – eine zweite Anfahrt kostet mehr
+   als ein zweites Pferd. Die Praxis trägt Fälligkeiten selbst ein (Impfung, Entwurmung, Zahnkontrolle); das Cockpit
+   rechnet nichts aus, es zeigt nur: „im selben Stall fällig“. Kein Impfplan, keine Empfehlung. */
+const Fristen={
+  ARTEN:[['impfung','Impfung'],['wurm','Entwurmung'],['zahn','Zahnkontrolle']],
+  TAGE:30,
+  _tag(iso){ return iso?Math.round((new Date(iso+'T12:00:00')-new Date(ortsDatum()+'T12:00:00'))/86400000):null; },
+  offen(h){ const f=h.fristen||{}; return this.ARTEN.map(([k,l])=>({k,l,am:f[k],in:this._tag(f[k])})).filter(x=>x.am&&x.in<=this.TAGE); },
+  ort(h){ return String(h.stable||h.place||'').trim().toLowerCase(); },
+  imStall(h,ausser){ const o=this.ort(h); if(!o) return [];
+    return State.horses.filter(x=>x.id!==h.id&&!(ausser&&ausser.has(x.id))&&this.ort(x)===o).map(x=>({h:x,f:this.offen(x)})).filter(x=>x.f.length); },
+  text(x){ if(typeof Sprache!=='undefined'&&Sprache.cur==='en'){ const l={impfung:'Vaccination',wurm:'Deworming',zahn:'Dental check'}[x.k];
+      return x.in<0?`${l} overdue by ${-x.in} d`:x.in===0?`${l} due today`:`${l} due ${new Date(x.am+'T12:00:00').toLocaleDateString('en-GB',{day:'numeric',month:'short'})}`; }
+    return x.in<0?`${x.l} seit ${-x.in} T. überfällig`:x.in===0?`${x.l} heute fällig`:`${x.l} fällig ${fmtDate(x.am+'T12:00:00')}`; },
+};
 const Postausgang={
   async _alle(){ return (State.settings.postausgang||[]); },
   async _setzen(l){ State.settings.postausgang=l; await State.saveSettings(); },
@@ -10893,7 +10953,7 @@ const Backup={
      an den Knopf denken; sie liegt außerhalb des Browsers und übersteht „Websitedaten löschen“ und Geräteverlust. */
   async auto(){
     if(typeof Teilen==='undefined'||!Teilen.aktiv||!Teilen.handle) return false;
-    const heute=new Date().toISOString().slice(0,10); if((State.settings.autoSicherung||'')===heute) return false;
+    const heute=ortsDatum(); if((State.settings.autoSicherung||'')===heute) return false;
     try{ const d=await Teilen.handle.getDirectoryHandle('carlon-sicherung',{create:true});
       const g=String((State.settings.geraeteName)||'geraet').replace(/[^\w.-]+/g,'-');
       const f=await d.getFileHandle('sicherung-'+heute+'-'+g+'.json',{create:true}); const w=await f.createWritable();
@@ -10905,7 +10965,7 @@ const Backup={
     const data=Backup.daten();
     const blob=new Blob([JSON.stringify(data)],{type:'application/json'});
     const a=document.createElement('a');a.href=URL.createObjectURL(blob);
-    a.download='carlon-clinic-backup-'+new Date().toISOString().slice(0,10)+'.json';a.click();
+    a.download='carlon-clinic-backup-'+ortsDatum()+'.json';a.click();
     if(typeof Safe!=='undefined')Safe.markBackup();
     Toast.show('Praxis-Backup exportiert · sicher aufbewahren','ok');
   },
@@ -11045,7 +11105,7 @@ const Logbook={
     const driveMin=trips.reduce((a,t)=>a+(t.min||0),0);
     const arr=visits.map(v=>v.arriveAt).filter(Boolean).sort(), dep=visits.map(v=>v.departAt).filter(Boolean).sort();
     const spanMin=(arr.length&&dep.length)?Math.max(0,Math.round((new Date(dep[dep.length-1])-new Date(arr[0]))/60000)):treatMin;
-    const revenue=State.consults.filter(c=>(c.date||'').slice(0,10)===d).reduce((a,c)=>a+(c.fee||0),0);
+    const revenue=State.consults.filter(c=>c.date&&ortsDatum(c.date)===d).reduce((a,c)=>a+(c.fee||0),0);
     return {date:d, visits, trips, treatMin, driveKm, driveMin, spanMin, workMin:treatMin+driveMin, revenue};
   },
   exportTimesheet(d){
@@ -12090,7 +12150,7 @@ const Sprache={
   WB:{
     /* 17.11.2026: Lücken aus der Sprachprobe (nur/enrest.mjs) */
     "gehört zum Abo –":"is part of the subscription –", "die ersten 14 Tage sind kostenlos":"the first 14 days are free", ", danach monatlich kündbar.":", then cancel monthly.",
-    "Basis im Aufbau":"Baseline building", "Pferde anlegen":"Add horses", "Einzeln – oder den ganzen Bestand aus Praxissoftware oder Excel übernehmen. Jedes Pferd steht dann auch für die Tour bereit.":"One by one – or bring in your whole list from practice software or Excel. Every horse is then ready for the round too.", "Bestand übernehmen (CSV)":"Import your list (CSV)", "Bestand übernehmen":"Import your list", "Pferde und Halterinnen aus Ihrer Praxissoftware, aus Excel oder aus dem Adressbuch – als CSV-Datei (in Excel: „Speichern unter → CSV“). Sie sehen vor dem Übernehmen, was wohin kommt; vorhandene Pferde werden nur in leeren Feldern ergänzt.":"Horses and owners from your practice software, Excel or address book – as a CSV file (in Excel: “Save as → CSV”). Before importing you see what goes where; existing horses are only completed in empty fields.", "CSV-Datei wählen":"Choose CSV file", "Vorlage laden":"Download template", "Zeilen":"rows", "Neue Pferde":"New horses", "Ergänzt":"Completed", "Schon vorhanden":"Already there", "Halterinnen":"Owners", "Keine Spalte als „Pferd“ zugeordnet – übernommen werden dann nur die Halterinnen als Kontakte. Ordnen Sie die Spalte mit dem Pferdenamen unten zu.":"No column assigned to “Horse” – only the owners will be imported as contacts. Assign the column with the horse name below.", "Spalte in Ihrer Datei":"Column in your file", "Beispiel":"Example", "Kommt nach":"Goes to", "– nicht übernehmen –":"– don’t import –", "(ohne Titel)":"(untitled)", "Zeilen ohne Pferdenamen:":"Rows without a horse name:", "– daraus werden nur Kontakte.":"– these become contacts only.", "Übernehmen":"Import", "Pferde angelegt":"Horses added", "Pferde ergänzt":"Horses completed", "Kontakte neu":"New contacts", "Pferde haben eine Adresse, aber noch keinen Kartenpunkt. Für Route und Fahrzeit ermittelt das Cockpit ihn über OpenStreetMap – eine Adresse pro Sekunde.":"horses have an address but no map point yet. For route and driving time the cockpit looks it up via OpenStreetMap – one address per second.", "Alle übernommenen Pferde mit Adresse stehen auf der Karte.":"All imported horses with an address are on the map.", "Fertig":"Done", "Kartenpunkte ermitteln":"Find map points", "Kartenpunkt gefunden:":"Map point found:", "· nicht gefunden:":"· not found:", "(Adresse in der Akte prüfen)":"(check the address in the record)", "Die Datei enthält keine Datenzeilen":"The file contains no data rows", "Halterin / Besitzer":"Owner", "Vorname (Halterin)":"First name (owner)", "Nachname (Halterin)":"Last name (owner)", "Telefon":"Phone", "E-Mail":"Email", "Stall":"Stable", "Straße":"Street", "PLZ":"Postcode", "Ort":"Town", "Rasse":"Breed", "Patienten-Nr. (Praxissoftware)":"Patient no. (practice software)", "UELN":"UELN", "Mikrochip":"Microchip", "Equidenpass-Nr.":"Equine passport no.", "Breitengrad":"Latitude", "Längengrad":"Longitude", "Notiz":"Note", "Erste Schritte":"First steps", "So kommt das erste Pferd in den Verlauf.":"How the first horse gets into the trend.", "Pferd anlegen":"Add a horse", "+ Pferd anlegen":"+ Add a horse",
+    "Basis im Aufbau":"Baseline building", "Impfung":"Vaccination", "Entwurmung":"Deworming", "Zahnkontrolle":"Dental check", "Impfung fällig":"Vaccination due", "Entwurmung fällig":"Deworming due", "Zahnkontrolle fällig":"Dental check due", "Von Ihnen gesetzt – das Cockpit zeigt sie nur an, wenn Sie in diesem Stall sind.":"Set by you – the cockpit only shows them when you are at this stable.", "Im selben Stall:":"Same stable:", "gelernt":"learned", "Unterwegs":"On my way", "Unterwegs melden":"Tell the owner you're on your way", "Zeiten aus Ihren":"Times learned from your", "dokumentierten Besuchen gelernt: Behandlung meist":"documented visits: treatment usually", "· Fahrzeit ×":"· driving time ×", "Aus Ihren bisherigen Besuchen gelernt":"Learned from your previous visits", "Halterin: Sie sind unterwegs, Pferd bitte bereithalten":"Owner: you are on your way, please have the horse ready", "Pferde anlegen":"Add horses", "Einzeln – oder den ganzen Bestand aus Praxissoftware oder Excel übernehmen. Jedes Pferd steht dann auch für die Tour bereit.":"One by one – or bring in your whole list from practice software or Excel. Every horse is then ready for the round too.", "Bestand übernehmen (CSV)":"Import your list (CSV)", "Bestand übernehmen":"Import your list", "Pferde und Halterinnen aus Ihrer Praxissoftware, aus Excel oder aus dem Adressbuch – als CSV-Datei (in Excel: „Speichern unter → CSV“). Sie sehen vor dem Übernehmen, was wohin kommt; vorhandene Pferde werden nur in leeren Feldern ergänzt.":"Horses and owners from your practice software, Excel or address book – as a CSV file (in Excel: “Save as → CSV”). Before importing you see what goes where; existing horses are only completed in empty fields.", "CSV-Datei wählen":"Choose CSV file", "Vorlage laden":"Download template", "Zeilen":"rows", "Neue Pferde":"New horses", "Ergänzt":"Completed", "Schon vorhanden":"Already there", "Halterinnen":"Owners", "Keine Spalte als „Pferd“ zugeordnet – übernommen werden dann nur die Halterinnen als Kontakte. Ordnen Sie die Spalte mit dem Pferdenamen unten zu.":"No column assigned to “Horse” – only the owners will be imported as contacts. Assign the column with the horse name below.", "Spalte in Ihrer Datei":"Column in your file", "Beispiel":"Example", "Kommt nach":"Goes to", "– nicht übernehmen –":"– don’t import –", "(ohne Titel)":"(untitled)", "Zeilen ohne Pferdenamen:":"Rows without a horse name:", "– daraus werden nur Kontakte.":"– these become contacts only.", "Übernehmen":"Import", "Pferde angelegt":"Horses added", "Pferde ergänzt":"Horses completed", "Kontakte neu":"New contacts", "Pferde haben eine Adresse, aber noch keinen Kartenpunkt. Für Route und Fahrzeit ermittelt das Cockpit ihn über OpenStreetMap – eine Adresse pro Sekunde.":"horses have an address but no map point yet. For route and driving time the cockpit looks it up via OpenStreetMap – one address per second.", "Alle übernommenen Pferde mit Adresse stehen auf der Karte.":"All imported horses with an address are on the map.", "Fertig":"Done", "Kartenpunkte ermitteln":"Find map points", "Kartenpunkt gefunden:":"Map point found:", "· nicht gefunden:":"· not found:", "(Adresse in der Akte prüfen)":"(check the address in the record)", "Die Datei enthält keine Datenzeilen":"The file contains no data rows", "Halterin / Besitzer":"Owner", "Vorname (Halterin)":"First name (owner)", "Nachname (Halterin)":"Last name (owner)", "Telefon":"Phone", "E-Mail":"Email", "Stall":"Stable", "Straße":"Street", "PLZ":"Postcode", "Ort":"Town", "Rasse":"Breed", "Patienten-Nr. (Praxissoftware)":"Patient no. (practice software)", "UELN":"UELN", "Mikrochip":"Microchip", "Equidenpass-Nr.":"Equine passport no.", "Breitengrad":"Latitude", "Längengrad":"Longitude", "Notiz":"Note", "Erste Schritte":"First steps", "So kommt das erste Pferd in den Verlauf.":"How the first horse gets into the trend.", "Pferd anlegen":"Add a horse", "+ Pferd anlegen":"+ Add a horse",
     "Name, Halterin, Telefon und Stall – das Pferd steht dann auch für die Tour bereit.":"Name, owner, phone and stable – the horse is then ready for the round, too.",
     "Messung anfordern":"Request a recording", "In der Akte des Pferds: „Messung anfordern“ schickt der Halterin Ihren Mess-Link per WhatsApp oder SMS – mit Ihrem Praxisnamen.":"In the horse’s record, “Request a recording” sends the owner your measuring link via WhatsApp or SMS – with your practice name.",
     "Aufnahme kommt an":"The recording arrives", "Die Halterin misst sieben Minuten im Stall und sendet. Sie öffnen die Datei hier – oder richten einen Eingangs-Ordner ein, dann kommt sie von selbst.":"The owner records for seven minutes in the stable and sends it. You open the file here – or set up an inbox folder and it arrives by itself.",
