@@ -2246,14 +2246,17 @@ const Teilen = {
   _pruef(obj){ return String(hashStr(JSON.stringify(obj))); },
   _zuletztLesen(){ if(this._zuletzt==null){ try{ this._zuletzt=localStorage.getItem('carlonTeamZuletzt')||''; }catch(_){ this._zuletzt=''; } } return this._zuletzt; },
   _zuletztSetzen(){ this._zuletzt=this.neuerStand(); try{ localStorage.setItem('carlonTeamZuletzt',this._zuletzt); }catch(_){ } },
-  MUSTER:/^(recordings|horses|consults|coherence)__[\w.-]+\.json$/,
-  teilbar(store){ return this.GETEILT.indexOf(store)>=0; },
+  MUSTER:/^((recordings|horses|consults|coherence)__[\w.-]+|settings__log-[\w.-]+)\.json$/,
+  /* Besuchsdokumentation (Tagebuch „log:…“) liegt im settings-Store – sie ist Praxisarbeit und gehört in den Team-Ordner
+     (Audit 19.11.2026: Tourdoku fehlte im Abgleich und in der Sicherung). Die übrigen Einstellungen bleiben je Gerät. */
+  teilbar(store,x){ if(this.GETEILT.indexOf(store)>=0) return true; const id=x&&typeof x==='object'?x.id:x;
+    return store==='settings'&&typeof id==='string'&&id.indexOf('log:')===0; },
   _name(store,obj){ return store+'__'+String(obj.id||obj.key||'ohne').replace(/[^\w.-]+/g,'-')+'.json'; },
 
   /* Spiegeln, nicht verschieben: Der lokale Bestand bleibt vollständig.
      Fällt der Ordner aus, arbeitet das Gerät ohne Datenverlust weiter. */
   async schreiben(store,obj){
-    if(!this.aktiv||!this.handle||!this.teilbar(store)) return false;
+    if(!this.aktiv||!this.handle||!this.teilbar(store,obj)) return false;
     try{
       const d=await this.handle.getDirectoryHandle('carlon',{create:true});
       const f=await d.getFileHandle(this._name(store,obj),{create:true});
@@ -2266,7 +2269,7 @@ const Teilen = {
   /* Löschen wirkt auf allen Geräten: statt der Datei steht ein Löschvermerk mit Zeitstempel im Ordner. Ohne ihn
      kam eine gelöschte Aufnahme vom zweiten Gerät zurück (Prüfstand 16.11.2026, Fall 5). */
   async loeschen(store,id){
-    if(!this.aktiv||!this.handle||!this.teilbar(store)) return false;
+    if(!this.aktiv||!this.handle||!this.teilbar(store,id)) return false;
     try{ const d=await this.handle.getDirectoryHandle('carlon',{create:true});
       const f=await d.getFileHandle(this._name(store,{id}),{create:true}); const w=await f.createWritable();
       await w.write(JSON.stringify({store,obj:{id},geloescht:true,stand:new Date().toISOString()})); await w.close(); return true;
@@ -2294,7 +2297,7 @@ const Teilen = {
         if(!this.MUSTER.test(name)) continue;
         try{
           const satz=JSON.parse(await (await h.getFile()).text());
-          if(!satz||!satz.store||!satz.obj||!this.teilbar(satz.store)) continue;
+          if(!satz||!satz.store||!satz.obj||!this.teilbar(satz.store,satz.obj)) continue;
           /* Prüfsumme: halb synchronisierte oder veränderte Dateien werden nicht übernommen. */
           if(satz.pruef && !satz.geloescht && satz.pruef!==this._pruef(satz.obj)){ this.letzterFehler='Datei '+name+' unvollständig – übersprungen'; continue; }
           this._sieh(satz.stand);
@@ -2349,8 +2352,9 @@ const Teilen = {
         let st=''; try{ const s=JSON.parse(await (await h.getFile()).text()); st=(s&&(s.stand||(s.obj&&s.obj.stand)))||''; }catch(_){ }
         vorhanden.set(name,st);
       }
-      for(const store of this.GETEILT){
+      for(const store of [...this.GETEILT,'settings']){
         let alle=[]; try{ alle=await DB.all(store); }catch(_){ continue; }
+        if(store==='settings') alle=alle.filter(o=>this.teilbar(store,o));
         for(const obj of alle){
           if(n>=grenze) break;
           const fs=vorhanden.get(this._name(store,obj)); if(fs!==undefined && (obj.stand||'') <= fs) continue;
@@ -2500,11 +2504,11 @@ const DB = {
   /* Team-Ordner-Prüfstand 16.11.2026: Ohne eigenen Zeitstempel je Datensatz überschrieb der ältere Ordnerstand eine
      Offline-Änderung (Datenverlust). Jetzt trägt jeder geteilte Datensatz `stand`; Einträge AUS dem Ordner
      (opt.vonOrdner) behalten ihren Stand und werden nicht zurückgespiegelt. */
-  put(store,obj,opt){ if(obj&&typeof Teilen!=='undefined'&&Teilen.teilbar(store)&&!(opt&&opt.vonOrdner)) obj.stand=Teilen.neuerStand();
+  put(store,obj,opt){ if(obj&&typeof Teilen!=='undefined'&&Teilen.teilbar(store,obj)&&!(opt&&(opt.vonOrdner||opt.standBehalten))) obj.stand=Teilen.neuerStand();
     return new Promise((res,rej)=>{try{const r=this._tx(store,'readwrite').put(obj);r.onsuccess=()=>{
     if(typeof Teilen!=='undefined'&&Teilen.aktiv&&!(opt&&opt.vonOrdner)){ try{ Teilen.schreiben(store,obj); }catch(_){ } }
     res(obj);};r.onerror=()=>{if(typeof Safe!=='undefined')Safe.writeFailed(store,r.error);rej(r.error);};}catch(e){if(typeof Safe!=='undefined')Safe.writeFailed(store,e);rej(e);}});},
-  del(store,id,opt){return new Promise((res,rej)=>{try{const r=this._tx(store,'readwrite').delete(id);r.onsuccess=()=>{ if(typeof Teilen!=='undefined'&&Teilen.aktiv&&Teilen.teilbar(store)&&!(opt&&opt.vonOrdner)){ try{ Teilen.loeschen(store,id); }catch(_){ } } res(); };r.onerror=()=>{if(typeof Safe!=='undefined')Safe.writeFailed(store,r.error);rej(r.error);};}catch(e){if(typeof Safe!=='undefined')Safe.writeFailed(store,e);rej(e);}});},
+  del(store,id,opt){return new Promise((res,rej)=>{try{const r=this._tx(store,'readwrite').delete(id);r.onsuccess=()=>{ if(typeof Teilen!=='undefined'&&Teilen.aktiv&&Teilen.teilbar(store,id)&&!(opt&&opt.vonOrdner)){ try{ Teilen.loeschen(store,id); }catch(_){ } } res(); };r.onerror=()=>{if(typeof Safe!=='undefined')Safe.writeFailed(store,r.error);rej(r.error);};}catch(e){if(typeof Safe!=='undefined')Safe.writeFailed(store,e);rej(e);}});},
   get(store,id){return new Promise((res,rej)=>{const r=this._tx(store,'readonly').get(id);r.onsuccess=()=>res(r.result);r.onerror=()=>rej(r.error);});},
 };
 
@@ -10883,7 +10887,7 @@ const License={
    ════════════════════════════════════════════════════════════════════════ */
 const Backup={
   daten(){ return {app:'carlon-clinic',version:2,exportedAt:new Date().toISOString(),
-      horses:State.horses,recordings:State.recordings,consults:State.consults,coherence:State.coherence,settings:State.settings}; },
+      horses:State.horses,recordings:State.recordings,consults:State.consults,coherence:State.coherence,daylog:State.daylog,settings:State.settings}; },
   /* Automatische Sicherung (Fable-Gutachten 16.11.2026, stärkster Hebel): ist ein Team-Ordner verbunden, legt jedes Gerät
      einmal am Tag eine vollständige Sicherung dort ab – carlon-sicherung/sicherung-JJJJ-MM-TT-<Gerät>.json. Niemand muss
      an den Knopf denken; sie liegt außerhalb des Browsers und übersteht „Websitedaten löschen“ und Geräteverlust. */
@@ -10908,11 +10912,18 @@ const Backup={
   async doImport(file){
     let d;try{d=JSON.parse(await file.text());}catch(e){Toast.show('Datei nicht lesbar','warn');return;}
     if(!d||!Array.isArray(d.horses)){Toast.show('Kein gültiges CARLON-Clinic-Backup','warn');return;}
-    if(!confirm(`Backup vom ${fmtDate(d.exportedAt)} importieren?\n${d.horses.length} Pferde, ${(d.recordings||[]).length} Aufnahmen. Einträge mit gleicher ID werden ersetzt.`))return;
-    for(const h of d.horses||[])await DB.put('horses',h);
-    for(const r of d.recordings||[])await DB.put('recordings',r);
-    for(const c of d.consults||[])await DB.put('consults',c);
-    for(const c of d.coherence||[])await DB.put('coherence',c);
+    if(!confirm(`Backup vom ${fmtDate(d.exportedAt)} einspielen?\n${d.horses.length} Pferde, ${(d.recordings||[]).length} Aufnahmen, ${(d.daylog||[]).length} Besuche. Zusammengeführt: Was hier neuer ist, bleibt.`))return;
+    /* ZUSAMMENFÜHREN statt ersetzen (19.11.2026): iPhone und iPad gleichen über diese Datei mit dem Rechner ab. Ersetzen
+       hätte eine neuere Änderung auf diesem Gerät mit dem älteren Stand der Datei überschrieben. Jüngerer `stand` gewinnt. */
+    let gleich=0;
+    const rein=async(store,o)=>{ if(!o||!o.id) return; const eigen=await DB.get(store,o.id);
+      if(eigen && (eigen.stand||'') >= (o.stand||'') && (eigen.stand||o.stand)){ gleich++; return; }
+      await DB.put(store,o,{standBehalten:!!o.stand}); };
+    for(const h of d.horses||[]) await rein('horses',h);
+    for(const r of d.recordings||[]) await rein('recordings',r);
+    for(const c of d.consults||[]) await rein('consults',c);
+    for(const c of d.coherence||[]) await rein('coherence',c);
+    for(const e of d.daylog||[]) if(String(e.id||'').indexOf('log:')===0) await rein('settings',e);
     if(d.settings){State.settings={...State.settings,...d.settings};await State.saveSettings();}
     await State.load();
     /* Die Sicherung traegt den Abo-Token mit — ohne diesen Aufruf bliebe die
