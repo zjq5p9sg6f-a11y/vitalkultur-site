@@ -2972,8 +2972,12 @@ const Triage = {
    dann „Ausgangswert", nie Baseline. */
 const Baseline={
   TAGE:30, MIN:3,
-  _aus(recs, bisMs){
-    const von=bisMs-this.TAGE*864e5;
+  /* Seltene Messung (Audit Runde 3, 19.11.2026): Misst eine Halterin alle 14 Tage, lagen im 30-Tage-Fenster nie drei
+     Aufnahmen – das Pferd bekam nie eine Basis. Dann zählt das 60-Tage-Fenster (TAGE_SELTEN); die Seite nennt beides. */
+  TAGE_SELTEN:60,
+  _aus(recs, bisMs, tage){
+    if(tage==null){ const e=this._aus(recs,bisMs,this.TAGE); return e.wert!=null?e:this._aus(recs,bisMs,this.TAGE_SELTEN); }
+    const von=bisMs-tage*864e5;
     const xs=recs.filter(r=>{const t=new Date(r.startedAt).getTime();return t<bisMs&&t>=von&&r.metrics&&r.metrics.rmssd>0;}).map(r=>r.metrics.rmssd);
     if(xs.length<this.MIN) return {n:xs.length};
     const m=xs.reduce((a,b)=>a+b,0)/xs.length;
@@ -10744,6 +10748,19 @@ const License={
         body:JSON.stringify({session_id:sid})});
       License.ZEIT.ausAntwort(r);   // Serverzeit ernten, kostet keine Anfrage
       const d=await r.json().catch(()=>({}));
+      /* Testphase schon genutzt (gleiche Karte/E-Mail): Abo läuft, freigeschaltet wird mit der ersten Zahlung.
+         Den Ausweis behalten, damit die Erneuerung das später von selbst erledigt. */
+      if(!d.ok && d.testGenutzt && d.abo){
+        const va=await this.verify(d.abo).catch(()=>({valid:false}));
+        if(va.valid&&va.typ==='sub'){ State.settings.license={provider:'offline',sub:d.abo,testGenutzt:true}; await State.saveSettings(); }
+        saeubern();
+        const bis=d.probeEnde?new Date(d.probeEnde*1000).toLocaleDateString('de-DE'):'';
+        UI.modal(`<div class="modal-head"><button class="closex" onclick="UI.closeModal()">${IC.x}</button><h3>Testphase bereits genutzt</h3></div>
+          <div class="modal-body"><p style="line-height:1.6;margin:0 0 10px">Mit dieser Karte bzw. E-Mail-Adresse wurde die kostenlose Testphase schon einmal genutzt. Ihr Abo läuft weiter – freigeschaltet wird mit der ersten Zahlung${bis?` (am ${bis})`:''}, ganz von selbst.</p>
+          <p style="line-height:1.6;margin:0;color:var(--text-dim)">Möchten Sie das nicht, kündigen Sie unter „Abo verwalten“ – dann entstehen keine Kosten.</p></div>
+          <div class="modal-foot"><button class="btn ghost" onclick="License.portalOeffnen()">Abo verwalten</button><button class="btn primary" onclick="UI.closeModal()">Verstanden</button></div>`);
+        return false;
+      }
       if(!d.ok){
         // Nicht saeubern: ein spaeterer Versuch soll noch moeglich sein.
         Toast.show(d.nochmal?'Freischaltung gleich nochmal versuchen — Verbindung war kurz weg'
@@ -10825,7 +10842,9 @@ const License={
   _letzterVersuch:0,
   async lizenzHolenWennFaellig(){
     const s=State.settings.license||{};
-    if(!s.sub||!s.key) return;
+    if(!s.sub) return;
+    /* Ausweis ohne Lizenz (Testphase schon genutzt): sobald die erste Zahlung da ist, holt die Erneuerung die Lizenz. */
+    if(!s.key){ if(!navigator.onLine||Date.now()-this._letzterVersuch<30*60000) return; this._letzterVersuch=Date.now(); const e=await this.lizenzHolen('erste-zahlung'); if(e.ok){ s.testGenutzt=false; Toast.show('Erste Zahlung eingegangen – freigeschaltet','ok'); } return; }
     // Nicht oefter als alle 30 Minuten anklopfen, egal wie oft der Tab wechselt
     if(Date.now()-this._letzterVersuch < 30*60000) return;
     const v=await this.verify(s.key);

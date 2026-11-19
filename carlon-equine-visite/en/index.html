@@ -144,7 +144,7 @@ document.head.appendChild(s);})();</script>
      "name": "What happens after cancellation?",
      "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Your horses, recordings and records stay readable on the device; backup, JSON, CSV and FHIR export keep working. Locked are new horses of your own, receiving via measuring link and inbox folder, the PDF report, hand-off to Google Maps and the team folder. We could not delete your data anyway — it is with you."
+      "text": "Your horses, recordings and records stay readable on the device; backup, JSON, CSV and FHIR export keep working. Locked are new horses of your own, the daily round with records, receiving via measuring link and inbox folder, the PDF report, hand-off to Google Maps and the team folder. We could not delete your data anyway — it is with you."
      }
     },
     {
@@ -152,7 +152,7 @@ document.head.appendChild(s);})();</script>
      "name": "How do my horses get into the cockpit?",
      "acceptedAnswer": {
       "@type": "Answer",
-      "text": "As a CSV file from your practice software, from Excel (“Save as → CSV”) or from your address book. The cockpit recognises the columns, shows what goes where before importing and creates nothing twice; existing horses are only completed in empty fields. It then finds the map points for the route from the addresses. You add single horses directly."
+      "text": "As a CSV file from your practice software, from Excel (“Save as → CSV”) or from your address book. The cockpit recognises the columns, shows what goes where before importing and creates nothing twice; existing horses are only completed in empty fields. It then looks up the map points for the route once – one address per second via OpenStreetMap; coordinates in the file are taken over directly. You add single horses directly."
      }
     },
     {
@@ -160,7 +160,7 @@ document.head.appendChild(s);})();</script>
      "name": "Does the cockpit work without signal?",
      "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Yes. After the first visit the cockpit also starts without a network: records, today’s route, appointments and “Done” work on the device, and whatever you enter offline is kept. Without a network only the map view and address search are missing; the route list remains."
+      "text": "Yes. After the first visit the cockpit also starts without a network: records, today’s route, appointments and “Done” work on the device, and whatever you enter offline is kept. Without a network the map view and address search are missing; messages, the Maps hand-off and team sync go out as soon as there is signal again. The licence carries up to 28 days without signal."
      }
     },
     {
@@ -168,7 +168,7 @@ document.head.appendChild(s);})();</script>
      "name": "What if CARLON no longer exists one day?",
      "acceptedAnswer": {
       "@type": "Answer",
-      "text": "Then your data is not gone: it lies on your device or in your own team folder, not on a server of ours, and can be exported at any time as JSON, CSV and FHIR R5. The backup restores everything in any Chrome or Edge."
+      "text": "Then your data is not gone: it lies on your device or in your own team folder, not on a server of ours, and can be exported at any time as JSON, CSV and FHIR R5. The backup restores everything on a new device or in another browser."
      }
     },
     {
@@ -200,7 +200,7 @@ document.head.appendChild(s);})();</script>
      "name": "Where does the baseline come from?",
      "acceptedAnswer": {
       "@type": "Answer",
-      "text": "From this horse's own resting recordings: three of its own recordings within 30 days form the baseline; from the fourth, the cockpit shows the deviation from it. Until then the cockpit shows the starting value from the file, explicitly not as a baseline, and how many of the horse's own recordings are still missing."
+      "text": "From this horse's own resting recordings: three of its own recordings within 30 days form the baseline (60 days if the owner records less often); from the fourth, the cockpit shows the deviation from it. Until then the cockpit shows the starting value from the file, explicitly not as a baseline, and how many of the horse's own recordings are still missing."
      }
     },
     {
@@ -1272,7 +1272,7 @@ try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; 
     <span class="hero-signet" aria-hidden="true"><img src="/assets/equine-mark-512.png" width="512" height="512" alt="" fetchpriority="high"></span>
     <p class="hero-marke">CARLON<small>EQUINE VISITE</small></p>
     <div class="eyebrow">For equine practices and clinics</div>
-    <h1>Resting HRV from the home stable – <em>in your practice’s trend view.</em></h1>
+    <h1>Your day on the road under control – <em>and resting HRV from the home stable as a trend.</em></h1>
     <p class="hero-sub">
       Your client records in the familiar stable following a fixed protocol. Before the visit you open <strong>raw data, signal quality and the trend against the horse’s own baseline</strong> – with a measurement report on your letterhead. Your cockpit runs on iPhone, iPad and computer; in the stable the owner records with a Polar H10 strap and an Android device or computer (Chrome, Edge) – or with your practice measuring kit.
     </p>
@@ -1282,7 +1282,7 @@ try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; 
     </div>
     <ul class="hero-belege2">
       <li><svg class="ic" aria-hidden="true"><use href="#i-browser"/></svg>Demo without account or installation</li>
-      <li><svg class="ic" aria-hidden="true"><use href="#i-schild"/></svg>Horse and measurement data stay on your device</li>
+      <li><svg class="ic" aria-hidden="true"><use href="#i-schild"/></svg>Horse and measurement data stay with you – on the device or in your team folder</li>
       <li><svg class="ic" aria-hidden="true"><use href="#i-check"/></svg>14-day trial, cancel monthly</li>
     </ul>
     
@@ -1350,7 +1350,7 @@ try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; 
     <div class="tour-punkte m-wisch">
       <div class="tp"><svg class="ic li-ic" aria-hidden="true"><use href="#i-route"/></svg><h3>Short drives – or your own order</h3><p>Default: stop by stop to the nearest horse, with your appointments. If you wish, you sort the list arithmetically by the measured deviation from the own baseline and then set the order yourself – the software does not determine urgency. You change it by dragging, stop by stop.</p></div>
       <div class="tp"><svg class="ic li-ic" aria-hidden="true"><use href="#i-uhr"/></svg><h3>Arrival and appointment at a glance</h3><p>Every card shows arrival, drive time and contact; the route counts from the current time and shows whether you are on time, have a buffer or are running late. It starts from an estimate (straight line × 1.32 at 45 km/h, 20 min per visit); then the times learn from your own records: how long you usually need for this horse and how long your drives really take.</p></div>
-      <div class="tp"><svg class="ic li-ic" aria-hidden="true"><use href="#i-uhr"/></svg><h3>Running late, one tap</h3><p>If a visit takes longer, one tap opens WhatsApp or SMS with a ready message to the next owner – new arrival time, your name, your location if you like. You send it yourself. Before you set off, “On my way” goes out the same way: the horse is ready, the passport is at hand.</p></div>
+      <div class="tp"><svg class="ic li-ic" aria-hidden="true"><use href="#i-uhr"/></svg><h3>Running late: message ready-written</h3><p>If a visit takes longer, one tap opens WhatsApp or SMS with a ready message to the next owner – new arrival time, your name, your location if you like. You send it yourself. Before you set off, “On my way” goes out the same way: the horse is ready, the passport is at hand.</p></div>
       <div class="tp"><svg class="ic li-ic" aria-hidden="true"><use href="#i-akte"/></svg><h3>What else is due at the same stable</h3><p>Vaccination, deworming, dental check: you enter the due date or import it via CSV. When you are at a stable, the stop shows what else is due there in the next 30 days – one trip instead of two.</p></div>
       <div class="tp"><svg class="ic li-ic" aria-hidden="true"><use href="#i-check"/></svg><h3>“Done” – and the visit is recorded</h3><p>One tap as you leave: visit, treatment time and distance are in the records, the service is in the service list – as CSV for your practice software; invoices are still written by your practice program. You can dictate a note through your phone keyboard’s microphone. Whether your practice program reads the CSV is up to its vendor.</p></div>
       <div class="tp"><svg class="ic li-ic" aria-hidden="true"><use href="#i-route"/></svg><h3>Mileage fee proposal under § 10 GOT</h3><p>Your round produces a proposal for the German fee scale: double kilometres × €3.50, split per owner, amounts below the €13 minimum flagged – with your odometer km, as CSV. What you charge is your decision.</p></div>
@@ -1551,7 +1551,7 @@ try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; 
         <path d="M411.7 236V70" class="gr-mittel"/><text x="417.7" y="228" class="gr-klein">baseline from the 4th recording</text>
         <text x="724" y="280" text-anchor="end" class="gr-klein gr-cyan">own baseline · mean ± spread of the previous 30 days</text>
         </svg>
-      <figcaption>Demo horse “Sunny” from the cockpit, 14 weekly recordings. The cockpit computes the baseline exactly like this: mean and spread of the previous 30 days, from the fourth recording; the new recording is not included.</figcaption>
+      <figcaption>Demo horse “Sunny” from the cockpit, 14 weekly recordings. The cockpit computes the baseline exactly like this: mean and spread of the previous 30 days (60 if recordings are rarer), from the fourth recording; the new recording is not included.</figcaption>
     </figure>
     <h3 class="sub-h">And why in the familiar stall?</h3>
     <p class="sec-lead">
@@ -1747,11 +1747,11 @@ try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; 
       </picture>
       <figcaption>
         <div class="sec-eyebrow">The sensor</div>
-        <h3>Polar H10 with the Equine belt: measured electrically, validated against the ECG in a study in horses.</h3>
+        <h3>Polar H10 in the Equine belt: measured electrically – the H10 has been validated against the ECG in a study in horses.</h3>
         <ul class="gurt-liste">
           <li class="mit-ic"><svg class="ic li-ic" aria-hidden="true"><use href="#i-ekg"/></svg><b>R-waves, not a light pulse.</b> The H10 measures the heart’s electrical activity and delivers every beat interval at about 1&nbsp;ms resolution (1/1024&nbsp;s) – optical sensors estimate it from light.</li>
           <li class="mit-ic"><svg class="ic li-ic" aria-hidden="true"><use href="#i-gurt"/></svg><b>Made for the horse’s body.</b> The Equine belt is sized for the horse’s girth; electrode gel on the coat lowers the coat impedance – that usually improves contact; whether the signal holds, the measuring station shows live.</li>
-          <li class="mit-ic"><svg class="ic li-ic" aria-hidden="true"><use href="#i-check"/></svg><b>Validated in horses.</b> In 28 horses, heart rate and time-domain HRV values from a Polar H10 system agreed with the ECG at rest and during groundwork (<a href="https://doi.org/10.3389/fvets.2022.939534" target="_blank" rel="noopener">Kapteijn et&nbsp;al. 2022</a>; with different electrodes, a different receiver and after artefact correction in Kubios; our analysis is not separately validated). The measuring station shows beat intervals, not an ECG trace.</li>
+          <li class="mit-ic"><svg class="ic li-ic" aria-hidden="true"><use href="#i-check"/></svg><b>Validated in a study in horses.</b> In 28 horses, heart rate and time-domain HRV values from a Polar H10 system agreed with the ECG at rest and during groundwork (<a href="https://doi.org/10.3389/fvets.2022.939534" target="_blank" rel="noopener">Kapteijn et&nbsp;al. 2022</a>; with different electrodes, a different receiver and after artefact correction in Kubios; our analysis is not separately validated). The measuring station shows beat intervals, not an ECG trace.</li>
           <li class="mit-ic"><svg class="ic li-ic" aria-hidden="true"><use href="#i-tasche"/></svg><b>Freely available.</b> Not our device, no lock-in – replacements are sold by retailers.</li>
         </ul>
       </figcaption>
@@ -1919,7 +1919,6 @@ try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; 
         <li>Everything in the practice plan</li>
         <li>Team folder for wards and the wall monitor too – the same state across the whole hospital</li>
         <li>Station wall for the monitor in the ward, no alerts</li>
-        <li>A fixed method version per analysis — for archives and studies</li>
       </ul>
       <a class="cta-primary tarif-knopf" href="/carlon-equine/app/?kasse=klinik&amp;lang=en">Try 14 days free · then €349 / month →</a>
       <a class="tarif-neben" href="/carlon-equine/app/?demo=station&amp;lang=en">See the station wall in the demo →</a>
@@ -2027,16 +2026,16 @@ try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; 
            browser; the page directs you to a capable device there.</p></div>
       </details>
       <details class="faq-item" data-spur-auf="faq-3"><summary><h3>What happens after cancellation?</h3></summary>
-        <div class="faq-a"><p>Your horses, recordings and records stay readable on the device; backup, JSON, CSV and FHIR export keep working. Locked are new horses of your own, receiving via measuring link and inbox folder, the PDF report, hand-off to Google Maps and the team folder. We could not delete your data anyway — it is with you.</p></div>
+        <div class="faq-a"><p>Your horses, recordings and records stay readable on the device; backup, JSON, CSV and FHIR export keep working. Locked are new horses of your own, the daily round with records, receiving via measuring link and inbox folder, the PDF report, hand-off to Google Maps and the team folder. We could not delete your data anyway — it is with you.</p></div>
       </details>
       <details class="faq-item" data-spur-auf="faq-bestand"><summary><h3>How do my horses get into the cockpit?</h3></summary>
-        <div class="faq-a"><p>As a CSV file from your practice software, from Excel (“Save as → CSV”) or from your address book. The cockpit recognises the columns, shows what goes where before importing and creates nothing twice; existing horses are only completed in empty fields. It then finds the map points for the route from the addresses. You add single horses directly.</p></div>
+        <div class="faq-a"><p>As a CSV file from your practice software, from Excel (“Save as → CSV”) or from your address book. The cockpit recognises the columns, shows what goes where before importing and creates nothing twice; existing horses are only completed in empty fields. It then looks up the map points for the route once – one address per second via OpenStreetMap; coordinates in the file are taken over directly. You add single horses directly.</p></div>
       </details>
       <details class="faq-item" data-spur-auf="faq-offline"><summary><h3>Does the cockpit work without signal?</h3></summary>
-        <div class="faq-a"><p>Yes. After the first visit the cockpit also starts without a network: records, today’s route, appointments and “Done” work on the device, and whatever you enter offline is kept. Without a network only the map view and address search are missing; the route list remains.</p></div>
+        <div class="faq-a"><p>Yes. After the first visit the cockpit also starts without a network: records, today’s route, appointments and “Done” work on the device, and whatever you enter offline is kept. Without a network the map view and address search are missing; messages, the Maps hand-off and team sync go out as soon as there is signal again. The licence carries up to 28 days without signal.</p></div>
       </details>
       <details class="faq-item" data-spur-auf="faq-anbieter"><summary><h3>What if CARLON no longer exists one day?</h3></summary>
-        <div class="faq-a"><p>Then your data is not gone: it lies on your device or in your own team folder, not on a server of ours, and can be exported at any time as JSON, CSV and FHIR R5. The backup restores everything in any Chrome or Edge.</p></div>
+        <div class="faq-a"><p>Then your data is not gone: it lies on your device or in your own team folder, not on a server of ours, and can be exported at any time as JSON, CSV and FHIR R5. The backup restores everything on a new device or in another browser.</p></div>
       </details>
       <details class="faq-item" data-spur-auf="faq-4"><summary><h3>Do I need a data processing agreement?</h3></summary>
         <div class="faq-a"><p>In our assessment, no. The cockpit runs entirely in your browser, and the owner's recording never
@@ -2086,43 +2085,6 @@ try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; 
     </div>
     <p class="cta-note">Runs in the browser, no installation and no account. Measurement data stays on your device.</p>
 
-    <form id="anmeldung" class="anmeldung"
-          action="mailto:jan@vitalkultur.com" method="post" enctype="text/plain">
-      <h3>Join as a beta practice</h3>
-      <p class="anm-lead">Take part in the beta and your founding-partner price stays fixed for 24 months (active subscription, same site). The developer
-         reads every registration personally — and replies, usually the
-         same day.</p>
-
-      <div class="anm-art" role="radiogroup" aria-label="Praxisart">
-        <label><input type="radio" name="art" value="mobil" checked> I work ambulatory</label>
-        <label><input type="radio" name="art" value="klinik"> We are a clinic</label>
-      </div>
-
-      <div class="anm-raster">
-        <label>Name<input name="name" autocomplete="name" required></label>
-        <label>Practice or clinic <span>(optional)</span><input name="praxis" autocomplete="organization"></label>
-        <label>Email<input name="email" type="email" autocomplete="email" required></label>
-        <label>Region <span>(optional)</span><input name="region" placeholder="e.g. Ortenau, Bavaria, Münsterland"></label>
-        <label>Roughly how many horses do you look after?<input name="pferde" inputmode="numeric" placeholder="e.g. 180"></label>
-      </div>
-      <label class="anm-weit">What would you like to know first? <span>(optional)</span>
-        <textarea name="nachricht" rows="3" placeholder="A question, a doubt, a wish — whatever comes first."></textarea></label>
-
-      <div class="anm-topf" aria-hidden="true">
-        <label>Please leave empty<input name="hinweis" tabindex="-1" autocomplete="off"></label>
-      </div>
-
-      <button type="submit" class="cta-primary anm-senden">Send registration →</button>
-      <p class="anm-status" id="anmStatus" role="status" aria-live="polite"></p>
-
-      <p class="anm-recht">
-        We store your details solely in order to process your registration
-        (Art.&nbsp;6(1)(b) GDPR), on our own service — not with a form provider — and delete
-        them after 180&nbsp;days at the latest. No newsletter, no sharing.
-        <a href="/privacy-en.html">Privacy Policy</a> ·
-        oder schreiben Sie einfach an <a href="mailto:jan@vitalkultur.com">jan@vitalkultur.com</a>.
-      </p>
-    </form>
   </div>
 </section>
 
