@@ -10250,7 +10250,11 @@ const UI={
        feats:['Alles aus Klinik + Reha','Tierärzte und Reha-Pferde ohne Obergrenze','Für Betriebe mit mehreren Standorten, Preis je Standort']},
     ];
     const brutto=x=>(Math.round(x*119)/100).toLocaleString('de-DE',{minimumFractionDigits:2,maximumFractionDigits:2})+' €';
-    const knopf=(id,text)=>{const u=License.checkoutLink(id);
+    /* Wer schon ein laufendes Abo hat, wechselt die Stufe im Kundenportal (anteilig verrechnet) – ein zweiter Kauf hier
+       wäre ein Doppelabo mit doppelter Abbuchung und Erstattung von Hand (20.11.2026). */
+    const hatAbo=!!(State.settings.license&&State.settings.license.sub)&&License.isPaid();
+    const knopf=(id,text)=>{ if(hatAbo) return `<button class="btn primary" style="margin-top:8px;padding:7px 12px;font-size:12px" onclick="UI.closeModal();License.portalOeffnen(true)">Stufe wechseln</button>`;
+      const u=License.checkoutLink(id);
       return u?`<a class="btn primary kauf-link" aria-disabled="true" style="margin-top:8px;padding:7px 12px;font-size:12px" href="${u}" target="_blank" rel="noopener" onclick="if(!document.getElementById('kaufB2B')?.checked){event.preventDefault();UI.kaufHinweis();}">${text}</a>`
               :`<span class="kauf-zu" style="display:block;margin-top:8px;font-size:11.5px;color:var(--text-dim)">Kasse öffnet in Kürze</span>`;};
     this.modal(`<div class="modal-head"><button class="closex" onclick="UI.closeModal()">${IC.x}</button><h3>CARLON Equine freischalten</h3></div>
@@ -12061,7 +12065,20 @@ const License={
     UI.modal(`<div class="modal-head"><button class="closex" onclick="UI.closeModal()">${IC.x}</button><h3>Gerätegrenze der Stufe erreicht</h3></div>
       <div class="modal-body"><p style="line-height:1.6;margin:0 0 10px">Ihr Abo ist bereits auf ${d&&d.grenze||''} Geräten aktiv. So viele umfasst Ihre Stufe${d&&d.stufe&&License.TIERS[d.stufe]?' '+esc(License.TIERS[d.stufe].name):''}. Für dieses Gerät wechseln Sie zu einer größeren Stufe.</p>
       <p style="line-height:1.6;margin:0;color:var(--text-dim)">Ein Gerät, das 30 Tage nicht genutzt wird, gibt seinen Platz von selbst frei${bis?` (frühestens am ${bis})`:''}. Ihre Daten auf diesem Gerät bleiben lesbar.</p></div>
-      <div class="modal-foot"><button class="btn ghost" onclick="UI.closeModal()">Schließen</button><button class="btn primary" onclick="UI.closeModal();License.stufeWechseln()">Stufe wechseln</button></div>`);
+      <p style="line-height:1.6;margin:10px 0 0;color:var(--text-dim)">Neues Tablet oder Browserdaten gelöscht? Melden Sie das am längsten ungenutzte Gerät ab, dann gilt Ihr Abo hier (einmal in 7 Tagen).</p></div>
+      <div class="modal-foot"><button class="btn ghost" onclick="UI.closeModal()">Schließen</button><button class="btn ghost" onclick="License.geraetFreigeben()">Ältestes Gerät abmelden</button><button class="btn primary" onclick="UI.closeModal();License.stufeWechseln()">Stufe wechseln</button></div>`);
+  },
+  /* Selbstfreigabe (20.11.2026): ältestes Gerät abmelden und dieses freischalten – ohne Mail an uns. */
+  async geraetFreigeben(){
+    const s=State.settings.license||{}; if(!s.sub){ Toast.show('Kein Abo hinterlegt','warn'); return; }
+    try{
+      const r=await fetch(this.DIENST+'/geraet-freigeben',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({token:s.sub,geraet:this.geraetId()})});
+      const d=await r.json().catch(()=>({}));
+      if(!d.ok){ Toast.show(d.zuFrueh?`Ein Gerät lässt sich einmal in 7 Tagen abmelden – wieder ab ${new Date(d.wiederAb*1000).toLocaleDateString('de-DE')}.`:(d.grund||'Abmelden gerade nicht möglich'),'warn'); return; }
+      s.abgelehntSeit=null; State.settings.license=s; await State.saveSettings();
+      UI.closeModal(); const e=await this.lizenzHolen('freigabe');
+      Toast.show(e.ok?'Dieses Gerät ist freigeschaltet':'Freischaltung gerade nicht möglich – bitte gleich nochmal',e.ok?'ok':'warn');
+    }catch(_){ Toast.show('Abmelden braucht Internet','warn'); }
   },
   geraetLink(){ const s=State.settings.license||{}; return s.sub ? location.origin+location.pathname+'#abo='+encodeURIComponent(s.sub) : ''; },
   async geraetUebernehmen(){
@@ -12172,7 +12189,10 @@ const License={
            Genau diese Unterscheidung fehlte und war der Grund, warum ein
            Funkloch dieselbe Wirkung hatte wie eine Kuendigung. */
         console.warn('[CARLON] Erneuerung abgelehnt:', r.status, d.grund);
-        if(d.geraeteGrenze){ this._geraeteGrenze=d; if(grund!=='still') try{ this.geraeteGrenzeZeigen(d); }catch(_){ } return {ok:false,grund:d.grund,geraeteGrenze:true}; }
+        if(d.geraeteGrenze){ this._geraeteGrenze=d;
+          /* Abgemeldetes oder überzähliges Gerät: das ist ein klares Nein – keine Funkloch-Kulanz nach Ablauf der Lizenz. */
+          s.abgelehntSeit=Math.floor(Date.now()/1000); State.settings.license=s; await State.saveSettings();
+          if(grund!=='still') try{ this.geraeteGrenzeZeigen(d); }catch(_){ } return {ok:false,grund:d.grund,geraeteGrenze:true}; }
         if(r.status===402){
           s.abgelehntSeit=Math.floor(Date.now()/1000); s.letztePruefung=s.abgelehntSeit;
           State.settings.license=s; await State.saveSettings();

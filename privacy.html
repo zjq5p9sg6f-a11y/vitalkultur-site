@@ -44,7 +44,7 @@
 
   <div class="container legal">
     <h1>Datenschutzerklärung</h1>
-    <p class="subtitle">Vitalkultur · Stand: 19.11.2026 · Version 2.9 — portfolio-weit (alle iOS-Apps + vitalkultur.com)</p>
+    <p class="subtitle">Vitalkultur · Stand: 20.11.2026 · Version 3.0 — portfolio-weit (alle iOS-Apps + vitalkultur.com)</p>
 
     <!-- ============================================================
          GELTUNGSBEREICH
@@ -345,6 +345,7 @@
       <ul>
         <li>Erhält den signierten Abo-Ausweis der Praxis und fragt bei Stripe, ob das Abonnement läuft (Art.&nbsp;6 Abs.&nbsp;1 lit.&nbsp;b DSGVO)</li>
         <li>Legt einen <strong>gehashten</strong> Nutzungsstempel ab (<code>n:</code> + gekürzter SHA-256 der Stripe-Kundennummer, ohne Namen) zur Erkennung aktiver Nutzung — Art.&nbsp;6 Abs.&nbsp;1 lit.&nbsp;f DSGVO; Löschung nach längstens 400 Tagen</li>
+        <li>Erhält von jedem freigeschalteten Gerät eine <strong>zufällige Gerätekennung</strong> (im Browser erzeugt, ohne Bezug zu Gerät oder Person) und legt sie nur <strong>gehasht</strong> mit dem Zeitpunkt der letzten Erneuerung ab (<code>g:</code> + gekürzter SHA-256), um die Gerätezahl der gebuchten Stufe einzuhalten (Art.&nbsp;6 Abs.&nbsp;1 lit.&nbsp;b DSGVO); ein Eintrag entfällt nach 30 Tagen ohne Erneuerung oder wenn die Praxis das Gerät selbst abmeldet, die Liste spätestens nach 400 Tagen</li>
         <li>Sieht <strong>keine Gesundheits- oder Pferdedaten</strong></li>
       </ul>
 

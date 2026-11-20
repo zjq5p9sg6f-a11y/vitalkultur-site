@@ -176,7 +176,7 @@ document.head.appendChild(s);})();</script>
      "name": "Do I need a data processing agreement?",
      "acceptedAnswer": {
       "@type": "Answer",
-      "text": "In our assessment, no. The cockpit runs entirely in your browser, and the owner's recording never reaches us either: her measuring station creates a file on her own device, which she sends to you herself. There is no relay at our end and therefore nothing a data processing agreement could be about. Please check this for your practice."
+      "text": "In our assessment, no. The cockpit runs entirely in your browser; to check the licence it contacts our licence service and transmits only the subscription pass and a random device ID, no horse or measurement data, and the owner's recording never reaches us either: her measuring station creates a file on her own device, which she sends to you herself. There is no relay at our end and therefore nothing a data processing agreement could be about. Please check this for your practice."
      }
     },
     {
@@ -208,7 +208,7 @@ document.head.appendChild(s);})();</script>
      "name": "Where is my data, and how do I back it up?",
      "acceptedAnswer": {
       "@type": "Answer",
-      "text": "In your browser on your device, not on a server of ours. Under Documentation, “Back up” creates a backup file; “Restore backup” brings everything back on a new device or browser, including your activation. If a recent backup is missing, the cockpit shows it at the top. With a subscription, the records can also live in a team folder your practice already uses, such as OneDrive, Google Drive, Dropbox or a network drive. Then every vet sees the same state when working on computers with Chrome or Edge. iPad and iPhone sync by file: “Sync to the practice” puts the file into the inbox folder with one tap, and the practice computer merges it by itself. The newer state is always kept, including visit records. The phone takes the daily backup back from the team folder."
+      "text": "In your browser on your device, not on a server of ours. Under Documentation, “Back up” creates a backup file; “Restore backup” brings everything back on a new device or browser, including your activation within your tier's device count; you sign off an old device yourself. If a recent backup is missing, the cockpit shows it at the top. With a subscription, the records can also live in a team folder your practice already uses, such as OneDrive, Google Drive, Dropbox or a network drive. Then every vet sees the same state when working on computers with Chrome or Edge. iPad and iPhone sync by file: “Sync to the practice” puts the file into the inbox folder with one tap, and the practice computer merges it by itself. The newer state is always kept, including visit records. The phone takes the daily backup back from the team folder."
      }
     },
     {
@@ -1257,7 +1257,7 @@ try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; 
         <li><a href="#arbeitstag"><span class="kap-nr">02</span><span class="kap-titel">Working day</span><span class="kap-was">Route · delays · visit records · mileage fee</span></a></li>
         <li><a href="#ablauf"><span class="kap-nr">03</span><span class="kap-titel">Measuring station</span><span class="kap-was">Measuring link · station · data path</span></a></li>
         <li><a href="#methode"><span class="kap-nr">04</span><span class="kap-titel">Method</span><span class="kap-was">Own baseline · pauses · exports</span></a></li>
-        <li><a href="#preis"><span class="kap-nr">05</span><span class="kap-titel">Pricing</span><span class="kap-was">Practice · clinic · 14-day trial</span></a></li>
+        <li><a href="#preis"><span class="kap-nr">05</span><span class="kap-titel">Pricing</span><span class="kap-was">Five tiers · 14-day trial</span></a></li>
         <li><a href="#fragen"><span class="kap-nr">06</span><span class="kap-titel">Questions</span><span class="kap-was">FAQ · limits</span></a></li>
       </ol>
     </div>
@@ -1883,15 +1883,15 @@ try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; 
     
     <h2>One fixed monthly price per tier. No extra charges.</h2>
     <p class="sec-lead">
-      One subscription covers one business, that is one practice or one site. <strong>Horses and recordings are unlimited.</strong>
+      One subscription covers one business, that is one practice or one site. <strong>Horses and recordings are unlimited;</strong> in the rehab tiers only horses with a rehab session in 30 days are limited.
       Devices per tier: Mobile practice 2, Practice &amp; clinic 6, Rehab 6, Clinic + rehab 8, Equine Center unlimited. Rehab horses in 30 days: Rehab 20, Clinic + rehab 40, Equine Center unlimited.
-      Above the limit, a further device or rehab horse is activated with the larger tier; everything you already have stays usable, nothing is charged extra. A device not used for 30 days frees its place.
+      Above the limit, a further device or rehab horse is activated with the larger tier; everything you already have stays usable, nothing is charged extra. A device is a browser on a computer, tablet or phone of your business in which the cockpit is activated, including the wall monitor; owners' devices do not count. A device not used for 30 days frees its place, and you can sign off an old device yourself at any time.
     </p>
     
     <ol class="kaufschritte m-wisch">
       <li><b>Pay via the payment service Link (Stripe group),</b> in the secure checkout, in about two minutes. On the monthly plan the first 14 days are free. The invoice showing VAT arrives by email.</li>
       <li><b>Activated at once.</b> After payment you return to the cockpit, and it activates itself, no user account. Further devices are activated with a device link from the first device.</li>
-      <li><b>Manage it yourself.</b> Invoices, payment method and cancellation any time under “Manage subscription”.</li>
+      <li><b>Manage it yourself.</b> Invoices, payment method, tier changes and cancellation any time under “Manage subscription”. A tier change applies at once and is prorated. The monthly plan can be cancelled at the end of any month, the annual plan (no trial) with one month's notice before the end of the term.</li>
     </ol>
     <div class="gruender">
       <div class="g-k">Your contact</div>
@@ -1942,10 +1942,10 @@ try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; 
       <ul class="enthalten">
         <li>Everything in practice &amp; clinic</li>
         <li class="tarif-begeistert"><b>Rehab recording on 13 modalities</b> with live heart rate and HRV, session report and progress documentation for the owner, sessions for her CARLON Equine app</li>
-        <li>Several sites: Equine Center, €890 net per site</li>
+        <li>Several sites: Equine Center, €890 net per site, devices and rehab horses unlimited</li>
       </ul>
       <a class="cta-primary tarif-knopf" href="/carlon-equine/app/?kasse=kombi&amp;lang=en">Try 14 days · then €590 net per month →</a>
-      <a class="tarif-neben" href="/carlon-equine-visite/reha/">Rehab centre only? Rehab from €349 net, up to 20 horses (German page) →</a>
+      <a class="tarif-neben" href="/carlon-equine-visite/reha/">Rehab centre only? Rehab €349 net: 20 rehab horses in 30 days, 6 devices (German page) →</a>
     </div>
     </div>
     <p class="test-bedingung"><b>Try 14 days free:</b> you enter payment details at the start; nothing is charged today. Cancel within the 14 days under “Manage subscription” and there is no charge; after that the monthly plan runs at the stated price.</p>
@@ -2059,7 +2059,7 @@ try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; 
         <div class="faq-a"><p>Then your data is not gone: it lies on your device or in your own team folder, not on a server of ours, and can be exported at any time as JSON, CSV and FHIR R5. The backup restores everything on a new device or in another browser.</p></div>
       </details>
       <details class="faq-item" data-spur-auf="faq-4"><summary><h3>Do I need a data processing agreement?</h3></summary>
-        <div class="faq-a"><p>In our assessment, no. The cockpit runs entirely in your browser, and the owner's recording never
+        <div class="faq-a"><p>In our assessment, no. The cockpit runs entirely in your browser; to check the licence it contacts our licence service and transmits only the subscription pass and a random device ID, no horse or measurement data, and the owner's recording never
            reaches us either: her measuring station creates a file on her own device, which
            she sends to you herself. There is no relay at our end and therefore nothing a
            data processing agreement could be about. Please check this for your practice.</p></div>
@@ -2082,7 +2082,7 @@ try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; 
            explicitly not as a baseline, and how many of the horse's own recordings are still missing.</p></div>
       </details>
       <details class="faq-item" data-spur-auf="faq-9"><summary><h3>Where is my data, and how do I back it up?</h3></summary>
-        <div class="faq-a"><p>In your browser on your device, not on a server of ours. Under Documentation, “Back up” creates a backup file; “Restore backup” brings everything back on a new device or browser, including your activation. If a recent backup is missing, the cockpit shows it at the top. With a subscription, the records can also live in a team folder your practice already uses, such as OneDrive, Google Drive, Dropbox or a network drive. Then every vet sees the same state when working on computers with Chrome or Edge. iPad and iPhone sync by file: “Sync to the practice” puts the file into the inbox folder with one tap, and the practice computer merges it by itself. The newer state is always kept, including visit records. The phone takes the daily backup back from the team folder.</p></div>
+        <div class="faq-a"><p>In your browser on your device, not on a server of ours. Under Documentation, “Back up” creates a backup file; “Restore backup” brings everything back on a new device or browser, including your activation within your tier's device count; you sign off an old device yourself. If a recent backup is missing, the cockpit shows it at the top. With a subscription, the records can also live in a team folder your practice already uses, such as OneDrive, Google Drive, Dropbox or a network drive. Then every vet sees the same state when working on computers with Chrome or Edge. iPad and iPhone sync by file: “Sync to the practice” puts the file into the inbox folder with one tap, and the practice computer merges it by itself. The newer state is always kept, including visit records. The phone takes the daily backup back from the team folder.</p></div>
       </details>
       <details class="faq-item" data-spur-auf="faq-10"><summary><h3>Can I charge for reviewing a recording?</h3></summary>
         <div class="faq-a"><p>Whether and how you charge for reviewing a recording is your decision under the German fee schedule for veterinarians (GOT); we give no recommendation on this. CARLON delivers measurements, trends and a measurement report; whether this becomes a consultation and how you charge for it is up to you. Reviewing does not replace an examination.</p></div>
