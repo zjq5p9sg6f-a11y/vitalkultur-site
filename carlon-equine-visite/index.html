@@ -385,6 +385,7 @@ svg.ic.vt-ic{grid-row:1 / span 2;width:34px;height:34px;padding:7px;box-sizing:b
 .pz-echt .pz{background:#000;border-radius:calc(var(--r) - var(--b));padding:clamp(10px,1.4vw,18px)}
 .pz-hinweis{display:flex;gap:10px;align-items:flex-start;margin-top:var(--sp-21)!important;font-size:var(--t-klein);color:var(--text-dim)!important}
 .pz-hinweis svg.ic{width:22px;height:22px;flex:0 0 auto;margin-top:1px}
+.pz-roh{margin-top:var(--sp-21)!important;font-size:var(--t-klein);color:var(--text-dim)!important}.pz-roh a{color:var(--accent,#3fd0a8)}
 .pz-mehr{display:inline-block;margin-top:var(--sp-13);color:var(--cyan);font-size:var(--t-klein);border-bottom:1px solid rgba(62,207,178,.35)}
 
 .gurt-block{display:block!important;background:none!important;border:0!important;padding:0!important;margin-top:var(--sp-55)!important}
@@ -1673,6 +1674,7 @@ try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; 
         <h3>Jede Aufnahme Schlag für Schlag durchsehen</h3>
         <p>Das ist derselbe Baustein wie in der Akte im Cockpit: Jedes Schlagpaar ist ein Punkt, die Ellipse aus SD1 und SD2 gilt für das gewählte Zeitfenster. Beim Scrollen baut sich das Diagramm Schlag für Schlag auf; lange Pausen sind bernsteinfarben markiert.</p>
         <p class="pz-hinweis"><svg class="ic" aria-hidden="true"><use href="#i-pfeil"/></svg>Ziehen Sie den Zeitregler vor und zurück. <span class="nur-maus">Zeigen Sie auf einen Punkt: Das Fadenkreuz nennt Schlag, Zeitpunkt und beide Abstände in Millisekunden. Mausrad zoomt, Doppelklick setzt zurück.</span><span class="nur-touch">Tippen Sie auf einen Punkt: Das Fadenkreuz nennt Schlag, Zeitpunkt und beide Abstände in Millisekunden. Zwei Finger zoomen, Doppeltipp setzt zurück.</span></p>
+        <p class="pz-roh"><b>Zum Nachrechnen:</b> eine echte Ruheaufnahme eines Pferds im Stall als <a href="/carlon-equine/app/belege/ruheaufnahme-2026-06-24.csv">CSV mit 325 Schlagabständen</a>, so wie der Polar&nbsp;H10 sie im Gurtspeicher abgelegt hat: Zeitraster 1/1024&nbsp;s, jeder Schlag mit Etikett nach Lipponen &amp; Tarvainen (2019), nichts geglättet. Ungefiltert gerechnet ergibt sie 34 Schläge pro Minute und eine RMSSD von 130&nbsp;ms; 15 Schläge sind als auffällig markiert. Öffnen Sie die Datei in Kubios oder Ihrer eigenen Auswertung.</p>
         <a class="pz-mehr" href="/carlon-equine/app/?demo=roster&amp;pferd=champion&amp;fokus=poincare">Im Cockpit mit 15 Demo-Pferden weiter →</a>
       </div>
       <div class="hero-shot schau-box pz-tablet" data-schau="/carlon-equine/app/?schaufenster=1&amp;demo=roster&amp;pferd=champion&amp;fokus=poincare">
@@ -2276,7 +2278,7 @@ if(_lb) _lb.addEventListener('click', function(){
   
   tel&&(function(){ var t=document.querySelector('.pz-echt-block .pz-tablet'); if(!t) return; var EN=(document.documentElement.lang||'de').indexOf('en')===0;
     var w=document.createElement('div'); w.className='pz-telefon';
-    w.innerHTML='<figure class="pz" data-quelle="/carlon-equine/app/belege/poincare-ruhe.json" data-lang="'+(EN?'en':'de')+'"></figure><p class="pz-telefon-q">'+(EN?'Real resting recording of a horse · Polar H10 · 406 beats · 36/min':'Echte Ruheaufnahme eines Pferds · Polar H10 · 406 Schläge · 36/min')+'</p>';
+    w.innerHTML='<figure class="pz" data-quelle="/carlon-equine/app/belege/poincare-ruhe.json" data-lang="'+(EN?'en':'de')+'"></figure><p class="pz-telefon-q">'+(EN?'Real resting recording of a horse · Polar H10 strap memory · 325 beats · 34/min · <a href="/carlon-equine/app/belege/ruheaufnahme-2026-06-24.csv">raw data (CSV)</a>':'Echte Ruheaufnahme eines Pferds · Polar H10 aus dem Gurtspeicher · 325 Schläge · 34/min · <a href="/carlon-equine/app/belege/ruheaufnahme-2026-06-24.csv">Rohdaten (CSV)</a>')+'</p>';
     t.parentNode.insertBefore(w,t); t.classList.add('nur-gross');
     var s=document.createElement('script'); s.src='/carlon-equine-visite/assets/poincare-zeit.js?v=20261116d'; s.defer=true; document.body.appendChild(s); })();
   

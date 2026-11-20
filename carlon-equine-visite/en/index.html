@@ -385,6 +385,7 @@ svg.ic.vt-ic{grid-row:1 / span 2;width:34px;height:34px;padding:7px;box-sizing:b
 .pz-echt .pz{background:#000;border-radius:calc(var(--r) - var(--b));padding:clamp(10px,1.4vw,18px)}
 .pz-hinweis{display:flex;gap:10px;align-items:flex-start;margin-top:var(--sp-21)!important;font-size:var(--t-klein);color:var(--text-dim)!important}
 .pz-hinweis svg.ic{width:22px;height:22px;flex:0 0 auto;margin-top:1px}
+.pz-roh{margin-top:var(--sp-21)!important;font-size:var(--t-klein);color:var(--text-dim)!important}.pz-roh a{color:var(--accent,#3fd0a8)}
 .pz-mehr{display:inline-block;margin-top:var(--sp-13);color:var(--cyan);font-size:var(--t-klein);border-bottom:1px solid rgba(62,207,178,.35)}
 
 .gurt-block{display:block!important;background:none!important;border:0!important;padding:0!important;margin-top:var(--sp-55)!important}
@@ -1672,6 +1673,7 @@ try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; 
         <h3>Review every recording beat by beat</h3>
         <p>This is the same component as in the record in the cockpit: every beat pair is a point, and the SD1/SD2 ellipse covers the selected time window. As you scroll, the plot builds up beat by beat; long pauses are marked in amber.</p>
         <p class="pz-hinweis"><svg class="ic" aria-hidden="true"><use href="#i-pfeil"/></svg>Drag the time slider back and forth. <span class="nur-maus">Point at a dot: the crosshair shows beat, time and both intervals in milliseconds. Mouse wheel zooms, double-click resets.</span><span class="nur-touch">Tap a dot: the crosshair shows beat, time and both intervals in milliseconds. Two fingers zoom, double-tap resets.</span></p>
+        <p class="pz-roh"><b>Check it yourself:</b> a real resting recording of a horse in its stable as a <a href="/carlon-equine/app/belege/ruheaufnahme-2026-06-24.csv">CSV with 325 beat intervals</a>, exactly as the Polar&nbsp;H10 stored them in its memory: 1/1024&nbsp;s time grid, every beat labelled after Lipponen &amp; Tarvainen (2019), nothing smoothed. Computed unfiltered, it gives 34 beats per minute and an RMSSD of 130&nbsp;ms; 15 beats are flagged. Open the file in Kubios or your own analysis.</p>
         <a class="pz-mehr" href="/carlon-equine/app/?demo=roster&amp;pferd=champion&amp;fokus=poincare&amp;lang=en">Continue in the cockpit with 15 demo horses →</a>
       </div>
       <div class="hero-shot schau-box pz-tablet" data-schau="/carlon-equine/app/?schaufenster=1&amp;demo=roster&amp;pferd=champion&amp;fokus=poincare&amp;lang=en">
@@ -2274,7 +2276,7 @@ if(_lb) _lb.addEventListener('click', function(){
   
   tel&&(function(){ var t=document.querySelector('.pz-echt-block .pz-tablet'); if(!t) return; var EN=(document.documentElement.lang||'de').indexOf('en')===0;
     var w=document.createElement('div'); w.className='pz-telefon';
-    w.innerHTML='<figure class="pz" data-quelle="/carlon-equine/app/belege/poincare-ruhe.json" data-lang="'+(EN?'en':'de')+'"></figure><p class="pz-telefon-q">'+(EN?'Real resting recording of a horse · Polar H10 · 406 beats · 36/min':'Echte Ruheaufnahme eines Pferds · Polar H10 · 406 Schläge · 36/min')+'</p>';
+    w.innerHTML='<figure class="pz" data-quelle="/carlon-equine/app/belege/poincare-ruhe.json" data-lang="'+(EN?'en':'de')+'"></figure><p class="pz-telefon-q">'+(EN?'Real resting recording of a horse · Polar H10 strap memory · 325 beats · 34/min · <a href="/carlon-equine/app/belege/ruheaufnahme-2026-06-24.csv">raw data (CSV)</a>':'Echte Ruheaufnahme eines Pferds · Polar H10 aus dem Gurtspeicher · 325 Schläge · 34/min · <a href="/carlon-equine/app/belege/ruheaufnahme-2026-06-24.csv">Rohdaten (CSV)</a>')+'</p>';
     t.parentNode.insertBefore(w,t); t.classList.add('nur-gross');
     var s=document.createElement('script'); s.src='/carlon-equine-visite/assets/poincare-zeit.js?v=20261116d'; s.defer=true; document.body.appendChild(s); })();
   
