@@ -1309,6 +1309,21 @@ try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; 
   </div>
 </section>
 
+<style>
+
+.rx-ww{padding-block:clamp(20px,3vw,40px)!important}
+.rx-ww-l{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px;margin-top:16px}
+@media (max-width:1000px){.rx-ww-l{display:flex;overflow-x:auto;scrollbar-width:none;margin-inline:-16px;padding:2px 16px 8px;touch-action:pan-x pan-y}.rx-ww-l::-webkit-scrollbar{display:none}.rx-ww-k{flex:0 0 min(62vw,240px)}}
+.rx-ww-k{display:grid;gap:4px;align-content:start;text-decoration:none;border:1px solid var(--border-subtle);border-radius:16px;padding:14px 15px 15px;background:rgba(255,255,255,.015);transition:border-color .3s,transform .3s,background .3s}
+.rx-ww-k:hover{border-color:rgba(62,207,178,.5);transform:translateY(-2px)}
+.rx-ww-k .ic{width:20px;height:20px;color:var(--cyan);margin-bottom:4px}
+.rx-ww-k b{color:var(--text-primary);font-size:15.5px;font-weight:600}
+.rx-ww-k span{color:var(--text-secondary);font-size:13.5px;line-height:1.45}
+.rx-ww-k i{font-style:normal;color:var(--cyan);font-size:12.5px;margin-top:4px}
+.rx-ww-hier{border-color:rgba(62,207,178,.55);background:rgba(62,207,178,.06)}
+</style>
+<section class="rx-ww" aria-label="Wegweiser"><div class="wrap"><div class="sec-eyebrow" style="text-align:center">Welche Fassung passt zu Ihrem Betrieb?</div><nav class="rx-ww-l"><a class="rx-ww-k rx-ww-hier" href="#preis"><svg class="ic" aria-hidden="true"><use href="#i-route"/></svg><b>Mobile Fahrpraxis</b><span>Tour planen, Ruhe-HRV der Patienten im Verlauf</span><i>ab 149&nbsp;€ netto im Monat · hier</i></a><a class="rx-ww-k rx-ww-hier" href="#preis"><svg class="ic" aria-hidden="true"><use href="#i-wand"/></svg><b>Praxis &amp; Klinik</b><span>Team, Stationswand, Klinikname im Bericht</span><i>ab 349&nbsp;€ netto im Monat · hier</i></a><a class="rx-ww-k" href="/carlon-equine-visite/reha/"><svg class="ic" aria-hidden="true"><use href="#i-verlauf"/></svg><b>Reha-Zentrum</b><span>Reha-Einheiten am Gerät, Sitzungsbericht, Verlauf</span><i>ab 349&nbsp;€ netto im Monat</i></a><a class="rx-ww-k" href="/carlon-equine-visite/reha/#preis"><svg class="ic" aria-hidden="true"><use href="#i-akte"/></svg><b>Klinik mit Reha</b><span>Alles aus Klinik und Reha, Stationsmonitor über Nacht</span><i>ab 590&nbsp;€ netto im Monat</i></a><a class="rx-ww-k" href="/carlon-equine-visite/reha/#preis"><svg class="ic" aria-hidden="true"><use href="#i-ordner"/></svg><b>Equine Center</b><span>Mehrere Standorte, ohne Obergrenzen</span><i>ab 890&nbsp;€ netto im Monat</i></a></nav></div></section>
+
 <section id="nutzen" class="nutzen">
   <div class="wrap">
     <div class="sec-eyebrow">Die wiederkehrende Aufgabe</div>
