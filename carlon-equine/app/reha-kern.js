@@ -127,6 +127,8 @@
     if (m.hilfszuegel === true) p.push(de ? 'Hilfszügel' : 'training aid');
     if (m.stangen > 0) p.push(de ? `${m.stangen} Stangen` : `${m.stangen} poles`);
     if (!p.length && m.note) p.push(m.note);
+    /* 20.11.2026 (abgestimmt mit AquaStageMarker.label): alle Teile leer, keine Notiz → Gerätename + „Einstellung nicht erfasst“ statt leerer Klammer im Bericht */
+    if (!p.length && m.device && m.device !== 'keines' && GERAETE[m.device]) return `${GERAETE[m.device][de ? 'de' : 'en']}, ${de ? 'Einstellung nicht erfasst' : 'setting not recorded'}`;
     return p.join(' · ');
   }
   // Lastschlüssel: verglichen werden nur Sitzungen mit identischem Schlüssel (fairer Verlauf)
