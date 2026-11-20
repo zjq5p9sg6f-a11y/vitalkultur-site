@@ -695,6 +695,7 @@ h2{font-family:var(--font-brand);font-weight:350;font-size:clamp(28px,3.6vw,var(
 .tarife-grid{max-width:920px;margin:var(--sp-55) auto 0;display:grid;
   grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:var(--sp-21)}
 .tarife-grid .tarif{max-width:none;margin:0}
+.tarife-drei{max-width:1180px;grid-template-columns:repeat(auto-fit,minmax(300px,1fr))}.tarif-begeistert{color:rgb(235,230,220)!important;background:rgba(62,207,178,.08);border-left:2px solid rgb(62,207,178);padding:8px 10px!important;border-radius:0 10px 10px 0;margin:6px 0!important}.tarif-begeistert::before{display:none!important}
 .rollen-weiche{margin-top:12px;font-size:14px;color:var(--text-secondary)}.rollen-weiche a{color:var(--cyan);border-bottom:1px solid rgba(62,207,178,.35)}
 .kaufschritte{list-style:none;counter-reset:ks;max-width:920px;margin:var(--sp-34,34px) auto 0;padding:0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
 .kaufschritte li{counter-increment:ks;position:relative;padding:18px 18px 18px 54px;border:1px solid rgba(235,230,220,.14);border-radius:14px;background:rgba(235,230,220,.03);font-size:.95rem;line-height:1.5;color:rgba(235,230,220,.78)}
@@ -860,6 +861,7 @@ section[id]{scroll-margin-top:76px}
   border:1px solid rgba(62,207,178,.55);color:var(--cyan);background:rgba(62,207,178,.06);font-size:12.5px;letter-spacing:.08em;line-height:1;transition:background .2s,border-color .2s}
 .berichtsmuster .bm-knopf:hover{background:rgba(62,207,178,.14);border-color:var(--cyan)}
 .berichtsmuster .bm-knopf::after{content:'↗';font-size:14px;letter-spacing:0}
+.muster-mehr{list-style:none;padding:0;margin:28px 0 0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}.muster-mehr a{display:block;text-decoration:none;border:1px solid var(--border-subtle);border-radius:14px;padding:14px 16px;background:rgba(12,12,13,.6)}.muster-mehr a:hover{border-color:rgba(62,207,178,.5)}.muster-mehr b{display:block;color:var(--text-primary);font-weight:600}.muster-mehr span{font-size:13.5px;color:var(--cyan)}@media(max-width:720px){.muster-mehr{grid-template-columns:1fr}}
 @media(max-width:720px){.berichtsmuster{grid-template-columns:1fr;text-align:center}.bm-faecher{max-width:260px}.berichtsmuster span{margin:0 auto}}
 .anmeldung{max-width:720px;margin:var(--sp-55) auto 0;text-align:left;padding:34px 32px 30px;position:relative;
   border:1px solid var(--border-subtle);border-radius:18px;
@@ -1490,6 +1492,12 @@ try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; 
         <a class="bm-knopf" href="assets/CARLON-Muster-Bericht.pdf" target="_blank" rel="noopener">Musterbericht ansehen · PDF, 6 Seiten</a>
       </div>
     </div>
+    
+    <ul class="muster-mehr">
+      <li><a href="assets/muster/langzeit-stallrunde.pdf" target="_blank" rel="noopener"><b>Sammelbericht Stallrunde</b><span>Fahrpraxis · drei Pferde je 30 Minuten · PDF, 10 Seiten ↗</span></a></li>
+      <li><a href="assets/muster/langzeit-nacht-station.pdf" target="_blank" rel="noopener"><b>Langzeitbericht Nacht auf Station</b><span>Klinik · 9 Stunden aus dem Gurtspeicher · PDF, 4 Seiten ↗</span></a></li>
+      <li><a href="/carlon-equine-visite/reha/#muster"><b>Reha-Berichte</b><span>Sitzungsbericht und Verlaufsdokumentation · auf der Reha-Seite →</span></a></li>
+    </ul>
 
     <details class="mehr gross" data-spur-auf="mehr-was-im-cockpit-steht"><summary><span>Alle Funktionen der Akte im Überblick</span></summary>
       <div class="grid">
@@ -1877,11 +1885,11 @@ try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; 
   <div class="wrap">
     <div class="sec-eyebrow">Preise</div>
     
-    <h2>Zwei Tarife. Keine Gebühr je Pferd, Nutzer oder Gerät.</h2>
+    <h2>Ein fester Monatspreis je Stufe. Keine Nachberechnung.</h2>
     <p class="sec-lead">
-      Ein Abo gilt für einen Betrieb, also eine Praxis oder einen Standort, mit allen tierärztlichen und
-      tiermedizinischen Mitarbeitenden und auf beliebig vielen Geräten dieses Betriebs.
-      Es gibt <strong>keine Gebühr je Pferd, je Nutzer oder je Gerät</strong> und keine Grenze für Aufnahmen.
+      Ein Abo gilt für einen Betrieb, also eine Praxis oder einen Standort, auf beliebig vielen Geräten.
+      Jede Stufe nennt, für wie viele Tierärztinnen und Tierärzte sie gedacht ist. <strong>Pferde, Aufnahmen und Geräte sind unbegrenzt</strong>, nur Reha-Pferde haben in den Reha-Stufen eine Obergrenze;
+      wird eine Obergrenze zwei Monate in Folge überschritten, schlägt das Cockpit den Wechsel mit einem Klick vor. Es sperrt nie und berechnet nichts nach.
     </p>
     
     <ol class="kaufschritte m-wisch">
@@ -1903,37 +1911,45 @@ try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; 
       <p class="pb-fest"><b>Ein fester Monatspreis.</b> Keine zusätzlichen Gebühren pro Pferd oder Aufnahme. Ihr Preis bleibt ab Vertragsbeginn 24 Monate fest.</p>
       <p class="pb-fest"><b>Nicht enthalten:</b> Rechnungsstellung nach GOT, DATEV, Arzneimittel- und Abgabebelege, Online-Terminbuchung, Lager. Dafür bleibt Ihr Praxisprogramm zuständig. Kein Live-Abgleich auf iPhone und iPad; dort gleichen Sie per Datei über den Eingangsordner ab.</p>
     </div>
-    <div class="tarife-grid m-wisch">
+    <div class="tarife-grid tarife-drei m-wisch">
     <div class="tarif">
-      <div class="tarif-name">Für Pferdepraxen</div>
-
+      <div class="tarif-name">Fahrpraxis · für eine Tierärztin oder einen Tierarzt</div>
       <div class="tarif-preis"><b>149&nbsp;€</b> <span>netto im Monat · 177,31&nbsp;€ inkl. 19&nbsp;% USt.</span></div>
-      <div class="tarif-alt">oder 1.490&nbsp;€ netto im Jahr (1.773,10&nbsp;€ inkl. USt.)</div>
-      
+      <div class="tarif-alt">Jährliche Zahlung: 11 Monatsbeiträge, 1.639&nbsp;€ netto (1.950,41&nbsp;€ inkl. USt.)</div>
       <ul class="enthalten">
-        <li>Tourenplanung, Verspätungsnachricht, Besuchsdokumentation und Wegegeld-Vorschlag ab dem ersten Tag, auch ohne Messungen</li>
-        <li>Unbegrenzt Pferde, Aufnahmen und Verläufe</li>
-        <li>Ein Standort, alle Geräte, ohne Zuschlag je Gerät</li>
-        <li>Team-Ordner für die ganze Praxis: OneDrive, Google Drive, Dropbox oder Netzlaufwerk; alle Rechner mit Chrome oder Edge sehen denselben Stand</li>
-        <li>Messwertbericht mit eigenem Briefkopf</li>
+        <li>Tourenplanung, Verspätungsnachricht, Besuchsdokumentation und Wegegeld-Vorschlag nach § 10 GOT ab dem ersten Tag</li>
+        <li>Akte per Sprache, Messwertbericht mit eigenem Briefkopf</li>
+        <li>Ihre Halterinnen messen kostenlos an der Messstation, die Aufnahme kommt von selbst in die Akte</li>
+        <li class="tarif-begeistert"><b>Stallrunde:</b> mehrere Pferde zeichnen je 30 Minuten parallel im eigenen Gurt auf, am Ende lesen Sie alle aus; Langzeit im Gurt und Langzeitbericht als PDF</li>
         <li>Export als JSON, CSV, Kubios und FHIR&nbsp;R5</li>
-        <li>Monatsabo mit 14 Tagen kostenlosem Test, danach monatlich kündbar; Jahresabo zum Ende der Laufzeit</li>
       </ul>
-      <a class="cta-primary tarif-knopf" href="/carlon-equine/app/?kasse=praxis">14 Tage kostenlos testen · danach 149&nbsp;€ netto im Monat →</a>
+      <a class="cta-primary tarif-knopf" href="/carlon-equine/app/?kasse=praxis">14 Tage testen · danach 149&nbsp;€ netto im Monat →</a>
       <a class="tarif-neben" href="/carlon-equine/app/?demo=today">Erst ausprobieren: Demo mit 15 Pferden, ohne Konto →</a>
     </div>
     <div class="tarif tarif-klinik">
-      <div class="tarif-name">Für Pferdekliniken</div>
+      <div class="tarif-name">Praxis &amp; Klinik · bis 4 Tierärztinnen und Tierärzte</div>
       <div class="tarif-preis"><b>349&nbsp;€</b> <span>netto im Monat · 415,31&nbsp;€ inkl. 19&nbsp;% USt.</span></div>
-      <div class="tarif-alt">oder 3.490&nbsp;€ netto im Jahr (4.153,10&nbsp;€ inkl. USt.)</div>
+      <div class="tarif-alt">Jährliche Zahlung: 11 Monatsbeiträge, 3.839&nbsp;€ netto (4.568,41&nbsp;€ inkl. USt.)</div>
       <ul class="enthalten">
-        <li>Alles aus der Praxis-Stufe</li>
-        <li>Team-Ordner auch für Stationen und den Wandmonitor, mit demselben Stand im ganzen Haus</li>
+        <li>Alles aus der Stufe Fahrpraxis</li>
+        <li>Team-Ordner für Praxis, Stationen und Wandmonitor, derselbe Stand im ganzen Haus</li>
+        <li class="tarif-begeistert"><b>Stationsmonitor über Nacht:</b> jedes Pferd zeichnet im eigenen Gurt auf, die Stationswand zeigt den Puls ohne Verbindung zum Gurt, morgens lesen Sie die vollständige Aufzeichnung aus</li>
         <li>Stationswand für den Monitor im Stationszimmer, ohne Alarme</li>
       </ul>
-      <a class="cta-primary tarif-knopf" href="/carlon-equine/app/?kasse=klinik">14 Tage kostenlos testen · danach 349&nbsp;€ netto im Monat →</a>
+      <a class="cta-primary tarif-knopf" href="/carlon-equine/app/?kasse=klinik">14 Tage testen · danach 349&nbsp;€ netto im Monat →</a>
       <a class="tarif-neben" href="/carlon-equine/app/?demo=station">Stationswand in der Demo ansehen →</a>
-      <a class="tarif-neben" href="mailto:jan@vitalkultur.com?subject=CARLON%20Equine%20Visite%20%E2%80%93%20Klinik-Einrichtung">Fragen zu Netzlaufwerk und Einrichtung? jan@vitalkultur.com →</a>
+    </div>
+    <div class="tarif">
+      <div class="tarif-name">Klinik + Reha · bis 6 Tierärztinnen und Tierärzte, 40 Reha-Pferde</div>
+      <div class="tarif-preis"><b>590&nbsp;€</b> <span>netto im Monat · 702,10&nbsp;€ inkl. 19&nbsp;% USt.</span></div>
+      <div class="tarif-alt">Jährliche Zahlung: 11 Monatsbeiträge, 6.490&nbsp;€ netto (7.723,10&nbsp;€ inkl. USt.)</div>
+      <ul class="enthalten">
+        <li>Alles aus Praxis &amp; Klinik</li>
+        <li class="tarif-begeistert"><b>Reha-Aufnahme an 13 Anwendungen</b> mit Live-Puls und HRV, Sitzungsbericht und Verlaufsdokumentation für die Halterin, Einheiten für ihre CARLON-Equine-App</li>
+        <li>Mehrere Standorte: Equine Center, 890&nbsp;€ netto je Standort</li>
+      </ul>
+      <a class="cta-primary tarif-knopf" href="/carlon-equine/app/?kasse=kombi">14 Tage testen · danach 590&nbsp;€ netto im Monat →</a>
+      <a class="tarif-neben" href="/carlon-equine-visite/reha/">Nur Reha-Zentrum? Reha ab 349&nbsp;€ netto, bis 20 Pferde →</a>
     </div>
     </div>
     <p class="test-bedingung"><b>14 Tage kostenlos testen:</b> Zahlungsdaten geben Sie beim Start an, heute wird nichts abgebucht. Kündigen Sie innerhalb der 14 Tage unter „Abo verwalten“, entstehen keine Kosten; danach läuft das Monatsabo zum genannten Preis.</p>

@@ -1,0 +1,25 @@
+{
+ "erzeugt": "2026-11-20T12:43:39.092Z",
+ "liste": [
+  {
+   "name": "reha-sitzungsbericht",
+   "seiten": 5,
+   "kb": 3500
+  },
+  {
+   "name": "reha-verlaufsdokumentation",
+   "seiten": 2,
+   "kb": 871
+  },
+  {
+   "name": "langzeit-nacht-station",
+   "seiten": 4,
+   "kb": 1690
+  },
+  {
+   "name": "langzeit-stallrunde",
+   "seiten": 10,
+   "kb": 1676
+  }
+ ]
+}

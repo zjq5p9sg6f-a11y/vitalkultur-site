@@ -157,7 +157,7 @@
       bloecke.push({ a, b, n: idx.length, med: q(h, 0.5), min: q(h, 0.05), max: q(h, 0.95), spr: 100 * j / Math.max(1, idx.length - 1), rmssd: rm, ungleich: Math.abs(h1 - h2) >= 4 }); });
     return { rr, zeit, t0, dauer, n: rr.length, hfMed: q(hfAlle, 0.5), hf5: q(hfAlle, 0.05), hf95: q(hfAlle, 0.95), dopPct: 100 * dop / Math.max(1, rr.length - 1), sprPct: 100 * spr / Math.max(1, rr.length - 1), dop, spr, pipe, ruhe, bloecke, blk };
   };
-  Stall._frueher = function (r) { const alt = State.recordings.filter(x => x.horseId === r.horseId && x.id !== r.id && x.rrQuelle === 'gurtspeicher' && !x.reha && (x.durationSec || 0) >= 1200 && new Date(x.startedAt) < new Date(r.startedAt));
+  Stall._frueher = function (r) { const alt = State.recordings.filter(x => x.horseId === r.horseId && x.id !== r.id && /gurtspeicher/.test(x.rrQuelle || '') && !x.reha && (x.durationSec || 0) >= 1200 && new Date(x.startedAt) < new Date(r.startedAt));
     if (!alt.length) return null; const med = alt.map(x => { const h = (x.rr || []).map(v => 60000 / v).sort((a, b) => a - b); return h[Math.floor(h.length / 2)]; }).sort((a, b) => a - b);
     return { n: alt.length, p25: med[Math.floor(0.25 * (med.length - 1))], p75: med[Math.ceil(0.75 * (med.length - 1))], med: med[Math.floor(med.length / 2)] }; };
   Stall._svgHF = function (k, C, w, h, ber, frueher, ereignisse) {
@@ -186,24 +186,32 @@
     for (let v = Math.ceil(lo / st) * st; v <= hi; v += st) g += `<line x1="${S(v).toFixed(1)}" x2="${S(v).toFixed(1)}" y1="14" y2="${14 + W}" stroke="${C.grid}"/><line x1="${pad}" x2="${pad + W}" y1="${Sy(v).toFixed(1)}" y2="${Sy(v).toFixed(1)}" stroke="${C.grid}"/><text x="${S(v).toFixed(1)}" y="${W + 28}" text-anchor="middle" font-size="9.5" fill="${C.achse}">${fmt0(v)}</text><text x="${pad - 5}" y="${(Sy(v) + 3).toFixed(1)}" text-anchor="end" font-size="9.5" fill="${C.achse}">${fmt0(v)}</text>`;
     g += `<line x1="${S(lo)}" y1="${Sy(lo)}" x2="${S(hi)}" y2="${Sy(hi)}" stroke="${C.achse}" stroke-dasharray="4 4" opacity=".55"/>`;
     const r0 = n > 12000 ? 0.9 : n > 4000 ? 1.2 : 1.6, op = n > 12000 ? 0.5 : 0.75;
-    for (let i = 0; i < n - 1; i++) g += `<circle cx="${S(k.rr[i]).toFixed(1)}" cy="${Sy(k.rr[i + 1]).toFixed(1)}" r="${r0}" fill="${farbe(i / (n - 2))}" opacity="${op}"/>`;
+    g += Stall._punkte(Array.from({ length: n - 1 }, (_, i) => [S(k.rr[i]), Sy(k.rr[i + 1]), i / (n - 2)]), r0, op);
     const gy = size + 6, uhr = t => new Date(k.t0 + t * 1000).toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit' });
     g += `<defs><linearGradient id="lzG"><stop offset="0" stop-color="rgb(62,207,178)"/><stop offset=".5" stop-color="rgb(246,183,60)"/><stop offset="1" stop-color="rgb(143,124,240)"/></linearGradient></defs><rect x="${pad}" y="${gy}" width="${W}" height="8" rx="4" fill="url(#lzG)"/>`;
     g += `<text x="${pad}" y="${gy + 21}" font-size="10" fill="${C.achse}">${uhr(0)}</text><text x="${pad + W / 2}" y="${gy + 21}" text-anchor="middle" font-size="10" fill="${C.achse}">${uhr(k.dauer / 2)}</text><text x="${pad + W}" y="${gy + 21}" text-anchor="end" font-size="10" fill="${C.achse}">${uhr(k.dauer)} Uhr</text>`;
     g += `<text x="${pad + W / 2}" y="${W + 42}" text-anchor="middle" font-size="9.5" fill="${C.achse}">RRₙ (ms)</text><text transform="translate(12 ${14 + W / 2}) rotate(-90)" text-anchor="middle" font-size="9.5" fill="${C.achse}">RRₙ₊₁ (ms)</text>`;
     return `<svg viewBox="0 0 ${size} ${size + 54}" style="width:100%;display:block">${g}</svg>`; };
+  /* PUNKTWOLKE KOMPAKT (20.11.2026): Ein <circle> je Schlag machte den Nachtbericht 24,5 MB groß (nicht per Mail versendbar).
+     Jetzt: 32 Zeitfarb-Stufen, je Stufe EIN Pfad aus runden Punkten (Strich der Länge 0), Punkte auf 0,25 px gerastert und doppelte
+     je Stufe entfernt. Spätere Stufen liegen oben wie vorher; das Bild bleibt gleich, die Datei schrumpft um ein Vielfaches. */
+  Stall._punkte = function (pkt, r, op) { const N = 32, eim = Array.from({ length: N }, () => new Map());
+    for (const [x, y, u] of pkt) { const b = Math.min(N - 1, Math.max(0, Math.floor(u * N))); eim[b].set(Math.round(x * 4) + ',' + Math.round(y * 4), 1); }
+    let g = ''; eim.forEach((m, b) => { if (!m.size) return; let d = ''; for (const key of m.keys()) { const [x, y] = key.split(','); d += 'M' + (x / 4) + ' ' + (y / 4) + 'h0'; }
+      g += `<path d="${d}" stroke="${Stall._farbe((b + 0.5) / N)}" stroke-width="${2 * r}" stroke-linecap="round" fill="none" opacity="${op}"/>`; }); return g; };
   /* Zeitfarbe wie im großen Poincaré: u = Anteil der Aufzeichnung (0 Beginn, 1 Ende), Türkis → Bernstein → Violett */
   Stall._farbe = function (u) { const A = [62, 207, 178], B = [246, 183, 60], V = [143, 124, 240], m = u < .5 ? [A, B, u * 2] : [B, V, (u - .5) * 2]; return 'rgb(' + m[0].map((x, i) => Math.round(x + (m[1][i] - x) * m[2])).join(',') + ')'; };
   /* Poincaré je Zeitblock in denselben Zeitfarben, gleiche Achsen, Ellipse aus SD1/SD2 des Blocks */
   Stall._svgPoinKlein = function (k, ix, lo, hi, C, size) {
-    if (ix.length < 20) return ''; const pad = 26, W = size - pad - 8, S = v => pad + (Math.max(lo, Math.min(hi, v)) - lo) / (hi - lo) * W, Sy = v => 6 + W - (Math.max(lo, Math.min(hi, v)) - lo) / (hi - lo) * W;
+    if (ix.length < 20) return ''; const pad = 36, W = size - pad - 8, S = v => pad + (Math.max(lo, Math.min(hi, v)) - lo) / (hi - lo) * W, Sy = v => 6 + W - (Math.max(lo, Math.min(hi, v)) - lo) / (hi - lo) * W;
     const xs = [], ys = []; for (let j = 0; j + 1 < ix.length; j++) if (ix[j + 1] === ix[j] + 1) { xs.push(k.rr[ix[j]]); ys.push(k.rr[ix[j + 1]]); }
     const n = xs.length; if (n < 10) return ''; const m = (xs.reduce((a, b) => a + b, 0) + ys.reduce((a, b) => a + b, 0)) / (2 * n);
     let s1 = 0, s2 = 0; for (let i = 0; i < n; i++) { const d1 = (ys[i] - xs[i]) / Math.SQRT2, d2 = (xs[i] + ys[i]) / Math.SQRT2 - m * Math.SQRT2; s1 += d1 * d1; s2 += d2 * d2; } const sd1 = Math.sqrt(s1 / n), sd2 = Math.sqrt(s2 / n);
     let g = `<rect width="${size}" height="${size}" rx="8" fill="${C.bg}" stroke="${C.rand}"/>`;
-    const st = (hi - lo) > 800 ? 200 : 100; for (let v = Math.ceil(lo / st) * st; v <= hi; v += st) g += `<line x1="${S(v).toFixed(1)}" x2="${S(v).toFixed(1)}" y1="6" y2="${6 + W}" stroke="${C.grid}" stroke-width="0.6"/><line x1="${pad}" x2="${pad + W}" y1="${Sy(v).toFixed(1)}" y2="${Sy(v).toFixed(1)}" stroke="${C.grid}" stroke-width="0.6"/><text x="${pad - 3}" y="${(Sy(v) + 3).toFixed(1)}" text-anchor="end" font-size="7.5" fill="${C.achse}">${fmt0(v)}</text>`;
+    const st = (hi - lo) > 800 ? 200 : 100; for (let v = Math.ceil(lo / st) * st; v <= hi; v += st) g += `<line x1="${S(v).toFixed(1)}" x2="${S(v).toFixed(1)}" y1="6" y2="${6 + W}" stroke="${C.grid}" stroke-width="0.6"/><line x1="${pad}" x2="${pad + W}" y1="${Sy(v).toFixed(1)}" y2="${Sy(v).toFixed(1)}" stroke="${C.grid}" stroke-width="0.6"/>${Math.round(v / st) % 2 ? '' : `<text x="${pad - 3}" y="${(Sy(v) + 3).toFixed(1)}" text-anchor="end" font-size="7.5" fill="${C.achse}">${fmt0(v)}</text><text x="${S(v).toFixed(1)}" y="${(6 + W + 10).toFixed(1)}" text-anchor="middle" font-size="7.5" fill="${C.achse}">${fmt0(v)}</text>`}`;
+    /* 20.11. (Jan): x-Skala und Achsentitel auch in den kleinen Feldern – gleiche Werte auf beiden Achsen */ g += `<text x="${(pad + W / 2).toFixed(1)}" y="${(6 + W + 21).toFixed(1)}" text-anchor="middle" font-size="7.5" fill="${C.achse}">RRₙ (ms)</text><text transform="translate(8 ${(6 + W / 2).toFixed(1)}) rotate(-90)" text-anchor="middle" font-size="7.5" fill="${C.achse}">RRₙ₊₁ (ms)</text>`;
     g += `<line x1="${S(lo)}" y1="${Sy(lo)}" x2="${S(hi)}" y2="${Sy(hi)}" stroke="${C.achse}" stroke-dasharray="3 3" opacity=".5"/>`;
-    for (let j = 0; j + 1 < ix.length; j++) if (ix[j + 1] === ix[j] + 1) g += `<circle cx="${S(k.rr[ix[j]]).toFixed(1)}" cy="${Sy(k.rr[ix[j + 1]]).toFixed(1)}" r="1.1" fill="${this._farbe(ix[j] / Math.max(1, k.n - 2))}" opacity=".75"/>`;
+    { const pk = []; for (let j = 0; j + 1 < ix.length; j++) if (ix[j + 1] === ix[j] + 1) pk.push([S(k.rr[ix[j]]), Sy(k.rr[ix[j + 1]]), ix[j] / Math.max(1, k.n - 2)]); g += Stall._punkte(pk, 1.1, 0.75); }
     const cx = S(m), cy = Sy(m), sk = W / (hi - lo); g += `<ellipse cx="${cx.toFixed(1)}" cy="${cy.toFixed(1)}" rx="${Math.max(1, sd2 * 2 * sk).toFixed(1)}" ry="${Math.max(1, sd1 * 2 * sk).toFixed(1)}" transform="rotate(-45 ${cx.toFixed(1)} ${cy.toFixed(1)})" fill="none" stroke="${C.linie}" stroke-width="1.1"/>`;
     return { svg: `<svg viewBox="0 0 ${size} ${size}" style="width:100%;display:block">${g}</svg>`, n, sd1, sd2 }; };
   Stall._seiten = function (h, r, k, kpi, fig, opt) {
@@ -234,7 +242,7 @@
         ${P ? `<div style="display:grid;grid-template-columns:330px 1fr;gap:12px;align-items:start"><div>${P.svg}</div>${fig(`Poincaré der ${fmt0(P.n)} Schlagpaare: jeder Abstand gegen den folgenden. Die Breite der Wolke beschreibt die Änderung von Schlag zu Schlag (SD1 ≈ RMSSD ÷ √2), die Länge langsamere Schwankungen. Die Aufzeichnung enthält nur Abstände zwischen Schlägen, keine Kurvenform.`)}</div>` : ''}</div>
       <div><div class="rh-box"><div class="rh-bt">Herkunft</div>
         <div class="rh-pv"><span>Pferd</span><b>${esc(h.name)}</b></div><div class="rh-pv"><span>Beginn</span><b>${new Date(k.t0).toLocaleString('de-DE')} (${Intl.DateTimeFormat().resolvedOptions().timeZone})</b></div><div class="rh-pv"><span>Sensor</span><b>${esc((r.source && r.source.sensor) || 'Polar H10')}, Brustgurt im Pferdegurt</b></div>
-        <div class="rh-pv"><span>Weg</span><b>${r.rrQuelle === 'gurtspeicher' ? 'Speicher des Gurts (PSFTP), ausgelesen, aus der Datenbank bitgleich gegengelesen, danach im Gurt gelöscht. Bitgleich belegt die vollständige Übertragung, nicht die Messgenauigkeit.' : 'live'}</b></div>
+        <div class="rh-pv"><span>Weg</span><b>${/gurtspeicher/.test(r.rrQuelle || '') ? 'Speicher des Gurts (PSFTP), ausgelesen, aus der Datenbank bitgleich gegengelesen, danach im Gurt gelöscht. Bitgleich belegt die vollständige Übertragung, nicht die Messgenauigkeit.' : 'live'}</b></div>
         ${sp.kennung ? `<div class="rh-pv"><span>Kennung im Gurt</span><code>${esc(sp.kennung)}</code></div>` : ''}<div class="rh-pv"><span>Prüfwert</span><span>SHA-256 der RR-Reihe (ms, kommagetrennt): ${sha}</span></div>
         <div class="rh-pv"><span>Software</span><span>${esc(Stall.BERICHT_VERSION)} · ${esc((typeof RehaKern !== 'undefined' && RehaKern.VERSION) || '')} · erstellt ${new Date().toLocaleString('de-DE')}</span></div></div>
       <div class="rh-box"><div class="rh-bt">Methode und Grenzen</div><div class="rh-meth">

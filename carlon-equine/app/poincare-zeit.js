@@ -50,7 +50,7 @@
       }
     });
 
-    var dpr = 1, S = 0, M = { l: 62, r: 16, t: 16, b: 48 };
+    var dpr = 1, S = 0, M = { l: 62, r: 16, t: 30, b: 48 };   /* 20.11.: l+r = t+b → gleiche ms je Pixel in x und y; sonst ist die Identitätslinie nicht 45° und die Ellipse liegt schief (Jan) */
     var GMAX = fig.classList.contains('pz-gross') ? 820 : 560;
     function groesse() { var b = cv.parentNode.getBoundingClientRect(); S = Math.max(300, Math.min(b.width, GMAX, (window.innerHeight || 900) - 230)); fig.querySelector('.pz-leiste').style.maxWidth = S + 'px'; dpr = window.devicePixelRatio || 1; cv.width = S * dpr; cv.height = S * dpr; cv.style.width = S + 'px'; cv.style.height = S + 'px'; }
     function X(v) { return M.l + (v - vlo) / (vhi - vlo) * (S - M.l - M.r); }
@@ -79,7 +79,15 @@
         c.fillStyle = istAv ? AMBER : 'rgba(62,207,178,' + (0.25 + 0.75 * (1 - alt)).toFixed(2) + ')';
         c.beginPath(); c.arc(X(rr[i]), Y(rr[i + 1]), istAv ? 3.6 : 2.2, 0, 7); c.fill(); }
       if (k > 3) { var e = sd(k); var cx = X(e.mx), cy = Y(e.mx), px = (S - M.l - M.r) / (vhi - vlo);
-        c.save(); c.translate(cx, cy); c.rotate(-Math.PI / 4); c.strokeStyle = CYAN; c.lineWidth = 1.6; c.beginPath(); c.ellipse(0, 0, e.sd2 * px, e.sd1 * px, 0, 0, 7); c.stroke(); c.restore();
+        /* 20.11.: Ellipse in DATEN-Koordinaten (Brennan 2001): Mittelpunkt (RR̄, RR̄), SD2 entlang der Identitätslinie, SD1 senkrecht dazu –
+           liegt damit exakt auf der Achse, egal wie die Fläche skaliert. Warmweiß statt Cyan (Punkte sind Cyan, Bernstein = auffällige Paare). */
+        var r2 = Math.SQRT1_2, EL = 'rgba(235,230,220,.92)', pt = function (u, v) { return [X(e.mx + (u - v) * r2), Y(e.mx + (u + v) * r2)]; };
+        c.strokeStyle = EL; c.lineWidth = 1.8; c.beginPath();
+        for (var w = 0; w <= 96; w++) { var th = w / 96 * 2 * Math.PI, q = pt(e.sd2 * Math.cos(th), e.sd1 * Math.sin(th)); if (w) c.lineTo(q[0], q[1]); else c.moveTo(q[0], q[1]); }
+        c.closePath(); c.stroke();
+        c.lineWidth = 1; c.strokeStyle = 'rgba(235,230,220,.6)'; c.beginPath(); var a0 = pt(0, 0), aS2 = pt(e.sd2, 0), aS1 = pt(0, e.sd1);
+        c.moveTo(a0[0], a0[1]); c.lineTo(aS2[0], aS2[1]); c.moveTo(a0[0], a0[1]); c.lineTo(aS1[0], aS1[1]); c.stroke();
+        c.fillStyle = EL; c.font = '600 11px system-ui, sans-serif'; c.textAlign = 'left'; c.fillText('SD2', aS2[0] + 5, aS2[1] - 3); c.fillText('SD1', aS1[0] + 5, aS1[1] - 3);
         werteEl.innerHTML = '<span><b>SD1</b> ' + e.sd1.toFixed(1).replace('.', DE ? ',' : '.') + ' ms</span><span><b>SD2</b> ' + e.sd2.toFixed(1).replace('.', DE ? ',' : '.') + ' ms</span><span><b>' + k + '</b> ' + T.paare + '</span><span class="pz-av"><i></i>' + T.av + '</span>'; }
       if (k > 3) { var e2 = sd(k), f1 = function (v) { return v.toFixed(1).replace('.', DE ? ',' : '.'); };
         c.textAlign = 'left'; c.fillStyle = 'rgba(235,230,220,.92)'; c.font = '600 ' + Math.round(S / 34) + 'px system-ui, sans-serif';

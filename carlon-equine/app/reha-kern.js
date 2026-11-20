@@ -11,9 +11,9 @@
 (function (root) {
   const GERAETE = {
     keines:      { de: 'Ohne Gerät',  en: 'No device',      last: false, felder: [] },
-    laufband:    { de: 'Laufband',    en: 'Treadmill',      last: true,  felder: ['speedKmh', 'inclinePercent', 'reverse', 'vibrationAn'] },
+    laufband:    { de: 'Laufband',    en: 'Treadmill',      last: true,  felder: ['speedKmh', 'inclinePercent', 'reverse'] },   // 20.11.: keine Vibration am Laufband (Jan) – Vibrationsplatte ist eigene Anwendung
     aquatrainer: { de: 'Aquatrainer', en: 'Aqua treadmill', last: true,  felder: ['waterHeight', 'waterHeightCm', 'waterTempC', 'speedKmh', 'inclinePercent', 'reverse'] },
-    vibration:   { de: 'Vibration',   en: 'Vibration',      last: false, felder: ['vibrationHz', 'amplitudeMm'] },
+    vibration:   { de: 'Vibration',   en: 'Vibration',      last: false, felder: ['vibrationHz'] },   // 20.11.: Amplitude an Platten nicht als einstellbar belegt (Geräte-Recherche) – Feld bleibt für alte Aufnahmen in FELD
     fuehranlage: { de: 'Führanlage',  en: 'Horse walker',   last: true,  felder: ['speedKmh', 'directionChanges', 'radiusM'] },
     solarium:    { de: 'Solarium',    en: 'Solarium',       last: false, felder: ['intensityPercent', 'distanceCm'] },
     solekammer:  { de: 'Solekammer',  en: 'Salt chamber',   last: false, felder: ['intensityPercent'] },
@@ -41,7 +41,6 @@
     radiusM:          { de: 'Radius', en: 'Radius', einheit: 'm', schritt: 1, min: 1, max: 40 },
     intensityPercent: { de: 'Intensität', en: 'Intensity', einheit: '%', schritt: 5, min: 0, max: 100 },
     distanceCm:       { de: 'Abstand', en: 'Distance', einheit: 'cm', schritt: 5, min: 0, max: 300 },
-    vibrationAn:      { de: 'Vibration', en: 'Vibration', bool: true },
     gangart:          { de: 'Gangart', en: 'Gait', liste: ['stand', 'schritt', 'trab', 'galopp'], namen: { stand: ['Stehen', 'Standing'], schritt: ['Schritt', 'Walk'], trab: ['Trab', 'Trot'], galopp: ['Galopp', 'Canter'] } },
     untergrund:       { de: 'Boden', en: 'Ground', liste: ['sand', 'gras', 'fest', 'tief'], namen: { sand: ['Sand', 'Sand'], gras: ['Gras', 'Grass'], fest: ['Fester Boden', 'Firm ground'], tief: ['Tiefer Boden', 'Deep ground'] } },
     steigung:         { de: 'Gelände', en: 'Slope', liste: ['eben', 'leicht', 'steil'], namen: { eben: ['Eben', 'Flat'], leicht: ['Leicht bergauf', 'Gentle slope'], steil: ['Steil', 'Steep'] } },
@@ -127,7 +126,6 @@
     if (m.zirkelM != null) p.push(de ? `Zirkel ${z(m.zirkelM, 0)} m` : `circle ${z(m.zirkelM, 0)} m`);
     if (m.hilfszuegel === true) p.push(de ? 'Hilfszügel' : 'training aid');
     if (m.stangen > 0) p.push(de ? `${m.stangen} Stangen` : `${m.stangen} poles`);
-    if (m.vibrationAn === true) p.push('Vibration');
     if (!p.length && m.note) p.push(m.note);
     return p.join(' · ');
   }

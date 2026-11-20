@@ -33,6 +33,7 @@
 @media(max-width:900px){.speicher-pill #speicherTxt{display:none}}
 
 .kauf-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;align-items:start}
+.kauf-grid.kauf-fuenf{grid-template-columns:repeat(auto-fit,minmax(230px,1fr))}
 @media(max-width:760px){.kauf-grid{grid-template-columns:1fr}}
 .kauf-grid .tier-opt{padding:12px 14px}.kauf-spalte.gewaehlt>.tier-opt.feat:first-child{border-color:var(--cyan);box-shadow:0 0 0 2px rgba(62,207,178,.28)}.kauf-kurz{font-size:12px;color:var(--text-dim);margin:-6px 0 14px 2px}.kauf-b2b{display:flex;gap:10px;align-items:flex-start;margin:0 0 14px;padding:10px 12px;border:1px solid rgba(62,207,178,.35);border-radius:10px;font-size:13px;color:var(--text-primary);cursor:pointer}.kauf-b2b input{margin-top:3px;accent-color:var(--cyan)}.kauf-b2b a{color:var(--cyan)}.kauf-link[aria-disabled=true]{opacity:.82}.kauf-spalte.gewaehlt>.tier-opt.feat:first-child h4::after{content:"Gewählt";margin-left:8px;padding:2px 8px;border-radius:999px;font-size:11px;background:rgba(62,207,178,.18);color:var(--cyan);vertical-align:middle}.kauf-grid .tier-table{gap:8px}.kauf-spalte{display:flex;flex-direction:column}.kauf-spalte>.tier-table{order:-1;margin:0 0 10px!important}.kauf-grid .tier-opt ul{line-height:1.6}
 
@@ -320,9 +321,14 @@ body.hoert .stimme-knopf{background:var(--cyan);color:#02130f;animation:hoertPul
 .reha-live .rl-los .btn.primary{background:var(--rl-cyan);color:#00140F;box-shadow:0 14px 36px -14px rgba(62,207,178,.75)}
 .reha-live .rl-los .btn[disabled]{background:var(--rl-card);color:var(--rl-t3);box-shadow:none;opacity:1!important}
 .reha-live .rl-wrap>div>.btn.ghost,.reha-live .btn.ghost[data-rl]{background:transparent;border:1px solid var(--rl-hair);color:var(--rl-t2);border-radius:999px;min-height:44px;font-weight:600}
+.reha-live .rl-modell{display:flex;align-items:center;gap:10px;margin:10px 0 0;font-size:12.5px;color:var(--rl-t2)}.reha-live .rl-modell input{flex:1;max-width:360px;background:var(--rl-card);border:1px solid var(--rl-stroke);border-radius:10px;color:var(--rl-t1,#fff);padding:8px 12px;font:inherit}
 .reha-live .rl-hrv{margin-top:34px;padding-top:26px;border-top:1px solid var(--rl-hair)}
 .reha-live .rl-hrv-k h3{font-size:24px;font-weight:700;letter-spacing:-.02em;margin:4px 0 6px}.reha-live .rl-hrv-k p{color:var(--rl-t2);font-size:14px;line-height:1.5;max-width:62ch;margin:0 0 16px}
 .reha-live .rl-kacheln{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-bottom:12px}
+.reha-live .rl-puls1{grid-template-columns:minmax(0,1fr)}.reha-live .rl-puls1 .rl-kachel b{font-size:46px}
+.reha-live .rl-kw{grid-template-columns:repeat(5,minmax(0,1fr))}@media(max-width:860px){.reha-live .rl-kw{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(min-width:900px){body:has(#rehaLive) .stimme-knopf{left:calc(12px + env(safe-area-inset-left,0px))}.reha-live .rl-wrap{padding-left:80px}}   /* 20.11.: Mikrofon bekommt eigenen Rand, verdeckt keine Beschriftung mehr */.reha-live .rl-kw .rl-kachel b{font-size:26px}.reha-live .rl-kachel.rl-nv b{color:var(--rl-t3);font-size:18px}
+.reha-live .rl-kw-t{display:flex;flex-wrap:wrap;justify-content:space-between;gap:4px 12px;margin:18px 2px 8px;font-size:12px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--rl-t2)}.reha-live .rl-kw-t span{font-weight:500;letter-spacing:0;text-transform:none;color:var(--rl-t3)}
 .reha-live .rl-kachel{font:inherit;text-align:left;color:inherit;cursor:pointer;transition:border-color .15s,background .15s}.reha-live .rl-kachel:hover{border-color:rgba(255,255,255,.18)}.reha-live .rl-kachel:active{background:var(--rl-card2)}
 .reha-live .rl-kachel span{display:flex;align-items:center;justify-content:space-between;gap:8px}.reha-live .rl-i{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;opacity:.75;flex:none}
 .reha-live .rl-hcard-t{display:flex;align-items:center;justify-content:space-between;gap:8px}.reha-live .rl-hcard .rl-hcard-t svg{width:14px;height:14px;display:block}.reha-live .rl-hcard .rl-hcard-t .rl-i{width:15px;height:15px}.reha-live .rl-ib{display:grid;place-items:center;width:32px;height:32px;margin:-6px 0;border:0;border-radius:10px;background:transparent;color:var(--rl-t3);cursor:pointer;transition:background .15s,color .15s}.reha-live .rl-ib:hover{background:var(--rl-card2);color:var(--rl-t1)}.reha-live .rl-ib .rl-i{width:15px;height:15px;opacity:1;stroke-width:1.6}
@@ -338,9 +344,14 @@ body:has(#rehaLive) .modal-bg,body:has(#rehaLive) #chartZoom{z-index:150}
 .reha-live .rl-kachel em{font-style:normal;font-size:12.5px;color:var(--rl-t2);line-height:1.35}
 .reha-live .rl-hcard{background:var(--rl-card);border:1px solid var(--rl-hair);border-radius:22px;padding:14px 14px 10px;margin-bottom:12px;min-width:0;overflow:hidden}
 .reha-live .rl-hcard-t{font-size:13px;font-weight:600;color:var(--rl-t2);margin:0 2px 8px}.reha-live .rl-hcard svg{width:100%;height:auto;display:block}
-.reha-live .rl-hgrid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.3fr);gap:12px}.reha-live .rl-hgrid .rl-hcard{margin-bottom:0}.reha-live .rl-hgrid+.rl-hcard{margin-top:12px}
+.reha-live .rl-gauge{max-width:560px;margin:0 auto;display:flex;justify-content:center}.reha-live .rl-gauge svg{display:block;margin:0 auto;width:100%;max-width:520px!important;height:auto}.reha-live .rl-fuss{font-size:12px;color:var(--rl-t3);margin-top:8px;line-height:1.5}
+.reha-live .rl-analyse{margin:26px 2px 10px;font-size:13px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--rl-t2)}.reha-live .rl-analyse span{display:block;margin-top:4px;font-weight:500;letter-spacing:0;text-transform:none;color:var(--rl-t3);font-size:13px}
+.reha-live .rl-vgl{font-size:15px;line-height:1.5;color:var(--rl-t1,#EDEEF1);margin:2px 2px 10px}.reha-live .rl-vglk{border-color:rgba(62,207,178,.35)}
+.reha-live .rl-zeile{font-size:13px;color:var(--rl-t3);margin:4px 4px 14px}
+.reha-live .rl-bv{text-align:center;font-size:13px;color:var(--rl-t2);margin-top:4px}.reha-live .rl-bv b{color:#FFB547;font-size:16px}
+.reha-live .rl-hgrid{display:grid;margin-bottom:12px;grid-template-columns:minmax(0,1fr) minmax(0,1.3fr);gap:12px}.reha-live .rl-hgrid .rl-hcard{margin-bottom:0}.reha-live .rl-hgrid+.rl-hcard{margin-top:12px}
 .reha-live .rl-leer{color:var(--rl-t3);font-size:14px;padding:22px 16px;text-align:center}
-@media(max-width:720px){.reha-live .rl-kacheln{grid-template-columns:repeat(2,minmax(0,1fr))}.reha-live .rl-hgrid{grid-template-columns:1fr}.reha-live .rl-kachel b{font-size:30px}}
+@media(max-width:720px){.reha-live .rl-kacheln{grid-template-columns:repeat(2,minmax(0,1fr))}.reha-live .rl-kacheln.rl-kw{grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}.reha-live .rl-kacheln.rl-puls1{grid-template-columns:1fr}.reha-live .rl-kw .rl-kachel b{font-size:21px!important}.reha-live .rl-hgrid{grid-template-columns:1fr}.reha-live .rl-kachel b{font-size:30px}}
 .reha-live .rl-liste{margin-top:14px;padding:14px 16px;background:var(--rl-card);border:1px solid var(--rl-hair);border-radius:20px;font-size:14px;color:var(--rl-t2);line-height:1.5}
 .reha-live .rl-liste>div{position:relative;padding:7px 0 7px 22px}.reha-live .rl-liste>div::before{content:"";position:absolute;left:3px;top:14px;width:7px;height:7px;border-radius:50%;background:var(--rl-cyan)}
 .reha-live .rl-liste>div+div::after{content:"";position:absolute;left:6px;top:-6px;height:20px;width:1px;background:var(--rl-stroke)}
@@ -1440,6 +1451,9 @@ svg.viz .sd-lbl{fill:var(--cyan-strong);font-size:10px;font-weight:600;font-fami
 #chartZoom .zbody .viz-hov{position:relative;width:100%;max-width:min(94vw,78vh);margin:0 auto}
 #chartZoom .zbody.wide .viz-hov{max-width:none;min-width:820px}
 #chartZoom .zbody .viz-hov svg{width:100%!important;max-width:none!important;height:auto}
+#chartZoom .zbody.zeit-fs .bfs-scroll{align-items:flex-start!important;padding-top:0!important;padding-bottom:0!important}#chartZoom .zbody.zeit-fs .viz-hov svg{height:auto}
+#chartZoom .zbody.zeit-fs .zeit-rahmen{position:relative;flex:1;min-width:0;width:100%;display:flex}#chartZoom .zbody.zeit-fs .zeit-achse{position:absolute;top:0;bottom:42px;width:56px;overflow:hidden;pointer-events:none;background:linear-gradient(90deg,#0B0B0D 78%,rgba(11,11,13,0))}#chartZoom .zbody.zeit-fs .zeit-achse.l{left:0}#chartZoom .zbody.zeit-fs .zeit-achse.r{right:0;background:linear-gradient(270deg,#0B0B0D 78%,rgba(11,11,13,0))}#chartZoom .zbody.zeit-fs .zeit-achse svg{display:block}
+#chartZoom .zbody.zeit-fs .viz-hov{width:auto;max-width:none;min-width:0;margin:0;flex:0 0 auto}#chartZoom .zbody.zeit-fs .viz-hov svg{width:auto!important}   /* 20.11.: Zeitachse dehnen – Breite kommt aus dem Neuzeichnen */
 /* Vollbild-Viewer: Plot MAXIMAL GROSS oben, Kennwerte + Guide als schmaler Streifen DARUNTER (nicht Sidebar) — auf ALLEN Größen */
 #chartZoom .zbody.poinca-fs{display:flex;flex-direction:column;gap:12px;align-items:stretch;padding:14px 16px 16px;overflow:hidden;background:none;border:none}
 .pfs-plot{flex:1;min-height:0;order:0;display:flex;align-items:center;justify-content:center;overflow:hidden}
@@ -1504,7 +1518,7 @@ svg.viz .sd-lbl{fill:var(--cyan-strong);font-size:10px;font-weight:600;font-fami
 .vm-grid button.vm{font:inherit;color:inherit;text-align:left;width:100%;cursor:pointer;transition:border-color .15s,background .15s}
 .vm-grid button.vm:hover,.vm-grid button.vm:focus-visible{border-color:rgba(0,229,204,.38);outline:none}
 .vm-grid .vm .k{text-transform:none!important;letter-spacing:.04em!important;font-size:11px}
-.vm-grid .vm .vm-i{width:11px;height:11px;margin-left:5px;vertical-align:-1px;opacity:.45}
+.vm-grid .vm .vm-i{display:none}   /* 20.11. Jan: kein ⓘ in Kacheln – Antippen erklärt */
 .vm-grid button.vm:hover .vm-i{opacity:.9}
 .vm-hint{font-size:10.5px;color:var(--text-faint);letter-spacing:.02em}
 .vm-grid .vm::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,.07),transparent)}
@@ -2796,7 +2810,7 @@ const Bindung={
       rueckrufe:doku.filter(e=>e.art==='Rückruf'&&e.erledigt).length, pferde:State.horses.length,
       reha:State.recordings.filter(r=>r.reha&&r.startedAt&&t(r.startedAt)&&!r._seed).length,
       rehaPferde:new Set(State.recordings.filter(r=>r.reha&&r.startedAt&&t(r.startedAt)&&!r._seed).map(r=>r.horseId)).size,
-      gurtspeicher:State.recordings.filter(r=>r.reha&&r.rrQuelle==='gurtspeicher'&&r.startedAt&&t(r.startedAt)&&!r._seed).length,
+      gurtspeicher:State.recordings.filter(r=>r.reha&&/gurtspeicher/.test(r.rrQuelle||'')&&r.startedAt&&t(r.startedAt)&&!r._seed).length,
       wegegeld:(()=>{ try{ if(typeof Logbook==='undefined') return 0; const tage=[...new Set(log.map(e=>e.date).filter(Boolean))]; return Math.round(tage.reduce((a,d)=>a+(Logbook.wegegeld(d).gesamt||0),0)); }catch(_){ return 0; } })() };
   },
   /* Monat auf einen Blick (sichtbar in Dokumentation, nicht nur beim Kündigen). Wegegeld = Summe von Logbook.wegegeld je Tag
@@ -2837,14 +2851,26 @@ const Reha={
   /* Demo (20.11.2026): vier Aquatrainer-Einheiten über vier Wochen für ein Demo-Pferd, damit Partner wie SASCOTEC den
      Verlauf bei gleicher Stufe sofort sehen. Synthetisch und als Demo markiert; HF bei gleicher Last sinkt leicht. */
   async demoAnlegen(){
-    const h=State.horses[0]; if(!h||State.recordings.some(r=>r.reha)) return;
+    /* 20.11.: Reha-Demo an Comet (ruhiger Ruheverlauf). Sunny trägt den sinkenden Verlauf der Fahrpraxis-Seite; ein rotes „Auffällig“ neben dem Reha-Verlauf lenkte ab. */
+    const h=State.horses.find(x=>/^comet$/i.test(x.name||''))||State.horses[0]; if(!h||State.recordings.some(r=>r.reha)) return;
     const jetzt=Date.now();
     if(!h.reha){ h.reha={indikation:'Tendinitis oberflächliche Beugesehne vorne links (Reha ab Monat 4)',indikationDatum:new Date(jetzt-160*864e5).toISOString().slice(0,10),ziel:'25 min Aquatrainer im Schritt (Karpushöhe) ohne Lahmheit, danach Trabaufbau an der Hand',erreicht:'teilweise',grund:'Schritt-Ziel erreicht, Trabaufbau an der Hand steht noch aus',naechster:'Trabaufbau an der Hand, 3 × 5 min, Kontrolle Ultraschall in 6 Wochen',eingewoehnung:'2',
       befundBeginn:'Ultraschall: Läsion 12 % der Querschnittsfläche, Faserbild teilweise parallel',befundBeginnDatum:new Date(jetzt-52*864e5).toISOString().slice(0,10),befundEnde:'Ultraschall: Läsion 10 % der Querschnittsfläche, Faserbild überwiegend parallel',befundEndeDatum:new Date(jetzt-1*864e5).toISOString().slice(0,10),lahmBeginn:'1',lahmEnde:'0',verantwortlich:'Dr. med. vet. Demo'}; h.ueln=h.ueln||'276098100012345'; try{ await DB.put('horses',h); }catch(_){ } }
+    /* ECHTE TEXTUR (20.11.2026, Jan: „muss für einen Profi wie echte Pferdedaten aussehen“): Ruhe-Referenz = echte Ruheaufnahme
+       eines Pferdes (belege/poincare-ruhe.json, 12.06.2026, 406 Schläge, 36/min, anonymisiert, auf der Visite-Seite veröffentlicht),
+       je Woche ein anderer Abschnitt. Unter Last das echte Schlag-zu-Schlag-Muster derselben Reihe (ohne die markierten langen Pausen),
+       auf das Belastungsniveau verschoben und mit der Herzfrequenz gestaucht. Fällt die Datei aus: rein synthetisch wie bisher. */
+    let ECHT=null; try{ const j=await (await fetch('belege/poincare-ruhe.json')).json(); if(Array.isArray(j.rrMs)&&j.rrMs.length>300){ const R=j.rrMs, lab=j.etiketten||{}, m=R.reduce((a,b)=>a+b,0)/R.length;
+      ECHT={R, m, pool:R.map((v,i)=>lab[i]||lab[i-1]?null:v-m).filter(v=>v!=null)}; } }catch(_){ ECHT=null; }
     for(let w=0;w<8;w++){
       /* Stufe 1 = Referenz (jede Woche gleich: Karpus, 18 °C, 5 km/h), Stufe 2 wird jede Woche länger und schneller (Belastungsaufbau) */
       const st=[0.9,-1.1,0.4,-0.6,1.2,-0.3,0.7,-0.9][w], ruhe=[36,37,35,36,38,36,35,37][w], amp=[1,0.85,1.15,0.95,0.8,1.1,1.05,0.9][w], s1=64-w*0.85+st, v2=Math.round((5+w*0.14)*10)/10, s2=74+w*0.8, er=44-w*0.4, e2=960+420+w*60, e3=e2+180, T=e3+600; const rr=[]; let t=0, x=7+w;
       const ph=[[0,360,ruhe,ruhe,1],[360,960,ruhe,s1,45],[960,e2,s1,s2,35],[e2,e3,s2,s1+2,40],[e3,T,s1+2,er,[82,77,79,72,78,69,70,66][w]]];
+      if(ECHT){ let i=(w*29)%(ECHT.R.length-230), j=w*53; const skal=(60000/ruhe)/ECHT.m;
+        while(t<T){ const p=ph.find(p=>t>=p[0]&&t<p[1]); const hf=p[3]+(p[2]-p[3])*Math.exp(-(t-p[0])/p[4]);
+          let v; if(t<360&&i<ECHT.R.length) v=ECHT.R[i++]*skal; else { const k=Math.pow(ruhe/hf,2.2)*amp; v=60000/hf+k*ECHT.pool[(j++)%ECHT.pool.length]; }
+          rr.push(Math.round(v*100)/100); t+=v/1000; } }
+      else
       while(t<T){ const p=ph.find(p=>t>=p[0]&&t<p[1]); const hf=p[3]+(p[2]-p[3])*Math.exp(-(t-p[0])/p[4]); x=(x*16807)%2147483647; const fa=[0.17,0.15,0.19,0.16,0.18,0.14,0.2,0.165][w]; x=(x*16807)%2147483647; const u2=(x/2147483647)-0.5; x=(x*16807)%2147483647; const u3=(x/2147483647)-0.5; const u=(x/2147483647)-0.5, k=Math.pow(ruhe/hf,3)*amp; const v=60000/hf+k*(24*Math.sin(2*Math.PI*fa*t)+16*Math.sin(2*Math.PI*(0.03+w*0.004)*t+w))+k*22*(u+u2+u3); rr.push(Math.round(v*100)/100); t+=v/1000; }
       /* Bewusste Problemfälle, damit die Schutzmechanismen sichtbar sind: Woche 3 Störschläge in der Ruhe, Woche 5 unruhige
          Erholung (Modell passt nicht), Woche 6 lange Pausen (doppeltes RR) in der Ruhe */
@@ -2855,7 +2881,7 @@ const Reha={
           tt+=rr[k]/1000; } }
       const log=[{startSec:360,device:'aquatrainer',waterHeight:'carpus',waterTempC:18,speedKmh:4.5,reverse:false},{startSec:960,device:'aquatrainer',waterHeight:'carpus',waterTempC:18,speedKmh:v2,reverse:false},{startSec:e2,device:'aquatrainer',waterHeight:'carpus',waterTempC:18,speedKmh:4.5,reverse:false},{startSec:e3,device:'keines'}];
       const start=new Date(jetzt-(50-w*7)*864e5); start.setHours(10,0,0,0);
-      const rec={id:'reha_demo_'+(w+1),horseId:h.id,startedAt:start.toISOString(),durationSec:T,beatCount:rr.length,rr,reha:{log},metrics:{},_seed:true,source:{app:'Demo · synthetische Daten'},triage:{level:'stable',reasons:[]}};
+      const rec={id:'reha_demo_'+(w+1),horseId:h.id,startedAt:start.toISOString(),durationSec:T,beatCount:rr.length,rr,reha:{log,modell:'Aquatrainer Modell A (Demo)'},metrics:{},_seed:true,source:{app:'Demo · synthetische Daten'},triage:{level:'stable',reasons:[]}};
       await DB.put('recordings',rec);
     }
   },
@@ -2869,7 +2895,7 @@ const Reha={
   mmss(x){ x=Math.max(0,Math.round(x)); return Math.floor(x/60)+':'+String(x%60).padStart(2,'0'); },
   z(v,d=0){ return v==null||!isFinite(v)?'–':(d?fmt1(v):fmt0(v)); },
   /* Fairer Verlauf: je Lastschlüssel die Herzfrequenz (Median letzte 60 s) über die Sitzungen */
-  verlauf(hid){ const m={}; for(const s of this.sitzungen(hid)){ const gesehen=new Set(); for(const st of s.a.stufen) if(st.last&&st.hfMedian60!=null&&!gesehen.has(st.schluessel)){ gesehen.add(st.schluessel); (m[st.schluessel]=m[st.schluessel]||{label:st.label,punkte:[]}).punkte.push({datum:s.rec.startedAt,hf:st.hfMedian60,art:st.artifactRatePct}); } }
+  verlauf(hid){ const m={}; for(const s of this.sitzungen(hid)){ const gesehen=new Set(); for(const st of s.a.stufen) if(st.last&&st.hfMedian60!=null&&!gesehen.has(st.schluessel)){ gesehen.add(st.schluessel); (m[st.schluessel]=m[st.schluessel]||{label:st.label,schluessel:st.schluessel,punkte:[]}).punkte.push({datum:s.rec.startedAt,hf:st.hfMedian60,art:st.artifactRatePct}); } }
     return Object.values(m).filter(x=>x.punkte.length>=1).sort((a,b)=>b.punkte.length-a.punkte.length); },
   spark(p){ if(p.length<2) return ''; const w=180,h=40,v=p.map(x=>x.hf),lo=Math.min(...v)-2,hi=Math.max(...v)+2;
     const X=i=>4+i*(w-8)/(p.length-1), Y=x=>h-4-(x-lo)/(hi-lo||1)*(h-8);
@@ -2888,7 +2914,7 @@ const Reha={
       ${ref?`<div style="font-size:13px;color:var(--text-secondary);margin:6px 0">Referenzstufe: <b>${esc(ref.label)}</b> · in ${vgl} von ${S.length} Einheiten${tr?` · Trend ${tr.b>0?'+':'−'}${fmt1(Math.abs(tr.b))} bpm je Woche (±${fmt1(tr.ki)})`:''} · stabil heißt ±${g.eigen?fmt0(Math.round(g.wert))+' bpm (an diesem Pferd gemessen)':'3 bpm (vorläufig)'}</div>`:''}
       ${VL||'<div style="font-size:13px;color:var(--text-dim)">Verlauf ab zwei Einheiten mit derselben Einstellung.</div>'}
       <table class="tbl" style="width:100%;font-size:12.5px;margin-top:10px"><thead><tr><th>Datum</th><th>Gerät</th><th>Belastung</th><th>HF Referenzstufe</th><th>Erholung</th><th>Ruhe-RMSSD</th><th>Quelle</th><th>Auswertbar</th><th>Hinweis</th><th>Bericht</th></tr></thead><tbody>
-      ${S.slice().reverse().map((s2,i)=>{ const k=K[S.length-1-i]; return `<tr><td style="white-space:nowrap">${fmtDate(s2.rec.startedAt)}</td><td>${esc(k.geraet)}</td><td>${fmt0(k.lastMin)} min</td><td><b>${this.z(this.hfRef(k,ref))}</b> bpm</td><td>${k.tauE!=null?fmt0(k.tauE)+' s':'–'}</td><td>${k.ruheRM!=null?Number(k.ruheRM).toFixed(1).replace('.',',')+' ms':'–'}</td><td>${s2.rec._seed?'Demo':s2.rec.rrQuelle==='gurtspeicher'?'Gurtspeicher':'live'}</td>${(()=>{ const t=st(k), ok=t==='auswertbar'||/^Ende erkannt$|^\d+ lange Pausen$/.test(t); return `<td style="color:${ok?'var(--cyan)':'var(--amber,#f6b73c)'};font-weight:600">${ok?'ja':'teilweise'}</td><td style="color:var(--text-secondary)">${t==='auswertbar'?'–':t}</td>`; })()}<td style="white-space:nowrap"><button class="btn ghost" style="font-size:11.5px;padding:4px 8px" onclick="Reha.drucken('${h.id}','${s2.rec.id}','klinik')">Klinik</button> <button class="btn ghost" style="font-size:11.5px;padding:4px 8px" onclick="Reha.drucken('${h.id}','${s2.rec.id}','halter')">Halterin</button></td></tr>`; }).join('')}</tbody></table>
+      ${S.slice().reverse().map((s2,i)=>{ const k=K[S.length-1-i]; return `<tr><td style="white-space:nowrap">${fmtDate(s2.rec.startedAt)}</td><td>${esc(k.geraet)}</td><td>${fmt0(k.lastMin)} min</td><td><b>${this.z(this.hfRef(k,ref))}</b> bpm</td><td>${k.tauE!=null?fmt0(k.tauE)+' s':'–'}</td><td>${k.ruheRM!=null?Number(k.ruheRM).toFixed(1).replace('.',',')+' ms':'–'}</td><td>${s2.rec._seed?'Demo':/gurtspeicher/.test(s2.rec.rrQuelle||'')?'Gurtspeicher':'live'}</td>${(()=>{ const t=st(k), ok=t==='auswertbar'||/^Ende erkannt$|^\d+ lange Pausen$/.test(t); return `<td style="color:${ok?'var(--cyan)':'var(--amber,#f6b73c)'};font-weight:600">${ok?'ja':'teilweise'}</td><td style="color:var(--text-secondary)">${t==='auswertbar'?'–':t}</td>`; })()}<td style="white-space:nowrap"><button class="btn ghost" style="font-size:11.5px;padding:4px 8px" onclick="Reha.drucken('${h.id}','${s2.rec.id}','klinik')">Klinik</button> <button class="btn ghost" style="font-size:11.5px;padding:4px 8px" onclick="Reha.drucken('${h.id}','${s2.rec.id}','halter')">Halterin</button></td></tr>`; }).join('')}</tbody></table>
       <div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin-top:10px">${vgl>=2?`<button class="btn primary" style="font-size:12.5px" onclick="Reha.abschlussDialog('${h.id}')">Verlaufsdokumentation · alle Einheiten</button>`:'<span style="font-size:12.5px;color:var(--text-dim)">Verlaufsdokumentation ab zwei vergleichbaren Einheiten</span>'}<button class="btn ghost" style="font-size:12.5px" onclick="EquineApp.alle('${h.id}',true)" title="Alle Einheiten als Dateien für die CARLON Equine App der Halterin (iPhone, iPad): antippen, und die Messungen stehen dort lückenlos beim Pferd">Für die CARLON Equine App</button><span style="font-size:12px;color:var(--text-dim)">Übergabe an die App der Halterin: dort lückenlos beim Pferd, auch für Messungen zu Hause.</span></div></div>`; },
   panel(h){
     if(!this.erlaubt()) return `<div class="panel" style="margin-bottom:var(--s4)" id="rehaAkte"><h2 style="font-size:16px">Reha</h2><p style="color:var(--text-dim);font-size:13px;line-height:1.55">Reha-Sitzungen am Aquatrainer, Laufband, in der Führanlage, beim Führen, an der Longe, unter dem Reiter, an der Vibrationsplatte, im Solarium, in der Solekammer und bei Anwendungen im Stand, mit Herzfrequenz je Stufe, Verlauf bei gleicher Last und Berichten für Klinik und Halterin. Enthalten in den Stufen Reha und Klinik + Reha.</p><button class="btn ghost" onclick="UI.upgrade&&UI.upgrade()">Stufen ansehen</button></div>`;
@@ -2899,7 +2925,7 @@ const Reha={
     return `<div class="panel" style="margin-bottom:var(--s4)" id="rehaAkte"><h2 style="font-size:16px">Reha · ${S.length} Sitzung${S.length>1?'en':''}</h2>
       <div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin:6px 0 8px">${S.length>=2?`<button class="btn primary" style="font-size:12.5px" onclick="Reha.abschlussDialog('${h.id}')">Abschlussbericht · alle Einheiten</button>`:''}<button class="btn ghost" style="font-size:12.5px" onclick="EquineApp.alle('${h.id}',true)">Für die CARLON Equine App</button><span class="rh-thema" role="group" aria-label="Druckfarbe" style="display:inline-flex;border:1px solid var(--border);border-radius:999px;overflow:hidden;font-size:12px">${['hell','dunkel'].map(t=>`<button type="button" aria-pressed="${(State.settings.rehaThema||'hell')===t}" onclick="Reha.thema('${t}',this)" style="border:0;padding:6px 12px;cursor:pointer;background:${(State.settings.rehaThema||'hell')===t?'var(--cyan)':'transparent'};color:${(State.settings.rehaThema||'hell')===t?'#04161a':'inherit'}">${t==='hell'?'Weiß (Druck)':'Dunkel'}</button>`).join('')}</span></div>
       ${ver.length?`<div style="font-size:12.5px;color:var(--text-secondary);margin:4px 0 6px">Verlauf bei gleicher Stufe (Herzfrequenz, letzte 60 s der Stufe):</div>${ver.slice(0,4).map(v=>`<div style="display:flex;align-items:center;gap:10px;margin:4px 0"><span style="flex:1;font-size:12.5px">${esc(v.label)}</span>${this.spark(v.punkte)}<b class="mono">${fmt0(v.punkte[v.punkte.length-1].hf)}</b></div>`).join('')}`:''}
-      <div class="rec-list" style="margin-top:8px">${S.slice().reverse().map(s=>`<details class="rec" style="display:block;padding:9px 11px"><summary style="cursor:pointer;list-style:none"><span class="rdate" style="font-size:12px">${fmtDate(s.rec.startedAt)}</span> <span class="rmeta">${esc(this.geraet(s))} · ${s.a.stufen.filter(x=>x.device!=='keines').length} Stufen${s.rec.rrQuelle==='gurtspeicher'?' · Gurtspeicher':''}</span></summary>
+      <div class="rec-list" style="margin-top:8px">${S.slice().reverse().map(s=>`<details class="rec" style="display:block;padding:9px 11px"><summary style="cursor:pointer;list-style:none"><span class="rdate" style="font-size:12px">${fmtDate(s.rec.startedAt)}</span> <span class="rmeta">${esc(this.geraet(s))} · ${s.a.stufen.filter(x=>x.device!=='keines').length} Stufen${/gurtspeicher/.test(s.rec.rrQuelle||'')?' · Gurtspeicher':''}</span></summary>
         <table class="tbl" style="width:100%;font-size:12px;margin-top:8px"><thead><tr><th>Stufe</th><th>Dauer</th><th>HF Ende</th><th>ΔHF</th><th>τ63</th></tr></thead><tbody>${s.a.stufen.filter(x=>x.device!=='keines').map(x=>`<tr><td>${esc(x.label)}</td><td>${this.mmss(x.endSec-x.startSec)}</td><td>${this.z(x.hfMedian60)}</td><td>${x.deltaHRbpm==null?'–':(x.deltaHRbpm>0?'+':'')+fmt0(x.deltaHRbpm)}</td><td>${x.adaptationSec==null?'–':((g=>g&&g.r2!=null&&g.r2<0.6||x.adaptationSec<5)(this._tauGuete(this.kennwerte(s.rec),x))?'unsicher':x.adaptationSec+' s')}</td></tr>`).join('')}</tbody></table>
         ${s.a.erholung?(()=>{ const kw=this.kennwerte(s.rec); return `<div style="font-size:12px;color:var(--text-secondary);margin-top:6px">Erholungszeit ${kw.tauE!=null?fmt0(kw.tauE)+' s':(kw.tauUnsicher?'unsicher':'–')} · HF am Ende ${this.z(s.a.erholung.hfEnde)} · nach 1 min ${this.z(s.a.erholung.hf60)} · 5 min ${this.z(s.a.erholung.hf300)}${s.a.endeErkannt?' · Ende automatisch erkannt':''}</div>`; })():''}
         <div style="display:flex;gap:6px;margin-top:8px;flex-wrap:wrap"><button class="btn ghost" style="font-size:12.5px" onclick="Reha.drucken('${h.id}','${s.rec.id}','klinik')">Klinikbericht</button><button class="btn ghost" style="font-size:12.5px" onclick="Reha.drucken('${h.id}','${s.rec.id}','halter')">Bericht für die Halterin</button></div></details>`).join('')}</div>
@@ -3093,7 +3119,7 @@ const Reha={
     const praxis=esc(st.clinicName||'Ihre Einrichtung'), zusatz=esc([st.clinicAddr,st.clinicWeb].filter(Boolean).join(' · '));
     const logo=st.logo?`<img src="${st.logo}" style="width:74px;height:58px;object-fit:contain;border:1px solid var(--line);border-radius:8px;background:#fff">`:'';
     const von=S[0].rec.startedAt, bis=S[S.length-1].rec.startedAt, tage=Math.round((+new Date(bis)-+new Date(von))/864e5);
-    const kopf=t=>this._kopf(t,esc(h.name),`${fmtDate(von)} bis ${fmtDate(bis)} · <b>${S.length} Einheiten · ${tage} Tage</b>`)+this.stamm(h,S[S.length-1].rec);
+    const _mod=[...new Set(S.map(x=>(x.rec.reha||{}).modell||''))]; const kopf=t=>this._kopf(t,esc(h.name),`${fmtDate(von)} bis ${fmtDate(bis)} · <b>${S.length} Einheiten · ${tage} Tage</b>${_mod.length===1&&_mod[0]?' · Gerät: '+esc(_mod[0]):''}`)+this.stamm(h,S[S.length-1].rec);
     const fuss=(n,m)=>`<div class="rh-fuss"><div>Dokumentation der Herz-Kreislauf-Antwort auf das Reha-Training mit CARLON Equine Visite (Polar H10). Kein Medizinprodukt. Die Software stellt keine Diagnose; Befund und Beurteilung stammen von der Tierärztin oder dem Tierarzt. Prüfwerte der Originalaufnahmen stehen in den Sitzungsberichten.</div><div class="rh-fz"><span>Erstellt von ${praxis} · <b style="color:var(--acc);letter-spacing:.12em">CARLON EQUINE VISITE</b></span><span>${n} / ${m}</span><span>vitalkultur.com/carlon-equine-visite</span></div></div>`;
     const kpi=(l,w,e,f,u)=>`<div class="rh-kpi"><span>${l}</span><b style="color:${f||'var(--ink)'}">${w}</b><em>${e||''}</em>${u?`<div class="rh-ku">${u}</div>`:''}</div>`;
     const ref=this.referenz(h.id), rp=ref?K.map(k=>({x:k.rec.startedAt,y:this.hfRef(k,ref)})).filter(q=>q.y!=null):[];
@@ -3188,13 +3214,13 @@ const Reha={
     const ref=this.referenz(hid), hfR=this.hfRef(o,ref), hfRv=this.hfRef(vor,ref), hfRe=this.hfRef(erst,ref), R=this.RAUSCH;
     const praxis=esc(st.clinicName||'Ihre Einrichtung'), zusatz=esc([st.clinicAddr,st.clinicWeb].filter(Boolean).join(' · ')), dauer=Math.round(o.dauer);
     const logo=st.logo?`<img src="${st.logo}" style="width:74px;height:58px;object-fit:contain;border:1px solid var(--line);border-radius:8px;background:#fff">`:'';
-    const kopf=t=>this._kopf(t,esc(h.name),`${Report._dt(r.startedAt)} · <b>${Math.round(dauer/60)} min · ${fmt0(rr.length)} Schläge · Einheit ${ix+1} von ${S.length}</b>`)+this.stamm(h,r);
+    const kopf=t=>this._kopf(t,esc(h.name),`${Report._dt(r.startedAt)} · <b>${Math.round(dauer/60)} min · ${fmt0(rr.length)} Schläge · Einheit ${ix+1} von ${S.length}</b>${r.reha&&r.reha.modell?' · Gerät: '+esc(r.reha.modell):''}`)+this.stamm(h,r);
     const fuss=(n,m)=>`<div class="rh-fuss"><div>Verlaufsbeobachtung mit CARLON Equine Visite (Polar H10, RR-Intervalle 1 ms). Kein Medizinprodukt. Die Software stellt keine Diagnose; Befund und Beurteilung stammen von der Tierärztin oder dem Tierarzt.</div><div class="rh-fz"><span>Erstellt von ${praxis} · <b style="color:var(--acc);letter-spacing:.12em">CARLON EQUINE VISITE</b></span><span>${n} / ${m}</span><span>vitalkultur.com/carlon-equine-visite</span></div></div>`;
     const kpi=(l,w,e,f,u)=>`<div class="rh-kpi"><span>${l}</span><b style="color:${f||'var(--ink)'}">${w}</b><em>${e||''}</em>${u?`<div class="rh-ku">${u}</div>`:''}</div>`;
     let abb=0; const fig=t=>`<div class="rh-fig"><b>Abbildung ${++abb}.</b> ${t}</div>`;
     const trRM=this.reihenTrend(K.map(k=>({x:k.rec.startedAt,y:k.ruheRM}))), gRM=trRM&&trRM.n>=6?trRM.mdc:null, gHF=this.grenzeHF(hid,r.startedAt), ruheQ=ruheSec?o.anteil(0,ruheSec):null, ruheOk=ruheQ!=null&&ruheQ<5, tVgl=this.tauVergleich(vor,o), dR=this._d(hfRv,hfR,gHF.wert,'bpm'), dRe=this._d(hfRe,hfR,gHF.wert,'bpm'), dT=tVgl?this._d(vor.tauE,o.tauE,R.tau,'s'):null, dM=gRM!=null?this._d(vor&&vor.ruheRM,o.ruheRM,gRM,'ms',false,1):this._d(vor&&vor.ruheRM,o.ruheRM,R.rmssd,'ms',true,1);
     const ar=o.ersetztPct, stufeQ=ar==null?'ausgewertet':ar<1?'sehr gut':ar<3?'gut':ar<10?'eingeschränkt':'nicht belastbar';
-    const quelle=r._seed?'Demo, synthetische Daten':r.rrQuelle==='gurtspeicher'?`Gurtspeicher, gegengelesen${r.live&&(r.live.luecken||[]).length?', '+r.live.luecken.length+' Funklücke(n) gefüllt':''}`:(r.live&&r.live.luecken&&r.live.luecken.length?`live, ${r.live.luecken.length} Funklücke(n)`:'live');
+    const quelle=r._seed?'Demo, synthetische Daten':/gurtspeicher/.test(r.rrQuelle||'')?`Gurtspeicher, gegengelesen${r.live&&(r.live.luecken||[]).length?', '+r.live.luecken.length+' Funklücke(n) gefüllt':''}`:(r.live&&r.live.luecken&&r.live.luecken.length?`live, ${r.live.luecken.length} Funklücke(n)`:'live');
     const kern=[]; const wort=(x,e)=>x.stabil?`stabil (${x.d>0?'+':x.d<0?'−':'±'}${Math.abs(x.d)} ${e})`:`${x.d>0?'+':'−'}${Math.abs(x.d)} ${e}`;
     if(ref&&hfR!=null) kern.push(ix>0&&hfRv!=null?`Referenzstufe (${esc(ref.label)}): ${fmt0(hfR)} bpm, ${dR.d===0?'gleich wie':Math.abs(dR.d)+' bpm '+(dR.d<0?'unter':'über')} der Vor-Einheit; ${dR.stabil?'nicht von der Streuung dieses Pferds zu unterscheiden (Grenze '+(gHF.eigen?fmt1(gHF.wert):'3')+' bpm).':'größer als die Streuung dieses Pferds (Grenze '+(gHF.eigen?fmt1(gHF.wert):'3')+' bpm).'}${(()=>{ const tr=this.hfTrend(hid,r.startedAt); if(!(tr&&tr.n>=4)) return ''; const tw=tr.b*tr.wochen, k2=tr.ki*tr.wochen, vz=x=>(x>0?'+':x<0?'−':'±')+fmt0(Math.abs(x)); return ' Über '+fmt0(tr.wochen)+' Wochen '+vz(tw)+' bpm (95 %: '+vz(tw-k2)+' bis '+vz(tw+k2)+').'; })()}`:`Erste Einheit auf der Referenzstufe (${esc(ref.label)}): Herzfrequenz ${fmt0(hfR)} bpm. Sie ist der Ausgangswert für die folgenden Einheiten.`);
     if(o.tauE!=null) kern.push(`Nach der Belastung hatte die Herzfrequenz nach ${fmt0(o.tauE)} s 63 % ihres Abfalls erreicht (τ63)${dT?' (Vor-Einheit '+(dT.d>0?'+':dT.d<0?'−':'±')+Math.abs(dT.d)+' s, '+(dT.stabil?'innerhalb der Streuung':'außerhalb der Streuung')+')':(vor&&vor.tauE!=null?' (mit der Vor-Einheit nicht vergleichbar: andere Belastung vor der Erholung)':'')}.`);
@@ -3257,13 +3283,13 @@ const Reha={
       let qrM=''; try{ qrM=QR.svg('https://vitalkultur.com/carlon-equine-visite/',{hell:'#ffffff',dunkel:'#04303a'}); }catch(_){ }
       const zl=(k,w2)=>`<div class="rh-pv"><span>${k}</span><code>${w2}</code></div>`;
       seiten.push(`${kopf('Methoden, Herkunft, Literatur')}<div class="rh-zwei" style="grid-template-columns:1.3fr 1fr"><div><div class="rh-bt">Methoden</div><div class="rh-meth">
-        <p><b>Aufnahme.</b> Polar-H10-Brustgurt im Equine-Gurt, RR-Intervalle mit 1 ms Auflösung${r.rrQuelle==='gurtspeicher'?'; parallel live und im Gurtspeicher, ausgewertet wird die lückenlose Speicherreihe, im Gurt gelöscht erst nach bitgleichem Gegenlesen':''}. Die Geräteeinstellungen (${esc(o.geraet)}) wurden während der Aufnahme als Zeitmarken gesetzt. Grenze: Der H10 ist beim Pferd für Herzfrequenz und Zeitbereichs-HRV in Ruhe und geführter Bodenarbeit gegen ein EKG geprüft (Kapteijn et al. 2022, 28 Pferde, H10-Sender mit Polar-M430-Empfänger und Hylofit-Elektroden; CARLON liest den Gurt direkt); für Spektrum, DFA und Entropie sowie für Bewegung im Aquatrainer liegt kein publizierter Vergleich vor.</p>
+        <p><b>Aufnahme.</b> Polar-H10-Brustgurt im Equine-Gurt, RR-Intervalle mit 1 ms Auflösung${/gurtspeicher/.test(r.rrQuelle||'')?'; parallel live und im Gurtspeicher, ausgewertet wird die lückenlose Speicherreihe, im Gurt gelöscht erst nach bitgleichem Gegenlesen':''}. Die Geräteeinstellungen (${esc(o.geraet)}) wurden während der Aufnahme als Zeitmarken gesetzt. Grenze: Der H10 ist beim Pferd für Herzfrequenz und Zeitbereichs-HRV in Ruhe und geführter Bodenarbeit gegen ein EKG geprüft (Kapteijn et al. 2022, 28 Pferde, H10-Sender mit Polar-M430-Empfänger und Hylofit-Elektroden; CARLON liest den Gurt direkt); für Spektrum, DFA und Entropie sowie für Bewegung im Aquatrainer liegt kein publizierter Vergleich vor.</p>
         <p><b>Aufbereitung.</b> Fünfstufige Filterkette nach Lipponen und Tarvainen (2019); die Schwellen sind von CARLON für Pferde skaliert und nicht gesondert validiert. Lange Pausen von etwa doppelter RR-Länge (typisch für AV-Block 2. Grades, Einordnung nur im EKG) werden erkannt, zählen nicht als Ersatz und werden für die HRV-Rechnung interpoliert; die Zeitachse bleibt die der Originalreihe. Die Filterkette läuft je Phase (Ruhe und jede Stufe einzeln), weil ihre Schwellen sonst aus dem ganzen Pulsbereich der Sitzung stammen und normale Ruheschläge als Ausreißer werten würden. Datenqualität = Anteil der Schläge, die nicht ersetzt werden mussten.</p>
         <p><b>Stufen und Erholung.</b> Herzfrequenz am Stufenende als Median der letzten 60 s; Δ HF und Zeitkonstante τ63 einer angepassten Sprungantwort erster Ordnung mit R² (unter 0,6 „unsicher“). Erholungszeiten werden nur nach derselben letzten Stufe verglichen. Fehlt die Marke „Belastung Ende“, wird sie aus dem Pulsabfall erkannt (±20 s) und benannt.</p>
         <p><b>HRV.</b> Nur aus der stationären Ruhephase vor der ersten Stufe (Task Force 1996). Spektrum nach 4-Hz-Spline-Resampling, Welch-Verfahren mit Hann-Fenster 256 Punkte (64 s) und 50 % Überlappung; Bänder für Pferde nach Kuwahara et al. (1996). Mit diesem Fenster ist die LF-Untergrenze 0,01 Hz nicht aufgelöst (erster Frequenzpunkt 0,016 Hz); LF und LF/HF sind deshalb immer orientierend. Poincaré nach Brennan et al. (2001), DFA α₁ nach Peng et al. (1995).</p>
         <p><b>Vergleich und Grenzen.</b> Verglichen werden nur identische Geräteeinstellungen einschließlich Wassertemperatur, weil die Wassertemperatur die Herzfrequenz verschiebt: kälteres Wasser senkt sie (13 °C rund 10 bpm unter 16 °C; 16 gegen 19 °C ohne gesicherten Unterschied, ab 19 °C Hinweise auf Drift; Nankervis et al. 2008, 8 Pferde, Wasser bis zum Buggelenk). Grenze für „stabil“: ab 6 Einheiten je Größe die an diesem Pferd gemessene kleinste sicher erkennbare Änderung t(n−2) · √2 · Reststreuung um die Trendlinie; davor vorläufig ±3 bpm, ±10 s, ±20 % (Festlegung CARLON). Bei 6–8 Einheiten ist diese Grenze nur grob bestimmt und wird gerundet angegeben. Ein Puls, der bei gleicher Stufe sinkt, kann auch Gewöhnung an das Gerät sein (Nankervis &amp; Williams 2006). Originalintervalle bleiben unverändert; alle Kennzahlen werden bei jeder Ansicht neu berechnet.</p></div>
         <div class="rh-bt" style="margin-top:10px">Literatur</div>${ref2.map(x=>`<div class="rh-ref">${x}</div>`).join('')}</div>
-        <div><div class="rh-bt">Herkunft</div>${zl('Aufnahme-ID',esc(r.id))}${zl('RR-Reihe SHA-256',sha||'–')}${zl('Quelle',r._seed?'Demo · synthetische Daten':esc((r.source&&r.source.sensor)||'Polar H10')+' · '+esc(r.rrQuelle==='gurtspeicher'?'Gurtspeicher (PSFTP), parallel live':'live (Bluetooth)'))}${r.speicher&&r.speicher.schlaege?zl('Gurtspeicher',fmt0(r.speicher.schlaege)+' Schläge (1 ms) · nach dem Speichern bitgleich aus der Datenbank zurückgelesen, erst dann im Gurt gelöscht: '+(r.speicher.geloescht?'ja':'nein')+' · Zeitmarken: Uhr des Geräts, Speicherstart '+fmt1(r.speicher.versatzSec||0)+' s nach Aufnahmebeginn'):''}${r.live?zl('Live',fmt0(r.live.schlaege||0)+' Schläge · '+((r.live.luecken||[]).length?(r.live.luecken.length+' Funklücke(n), aus dem Speicher gefüllt'):'keine Funklücke')):''}${zl('Auswertung','CARLON HRV '+esc(((typeof HRVVorstufe!=='undefined'&&HRVVorstufe.VERSION)||'').split(' (')[0]))}${zl('Reha-Auswertung',esc((a.version||'').split(' (')[0].replace('Reha-Auswertung ','')))}${zl('Bericht erstellt',fmtDate(new Date().toISOString())+', '+new Date().toLocaleTimeString('de-DE',{hour:'2-digit',minute:'2-digit'})+' Uhr')}
+        <div><div class="rh-bt">Herkunft</div>${zl('Aufnahme-ID',esc(r.id))}${zl('RR-Reihe SHA-256',sha||'–')}${zl('Quelle',r._seed?'Demo · synthetische Daten':esc((r.source&&r.source.sensor)||'Polar H10')+' · '+esc(/gurtspeicher/.test(r.rrQuelle||'')?'Gurtspeicher (PSFTP), parallel live':'live (Bluetooth)'))}${r.speicher&&r.speicher.schlaege?zl('Gurtspeicher',fmt0(r.speicher.schlaege)+' Schläge (1 ms) · nach dem Speichern bitgleich aus der Datenbank zurückgelesen, erst dann im Gurt gelöscht: '+(r.speicher.geloescht?'ja':'nein')+' · Zeitmarken: Uhr des Geräts, Speicherstart '+fmt1(r.speicher.versatzSec||0)+' s nach Aufnahmebeginn'):''}${r.live?zl('Live',fmt0(r.live.schlaege||0)+' Schläge · '+((r.live.luecken||[]).length?(r.live.luecken.length+' Funklücke(n), aus dem Speicher gefüllt'):'keine Funklücke')):''}${zl('Auswertung','CARLON HRV '+esc(((typeof HRVVorstufe!=='undefined'&&HRVVorstufe.VERSION)||'').split(' (')[0]))}${zl('Reha-Auswertung',esc((a.version||'').split(' (')[0].replace('Reha-Auswertung ','')))}${zl('Bericht erstellt',fmtDate(new Date().toISOString())+', '+new Date().toLocaleTimeString('de-DE',{hour:'2-digit',minute:'2-digit'})+' Uhr')}
         <div class="rh-bt" style="margin-top:10px">Zitierweise</div><div class="rh-ref" style="font-size:10px">Rohwedder, J. (2026). CARLON Equine Visite, Reha-Auswertung ${esc((a.version||'').split(' (')[0].replace('Reha-Auswertung ',''))} [Browser-Software]. Vitalkultur. https://vitalkultur.com/carlon-equine-visite/</div>
         <div class="rh-qr" style="border:1px solid var(--line);border-radius:12px;padding:10px;margin-top:12px"><div style="width:72px;background:#fff;border-radius:8px;padding:4px">${qrM}</div><div>Aufgezeichnet und ausgewertet mit CARLON Equine Visite.</div></div></div></div>`);
     } else {
@@ -3309,15 +3335,23 @@ const RehaLive={
       const dev=await navigator.bluetooth.requestDevice({filters:frei?[{services:['heart_rate']}]:[{name:h.gurt}],optionalServices:dienste}); this.dev=dev;
       dev.addEventListener&&dev.addEventListener('gattserverdisconnected',()=>this.wiederverbinden());
       await this.verbinden();
-      this.start=new Date(); this.kennung=(typeof H10Speicher!=='undefined')?H10Speicher.kennung(+this.start,h.id):null; this.entwurf();
+      /* START-TOR (20.11.2026, Jan: „erst starten, wenn interne Speicheraufnahme UND Live sichergestellt sind, idiotensicher“):
+         Uhr, Ruhe-Referenz und Stufen beginnen erst, wenn Live-Schläge ankommen und der Gurtspeicher läuft. Davor: Vorbereitung mit
+         automatischen neuen Versuchen. Ohne Speicher nur auf ausdrückliche Entscheidung „nur live“. */
+      this.kennung=(typeof H10Speicher!=='undefined')?H10Speicher.kennung(Date.now(),h.id):null; this.vorbereitung=true; this._vorN=0; this.nurLiveFrage=false;
       if(dev.name&&h.gurt!==dev.name){ h.gurt=dev.name; try{ await DB.put('horses',h); }catch(_){ } }
       try{ this.wakelock=await navigator.wakeLock.request('screen'); }catch(_){ }
       try{ navigator.storage&&navigator.storage.persist&&navigator.storage.persist(); }catch(_){ }
-      this._takt=setInterval(()=>{ this.kopf(); if((this._tk=(this._tk||0)+1)%2===0) this.hrvZeichnen(); },1000); this.zeichnen();
-      this.speicherStarten();
+      this._takt=setInterval(()=>{ this.kopf(); if(this.start&&(this._tk=(this._tk||0)+1)%2===0) this.hrvZeichnen(); },1000); this.zeichnen();
+      if(typeof H10Speicher==='undefined') this.beginnen(); else this.speicherStarten();
     }catch(e){ if(h.gurt&&!(opt&&opt.frei)&&e&&e.name==='NotFoundError'){ this.gurtWahl=true; this.zeichnen(); return; }
       Toast.show('Gurt nicht verbunden: '+(e&&e.message||e),'warn'); this.schliessen(); }
   },
+  /* Aufnahme beginnt: Zeitachse = Speicherstart, Live-Reihe ab hier (beide decken sich von Schlag 1 an) */
+  beginnen(){ if(this.start||!this.aktiv) return; this.vorbereitung=false; this.nurLiveFrage=false; this.start=new Date((this.sp&&this.sp.laeuft&&this.sp.startMs)||Date.now()); this.rr=[]; if(this.sp) this.sp.liveIdx=0;
+    this.entwurf(); this.zeichnen(); Toast.show(this.sp&&this.sp.laeuft?(this.en()?'Recording runs · live and in the strap memory':'Aufnahme läuft · live und im Gurtspeicher'):(this.en()?'Recording runs · live only':'Aufnahme läuft · nur live'),'ok'); },
+  nurLive(){ clearTimeout(this._spT); this.sp=null; this.spText=this.en()?'Live only (chosen): radio gaps are missing from the report.':'Nur live (gewählt): Funklücken fehlen im Bericht.'; this.beginnen(); },
+  spNeu(){ clearTimeout(this._spT); this.nurLiveFrage=false; this.spText=this.en()?'Starting strap memory …':'Gurtspeicher wird gestartet …'; this.zeichnen(); this.speicherStarten(); },
   async verbinden(){ const g=await this.dev.gatt.connect(); this._g=g; const svc=await g.getPrimaryService('heart_rate'); const c=await svc.getCharacteristic('heart_rate_measurement');
     c.addEventListener('characteristicvaluechanged',e=>this.schlag(e.target.value)); await c.startNotifications(); this._char=c;
     /* Gurtspeicher-Kanal hängt an der Verbindung: nach jedem Wiederverbinden neu aufbauen (die Aufnahme im Gurt läuft weiter) */
@@ -3329,7 +3363,8 @@ const RehaLive={
     finally{ this._wv=false; this.kopf(); } },
   schlag(v){ const fl=v.getUint8(0); let i=1; const hr=(fl&1)?v.getUint16(i,true):v.getUint8(i); i+=(fl&1)?2:1; if(fl&8) i+=2;
     /* Grenzen wie der Kanon (CarlonCore, PolarH10PSFTP.absurd*): nur < 200 oder > 12 000 ms ist absurd – AV-Block 2. Grades bleibt erhalten */
-    if(fl&16){ while(i+1<v.byteLength){ const rr=v.getUint16(i,true)*1000/1024; i+=2; if(rr>=200&&rr<=12000&&this.rr.length<200000) this.rr.push(rr); } }
+    if(fl&16&&this.start){ while(i+1<v.byteLength){ const rr=v.getUint16(i,true)*1000/1024; i+=2; if(rr>=200&&rr<=12000&&this.rr.length<200000) this.rr.push(rr); } }
+    if(!this.start&&fl&16) this._vorN=(this._vorN||0)+1;
     this.hrNow=hr; this.lastBeat=Date.now(); if(!this._k||Date.now()-this._k>500){ this._k=Date.now(); this.kopf(); } },
   /* Zwei Zeitachsen: t() = Summe der live angekommenen Schläge (passt exakt zur Live-Reihe, auch nach einem Funkloch),
      tw() = Wanduhr seit Start (passt zur lückenlosen Gurtspeicher-Reihe). Jede Marke trägt beide. */
@@ -3343,19 +3378,26 @@ const RehaLive={
      2 eigene Aufnahme starten (Kennung CV-…)   3 am Ende stoppen, auslesen, Speicher = Hauptreihe */
   async speicherStarten(){
     if(typeof H10Speicher==='undefined'||!this._g) return; const sp={laeuft:false}; this.sp=sp;
-    try{ sp.client=await new H10Speicher.Client(this._g).init(); }catch(_){ this.sp=null; this.spText=(this.en()?'Live only: this strap has no memory service':'Nur live: dieser Gurt hat keinen Speicher-Dienst'); this.kopf(); return; }
+    try{ sp.client=await new H10Speicher.Client(this._g).init(); }catch(_){ this.sp=null; this.spText=(this.en()?'This strap has no memory service. Recording is possible live only.':'Dieser Gurt hat keinen Speicher-Dienst. Aufnahme nur live möglich.'); if(!this.start){ this.nurLiveFrage=true; this.zeichnen(); } else this.kopf(); return; }
     const versuch=async()=>{
       try{ await sp.client.sitzungAuf(); }catch(_){ }
       const st=await sp.client.status(); if(st.laeuft){ this.spText=(this.en()?'Ending and saving an older strap recording …':'Ältere Gurtaufnahme wird beendet und gesichert …'); this.kopf(); await sp.client.stopp(); }
       const alt=await sp.client.aufnahmen();
       for(const a of alt){ this.spText=(this.en()?'Saving an older strap recording …':'Ältere Gurtaufnahme wird gesichert …'); this.kopf(); const e=await sp.client.ernte(a,n=>{ this.spText=`${this.en()?'Saving an older strap recording':'Ältere Gurtaufnahme wird gesichert'} … ${a.groesse?Math.min(99,Math.round(n/a.groesse*100)):''} %`; this.kopf(); });
         if(await RehaLive.fundSichern(e)) await sp.client.loeschen(a.ordner); }
-      await sp.client.start(this.kennung); sp.startMs=Date.now(); sp.liveIdx=this.rr.length; sp.laeuft=true; this.entwurf(); };
+      await sp.client.start(this.kennung); sp.startMs=Date.now(); sp.liveIdx=this.rr.length; sp.laeuft=true; this._spN=0; this.entwurf(); };
     try{ await versuch(); }
     catch(e){ if(e&&e.code===106){ this.spText=(this.en()?'Pairing the strap: please confirm the system dialog':'Gurt wird gekoppelt: bitte den Dialog des Systems bestätigen'); this.kopf(); await sp.client.koppeln(); try{ await versuch(); }catch(e2){ return this.spAus(e2); } } else return this.spAus(e); }
-    this.spText=''; this.kopf(); },
+    this.spText=''; this.kopf(); if(!this.start) this.beginnen(); },
   spAus(e){ if(this.sp){ this.sp.laeuft=false; this.sp.fehler=String((e&&e.message)||e); } try{ console.warn('[Gurtspeicher]',e); }catch(_){ }
-    this.spText=e&&e.code===106?(this.en()?'Live only: the strap is not paired. Confirm the pairing dialog at the next start.':'Nur live: Der Gurt ist nicht gekoppelt. Beim nächsten Start den Kopplungsdialog bestätigen.'):(this.en()?'Live only: the strap memory does not respond. Recording continues live.':'Nur live: Der Gurtspeicher antwortet nicht. Die Aufnahme läuft live weiter.'); this.kopf(); },
+    /* 20.11.2026 (Jan: „interne Aufnahme und Live müssen immer zu 100 % laufen, idiotensicher“): nicht aufgeben, solange live läuft.
+       Bis zu 6 neue Versuche (15, 30, 45 … s), Hinweis mit Zähler; Kopplung (106) braucht den Menschen und wird nicht wiederholt. */
+    if(this.aktiv&&!(e&&e.code===106)&&(this._spN=(this._spN||0)+1)<=6){ const n=this._spN, sek=15*n;
+      const weiter=this.start?(this.en()?'Live recording continues.':'Die Aufnahme läuft live weiter.'):(this.en()?'Recording starts as soon as it runs.':'Die Aufnahme beginnt, sobald er läuft.'); this.spText=this.en()?`Strap memory not responding yet. New attempt in ${sek} s (${n} of 6). ${weiter}`:`Gurtspeicher antwortet noch nicht. Neuer Versuch in ${sek} s (${n} von 6). ${weiter}`; this.kopf();
+      if(!this.start){ this.nurLiveFrage=true; this.zeichnen(); } /* 20.11.: Wahl sofort anbieten, Versuche laufen weiter */
+      clearTimeout(this._spT); this._spT=setTimeout(()=>{ if(this.aktiv&&!(this.sp&&this.sp.laeuft)) this.speicherStarten(); },sek*1000); return; }
+    this.spText=e&&e.code===106?(this.en()?'Live only: the strap is not paired. Confirm the pairing dialog at the next start.':'Nur live: Der Gurt ist nicht gekoppelt. Beim nächsten Start den Kopplungsdialog bestätigen.'):(this.en()?'Live only: the strap memory does not respond. Recording continues live.':'Nur live: Der Gurtspeicher antwortet nicht. Die Aufnahme läuft live weiter.');
+    if(!this.start){ this.spText=this.en()?'The strap memory does not respond. Wet the strap, check the fit, then try again.':'Der Gurtspeicher antwortet nicht. Gurt anfeuchten, Sitz prüfen, dann erneut versuchen.'; this.nurLiveFrage=true; this.zeichnen(); } else this.kopf(); },
   /* Fund aus dem Gurt sichern: eigene Kennung + Entwurf im Browser → vollständige Sitzung; sonst als Fund zum Zuordnen.
      true erst, wenn der Datensatz aus der Datenbank gelesen bitgleich ist (dann darf der Gurt löschen). */
   async fundSichern(e){ if(!e||!e.rr||e.rr.length<10) return true;
@@ -3404,7 +3446,7 @@ const RehaLive={
   /* LIVE-HRV unter den Einstellungen (20.11.2026): dieselben Zeichnungen wie Messstation und Abschluss (Chart.*), alle 2 s und nur
      sichtbar neu. Unter Belastung beschreibend (gleitend); ausgewertet wird im Sitzungsbericht je Stufe aus der Rohreihe. */
   hrvZeichnen(force){ const el=document.getElementById('rlHrv'); if(!el||typeof Chart==='undefined') return; const en=this.en();
-    if(!force){ const r=el.getBoundingClientRect(); if(r.top>innerHeight+120||r.bottom<-120) return; if(this._hrvHalt) return; }   /* angehalten, solange jemand eine Grafik untersucht */
+    if(!force&&(this._hrvHalt||el.querySelector('.hov-tip.on'))){ el.classList.add('rl-halt'); return; } el.classList.remove('rl-halt');   /* angehalten, solange jemand eine Grafik untersucht. 20.11.: IMMER zeichnen (6 ms), auch außerhalb des Bilds – sonst blieb der Bereich leer, bis man hinscrollte (Jan) */
     const rr=this.rr, n=rr.length, lm=[...this.log].reverse()[0], ruhe=!this.log.length;
     const kopf=`<div class="rl-hrv-k"><span class="eyebrow" data-halt="${en?' · paused while you look':' · angehalten, solange Sie hinsehen'}">${en?'Live · beat by beat':'Live · Schlag für Schlag'}</span><h3>${en?'Heart rate and HRV':'Puls und HRV'}</h3><p>${en?'The same views as the measuring station. Under load the values are descriptive (rolling); the session report evaluates each stage from the raw series.':'Dieselben Ansichten wie die Messstation. Unter Belastung sind die Werte beschreibend (gleitend); ausgewertet wird im Sitzungsbericht je Stufe aus der Rohreihe.'}</p></div>`;
     if(n<20){ const h=kopf+`<div class="rl-hcard rl-leer">${en?'Appears after the first 20 beats.':'Erscheint nach den ersten 20 Schlägen.'}</div>`; if(this._hrvHtml!==h){ el.innerHTML=h; this._hrvHtml=h; } return; }
@@ -3415,16 +3457,125 @@ const RehaLive={
     const r1=seit(60), hf60=r1.length?r1.reduce((a,b)=>a+60000/b,0)/r1.length:null;
     const f1=x=>x==null?'–':(Math.round(x*10)/10).toFixed(1).replace('.',en?'.':','), f0=x=>x==null?'–':String(Math.round(x));
     const IIC='<svg class="rl-i" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 7.6v.01"/></svg>';
-    const kach=(lbl,wert,einheit,unter,cls='',key='')=>`<button type="button" class="rl-kachel ${cls}" data-info="${key}" aria-label="${esc(lbl)} ${wert} ${einheit}: ${en?'explain':'erklären'}"><span>${lbl}${IIC}</span><b>${wert}<small>${einheit}</small></b><em>${unter}</em></button>`;
+    const kach=(lbl,wert,einheit,unter,cls='',key='')=>`<button type="button" class="rl-kachel ${cls}" data-info="${key}" aria-label="${esc(lbl)} ${wert} ${einheit}: ${en?'explain':'erklären'}"><span>${lbl}</span><b>${wert}<small>${einheit}</small></b><em>${unter}</em></button>`;
     const phase=ruhe?(en?'rest reference':'Ruhe-Referenz'):lm.device==='keines'?(en?'recovery':'Erholung'):(en?'stage ':'Stufe ')+this.log.filter(m=>m.device!=='keines').length;
-    const kacheln=`<div class="rl-kacheln">${kach(en?'Heart rate':'Puls',f0(hf60),'bpm',(en?'mean of last 60 s · ':'Mittel der letzten 60 s · ')+phase,'gold','meanrr')}${kach('RMSSD',f1(rmssd),'ms',en?'rolling, last 30 beats':'gleitend, letzte 30 Schläge','','rmssd')}${kach('SDNN',f1(sdnn),'ms',en?'last 2 min':'letzte 2 min','','sdnn')}${kach(en?'Irregular pairs':'Auffällige Paare',f1(art),'%',en?'jump > 20 %, last 2 min':'Sprung über 20 %, letzte 2 min',art>=5?'warn':'','artefakt')}</div>`;
+    /* ALLE KENNWERTE WIE IN DER AKTE / CARLON EQUINE (20.11.2026, Jan): dieselbe Filterkette (HRVVorstufe.analysiere) über die letzten 5 min,
+       Puls groß vorn. Unter Belastung beschreibend (Hinweis im Kopf); ausgewertet wird im Sitzungsbericht je Stufe. TINN/Tri-Index erst ab 20 min. */
+    /* FENSTER (20.11.2026, Gremium): höchstens 5 min, aber erst ab 120 s nach dem letzten Stufenwechsel – sonst beschreiben die Kennwerte
+       den Pulsanstieg statt der Variabilität. Im Übergang: ausgegraut mit „stabil ab mm:ss“ (eigene Festlegung, an echten Daten prüfen). */
+    const ende=rr.reduce((a,b)=>a+b,0)/1000, lmk=[...this.log].reverse()[0], stufeT0=lmk?(lmk.startSec??lmk.wandSec??0):0, abT=lmk?stufeT0+120:0, uebergang=!!lmk&&ende<abT;
+    const seitT=t0=>{ let t=0,k=0; const o=[]; for(;k<rr.length;k++){ t+=rr[k]/1000; if(t>t0) o.push(rr[k]); } return o; };
+    const r5=uebergang?[]:seitT(Math.max(ende-300,abT)); let v5=null; try{ v5=(typeof HRVVorstufe!=='undefined'&&r5.length>=60)?HRVVorstufe.analysiere(r5):null; }catch(e){ v5=null; }
+    const kr=(v5&&v5.correctedRR&&v5.correctedRR.length)?v5.correctedRR:r5, mRR=kr.length?kr.reduce((a,b)=>a+b,0)/kr.length:null;
+    const lang20=rr.reduce((a,b)=>a+b,0)>=1200000; let tt=null; try{ tt=lang20&&HRV.tinnTri?HRV.tinnTri(seit(1200)):null; }catch(e){ tt=null; }
+    const f2=x=>x==null||!isFinite(x)?'–':(Math.round(x*100)/100).toFixed(2).replace('.',en?'.':','), g=(x,f)=>x==null||!isFinite(x)?'–':f(x);
+    const K=[ // [Label DE, Label EN, Wert, Einheit, Unterzeile DE, Unterzeile EN, Info]
+      ['RMSSD','RMSSD',g(v5&&v5.rmssdMs,f1),'ms','Schlag zu Schlag','beat to beat','rmssd'],
+      ['SDNN','SDNN',g(v5&&v5.sdnnMs,f1),'ms','Gesamtstreuung','overall spread','sdnn'],
+      ['pNN50','pNN50',g(v5&&v5.pnn50Pct,f1),'%','Sprünge über 50 ms','jumps over 50 ms','pnn50'],
+      ['Mittleres RR','Mean RR',g(mRR,f0),'ms','Abstand je Schlag','interval per beat','meanrr'],
+      ['Min-HF','Min HR',g(kr.length?60000/Math.max(...kr):null,f0),'bpm','niedrigster Wert','lowest value','minmax'],
+      ['Max-HF','Max HR',g(kr.length?60000/Math.min(...kr):null,f0),'bpm','höchster Wert','highest value','minmax'],
+      ['SD1','SD1',g(v5&&v5.sd1Ms,f1),'ms','Poincaré quer','Poincaré across','sd1'],
+      ['SD2','SD2',g(v5&&v5.sd2Ms,f1),'ms','Poincaré längs','Poincaré along','sd2'],
+      ['SD2/SD1','SD2/SD1',g(v5&&v5.sd2sd1Ratio,f2),'','Form der Wolke','shape of the cloud','sdratio'],
+      ['TINN','TINN',lmk?'–':g(tt&&tt.tinn,f0),'ms',lmk?'nur in Ruhe ab 20 min':(lang20?'letzte 20 min · explorativ':'ab 20 min'),lmk?'rest only, from 20 min':(lang20?'last 20 min · exploratory':'from 20 min'),'tinn'],
+      ['Tri-Index','Tri index',lmk?'–':g(tt&&tt.triIndex,f1),'',lmk?'nur in Ruhe ab 20 min':(lang20?'letzte 20 min · explorativ':'ab 20 min'),lmk?'rest only, from 20 min':(lang20?'last 20 min · exploratory':'from 20 min'),'tinn'],
+      ['DFA α1','DFA α1',g(v5&&v5.nichtlineareBelastbar?v5.dfaAlpha1:null,f2),'','explorativ','exploratory','dfa'],
+      ['SampEn','SampEn',g(v5&&v5.sampleEntropy,f2),'','Regelmäßigkeit · explorativ','regularity · exploratory','sampen'],
+      ['Artefakte','Artefacts',g(v5&&v5.artefaktRatePct,f1),'%','ersetzte Schläge','replaced beats','artefakt'],
+      ['Lange Pausen','Long pauses',g(v5?v5.avBlockCount:null,f0),'','etwa doppelter Abstand','about double interval','avblock']];
+    const kacheln=`<div class="rl-kacheln rl-puls1">${kach(en?'Heart rate':'Puls',f0(hf60),'bpm',(en?'mean of last 60 s · ':'Mittel der letzten 60 s · ')+phase,'gold','meanrr')}</div>
+      <div class="rl-kw-t">${uebergang?(en?`Transition after stage change · values from ${this.mmss(abT)}`:`Übergang nach Stufenwechsel · Kennwerte ab ${this.mmss(abT)}`):lmk?(en?'HRV values · since stage start (without the first 2 min), at most 5 min, cleaned':'HRV-Kennwerte · seit Stufenbeginn (ohne die ersten 2 min), höchstens 5 min, bereinigt'):(en?'HRV values · last 5 min, cleaned':'HRV-Kennwerte · letzte 5 min, bereinigt')}<span>${en?'tap a tile for an explanation':'Kachel antippen = Erklärung'}</span></div>
+      <div class="rl-kacheln rl-kw">${K.map(k=>kach(en?k[1]:k[0],k[2]==='–'?(en?'n/a':'n. v.'):k[2],k[2]==='–'?'':k[3],en?k[5]:k[4],(k[0]==='Artefakte'?'warn':'')+(k[2]==='–'?' rl-nv':''),k[6])).join('')}</div>`;
     const karte=(titel,inhalt,cls='',key='')=>`<div class="rl-hcard ${cls}"><div class="rl-hcard-t"><span>${titel}</span>${key?`<button type="button" class="rl-ib" data-info="${key}" aria-label="${esc(titel)}: ${en?'what does this chart show?':'was zeigt diese Grafik?'}">${IIC}</button>`:''}</div>${inhalt}</div>`;
     const W=Math.max(320,Math.min(1200,(el.clientWidth||860)-30)), schmal=W<560, Wh=W, Hd=Math.round(Math.max(300,Math.min(460,W*0.42))), Hs=Math.round(Math.max(220,Math.min(340,W*0.3))), P0=Math.round(Math.min(W,schmal?W:640));
     const p3=rr.slice(-300), dd=p3.slice(1).map((v,i)=>v-p3[i]), mp=p3.reduce((a,b)=>a+b,0)/p3.length, sdp=Math.sqrt(p3.reduce((a,b)=>a+(b-mp)*(b-mp),0)/(p3.length-1)),
       sd1=Math.sqrt(dd.reduce((a,b)=>a+b*b,0)/dd.length)/Math.SQRT2, sd2=Math.sqrt(Math.max(0,2*sdp*sdp-sd1*sd1));
-    let h=kopf+kacheln+karte(en?'Heart rate + HRV · last 10 min':'Puls + HRV · letzte 10 min',Chart.dualVitals(seit(600),{w:W,h:Hd,live:true}),'','dual');
-    h+=karte(en?'Last beats · RR in ms':'Letzte Schläge · RR in ms',Chart.tachogram(rr.slice(-120),{w:Wh,h:Hs}),'','tacho');
+    let h=kopf+kacheln+karte(en?'Heart rate + HRV · last 10 min':'Puls + HRV · letzte 10 min',Chart.dualVitals(seit(600),{w:W,h:Hd,live:true,zoomRR:rr.slice()}),'','dual');
+    /* STUFENVERGLEICH LIVE (20.11.2026, Gremium: „den Preis trägt der Vergleich gleiche Stufe, gleiches Pferd, Woche 1 bis 8“, Jan):
+       frühere Einheiten DIESES Pferds mit identisch dokumentierter Einstellung (RehaKern.lastschluessel), je Einheit die Herzfrequenz
+       der letzten 60 s der Stufe (wie im Bericht); heute = Median der letzten 60 s, sobald die Stufe 3 min läuft. */
+    { const lst=[...this.log].reverse().find(m=>m.device!=='keines');
+      if(lst&&typeof Reha!=='undefined'&&Reha.verlauf&&RehaKern.lastschluessel){ const key=RehaKern.lastschluessel(lst);
+        if(!this._vgl||this._vgl.key!==key){ let v=null; try{ v=Reha.verlauf(this.h.id).find(x=>x.schluessel===key)||null; }catch(_){ v=null; } this._vgl={key,v,label:RehaKern.label?RehaKern.label(lst):''}; }
+        const V=this._vgl, p0=(V.v&&V.v.punkte)||[], t0s=lst.startSec??lst.wandSec??0, laeuft=ende-t0s;
+        let heute=null; if(laeuft>=180){ const l60=seitT(ende-60).map(x=>60000/x).sort((a,b)=>a-b); if(l60.length) heute=l60[Math.floor(l60.length/2)]; }
+        const titel=(en?'This stage compared · ':'Diese Stufe im Vergleich · ')+(V.label||'');
+        let inhalt;
+        if(!p0.length) inhalt=`<div class="rl-leer">${en?'First session with this setting. From the next session on, the comparison appears here.':'Erste Einheit mit dieser Einstellung. Ab der nächsten Einheit erscheint hier der Vergleich.'}</div>`;
+        else { const P=p0.map(x=>({d:x.datum,t:Date.parse(x.datum),hf:x.hf})).sort((a,b)=>a.t-b.t);
+          /* Gewöhnung (Nankervis & Williams 2006): die ersten 2 Einheiten sind Gewöhnung, nicht Bezug. Bezug = Median ab Einheit 3,
+             Band = Schwankung dieses Pferds (Reha.grenzeHF: ab 6 Einheiten eigene, sonst 3 bpm) – dieselbe Regel wie im Bericht. */
+          const GEW=2, nach=P.slice(GEW).map(x=>x.hf).sort((a,b)=>a-b), bezug=nach.length?nach[Math.floor((nach.length-1)/2)]:null;
+          let gr=null; try{ gr=Reha.grenzeHF?Reha.grenzeHF(this.h.id):null; }catch(_){ gr=null; } const band=gr&&gr.wert!=null?gr.wert:3, eigen=!!(gr&&gr.eigen);
+          const tH=Date.now(), alle=P.map(x=>x.hf).concat(heute!=null?[heute]:[]).concat(bezug!=null?[bezug-band,bezug+band]:[]); const lo=Math.floor((Math.min(...alle)-3)/5)*5, hi=Math.ceil((Math.max(...alle)+3)/5)*5;
+          const w0=Math.round(Math.max(320,W)), h0=Math.round(Math.max(230,Math.min(310,W*0.27))), L=44,R=96,T=18,B=34, t0=P[0].t, t1=Math.max(tH,P[P.length-1].t+864e5);
+          const sx=t=>L+((t-t0)/((t1-t0)||1))*(w0-L-R), sy=v=>T+(1-(v-lo)/((hi-lo)||1))*(h0-T-B);
+          let g=`<rect x="${L}" y="${T}" width="${w0-L-R}" height="${h0-T-B}" rx="8" fill="#0E0E0E"/>`;
+          for(let v=lo;v<=hi;v+=5) g+=`<line x1="${L}" x2="${w0-R}" y1="${sy(v).toFixed(1)}" y2="${sy(v).toFixed(1)}" stroke="rgba(255,255,255,.07)"/><text x="${L-7}" y="${(sy(v)+3).toFixed(1)}" text-anchor="end" style="font-size:10.5px;fill:rgba(235,230,220,.6)">${v}</text>`;
+          if(P.length>GEW){ const xa=L, xb=sx((P[GEW-1].t+P[GEW].t)/2); g+=`<rect x="${xa}" y="${T}" width="${(xb-xa).toFixed(1)}" height="${h0-T-B}" fill="rgba(255,255,255,.04)"/><text x="${(xa+6).toFixed(1)}" y="${T+13}" style="font-size:10.5px;fill:rgba(235,230,220,.55)">${en?'habituation':'Gewöhnung'}</text>`; }
+          if(bezug!=null){ g+=`<rect x="${L}" y="${sy(bezug+band).toFixed(1)}" width="${w0-L-R}" height="${(sy(bezug-band)-sy(bezug+band)).toFixed(1)}" fill="rgba(62,207,178,.08)"/><line x1="${L}" x2="${w0-R}" y1="${sy(bezug).toFixed(1)}" y2="${sy(bezug).toFixed(1)}" stroke="rgba(62,207,178,.55)" stroke-dasharray="5 4"/><text x="${w0-R+6}" y="${(sy(bezug)-2).toFixed(1)}" style="font-size:10.5px;fill:#5fe0c6">${en?'reference':'Bezug'} ${Math.round(bezug)}</text><text x="${w0-R+6}" y="${(sy(bezug)+11).toFixed(1)}" style="font-size:9.5px;fill:rgba(235,230,220,.55)">± ${(Math.round(band*10)/10).toString().replace('.',en?'.':',')} bpm</text>`; }
+          g+=`<polyline points="${P.map(x=>sx(x.t).toFixed(1)+','+sy(x.hf).toFixed(1)).join(' ')}" fill="none" stroke="#FFB547" stroke-width="2.2" stroke-linejoin="round"/>`;
+          P.forEach((x,i)=>{ const gew=i<GEW; g+=`<circle cx="${sx(x.t).toFixed(1)}" cy="${sy(x.hf).toFixed(1)}" r="4.5" fill="${gew?'#0E0E0E':'#FFB547'}" stroke="#FFB547" stroke-width="2" ${gew?'stroke-dasharray="2 2"':''}/>`; });
+          const ticks=P.length<=8?P.map(x=>x.t):[P[0].t,P[Math.floor(P.length/2)].t,P[P.length-1].t]; ticks.forEach(t=>{ g+=`<text x="${sx(t).toFixed(1)}" y="${h0-12}" text-anchor="middle" style="font-size:10.5px;fill:rgba(235,230,220,.6)">${fmtDate(new Date(t).toISOString()).replace(/\s?\d{4}$/,'')}</text>`; });
+          if(heute!=null){ const xh=sx(tH); g+=`<line x1="${sx(P[P.length-1].t).toFixed(1)}" y1="${sy(P[P.length-1].hf).toFixed(1)}" x2="${xh.toFixed(1)}" y2="${sy(heute).toFixed(1)}" stroke="#3ECFB2" stroke-width="2" stroke-dasharray="4 3"/><circle cx="${xh.toFixed(1)}" cy="${sy(heute).toFixed(1)}" r="7" fill="#3ECFB2"/><text x="${xh.toFixed(1)}" y="${T-5}" text-anchor="middle" style="font-size:11px;font-weight:700;fill:#3ECFB2">${en?'today':'heute'}</text>`; }
+          const hp=P.map((x,i)=>({x:+sx(x.t).toFixed(1),y:+sy(x.hf).toFixed(1),lab:fmtDate(x.d)+(i<GEW?(en?' · habituation':' · Gewöhnung'):''),val:Math.round(x.hf)+' bpm',sub:(en?'heart rate, last 60 s of the stage':'Herzfrequenz, letzte 60 s der Stufe'),col:'#FFB547'})).concat(heute!=null?[{x:+sx(tH).toFixed(1),y:+sy(heute).toFixed(1),lab:en?'today (running)':'heute (laufend)',val:Math.round(heute)+' bpm',sub:en?'median of the last 60 s':'Median der letzten 60 s',col:'#3ECFB2'}]:[]);
+          const vz=x=>x>0?'+'+x:x<0?'−'+Math.abs(x):'±0', k1=x=>(Math.round(x*10)/10).toFixed(1).replace('.',en?'.':','), vz1=x=>{ const r1=Math.round(x*10)/10; return (r1>0?'+':r1<0?'−':'±')+k1(Math.abs(r1)); }, dv=heute!=null?Math.round(heute)-Math.round(P[P.length-1].hf):null, db=heute!=null&&bezug!=null?heute-bezug:null, innen=db!=null&&Math.abs(Math.round(db*10)/10)<=Math.round(band*10)/10;
+          const bandTxt=(Math.round(band*10)/10).toString().replace('.',en?'.':',');
+          const satz=heute!=null?(en?`Today ${Math.round(heute)} bpm at this setting · previous session ${Math.round(P[P.length-1].hf)} (${vz(dv)})`+(bezug!=null?` · reference after habituation ${k1(bezug)} (${vz1(db)}), ${innen?'within':'outside'} this horse’s variation of ±${bandTxt} bpm${eigen?'':' (fixed limit until 6 sessions)'}`:'')+'. The assessment lies with the vet.'
+                                    :`Heute ${Math.round(heute)} bpm bei dieser Einstellung · letzte Einheit ${Math.round(P[P.length-1].hf)} (${vz(dv)})`+(bezug!=null?` · Bezug nach der Gewöhnung ${k1(bezug)} (${vz1(db)}), ${innen?'innerhalb':'außerhalb'} der Schwankung dieses Pferds von ±${bandTxt} bpm${eigen?'':' (feste Grenze bis 6 Einheiten)'}`:'')+'. Die Einordnung trifft die Tierärztin oder der Tierarzt.')
+            :(en?`${P.length} earlier sessions with this setting. Today's value appears once the stage has run 3 minutes (from ${this.mmss(t0s+180)}).`:`${P.length} frühere ${P.length===1?'Einheit':'Einheiten'} mit dieser Einstellung. Der heutige Wert erscheint, sobald die Stufe 3 Minuten läuft (ab ${this.mmss(t0s+180)}).`);
+          inhalt=`<div class="rl-vgl">${esc(satz)}</div>`+Chart._hov(g,w0,h0,hp,'zeit','',` aria-label="${esc(titel)}"`); }
+        h+=karte(titel,inhalt,'rl-vglk','stufenvergleich'); } }
     h+=`<div class="rl-hcard poin" id="rlPzKarte"><div class="rl-hcard-t"><span>Poincaré · ${en?'whole session, rewind with the slider':'ganze Sitzung, mit dem Regler zurückspulen'}</span><button type="button" class="rl-ib" data-info="poincare" aria-label="Poincaré: ${en?'what does this chart show?':'was zeigt diese Grafik?'}">${IIC}</button></div><div id="rlPzPlatz"></div></div>`;
+    h+=karte((en?'Tachogram · last 120 beats (':'Tachogramm · letzte 120 Schläge (')+this.mmss(rr.slice(-120).reduce((a,b)=>a+b,0)/1000)+(en?' min), RR in ms':' min), RR in ms'),Chart.tachogram(rr.slice(-120),{w:Wh,h:Hs}),'','tacho'); /* Zeitraum: siehe Titel */
+    /* VOLLE AUSSTATTUNG WIE IN DER AKTE (20.11.2026, Jan: „alle relevanten Grafiken und HRV-Werte, Baevsky mit Tacho und über die Zeit“):
+       Baevsky-Tacho, Baevsky über die ganze Einheit (2-min-Fenster alle 30 s, bereinigt, Stufen als Linien), Spektrum, RR-Verteilung,
+       DFA-α1 – dieselben Funktionen wie in der Akte. Schwere Rechnung höchstens alle 10 s (Zwischenspeicher). */
+    if(rr.length>=120){ const jetzt=Date.now();   /* Analyse bleibt auch im Übergang sichtbar; Fensterwerte erst mit genug Schlägen */
+      if(!this._schwer||jetzt-this._schwer.t>10000||force){ let psd=null,bv=null,dfa=null; if(kr.length>=120){ try{ psd=HRV.lombPSD(kr); }catch(_){ } try{ bv=HRV.baevsky(kr); }catch(_){ } } dfa=v5&&v5.nichtlineareBelastbar?v5.dfaAlpha1:null;
+        const cum=[]; let tt=0; for(const v of rr){ tt+=v/1000; cum.push(tt); } const pts=[], apts=[];
+        const fenster=(e,lang)=>{ let a=0; while(a<cum.length&&cum[a]<=e-lang) a++; let b=a; while(b<cum.length&&cum[b]<=e) b++; let w=rr.slice(a,b);
+          try{ const vv=typeof HRVVorstufe!=='undefined'&&w.length>=60?HRVVorstufe.analysiere(w):null; if(vv&&vv.correctedRR&&vv.correctedRR.length) w=vv.correctedRR; }catch(_){ } return w; };
+        /* 20.11. (Gremium R2): Fenster, die einen Übergang (Stufenbeginn + 120 s) berühren, ergeben KEINEN Punkt → Lücke in der Kurve */
+        const marken=this.log.map(m=>m.startSec??m.wandSec).filter(x=>x!=null), beruehrt=(a,b)=>marken.some(t0=>t0<b&&t0+120>a);
+        for(let e=120;e<=tt+0.01;e+=30){ if(!beruehrt(e-120,e)){ const w=fenster(e,120); const bb=w.length>=40?HRV.baevsky(w):null; if(bb) pts.push([e,bb.sqrtSI]); } else pts.push([e,null]);
+          if(e>=180){ if(!beruehrt(e-180,e)){ const w3=fenster(e,180); let a1=null; try{ a1=w3.length>=150?HRV.dfaAlpha1(w3):null; }catch(_){ } apts.push([e,a1!=null&&isFinite(a1)?a1:null]); } else apts.push([e,null]); } }
+        const ers=this.log.find(m=>m.device!=='keines'), ruheEnde=ers?(ers.startSec??ers.wandSec):null; let ruheBv=null, ruheA1=null; if(ruheEnde!=null&&ruheEnde>=120){ const wr=fenster(ruheEnde,Math.min(300,ruheEnde)); const b0=wr.length>=40?HRV.baevsky(wr):null; ruheBv=b0?b0.sqrtSI:null; try{ ruheA1=wr.length>=150?HRV.dfaAlpha1(wr):null; }catch(_){ ruheA1=null; } }
+        this._schwer={t:jetzt,psd,bv,dfa,pts,apts,ruheBv,ruheA1}; }
+      const X=this._schwer, f1b=x=>x==null?'–':(Math.round(x*10)/10).toFixed(1).replace('.',en?'.':','), f2b=x=>x==null?'–':(Math.round(x*100)/100).toFixed(2).replace('.',en?'.':',');
+      const bvTxt=X.bv?`<div class="rl-bv">√SI <b>${f1b(X.bv.sqrtSI)}</b> · AMo ${f1b(X.bv.AMo)} % · Mo ${fmt0(X.bv.Mo*1000)} ms</div>`:'';
+      /* Zeitverlauf über die ganze Einheit mit Stufenlinien, Fadenkreuz wie alle Grafiken (Chart._hov, Modus „zeit“) */
+      const zeitChart=(P,o2)=>{ const {ymin=0,ymax,schritt,farbe,fmt,achse,einheit,zonen=[],leer,aria,breite,hoehe,keinZoom}=o2; const fa=achse||fmt; if(P.filter(p=>p[1]!=null).length<2) return `<div class="rl-leer">${leer}</div>`;
+        const w0=Math.round(breite||Math.max(320,W)), h0=Math.round(hoehe||Math.max(220,Math.min(300,W*0.28))), L=44,R=14,T=16,B=30, tmax=Math.max(P[P.length-1][0],300);
+        const sx=t=>L+(t/tmax)*(w0-L-R), sy=v=>T+(1-(Math.max(ymin,Math.min(ymax,v))-ymin)/(ymax-ymin))*(h0-T-B);
+        let g=`<rect x="${L}" y="${T}" width="${w0-L-R}" height="${h0-T-B}" rx="8" fill="#0E0E0E"/>`;
+        this.log.forEach(mk=>{ const t0=mk.startSec??mk.wandSec; if(t0==null||t0>tmax) return; g+=`<rect x="${sx(t0).toFixed(1)}" y="${T}" width="${Math.max(0,sx(Math.min(tmax,t0+120))-sx(t0)).toFixed(1)}" height="${h0-T-B}" fill="rgba(255,255,255,.05)"/>`; });
+        (o2.linien||[]).forEach(([v,lab,c])=>{ g+=`<line x1="${L}" x2="${w0-R}" y1="${sy(v).toFixed(1)}" y2="${sy(v).toFixed(1)}" stroke="${c||'rgba(235,230,220,.35)'}" stroke-dasharray="5 4"/><text x="${w0-R-6}" y="${(sy(v)-5).toFixed(1)}" text-anchor="end" style="font-size:10px;fill:${c||'rgba(235,230,220,.6)'}">${lab}</text>`; });
+        zonen.forEach(([a,b,c,lab])=>{ g+=`<rect x="${L}" y="${sy(b).toFixed(1)}" width="${w0-L-R}" height="${(sy(a)-sy(b)).toFixed(1)}" fill="${c}" opacity=".10"/>`+(lab?`<text x="${w0-R-6}" y="${(sy(b)+12).toFixed(1)}" text-anchor="end" style="font-size:10px;fill:${c}">${lab}</text>`:''); });
+        for(let v=ymin;v<=ymax+1e-9;v+=schritt) g+=`<line x1="${L}" x2="${w0-R}" y1="${sy(v).toFixed(1)}" y2="${sy(v).toFixed(1)}" stroke="rgba(255,255,255,.07)"/><text x="${L-7}" y="${(sy(v)+3).toFixed(1)}" text-anchor="end" style="font-size:10.5px;fill:rgba(235,230,220,.6)">${fa(v)}</text>`;
+        const stM=Math.max(5,Math.ceil(tmax/60/6/5)*5); for(let m=0;m*60<=tmax;m+=stM) g+=`<text x="${sx(m*60).toFixed(1)}" y="${h0-9}" text-anchor="middle" style="font-size:10.5px;fill:rgba(235,230,220,.6)">${m}:00</text>`;
+        this.log.forEach((mk,i)=>{ const t0=mk.wandSec??mk.startSec; if(t0==null||t0>tmax) return; const nr=mk.device==='keines'?(en?'Rec.':'Erh.'):String(this.log.slice(0,i+1).filter(m2=>m2.device!=='keines').length);
+          g+=`<line x1="${sx(t0).toFixed(1)}" x2="${sx(t0).toFixed(1)}" y1="${T}" y2="${h0-B}" stroke="rgba(235,230,220,.35)" stroke-dasharray="3 3"/><text x="${(sx(t0)+5).toFixed(1)}" y="${T+13}" style="font-size:11px;font-weight:700;fill:#5fe0c6">${nr}</text>`; });
+        { let seg=[]; const zieh=()=>{ if(seg.length>1) g+=`<polyline points="${seg.join(' ')}" fill="none" stroke="${farbe}" stroke-width="2.2" stroke-linejoin="round"/>`; else if(seg.length===1){ const [x1,y1]=seg[0].split(','); g+=`<circle cx="${x1}" cy="${y1}" r="2.5" fill="${farbe}"/>`; } seg=[]; };
+          P.forEach(p=>{ if(p[1]==null) zieh(); else seg.push(sx(p[0]).toFixed(1)+','+sy(p[1]).toFixed(1)); }); zieh(); }
+        { const L2=[...P].reverse().find(p=>p[1]!=null); if(L2) g+=`<circle cx="${sx(L2[0]).toFixed(1)}" cy="${sy(L2[1]).toFixed(1)}" r="4" fill="${farbe}"/>`; }
+        const stufeBei=t=>{ let n2='';  this.log.forEach((mk,i)=>{ const t0=mk.wandSec??mk.startSec; if(t0!=null&&t0<=t) n2=mk.device==='keines'?(en?'recovery':'Erholung'):(en?'stage ':'Stufe ')+this.log.slice(0,i+1).filter(m2=>m2.device!=='keines').length; }); return n2||(en?'rest':'Ruhe'); };
+        const hp=P.filter(p=>p[1]!=null).map(p=>({x:+sx(p[0]).toFixed(1),y:+sy(p[1]).toFixed(1),lab:this.mmss(p[0])+' · '+stufeBei(p[0]),val:fmt(p[1])+(einheit?' '+einheit:''),col:farbe}));
+        const nz=keinZoom?'':` data-neu="${Chart.neuReg((w2,h2)=>zeitChart(P,{...o2,breite:w2,hoehe:h2,keinZoom:true}))}"`;
+        return Chart._hov(g,w0,h0,hp,'zeit','',` aria-label="${esc(aria)}"`+nz); };
+      const zb=zeitChart(X.pts,{ymax:Math.max(30,Math.ceil(Math.max(...X.pts.map(p=>p[1]||0),0)/5)*5),schritt:5,farbe:'#FFB547',fmt:f1b,achse:v=>String(Math.round(v)),einheit:'√SI',
+        linien:X.ruheBv!=null?[[X.ruheBv,(en?'rest ':'Ruhe ')+f1b(X.ruheBv),'#3ECFB2']]:[],leer:en?'Appears after 2 minutes.':'Erscheint nach 2 Minuten.',aria:en?'Baevsky index over the session':'Baevsky-Index über die Einheit'});
+      const za=zeitChart(X.apts,{ymin:0,ymax:2,schritt:0.25,farbe:'#9B8CFF',fmt:f2b,einheit:'',
+        linien:[[0.75,en?'0.75 (human research)':'0,75 (Humanforschung)'],[0.5,en?'0.5 (human research)':'0,5 (Humanforschung)']].concat(X.ruheA1!=null?[[X.ruheA1,(en?'rest ':'Ruhe ')+f2b(X.ruheA1),'#3ECFB2']]:[]),leer:en?'Appears once a 3-minute window holds 150 clean beats.':'Erscheint, sobald ein 3-Minuten-Fenster 150 saubere Schläge enthält.',aria:en?'DFA alpha1 over the session':'DFA-α1 über die Einheit'});
+      /* EINE GRAFIK JE ZEILE (Jan, wie Equine-iOS-App): untereinander, volle Breite, edel – nichts nebeneinander gequetscht */
+      h+=`<div class="rl-analyse">${en?'Analysis':'Analyse'}<span>${en?'exploratory values, validated in horses neither at rest nor under load; no ratings, the only reference is this horse’s resting value':'explorative Kennwerte, beim Pferd weder in Ruhe noch unter Belastung validiert; keine Bewertung, Bezug ist allein der Ruhewert dieses Pferds'}</span></div>`;
+      h+=karte(en?'Baevsky over the session · √SI, 2-min window':'Baevsky über die Einheit · √SI, 2-min-Fenster',zb,'','baevskyVerlauf');
+      h+=karte(en?'DFA-α₁ over the session · 3-min window':'DFA-α₁ über die Einheit · 3-min-Fenster',za+`<div class="rl-fuss">${en?'Lines 0.75 and 0.5 come from human research and are not confirmed in horses; exploratory. Grey: transition after a stage change.':'Die Linien 0,75 und 0,5 stammen aus der Humanforschung und sind am Pferd nicht bestätigt; explorativ. Grau: Übergang nach einem Stufenwechsel.'}</div>`,'','dfaVerlauf');
+      if(!lmk&&X.psd) h+=karte(en?'Frequency spectrum · rest reference':'Frequenz-Spektrum · Ruhe-Referenz',HRV.psdChart(X.psd,{w:W,h:Hs}),'','freq'); else h+=`<div class="rl-zeile">${en?'Frequency spectrum: shown only in the rest reference; during movement it cannot be interpreted.':'Frequenz-Spektrum: nur in der Ruhe-Referenz; unter Bewegung ist es nicht interpretierbar.'}</div>`;
+      h+=karte(en?'RR distribution · current stage':'RR-Verteilung · laufende Stufe',kr.length>=60?`<div class="rl-gauge">${HRV.histChart(kr,{w:560,h:260,ohneDreieck:true})}</div><div class="rl-fuss">${en?'Description of the window only; TINN and triangular index need 20 steady minutes and are not shown live.':'Nur Beschreibung des Fensters; TINN und Triangular-Index brauchen 20 gleichförmige Minuten und werden live nicht ausgewiesen.'}</div>`:`<div class="rl-leer">${en?'Appears once the window holds enough beats.':'Erscheint, sobald das Fenster genug Schläge enthält.'}</div>`,'','tinn');
+    }
     if(ruhe&&n>=120) h+=karte(en?'Breathing curve · from the heartbeat, at rest':'Atemkurve · aus dem Herzschlag, in Ruhe',Chart.breathWave(seit(90),{w:W,h:Hs}),'','atem');
     el.innerHTML=h; this._hrvHtml=h; this._hrvAusbauen(el); this._pzEinsetzen(); },
   /* Poincaré mit Zeitregler (poincare-zeit.js, dieselbe Komponente wie in der Akte): EIN Element für die ganze Sitzung,
@@ -3447,6 +3598,7 @@ const RehaLive={
   kopf(){ const k=document.getElementById('rlKopf'); if(!k) return; const alt=this.lastBeat&&Date.now()-this.lastBeat>5000;
     const s=this.log.length?this.tw()-(this.log[this.log.length-1].wandSec??this.log[this.log.length-1].startSec):0;
     const en=this.en(), lm=this.log[this.log.length-1], tw=this.tw(); let hin='';
+    if(!this.start&&this.aktiv){ hin=this._vorN?(en?`Strap connected · ${this._vorN} live beats received · recording starts as soon as the strap memory runs`:`Gurt verbunden · ${this._vorN} Live-Schläge angekommen · Aufnahme beginnt, sobald der Gurtspeicher läuft`):(en?'Connecting the strap · waiting for the first beats':'Gurt wird verbunden · warte auf die ersten Schläge'); }
     if(this.start){ if(!this.log.length) hin=tw<300?(en?`Rest reference: ${this.mmss(300-tw)} left (stand quietly 5 min)`:`Ruhe-Referenz läuft: noch ${this.mmss(300-tw)} (5 min ruhig stehen)`):(en?'Rest reference complete ✓ · set the first stage':'Ruhe-Referenz ausreichend ✓ · erste Stufe setzen');
       else if(lm.device==='keines'){ const e=tw-(lm.wandSec??lm.startSec); hin=e<300?(en?`Recovery: keep recording ${this.mmss(300-e)}`:`Erholung läuft: noch ${this.mmss(300-e)} nachbeobachten`):(en?'Recovery complete ✓ · tap Finish':'Erholung ausreichend ✓ · Fertig tippen'); }
       else { const e=tw-(lm.wandSec??lm.startSec); const mw=(a,b)=>{ let t=0,s2=0,n=0; for(let k=this.rr.length-1;k>=0&&t<b;k--){ if(t>=a){ s2+=60000/this.rr[k]; n++; } t+=this.rr[k]/1000; } return n?s2/n:null; };
@@ -3454,9 +3606,11 @@ const RehaLive={
         hin=e<180?(en?`Stage analysable in ${this.mmss(180-e)}`:`Stufe auswertbar in ${this.mmss(180-e)}`):(stabil?(en?'Stage settled ✓ (plateau)':'Stufe eingeschwungen ✓ (Puls stabil)'):(en?'Pulse still changing · keep the stage':'Puls ändert sich noch · Stufe halten')); } }
     k.innerHTML=`<div class="rl-hf ${alt?'alt':''}">${this.hrNow!=null&&!alt?this.hrNow:'–'}<small>bpm</small></div><div class="rl-zeit"><b>${this.mmss(this.tw())}</b><span>${this.en()?'recording':'Aufnahme'}</span></div><div class="rl-zeit"><b>${this.log.length?this.mmss(s):'–'}</b><span>${this.en()?'stage':'Stufe'}</span></div><div class="rl-zeit"><b>${fmt0(this.rr.length)}</b><span>${this.en()?'beats':'Schläge'}</span></div>
       ${hin?`<div class="rl-hin" id="rlHinweis">${esc(hin)}${alt?` · <b>${en?'no signal':'kein Signal'}</b>`:''}</div>`:''}
-      <div class="rl-sp" id="rlSpeicher" data-zustand="${this.sp&&this.sp.laeuft?'an':(this.spText?'info':'aus')}">${this.sp&&this.sp.laeuft&&!this.spText?`<i></i>${this.en()?'Strap memory records in parallel':'Gurtspeicher zeichnet parallel auf'}${this._wv?' · '+(this.en()?'radio gap, nothing is lost':'Funkloch, nichts geht verloren'):''}`:esc(this.spText||(this.start?(this.en()?'Starting strap memory …':'Gurtspeicher wird gestartet …'):''))}</div>`; },
+      <div class="rl-sp" id="rlSpeicher" data-zustand="${this.sp&&this.sp.laeuft?'an':(this.spText?'info':'aus')}">${this.sp&&this.sp.laeuft&&!this.spText?`<i></i>${this.en()?'Strap memory records in parallel':'Gurtspeicher zeichnet parallel auf'}${this._wv?' · '+(this.en()?'radio gap, nothing is lost':'Funkloch, nichts geht verloren'):''}`:esc(this.spText||(this.en()?'Starting strap memory …':'Gurtspeicher wird gestartet …'))}</div>
+      ${this.nurLiveFrage&&!this.start?`<div class="rl-spfrage"><button class="btn primary" data-rl="spneu">${en?'Try strap memory now':'Gurtspeicher jetzt erneut versuchen'}</button><button class="btn" data-rl="nurlive">${en?'Record without strap memory (live only)':'Ohne Gurtspeicher aufnehmen (nur live)'}</button></div>`:''}`; },
   zeichnen(){
     let o=document.getElementById('rehaLive'); if(!o){ o=document.createElement('div'); o.id='rehaLive'; o.className='reha-live'; document.body.appendChild(o);
+      o.addEventListener('input',e=>{ const mm=e.target.closest&&e.target.closest('[data-rl-modell]'); if(mm){ State.settings.rehaModelle={...(State.settings.rehaModelle||{}),[this.art]:mm.value.trim()}; clearTimeout(this._mT); this._mT=setTimeout(()=>State.saveSettings(),600); return; } });
       o.addEventListener('input',e=>{ const t=e.target.closest&&e.target.closest('[data-rl-text]'); if(!t) return; this.akt[t.dataset.rlText]=t.value.trim();
         const alt=o.querySelector('button[data-rl="stufe"]'); if(alt){ const d=document.createElement('div'); d.innerHTML=this._stufeKnopf(); alt.replaceWith(d.firstElementChild); } });
       o.addEventListener('keydown',e=>{ const g=e.target.closest('.rl-wahl'); if(!g||!/^Arrow(Left|Right|Up|Down)$/.test(e.key)) return; e.preventDefault();
@@ -3467,14 +3621,16 @@ const RehaLive={
         if(a==='stufe'){ if(this.wasserWiderspruch()&&!sicher('stufe')) return; this.stufe(); }
         else if(a==='gurtfrei'){ const h=this.h, art=this.art; this.schliessen(); this.starten(h.id,art,{frei:true}); }
         else if(a==='wahl'){ this._wGewaehlt=true; this.wahl(b.dataset.f,b.dataset.v); const n=o.querySelector('.rl-wahl button[aria-checked="true"]'); if(n) n.focus(); }
+        else if(a==='spneu') this.spNeu(); else if(a==='nurlive') this.nurLive();
         else if(a==='wmehr'){ this._wMehr=!this._wMehr; this.zeichnen(); }
         else if(a==='werkl'){ this._wErkl=!this._wErkl; this.zeichnen(); }
         else if(a==='wfix'){ if(b.dataset.h) this.akt.waterHeight=b.dataset.h; if(b.dataset.c!=null&&b.dataset.c!=='') this.akt.waterHeightCm=+b.dataset.c; this.zeichnen(); }
         else if(a==='ende') this.ende(); else if(a==='zurueck'){ this.log.pop(); this.entwurf(); this.zeichnen(); }
         else if(a==='referenz'){ const r0=this.log.find(m=>m.device!=='keines')||this._letzt; if(r0){ for(const k of (RehaKern.GERAETE[this.art].felder||[])) if(r0[k]!=null) this.akt[k]=r0[k]; this.zeichnen(); Toast.show(en?'Reference stage set':'Referenzstufe eingestellt','ok'); } }
-        else if(a==='fertig'){ if(sicher('fertig')) this.fertig(); } else if(a==='abbrechen'){ if(sicher('abbrechen')) this.schliessen(); } else if(a==='+'||a==='-') this.aendern(b.dataset.f,a==='+'?1:-1); }); }
+        else if(a==='fertig'){ if(!this.start){ this.schliessen(); return; } if(sicher('fertig')) this.fertig(); } else if(a==='abbrechen'){ if(sicher('abbrechen')) this.schliessen(); } else if(a==='+'||a==='-') this.aendern(b.dataset.f,a==='+'?1:-1); }); }
     const G=RehaKern.GERAETE[this.art], en=this.en();
     o.innerHTML=`<div class="rl-wrap"><div class="rl-top"><div><div class="eyebrow">${en?'Rehab session':'Reha-Sitzung'} · ${esc(en?G.en:G.de)}${this.dev&&this.dev.name?` · <span class="rl-gurt">${esc(this.dev.name.replace(/^Polar H10 /,'H10 '))}</span>`:''}</div><h2>${esc(this.h.name)}</h2></div><button class="btn ghost" data-rl="abbrechen">${this._sicher==='abbrechen'?(en?'Discard? Tap again':'Verwerfen? Nochmal tippen'):(en?'Cancel':'Abbrechen')}</button></div>
+      <label class="rl-modell"><span>${en?'Device on the report':'Gerät im Bericht'}</span><input data-rl-modell value="${esc((State.settings.rehaModelle||{})[this.art]||'')}" placeholder="${en?'Manufacturer and model, e.g. from the type plate':'Hersteller und Modell, z. B. vom Typenschild'}" maxlength="60"></label>
       <div id="rlKopf" class="rl-kopf"></div>
       ${this.start?'':`<div class="chip rl-gurtwahl" style="display:block;margin:10px 0">${this.h.gurt?(en?`Strap of this horse: <b>${esc(this.h.gurt)}</b>. Select it in the browser dialog.`:`Gurt dieses Pferds: <b>${esc(this.h.gurt)}</b>. Im Browser-Dialog auswählen.`):(en?'Choose the Polar H10 in the browser dialog. Recording starts as soon as it is connected.':'Polar H10 im Browser-Dialog wählen. Die Aufnahme startet, sobald er verbunden ist.')}${this.h.gurt?` <button class="btn ghost" data-rl="gurtfrei" style="margin-left:8px">${en?'Choose another strap':'Anderen Gurt wählen'}</button>`:''}</div>`}
       <div class="rl-felder">${G.felder.map(f=>{ const F=RehaKern.FELD[f];
@@ -3490,7 +3646,7 @@ const RehaLive={
       ${(()=>{ const w=this.wasserWiderspruch(); if(!w&&this._sicher==='stufe') this._sicher=null; if(!w) return ''; const K=RehaKern.WASSER;
         return `<div class="rl-warn" id="rlWasser" role="alert"><b>${en?'Please check the water height':'Wasserhöhe bitte prüfen'}</b> ${esc(en?w.en:w.de)}<div>${w.hoehe?`<button class="btn" data-rl="wfix" data-h="${w.hoehe}" data-c="">${en?'Height is':'Höhe ist'} ${esc(K[w.hoehe][en?1:0])}</button>`:''}${w.cm!=null?`<button class="btn" data-rl="wfix" data-c="${w.cm}">${en?'Set':'Auf'} ${w.cm} cm${en?'':' stellen'}</button>`:''}</div></div>`; })()}
       ${(()=>{ const lt=[...this.log].reverse().find(m=>m.device!=='keines'); this._gleich=!!lt&&RehaKern.lastschluessel(lt)===RehaKern.lastschluessel(this.akt); return ''; })()}
-      <div class="rl-los">${this._stufeKnopf()}<button class="btn" data-rl="ende">${en?'End of load':'Belastung Ende'}</button><button class="btn ${this.log.length&&this.log[this.log.length-1].device==='keines'?'primary':''}" data-rl="fertig" style="margin-left:14px">${this._sicher==='fertig'?(en?'Finish now? Tap again':'Wirklich beenden? Nochmal tippen'):(en?'Finish':'Fertig')}</button></div><div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px">${(this.log.find(m=>m.device!=='keines')||this._letzt)?`<button class="btn ghost" data-rl="referenz">${en?'Set reference stage':'Referenz einstellen'}</button>`:''}${this.log.length?`<button class="btn ghost" data-rl="zurueck">${en?'Undo last marker':'Letzte Marke zurücknehmen'}</button>`:''}</div>
+      <div class="rl-los">${this._stufeKnopf()}<button class="btn" data-rl="ende">${en?'End of load':'Belastung Ende'}</button><button class="btn ${this.log.length&&this.log[this.log.length-1].device==='keines'?'primary':''}" data-rl="fertig" style="margin-left:14px">${this._sicher==='fertig'?(en?'End recording now? Tap again':'Aufnahme wirklich beenden? Nochmal tippen'):(en?'■ End recording':'■ Aufnahme beenden')}</button></div><div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px">${(this.log.find(m=>m.device!=='keines')||this._letzt)?`<button class="btn ghost" data-rl="referenz">${en?'Set reference stage':'Referenz einstellen'}</button>`:''}${this.log.length?`<button class="btn ghost" data-rl="zurueck">${en?'Undo last marker':'Letzte Marke zurücknehmen'}</button>`:''}</div>
       <div class="rl-liste">${this.log.length?this.log.map((m,i)=>`<div>${i+1}. ${this.mmss(m.wandSec??m.startSec)} <span style="color:var(--text-dim)">(${this.start?new Date(this.start.getTime()+1000*(m.wandSec??m.startSec)).toLocaleTimeString(en?'en-GB':'de-DE',{hour:'2-digit',minute:'2-digit'}):''})</span>${(()=>{ const nx=this.log[i+1], d=(nx?(nx.wandSec??nx.startSec):this.tw())-(m.wandSec??m.startSec); return m.device!=='keines'&&nx&&d<180?` <b style="color:var(--amber,#f6b73c)">${en?'short, not compared':'kurz, wird nicht verglichen'}</b>`:''; })()} · ${m.device==='keines'?(en?'end of load':'Belastung Ende'):esc(RehaKern.label(m,!en))}</div>`).join(''):`<div>${en?'No stage yet. Set the device, then tap “Start stage” or say “stage”.':'Noch keine Stufe. Gerät einstellen, dann „Stufe übernehmen“ tippen oder „Stufe“ sagen.'}</div>`}</div>
       <section class="rl-hrv" id="rlHrv" aria-label="${en?'Live heart rate and HRV':'Live-Puls und HRV'}">${this._hrvHtml||''}</section></div>`;
     this.kopf(); if(!this._hrvHtml) this.hrvZeichnen(true); else this._pzEinsetzen();
@@ -3516,15 +3672,19 @@ const RehaLive={
     /* Vergleich nur mit den live angekommenen Schlägen NACH dem Speicherstart (der Speicher beginnt einige Sekunden später) */
     const liveNach=this.sp?live.length-(this.sp.liveIdx||0):live.length;
     if(mem&&mem.rr.length<liveNach-2){ grund=`Gurtdatei unvollständig (${mem.rr.length} statt mindestens ${liveNach} Schläge)`; mem=null; ziel=null; }
-    const ausSpeicher=!!(mem&&mem.rr.length>=30), off=ausSpeicher?(this.sp.startMs-this.start.getTime())/1000:0;
-    const rr=ausSpeicher?mem.rr.slice():live.map(x=>Math.round(x*100)/100);
+    const ausSpeicher=!!(mem&&mem.rr.length>=30);
+    /* 20.11.: Speicher erst spät gestartet (erneuter Versuch) → Live-Schläge bis zum Speicherstart VORN anfügen, sonst ginge z. B. die Ruhe-Referenz verloren */
+    const vorn=ausSpeicher&&(this.sp.liveIdx||0)>15?live.slice(0,this.sp.liveIdx).map(x=>Math.round(x*100)/100):null;
+    const off=ausSpeicher&&!vorn?(this.sp.startMs-this.start.getTime())/1000:0;
+    const rr=ausSpeicher?(vorn?vorn.concat(mem.rr):mem.rr.slice()):live.map(x=>Math.round(x*100)/100);
     const log=this.log.map(m=>{ const o=Object.assign({},m); if(ausSpeicher&&m.wandSec!=null) o.startSec=Math.max(0,Math.round((m.wandSec-off)*10)/10); delete o.wandSec; return o; });
-    const startIso=new Date(ausSpeicher?this.sp.startMs:this.start.getTime()).toISOString();
+    const startIso=new Date(ausSpeicher&&!vorn?this.sp.startMs:this.start.getTime()).toISOString();
     const id='reha_'+this.h.id+'_'+this.start.getTime(), dauer=Math.round(rr.reduce((a,b)=>a+b,0)/1000);
-    const rec={id,horseId:this.h.id,startedAt:startIso,durationSec:dauer,beatCount:rr.length,rr,reha:{log},metrics:{},
-      rrQuelle:ausSpeicher?'gurtspeicher':'live',
+    const _modell=((State.settings.rehaModelle||{})[this.art]||'').trim();   /* 20.11.: Hersteller und Modell zum Zeitpunkt der Aufnahme festhalten */
+    const rec={id,horseId:this.h.id,startedAt:startIso,durationSec:dauer,beatCount:rr.length,rr,reha:_modell?{log,modell:_modell}:{log},metrics:{},
+      rrQuelle:ausSpeicher?(vorn?'live+gurtspeicher':'gurtspeicher'):'live',
       live:{schlaege:live.length,luecken:this.luecken.map(l=>({abSec:Math.max(0,Math.round((l.abSec-off)*10)/10),bisSec:l.bisSec!=null?Math.max(0,Math.round((l.bisSec-off)*10)/10):null,nachSchlag:l.nachSchlag}))},
-      speicher:ausSpeicher?{kennung:this.kennung,schlaege:mem.rr.length,verworfen:mem.verworfen,bytes:mem.bytes,versatzSec:Math.round(off*1000)/1000,geloescht:false}:(this.sp?{fehler:grund||'nicht gelaufen'}:null),
+      speicher:ausSpeicher?{kennung:this.kennung,schlaege:mem.rr.length,verworfen:mem.verworfen,bytes:mem.bytes,versatzSec:Math.round(off*1000)/1000,geloescht:false,...(vorn?{abSchlag:vorn.length,vornLive:vorn.length}:{})}:(this.sp?{fehler:grund||'nicht gelaufen'}:null),
       source:{app:'CARLON Equine Visite · Reha-Aufnahme',sensor:(this.dev&&this.dev.name)||null,weg:ausSpeicher?'Polar H10 Gurtspeicher (PSFTP) + live':'Polar H10 live (Bluetooth)'},triage:{level:'stable',reasons:[]}};
     try{ if(typeof Neuauswertung!=='undefined'){ rec.neuauswertung=Neuauswertung._rechnen(rec,Neuauswertung.version()); Neuauswertung._uebernehmen(rec); } }catch(_){ }
     await DB.put('recordings',rec); State.recordings.push(rec);
@@ -5085,7 +5245,7 @@ const Chart={
        man dieses Diagramm ueberhaupt betrachtet. */
     const _pr=Chart._robustRange(rr,{lo:0.004,hi:0.996,pad:0.10,minSpan:40});
     const lo=_pr.min, hi=_pr.max;
-    const pL=pad, pT=pad-18, pB=size-pad, plotR=size-16;
+    const pL=pad, pT=16, pB=size-pad, plotR=size-16;   /* 20.11.: H = W (pB-pT = plotR-pL) → 1 ms in x = 1 ms in y, Identitätslinie und Ellipse exakt 45° (vorher 18 px gestaucht) */
     const W=plotR-pL, H=pB-pT;
     const _cl=v=>Math.max(lo,Math.min(hi,v));
     const PX=v=>pL+(_cl(v)-lo)/(hi-lo)*W, PY=v=>pB-(_cl(v)-lo)/(hi-lo)*H;
@@ -5302,7 +5462,7 @@ const Chart={
     const hov=pts.map(p=>({x:+X(p.t).toFixed(1),y:+Y(p.v).toFixed(1),i:Math.round(p.t),rr:Math.round(p.v),hr:Math.round(p.v)}));
     return Chart._hov(g,w,h,hov,"seq");
   },
-  tachogram(rr,{w=720,h=230,color='var(--cyan)'}={}){
+  tachogram(rr,{w=720,h=230,color='var(--cyan)',keinZoom=false}={}){
     if(!rr||rr.length<2) return `<div style="color:var(--text-faint);font-size:12px;text-align:center;padding:30px">Keine RR-Daten</div>`;
     const pad={l:52,r:16,t:14,b:32};const n=rr.length;
     const _rr=Chart._robustRange(rr,{minSpan:40});
@@ -5329,7 +5489,8 @@ const Chart={
     // Ausreisser, auf die er sich bezieht
     g+=Chart._clipNote(w-pad.r,h-3,_rr.clipped);
     const _tm=rr.map((v,i)=>({x:+X(i).toFixed(1),y:+Y(v).toFixed(1),i,rr:Math.round(v),hr:Math.round(60000/v),af:_taf[i]}));
-    return Chart._hov(g,w,h,_tm,"seq");
+    const _nz=keinZoom?'':` data-neu="${Chart.neuReg((w2,h2)=>Chart.tachogram(rr,{w:w2,h:h2,color,keinZoom:true}))}"`;
+    return Chart._hov(g,w,h,_tm,"seq",'',_nz);
   },
   dualHrvBpm(rr,{w=720,h=300}={}){
     if(!rr||rr.length<2) return '';
@@ -5367,7 +5528,7 @@ const Chart={
   // (Cyan, rechte Achse) über EINE Zeitachse. Zeigt das Zusammenspiel von Belastung (HF↑) und
   // Erholungsreserve (HRV): gesund = HF↑/HRV↓ synchron · Stress/sEA = HF hoch + HRV niedrig stabil.
   // HF_i = 60000/RR_i · HRV_i = rollendes RMSSD, Fenster 30 Beats (Task Force 1996, adaptiv bei kurzer Aufnahme).
-  dualVitals(rr,{w=720,h=300,live=false}={}){
+  dualVitals(rr,{w=720,h=300,live=false,zoomRR=null,keinZoom=false}={}){
     if(!rr||rr.length<8) return `<div style="color:var(--text-faint);font-size:12px;text-align:center;padding:30px">Zu wenige Schläge für Dual-Vitals</div>`;
     const n=rr.length;
     const hf=rr.map(v=>60000/v);
@@ -5475,8 +5636,9 @@ const Chart={
        haette ihn als rohe Attribute in das umschliessende Element gekippt.
        Zwei Funktionen gleichen Namens mit verschiedenen Parametern sind eine
        Falle; hier wird sie benannt statt umgangen. */
+    const _nz=keinZoom?'':` data-neu="${Chart.neuReg((w2,h2)=>Chart.dualVitals(zoomRR||rr,{w:w2,h:h2,live,keinZoom:true}),zoomRR?((State.settings&&State.settings.lang==='en')?'Heart rate + HRV · whole session':'Puls + HRV · ganze Einheit'):'')}"`;
     return Chart._hov(g,w,h,_dm,"dual",'',
-      ` role="img" aria-label="${_alt.replace(/"/g,'')}"`);
+      ` role="img" aria-label="${_alt.replace(/"/g,'')}"`+_nz);
   },
   ring(score,{size=120,color='var(--cyan)',label='Score'}={}){
     const r=size/2-10, c=2*Math.PI*r, cx=size/2, cy=size/2;
@@ -5605,11 +5767,12 @@ const Chart={
       tip.style.left=Math.max(tw/2+2,Math.min(rect.width-tw/2-2,px))+'px'; tip.style.top='0px';
       tip.classList.add('on');
     };
-    document.addEventListener('mousemove',onMove,{passive:true});
-    // Touch: Tippen/Wischen zeigt den Verlaufspunkt unter dem Finger (mobile Vets).
-    document.addEventListener('pointerdown',e=>{ if(e.pointerType==='mouse')return; Chart._tsScrub=e.target&&e.target.closest&&e.target.closest('.ts-chart'); onMove(e); },{passive:true});
-    document.addEventListener('pointermove',e=>{ if(e.pointerType==='mouse'||!Chart._tsScrub)return; e.preventDefault(); onMove(e); },{passive:false});
-    const _tsEnd=e=>{ if(e.pointerType!=='mouse')Chart._tsScrub=null; };
+    document.addEventListener('mousemove',e=>{ if(Date.now()-(Chart._tsTouchT||0)<900||(e.sourceCapabilities&&e.sourceCapabilities.firesTouchEvents)) return; onMove(e); },{passive:true});
+    // Touch (20.11.2026, wie iOS-App und alle Grafiken): Wischen zeigt, Loslassen lässt stehen, erneutes Tippen blendet aus.
+    document.addEventListener('pointerdown',e=>{ if(e.pointerType==='mouse')return; Chart._tsTouchT=Date.now(); const w=e.target&&e.target.closest&&e.target.closest('.ts-chart'); Chart._tsScrub=w;
+      const an=!!(w&&w.querySelector('.ts-tip.on')); Chart._tsTap=w?{w,x:e.clientX,y:e.clientY,an,bewegt:false}:null; if(w&&!an) onMove(e); },{passive:true});
+    document.addEventListener('pointermove',e=>{ if(e.pointerType==='mouse'||!Chart._tsScrub)return; const t=Chart._tsTap; if(t&&!t.bewegt&&Math.hypot(e.clientX-t.x,e.clientY-t.y)<8) return; if(t) t.bewegt=true; e.preventDefault(); onMove(e); },{passive:false});
+    const _tsEnd=e=>{ if(e.pointerType!=='mouse'){ Chart._tsTouchT=Date.now(); const t=Chart._tsTap; if(t&&t.an&&!t.bewegt){ hide(t.w); if(Chart._active===t.w) Chart._active=null; } Chart._tsScrub=null; Chart._tsTap=null; } };
     document.addEventListener('pointerup',_tsEnd); document.addEventListener('pointercancel',_tsEnd);
   },
   bar(value,max,color,label,sub){
@@ -5628,6 +5791,11 @@ const Chart={
     return flags;
   },
   // Interaktiver Hover-Wrapper: Fadenkreuz + Fokuspunkt(e) + Tooltip mit echten Werten am Cursor.
+  /* ZEITACHSE IM VOLLBILD (20.11.2026, Jan: „reinzoomen, x-Achse mit einem oder zwei Fingern verschieben, Daten begreifbar“):
+     Zeitgrafiken melden hier, wie sie sich in beliebiger Breite NEU zeichnen; das Vollbild dehnt die Achse durch Neuzeichnen
+     (Schrift und Punkte bleiben scharf), statt das Bild zu strecken. Ringpuffer: die letzten 40 Grafiken. */
+  _neu:{}, _neuN:0,
+  neuReg(render,titel){ const id='z'+(++Chart._neuN); Chart._neu[id]=render; if(titel) render.titel=titel; delete Chart._neu['z'+(Chart._neuN-40)]; return id; },
   _hov(inner,w,h,pts,mode,extraStyle='',dataAttrs=''){
     const cross=mode==='scatter'
       ?`<line class="hov-cross" x1="0" x2="${w}" y1="0" y2="0"/><line class="hov-cross" x1="0" x2="0" y1="0" y2="${h}"/>`
@@ -5680,6 +5848,7 @@ const Chart={
       let html;
       if(mode==='scatter'){const dR=best.rn1-best.rn;html=`<div class="tt-date">RRₙ → RRₙ₊₁</div><div class="tt-val">${best.rn} → ${best.rn1} ms</div><div class="tt-cls" style="color:var(--text-secondary)">HR ${Math.round(60000/best.rn)} bpm · ΔRR ${dR>0?'+':''}${dR} ms</div>`;}
       else if(mode==='dual') html=`<div class="tt-date">${best.t!=null?fmt0(best.t)+' s':'Schlag '+(best.i+1)}${best.af?' · ⚠ Fehlbeat':''}</div><div class="tt-val" style="color:#FFB547">${best.hf!=null?best.hf+' bpm':best.rr+' ms'}</div><div class="tt-cls" style="color:var(--cyan)">${best.hrv!=null?best.hrv+' ms HRV':best.hr+' bpm'}${best.hvU?' <span style="opacity:.75">· auffälliges Paar im Fenster</span>':''}</div>`;
+      else if(mode==='zeit') html=`<div class="tt-date">${esc(best.lab||'')}</div><div class="tt-val"${best.col?` style="color:${best.col}"`:''}>${esc(best.val||'')}</div>${best.sub?`<div class="tt-cls" style="color:var(--text-secondary)">${esc(best.sub)}</div>`:''}`;
       else if(mode==='spec') html=`<div class="tt-date">${best.bd}-Band</div><div class="tt-val">${fmt0(best.pw)} <span style="font-size:11px;color:var(--text-dim)">ms²</span></div><div class="tt-cls" style="color:var(--text-secondary)">${best.pct}% Gesamt${best.f?' · Peak '+best.f+' Hz':''}</div>`;
       else html=`<div class="tt-date">Schlag ${best.i+1}</div><div class="tt-val">${best.rr} ms</div><div class="tt-cls" style="color:var(--text-secondary)">${best.hr} bpm</div>`;
       const ay=best.y2!=null?Math.min(best.y,best.y2):best.y;
@@ -5689,12 +5858,16 @@ const Chart={
       tip.classList.toggle('tright',_isTouch && (best.x/W)<0.42);   // nahe linkem Rand: nach rechts kippen
       tip.innerHTML=html;tip.classList.add('on');
     };
-    document.addEventListener('mousemove',onMove,{passive:true});
+    /* Nach einem Fingertipp schickt der Browser eine nachgeahmte Mausbewegung – die darf einen ausgeblendeten Wert nicht wieder zeigen */
+    document.addEventListener('mousemove',e=>{ if(Date.now()-(Chart._vhTouchT||0)<900||(e.sourceCapabilities&&e.sourceCapabilities.firesTouchEvents)) return; onMove(e); },{passive:true});
     // Touch (iPad/Handy — mobile Vets sind der Hauptfall): Tippen zeigt den Wert unter dem Finger,
     // Wischen scrubbt entlang der Daten, der Wert bleibt stehen bis zum nächsten Tippen woanders.
-    document.addEventListener('pointerdown',e=>{ if(e.pointerType==='mouse')return; Chart._vhScrub=e.target&&e.target.closest&&e.target.closest('.viz-hov'); onMove(e); },{passive:true});
-    document.addEventListener('pointermove',e=>{ if(e.pointerType==='mouse'||!Chart._vhScrub)return; e.preventDefault(); onMove(e); },{passive:false});
-    const _vhEnd=e=>{ if(e.pointerType!=='mouse')Chart._vhScrub=null; };
+    /* 20.11.2026 (Jan, wie iOS-App): Wischen zeigt den Wert unter dem Finger, Loslassen LÄSST IHN STEHEN (zum Zeigen und
+       Besprechen), erneutes Tippen ohne Wischen blendet ihn aus. Ein Tipp auf eine Grafik ohne sichtbaren Wert zeigt ihn. */
+    document.addEventListener('pointerdown',e=>{ if(e.pointerType==='mouse')return; Chart._vhTouchT=Date.now(); const w=e.target&&e.target.closest&&e.target.closest('.viz-hov'); Chart._vhScrub=w;
+      const an=!!(w&&w.querySelector('.hov-tip.on')); Chart._vhTap=w?{w,x:e.clientX,y:e.clientY,an,bewegt:false}:null; if(w&&!an) onMove(e); },{passive:true});
+    document.addEventListener('pointermove',e=>{ if(e.pointerType==='mouse'||!Chart._vhScrub)return; const t=Chart._vhTap; if(t&&!t.bewegt&&Math.hypot(e.clientX-t.x,e.clientY-t.y)<8) return; if(t) t.bewegt=true; e.preventDefault(); onMove(e); },{passive:false});
+    const _vhEnd=e=>{ if(e.pointerType!=='mouse'){ Chart._vhTouchT=Date.now(); const t=Chart._vhTap; if(t&&t.an&&!t.bewegt){ clear(t.w); if(Chart._vhActive===t.w) Chart._vhActive=null; } Chart._vhScrub=null; Chart._vhTap=null; } };
     document.addEventListener('pointerup',_vhEnd); document.addEventListener('pointercancel',_vhEnd);
   },
   tacho(rr,{w=560,h=110}={}){
@@ -5840,7 +6013,7 @@ const HRV={
     return Chart._hov(g,w,h,_sm,"spec");
   },
   // Baevsky-Gauge (Halbkreis-Tacho, orientierend)
-  gauge(si,{w=360,h=214}={}){   // si = √SI (equine-skaliert, Stucke 2015) — stabile Skala 0–30 · Optik 1:1 iOS-App
+  gauge(si,{w=360,h=214,neutral=false,ref=null}={}){   // si = √SI (equine-skaliert, Stucke 2015) — stabile Skala 0–30 · Optik 1:1 iOS-App
     if(si==null)return '';
     const cx=w/2,cy=h-30,r=w/2-42; const smax=30; const v=Math.max(0,Math.min(smax,si));
     const ang=a=>Math.PI-(a/smax)*Math.PI; // 0→π (links), smax→0 (rechts)
@@ -5849,21 +6022,23 @@ const HRV={
     const ZC={ruhig:'#3E8E57',aktiv:'#3E76A0',stress:'#9C6A2E',alarm:'#9C3A3A'};
     const gap=0.35;
     const arc=(a0,a1,col)=>{const[x0,y0]=pt(a0+gap,r),[x1,y1]=pt(Math.max(a0+gap,a1-gap),r);const laf=(a1-a0)>smax/2?1:0;return `<path d="M${x0.toFixed(1)},${y0.toFixed(1)} A${r},${r} 0 ${laf} 1 ${x1.toFixed(1)},${y1.toFixed(1)}" fill="none" stroke="${col}" stroke-width="15" stroke-linecap="butt"/>`;};
-    let g=arc(0,7,ZC.ruhig)+arc(7,15,ZC.aktiv)+arc(15,25,ZC.stress)+arc(25,smax,ZC.alarm);
+    /* 20.11.: neutral = ohne Wertungszonen (am Pferd kein Referenzbereich, Perplexity-Gremium); ref = Ruhewert dieses Pferds als Marke */
+    let g=neutral?arc(0,smax,'#4A4A52'):arc(0,7,ZC.ruhig)+arc(7,15,ZC.aktiv)+arc(15,25,ZC.stress)+arc(25,smax,ZC.alarm);
+    if(neutral&&ref!=null){ const rv=Math.max(0,Math.min(smax,ref)), [a1,b1]=pt(rv,r-11), [a2,b2]=pt(rv,r+11), [a3,b3]=pt(rv,r+26); g+=`<line x1="${a1.toFixed(1)}" y1="${b1.toFixed(1)}" x2="${a2.toFixed(1)}" y2="${b2.toFixed(1)}" stroke="#3ECFB2" stroke-width="3"/><text x="${a3.toFixed(1)}" y="${(b3+3).toFixed(1)}" text-anchor="middle" style="font-size:10px;font-weight:700;fill:#3ECFB2">Ruhe</text>`; }
     // Zonen-Labels auf dem Bogen (Mitte jeder Zone, in Zonenfarbe)
-    const zl=(mid,txt,col)=>{const[x,y]=pt(mid,r-28);return `<text x="${x.toFixed(1)}" y="${(y+3).toFixed(1)}" text-anchor="middle" font-size="9" font-weight="700" letter-spacing=".05em" fill="${col}">${txt}</text>`;};
+    const zl=(mid,txt,col)=>{const[x,y]=pt(mid,r-28);return `<text x="${x.toFixed(1)}" y="${(y+3).toFixed(1)}" text-anchor="middle" style="font-size:9px;font-weight:700;letter-spacing:.05em;fill:${col}">${txt}</text>`;};
     /* 16.11.2026: Skalenbereiche statt Zustandswörter – „Alarm“ widersprach „keine Alarme“, „Stress“ ist eine Deutung. */
-    g+=zl(3.5,'NIEDRIG',ZC.ruhig)+zl(11,'MITTEL',ZC.aktiv)+zl(20,'HOCH',ZC.stress)+zl(27.5,'SEHR HOCH',ZC.alarm);
+    if(!neutral) g+=zl(3.5,'NIEDRIG',ZC.ruhig)+zl(11,'MITTEL',ZC.aktiv)+zl(20,'HOCH',ZC.stress)+zl(27.5,'SEHR HOCH',ZC.alarm);
     // Tick-Zahlen an den Zonen-Grenzen (0 · 7 · 25 · 30)
     const tk=(a,txt)=>{const[x,y]=pt(a,r+17);return `<text x="${x.toFixed(1)}" y="${(y+3).toFixed(1)}" text-anchor="middle" font-size="9.5" font-family="var(--font-mono)" fill="var(--text-dim)">${txt}</text>`;};
-    g+=tk(0,'0')+tk(7,'7')+tk(25,'25')+tk(30,'30');
+    g+=neutral?[0,5,10,15,20,25,30].map(a=>tk(a,String(a))).join(''):tk(0,'0')+tk(7,'7')+tk(25,'25')+tk(30,'30');
     // Nadel hellblau + Pivot (wie App)
     const[nx,ny]=pt(v,r-8);
     g+=`<line x1="${cx}" y1="${cy}" x2="${nx.toFixed(1)}" y2="${ny.toFixed(1)}" stroke="#5AB8E8" stroke-width="3" stroke-linecap="round"/>`;
     g+=`<circle cx="${cx}" cy="${cy}" r="7.5" fill="#5AB8E8"/><circle cx="${cx}" cy="${cy}" r="3.2" fill="var(--bg-void)"/>`;
     // Große Zahl mittig
-    g+=`<text x="${cx}" y="${(cy-50).toFixed(0)}" text-anchor="middle" font-family="var(--font-brand)" font-weight="700" font-size="40" fill="var(--text-primary)" stroke="var(--bg-void)" stroke-width="5" stroke-linejoin="round" paint-order="stroke">${fmt1(si)}</text>`;
-    g+=`<text x="${cx}" y="${(cy-31).toFixed(0)}" text-anchor="middle" font-size="12" fill="var(--text-dim)" letter-spacing="2" stroke="var(--bg-void)" stroke-width="3" paint-order="stroke">√SI</text>`;
+    g+=`<text x="${cx}" y="${(cy-50).toFixed(0)}" text-anchor="middle" style="font-family:var(--font-brand);font-weight:700;font-size:40px;fill:var(--text-primary)" stroke="var(--bg-void)" stroke-width="5" stroke-linejoin="round" paint-order="stroke">${fmt1(si)}</text>`;
+    g+=`<text x="${cx}" y="${(cy-31).toFixed(0)}" text-anchor="middle" style="font-size:12px;fill:var(--text-dim);letter-spacing:2px" stroke="var(--bg-void)" stroke-width="3" paint-order="stroke">√SI</text>`;
     return `<svg class="viz" viewBox="0 0 ${w} ${h}" style="max-width:${w}px">${g}</svg>`;
   },
   // Zonen-Legende für die Baevsky-Gauge (√SI, equine — Stucke 2015)
@@ -5872,7 +6047,7 @@ const HRV={
     return `<div class="zone-leg">${Z.map(([n,r,c,a,b])=>{const on=si!=null&&si>=a&&si<b;return `<div class="zl${on?' on':''}"><span class="zl-bar" style="background:${c}"></span><b>${n}</b><span>${r}</span></div>`;}).join('')}</div>`;
   },
   // RR-Histogramm mit Dreiecks-Interpolation (geometrische HRV — Kubios-Signatur, schöner)
-  histChart(rr,{w=340,h=210}={}){
+  histChart(rr,{w=340,h=210,ohneDreieck=false}={}){
     const H=this.histogram(rr,7.8125); if(!H)return '';
     const pad={l:40,r:14,t:14,b:34}; const n=H.bins.length; const peak=H.peak||1; const bw=(w-pad.l-pad.r)/n;
     const X=i=>pad.l+i*bw, Y=v=>pad.t+(1-v/peak)*(h-pad.t-pad.b);
@@ -5883,10 +6058,12 @@ const HRV={
     // Dreiecks-Interpolation an den ECHTEN TINN-Stützpunkten (kleinste Quadrate), nicht an der rohen Spannweite → deckt sich mit der TINN-Zahl
     const _ttFit=this.tinnTri(rr); const clampI=i=>Math.max(0,Math.min(H.bins.length,i));
     const triN=_ttFit?clampI(_ttFit.triN):0, triX=_ttFit?_ttFit.triX:peakI, triM=_ttFit?clampI(_ttFit.triM):H.bins.length;
-    g+=`<polyline points="${(X(triN)+bw/2).toFixed(1)},${Y(0).toFixed(1)} ${(X(triX)+bw/2).toFixed(1)},${Y(peak).toFixed(1)} ${(X(triM)+bw/2).toFixed(1)},${Y(0).toFixed(1)}" fill="none" stroke="var(--amber)" stroke-width="1.8"/>`;
+    /* 20.11.: Stützpunkte in die Zeichenfläche klemmen – bei enger Verteilung (wenige breite Balken) lief die Linie über den Rand */
+    const KX=i=>Math.max(pad.l,Math.min(w-pad.r,X(i)+bw/2));
+    if(!ohneDreieck) g+=`<polyline points="${KX(triN).toFixed(1)},${Y(0).toFixed(1)} ${KX(triX).toFixed(1)},${Y(peak).toFixed(1)} ${KX(triM).toFixed(1)},${Y(0).toFixed(1)}" fill="none" stroke="var(--amber)" stroke-width="1.8"/>`;
     g+=`<rect x="${pad.l}" y="${pad.t}" width="${w-pad.l-pad.r}" height="${h-pad.t-pad.b}" fill="none" class="axis"/>`;
     const rrAt=i=>fmt0(H.mn+i*H.binMs);
-    [triN,triX,triM].forEach(i=>g+=`<text x="${(X(i)+bw/2).toFixed(1)}" y="${(h-pad.b+13).toFixed(1)}" text-anchor="middle">${rrAt(i)}</text>`);
+    [triN,triX,triM].forEach(i=>g+=`<text x="${KX(i).toFixed(1)}" y="${(h-pad.b+13).toFixed(1)}" text-anchor="middle">${rrAt(i)}</text>`);
     g+=`<text x="${(pad.l+(w-pad.l-pad.r)/2).toFixed(0)}" y="${h-2}" text-anchor="middle" class="label-axis">RR-INTERVALL<tspan class="label-unit"> (ms)</tspan></text>`;
     const _tt=_ttFit; const _modeRR=Math.round(H.mn+peakI*H.binMs);
     // Rohe Maschinenzahlen (Punkt-Dezimal) in die data-Attribute — Formatierung erst im Viewer (parseFloat verträgt kein DE-Komma)
@@ -5945,12 +6122,12 @@ const HRV={
   },
   // DFA-α₁ als interpretierbares Zonen-FARBBAND (1:1 iOS-App): Random/Vagal-Hyper/Physiologisch/Sympathisch/Hochkorr.
   // mit Marker — für den Vet sofort deutbar (statt abstrakter Log-Log-Kurve). Log-Log bleibt Fachdetail im Info/Vollbild.
-  dfaBand(dfa1,{w=720,h=180}={}){
+  dfaBand(dfa1,{w=720,h=180,neutral=false}={}){
     if(dfa1==null)return `<div style="color:var(--text-faint);font-size:12px;text-align:center;padding:30px">DFA nicht berechenbar (zu kurze Aufnahme)</div>`;
     const pad={l:16,r:16,t:38,b:40}; const plotW=w-pad.l-pad.r; const lo=0.3,hi=2.0;
     const X=v=>pad.l+(Math.max(lo,Math.min(hi,v))-lo)/(hi-lo)*plotW;
     const bandY=pad.t+16, bandH=30;
-    const Z=[[0.3,0.5,'unkorreliert','#9C3A3A'],[0.5,0.75,'schwach korr.','#C77D3A'],[0.75,1.15,'≈ 1/f','#3E8E57'],[1.15,1.5,'stark korr.','#9C6A2E'],[1.5,2.0,'≈ Brown','#9C3A3A']];
+    const Z=neutral?[[0.3,0.5,'unkorreliert','#3A3A40'],[0.5,0.75,'schwach korr.','#44444B'],[0.75,1.15,'≈ 1/f','#4E4E56'],[1.15,1.5,'stark korr.','#44444B'],[1.5,2.0,'≈ Brown','#3A3A40']]:[[0.3,0.5,'unkorreliert','#9C3A3A'],[0.5,0.75,'schwach korr.','#C77D3A'],[0.75,1.15,'≈ 1/f','#3E8E57'],[1.15,1.5,'stark korr.','#9C6A2E'],[1.5,2.0,'≈ Brown','#9C3A3A']];
     let g=`<rect x="${pad.l}" y="${bandY}" width="${plotW.toFixed(1)}" height="${bandH}" rx="7" fill="#0E0E0E"/>`;
     Z.forEach(([a,b,lab,col])=>{const x0=X(a),x1=X(b);
       g+=`<rect x="${x0.toFixed(1)}" y="${bandY}" width="${(x1-x0).toFixed(1)}" height="${bandH}" fill="${col}" opacity="0.88"/>`;
@@ -5962,7 +6139,9 @@ const HRV={
     const mx=X(dfa1);
     g+=`<line x1="${mx.toFixed(1)}" y1="${(bandY-3).toFixed(1)}" x2="${mx.toFixed(1)}" y2="${(bandY+bandH+3).toFixed(1)}" stroke="#fff" stroke-width="2"/>`;
     g+=`<path d="M${(mx-6).toFixed(1)},${(bandY-5).toFixed(1)} L${(mx+6).toFixed(1)},${(bandY-5).toFixed(1)} L${mx.toFixed(1)},${(bandY+2).toFixed(1)} Z" fill="#fff"/>`;
-    g+=`<text x="${mx.toFixed(1)}" y="${(bandY+bandH+34).toFixed(1)}" text-anchor="middle" style="fill:var(--text-primary);font-family:var(--font-mono);font-size:15px;font-weight:700">α1 = ${fmt2(dfa1)}</text>`;
+    /* 20.11.: Beschriftung am Rand nach innen ausrichten (Wert unter 0,3 oder über 2,0 wurde abgeschnitten) */
+    const anc=mx<pad.l+70?'start':mx>w-pad.r-70?'end':'middle', lx=anc==='start'?pad.l:anc==='end'?w-pad.r:mx;
+    g+=`<text x="${lx.toFixed(1)}" y="${(bandY+bandH+34).toFixed(1)}" text-anchor="${anc}" style="fill:var(--text-primary);font-family:var(--font-mono);font-size:15px;font-weight:700">α1 = ${fmt2(dfa1)}${dfa1<lo?' (unter der Skala)':dfa1>hi?' (über der Skala)':''}</text>`;
     return `<svg class="viz" data-chart="dfa" data-alpha1="${dfa1}" viewBox="0 0 ${w} ${h}">${g}</svg>`;
   }
 };
@@ -5984,7 +6163,7 @@ const Info={
        Regeln: erst in Alltagssprache WAS, dann der Rechenweg wie im Code, dann die Einordnung OHNE Normwert-
        oder Gesundheitsurteil (für Ruhe-HRV beim Pferd gibt es keinen Konsens-Normwert), dann die Quelle.
        Schwellen und Fenster stehen hier nur, wenn der Code sie genau so rechnet (hrv-vorstufe.js, Chart.*). */
-    rmssd:{t:'RMSSD',what:'Wie stark sich zwei aufeinanderfolgende Herzschläge im Abstand unterscheiden – gemittelt über die ganze Aufnahme, in Millisekunden.',method:'Wurzel aus dem Mittel der quadrierten Differenzen aufeinanderfolgender RR-Abstände, nach der Artefaktbereinigung.',interp:'Gilt als Maß der kurzfristigen, überwiegend vagal (parasympathisch) vermittelten Variabilität. Steigt die Herzfrequenz oder sinkt der Vagustonus, wird der Wert in der Regel kleiner.',equine:'Einen allgemeingültigen Normwert gibt es beim Pferd nicht; veröffentlichte Referenzintervalle gelten nur für ihr Protokoll (z. B. EKG-Langzeitaufnahmen). Lange Abstände erhöhen den Rohwert; im bereinigten Wert sind sie überbrückt. Ob ein langer Abstand ein AV-Block 2. Grades ist, zeigt nur das EKG. CARLON vergleicht mit der eigenen Basis des Pferds.',ref:'Task Force 1996 · Shaffer & Ginsberg 2017 · Eggensperger & Schwarzwald 2017 (Pferd)'},
+    rmssd:{t:'RMSSD',what:'Wie stark sich zwei aufeinanderfolgende Herzschläge im Abstand unterscheiden – gemittelt über die ganze Aufnahme, in Millisekunden.',method:'Wurzel aus dem Mittel der quadrierten Differenzen aufeinanderfolgender RR-Abstände, nach der Artefaktbereinigung.',interp:'Gilt als Maß der kurzfristigen, überwiegend vagal (parasympathisch) vermittelten Variabilität; das ist überwiegend am Menschen gezeigt. Steigt die Herzfrequenz, wird der Wert in der Regel kleiner.',equine:'Einen allgemeingültigen Normwert gibt es beim Pferd nicht; veröffentlichte Referenzintervalle gelten nur für ihr Protokoll (z. B. EKG-Langzeitaufnahmen). Lange Abstände erhöhen den Rohwert; im bereinigten Wert sind sie überbrückt. Ob ein langer Abstand ein AV-Block 2. Grades ist, zeigt nur das EKG. CARLON zeigt den Wert neben den früheren Aufnahmen desselben Pferds, ohne ihn zu bewerten.',ref:'Task Force 1996 · Shaffer & Ginsberg 2017 · Eggensperger & Schwarzwald 2017 (Pferd)'},
     sdnn:{t:'SDNN',what:'Wie weit alle Schlagabstände der Aufnahme um ihren Mittelwert streuen – die Gesamtstreuung, in Millisekunden.',method:'Standardabweichung aller bereinigten RR-Abstände.',interp:'Enthält schnelle und langsame Schwankungen zugleich. Der Wert wächst mit der Aufnahmedauer – vergleichen Sie nur Aufnahmen ähnlicher Länge und gleichen Protokolls.',ref:'Task Force 1996'},
     pnn50:{t:'pNN50',what:'Anteil der aufeinanderfolgenden Schlagabstände, die sich um mehr als 50 ms unterscheiden, in Prozent.',interp:'Wie RMSSD ein Maß der Schlag-zu-Schlag-Variabilität und eng mit ihm verwandt.',equine:'Die feste 50-ms-Schwelle stammt aus der Humanmedizin und ist für das Pferd mit seinen deutlich längeren Schlagabständen nicht eigens validiert. Lange Pausen treiben den Wert. Die Task Force zieht RMSSD wegen der besseren statistischen Eigenschaften vor.',ref:'Task Force 1996 · Eggensperger & Schwarzwald 2017'},
     meanrr:{t:'Mittleres RR',what:'Durchschnittlicher Abstand zwischen zwei Herzschlägen, in Millisekunden.',method:'Mittelwert der bereinigten RR-Abstände; 60.000 ÷ mittleres RR ergibt die mittlere Herzfrequenz pro Minute. Überbrückte Pausen verkürzen das mittlere RR; die daraus gerechnete Herzfrequenz liegt dann über der gezählten.',interp:'Variabilitätsmaße werden meist größer, wenn der Puls niedriger ist (am Menschen gezeigt). Vergleichen Sie deshalb Aufnahmen mit ähnlichem Ruhepuls.',ref:'Task Force 1996 · Sacha 2013 (Abhängigkeit der HRV von der Herzfrequenz)'},
@@ -5998,7 +6177,7 @@ const Info={
     avblock:{t:'Lange Pausen',what:'Wie oft ein Schlagabstand etwa doppelt so lang war wie die Abstände davor und danach.',method:'Gezählt wird ein Abstand vom 1,8- bis 2,2-Fachen des örtlichen Medians (± 10 Schläge), wenn seine Nachbarn unauffällig sind (Abweichung unter 25 %). Diese Pausen werden getrennt ausgewiesen und für die Kennwerte überbrückt (eigene Festlegung der Schwellen).',interp:'Beim ruhenden Pferd steckt dahinter häufig ein AV-Block 2. Grades, der bei hohem Vagustonus vorkommt und unter Belastung typischerweise verschwindet. Dasselbe Bild geben eine Sinuspause oder ein vom Sensor nicht erfasster Schlag. Längere Pausen mit zwei oder mehr ausgefallenen Schlägen in Folge zählt dieser Wert nicht mit. Was es ist, zeigt nur das EKG – die Zahl ist ein Beobachtungshinweis, keine Rhythmusdiagnose.',ref:'Reef et al. 2014 (ACVIM/ECEIM-Konsens) · Eggensperger & Schwarzwald 2017'},
     dual:{t:'Puls und HRV über die Zeit',what:'Herzfrequenz (gold, pro Minute) und HRV als gleitende RMSSD (cyan, ms) über die ganze Aufnahme, auf derselben Zeitachse.',method:'Die HRV-Kurve ist die RMSSD der jeweils letzten 30 Schläge. Enthält ein Fenster ein auffälliges Schlagpaar (Sprung über 20 %), ist der Abschnitt gestrichelt hinterlegt – dort trägt ein einzelner Schlag die Kurve. 30 Schläge entsprechen in Ruhe etwa 45–60 Sekunden; so kurze Fenster sind am Pferd nicht validiert. Die 20-%-Markierung ist eine einfache Sichthilfe und nicht die Bereinigung der Kennwerte.',interp:'Die Kurve hilft, ruhige Abschnitte zu finden. Lange Abstände lassen sie auch in Ruhe springen. Steigt der Puls, fällt die HRV-Kurve meist; im Moment des Anstiegs kann sie kurz ausschlagen. Unter Bewegung ist sie nur eingeschränkt belastbar.',ref:'Eigene Darstellung; RMSSD-Definition nach Task Force 1996'},
     tacho:{t:'RR-Tachogramm',what:'Jeder einzelne Schlagabstand der Aufnahme als Punkt einer Linie, in Millisekunden – das Rohmaterial aller Kennwerte.',interp:'Die Linie zeigt ruhige Phasen, Ausreißer und lange Pausen auf einen Blick. Bernsteinfarbene Rauten markieren Schläge, die die Bereinigung ersetzt hat; die gestrichelte Linie ist der Mittelwert. Ob ein langer Abstand eine Pause oder ein verpasster Schlag ist, zeigt nur das EKG.',ref:'Task Force 1996'},
-    atem:{t:'Atemkurve (aus dem Herzschlag)',what:'Die Kurve schätzt die Atmung aus dem Herzschlag; sie ist keine Atemmessung. Die Abstände schwanken mit der Atmung (respiratorische Sinusarrhythmie); die Richtung ist vom Menschen übernommen.',method:'Von jedem RR-Abstand wird das Mittel der umliegenden 11 Schläge abgezogen; was bleibt, sind die schnelleren Schwankungen, in Ruhe überwiegend atmungsbedingt. Koralle = kürzer werdende Abstände (meist Einatmen), Blau = länger werdende (meist Ausatmen).',interp:'Gleichmäßige Wellen passen zu einer regelmäßigen Atmung, belegen sie aber nicht: Auch andere vagale Schwankungen erzeugen Wellen. Die Kurve ist aus dem Herzschlag abgeleitet und keine direkte Atemmessung; eine Atemfrequenz daraus ist eine Schätzung.',ref:'Kuwahara 1996 (Pferd) · Hirsch & Bishop 1981 (Mensch)',equine:'Nur für Ruheaufnahmen im Stand gedacht. Abbilden lässt sich höchstens die halbe Schlagfrequenz, in Ruhe etwa 0,23–0,33 Hz (14–20 Atemzüge pro Minute). Eine Ruheatmung von 8–16 Zügen pro Minute (0,13–0,27 Hz) kann diese Grenze bei niedrigem Puls erreichen oder überschreiten; dann zeigt die Kurve eine zu langsame Scheinwelle. Lange Pausen verfälschen die Kurve.'},
+    atem:{t:'Atemkurve (aus dem Herzschlag)',what:'Die Kurve schätzt die Atmung aus dem Herzschlag; sie ist keine Atemmessung. Die Abstände schwanken mit der Atmung (respiratorische Sinusarrhythmie).',method:'Von jedem RR-Abstand wird das Mittel der umliegenden 11 Schläge abgezogen; was bleibt, sind die schnelleren Schwankungen, in Ruhe überwiegend atmungsbedingt. Koralle = kürzer werdende Abstände, Blau = länger werdende. Die Zuordnung zu Ein- und Ausatmen stammt vom Menschen und ist am Pferd nicht gesichert.',interp:'Gleichmäßige Wellen passen zu einer regelmäßigen Atmung, belegen sie aber nicht: Auch andere vagale Schwankungen erzeugen Wellen. Eine Atemfrequenz daraus ist eine Schätzung.',ref:'Kuwahara 1996 (Pferd) · Hirsch & Bishop 1981 (Mensch)',equine:'Nur für Ruheaufnahmen im Stand gedacht. Abbilden lässt sich höchstens die halbe Schlagfrequenz, in Ruhe etwa 0,23–0,33 Hz (14–20 Atemzüge pro Minute). Eine Ruheatmung von 8–16 Zügen pro Minute (0,13–0,27 Hz) kann diese Grenze bei niedrigem Puls erreichen oder überschreiten; dann zeigt die Kurve eine zu langsame Scheinwelle. Lange Pausen verfälschen die Kurve.'},
     freq:{t:'Frequenzspektrum',what:'Zerlegt die Schwankungen der Schlagabstände nach ihrem Tempo: langsame Wellen links, schnelle rechts. Die Fläche unter der Kurve je Band ist dessen Leistung in ms².',method:'Lomb-Scargle-Periodogramm direkt auf den ungleichmäßig liegenden Schlägen (ohne Umrechnen auf ein festes Raster), auf die Varianz der Reihe kalibriert.',interp:'HF enthält vor allem die atmungsbedingte Schwankung und gilt als vagal vermittelt. LF ist gemischt. Nach oben endet das Bild bei der halben mittleren Schlagfrequenz – schnellere Schwankungen lassen sich aus Herzschlägen nicht ablesen.',equine:'Bänder nach Kuwahara 1996: LF 0,01–0,07 Hz, HF 0,07–0,6 Hz; dargestellt wird HF nur bis zur halben mittleren Schlagfrequenz, HF-Werte sind deshalb nicht mit Literaturwerten bis 0,6 Hz vergleichbar. LF braucht nach der Task-Force-Regel (zehn Wellenlängen der unteren Bandgrenze) mindestens etwa 17 Minuten; kürzer weist CARLON LF und LF/HF nicht aus.',ref:'Kuwahara 1996 · Lomb 1976 / Scargle 1982 · Task Force 1996'},
     verlauf:{t:'Verlauf über Wochen',what:'Jede Ruheaufnahme dieses Pferds ist ein Punkt, auf einer echten Zeitachse.',method:'Die Linie „eigene Basis" ist das Mittel aus mindestens drei früheren Aufnahmen der letzten 30 Tage; verglichen wird ab der vierten Aufnahme.',interp:'Der einzelne Wert sagt beim Pferd wenig; aussagekräftiger ist der Verlauf unter gleichem Protokoll – gleicher Ort, ähnliche Tageszeit, Ruhe vorher. Eine Richtung allein ist noch keine Bewertung.',ref:'Eggensperger & Schwarzwald 2017'},
     lfhf:{t:'LF/HF-Verhältnis',what:'Quotient aus der Leistung im LF- und im HF-Band, ohne Einheit.',interp:'Die Lesart als „sympatho-vagale Balance“ gilt als nicht haltbar: LF ist kein Maß der Sympathikusaktivität. Nutzen Sie den Wert rein beschreibend und nur im Verlauf desselben Pferds unter gleichem Protokoll.',equine:'Bänder nach Kuwahara 1996; ausgewiesen erst ab etwa 17 Minuten. Da HF nur bis zur halben Schlagfrequenz reicht, ist der Quotient nicht mit Literaturwerten vergleichbar.',ref:'Billman 2013 · Kuwahara 1996'},
@@ -6075,7 +6254,7 @@ Info.defsEn={
   poincare:{t:'Poincaré plot',what:'Scatter plot: each interval (RRₙ) against the next (RRₙ₊₁).',interp:'A narrow cloud means even intervals from beat to beat, a long cloud means change over the recording. Width = SD1 (about RMSSD ÷ √2), length = SD2. Points far outside are long intervals, extra beats or detection errors; which it is, only the ECG shows.',ref:'Brennan 2001 · Woo 1992 (shape patterns, human)'},
   baevsky:{t:'Baevsky index (SI)',what:'Value from the RR histogram: it becomes large when intervals cluster tightly around a short most frequent value.',method:'SI = AMo / (2 · Mo · MxDMn) from the RR histogram (bin width 7.8125 ms; Mo = mode [s], AMo = share of the modal bin [%], MxDMn = range [s]).',interp:'Introduced by Baevsky in humans as a measure of “tension of the regulatory systems”. Arithmetically mainly an inverse of spread: little variability at high heart rate gives high values.',equine:'Not validated in horses as a stress or sympathetic measure and without reference range – exploratory, only in the course of the same horse. √SI stabilises the scale.',ref:'Baevsky & Chernikova 2017'},
   lfhf:{t:'LF/HF ratio',what:'Ratio of power in the LF and HF bands, without unit.',interp:'The reading as “sympatho-vagal balance” is not tenable: LF is not a measure of sympathetic activity. Use the value descriptively and only in the course of the same horse under the same protocol.',equine:'Bands after Kuwahara 1996; reported only from about 17 minutes. Because HF only reaches half the beat rate, the ratio is not comparable with literature values.',ref:'Billman 2013 · Kuwahara 1996'},
-  rmssd:{t:'RMSSD',what:'How much two consecutive heartbeats differ in their interval – averaged over the whole recording, in milliseconds.',method:'Square root of the mean of the squared differences between consecutive RR intervals, after artefact correction.',interp:'Regarded as a measure of short-term, predominantly vagally (parasympathetically) mediated variability. When heart rate rises or vagal tone falls, the value usually becomes smaller.',equine:'There is no universal reference value in horses; published reference intervals only apply to their protocol (e.g. long-term ECG). Long intervals raise the raw value; in the cleaned value they are bridged. Whether a long interval is a second-degree AV block, only the ECG shows. CARLON compares with the horse’s own baseline.',ref:'Task Force 1996 · Shaffer & Ginsberg 2017 · Eggensperger & Schwarzwald 2017 (horse)'},
+  rmssd:{t:'RMSSD',what:'How much two consecutive heartbeats differ in their interval – averaged over the whole recording, in milliseconds.',method:'Square root of the mean of the squared differences between consecutive RR intervals, after artefact correction.',interp:'Regarded as a measure of short-term, predominantly vagally (parasympathetically) mediated variability; this has mainly been shown in humans. When heart rate rises, the value usually becomes smaller.',equine:'There is no universal reference value in horses; published reference intervals only apply to their protocol (e.g. long-term ECG). Long intervals raise the raw value; in the cleaned value they are bridged. Whether a long interval is a second-degree AV block, only the ECG shows. CARLON shows the value next to earlier recordings of the same horse without rating it.',ref:'Task Force 1996 · Shaffer & Ginsberg 2017 · Eggensperger & Schwarzwald 2017 (horse)'},
   sdnn:{t:'SDNN',what:'How widely all intervals of the recording scatter around their mean – the overall spread, in milliseconds.',method:'Standard deviation of all corrected RR intervals.',interp:'Contains fast and slow fluctuations together. The value grows with recording length – compare only recordings of similar length and the same protocol.',ref:'Task Force 1996'},
   pnn50:{t:'pNN50',what:'Share of consecutive intervals that differ by more than 50 ms, in percent.',interp:'Like RMSSD a measure of beat-to-beat variability and closely related to it.',equine:'The fixed 50 ms threshold comes from human medicine and has not been validated for the horse with its much longer intervals. Long pauses drive the value up. The Task Force prefers RMSSD for its better statistical properties.',ref:'Task Force 1996 · Eggensperger & Schwarzwald 2017'},
   meanrr:{t:'Mean RR',what:'Average interval between two heartbeats, in milliseconds.',method:'Mean of the corrected RR intervals; 60,000 ÷ mean RR gives the mean heart rate per minute. Bridged pauses shorten the mean RR; the heart rate computed from it is then above the counted one.',interp:'Variability measures usually become larger when the pulse is lower (shown in humans). Therefore compare recordings with a similar resting pulse.',ref:'Task Force 1996 · Sacha 2013 (heart-rate dependence of HRV)'},
@@ -6089,7 +6268,7 @@ Info.defsEn={
   avblock:{t:'Long pauses',what:'How often an interval was about twice as long as the intervals before and after it.',method:'Counted is an interval of 1.8 to 2.2 times the local median (± 10 beats) when its neighbours are unremarkable (deviation below 25 %). These pauses are reported separately and bridged for the values (thresholds are our own definition).',interp:'In a resting horse this is often a second-degree AV block, which occurs with high vagal tone and typically disappears under exercise. A sinus pause or a beat the sensor missed gives the same picture. Longer pauses with two or more dropped beats in a row are not counted. Only the ECG shows which it is – the count is an observation, not a rhythm diagnosis.',ref:'Reef et al. 2014 (ACVIM/ECEIM consensus) · Eggensperger & Schwarzwald 2017'},
   dual:{t:'Heart rate and HRV over time',what:'Heart rate (gold, per minute) and HRV as rolling RMSSD (cyan, ms) across the whole recording, on the same time axis.',method:'The HRV curve is the RMSSD of the last 30 beats. If a window contains an irregular beat pair (jump above 20 %), the section is shaded and dashed – there a single beat carries the curve. At rest 30 beats are about 45–60 seconds; windows this short are not validated in horses. The 20 % marking is a simple visual aid and not the cleaning of the indices.',interp:'The curve helps to find calm sections. Long intervals make it jump even at rest. When the pulse rises, the HRV curve usually falls; at the moment of the rise it can swing briefly. During exercise it is of limited reliability.',ref:'Own presentation; RMSSD definition after Task Force 1996'},
   tacho:{t:'RR tachogram',what:'Every single interval of the recording as a point on a line, in milliseconds – the raw material of all values.',interp:'The line shows calm phases, outliers and long pauses at a glance. Amber diamonds mark beats that the correction replaced; the dashed line is the mean. Whether a long interval is a pause or a missed beat, only the ECG shows.',ref:'Task Force 1996'},
-  atem:{t:'Respiration curve (from the heartbeat)',what:'The curve estimates breathing from the heartbeat; it is not a respiration measurement. The intervals fluctuate with breathing (respiratory sinus arrhythmia); the direction is taken from humans.',method:'From each RR interval the mean of the surrounding 11 beats is subtracted; what remains are the faster fluctuations, at rest mainly breathing-related. Coral = shortening intervals (usually inspiration), blue = lengthening (usually expiration).',interp:'Even waves fit a regular breathing pattern but do not prove it: other vagal fluctuations also create waves. The curve is derived from the heartbeat and is not a direct respiration measurement; a respiratory rate derived from it is an estimate.',ref:'Kuwahara 1996 (horse) · Hirsch & Bishop 1981 (human)',equine:'Intended for resting recordings while standing only. At most half the beat rate can be represented, at rest about 0.23–0.33 Hz (14–20 breaths per minute). A resting breathing rate of 8–16 breaths per minute (0.13–0.27 Hz) can reach or exceed this limit at a low pulse; the curve then shows a falsely slow wave. Long pauses distort the curve.'},
+  atem:{t:'Respiration curve (from the heartbeat)',what:'The curve estimates breathing from the heartbeat; it is not a respiration measurement. The intervals fluctuate with breathing (respiratory sinus arrhythmia).',method:'From each RR interval the mean of the surrounding 11 beats is subtracted; what remains are the faster fluctuations, at rest mainly breathing-related. Coral = shortening intervals, blue = lengthening. The link to inspiration and expiration comes from humans and is not established in horses.',interp:'Even waves fit a regular breathing pattern but do not prove it: other vagal fluctuations also create waves. A respiratory rate derived from it is an estimate.',ref:'Kuwahara 1996 (horse) · Hirsch & Bishop 1981 (human)',equine:'Intended for resting recordings while standing only. At most half the beat rate can be represented, at rest about 0.23–0.33 Hz (14–20 breaths per minute). A resting breathing rate of 8–16 breaths per minute (0.13–0.27 Hz) can reach or exceed this limit at a low pulse; the curve then shows a falsely slow wave. Long pauses distort the curve.'},
   freq:{t:'Frequency spectrum',what:'Splits the fluctuations of the intervals by their tempo: slow waves on the left, fast ones on the right. The area under the curve per band is its power in ms².',method:'Lomb-Scargle periodogram directly on the unevenly spaced beats (no resampling to a fixed grid), calibrated to the variance of the series.',interp:'HF contains mainly the breathing-related fluctuation and is regarded as vagally mediated. LF is mixed. The plot ends at half the mean beat rate – faster fluctuations cannot be read from heartbeats.',equine:'Bands after Kuwahara 1996: LF 0.01–0.07 Hz, HF 0.07–0.6 Hz; HF is shown only up to half the mean beat rate, so HF values are not comparable with literature values up to 0.6 Hz. Following the Task Force rule (ten wavelengths of the lower band edge) LF needs at least about 17 minutes; for shorter recordings CARLON does not report LF and LF/HF.',ref:'Kuwahara 1996 · Lomb 1976 / Scargle 1982 · Task Force 1996'},
   verlauf:{t:'Course over weeks',what:'Each resting recording of this horse is a point on a real time axis.',method:'The "own baseline" line is the mean of at least three earlier recordings from the last 30 days; comparison starts with the fourth recording.',interp:'A single value says little in a horse; the course under the same protocol says more – same place, similar time of day, rest beforehand. A direction alone is not yet an assessment.',ref:'Eggensperger & Schwarzwald 2017'},
 };
@@ -7429,14 +7608,14 @@ const Views={
       </div>
       <div class="chart-card baev-box" data-si="${bv?bv.SI.toFixed(1):''}" data-sqrtsi="${bv?bv.sqrtSI.toFixed(1):''}" data-amo="${bv?bv.AMo.toFixed(1):''}" data-mo="${bv?(bv.Mo*1000).toFixed(0):''}" data-mxdmn="${bv?(bv.MxDMn*1000).toFixed(0):''}">
         ${(()=>{const si=bv?bv.sqrtSI:null;const z=si==null?['—','var(--text-dim)']:si<7?['Niedrig','#3E8E57']:si<15?['Mittel','#3E76A0']:si<25?['Hoch','#9C6A2E']:['Sehr hoch','#9C3A3A'];return chead('gauge','Baevsky-Index (SI)','baevsky',`<span style="font-weight:700;font-size:10.5px;letter-spacing:.09em;padding:3px 12px;border-radius:99px;background:color-mix(in srgb,${z[1]} 16%,transparent);color:${z[1]};border:1px solid color-mix(in srgb,${z[1]} 55%,transparent)">${z[0].toUpperCase()}</span>`,z[1]);})()}
-        <div class="chart-subtitle">√SI · Baevsky 1979 · equine-skaliert (Stucke 2015)</div>
+        <div class="chart-subtitle">√SI · Baevsky 1979 · Skala 0–30 als CARLON-Festlegung, am Pferd ohne Referenzbereich</div>
         ${HRV.gauge(bv?bv.sqrtSI:null)}
         <div class="baev-sub">AMo ${bv?fmt1(bv.AMo):'–'} % · Mo ${bv?fmt0(bv.Mo*1000):'–'} ms · √SI ${bv?fmt1(bv.sqrtSI):'–'}<br>
         <span style="color:var(--text-faint)">orientierend · individuelle Baseline maßgeblich</span></div>
       </div>
       <div class="chart-card">${chead('bars','RR-Verteilung · TINN','tinn', tt?`TINN ${fmt0(tt.tinn)} <small>ms</small>`:'')}${HRV.histChart(rr,{w:720,h:250})}</div>
       <div class="chart-card">${chead('dfa','DFA-α₁','dfa', dfa1!=null?`α1 ${fmt2(dfa1)}`:'', 'var(--harmony)')}${HRV.dfaBand(dfa1)}${dfa1!=null?(()=>{const dv=dfa1<0.5?['unter 0,5 — kurzfristig unkorreliert bis antikorreliert','var(--red)']:dfa1<0.75?['0,5–0,75 — schwach korreliert','#C77D3A']:dfa1<1.15?['0,75–1,15 — nahe 1/f-Skalierung','var(--good)']:dfa1<1.5?['1,15–1,5 — stark korreliert','var(--amber)']:['über 1,5 — nahe brownschem Rauschen','var(--red)'];return `<div class="dfa-verdict"><span class="dot" style="background:${dv[1]}"></span><span>${dv[0]}</span></div>`;})():''}<div class="chart-hint">Detrended Fluctuation Analysis (4–16 Schläge): Korrelationsstruktur der Schlagfolge. 0,5 = weißes Rauschen · 1,0 = 1/f · 1,5 = brownsches Rauschen (Peng et al. 1995). Beim Pferd gibt es keine validierten Zielbereiche – vergleichen Sie mit der eigenen Vorgeschichte.</div></div>
-      <div style="font-size:10.5px;color:var(--text-faint);margin-top:2px;font-style:italic;line-height:1.5">Equine Bänder VLF 0–0,01 · LF 0,01–0,07 · HF 0,07–0,6 Hz (Kuwahara 1996). Lomb-Scargle-Spektrum &amp; Kennwerte aus der Schlag-für-Schlag-Reihe des Polar H10. Poincaré SD1/SD2 (Brennan 2001), Formmuster n. Woo 1992 · Baevsky (1984, equine-skaliert Stucke 2015) · SampEn (Richman 2000). Priorisierungshilfe, keine Diagnose.</div>
+      <div style="font-size:10.5px;color:var(--text-faint);margin-top:2px;font-style:italic;line-height:1.5">Equine Bänder VLF 0–0,01 · LF 0,01–0,07 · HF 0,07–0,6 Hz (Kuwahara 1996). Lomb-Scargle-Spektrum &amp; Kennwerte aus der Schlag-für-Schlag-Reihe des Polar H10. Poincaré SD1/SD2 (Brennan 2001), Formmuster n. Woo 1992 · Baevsky (1984; Skala 0–30 CARLON-Festlegung) · SampEn (Richman 2000). Priorisierungshilfe, keine Diagnose.</div>
     </div>`;
   },
   trainingPanel(recs,horse){
@@ -10039,78 +10218,46 @@ const UI={
     if(typeof BETA_GATED!=='undefined'&&BETA_GATED){ return this.betaGate(feature); }
     // EIN Angebot, zwei Laufzeiten. Kein Rabatt-Wording (Jan 19.11.2026: premium, seriös, stringent).
     // Features hier sind gegen PAID_ONLY + maxHorses verifiziert — nichts versprechen, was kein Gate hat.
-    const FEATS=['Unbegrenzt viele Pferde','Tourenplanung mit Ruhe-HRV-Verlauf je Pferd','Aufnahmequalität sichtbar: roh und bereinigt, Artefakte, Methodenversion','Mess-Link für Halter – Aufnahme kommt verschlüsselt zu Ihnen','Messwertbericht (PDF) mit Ihrem Logo, Export als JSON, CSV, Kubios und FHIR R5','Team-Ordner: alle Tierärzt:innen sehen denselben Stand (OneDrive, Google Drive, Dropbox, Netzlaufwerk)','Auswertung lokal im Browser – keine Pferde-, Halter- oder Messdaten auf unseren Servern'];
-    const plans=[
-      ['month','Monatsabo',String(License.PREIS.soloMonat),'14 Tage kostenlos testen, danach monatlich kündbar','14 Tage gratis'],
-      ['year','Jahresabo',(License.PREIS.soloJahr/12).toFixed(2).replace('.',','),`${License.PREIS.soloJahr.toLocaleString('de-DE')} € im Jahr · 12 Monate Laufzeit`,''],
+    /* FÜNF STUFEN (20.11.2026, Jan): Kauffenster = Verkaufsseite. Namen, Obergrenzen, Preise und Jahreslogik (11 Monatsbeiträge)
+       kommen aus TIERS/GRENZEN/PREIS; die Merkmale stehen wortgleich auf den Seitenkarten. Kasse je Stufe über checkoutLink() (Betragssperre). */
+    const P=License.PREIS;
+    const STUFEN=[
+      {k:'praxis',tier:'vet_solo',sub:'für eine Tierärztin oder einen Tierarzt',m:'month',y:'year',pm:P.soloMonat,py:P.soloJahr,
+       feats:['Tourenplanung, Verspätungsnachricht, Besuchsdokumentation und Wegegeld-Vorschlag nach § 10 GOT','Akte per Sprache, Messwertbericht mit eigenem Briefkopf','Mess-Link: Ihre Halterinnen messen kostenlos, die Aufnahme kommt verschlüsselt in die Akte','<b>Stallrunde und Langzeit im Gurt</b> mit Langzeitbericht','Export als JSON, CSV, Kubios und FHIR R5']},
+      {k:'klinik',tier:'vet_clinic',sub:'bis 4 Tierärztinnen und Tierärzte',m:'clinicMonth',y:'clinicYear',pm:P.klinikMonat,py:P.klinikJahr,
+       feats:['Alles aus der Stufe Fahrpraxis','Team-Ordner für Praxis, Stationen und Wandmonitor','<b>Stationsmonitor über Nacht:</b> Puls ohne Verbindung, morgens vollständig auslesen','Stationswand ohne Alarme, Nachsorge nach der Entlassung']},
+      {k:'reha',tier:'vet_reha',sub:'bis 20 Reha-Pferde',m:'rehaMonth',y:'rehaYear',pm:P.rehaMonat,py:P.rehaJahr,
+       feats:['Reha-Aufnahme an 13 Anwendungen mit Live-Puls und HRV','Gurtspeicher: Leeren erst nach bitgleichem Gegenlesen','Sitzungsbericht und Verlaufsdokumentation mit Ihrem Briefkopf','<b>Übergabe an die Halterin</b> und in ihre CARLON-Equine-App']},
+      {k:'kombi',tier:'vet_klinik_reha',sub:'bis 6 Tierärzte und 40 Reha-Pferde',m:'kombiMonth',y:'kombiYear',pm:P.kombiMonat,py:P.kombiJahr,
+       feats:['Alles aus Praxis &amp; Klinik','Alles aus Reha','Stationsmonitor, Stationswand und Tourenplanung']},
+      {k:'center',tier:'vet_center',sub:'je Standort, ohne Obergrenzen',m:'centerMonth',y:'centerYear',pm:P.centerMonat,py:P.centerJahr,
+       feats:['Alles aus Klinik + Reha','Tierärzte und Reha-Pferde ohne Obergrenze','Für Betriebe mit mehreren Standorten, Preis je Standort']},
     ];
-    /* Klinik-Stufe (AP3): eigener Block unter der Praxis — der Magnet ist
-       der Entlasstag (Nachsorge-Flow), nicht die Platzzahl.
-
-       SELBSTBEDIENUNG AN, 15.08.2026 abends. Der Grund, aus dem sie tagsueber
-       aus war, ist weg: Die Stripe-Preise stehen jetzt auf 349/3490, die
-       Links ziehen denselben Betrag ein, den die Seite nennt (Preise
-       price_1U4l7L… / price_1U4l9D…, Links plink_1U4lMc… / plink_1U4lOX…,
-       beide mit AGB-Zustimmung; die alten 199/1990 sind archiviert bzw.
-       deaktiviert). Damit greift CHECKOUT_BETRAG wieder als Sperre statt als
-       Dauerzustand.
-
-       Der Einwand von heute Mittag bleibt trotzdem richtig und ist bewusst
-       KEIN Gegenargument mehr, sondern eine Erwartung: Eine Klinik mit zehn
-       Behandlern kauft ihr Abo meist nicht ueber einen Bezahllink, sie will
-       ein Gespraech. Der Kaufweg ersetzt das Gespraech nicht — er verhindert
-       nur, dass eine kleine Klinik, die SOFORT kaufen will, an einer
-       Kontaktaufnahme haengenbleibt. Wer das wieder zumachen will, setzt
-       diese eine Zeile auf false; die Kachel faellt dann sauber auf
-       „Schluessel eingeben" zurueck, weil checkoutLink() ohne Link null gibt. */
-    const KLINIK_SELBSTKAUF = true;
-    const kplans=KLINIK_SELBSTKAUF?[
-      ['clinicMonth','Klinik · Monatsabo',String(License.PREIS.klinikMonat),'14 Tage kostenlos testen, danach monatlich kündbar','14 Tage gratis'],
-      ['clinicYear','Klinik · Jahresabo',(License.PREIS.klinikJahr/12).toFixed(2).replace('.',','),`${License.PREIS.klinikJahr.toLocaleString('de-DE')} € im Jahr · 12 Monate Laufzeit`,''],
-    ]:[];
+    const brutto=x=>(Math.round(x*119)/100).toLocaleString('de-DE',{minimumFractionDigits:2,maximumFractionDigits:2})+' €';
+    const knopf=(id,text)=>{const u=License.checkoutLink(id);
+      return u?`<a class="btn primary kauf-link" aria-disabled="true" style="margin-top:8px;padding:7px 12px;font-size:12px" href="${u}" target="_blank" rel="noopener" onclick="if(!document.getElementById('kaufB2B')?.checked){event.preventDefault();UI.kaufHinweis();}">${text}</a>`
+              :`<span class="kauf-zu" style="display:block;margin-top:8px;font-size:11.5px;color:var(--text-dim)">Kasse öffnet in Kürze</span>`;};
     this.modal(`<div class="modal-head"><button class="closex" onclick="UI.closeModal()">${IC.x}</button><h3>CARLON Equine freischalten</h3></div>
     <div class="modal-body">
       ${feature?`<div class="demo-ribbon" style="margin-bottom:14px"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg><div><b>${esc(feature)}</b> gehört zum Abo – <b>die ersten 14 Tage sind kostenlos</b>, danach monatlich kündbar.</div></div>`:''}
       
       <label class="kauf-b2b"><input type="checkbox" id="kaufB2B" onchange="document.querySelectorAll('.kauf-link').forEach(l=>l.setAttribute('aria-disabled',this.checked?'false':'true'))"> <span>Ich bestelle als <b>Unternehmer (§ 14 BGB)</b> für meine Praxis oder Klinik und akzeptiere die <a href="/agb.html" target="_blank" rel="noopener">AGB</a>.</span></label>
       <p class="kauf-kurz">Preise netto · Rechnung mit ausgewiesener USt. von Stripe · nach der Zahlung sofort freigeschaltet — kein Schlüssel, keine E-Mail.<br><b style="color:var(--text-primary)">14 Tage kostenlos testen</b> mit dem Monatsabo – volles Cockpit, eigene Pferde, Mess-Link. Kündigen Sie in den 14 Tagen, zahlen Sie nichts. Vorher ohne Karte: Demo mit Beispielpferden. Das Monatsabo ist jederzeit zum Monatsende kündbar.</p>
-      <div class="kauf-grid"><div class="kauf-spalte">
+      <div class="kauf-grid kauf-fuenf">${STUFEN.map(t=>`<div class="kauf-spalte" data-stufe="${t.k}">
       <div class="tier-opt feat" style="align-items:flex-start">
-        <div style="flex:1"><h4>CARLON Equine — für Pferdepraxen</h4>
-          <div style="font-size:12px;color:var(--text-dim)">Einzelpraxis · mobiler Vet</div>
-          <ul>${FEATS.map(f=>`<li>${f}</li>`).join('')}</ul></div>
+        <div style="flex:1"><h4>${esc(License.TIERS[t.tier].name)}</h4>
+          <div style="font-size:12px;color:var(--text-dim)">${t.sub}</div>
+          <ul>${t.feats.map(f=>`<li>${f}</li>`).join('')}</ul></div>
       </div>
       <div class="tier-table" style="margin-top:10px">
-        ${plans.map(([id,name,price,note,badge],i)=>`<div class="tier-opt ${i===0?'feat':''}">
-          <div style="flex:1"><h4>${name}${badge?` <span class="chip cyan">${badge}</span>`:''}</h4>
-            <div style="font-size:12px;color:var(--text-dim)">${note}</div></div>
-          <div class="price"><b>${price}</b><span>€ netto / Monat</span>
-            ${(()=>{const u=License.checkoutLink(id);
-              return u?`<a class="btn primary kauf-link" aria-disabled="true" style="margin-top:8px;padding:7px 12px;font-size:12px" href="${u}" target="_blank" rel="noopener" onclick="if(!document.getElementById('kaufB2B')?.checked){event.preventDefault();UI.kaufHinweis();}">Weiter zur Kasse →</a>`
-                      :`<button class="btn ghost" style="margin-top:8px;padding:7px 12px;font-size:12px" onclick="UI.activate()">Schlüssel eingeben</button>`;})()}</div>
-        </div>`).join('')}
-      </div>
-      </div><div class="kauf-spalte">
-      <div class="tier-opt feat" style="align-items:flex-start">
-        <div style="flex:1"><h4>CARLON Equine — für Pferdekliniken</h4>
-          <div style="font-size:12px;color:var(--text-dim)">Klinikteam · gemeinsamer Stand · mehrere Plätze</div>
-          <ul><li>Alles aus der Praxis-Stufe</li><li>Gemeinsamer Bestand über Ihren Klinik-Ordner (Netzlaufwerk) – jedes Gerät sieht denselben Stand</li><li>Übersichtswand für das ganze Team (ohne Alarme)</li><li>Mehrere Plätze in einer Lizenz</li><li>Mess-Karte je Pferd – die Halterin nimmt zu Hause weiter auf</li></ul></div>
-      </div>
-      <div class="tier-table" style="margin-top:10px">
-        ${kplans.map(([id,name,price,note,badge],i)=>`<div class="tier-opt">
-          <div style="flex:1"><h4>${name}${badge?` <span class="chip cyan">${badge}</span>`:''}</h4>
-            <div style="font-size:12px;color:var(--text-dim)">${note}</div></div>
-          <div class="price"><b>${price}</b><span>€ netto / Monat</span>
-            ${(()=>{const u=License.checkoutLink(id);
-              return u?`<a class="btn primary kauf-link" aria-disabled="true" style="margin-top:8px;padding:7px 12px;font-size:12px" href="${u}" target="_blank" rel="noopener" onclick="if(!document.getElementById('kaufB2B')?.checked){event.preventDefault();UI.kaufHinweis();}">Weiter zur Kasse →</a>`
-                      :`<button class="btn ghost" style="margin-top:8px;padding:7px 12px;font-size:12px" onclick="UI.activate()">Schlüssel eingeben</button>`;})()}</div>
-        </div>`).join('')}
-      </div>
-      </div></div>
-      <p style="font-size:12.5px;color:var(--text-secondary);margin-top:12px">${(()=>{ /* KASSENZAHL VORAB (05.11.2026): Stripe zeigt als Verkäufer zuerst den Bruttobetrag
-        (in der Live-Kasse gelesen: 177,31 / 1.773,10 / 415,31 / 4.153,10 €). Aus den Preisen gerechnet, nicht abgeschrieben. */
-        const b=x=>(Math.round(x*119)/100).toLocaleString('de-DE',{minimumFractionDigits:2,maximumFractionDigits:2})+' €';
-        const P=License.PREIS; return `An der Kasse für Praxen in Deutschland inkl. 19 % USt.: Praxis ${b(P.soloMonat)} im Monat bzw. ${b(P.soloJahr)} im Jahr · Klinik ${b(P.klinikMonat)} im Monat bzw. ${b(P.klinikJahr)} im Jahr.`; })()}</p>
+        <div class="tier-opt"><div style="flex:1"><h4>Monatsabo <span class="chip cyan">14 Tage gratis</span></h4>
+          <div style="font-size:12px;color:var(--text-dim)">monatlich kündbar · ${brutto(t.pm)} inkl. 19 % USt.</div></div>
+          <div class="price"><b>${t.pm.toLocaleString('de-DE')}</b><span>€ netto / Monat</span>${knopf(t.m,'Weiter zur Kasse →')}</div></div>
+        <div class="tier-opt"><div style="flex:1"><h4>Jahresabo</h4>
+          <div style="font-size:12px;color:var(--text-dim)">11 Monatsbeiträge · ${brutto(t.py)} inkl. 19 % USt.</div></div>
+          <div class="price"><b>${t.py.toLocaleString('de-DE')}</b><span>€ netto / Jahr</span>${knopf(t.y,'Weiter zur Kasse →')}</div></div>
+      </div></div>`).join('')}</div>
+      <p style="font-size:12.5px;color:var(--text-secondary);margin-top:12px">Ein Abo gilt für einen Betrieb auf beliebig vielen Geräten. Wird eine Obergrenze zwei Monate in Folge überschritten, schlägt das Cockpit den Wechsel vor; es sperrt nie und berechnet nichts nach.</p>
       <p style="font-size:12px;color:var(--text-dim);margin-top:4px">Verkäufer und Rechnungssteller ist Stripe (Link) im eigenen Namen; die Rechnung kommt von dort. Nach der Zahlung sind Sie sofort freigeschaltet — kein Schlüssel, keine E-Mail.</p>
     </div>
     <div class="modal-foot"><button class="btn ghost" onclick="UI.closeModal()">Später</button><button class="btn ghost" onclick="UI.activate()">Ich habe einen Schlüssel</button></div>`,{wide:true});
@@ -11854,14 +12001,14 @@ const License={
   oeffneKasseAusLink(){
     const u = new URL(location.href);
     const k = u.searchParams.get('kasse');
-    if (!['1','praxis','klinik'].includes(k)) return;
+    if (!['1','praxis','klinik','reha','kombi','center'].includes(k)) return;
     u.searchParams.delete('kasse');
     history.replaceState(null, '', u.pathname + (u.search || '') + u.hash);
     // Zahlt die Praxis schon, waere ein Kaufdialog verwirrend — dann die Lizenz zeigen.
     setTimeout(() => { try { if (this.isPaid()) return UI.licenseInfo(); UI.upgrade();
       /* Gewählte Spalte von der Verkaufsseite hervorheben (Conversion C1) */
-      const sp = document.querySelectorAll('.kauf-spalte'); const i = k==='praxis' ? 0 : k==='klinik' ? 1 : -1;
-      if (i>=0 && sp[i]) { sp[i].classList.add('gewaehlt'); if (i===1 && innerWidth<=760) sp[i].scrollIntoView({block:'start'}); }
+      const w = document.querySelector(`.kauf-spalte[data-stufe="${k}"]`);
+      if (w) { w.classList.add('gewaehlt'); if (k!=='praxis') w.scrollIntoView({block:'start'}); }
     } catch(e){} }, 350);
   },
 
@@ -12708,6 +12855,69 @@ const Sortable={
     });
   }
 };
+/* ERKLÄRTEXTE NACH WISSENSCHAFTLICHER PRÜFUNG DER LIVE-ANSICHT (20.11.2026, Perplexity-Gremium, Fable 5.2; Fundstellen geprüft:
+   Klassenbreite SI = 50 ms im Code (HRV.baevsky), α1-Pferdestudien EVJ 2025 doi:10.1111/evj.14491, Kuwahara 1996). Ergänzt die Grundtexte
+   oben; gilt für Akte, Messstation und Live-Ansicht gleichermaßen. */
+(function(){ if(typeof Info==='undefined'||!Info.defs) return; const D=Info.defs, E=Info.defsEn||{};
+  const an=(o,k,v)=>{ if(o&&o[k]) o[k]=o[k].replace(/\s*$/,'')+' '+v; };
+  if(D.rmssd){ an(D.rmssd,'equine','Unter Bewegung sinkt der Wert auf wenige Millisekunden und liegt dann nahe an der Messauflösung von etwa 1 ms; kleine Unterschiede sind dort nicht belastbar.'); }
+  if(E.rmssd){ an(E.rmssd,'equine','During movement the value drops to a few milliseconds, close to the resolution of about 1 ms; small differences are not reliable there.'); }
+  ['meanrr','sdnn','sd2'].forEach(k=>{ an(D[k],'interp','Liegt ein Stufenwechsel im Fenster, beschreibt der Wert vor allem den Pulsanstieg, nicht die Variabilität; die Live-Ansicht graut ihn bis zum Ende des Übergangs aus.'); an(E[k],'interp','If a stage change lies in the window, the value mainly describes the rise in heart rate, not variability; the live view greys it out until the transition ends.'); });
+  an(D.pnn50,'equine','Unter Belastung liegt der Wert meist bei null und sagt dann nichts aus.'); an(E.pnn50,'equine','Under load the value is usually zero and then says nothing.');
+  if(D.minmax) D.minmax.interp='Die Spannweite im Fenster. In Ruhe stammt eine hohe Max-HF oft von kurzer Aufregung oder einer einzelnen Fehlerkennung. Unter Belastung zeigt sie die höchste erreichte Herzfrequenz der Stufe; einzelne Spitzen können Bewegungsartefakte sein. Wann und wie lange, zeigt die Kurve „Puls und HRV“.';
+  if(E.minmax) E.minmax.interp='The range in the window. At rest a high max HR often comes from brief excitement or a single misdetection. Under load it shows the highest heart rate of the stage; single spikes can be movement artefacts. When and how long is shown by the “Heart rate and HRV” chart.';
+  if(D.tinn) D.tinn.interp='Unempfindlich gegen einzelne Ausreißer, braucht aber lange Aufnahmen: Die Task Force nennt mindestens 20 Minuten. Die Live-Ansicht rechnet TINN und Tri-Index über die letzten 20 Minuten und kennzeichnet sie als explorativ; Werte mit Stufenwechsel im Fenster sind nicht mit Literaturwerten vergleichbar.';
+  if(E.tinn) E.tinn.interp='Robust against single outliers but needs long recordings: the Task Force names at least 20 minutes. The live view uses the last 20 minutes and marks them exploratory; values with a stage change in the window are not comparable with literature values.';
+  if(D.dfa) D.dfa.equine='Für Pferde gibt es keine validierten Referenzbereiche und keinen belegten Schwellenwert. In einer Studie an 43 Vielseitigkeitspferden hing α1 im Gelände nicht mit Laktat, Herzfrequenz oder Tempo zusammen (EVJ 2025, doi:10.1111/evj.14491); bei 7 Vollblütern schätzte α1 die Dauerleistungsgrenze nicht brauchbar. CARLON weist α1 als explorativ aus und rechnet ihn erst ab 150 bereinigten Schlägen.';
+  if(E.dfa) E.dfa.equine='There are no validated reference ranges or thresholds for horses. In 43 eventing horses α1 in the field was not related to lactate, heart rate or speed (EVJ 2025, doi:10.1111/evj.14491); in 7 Thoroughbreds α1 did not usefully estimate the maximal lactate steady state. CARLON marks α1 as exploratory and computes it only from 150 cleaned beats.';
+  an(D.sampen,'equine','Bei wenigen Schlägen oder einem Stufenwechsel im Fenster ist der Wert nicht verlässlich; die Live-Ansicht graut ihn dann aus.'); an(E.sampen,'equine','With few beats or a stage change in the window the value is not reliable; the live view greys it out.');
+  an(D.avblock,'equine','Unter Bewegung stammen lange Abstände häufiger von nicht erfassten Schlägen. Dass Pausen unter Belastung verschwinden, ist die Regel, aber keine Garantie; treten sie unter Belastung wiederholt auf, zeigen Sie die Aufnahme Ihrer Tierärztin.');
+  an(E.avblock,'equine','Under movement long intervals more often come from missed beats. Pauses usually disappear under load, but not always; if they recur under load, show the recording to your vet.');
+  an(D.dual,'method','30 Schläge entsprechen bei 80 pro Minute etwa 22 Sekunden.'); an(E.dual,'method','30 beats correspond to about 22 seconds at 80 per minute.');
+  an(D.poincare,'interp','Bei einer Einheit mit mehreren Stufen bildet jede Stufe eine eigene Wolke. Länge und SD2 über die ganze Sitzung zeigen dann den Abstand der Stufen, nicht die Variabilität; aussagekräftig sind die Werte je Stufe.');
+  an(E.poincare,'interp','In a session with several stages each stage forms its own cloud. Length and SD2 over the whole session then show the distance between stages, not variability; the values per stage are meaningful.');
+  if(D.baevsky){ D.baevsky.method='SI = AMo / (2 · Mo · MxDMn) aus dem RR-Histogramm (Klassenbreite 50 ms nach Baevsky; Mo = häufigster Wert [s], AMo = Anteil der Modalklasse [%], MxDMn = Spannweite [s]); angezeigt als √SI.';
+    D.baevsky.equine='Beim Pferd nicht als Stress- oder Sympathikusmaß validiert und ohne Referenzbereich. Der Wert steigt rechnerisch mit dem Puls: Eine höhere Stufe ergibt einen höheren Wert, ohne dass sich am Pferd sonst etwas geändert haben muss. Die Live-Ansicht zeigt darum keine Bewertungszonen, sondern den Ruhewert dieses Pferds als Bezug.'; }
+  if(E.baevsky){ E.baevsky.method='SI = AMo / (2 · Mo · MxDMn) from the RR histogram (bin width 50 ms after Baevsky; Mo = most frequent value [s], AMo = share of the modal bin [%], MxDMn = range [s]); shown as √SI.';
+    E.baevsky.equine='Not validated in horses as a stress or sympathetic measure and without reference range. It rises with heart rate by calculation: a higher stage gives a higher value without anything else having changed. The live view therefore shows no rating zones but this horse’s resting value as reference.'; }
+  an(D.freq,'equine','Die Bänder stammen aus Ruheaufnahmen. Unter Bewegung ist das Spektrum nicht interpretierbar; die Live-Ansicht zeigt es nur in der Ruhe-Referenz. Ein Gipfel im HF-Band ist keine Atemfrequenz.');
+  an(E.freq,'equine','The bands come from resting recordings. During movement the spectrum cannot be interpreted; the live view shows it only in the rest reference. A peak in the HF band is not a respiratory rate.');
+  /* R2 (20.11.2026, Gremium mit Quellenprüfung): Korrekturen. */
+  const R2=()=>{
+    if(D.stufenvergleich){ D.stufenvergleich.what='Die Herzfrequenz in der letzten Minute dieser Stufe bei allen früheren Einheiten dieses Pferds mit genau derselben dokumentierten Einstellung (Gerät, Tempo, Wasserhöhe, Temperatur, Steigung). Heute: Median der letzten 60 Sekunden, sobald die Stufe 3 Minuten läuft. Die ersten 2 Einheiten sind als Gewöhnung markiert; Bezug ist der Median danach, mit dem Schwankungsband dieses Pferds.';
+      D.stufenvergleich.equine='Am Aquatrainer hing die Herzfrequenz in einer Studie an 8 Pferden von der Wassertemperatur ab (bei 13 °C niedriger als bei 16 und 19 °C). Für die Wasserhöhe ist die Lage uneinheitlich; in einer Studie unterschied sich die Herzfrequenz zwischen den Wasserhöhen nicht signifikant. Verglichen wird deshalb nur bei gleicher dokumentierter Einstellung. In den ersten Einheiten sinkt die Herzfrequenz auch durch Gewöhnung an das Gerät; diese Einheiten sind als Gewöhnungsphase markiert und nicht der Bezug. Ab 6 Einheiten ist das Band die eigene Schwankung dieses Pferds, davor eine feste Grenze von 3 Schlägen pro Minute (unsere Festlegung).';
+      D.stufenvergleich.ref='Nankervis, Thomas & Marlin 2008 · Scott et al. 2010 · Nankervis & Williams 2006'; }
+    if(E.stufenvergleich){ E.stufenvergleich.what='Heart rate in the last minute of this stage in all earlier sessions of this horse with exactly the same documented setting. Today: median of the last 60 seconds once the stage has run 3 minutes. The first 2 sessions are marked as habituation; the reference is the median after that, with this horse’s variation band.';
+      E.stufenvergleich.equine='On the aqua treadmill heart rate depended on water temperature in a study of 8 horses (lower at 13 °C than at 16 and 19 °C). For water height the evidence is mixed; in one study heart rate did not differ significantly between heights. Only the same documented setting is therefore compared. In the first sessions heart rate also falls through habituation; these are marked and are not the reference. From 6 sessions the band is this horse’s own variation, before that a fixed 3 bpm (our convention).';
+      E.stufenvergleich.ref='Nankervis, Thomas & Marlin 2008 · Scott et al. 2010 · Nankervis & Williams 2006'; }
+    const dfaEq='Für Pferde gibt es keine validierten Referenzbereiche und keinen belegten Schwellenwert. In 69 Geländeaufnahmen von 43 Vielseitigkeitspferden hing α1 nicht mit Laktat, Tempo oder Strecke zusammen; die Herzfrequenz wurde dort nicht gegen α1 ausgewertet (EVJ 2025, doi:10.1111/evj.14491; EKG, 60-s-Fenster). Bei 7 Vollblütern lieferte α1 keine brauchbare Schätzung des maximalen Laktat-Steady-State (AJVR 2025, doi:10.2460/ajvr.25.06.0192). CARLON weist α1 als explorativ aus.';
+    const dfaEqEn='There are no validated reference ranges or thresholds for horses. In 69 field recordings of 43 eventing horses α1 was not related to lactate, speed or distance; heart rate was not analysed against α1 there (EVJ 2025, doi:10.1111/evj.14491; ECG, 60-s window). In 7 Thoroughbreds α1 did not usefully estimate the maximal lactate steady state (AJVR 2025, doi:10.2460/ajvr.25.06.0192). CARLON marks α1 as exploratory.';
+    if(D.dfa) D.dfa.equine=dfaEq; if(E.dfa) E.dfa.equine=dfaEqEn;
+    if(D.dfaVerlauf){ D.dfaVerlauf.what='α1 in gleitenden Fenstern von 3 Minuten mit mindestens 150 bereinigten Schlägen; bei niedrigem Puls ist das Fenster dadurch entsprechend länger.'; D.dfaVerlauf.interp='Einzelne Fenster schwanken deutlich; aussagekräftig ist höchstens der Verlauf über mehrere Minuten bei gleicher Stufe. Nach einem Stufenwechsel erscheint der erste Punkt erst, wenn das Fenster den Übergang nicht mehr enthält. Die gestrichelte Linie ist der Ruhewert dieses Pferds. Die Linien 0,75 und 0,5 stammen aus der Belastungsforschung am Menschen und sind am Pferd nicht bestätigt.'; D.dfaVerlauf.equine=dfaEq; }
+    if(E.dfaVerlauf){ E.dfaVerlauf.what='α1 in rolling 3-minute windows with at least 150 cleaned beats; at low heart rate the window is correspondingly longer.'; E.dfaVerlauf.interp='Single windows vary considerably; at most the trend over several minutes at the same stage is meaningful. After a stage change the first point appears only when the window no longer contains the transition. The dashed line is this horse’s resting value. The lines at 0.75 and 0.5 come from human exercise research and are not confirmed in horses.'; E.dfaVerlauf.equine=dfaEqEn; }
+    const kl='Bei geringer Streuung liegen fast alle Abstände in ein bis drei Klassen von 50 ms; der Wert kann dann springen, ohne dass sich am Pferd etwas geändert hat. Werte anderer Programme sind nur bei gleicher Rechenweise vergleichbar.';
+    const klEn='With little spread almost all intervals fall into one to three 50-ms bins; the value can then jump without anything changing in the horse. Values from other programs are comparable only with the same calculation.';
+    an(D.baevsky,'equine',kl); an(E.baevsky,'equine',klEn); if(D.baevskyVerlauf) D.baevskyVerlauf.interp=kl+' '+D.baevskyVerlauf.interp; if(E.baevskyVerlauf) E.baevskyVerlauf.interp=klEn+' '+E.baevskyVerlauf.interp;
+    if(D.tinn) D.tinn.interp='Braucht lange, gleichförmige Aufnahmen; die Task Force nennt mindestens 20 Minuten. CARLON weist TINN und Triangular-Index deshalb nur für Ruheaufnahmen ab 20 Minuten aus. In der Live-Ansicht zeigt das Histogramm die Verteilung der laufenden Stufe ohne Dreieck und ohne Kennwert.';
+    if(E.tinn) E.tinn.interp='Needs long, steady recordings; the Task Force names at least 20 minutes. CARLON therefore shows TINN and the triangular index only for resting recordings from 20 minutes. In the live view the histogram shows the distribution of the current stage without triangle or value.';
+    if(D.rmssd) D.rmssd.what='Wie stark sich zwei aufeinanderfolgende Herzschläge im Abstand unterscheiden, gemittelt über das angezeigte Fenster (live: die laufende Stufe ohne Übergang, höchstens 5 Minuten; in der Akte: die ganze Aufnahme), in Millisekunden.';
+    if(E.rmssd) E.rmssd.what='How much two consecutive beat intervals differ, averaged over the window shown (live: the current stage without transition, at most 5 minutes; in the record: the whole recording), in milliseconds.';
+    if(D.tacho) D.tacho.what='Jeder einzelne Schlagabstand als Punkt einer Linie, in Millisekunden – das Rohmaterial aller Kennwerte. Die Live-Ansicht zeigt die letzten 120 Schläge, der Titel nennt den Zeitraum.';
+    if(E.tacho) E.tacho.what='Every single beat interval as a point of a line, in milliseconds – the raw material of all values. The live view shows the last 120 beats; the title states the time span.';
+    an(D.dual,'what','Live: die letzten 10 Minuten, im Vollbild die ganze Einheit.'); an(E.dual,'what','Live: the last 10 minutes; full screen: the whole session.');
+    if(D.dual&&D.dual.method) D.dual.method=D.dual.method.replace(' 30 Schläge entsprechen bei 80 pro Minute etwa 22 Sekunden.',' 30 Schläge entsprechen bei 36 pro Minute etwa 50 Sekunden, bei 80 pro Minute etwa 22 Sekunden; so kurze Fenster sind am Pferd nicht validiert.');
+    if(E.dual&&E.dual.method) E.dual.method=E.dual.method.replace(' 30 beats correspond to about 22 seconds at 80 per minute.',' 30 beats correspond to about 50 seconds at 36 per minute and about 22 seconds at 80 per minute; such short windows are not validated in horses.');
+    an(D.minmax,'what','Live aus den einzelnen bereinigten Schlagabständen im Fenster.'); an(E.minmax,'what','Live from the single cleaned beat intervals in the window.');
+    an(D.sampen,'equine','Unter Belastung mit sehr kleiner Streuung nahe der Messauflösung ist der Wert nicht belastbar.'); an(E.sampen,'equine','Under load with very small spread close to the resolution the value is not reliable.');
+  };
+  D.stufenvergleich={t:'Diese Stufe im Vergleich',what:'Die Herzfrequenz in der letzten Minute dieser Stufe bei allen früheren Einheiten dieses Pferds mit genau derselben dokumentierten Einstellung (Gerät, Tempo, Wasserhöhe, Temperatur, Steigung). Heute: Median der letzten 60 Sekunden, sobald die Stufe 3 Minuten läuft.',method:'Gleiche Rechnung wie im Sitzungsbericht (Median der letzten 60 s der Stufe); verglichen wird nur bei identischem Einstellungsschlüssel.',interp:'Eine niedrigere Herzfrequenz bei gleicher Einstellung kann an Gewöhnung an das Gerät liegen, an besserer Kondition, an ruhigerem Verhalten oder an Tagesform und Temperatur. Die Einordnung trifft die Tierärztin oder der Tierarzt.',equine:'Die Herzfrequenz reagiert am Aquatrainer auf Wasserhöhe und Wassertemperatur; darum zählt nur der Vergleich bei gleicher Einstellung. Ab 6 Einheiten nennt der Bericht, ob die Veränderung größer ist als die Schwankung dieses Pferds.',ref:'Scott et al. 2010 · Nankervis & Williams 2006'};
+  E.stufenvergleich={t:'This stage compared',what:'Heart rate in the last minute of this stage in all earlier sessions of this horse with exactly the same documented setting (device, speed, water height, temperature, incline). Today: median of the last 60 seconds once the stage has run 3 minutes.',method:'Same calculation as in the session report (median of the last 60 s of the stage); compared only with an identical setting key.',interp:'A lower heart rate at the same setting can come from getting used to the device, better fitness, calmer behaviour, or day form and temperature. The assessment lies with the vet.',equine:'On the aqua treadmill heart rate responds to water height and water temperature; only the comparison at the same setting counts. From 6 sessions the report states whether the change exceeds this horse’s variation.',ref:'Scott et al. 2010 · Nankervis & Williams 2006'};
+  D.baevskyVerlauf={t:'Baevsky über die Einheit',what:'√SI in gleitenden 2-Minuten-Fenstern, alle 30 Sekunden neu, mit Stufenlinien.',method:'Wie der Baevsky-Index, aus bereinigten Abständen (Klassenbreite 50 ms).',interp:'Die Kurve folgt vor allem dem Puls. Grau hinterlegte Abschnitte enthalten einen Stufenwechsel; dort fällt der Wert rechnerisch ab, weil die Spannweite im Fenster wächst. Vergleichen Sie dieselbe Stufe desselben Pferds über mehrere Einheiten. Die gestrichelte Linie ist der Ruhewert dieses Pferds.',equine:'Beim Pferd nicht validiert, ohne Referenzbereich, keine Bewertung.',ref:'Baevsky & Chernikova 2017'};
+  D.dfaVerlauf={t:'DFA-α₁ über die Einheit',what:'α1 in gleitenden 3-Minuten-Fenstern über die Einheit.',method:'Wie DFA α1 (n = 4–16); ein Punkt erscheint erst ab 150 bereinigten Schlägen im Fenster.',interp:'Einzelne Fenster schwanken deutlich; aussagekräftig ist höchstens der Verlauf über mehrere Minuten bei gleicher Stufe. Graue Abschnitte enthalten einen Stufenwechsel. Die Linien bei 0,75 und 0,5 stammen aus der Belastungsforschung am Menschen und sind am Pferd nicht bestätigt.',equine:'Explorativ, kein Schwellenwert. Bei 43 Vielseitigkeitspferden hing α1 nicht mit Laktat, Herzfrequenz oder Tempo zusammen (EVJ 2025, doi:10.1111/evj.14491).',ref:'Peng et al. 1995 · Rogers et al. 2021 (Mensch) · EVJ 2025 (Pferd)'};
+  E.baevskyVerlauf={t:'Baevsky over the session',what:'√SI in rolling 2-minute windows, updated every 30 seconds, with stage lines.',method:'Like the Baevsky index, from cleaned intervals (bin width 50 ms).',interp:'The curve mainly follows heart rate. Grey sections contain a stage change; there the value drops by calculation because the range in the window grows. Compare the same stage of the same horse across sessions. The dashed line is this horse’s resting value.',equine:'Not validated in horses, no reference range, no rating.',ref:'Baevsky & Chernikova 2017'};
+  E.dfaVerlauf={t:'DFA-α₁ over the session',what:'α1 in rolling 3-minute windows over the session.',method:'Like DFA α1 (n = 4–16); a point appears only from 150 cleaned beats in the window.',interp:'Single windows vary considerably; at most the trend over several minutes at the same stage is meaningful. Grey sections contain a stage change. The lines at 0.75 and 0.5 come from human exercise research and are not confirmed in horses.',equine:'Exploratory, no threshold. In 43 eventing horses α1 was not related to lactate, heart rate or speed (EVJ 2025, doi:10.1111/evj.14491).',ref:'Peng et al. 1995 · Rogers et al. 2021 (human) · EVJ 2025 (horse)'};
+  R2();
+})();
 const ChartZoom={
   enhance(){
     const main=$('#main'); if(!main) return;
@@ -12745,7 +12955,36 @@ const ChartZoom={
     const kind=(!wrap&&svg.dataset&&svg.dataset.chart)||'';
     const dfa=kind==='dfa', hist=kind==='hist', breath=kind==='breath';
     const baev=host&&host.classList&&host.classList.contains('baev-box');
-    if(scatter){
+    const neuR=wrap&&wrap.dataset.neu&&Chart._neu[wrap.dataset.neu], EN0=(State.settings&&State.settings.lang==='en')||document.documentElement.lang==='en';
+    if(neuR){
+      /* Zeitachse dehnen und verschieben: 1 Finger = Wert zeigen (wie überall), 2 Finger = zoomen + verschieben,
+         Trackpad/Mausrad waagrecht = verschieben, Strg/⌘ + Rad = zoomen, Knöpfe − / Alles / + */
+      body.className='zbody breath-fs zeit-fs'; body.innerHTML='';
+      const vw=(window.innerWidth||720), basis=Math.max(320,vw-40), H=Math.max(260,Math.min(520,(window.innerHeight||700)-200)); let fak=1;
+      const bar=document.createElement('div'); bar.className='bfs-bar';
+      bar.innerHTML=`<span class="bfs-hint">${EN0?'One finger: show value · two fingers: zoom and pan · Ctrl + wheel: zoom':'Ein Finger: Wert zeigen · zwei Finger: zoomen und verschieben · Strg + Mausrad: zoomen'}</span><div class="bfs-btns"><button class="bfs-z" data-z="out" aria-label="${EN0?'zoom out':'verkleinern'}">−</button><button class="bfs-z" data-z="fit">${EN0?'All':'Alles'}</button><button class="bfs-z" data-z="in" aria-label="${EN0?'zoom in':'vergrößern'}">+</button></div>`;
+      const scroller=document.createElement('div'); scroller.className='bfs-scroll';
+      /* Feste Achsen beim Verschieben: links (und beim Dualgraph rechts) eine angeheftete Kopie des Achsenrands */
+      const rahmen=document.createElement('div'); rahmen.className='zeit-rahmen'; const achseL=document.createElement('div'), achseR=document.createElement('div'); achseL.className='zeit-achse l'; achseR.className='zeit-achse r';
+      const zweiAchsen=wrap.dataset.mode==='dual';
+      const render=()=>{ const w=Math.round(basis*fak); scroller.innerHTML=neuR(w,H); const wr=scroller.firstElementChild; if(wr&&wr.style){ wr.style.width=w+'px'; } const s2=scroller.querySelector('svg'); if(s2){ s2.style.setProperty('width',w+'px','important'); s2.style.height=H+'px'; s2.style.maxWidth='none'; }
+        const kopie=()=>{ const k=s2.cloneNode(true); k.querySelectorAll('.hov-cross,.hov-focus').forEach(x=>x.remove()); k.style.setProperty('width',w+'px','important'); k.style.height=H+'px'; k.style.maxWidth='none'; return k; };
+        achseL.innerHTML=''; achseR.innerHTML=''; if(s2&&fak>1){ achseL.appendChild(kopie()); if(zweiAchsen){ const k=kopie(); k.style.marginLeft=(-(w-56))+'px'; achseR.appendChild(k); } }
+        achseL.style.display=fak>1?'':'none'; achseR.style.display=fak>1&&zweiAchsen?'':'none'; };
+      const zoomAuf=(nf,ax)=>{ const vor=scroller.scrollWidth||1, frac=(scroller.scrollLeft+ax)/vor; fak=Math.max(1,Math.min(16,nf)); render(); scroller.scrollLeft=Math.max(0,frac*scroller.scrollWidth-ax); };
+      bar.querySelectorAll('.bfs-z').forEach(b=>b.addEventListener('click',()=>{ const z=b.dataset.z; if(z==='fit'){ fak=1; render(); scroller.scrollLeft=0; } else zoomAuf(z==='in'?fak*1.7:fak/1.7,scroller.clientWidth/2); }));
+      let pb=null, warte=false;
+      scroller.addEventListener('touchstart',e=>{ if(e.touches.length!==2) return; const r0=scroller.getBoundingClientRect(); const mx=(e.touches[0].clientX+e.touches[1].clientX)/2-r0.left;
+        pb={d:Math.hypot(e.touches[0].clientX-e.touches[1].clientX,e.touches[0].clientY-e.touches[1].clientY),fak,mx}; },{passive:false});
+      scroller.addEventListener('touchmove',e=>{ if(e.touches.length!==2||!pb) return; e.preventDefault(); if(warte) return; warte=true;
+        const r0=scroller.getBoundingClientRect(), d=Math.hypot(e.touches[0].clientX-e.touches[1].clientX,e.touches[0].clientY-e.touches[1].clientY), mx=(e.touches[0].clientX+e.touches[1].clientX)/2-r0.left;
+        requestAnimationFrame(()=>{ warte=false; const nf=Math.max(1,Math.min(16,pb.fak*d/pb.d)); if(Math.abs(nf-fak)>0.01) zoomAuf(nf,mx); scroller.scrollLeft=Math.max(0,scroller.scrollLeft-(mx-pb.mx)); pb.mx=mx; }); },{passive:false});
+      scroller.addEventListener('touchend',()=>{ pb=null; },{passive:true});
+      scroller.addEventListener('wheel',e=>{ if(e.ctrlKey||e.metaKey){ e.preventDefault(); const r0=scroller.getBoundingClientRect(); zoomAuf(fak*(e.deltaY<0?1.25:0.8),e.clientX-r0.left); } else if(Math.abs(e.deltaY)>Math.abs(e.deltaX)&&fak>1){ e.preventDefault(); scroller.scrollLeft+=e.deltaY; } },{passive:false});
+      rahmen.appendChild(scroller); rahmen.appendChild(achseL); rahmen.appendChild(achseR); render(); body.appendChild(bar); body.appendChild(rahmen);
+      const tEl=host&&(host.querySelector('.rl-hcard-t span')||host.querySelector('.ct-t')); $('#zoomTitle').textContent=neuR.titel||(tEl&&tEl.textContent)||'';
+      $('#zoomHint').textContent=EN0?'Zoom up to 16× · values beat by beat':'Zoom bis 16-fach · Werte Schlag für Schlag'; $('#zoomHint').style.display='';
+    } else if(scatter){
       // Dedizierter Poincaré-Vollbild-Viewer (App-Stil): Seitenleiste (Kennwerte + Form-Guide) + großer Plot
       let pts=[]; try{pts=JSON.parse(wrap.dataset.hov.replace(/&#39;/g,"'").replace(/&lt;/g,'<'));}catch(_){}
       const n=pts.length||1;
@@ -12781,7 +13020,7 @@ const ChartZoom={
         +`<div class="pfs-stat"><span class="k">√SI</span><b>${d.sqrtsi||'–'}</b><span class="s" style="color:${zone[1]}">${zone[0]} · stabile Skala 0–30</span></div>`
         +`<div class="pfs-stat"><span class="k">SI · roh</span><b>${d.si||'–'}</b><span class="s">Baevsky-Index (SI) (unskaliert)</span></div>`
         +`<div class="pfs-stat"><span class="k">Komponenten</span><b style="font-size:17px;line-height:1.3">${d.amo||'–'} % · ${d.mo||'–'} ms · ${d.mxdmn||'–'} ms</b><span class="s">AMo (Modalamplitude) · Mo (Modus) · MxDMn (Variationsbreite)</span></div>`
-        +`<div class="pfs-guide"><div class="gh">Zonen · √SI (Stucke 2015)</div>`
+        +`<div class="pfs-guide"><div class="gh">Zonen · √SI (Humanbereiche, am Pferd nicht validiert)</div>`
           + [['Niedrig','0–7','var(--good)'],['Mittel','7–15','var(--cyan)'],['Hoch','15–25','var(--amber)'],['Sehr hoch','25+','var(--red)']].map(([n,r,c])=>`<div class="gr"><span style="width:16px;height:4px;border-radius:2px;background:${c};flex:0 0 auto"></span><div class="gt"><b style="color:${c}">${n}</b><span>√SI ${r}</span></div></div>`).join('')
         +`</div>`
         +`<div class="pfs-hint">√SI = √( AMo / (2 · Mo · MxDMn) )<br>Die Wurzel stabilisiert die Skala. Orientierend, keine equine Norm — individuelle Baseline maßgeblich.</div>`;
@@ -13404,7 +13643,7 @@ const Sprache={
     "eigene Basis":"own baseline",
     "Diese Aufnahme: Komet — langgestreckt und breit":"This recording: comet — elongated and wide",
     "Detrended Fluctuation Analysis (4–16 Schläge): Korrelationsstruktur der Schlagfolge. 0.5 = weißes Rauschen · 1.0 = 1/f · 1.5 = brownsches Rauschen (Peng et al. 1995). Beim Pferd gibt es keine validierten Zielbereiche – vergleichen Sie mit der eigenen Vorgeschichte.":"Detrended fluctuation analysis (4–16 beats): correlation structure of the beat sequence. 0.5 = white noise · 1.0 = 1/f · 1.5 = Brownian noise (Peng et al. 1995). There are no validated target ranges in horses – compare with the horse’s own history.",
-    "Equine Bänder VLF 0–0,01 · LF 0,01–0,07 · HF 0,07–0,6 Hz (Kuwahara 1996). Lomb-Scargle-Spektrum & Kennwerte aus der Schlag-für-Schlag-Reihe des Polar H10. Poincaré SD1/SD2 (Brennan 2001), Formmuster n. Woo 1992 · Baevsky (1984, equine-skaliert Stucke 2015) · SampEn (Richman 2000). Priorisierungshilfe, keine Diagnose.":"Equine bands VLF 0–0.01 · LF 0.01–0.07 · HF 0.07–0.6 Hz (Kuwahara 1996). Lomb–Scargle spectrum and values from the Polar H10 beat-to-beat series. Poincaré SD1/SD2 (Brennan 2001), shape patterns after Woo 1992 · Baevsky (1984, equine-scaled Stucke 2015) · SampEn (Richman 2000). Prioritisation aid, not a diagnosis.",
+    "Equine Bänder VLF 0–0,01 · LF 0,01–0,07 · HF 0,07–0,6 Hz (Kuwahara 1996). Lomb-Scargle-Spektrum & Kennwerte aus der Schlag-für-Schlag-Reihe des Polar H10. Poincaré SD1/SD2 (Brennan 2001), Formmuster n. Woo 1992 · Baevsky (1984; Skala 0–30 CARLON-Festlegung) · SampEn (Richman 2000). Priorisierungshilfe, keine Diagnose.":"Equine bands VLF 0–0.01 · LF 0.01–0.07 · HF 0.07–0.6 Hz (Kuwahara 1996). Lomb–Scargle spectrum and values from the Polar H10 beat-to-beat series. Poincaré SD1/SD2 (Brennan 2001), shape patterns after Woo 1992 · Baevsky (1984; 0–30 scale CARLON convention) · SampEn (Richman 2000). Prioritisation aid, not a diagnosis.",
     "Trainings-Steuerung auf HRV-Basis gegen die individuelle Baseline des Pferds — Trainings-Domäne, keine tierärztliche Beurteilung.":"HRV-based training guidance against the horse’s individual baseline — training domain, not a veterinary assessment.",
     "Noch nicht genug Messungen für einen belastbaren Ruhe-Verlauf über Wochen. Ab ~6 Aufnahmen über mind. 28 Tage zeigt CARLON hier Ruhe-HF- und HRV-Anpassung über Wochen/Monate":"Not enough recordings yet for a reliable rest trend over weeks. From about 6 recordings over at least 28 days, CARLON shows resting HR and HRV adaptation over weeks/months here",
     "HRV unter dem individuellen Normalniveau des Pferds — Belastung im Blick behalten, vor harter Einheit erneut messen.":"HRV below the horse’s individual normal level — keep an eye on the workload, measure again before a hard session.",
@@ -13913,7 +14152,7 @@ const Sprache={
     'AKTIV':'ACTIVE',
     'STRESS':'STRAIN',
     'ALARM':'ALERT',
-    '√SI · Baevsky 1979 · equine-skaliert (Stucke 2015)':'√SI · Baevsky 1979 · equine-scaled (Stucke 2015)',
+    '√SI · Baevsky 1979 · Skala 0–30 als CARLON-Festlegung, am Pferd ohne Referenzbereich':'√SI · Baevsky 1979 · 0–30 scale as CARLON convention, no equine reference range',
     'orientierend · individuelle Baseline maßgeblich':'indicative · the individual baseline governs',
     'RR-Verteilung · TINN':'RR distribution · TINN',
     'RR-INTERVALL':'RR INTERVAL',
@@ -14409,6 +14648,8 @@ const Sprache={
             try{ parent.postMessage({carlonSchaufenster:'bereit'},'*'); }catch(_){} },650);
           else if(h && _p.get('fokus')==='poincare') setTimeout(()=>{ const f=document.getElementById('pzAkte'); if(f){ f.scrollIntoView({block:'start'}); window.scrollBy(0,-78); const m=$('#main'); if(m&&m.scrollTop) m.scrollTop-=78; } try{ parent.postMessage({carlonSchaufenster:'bereit'},'*'); }catch(_){} },700);
           /* &fokus=verlauf (16.11.2026): Schaufenster im Hero der Visite-Seite – genau der Ausschnitt des Films, danach selbst bedienbar. */
+          /* 20.11.: Einstieg von der Reha-Seite – direkt zum Reha-Bereich der Akte */
+          if(h && !_p.has('nur') && _p.get('fokus')==='reha') setTimeout(()=>{ const f=document.getElementById('rehaAkte'); if(f){ f.scrollIntoView({block:'start'}); window.scrollBy(0,-78); const m=$('#main'); if(m&&m.scrollTop) m.scrollTop-=78; } },900);
           if(h && !_p.has('nur') && _p.get('fokus')==='verlauf') setTimeout(()=>{ const f=document.getElementById('verlaufAkte'); if(f){ f.scrollIntoView({block:'start'}); window.scrollBy(0,-78); const m=$('#main'); if(m&&m.scrollTop) m.scrollTop-=78; } try{ parent.postMessage({carlonSchaufenster:'bereit'},'*'); }catch(_){} },700);
         }catch(e){ console.error('demo',e); }
       },300);}

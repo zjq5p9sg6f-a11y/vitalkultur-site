@@ -2619,7 +2619,7 @@ const Chart={
     const lo=mn-rg*0.10, hi=mx+rg*0.10;
     let draussen=0;
     for(let i=0;i<xs.length;i++) if(xs[i]<lo||xs[i]>hi||ys[i]<lo||ys[i]>hi) draussen++;
-    const pL=pad, pT=pad-18, pB=size-pad, plotR=size-16;
+    const pL=pad, pT=16, pB=size-pad, plotR=size-16;   /* 20.11.: H = W (pB-pT = plotR-pL) → 1 ms in x = 1 ms in y, Identitätslinie und Ellipse exakt 45° (vorher 18 px gestaucht) */
     const W=plotR-pL, H=pB-pT;
     const PX=v=>pL+(v-lo)/(hi-lo)*W, PY=v=>pB-(v-lo)/(hi-lo)*H;
     let g=`<rect x="${pL}" y="${pT}" width="${W}" height="${H}" rx="8" class="plotbg" fill="#0E0E0E"/>`;
@@ -2886,7 +2886,7 @@ de:{
     ['Cyan','Die Herzratenvariabilität als gleitendes RMSSD. Rechte Achse, eigene Skala.'],
     ['Warum zusammen','Nebeneinander gelegt wird sichtbar, wie beide sich zueinander verhalten. Zwei getrennte Bilder verstecken genau das.'],
     ['Fenster','Die HRV wird jeweils aus den letzten 30 Schlägen gerechnet. Ändert sich der Puls, schlägt die Kurve mit aus. Sie zeigt einen Verlauf, keinen Ruhewert; so kurze Fenster sind am Pferd nicht validiert.'],
-    ['Einordnung','Die Kurve allein erlaubt keine Aussage über dein Pferd. Die Beurteilung liegt bei deiner Tierärztin und braucht den Vergleich mit früheren Aufnahmen desselben Pferds.'],
+    ['Einordnung','Die Kurve allein erlaubt keine Aussage über dein Pferd. Sie ist eine Beobachtungsgröße und wird erst im Vergleich mit früheren Aufnahmen desselben Pferds lesbar. Fragen zur Gesundheit klärt die Tierärztin mit eigener Untersuchung.'],
     ['Vergleich','Messstation und Praxis-Cockpit bereinigen unterschiedlich; vergleiche Werte nur innerhalb desselben Werkzeugs.']]},
   rr:{t:'Herzschlag-Abstände',r:[
     ['Was','Der Abstand zwischen zwei aufeinanderfolgenden Herzschlägen, in Millisekunden. Jeder Punkt der Kurve ist ein einzelner Schlag.'],
@@ -2895,7 +2895,7 @@ de:{
     ['Achse','Unten steht die Schlag-Nummer, die gestrichelte Linie ist der Mittelwert der Aufnahme.'],
     ['Störungen','Kauen, Wiehern, Fliegenabwehr und Gewichtsverlagerung verändern die Abstände; notiere, was während der Aufnahme passiert ist.']]},
   breath:{t:'Atemkurve',r:[
-    ['Idee','Die Kurve schätzt die Atmung aus dem Herzschlag. Beim Atmen schwanken die Abstände zwischen den Schlägen leicht mit. Dass kürzere Abstände zur Einatmung gehören, ist vom Menschen übernommen und am Pferd nicht geprüft.'],
+    ['Idee','Die Kurve schätzt die Atmung aus dem Herzschlag. Beim Atmen schwanken die Abstände zwischen den Schlägen leicht mit. Dass kürzere Abstände zur Einatmung gehören, ist vom Menschen übernommen und am Pferd nicht gesichert.'],
     ['Farben','Koralle: Abstände werden kürzer. Blau: Abstände werden länger. Grau: keine klare Richtung.'],
     ['Zahl','Oben links steht eine Schätzung der Atemzüge pro Minute, keine Messung.'],
     ['Grenze','Keine direkte Atemmessung, nur für ruhige Aufnahmen im Stand. Auch andere Einflüsse und lange Pausen lassen die Abstände schwanken; bei schneller Atmung und langsamem Puls bildet die Kurve die Atmung nicht mehr ab. Zähle zur Kontrolle die Flankenbewegungen eine Minute lang.']]},
@@ -2915,9 +2915,9 @@ de:{
     ['Vergleichbar','Miss immer zur gleichen Tageszeit, am gleichen Ort und mit Abstand zu Fütterung und Arbeit. Eine eigene Basis entsteht erst aus mehreren Aufnahmen an verschiedenen Tagen. Bricht die Aufnahme ab oder wird das Pferd unruhig, miss neu, statt Teile zu werten.']]},
   hr:{t:'Ø Herzfrequenz',r:[
     ['Was','Der durchschnittliche Puls über die Aufnahme, in Schlägen pro Minute.'],
-    ['Rechenweg','Gerechnet aus dem durchschnittlichen Schlagabstand: 60.000 geteilt durch den Abstand in Millisekunden. Das ist genauer, als einzelne Pulswerte zu mitteln.'],
+    ['Rechenweg','Gerechnet aus dem durchschnittlichen Schlagabstand: 60.000 geteilt durch den Abstand in Millisekunden. Das entspricht der Zahl der Schläge pro Minute über die ganze Aufnahme.'],
     ['Spannweite','Das Feld über der Grafik zeigt den niedrigsten und höchsten Einzelwert. Ein einzelner langer Abstand ergibt einen sehr niedrigen Einzelwert.'],
-    ['Einordnung','Ob ein Wert für dein Pferd üblich ist, hängt von Alter, Rasse, Training und Situation ab. Das beurteilt deine Tierärztin.']]},
+    ['Einordnung','Welcher Puls für ein Pferd üblich ist, hängt von Alter, Rasse, Training und Situation ab. CARLON bewertet den Wert nicht.']]},
   rmssd:{t:'HRV · RMSSD',r:[['Was','Zeigt, wie stark sich der Abstand von einem Herzschlag zum nächsten ändert, in Millisekunden.'],
     ['Lesart','Große Werte: die Abstände ändern sich von Schlag zu Schlag deutlich. Kleine Werte: die Abstände sind gleichmäßiger.'],
     ['Warum zwei Zahlen','Die obere Zahl rechnet mit jedem Schlag, die untere lässt große Sprünge weg (mehr als 20 % Unterschied zum vorigen Abstand). Das ist eine gängige Filterregel, am Pferd nicht eigens geprüft. Hinter einem Sprung kann eine Fehlerkennung des Gurts stecken oder ein echter langer Abstand; lange Abstände und unregelmäßige Ruherhythmen sind bei ruhenden Pferden häufig beschrieben. Der Filter kann das nicht unterscheiden und entfernt auch echte Schwankungen. Rohwert und gefilterter Wert sind beide nicht der wahre Wert.'],
@@ -2953,7 +2953,7 @@ en:{
     ['Cyan','Heart rate variability as a rolling RMSSD. Right axis, its own scale.'],
     ['Why together','Placed side by side, you can see how the two relate to each other. Two separate pictures hide exactly that.'],
     ['Window','The HRV is computed from the last 30 beats each time. When the pulse changes, the curve swings with it. It shows a course, not a resting value; windows this short are not validated in horses.'],
-    ['Interpretation','The curve alone allows no statement about your horse. Assessment lies with your vet and needs comparison with earlier recordings of the same horse.'],
+    ['Interpretation','The curve alone allows no statement about your horse. It is an observation and only becomes readable in comparison with earlier recordings of the same horse. Questions about health are for your vet and their own examination.'],
     ['Comparison','The measuring station and the practice cockpit clean data differently; compare values only within the same tool.']]},
   rr:{t:'Beat-to-beat intervals',r:[
     ['What','The interval between two consecutive heartbeats, in milliseconds. Every point on the curve is a single beat.'],
@@ -2962,7 +2962,7 @@ en:{
     ['Axis','Below is the beat number; the dashed line is the mean of the recording.'],
     ['Disturbances','Chewing, neighing, fending off flies and shifting weight change the intervals; note what happened during the recording.']]},
   breath:{t:'Breathing curve',r:[
-    ['Idea','The curve estimates breathing from the heartbeat. With breathing the intervals between beats fluctuate slightly. That shorter intervals belong to inspiration is taken from humans and not tested in horses.'],
+    ['Idea','The curve estimates breathing from the heartbeat. With breathing the intervals between beats fluctuate slightly. That shorter intervals belong to inspiration is taken from humans and not established in horses.'],
     ['Colours','Coral: intervals become shorter. Blue: intervals become longer. Grey: no clear direction.'],
     ['Number','Top left shows an estimate of breaths per minute, not a measurement.'],
     ['Limit','Not a direct respiration measurement, only for calm recordings while standing. Other influences and long pauses also make the intervals fluctuate; with fast breathing and a slow pulse the curve no longer reflects breathing. To check, count the flank movements for one minute.']]},
@@ -2982,9 +2982,9 @@ en:{
     ['Comparable','Always record at the same time of day, in the same place and away from feeding and work. A personal baseline only emerges from several recordings on different days. If the recording breaks off or the horse becomes restless, record again instead of using parts.']]},
   hr:{t:'Average pulse',r:[
     ['What','The average pulse across the recording, in beats per minute.'],
-    ['How it is calculated','Computed from the mean beat interval: 60,000 divided by the interval in milliseconds. This is more accurate than averaging single pulse values.'],
+    ['How it is calculated','Computed from the mean beat interval: 60,000 divided by the interval in milliseconds. This equals the number of beats per minute over the whole recording.'],
     ['Range','The field above the chart shows the lowest and highest single value. A single long interval produces a very low single value.'],
-    ['Interpretation','Whether a value is usual for your horse depends on age, breed, training and situation. Your veterinarian assesses that.']]},
+    ['Interpretation','Which heart rate is usual for a horse depends on age, breed, training and situation. CARLON does not rate the value.']]},
   rmssd:{t:'HRV · RMSSD',r:[['What','Shows how much the interval changes from one heartbeat to the next, in milliseconds.'],
     ['Reading it','Large values: the intervals change noticeably from beat to beat. Small values: the intervals are more even.'],
     ['Why two numbers','The upper number uses every beat, the lower drops large jumps (more than 20 % difference to the previous interval). This is a common filter rule, not specifically tested in horses. Behind a jump there may be a detection error of the strap or a genuine long interval; long intervals and irregular resting rhythms are frequently described in resting horses. The filter cannot tell them apart and also removes genuine fluctuations. Neither the raw nor the filtered value is the true value.'],

@@ -695,6 +695,7 @@ h2{font-family:var(--font-brand);font-weight:350;font-size:clamp(28px,3.6vw,var(
 .tarife-grid{max-width:920px;margin:var(--sp-55) auto 0;display:grid;
   grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:var(--sp-21)}
 .tarife-grid .tarif{max-width:none;margin:0}
+.tarife-drei{max-width:1180px;grid-template-columns:repeat(auto-fit,minmax(300px,1fr))}.tarif-begeistert{color:rgb(235,230,220)!important;background:rgba(62,207,178,.08);border-left:2px solid rgb(62,207,178);padding:8px 10px!important;border-radius:0 10px 10px 0;margin:6px 0!important}.tarif-begeistert::before{display:none!important}
 .rollen-weiche{margin-top:12px;font-size:14px;color:var(--text-secondary)}.rollen-weiche a{color:var(--cyan);border-bottom:1px solid rgba(62,207,178,.35)}
 .kaufschritte{list-style:none;counter-reset:ks;max-width:920px;margin:var(--sp-34,34px) auto 0;padding:0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
 .kaufschritte li{counter-increment:ks;position:relative;padding:18px 18px 18px 54px;border:1px solid rgba(235,230,220,.14);border-radius:14px;background:rgba(235,230,220,.03);font-size:.95rem;line-height:1.5;color:rgba(235,230,220,.78)}
@@ -860,6 +861,7 @@ section[id]{scroll-margin-top:76px}
   border:1px solid rgba(62,207,178,.55);color:var(--cyan);background:rgba(62,207,178,.06);font-size:12.5px;letter-spacing:.08em;line-height:1;transition:background .2s,border-color .2s}
 .berichtsmuster .bm-knopf:hover{background:rgba(62,207,178,.14);border-color:var(--cyan)}
 .berichtsmuster .bm-knopf::after{content:'↗';font-size:14px;letter-spacing:0}
+.muster-mehr{list-style:none;padding:0;margin:28px 0 0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}.muster-mehr a{display:block;text-decoration:none;border:1px solid var(--border-subtle);border-radius:14px;padding:14px 16px;background:rgba(12,12,13,.6)}.muster-mehr a:hover{border-color:rgba(62,207,178,.5)}.muster-mehr b{display:block;color:var(--text-primary);font-weight:600}.muster-mehr span{font-size:13.5px;color:var(--cyan)}@media(max-width:720px){.muster-mehr{grid-template-columns:1fr}}
 @media(max-width:720px){.berichtsmuster{grid-template-columns:1fr;text-align:center}.bm-faecher{max-width:260px}.berichtsmuster span{margin:0 auto}}
 .anmeldung{max-width:720px;margin:var(--sp-55) auto 0;text-align:left;padding:34px 32px 30px;position:relative;
   border:1px solid var(--border-subtle);border-radius:18px;
@@ -1490,6 +1492,12 @@ try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; 
         <a class="bm-knopf" href="../assets/CARLON-Muster-Bericht.pdf" target="_blank" rel="noopener">Sample report · PDF, 6 pages (German)</a>
       </div>
     </div>
+    
+    <ul class="muster-mehr">
+      <li><a href="../assets/muster/langzeit-stallrunde.pdf" target="_blank" rel="noopener"><b>Barn round summary report</b><span>Mobile practice · three horses, 30 minutes each · PDF, 10 pages (German) ↗</span></a></li>
+      <li><a href="../assets/muster/langzeit-nacht-station.pdf" target="_blank" rel="noopener"><b>Long-term report, night on the ward</b><span>Clinic · 9 hours from the strap memory · PDF, 4 pages (German) ↗</span></a></li>
+      <li><a href="/carlon-equine-visite/reha/#muster"><b>Rehab reports</b><span>Session report and progress documentation · on the rehab page (German) →</span></a></li>
+    </ul>
 
     <details class="mehr gross" data-spur-auf="mehr-was-im-cockpit-steht"><summary><span>All horse-record features at a glance</span></summary>
       <div class="grid">
@@ -1873,11 +1881,11 @@ try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; 
   <div class="wrap">
     <div class="sec-eyebrow">Pricing</div>
     
-    <h2>Two plans. No fee per horse, user or device.</h2>
+    <h2>One fixed monthly price per tier. No extra charges.</h2>
     <p class="sec-lead">
-      One subscription covers one business, that is one practice or one site, with all veterinary staff and on any
-      number of that business's devices. There is <strong>no fee per horse, per user or
-      per device</strong> and no limit on recordings.
+      One subscription covers one business, that is one practice or one site, on any number of devices.
+      Each tier states how many veterinarians it is meant for. <strong>Horses, recordings and devices are unlimited</strong>; only rehab horses have a limit in the rehab tiers.
+      If a limit is exceeded two months in a row, the cockpit suggests the switch with one click. It never locks and never charges extra.
     </p>
     
     <ol class="kaufschritte m-wisch">
@@ -1899,37 +1907,45 @@ try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; 
       <p class="pb-fest"><b>One fixed monthly price.</b> No extra fees per horse or recording. Your price stays fixed for 24 months from the start of your contract.</p>
       <p class="pb-fest"><b>Not included:</b> invoicing under the GOT fee scale, DATEV, drug and dispensing records, online booking, stock. Your practice program remains responsible for those. No live sync on iPhone and iPad; there you sync by file through the inbox folder.</p>
     </div>
-    <div class="tarife-grid m-wisch">
+    <div class="tarife-grid tarife-drei m-wisch">
     <div class="tarif">
-      <div class="tarif-name">For equine practices</div>
-
+      <div class="tarif-name">Mobile practice · for one veterinarian</div>
       <div class="tarif-preis"><b>€149</b> <span>net per month · €177.31 incl. 19&nbsp;% German VAT</span></div>
-      <div class="tarif-alt">or €1,490 net per year (€1,773.10 incl. VAT)</div>
-      
+      <div class="tarif-alt">Annual payment: 11 monthly fees, €1,639 net (€1,950.41 incl. VAT)</div>
       <ul class="enthalten">
-        <li>Round planning, delay messages, visit records and a mileage-fee proposal from day one, even without recordings</li>
-        <li>Unlimited horses, recordings and trends</li>
-        <li>All staff, all devices of the business</li>
-        <li>Team folder for the whole practice: OneDrive, Google Drive, Dropbox or a network drive; every computer with Chrome or Edge sees the same state</li>
-        <li>Measurement report on your own letterhead</li>
+        <li>Round planning, delay messages, visit records and a mileage-fee proposal under § 10 GOT from day one</li>
+        <li>Akte per Sprache, Measurement report on your own letterhead</li>
+        <li>Your owners record free of charge at the measuring station; the recording arrives in the record by itself</li>
+        <li class="tarif-begeistert"><b>Barn round:</b> several horses record 30 minutes each in parallel in their own strap, and you read them all out at the end; long-term recording in the strap with a long-term report as PDF</li>
         <li>Export as JSON, CSV, Kubios and FHIR&nbsp;R5</li>
-        <li>Monthly plan with a 14-day free trial, then cancellable monthly; annual plan at the end of its term</li>
       </ul>
-      <a class="cta-primary tarif-knopf" href="/carlon-equine/app/?kasse=praxis&amp;lang=en">Try 14 days free · then €149 net per month →</a>
+      <a class="cta-primary tarif-knopf" href="/carlon-equine/app/?kasse=praxis&amp;lang=en">Try 14 days · then €149 net per month →</a>
       <a class="tarif-neben" href="/carlon-equine/app/?demo=today&amp;lang=en">Try it first: demo with 15 horses, no account →</a>
     </div>
     <div class="tarif tarif-klinik">
-      <div class="tarif-name">For equine clinics</div>
+      <div class="tarif-name">Practice &amp; clinic · up to 4 veterinarians</div>
       <div class="tarif-preis"><b>€349</b> <span>net per month · €415.31 incl. 19&nbsp;% German VAT</span></div>
-      <div class="tarif-alt">or €3,490 net per year (€4,153.10 incl. VAT)</div>
+      <div class="tarif-alt">Annual payment: 11 monthly fees, €3,839 net (€4,568.41 incl. VAT)</div>
       <ul class="enthalten">
-        <li>Everything in the practice plan</li>
-        <li>Team folder for wards and the wall monitor too, with the same data across the whole clinic</li>
+        <li>Everything in the mobile practice tier</li>
+        <li>Team folder for practice, wards and wall monitor, the same data across the whole clinic</li>
+        <li class="tarif-begeistert"><b>Overnight ward monitor:</b> every horse records in its own strap, the ward wall shows the heart rate without a connection to the strap, and in the morning you read out the complete recording</li>
         <li>Ward display for the monitor on the ward, no alerts</li>
       </ul>
-      <a class="cta-primary tarif-knopf" href="/carlon-equine/app/?kasse=klinik&amp;lang=en">Try 14 days free · then €349 net per month →</a>
+      <a class="cta-primary tarif-knopf" href="/carlon-equine/app/?kasse=klinik&amp;lang=en">Try 14 days · then €349 net per month →</a>
       <a class="tarif-neben" href="/carlon-equine/app/?demo=station&amp;lang=en">See the ward display in the demo →</a>
-      <a class="tarif-neben" href="mailto:jan@vitalkultur.com?subject=CARLON%20Equine%20Visite%20%E2%80%93%20Klinik-Einrichtung">Questions about network drive and setup? jan@vitalkultur.com →</a>
+    </div>
+    <div class="tarif">
+      <div class="tarif-name">Clinic + rehab · up to 6 veterinarians, 40 rehab horses</div>
+      <div class="tarif-preis"><b>590&nbsp;€</b> <span>net per month · €702.10 incl. 19&nbsp;% VAT</span></div>
+      <div class="tarif-alt">Annual payment: 11 monthly fees, €6,490 net (€7,723.10 incl. VAT)</div>
+      <ul class="enthalten">
+        <li>Everything in practice &amp; clinic</li>
+        <li class="tarif-begeistert"><b>Rehab recording on 13 modalities</b> with live heart rate and HRV, session report and progress documentation for the owner, sessions for her CARLON Equine app</li>
+        <li>Several sites: Equine Center, €890 net per site</li>
+      </ul>
+      <a class="cta-primary tarif-knopf" href="/carlon-equine/app/?kasse=kombi&amp;lang=en">Try 14 days · then €590 net per month →</a>
+      <a class="tarif-neben" href="/carlon-equine-visite/reha/">Rehab centre only? Rehab from €349 net, up to 20 horses (German page) →</a>
     </div>
     </div>
     <p class="test-bedingung"><b>Try 14 days free:</b> you enter payment details at the start; nothing is charged today. Cancel within the 14 days under “Manage subscription” and there is no charge; after that the monthly plan runs at the stated price.</p>
