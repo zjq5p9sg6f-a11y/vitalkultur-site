@@ -36,6 +36,8 @@ Older pages under the former name described this app with figures that are no lo
 
 - [CARLON Breathwork](https://vitalkultur.com/breathwork/): breathing practice for Apple Watch and iPhone.
 - [CARLON Equine](https://vitalkultur.com/carlon-equine/): heart rate variability for horses.
+- [CARLON Equine Visite](https://vitalkultur.com/carlon-equine-visite/en/): browser cockpit for equine practices and clinics – resting HRV of patient horses against their own baseline, plus tour planning ([German](https://vitalkultur.com/carlon-equine-visite/)).
+- [CARLON Equine Visite · Reha](https://vitalkultur.com/carlon-equine-visite/reha/) (German): for rehab centres – Polar H10 recording per device stage (water treadmill, treadmill, horse walker, lunge), session report with the centre's letterhead.
 
 ## Policies
 
