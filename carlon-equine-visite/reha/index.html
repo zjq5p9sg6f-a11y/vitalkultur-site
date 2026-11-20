@@ -1106,30 +1106,45 @@ try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; 
 .rx-auf{opacity:0;transform:translateY(22px);transition:opacity .8s ease,transform .8s cubic-bezier(.2,.7,.2,1)}
 .rx-auf.da{opacity:1;transform:none}
 @media (prefers-reduced-motion:reduce){.rx-auf{opacity:1;transform:none;transition:none}}
-.rx-hero{padding-block:clamp(20px,3.5vw,48px) 0!important;text-align:center}
-.rx-hero h1{max-width:22ch;font-size:clamp(32px,4.3vw,56px)!important;line-height:1.08;letter-spacing:-.02em;margin:12px auto 0!important}
-.rx-hero h1 em{display:block;font-style:normal;color:var(--text-secondary);font-size:.5em;line-height:1.3;letter-spacing:0;margin:.6em auto 0;max-width:36ch}
-.rx-hero .hero-sub{max-width:62ch;margin:18px auto 0!important}
-.rx-hero .cta-row{justify-content:center}
-.rx-fakten{list-style:none;margin:20px 0 0;padding:0;display:flex;flex-wrap:wrap;gap:8px 10px;justify-content:center}
-.rx-fakten li{font-size:14px;color:var(--text-secondary);border:1px solid var(--border-subtle);border-radius:999px;padding:6px 12px;background:rgba(255,255,255,.02)}
-.rx-fakten li b{color:var(--text-primary);font-weight:600}
+.rx-hero{padding-block:clamp(26px,4vw,56px) 0!important;text-align:center}
+.rx-hero h1{max-width:16ch;font-size:clamp(40px,6.4vw,84px)!important;line-height:1.02;letter-spacing:-.025em;font-weight:300;margin:14px auto 0!important}
+.rx-hero h1 em{display:block;font-style:normal;color:var(--cyan)}
+.rx-hero .hero-sub{max-width:46ch;margin:22px auto 0!important;font-size:clamp(17px,1.7vw,21px);line-height:1.5;font-weight:300}
+.rx-hero .cta-row{justify-content:center;margin-top:28px}
+.rx-belegzeile{list-style:none;margin:22px 0 0;padding:0;display:flex;flex-wrap:wrap;justify-content:center;gap:8px 12px}
+.rx-belegzeile li{display:inline-flex;align-items:center;gap:8px;font-size:13.5px;color:var(--text-secondary);border:1px solid var(--border-subtle);border-radius:999px;padding:7px 13px}
+.rx-belegzeile .ic{width:16px;height:16px;color:var(--cyan)}
 
-.rx-tablet{position:relative;padding:clamp(6px,.8vw,11px);border-radius:clamp(18px,2.2vw,30px);background:linear-gradient(145deg,#1b1d1f,#060708 40%);
-  box-shadow:0 0 0 1px rgba(255,255,255,.07),0 30px 90px rgba(0,0,0,.6),inset 0 1px 0 rgba(255,255,255,.06)}
-.rx-tablet video,.rx-tablet img{display:block;width:100%;height:auto;border-radius:clamp(12px,1.5vw,20px);background:#000}
+.rx-blick{padding-block:clamp(40px,6vw,80px)!important}
+.rx-blick-l{list-style:none;margin:18px 0 0;padding:0;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));border-top:1px solid var(--border-subtle);border-bottom:1px solid var(--border-subtle)}
+.rx-blick-l li{display:grid;justify-items:center;text-align:center;gap:8px;padding:28px 14px;border-left:1px solid var(--border-subtle)}
+.rx-blick-l li:first-child{border-left:0}
+.rx-blick-l .ic{width:22px;height:22px;color:var(--cyan)}
+.rx-blick-l b{font-size:clamp(30px,3.6vw,46px);font-weight:300;letter-spacing:-.02em;color:var(--text-primary);line-height:1}
+.rx-blick-l span{font-size:13.5px;color:var(--text-dim);max-width:22ch;line-height:1.45}
+@media (max-width:720px){.rx-blick-l{grid-template-columns:repeat(2,minmax(0,1fr))}.rx-blick-l li:nth-child(3){border-left:0}.rx-blick-l li:nth-child(n+3){border-top:1px solid var(--border-subtle)}}
+
+section h2 em{font-style:normal;color:var(--cyan)}
+
+.rx-tablet{position:relative;padding:clamp(7px,1.05vw,13px);border-radius:clamp(20px,2.6vw,34px);background:#020203;
+  box-shadow:0 0 0 1px #2c2f33,0 0 0 2.5px #121315,0 0 0 3.5px rgba(255,255,255,.10),0 60px 120px -50px rgba(0,0,0,.95),0 24px 50px -24px rgba(0,0,0,.7)}
+.rx-tablet::before{content:"";position:absolute;top:calc(clamp(7px,1.05vw,13px) / 2 - 2px);left:50%;width:5px;height:5px;margin-left:-2.5px;border-radius:50%;background:#16181b;box-shadow:inset 0 0 0 1px #2a2d31;z-index:2}
+.rx-tablet video,.rx-tablet img{display:block;width:100%;height:auto;border-radius:clamp(13px,1.7vw,22px);background:#000}
 .rx-blatt{background:#fff;border-radius:10px;overflow:hidden;box-shadow:0 30px 80px rgba(0,0,0,.65),0 0 0 1px rgba(0,0,0,.2)}
 .rx-blatt img{display:block;width:100%;height:auto}
 .rx-marke{display:inline-flex;align-items:center;gap:8px;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--text-secondary);margin-bottom:10px;font-family:var(--font-mono)}
 .rx-marke i{font-style:normal;display:inline-grid;place-items:center;width:20px;height:20px;border-radius:50%;background:var(--cyan);color:#04110e;font-size:11px;font-weight:700}
 
-.rx-buehne{position:relative;margin-top:clamp(30px,4vw,52px);text-align:left;display:grid;grid-template-columns:minmax(0,.78fr) minmax(0,1.22fr);gap:clamp(22px,3.4vw,52px);align-items:center}
-.rx-ipad{padding:clamp(9px,1.1vw,14px);border-radius:clamp(26px,3vw,40px)}
-.rx-ipad video{border-radius:clamp(16px,1.9vw,26px)}
+.rx-buehne{position:relative;margin:clamp(40px,5vw,70px) auto 0;max-width:1040px;display:block;text-align:center}
+.rx-hero-ipad{width:min(560px,78%);margin:0 auto}
+.rx-stapel.rx-hero-blatt{display:block;position:absolute;right:0;bottom:12%;width:min(420px,40%);text-align:left;z-index:3;transition:transform .5s cubic-bezier(.2,.7,.2,1)}
+.rx-stapel.rx-hero-blatt:hover{transform:translateY(-6px)}
+.rx-hero-blatt .rx-blatt{display:block;border-radius:8px;box-shadow:0 40px 90px -30px rgba(0,0,0,.9),0 0 0 1px rgba(0,0,0,.25)}
+.rx-hero-blatt-t{display:block;margin-top:10px;font-size:13px;color:var(--cyan);text-align:right}
 .rx-unter{margin:12px 0 0;font-size:13.5px;color:var(--text-dim);text-align:center}
-
-.rx-quelle{margin-top:22px;font-size:13px;color:var(--text-dim);text-align:center;line-height:1.5}
+.rx-quelle{margin:28px auto 0;max-width:70ch;font-size:13px;color:var(--text-dim);text-align:center;line-height:1.5}
 .rx-quelle b{color:var(--text-secondary);font-weight:600}
+@media (max-width:900px){.rx-stapel.rx-hero-blatt{position:relative;right:auto;bottom:auto;width:min(92%,520px);margin:-60px auto 0}.rx-hero-blatt-t{text-align:center}}
 
 .rx-wisch{display:flex;gap:18px;overflow-x:auto;overscroll-behavior-x:contain;-webkit-overflow-scrolling:touch;scrollbar-width:none;padding:6px 2px 18px;touch-action:pan-x pan-y;user-select:none;-webkit-user-select:none}
 .rx-wisch::-webkit-scrollbar{display:none}
@@ -1139,12 +1154,23 @@ try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; 
 .rx-steuer button:disabled{opacity:.3;cursor:default}
 .rx-punkte{display:flex;gap:7px}.rx-punkte span{width:7px;height:7px;border-radius:50%;background:rgba(255,255,255,.2);transition:background .3s,width .3s}
 .rx-punkte span.an{background:var(--cyan);width:20px;border-radius:4px}
-@media (max-width:760px){
-  .rx-buehne{display:flex;overflow-x:auto;gap:14px;scrollbar-width:none;touch-action:pan-x pan-y;margin-inline:-16px;padding:0 16px 8px}
-  .rx-buehne::-webkit-scrollbar{display:none}
-  .rx-buehne>*{flex:0 0 84%}
-  .rx-buehne>.rx-b1{flex-basis:70%}
-}
+
+.rx-kar{--kw:min(80vw,520px);position:relative;margin-top:clamp(24px,3vw,40px)}
+.rx-kbahn{display:flex!important;align-items:stretch;gap:18px;overflow-x:auto;overflow-y:hidden;scroll-snap-type:x mandatory;padding:8px calc(50vw - var(--kw) / 2) 10px!important;margin-inline:calc(50% - 50vw)!important;scrollbar-width:none;overscroll-behavior-x:contain;-webkit-overflow-scrolling:touch;touch-action:pan-x pan-y}
+.rx-kbahn::-webkit-scrollbar{display:none}.rx-kbahn:focus-visible{outline:none}
+.rx-kdia{flex:0 0 var(--kw)!important;width:var(--kw)!important;scroll-snap-align:center;opacity:.38;transform:scale(.92);transition:opacity .55s cubic-bezier(.2,.7,.2,1),transform .55s cubic-bezier(.2,.7,.2,1);user-select:none;-webkit-user-select:none;-webkit-touch-callout:none}
+.rx-kdia.an{opacity:1;transform:none}
+.rx-ksteuer{display:flex;justify-content:center;align-items:center;gap:18px;margin-top:18px}
+.rx-kpunkte{display:flex;gap:8px}.rx-kpunkte i{width:6px;height:6px;border-radius:3px;background:rgba(235,230,220,.28);transition:width .4s,background .4s;cursor:pointer}
+.rx-kpunkte i.an{width:18px;background:var(--cyan)}
+.rx-kpfeil{width:38px;height:38px;border-radius:50%;border:1px solid var(--border-subtle);background:rgba(235,230,220,.06);color:var(--text-primary);font-size:18px;line-height:1;cursor:pointer;display:none;place-items:center}
+.rx-kpfeil:disabled{opacity:.3;cursor:default}
+@media (hover:hover) and (pointer:fine){.rx-kpfeil{display:grid}}
+@media (prefers-reduced-motion:reduce){.rx-kdia{transition:none}}
+.rx-kar-raster{--kw:min(78vw,340px)}
+@media (min-width:1100px){.rx-kar-raster .rx-kbahn{display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr));overflow:visible;padding:0!important;margin-inline:0!important;scroll-snap-type:none}
+  .rx-kar-raster .rx-kdia{width:auto!important;opacity:1;transform:none}.rx-kar-raster .rx-ksteuer{display:none}}
+.rx-karte.rx-kdia{width:var(--kw)}
 
 .rx-karte{width:min(78vw,440px);border:1px solid var(--border-subtle);border-radius:22px;background:linear-gradient(180deg,rgba(255,255,255,.035),rgba(255,255,255,.01));padding:14px 14px 22px}
 .rx-karte .rx-tablet{margin-bottom:18px}
@@ -1293,63 +1319,73 @@ try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; 
 
 <section class="rx-hero hero" id="oben">
   <div class="wrap">
-    <div class="eyebrow">Für Reha-Zentren und Kliniken mit Reha-Bereich</div>
-    <h1>Das Cockpit zeichnet jede Reha-Einheit Schlag für Schlag auf. <em>Es vergleicht dieselbe Belastungsstufe über die Wochen und gibt den Bericht mit Ihrem Briefkopf aus.</em></h1>
-    <p class="hero-sub">Ein Polar H10 an der Brust des Pferds zeichnet die Herzfrequenz auf. Ihr Team hält Gerät und Einstellung per Fingertipp fest. Nach der Einheit liegt der Sitzungsbericht vor, über die Wochen die Verlaufsdokumentation für die Halterin.</p>
+    <div class="eyebrow">Für Reha-Zentren und Kliniken mit Reha-Bereich · Polar H10</div>
+    <h1>Reha-Fortschritt, <em>Woche für Woche belegt.</em></h1>
+    <p class="hero-sub">Jede Einheit mit Herzfrequenz und Geräteeinstellung dokumentiert. Dieselbe Stufe über die Wochen verglichen, als Bericht mit Ihrem Briefkopf.</p>
     <div class="cta-row">
-      <a class="cta-primary" href="/carlon-equine/app/?demo=roster&amp;pferd=comet&amp;fokus=reha">Demo mit 8 Wochen Reha-Verlauf öffnen →</a>
-      <a class="btn btn-back" href="#berichte">Echten Bericht ansehen ↓</a>
+      <a class="cta-primary" href="/carlon-equine/app/?demo=roster&amp;pferd=comet&amp;fokus=reha">Demo öffnen →</a>
+      <a class="btn btn-back" href="#preis">Ab 349&nbsp;€ netto im Monat ↓</a>
     </div>
-    <ul class="rx-fakten">
-      <li><b>349&nbsp;€</b> netto im Monat</li>
-      <li><b>20</b> Reha-Pferde, <b>6</b> Rechner oder Tablets</li>
-      <li><b>14 Tage</b> testen</li>
-      <li>Chrome oder Edge, ohne Installation</li>
+    <ul class="rx-belegzeile">
+      <li><svg class="ic" aria-hidden="true"><use href="#i-check"/></svg>Sensor an 28 Pferden mit dem EKG verglichen</li>
+      <li><svg class="ic" aria-hidden="true"><use href="#i-gurt"/></svg>Auswertung aus dem Gurtspeicher</li>
+      <li><svg class="ic" aria-hidden="true"><use href="#i-schild"/></svg>Daten bleiben bei Ihnen</li>
     </ul>
-    <figure class="rx-buehne" style="margin-inline:0">
-      <div class="rx-b1 rx-auf"><div class="rx-tablet rx-ipad">
+    <figure class="rx-buehne rx-auf" style="margin-inline:0">
+      <div class="rx-tablet rx-ipad rx-hero-ipad">
         <video src="../assets/reha/rx-hero-v2.mp4" poster="../assets/reha/rx-hero-v2.jpg" width="768" height="1024" muted loop playsinline preload="auto"
           aria-label="Live-Ansicht während der Einheit: Puls in großer Schrift, Stufen Trab, Galopp und Schritt mit Uhrzeit, darunter Puls und HRV"></video></div>
-        <p class="rx-unter">Live am Gerät: Trab, Galopp und Erholung, 10-fach beschleunigt</p></div>
-      <div class="rx-b2 rx-auf"><button class="rx-stapel rx-hero-bericht" data-bericht="echt" aria-label="Echten Sitzungsbericht dieser Aufnahme öffnen">
-        <span class="rx-blaetter"><img src="../assets/reha/berichte/echt-sitzung-s1.jpg" width="1600" height="1131" alt="Seite 1 des Sitzungsberichts: Herzfrequenz Schlag für Schlag über 24 Minuten mit den Stufen Referenz Schritt 74, Trab 152, Galopp 174 und Wiederholung 75 Schläge pro Minute, Datenqualität 98 Prozent"><img src="../assets/reha/berichte/echt-sitzung-s4-klein.jpg" alt=""><img src="../assets/reha/berichte/echt-sitzung-s2-klein.jpg" alt=""></span></button>
-        <p class="rx-unter">Danach der Sitzungsbericht mit Ihrem Briefkopf · antippen zum Öffnen</p></div>
-      <figcaption class="rx-quelle" style="grid-column:1/-1"><b>Eine echte Aufnahme:</b> Rennpferd unter dem Sattel, Polar H10, ausgelesen aus dem Speicher des Gurts. Film und Bericht stammen unverändert aus dem Cockpit.</figcaption>
+      <button class="rx-stapel rx-hero-blatt" data-bericht="echt" aria-label="Echten Sitzungsbericht dieser Aufnahme öffnen">
+        <span class="rx-blatt"><img src="../assets/reha/berichte/echt-sitzung-s1.jpg" width="1600" height="1131" alt="Seite 1 des Sitzungsberichts dieser Einheit: Herzfrequenz Schlag für Schlag unter den Stufen, Datenqualität 98 Prozent"></span>
+        <span class="rx-hero-blatt-t">Sitzungsbericht dieser Einheit · öffnen</span></button>
+      <figcaption class="rx-quelle"><b>Eine echte Aufnahme:</b> Rennpferd unter dem Sattel, Polar H10, aus dem Speicher des Gurts. Film und Bericht unverändert aus dem Cockpit, 10-fach beschleunigt; Pferde- und Betriebsname sind Beispiele.</figcaption>
     </figure>
+  </div>
+</section>
+
+<section class="rx-blick">
+  <div class="wrap">
+    <div class="sec-eyebrow" style="text-align:center">Auf einen Blick</div>
+    <ul class="rx-blick-l">
+      <li><svg class="ic" aria-hidden="true"><use href="#i-signal"/></svg><b>13</b><span>Anwendungen vom Aquatrainer bis zur Solekammer</span></li>
+      <li><svg class="ic" aria-hidden="true"><use href="#i-uhr"/></svg><b>1/1024&nbsp;s</b><span>Zeitauflösung je Schlag, aus dem Gurtspeicher</span></li>
+      <li><svg class="ic" aria-hidden="true"><use href="#i-check"/></svg><b>98&nbsp;%</b><span>gültige Schläge in der gezeigten Einheit</span></li>
+      <li><svg class="ic" aria-hidden="true"><use href="#i-schloss"/></svg><b>0</b><span>Pferde- oder Messdaten auf unseren Servern</span></li>
+    </ul>
   </div>
 </section>
 
 <section id="einheit">
   <div class="wrap">
     <div class="sec-eyebrow">Eine Einheit</div>
-    <h2>Eine Einheit in vier Schritten</h2>
-    <div class="rx-wisch" id="rxAblauf" aria-label="Ablauf einer Reha-Einheit">
-      <article class="rx-karte"><div class="rx-medien"><img src="../assets/reha/rx-k1-akte.jpg" width="1000" height="750" loading="lazy" alt="Akte eines Demo-Pferds: 8 Reha-Sitzungen mit Herzfrequenz bei gleicher Stufe als Verlauf, darunter die 13 Geräte zum Starten einer Einheit"></div>
+    <h2>Vier Handgriffe am Gerät. <em>Der Bericht kommt beim Auslesen.</em></h2>
+    <div class="rx-kar" data-rxk><div class="rx-kbahn" tabindex="0" role="region" aria-roledescription="Karussell" aria-label="Ablauf einer Reha-Einheit">
+      <article class="rx-karte rx-kdia"><div class="rx-medien"><img src="../assets/reha/rx-k1-akte.jpg" width="1000" height="750" loading="lazy" alt="Akte eines Demo-Pferds: 8 Reha-Sitzungen mit Herzfrequenz bei gleicher Stufe als Verlauf, darunter die 13 Geräte zum Starten einer Einheit"></div>
         <div class="rx-nr">01</div><h3>Gerät in der Akte wählen</h3><p>Aus der Akte des Pferds starten Sie die Einheit am passenden Gerät. Das Cockpit verbindet sich mit dem Gurt dieses Pferds und beginnt erst, wenn Live-Übertragung und Gurtspeicher laufen.</p></article>
-      <article class="rx-karte"><div class="rx-medien"><img src="../assets/reha/rx-k2-ruhe.jpg" width="1000" height="750" loading="lazy" alt="Ruhe-Referenz läuft: 33 Schläge pro Minute, noch 4 Minuten 19 Sekunden, Gurtspeicher zeichnet parallel auf"></div>
+      <article class="rx-karte rx-kdia"><div class="rx-medien"><img src="../assets/reha/rx-k2-ruhe.jpg" width="1000" height="750" loading="lazy" alt="Ruhe-Referenz läuft: 33 Schläge pro Minute, noch 4 Minuten 19 Sekunden, Gurtspeicher zeichnet parallel auf"></div>
         <div class="rx-nr">02</div><h3>Fünf Minuten Ruhe als Bezug</h3><p>Das Pferd steht ruhig, das Cockpit zählt die Zeit herunter. Diese Ruhe-Referenz ist der Ausgangspunkt der Einheit.</p></article>
-      <article class="rx-karte"><div class="rx-medien"><img src="../assets/reha/rx-k3-aqua.jpg" width="1000" height="750" loading="lazy" alt="Aquatrainer-Einheit: Wasserhöhe am Bein mit Fessel, Karpus und Ellbogen zur Auswahl, Puls 79, Stufe eingeschwungen (Demo)"></div>
+      <article class="rx-karte rx-kdia"><div class="rx-medien"><img src="../assets/reha/rx-k3-aqua.jpg" width="1000" height="750" loading="lazy" alt="Aquatrainer-Einheit: Wasserhöhe am Bein mit Fessel, Karpus und Ellbogen zur Auswahl, Puls 79, Stufe eingeschwungen (Demo)"></div>
         <div class="rx-nr">03</div><h3>Einstellung antippen oder sagen</h3><p>Am Aquatrainer wählen Sie die Wasserhöhe am Bein, dazu Tempo und Temperatur, mit großen Tasten oder per Sprache. Das Cockpit ordnet jede Stufe dem Herzschlag zu, mit dem sie beginnt.</p></article>
-      <article class="rx-karte"><div class="rx-medien" style="background:#fff"><img src="../assets/reha/rx-k4-bericht.jpg" width="1000" height="750" loading="lazy" alt="Seite 2 des Sitzungsberichts: Tabelle der Stufen mit Beginn, Dauer, Herzfrequenz am Stufenende und Änderung"></div>
+      <article class="rx-karte rx-kdia"><div class="rx-medien" style="background:#fff"><img src="../assets/reha/rx-k4-bericht.jpg" width="1000" height="750" loading="lazy" alt="Seite 2 des Sitzungsberichts: Tabelle der Stufen mit Beginn, Dauer, Herzfrequenz am Stufenende und Änderung"></div>
         <div class="rx-nr">04</div><h3>Bericht beim Auslesen</h3><p>Nach dem Auslesen des Gurtspeichers erstellt das Cockpit den Sitzungsbericht: jede Stufe mit Herzfrequenz am Stufenende, Erholung und Datenqualität.</p></article>
     </div>
-    <div class="rx-steuer" data-fuer="rxAblauf"><button type="button" data-r="-1" aria-label="Zurück">‹</button><div class="rx-punkte"></div><button type="button" data-r="1" aria-label="Weiter">›</button></div>
+    <div class="rx-ksteuer"><button class="rx-kpfeil" type="button" data-r="-1" aria-label="Zurück">‹</button><div class="rx-kpunkte"></div><button class="rx-kpfeil" type="button" data-r="1" aria-label="Weiter">›</button></div></div>
   </div>
 </section>
 
 <section id="live">
   <div class="wrap">
     <div class="sec-eyebrow">Live am Gerät</div>
-    <h2>Was Ihr Team während der Einheit sieht</h2>
+    <h2>Live am Gerät. <em>Mit dem Vergleich zur Vorwoche.</em></h2>
     <div class="rx-live">
       <div class="rx-tablet rx-ipad rx-auf"><video src="../assets/reha/rx-live-v2.mp4" poster="../assets/reha/rx-live-v2.jpg" width="768" height="1024" muted loop playsinline preload="none"
         aria-label="Live-Ansicht zu Beginn der Einheit: Ruhe-Referenz mit Countdown bei 33 Schlägen pro Minute, danach die Stufen Schritt und Trab, 10-fach beschleunigt"></video></div>
       <ol class="rx-punkte-liste">
         <li><i>1</i><div><b>Puls, Aufnahmezeit, Stufenzeit</b><span>Groß oben, dazu der Hinweis, ob sich die Herzfrequenz stabilisiert hat und ob der Gurtspeicher mitläuft.</span></div></li>
-        <li><i>2</i><div><b>Stufen als Liste</b><span>Jede gesetzte Stufe mit Uhrzeit und Einstellung. Eine falsche Marke nehmen Sie mit einem Tipp zurück.</span></div></li>
-        <li><i>3</i><div><b>HRV-Kennwerte</b><span>RMSSD, SDNN, SD1, SD2, DFA&nbsp;α1 und Artefakte der laufenden Stufe. Jeder Wert erklärt sich beim Antippen. In Bewegung dienen sie der Orientierung, ausgewertet wird die Ruhe-Referenz.</span></div></li>
+        <li><i>2</i><div><b>Stufe im Vergleich</b><span>Läuft eine Stufe drei Minuten, zeigt das Cockpit ihre Herzfrequenz neben allen früheren Einheiten dieses Pferds mit derselben Einstellung.</span></div></li>
+        <li><i>3</i><div><b>Stufen als Liste</b><span>Jede gesetzte Stufe mit Uhrzeit und Einstellung. Eine falsche Marke nehmen Sie mit einem Tipp zurück.</span></div></li>
         <li><i>4</i><div><b>Puls- und HRV-Kurve</b><span>Die letzten 10 Minuten mit den Stufenmarken, darunter Poincaré der ganzen Sitzung mit Zeitregler.</span></div></li>
-        <li><i>5</i><div><b>Stufe im Vergleich</b><span>Läuft eine Stufe drei Minuten, zeigt das Cockpit ihre Herzfrequenz neben allen früheren Einheiten dieses Pferds mit derselben Einstellung.</span></div></li>
+        <li><i>5</i><div><b>HRV-Kennwerte</b><span>RMSSD, SDNN, SD1, SD2, DFA&nbsp;α1 und Artefakte der laufenden Stufe. Jeder Wert erklärt sich beim Antippen. In Bewegung dienen sie der Orientierung, ausgewertet wird die Ruhe-Referenz.</span></div></li>
       </ol>
     </div>
     <div class="rx-zwei">
@@ -1367,12 +1403,12 @@ try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; 
 <section id="berichte">
   <div class="wrap">
     <div class="sec-eyebrow">Berichte</div>
-    <h2>Für Ihre Akte, die Halterin und den Haustierarzt</h2>
+    <h2>Ein Bericht für die Akte. <em>Einer für die Halterin.</em></h2>
     <div class="rx-stapel-reihe">
       <button class="rx-stapel rx-bk rx-auf" data-bericht="echt"><span class="rx-wem">Für Ihre Akte</span>
         <span class="rx-cover"><img src="../assets/reha/rx-cover-sitzung.jpg" width="900" height="291" alt="Ausschnitt Sitzungsbericht: Herzfrequenz unter den Stufen Ruhe, 1 bis 4" loading="lazy"></span>
         <span class="rx-etikett echt">Echte Aufnahme</span><span class="rx-stapel-t">Sitzungsbericht · eine Einheit</span>
-        <span class="rx-stapel-w">Herzfrequenz unter jeder Stufe, Tabelle der Stufen, Erholung, Poincaré nach Uhrzeit, Datenqualität und Herkunft.</span><span class="rx-stapel-k">5 Seiten ansehen →</span></button>
+        <span class="rx-stapel-w">Herzfrequenz unter jeder Stufe, Tabelle der Stufen, Erholung, Poincaré nach Uhrzeit, Datenqualität und Herkunft. Echte Aufnahme, Namen sind Beispiele.</span><span class="rx-stapel-k">5 Seiten ansehen →</span></button>
       <button class="rx-stapel rx-bk rx-auf" data-bericht="verlauf"><span class="rx-wem">Für die Halterin</span>
         <span class="rx-cover"><img src="../assets/reha/rx-cover-verlauf.jpg" width="900" height="394" alt="Ausschnitt Verlaufsdokumentation: Kernsatz Gleiche Einstellung, rund 7 Schläge pro Minute weniger" loading="lazy"></span>
         <span class="rx-etikett demo">Muster mit Demo-Daten</span><span class="rx-stapel-t">Reha-Verlaufsdokumentation · Nachweis</span>
@@ -1388,7 +1424,7 @@ try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; 
 <section id="verlauf">
   <div class="wrap">
     <div class="sec-eyebrow">Belastungsverlauf</div>
-    <h2>Acht Wochen Belastungsaufbau, lückenlos dokumentiert</h2>
+    <h2>Acht Wochen Reha. <em>Belastung und Puls in einem Verlauf.</em></h2>
     <p class="sec-lead">So sieht die Dokumentation aus, wenn ein Pferd Woche für Woche am selben Gerät arbeitet. Die Ausschnitte stammen aus der Verlaufsdokumentation des Cockpits, hier mit den Demo-Daten des Pferds Comet.</p>
     <div class="rx-vl">
       <ol class="rx-vl-schritte">
@@ -1413,13 +1449,14 @@ try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; 
 <section id="nacharbeit">
   <div class="wrap">
     <div class="sec-eyebrow">Ohne Nacharbeit</div>
-    <h2>Was nach der Einheit nicht mehr anfällt</h2>
-    <div class="rx-proz">
-      <div class="rx-pz rx-auf"><div class="rx-pz-bild dunkel"><img src="../assets/reha/rx-k2-ruhe.jpg" alt="" loading="lazy"></div><div class="rx-pz-txt"><s>Mitschreiben am Gerät</s><b>Stufen werden während der Arbeit erfasst</b><span>mit Uhrzeit, auf den Herzschlag genau</span></div></div>
-      <div class="rx-pz rx-auf"><div class="rx-pz-bild"><img src="../assets/reha/rx-cover-sitzung.jpg" alt="" loading="lazy"></div><div class="rx-pz-txt"><s>Werte abtippen, Diagramm erstellen</s><b>Der Bericht entsteht beim Auslesen</b><span>mit Ihrem Briefkopf, als PDF</span></div></div>
-      <div class="rx-pz rx-auf"><div class="rx-pz-bild"><img src="../assets/reha/rx-cover-verlauf.jpg" alt="" loading="lazy"></div><div class="rx-pz-txt"><s>Den Verlauf der Halterin erklären</s><b>Sie nimmt ihn schriftlich mit</b><span>in Alltagssprache, mit Feld für Ihre Einordnung</span></div></div>
-      <div class="rx-pz rx-auf"><div class="rx-pz-bild dunkel"><img src="../assets/reha/rx-k1-akte.jpg" alt="" loading="lazy"></div><div class="rx-pz-txt"><s>Einheiten in Ordnern suchen</s><b>Alle Einheiten in der Akte des Pferds</b><span>mit Verlauf bei gleicher Stufe</span></div></div>
+    <h2>Kein Zettel am Gerät. <em>Kein Abtippen danach.</em></h2>
+    <div class="rx-kar rx-kar-raster" data-rxk><div class="rx-kbahn rx-proz" tabindex="0" role="region" aria-roledescription="Karussell" aria-label="Was nicht mehr anfällt">
+      <div class="rx-pz rx-kdia"><div class="rx-pz-bild dunkel"><img src="../assets/reha/rx-k2-ruhe.jpg" alt="" loading="lazy"></div><div class="rx-pz-txt"><s>Mitschreiben am Gerät</s><b>Stufen werden während der Arbeit erfasst</b><span>mit Uhrzeit, auf den Herzschlag genau</span></div></div>
+      <div class="rx-pz rx-kdia"><div class="rx-pz-bild"><img src="../assets/reha/rx-cover-sitzung.jpg" alt="" loading="lazy"></div><div class="rx-pz-txt"><s>Werte abtippen, Diagramm erstellen</s><b>Der Bericht entsteht beim Auslesen</b><span>mit Ihrem Briefkopf, als PDF</span></div></div>
+      <div class="rx-pz rx-kdia"><div class="rx-pz-bild"><img src="../assets/reha/rx-cover-verlauf.jpg" alt="" loading="lazy"></div><div class="rx-pz-txt"><s>Den Verlauf der Halterin erklären</s><b>Sie nimmt ihn schriftlich mit</b><span>in Alltagssprache, mit Feld für Ihre Einordnung</span></div></div>
+      <div class="rx-pz rx-kdia"><div class="rx-pz-bild dunkel"><img src="../assets/reha/rx-k1-akte.jpg" alt="" loading="lazy"></div><div class="rx-pz-txt"><s>Einheiten in Ordnern suchen</s><b>Alle Einheiten in der Akte des Pferds</b><span>mit Verlauf bei gleicher Stufe</span></div></div>
     </div>
+    <div class="rx-ksteuer"><button class="rx-kpfeil" type="button" data-r="-1" aria-label="Zurück">‹</button><div class="rx-kpunkte"></div><button class="rx-kpfeil" type="button" data-r="1" aria-label="Weiter">›</button></div></div>
   </div>
 </section>
 
@@ -1432,7 +1469,7 @@ try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; 
 <section id="gurtspeicher">
   <div class="wrap">
     <div class="sec-eyebrow">Gurtspeicher · Polar H10</div>
-    <h2>Der Gurt speichert jede Einheit selbst</h2>
+    <h2>Das Stahlgehäuse stört den Funk. <em>Der Gurt zeichnet weiter auf.</em></h2>
     <div class="rx-speicher">
       <div>
         <p>Ein Aquatrainer hat meist ein Gehäuse aus Stahl. Es schirmt die Funkverbindung zwischen dem Gurt am Pferd und dem Tablet draußen ab. <b>Der Polar H10 zeichnet deshalb jede Einheit zusätzlich im eigenen Speicher auf.</b></p>
@@ -1463,7 +1500,7 @@ try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; 
         <ul class="gurt-liste">
           <li class="mit-ic"><svg class="ic li-ic" aria-hidden="true"><use href="#i-ekg"/></svg><b>Elektrisch gemessen.</b> Jeder Schlagabstand mit rund 1&nbsp;ms Auflösung (1/1024&nbsp;s). Optische Sensoren schätzen ihn dagegen aus Licht.</li>
           <li class="mit-ic"><svg class="ic li-ic" aria-hidden="true"><use href="#i-gurt"/></svg><b>An der Brust des Pferds.</b> Der Equine-Gurt ist auf den Brustumfang ausgelegt; Elektrodengel auf dem Fell verbessert in der Regel den Kontakt.</li>
-          <li class="mit-ic"><svg class="ic li-ic" aria-hidden="true"><use href="#i-check"/></svg><b>Mit dem EKG verglichen.</b> Bei 28 Pferden stimmten Herzfrequenz und zeitbasierte HRV-Werte eines Polar-H10-Systems in Ruhe und bei Bodenarbeit mit dem EKG überein (<a href="https://doi.org/10.3389/fvets.2022.939534" target="_blank" rel="noopener">Kapteijn et&nbsp;al. 2022</a>; dort mit Hylofit-Elektroden, Polar-M430-Empfänger und nach Artefaktkorrektur in Kubios).</li>
+          <li class="mit-ic"><svg class="ic li-ic" aria-hidden="true"><use href="#i-check"/></svg><b>Mit dem EKG verglichen.</b> Bei 28 Pferden zeigte ein Polar-H10-System in Ruhe und bei Bodenarbeit gute Übereinstimmung mit dem EKG bei Herzfrequenz und zeitbasierten HRV-Werten (<a href="https://doi.org/10.3389/fvets.2022.939534" target="_blank" rel="noopener">Kapteijn et&nbsp;al. 2022</a>; dort mit Hylofit-Elektroden, Polar-M430-Empfänger und nach Artefaktkorrektur in Kubios).</li>
           <li class="mit-ic"><svg class="ic li-ic" aria-hidden="true"><use href="#i-tasche"/></svg><b>Frei erhältlich.</b> Gurt und Sensor kaufen Sie im Fachhandel, ein Gurt je Pferd, das gleichzeitig in Reha steht.</li>
         </ul>
       </figcaption>
@@ -1474,24 +1511,25 @@ try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; 
 <section id="rollen">
   <div class="wrap">
     <div class="sec-eyebrow">Nutzen je Rolle</div>
-    <h2>Was Leitung, Tierärztin, Team und Halterin davon haben</h2>
-    <div class="rx-rollen">
-      <article class="rx-rolle rx-auf"><div class="rx-bild"><img src="../assets/reha/berichte/echt-sitzung-s1-klein.jpg" alt="Sitzungsbericht mit Briefkopf" loading="lazy"></div>
+    <h2>Ein Ablauf. <em>Vier Rollen, die davon profitieren.</em></h2>
+    <div class="rx-kar rx-kar-raster" data-rxk><div class="rx-kbahn rx-rollen" tabindex="0" role="region" aria-roledescription="Karussell" aria-label="Nutzen je Rolle">
+      <article class="rx-rolle rx-kdia"><div class="rx-bild"><img src="../assets/reha/berichte/echt-sitzung-s1-klein.jpg" alt="Sitzungsbericht mit Briefkopf" loading="lazy"></div>
         <div class="rx-txt"><div class="rx-wer">Leitung</div><h3>Jede Einheit belegt, mit Ihrem Namen oben</h3><p>Der Bericht zeigt der Halterin, was in der Reha geschieht. Er steht in der Akte, wenn jemand nachfragt.</p></div></article>
-      <article class="rx-rolle rx-auf"><div class="rx-bild dunkel"><img src="../assets/reha/akte-reha-v1.jpg" alt="Akte eines Demo-Pferds mit Reha-Verlauf über die Einheiten" loading="lazy"></div>
+      <article class="rx-rolle rx-kdia"><div class="rx-bild dunkel"><img src="../assets/reha/akte-reha-v1.jpg" alt="Akte eines Demo-Pferds mit Reha-Verlauf über die Einheiten" loading="lazy"></div>
         <div class="rx-txt"><div class="rx-wer">Tierärztin, Tierarzt</div><h3>Dieselbe Stufe über die Wochen</h3><p>Sie sehen je Einheit die Herzfrequenz am Ende der Vergleichsstufe, also derselben Einstellung wie in den Vorwochen, dazu Erholung und Datenqualität. Die Beurteilung bleibt bei Ihnen.</p></div></article>
-      <article class="rx-rolle rx-auf"><div class="rx-bild dunkel"><img src="../assets/reha/rx-tafel-v1.jpg" alt="Live-Tafel mit großen Tasten für die Stufen" loading="lazy"></div>
+      <article class="rx-rolle rx-kdia"><div class="rx-bild dunkel"><img src="../assets/reha/rx-tafel-v1.jpg" alt="Live-Tafel mit großen Tasten für die Stufen" loading="lazy"></div>
         <div class="rx-txt"><div class="rx-wer">Team am Gerät</div><h3>Eingabe über große Tasten oder per Sprache</h3><p>Kein Formular nach der Einheit. Was am Gerät eingestellt war, ist schon während der Arbeit festgehalten.</p></div></article>
-      <article class="rx-rolle rx-auf"><div class="rx-bild"><img src="../assets/reha/berichte/verlauf-1.jpg" alt="Verlaufsdokumentation für die Halterin (Demo)" loading="lazy"></div>
+      <article class="rx-rolle rx-kdia"><div class="rx-bild"><img src="../assets/reha/berichte/verlauf-1.jpg" alt="Verlaufsdokumentation für die Halterin (Demo)" loading="lazy"></div>
         <div class="rx-txt"><div class="rx-wer">Halterin</div><h3>Der Verlauf in Alltagssprache</h3><p>Sie nimmt die Verlaufsdokumentation mit und kann die Einheiten in ihre CARLON-Equine-App übernehmen.</p></div></article>
     </div>
+    <div class="rx-ksteuer"><button class="rx-kpfeil" type="button" data-r="-1" aria-label="Zurück">‹</button><div class="rx-kpunkte"></div><button class="rx-kpfeil" type="button" data-r="1" aria-label="Weiter">›</button></div></div>
   </div>
 </section>
 
 <section id="anwendungen">
   <div class="wrap">
     <div class="sec-eyebrow">13 Anwendungen</div>
-    <h2>Für die Geräte und Übungen in Ihrem Betrieb</h2>
+    <h2>13 Anwendungen. <em>Vom Aquatrainer bis zur Solekammer.</em></h2>
     <p class="sec-lead">Bei den sieben Bewegungsanwendungen vergleicht der Bericht Stufen über die Wochen. Bei den übrigen hält er Puls und Einstellung fest.</p>
     <ul class="rx-geraete rx-auf">
       <li class="rx-haupt"><svg class="rx-gi" viewBox="0 0 120 72" aria-hidden="true"><defs><linearGradient id="rxW" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3ECFB2" stop-opacity=".55"/><stop offset="1" stop-color="#3ECFB2" stop-opacity=".08"/></linearGradient><radialGradient id="rxL" cx=".5" cy="0" r="1"><stop offset="0" stop-color="#F2C46B" stop-opacity=".55"/><stop offset="1" stop-color="#F2C46B" stop-opacity="0"/></radialGradient></defs><rect x="14" y="10" width="92" height="50" rx="6" class="f0"/><path class="rx-a-welle" d="M16 30c6-4 12-4 18 0s12 4 18 0 12-4 18 0 12 4 18 0 12-4 18 0v28H16z" fill="url(#rxW)" stroke="none"/><path class="rx-a-welle" d="M16 30c6-4 12-4 18 0s12 4 18 0 12-4 18 0 12 4 18 0 12-4 18 0"/><rect x="14" y="10" width="92" height="50" rx="6"/><path d="M60 10v50" class="d"/><rect x="22" y="50" width="76" height="6" rx="3"/><path class="rx-a-band" d="M26 53h68" stroke-dasharray="3 4"/></svg><b>Aquatrainer</b><span>Tempo, Wasserhöhe am Bein, Temperatur, Steigung</span></li>
@@ -1514,11 +1552,11 @@ try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; 
 <section id="nachweise">
   <div class="wrap">
     <div class="sec-eyebrow">Nachweise</div>
-    <h2>Eigene Prüfungen und eine Studie</h2>
+    <h2>Geprüft. <em>Mit Zahlen und einer Studie.</em></h2>
     <div class="rx-zahlen">
-      <div class="rx-zahl rx-auf"><div class="rx-gross">1.365<small>von 1.365</small></div><p>live empfangenen Schlägen standen in gleicher Reihenfolge im Gurtspeicher. 10 Prüfzyklen mit Auslesen und Gegenlesen.</p><span class="rx-q">Eigene Prüfung, Gurt am Menschen getragen</span></div>
       <div class="rx-zahl rx-auf"><div class="rx-gross">98<small>%</small></div><p>gültige Schläge in der gezeigten Einheit am Rennpferd, mit Galopp über 2.000&nbsp;m, aus dem Gurtspeicher.</p><span class="rx-q">Sitzungsbericht oben, 2.359 Schläge</span></div>
-      <div class="rx-zahl rx-auf"><div class="rx-gross">28<small>Pferde</small></div><p>Polar H10 mit Hylofit-Elektroden und Polar-M430-Empfänger im Vergleich zum Telemetrie-EKG, in Ruhe und bei Bodenarbeit: Herzfrequenz, SDNN und RMSSD stimmten nach Artefaktkorrektur in Kubios überein.</p><span class="rx-q">Kapteijn et al. 2022, Front. Vet. Sci., doi:10.3389/fvets.2022.939534</span></div>
+      <div class="rx-zahl rx-auf"><div class="rx-gross">28<small>Pferde</small></div><p>Polar H10 mit Hylofit-Elektroden und Polar-M430-Empfänger im Vergleich zum Telemetrie-EKG, in Ruhe und bei Bodenarbeit: gute Übereinstimmung bei Herzfrequenz, SDNN und RMSSD nach Artefaktkorrektur in Kubios.</p><span class="rx-q">Kapteijn et al. 2022, Front. Vet. Sci., doi:10.3389/fvets.2022.939534</span></div>
+      <div class="rx-zahl rx-auf"><div class="rx-gross">1.365<small>von 1.365</small></div><p>live empfangenen Schlägen standen in gleicher Reihenfolge im Gurtspeicher. 10 Prüfzyklen mit Auslesen und Gegenlesen.</p><span class="rx-q">Eigene Prüfung, Gurt am Menschen getragen</span></div>
     </div>
     <p class="rx-grenze"><b>Einordnung:</b> Die Software stellt keine Diagnose und ist nach unserer Einordnung kein Medizinprodukt im Sinne der Verordnung (EU) 2017/745. Befund und Beurteilung stammen von der Tierärztin oder dem Tierarzt; den Zustand von Sehne und Gelenk beurteilen Ultraschall und Lahmheitsuntersuchung. Die Auswertung im Browser wird bei jeder Änderung mit der CARLON-Equine-App abgeglichen.</p>
   </div>
@@ -1527,13 +1565,14 @@ try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; 
 <section id="preis">
   <div class="wrap">
     <div class="sec-eyebrow">Preise</div>
-    <h2>Ein fester Monatspreis je Stufe</h2>
+    <h2>349&nbsp;€ im Monat. <em>Für bis zu 20 Reha-Pferde.</em></h2>
     <p class="sec-lead">Ein Abo gilt für einen Standort. Gezählt werden Rechner, Tablets und Telefone mit freigeschaltetem Cockpit, nicht Ihre Reha-Geräte. Als Reha-Pferd zählt ein Pferd mit mindestens einer Einheit in den letzten 30 Tagen. Bei 20 Reha-Pferden sind 349&nbsp;€ rechnerisch 17,45&nbsp;€ netto je Pferd und Monat.</p>
     <div class="tarife-grid tarife-drei m-wisch">
       <div class="tarif">
-        <div class="tarif-name">Reha · bis 20 Reha-Pferde · 6 Geräte</div>
+        <div class="tarif-name">Reha · bis 20 Reha-Pferde · 6 Rechner oder Tablets</div>
         <div class="tarif-preis"><b>349&nbsp;€</b> <span>netto im Monat · 415,31&nbsp;€ inkl. 19&nbsp;% USt.</span></div>
         <div class="tarif-alt">Jährliche Zahlung: 11 Monatsbeiträge, 3.839&nbsp;€ netto (4.568,41&nbsp;€ inkl. USt.)</div>
+        <div class="tarif-alt">Dazu je Pferd in Reha ein Polar H10 mit Pferdegurt aus dem Fachhandel</div>
         <ul class="enthalten">
           <li>Reha-Aufnahme an 13 Anwendungen mit Live-Puls und HRV-Kennwerten</li>
           <li>Auswertung aus dem Gurtspeicher</li>
@@ -1544,7 +1583,7 @@ try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; 
         <a class="cta-primary tarif-knopf" href="/carlon-equine/app/?kasse=reha">14 Tage testen · danach 349&nbsp;€ netto im Monat →</a>
       </div>
       <div class="tarif tarif-klinik">
-        <div class="tarif-name">Klinik + Reha · bis 40 Reha-Pferde · 8 Geräte</div>
+        <div class="tarif-name">Klinik + Reha · bis 40 Reha-Pferde · 8 Rechner oder Tablets</div>
         <div class="tarif-preis"><b>590&nbsp;€</b> <span>netto im Monat · 702,10&nbsp;€ inkl. 19&nbsp;% USt.</span></div>
         <div class="tarif-alt">Jährliche Zahlung: 11 Monatsbeiträge, 6.490&nbsp;€ netto (7.723,10&nbsp;€ inkl. USt.)</div>
         <ul class="enthalten">
@@ -1560,7 +1599,7 @@ try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; 
         <div class="tarif-alt">Jährliche Zahlung: 11 Monatsbeiträge, 9.790&nbsp;€ netto (11.650,10&nbsp;€ inkl. USt.)</div>
         <ul class="enthalten">
           <li>Alles aus Klinik + Reha</li>
-          <li>Reha-Pferde, Geräte, Tierärztinnen und Tierärzte ohne Obergrenze</li>
+          <li>Reha-Pferde, Rechner und Tablets, Tierärztinnen und Tierärzte ohne Obergrenze</li>
         </ul>
         <a class="cta-primary tarif-knopf" href="/carlon-equine/app/?kasse=center">14 Tage testen · danach 890&nbsp;€ netto im Monat →</a>
       </div>
@@ -1574,7 +1613,7 @@ try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; 
 <section id="fragen">
   <div class="wrap">
     <div class="sec-eyebrow">Häufige Fragen</div>
-    <h2>Fragen aus dem Reha-Alltag</h2>
+    <h2>Fragen aus dem Reha-Alltag.</h2>
     <div class="faq-liste">
       <details class="faq-item"><summary><h3>Was brauchen wir?</h3></summary>
         <div class="faq-a"><p>Je Pferd, das gleichzeitig in Reha steht, einen Polar-H10-Sensor mit Pferdegurt aus dem Fachhandel; der Gurt liegt an der Brust des Pferds. Dazu ein Android-Tablet oder einen Rechner mit Chrome oder Edge. Auf iPhone und iPad lässt Apple Bluetooth im Browser nicht zu; dort sehen Sie Demo und Berichte an.</p></div></details>
@@ -1597,7 +1636,7 @@ try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; 
 <section class="final">
   <div class="wrap">
     <div class="sec-eyebrow">Vor der Entscheidung</div>
-    <h2>Öffnen Sie den Reha-Verlauf über 8 Wochen, ohne Konto</h2>
+    <h2>Sehen Sie es selbst. <em>Acht Wochen Reha in der Demo.</em></h2>
     <p class="sec-lead">Das Demo-Cockpit zeigt alle Funktionen. Öffnen Sie die Akte von Comet, erstellen Sie Sitzungsbericht und Verlaufsdokumentation, und starten Sie mit Ihrem eigenen Gurt eine Reha-Aufnahme. Eigene Pferde anlegen und dauerhaft führen Sie mit dem Abo.</p>
     <div class="cta-row"><a class="cta-primary" href="/carlon-equine/app/?demo=roster&amp;pferd=comet&amp;fokus=reha">Demo öffnen →</a><a class="btn btn-back" href="/carlon-equine/app/?kasse=reha">14 Tage testen · danach 349&nbsp;€ netto im Monat →</a></div>
     <p class="rx-kontakt">Fragen vorab beantwortet <b>Jan Rohwedder</b>, Vitalkultur, per E-Mail an <a href="mailto:jan@vitalkultur.com">jan@vitalkultur.com</a>. Die Antwort kommt meist am selben Tag.</p>
@@ -1637,8 +1676,23 @@ try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; 
     if('IntersectionObserver' in window){ new IntersectionObserver(function(es){ sicht=es[0].isIntersecting; lauf(); },{threshold:.35}).observe(V); }
     if(ruhig) V.classList.add('halt'); })();
   
+  [].slice.call(document.querySelectorAll('[data-rxk]')).forEach(function(k){
+    var bahn=k.querySelector('.rx-kbahn'), dias=[].slice.call(bahn.children), punkte=k.querySelector('.rx-kpunkte'), pf=k.querySelectorAll('.rx-kpfeil'), aktiv=-1;
+    dias.forEach(function(x,j){ var i=document.createElement('i'); i.addEventListener('click',function(){ zu(j); }); punkte.appendChild(i); });
+    function setze(i){ if(i===aktiv) return; aktiv=i; dias.forEach(function(d,j){ d.classList.toggle('an',j===i); punkte.children[j].classList.toggle('an',j===i); });
+      if(pf.length){ pf[0].disabled=i===0; pf[1].disabled=i===dias.length-1; }
+      dias.forEach(function(d,j){ var v=d.querySelector('video'); if(v){ if(j===i){ var p=v.play(); if(p&&p.catch) p.catch(function(){}); } else v.pause(); } }); }
+    function mitte(){ var m=bahn.scrollLeft+bahn.clientWidth/2, best=0, dd=1e9; dias.forEach(function(x,j){ var c=x.offsetLeft+x.offsetWidth/2, a=Math.abs(c-m); if(a<dd){ dd=a; best=j; } }); setze(best); }
+    var rq=0; bahn.addEventListener('scroll',function(){ if(!rq) rq=requestAnimationFrame(function(){ rq=0; mitte(); }); },{passive:true});
+    var bm=innerWidth; addEventListener('resize',function(){ if(innerWidth===bm) return; bm=innerWidth; mitte(); });
+    function zu(i){ var x=dias[Math.max(0,Math.min(dias.length-1,i))]; bahn.scrollTo({left:x.offsetLeft+x.offsetWidth/2-bahn.clientWidth/2,behavior:ruhig?'auto':'smooth'}); }
+    pf.forEach(function(b){ b.addEventListener('click',function(){ zu(aktiv+Number(b.dataset.r)); }); });
+    dias.forEach(function(d,j){ d.addEventListener('click',function(e){ if(j!==aktiv&&getComputedStyle(bahn).display==='flex'){ e.preventDefault(); zu(j); } }); });
+    bahn.addEventListener('keydown',function(e){ if(e.key==='ArrowRight'||e.key==='ArrowLeft'){ e.preventDefault(); zu(aktiv+(e.key==='ArrowRight'?1:-1)); } });
+    mitte(); if(document.fonts&&document.fonts.ready) document.fonts.ready.then(mitte); });
+  
   var B={
-    echt:{t:'Sitzungsbericht · Rennpferd, echte Aufnahme · 5 Seiten',pdf:'../assets/reha/berichte/echt-sitzungsbericht-rennpferd.pdf',s:[1,2,3,4,5].map(function(i){return '../assets/reha/berichte/echt-sitzung-s'+i+'.jpg';})},
+    echt:{t:'Sitzungsbericht · echte Aufnahme eines Rennpferds · 5 Seiten',pdf:'../assets/reha/berichte/echt-sitzungsbericht-rennpferd.pdf',s:[1,2,3,4,5].map(function(i){return '../assets/reha/berichte/echt-sitzung-s'+i+'.jpg';})},
     verlauf:{t:'Reha-Verlaufsdokumentation · Muster mit Demo-Daten · 2 Seiten',pdf:'../assets/reha/berichte/reha-verlaufsdokumentation-comet.pdf',s:['../assets/reha/berichte/verlauf-1.jpg','../assets/reha/berichte/verlauf-2.jpg']},
     nacht:{t:'Nacht auf Station · Muster mit Demo-Daten · 4 Seiten',pdf:'../assets/muster/langzeit-nacht-station.pdf',s:[1,2,3,4].map(function(i){return '../assets/reha/berichte/nacht-'+i+'.jpg';})}
   };
