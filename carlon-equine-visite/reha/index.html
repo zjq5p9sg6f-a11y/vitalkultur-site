@@ -1247,6 +1247,18 @@ section h2 em{font-style:normal;color:var(--cyan)}
 .rx-vl-buehne .rx-quelle{grid-area:2/1;margin-top:14px}
 .rx-link{all:unset;cursor:pointer;color:var(--cyan);border-bottom:1px solid rgba(62,207,178,.4)}
 
+.rx-pz-buehne{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,.85fr);gap:clamp(22px,3.5vw,52px);align-items:center;margin-top:clamp(26px,3.5vw,44px)}
+@media (max-width:860px){.rx-pz-buehne{grid-template-columns:1fr}}
+.rx-pz-tab{background:#020203}
+.rx-pz-tab .pz{margin:0;background:#000;border-radius:clamp(13px,1.7vw,22px);padding:clamp(10px,1.4vw,18px)}
+.rx-pz-txt p{color:var(--text-secondary);font-size:16px;line-height:1.6;margin:0 0 12px}
+.rx-haken{list-style:none;margin:0 0 14px;padding:0;display:grid;gap:8px}
+.rx-haken li{position:relative;padding-left:22px;color:var(--text-secondary);font-size:15px;line-height:1.5}
+.rx-haken li::before{content:"";position:absolute;left:2px;top:.55em;width:8px;height:8px;border-radius:50%;background:var(--cyan)}
+.rx-gal{margin:0}.rx-gal .rx-blatt img{width:100%;height:auto;display:block}
+.rx-gal figcaption{margin-top:12px;display:grid;gap:3px}.rx-gal figcaption b{color:var(--text-primary);font-size:16px}.rx-gal figcaption span{color:var(--text-secondary);font-size:14px;line-height:1.45}
+.rx-spektrum .rx-kar{--kw:min(84vw,620px)}
+
 .rx-bk{border:1px solid var(--border-subtle);border-radius:20px;padding:16px 16px 20px;background:rgba(255,255,255,.02);transition:transform .3s,border-color .3s}
 .rx-bk:hover,.rx-bk:focus-visible{transform:translateY(-4px);border-color:rgba(62,207,178,.45)}
 .rx-wem{display:block;font-family:var(--font-mono);font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--cyan);margin-bottom:12px}
@@ -1369,6 +1381,33 @@ section h2 em{font-style:normal;color:var(--cyan)}
 .rx-ww-k i{font-style:normal;color:var(--cyan);font-size:12.5px;margin-top:4px}
 .rx-ww-hier{border-color:rgba(62,207,178,.55);background:rgba(62,207,178,.06)}
 </style>
+<section id="grafiken" class="rx-spektrum">
+  <div class="wrap">
+    <div class="sec-eyebrow">Eine Einheit, alle Ansichten</div>
+    <h2>Jeder Schlag ein Punkt. <em>Spulen Sie die Einheit selbst zurück.</em></h2>
+    <div class="rx-pz-buehne">
+      <div class="rx-tablet rx-ipad rx-pz-tab"><figure class="pz" data-quelle="/carlon-equine/app/belege/poincare-fuehranlage.json" data-lang="de"></figure></div>
+      <div class="rx-pz-txt">
+        <p>Das ist der Poincaré-Baustein aus dem Cockpit, hier mit den 1.162 Schlägen von Nordwind in der Führanlage. Jeder Punkt ist ein Schlagpaar, die Ellipse aus SD1 und SD2 gilt für das gewählte Zeitfenster.</p>
+        <ul class="rx-haken">
+          <li>Ziehen Sie den Zeitregler vor und zurück.</li>
+          <li>Tippen Sie auf einen Punkt: Das Fadenkreuz nennt Schlag, Zeitpunkt und beide Abstände in Millisekunden.</li>
+          <li>Im Cockpit gibt es dieselbe Ansicht für jede Einheit, live und im Bericht.</li>
+        </ul>
+        <p class="rx-quelle" style="text-align:left;margin:0">Echte Aufnahme aus dem Gurtspeicher, Polar H10, 25 Minuten Führanlage.</p>
+      </div>
+    </div>
+    <div class="rx-kar" data-rxk><div class="rx-kbahn" tabindex="0" role="region" aria-roledescription="Karussell" aria-label="Weitere Ansichten einer Einheit">
+      <figure class="rx-gal rx-kdia"><div class="rx-blatt"><img src="../assets/reha/berichte/fuehr-sitzung-s2.jpg" width="1600" height="1131" loading="lazy" alt="Sitzungsbericht Seite 2: Tabelle der Stufen mit Herzfrequenz am Stufenende und Erholungskurve"></div><figcaption><b>Stufen und Erholung</b><span>Herzfrequenz am Ende jeder Stufe, Erholungskurve mit Zeitkonstante</span></figcaption></figure>
+      <figure class="rx-gal rx-kdia"><div class="rx-blatt"><img src="../assets/reha/berichte/fuehr-sitzung-s4.jpg" width="1600" height="1131" loading="lazy" alt="Sitzungsbericht Seite 4: Poincaré der ganzen Einheit, nach Uhrzeit eingefärbt, und je Stufe"></div><figcaption><b>Poincaré nach Uhrzeit</b><span>Die ganze Einheit farbig nach Zeitpunkt, daneben je Stufe</span></figcaption></figure>
+      <figure class="rx-gal rx-kdia"><div class="rx-blatt"><img src="../assets/reha/rx-vl-kurve.jpg" width="1400" height="219" loading="lazy" alt="Herzfrequenz bei gleicher Stufe über 8 Einheiten mit Trendlinie (Demo)"></div><figcaption><b>Acht Wochen bei gleicher Stufe</b><span>Herzfrequenz der Vergleichsübung mit Trend und Schwankungsband (Demo-Daten)</span></figcaption></figure>
+      <figure class="rx-gal rx-kdia"><div class="rx-blatt"><img src="../assets/reha/rx-vl-vier.jpg" width="1400" height="222" loading="lazy" alt="Vier Verläufe: Erholungszeit, Puls 5 Minuten nach Belastung, Ruhe-RMSSD, Ruhe-Herzfrequenz (Demo)"></div><figcaption><b>Erholung und Ruhe-HRV</b><span>Vier Verläufe über alle Einheiten (Demo-Daten)</span></figcaption></figure>
+      <figure class="rx-gal rx-kdia"><div class="rx-tablet"><img src="../assets/reha/rx-k1-akte.jpg" width="1000" height="750" loading="lazy" alt="Akte mit 8 Reha-Sitzungen, Verlauf 65 auf 57 bpm und den 13 Geräten (Demo)"></div><figcaption><b>Die Akte des Pferds</b><span>Alle Einheiten, der Verlauf in bpm und der Start jeder neuen Einheit</span></figcaption></figure>
+    </div>
+    <div class="rx-ksteuer"><button class="rx-kpfeil" type="button" data-r="-1" aria-label="Zurück">‹</button><div class="rx-kpunkte"></div><button class="rx-kpfeil" type="button" data-r="1" aria-label="Weiter">›</button></div></div>
+  </div>
+</section>
+
 <section class="rx-ww" aria-label="Wegweiser"><div class="wrap"><div class="sec-eyebrow" style="text-align:center">Welche Fassung passt zu Ihrem Betrieb?</div><nav class="rx-ww-l"><a class="rx-ww-k" href="/carlon-equine-visite/#preis"><svg class="ic" aria-hidden="true"><use href="#i-route"/></svg><b>Mobile Fahrpraxis</b><span>Tour planen, Ruhe-HRV der Patienten im Verlauf</span><i>149&nbsp;€ netto im Monat</i></a><a class="rx-ww-k" href="/carlon-equine-visite/#preis"><svg class="ic" aria-hidden="true"><use href="#i-wand"/></svg><b>Praxis &amp; Klinik</b><span>Team, Stationswand, Klinikname im Bericht</span><i>349&nbsp;€ netto im Monat</i></a><a class="rx-ww-k rx-ww-hier" href="#preis"><svg class="ic" aria-hidden="true"><use href="#i-verlauf"/></svg><b>Reha-Zentrum</b><span>Reha-Einheiten am Gerät, Sitzungsbericht, Verlauf</span><i>349&nbsp;€ netto im Monat · hier</i></a><a class="rx-ww-k" href="/carlon-equine-visite/reha/#preis"><svg class="ic" aria-hidden="true"><use href="#i-akte"/></svg><b>Klinik mit Reha</b><span>Alles aus Praxis &amp; Klinik und aus Reha, 8 Geräte, 40 Reha-Pferde</span><i>590&nbsp;€ netto im Monat</i></a><a class="rx-ww-k" href="/carlon-equine-visite/reha/#preis"><svg class="ic" aria-hidden="true"><use href="#i-ordner"/></svg><b>Equine Center</b><span>Geräte und Reha-Pferde ohne Grenze</span><i>890&nbsp;€ netto im Monat je Standort</i></a></nav></div></section>
 
 <section id="einheit">
@@ -1725,6 +1764,7 @@ section h2 em{font-style:normal;color:var(--cyan)}
   document.addEventListener('keydown',function(e){ if(A.hidden) return; if(e.key==='Escape') schliessen(); else if(e.key==='ArrowRight'||e.key==='ArrowLeft'){ var i=zahl()+(e.key==='ArrowRight'?1:-1); S.scrollTo({left:i*S.clientWidth,behavior:'smooth'}); } });
 })();
 </script>
+<script src="/carlon-equine/app/poincare-zeit.js?v=20261120b" defer></script>
 
 <footer>
   <div class="footer-brand">CARLON</div>
