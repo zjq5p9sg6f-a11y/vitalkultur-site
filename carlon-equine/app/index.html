@@ -2847,7 +2847,22 @@ const Bindung={
    (RehaKern, Übergangsfassung bis Equines eingefrorener Port kommt). Verglichen wird nur bei gleichem Lastschlüssel.
    Keine Wertung („fitter“), keine Diagnose: Zahlen mit Herkunft, die Einordnung macht die Tierärztin. */
 const Reha={
-  erlaubt(){ return !!(State.settings&&State.settings.isDemo) || License.can('reha'); },
+  /* 20.11.2026: in der Demo NUR an den Demo-Pferden (beim Laden gemerkt) – sonst nahm eine bezahlte Fahrpraxis über den
+     Demo-Schalter Reha an eigenen Pferden auf (Leistung der teureren Stufe). */
+  erlaubt(hid){ if(License.can('reha')) return true; const s=State.settings||{}; return !!(s.isDemo && hid && (s.demoPferde||[]).includes(hid)); },
+  /* Obergrenze Reha-Pferde (GRENZEN.pferde): zählt Pferde mit Reha-Einheit in den letzten 30 Tagen. Ein NEUES Pferd über der
+     Grenze öffnet den Stufenwechsel; vorhandene Pferde, Akten und Berichte bleiben voll nutzbar. */
+  grenzePruefen(hid){
+    const g=((License.GRENZEN||{})[License.tier()]||{}).pferde; if(!g||!License.isPaid()) return true;
+    const seit=Date.now()-30*86400000;
+    const im=new Set(State.recordings.filter(r=>r.reha&&!r._seed&&r.startedAt&&new Date(r.startedAt).getTime()>seit).map(r=>r.horseId));
+    if(im.has(hid)||im.size<g) return true;
+    UI.modal(`<div class="modal-head"><button class="closex" onclick="UI.closeModal()">${IC.x}</button><h3>${g} Reha-Pferde in 30 Tagen erreicht</h3></div>
+      <div class="modal-body"><p style="line-height:1.6;margin:0 0 10px">Ihre Stufe ${esc(License.TIERS[License.tier()].name)} umfasst ${g} Reha-Pferde in 30 Tagen. In den letzten 30 Tagen hatten bereits ${im.size} Pferde eine Reha-Einheit. Für ein weiteres Pferd wechseln Sie zu einer größeren Stufe.</p>
+      <p style="line-height:1.6;margin:0;color:var(--text-dim)">Die Pferde mit laufender Reha nehmen Sie weiter auf; alle Akten und Berichte bleiben nutzbar.</p></div>
+      <div class="modal-foot"><button class="btn ghost" onclick="UI.closeModal()">Schließen</button><button class="btn primary" onclick="UI.closeModal();License.stufeWechseln()">Stufe wechseln</button></div>`);
+    return false;
+  },
   /* Demo (20.11.2026): vier Aquatrainer-Einheiten über vier Wochen für ein Demo-Pferd, damit Partner wie SASCOTEC den
      Verlauf bei gleicher Stufe sofort sehen. Synthetisch und als Demo markiert; HF bei gleicher Last sinkt leicht. */
   async demoAnlegen(){
@@ -3318,7 +3333,8 @@ const RehaLive={
   en(){ return typeof Sprache!=='undefined'&&Sprache.cur==='en'; },
   async starten(hid,art,opt){
     const h=State.horses.find(x=>x.id===hid); if(!h) return; this._hrvHtml=''; this._pzFig=null; this._pzN=0; this._tk=0; this._wGewaehlt=false; this._wErkl=false; this._wMehr=false;
-    if(!Reha.erlaubt()){ if(UI.upgrade) UI.upgrade(); return; }
+    if(!Reha.erlaubt(hid)){ if(UI.upgrade) UI.upgrade(); return; }
+    if(!Reha.grenzePruefen(hid)) return;
     let bt=false; try{ bt=!!(navigator.bluetooth&&await navigator.bluetooth.getAvailability()); }catch(_){ }
     if(!bt){ Toast.show('Die Reha-Aufnahme braucht Bluetooth im Browser: Chrome oder Edge am Rechner oder auf Android. Auf iPhone und iPad lässt Apple das nicht zu.','warn'); return; }
     /* Letztes Profil dieses Pferds an diesem Gerät vorbelegen („wie letztes Mal“) */
@@ -10222,15 +10238,15 @@ const UI={
        kommen aus TIERS/GRENZEN/PREIS; die Merkmale stehen wortgleich auf den Seitenkarten. Kasse je Stufe über checkoutLink() (Betragssperre). */
     const P=License.PREIS;
     const STUFEN=[
-      {k:'praxis',tier:'vet_solo',sub:'für eine Tierärztin oder einen Tierarzt',m:'month',y:'year',pm:P.soloMonat,py:P.soloJahr,
+      {k:'praxis',tier:'vet_solo',sub:'für eine Tierärztin oder einen Tierarzt · 2 Geräte',m:'month',y:'year',pm:P.soloMonat,py:P.soloJahr,
        feats:['Tourenplanung, Verspätungsnachricht, Besuchsdokumentation und Wegegeld-Vorschlag nach § 10 GOT','Akte per Sprache, Messwertbericht mit eigenem Briefkopf','Mess-Link: Ihre Halterinnen messen kostenlos, die Aufnahme kommt verschlüsselt in die Akte','<b>Stallrunde und Langzeit im Gurt</b> mit Langzeitbericht','Export als JSON, CSV, Kubios und FHIR R5']},
-      {k:'klinik',tier:'vet_clinic',sub:'bis 4 Tierärztinnen und Tierärzte',m:'clinicMonth',y:'clinicYear',pm:P.klinikMonat,py:P.klinikJahr,
+      {k:'klinik',tier:'vet_clinic',sub:'bis 4 Tierärztinnen und Tierärzte · 6 Geräte',m:'clinicMonth',y:'clinicYear',pm:P.klinikMonat,py:P.klinikJahr,
        feats:['Alles aus der Stufe Fahrpraxis','Team-Ordner für Praxis, Stationen und Wandmonitor','<b>Stationsmonitor über Nacht:</b> Puls ohne Verbindung, morgens vollständig auslesen','Stationswand ohne Alarme, Nachsorge nach der Entlassung']},
-      {k:'reha',tier:'vet_reha',sub:'bis 20 Reha-Pferde',m:'rehaMonth',y:'rehaYear',pm:P.rehaMonat,py:P.rehaJahr,
+      {k:'reha',tier:'vet_reha',sub:'bis 20 Reha-Pferde · 6 Geräte',m:'rehaMonth',y:'rehaYear',pm:P.rehaMonat,py:P.rehaJahr,
        feats:['Reha-Aufnahme an 13 Anwendungen mit Live-Puls und HRV','Gurtspeicher: Leeren erst nach bitgleichem Gegenlesen','Sitzungsbericht und Verlaufsdokumentation mit Ihrem Briefkopf','<b>Übergabe an die Halterin</b> und in ihre CARLON-Equine-App']},
-      {k:'kombi',tier:'vet_klinik_reha',sub:'bis 6 Tierärzte und 40 Reha-Pferde',m:'kombiMonth',y:'kombiYear',pm:P.kombiMonat,py:P.kombiJahr,
+      {k:'kombi',tier:'vet_klinik_reha',sub:'bis 6 Tierärzte und 40 Reha-Pferde · 8 Geräte',m:'kombiMonth',y:'kombiYear',pm:P.kombiMonat,py:P.kombiJahr,
        feats:['Alles aus Praxis &amp; Klinik','Alles aus Reha','Stationsmonitor, Stationswand und Tourenplanung']},
-      {k:'center',tier:'vet_center',sub:'je Standort, ohne Obergrenzen',m:'centerMonth',y:'centerYear',pm:P.centerMonat,py:P.centerJahr,
+      {k:'center',tier:'vet_center',sub:'je Standort, Geräte und Pferde ohne Grenze',m:'centerMonth',y:'centerYear',pm:P.centerMonat,py:P.centerJahr,
        feats:['Alles aus Klinik + Reha','Tierärzte und Reha-Pferde ohne Obergrenze','Für Betriebe mit mehreren Standorten, Preis je Standort']},
     ];
     const brutto=x=>(Math.round(x*119)/100).toLocaleString('de-DE',{minimumFractionDigits:2,maximumFractionDigits:2})+' €';
@@ -10257,7 +10273,7 @@ const UI={
           <div style="font-size:12px;color:var(--text-dim)">11 Monatsbeiträge · ${brutto(t.py)} inkl. 19 % USt.</div></div>
           <div class="price"><b>${t.py.toLocaleString('de-DE')}</b><span>€ netto / Jahr</span>${knopf(t.y,'Weiter zur Kasse →')}</div></div>
       </div></div>`).join('')}</div>
-      <p style="font-size:12.5px;color:var(--text-secondary);margin-top:12px">Ein Abo gilt für einen Betrieb auf beliebig vielen Geräten. Wird eine Obergrenze zwei Monate in Folge überschritten, schlägt das Cockpit den Wechsel vor; es sperrt nie und berechnet nichts nach.</p>
+      <p style="font-size:12.5px;color:var(--text-secondary);margin-top:12px">Ein Abo gilt für einen Betrieb an einem Standort. Geräte je Stufe: Fahrpraxis 2, Praxis &amp; Klinik 6, Reha 6, Klinik + Reha 8, Equine Center ohne Grenze; Reha-Pferde in 30 Tagen: Reha 20, Klinik + Reha 40. Über der Grenze schaltet sich ein weiteres Gerät oder Pferd mit der größeren Stufe frei; Vorhandenes bleibt nutzbar, nachberechnet wird nichts.</p>
       <p style="font-size:12px;color:var(--text-dim);margin-top:4px">Verkäufer und Rechnungssteller ist Stripe (Link) im eigenen Namen; die Rechnung kommt von dort. Nach der Zahlung sind Sie sofort freigeschaltet — kein Schlüssel, keine E-Mail.</p>
     </div>
     <div class="modal-foot"><button class="btn ghost" onclick="UI.closeModal()">Später</button><button class="btn ghost" onclick="UI.activate()">Ich habe einen Schlüssel</button></div>`,{wide:true});
@@ -11608,7 +11624,7 @@ const License={
      nie nachberechnen. vet_solo/vet_clinic behalten ihre Schlüssel (gültige Lizenzen bleiben gültig), heißen jetzt Fahrpraxis bzw.
      Praxis & Klinik. Neu: vet_reha, vet_klinik_reha, vet_center (Lizenzdienst muss sie signieren können). */
   TIERS:{demo:{name:'Demo',color:'demo'},vet_solo:{name:'Fahrpraxis',color:'paid'},vet_clinic:{name:'Praxis & Klinik',color:'paid'},vet_reha:{name:'Reha',color:'paid'},vet_klinik_reha:{name:'Klinik + Reha',color:'paid'},vet_center:{name:'Equine Center',color:'paid'},research:{name:'Research',color:'paid'}},
-  /* Obergrenzen je Stufe: Hinweis ab dem 2. Monat in Folge darüber, mit Ein-Klick-Wechsel; nie Sperre, nie Nachberechnung */
+  /* Obergrenzen je Stufe (Jan 20.11.2026: hart, Daten bleiben): Reha-Pferde in 30 Tagen zählt die App (Reha.grenzePruefen), Geräte zählt der Lizenzdienst (GERAETE, renew-worker.js). tierarzt ist die Auslegung der Stufe, gezählt werden Geräte. */
   GRENZEN:{vet_solo:{tierarzt:1},vet_clinic:{tierarzt:4},vet_reha:{pferde:20},vet_klinik_reha:{tierarzt:6,pferde:40},vet_center:{}},
   /* EINE Quelle für jede Preisangabe. Vorher standen 49 € an fünf Stellen
      verstreut — Anzeige, ROI-Rechnung, Preistabelle, Kommentar. Genau so
@@ -11866,7 +11882,7 @@ const License={
          Laufzeit-Lizenz ("lic", 14 Tage) gewaehrt Zugang. Alte Schluessel ohne
          typ zaehlen als Lizenz, damit Bestandskunden nicht ausgesperrt werden. */
       return{valid:!expired,expired,tier:p.tier,lic:p.lic,exp:p.exp,founder:!!p.founder,beta:!!p.beta,
-             typ:p.typ||'lic', cus:p.cus||null,
+             typ:p.typ||'lic', cus:p.cus||null, ger:p.ger||null,
              seats:(typeof p.seats==='number'&&p.seats>0)?p.seats:1};
     }catch(e){return{valid:false,reason:e.message||'Fehler'};}
   },
@@ -12026,6 +12042,23 @@ const License={
      bringt ein QR/Link den Abo-Token im #Fragment mit (wird nie an einen Server
      gesendet), der Dienst macht daraus wie bei jeder Erneuerung die Lizenz.
      Nur ein VERIFIZIERTER Abo-Token wird übernommen. */
+  /* GERÄTEKENNUNG (Stand 10, 20.11.2026): zufällig, nur in DIESEM Browser (localStorage, nicht im Backup – sonst teilten
+     sich zwei Geräte einen Platz). Der Lizenzdienst zählt die Geräte je Stufe; die Lizenz trägt die Kennung und gilt nur hier. */
+  geraetId(){
+    if(this._gid) return this._gid;
+    try{ let g=localStorage.getItem('carlon-geraet'); if(!g||!/^[A-Za-z0-9-]{16,64}$/.test(g)){ g=(crypto.randomUUID?crypto.randomUUID():Array.from(crypto.getRandomValues(new Uint8Array(16)),b=>b.toString(16).padStart(2,'0')).join('')); localStorage.setItem('carlon-geraet',g); } this._gid=g; }
+    catch(_){ this._gid=this._gid||(crypto.randomUUID?crypto.randomUUID():String(Math.random()).slice(2)+String(Date.now())); }
+    return this._gid;
+  },
+  /* Stufenwechsel eines laufenden Abos läuft über „Abo verwalten“ (Stripe), damit kein zweites Abo entsteht. */
+  stufeWechseln(){ if(State.settings.license&&State.settings.license.sub) return this.portalOeffnen(); return UI.upgrade(); },
+  geraeteGrenzeZeigen(d){
+    const bis=d&&d.freiAb?new Date(d.freiAb*1000).toLocaleDateString('de-DE'):'';
+    UI.modal(`<div class="modal-head"><button class="closex" onclick="UI.closeModal()">${IC.x}</button><h3>Gerätegrenze der Stufe erreicht</h3></div>
+      <div class="modal-body"><p style="line-height:1.6;margin:0 0 10px">Ihr Abo ist bereits auf ${d&&d.grenze||''} Geräten aktiv. So viele umfasst Ihre Stufe${d&&d.stufe&&License.TIERS[d.stufe]?' '+esc(License.TIERS[d.stufe].name):''}. Für dieses Gerät wechseln Sie zu einer größeren Stufe.</p>
+      <p style="line-height:1.6;margin:0;color:var(--text-dim)">Ein Gerät, das 30 Tage nicht genutzt wird, gibt seinen Platz von selbst frei${bis?` (frühestens am ${bis})`:''}. Ihre Daten auf diesem Gerät bleiben lesbar.</p></div>
+      <div class="modal-foot"><button class="btn ghost" onclick="UI.closeModal()">Schließen</button><button class="btn primary" onclick="UI.closeModal();License.stufeWechseln()">Stufe wechseln</button></div>`);
+  },
   geraetLink(){ const s=State.settings.license||{}; return s.sub ? location.origin+location.pathname+'#abo='+encodeURIComponent(s.sub) : ''; },
   async geraetUebernehmen(){
     const m=/[#&]abo=([^&]+)/.exec(location.hash||''); if(!m) return null;
@@ -12049,11 +12082,15 @@ const License={
     try{
       const r=await fetch(this.DIENST+'/aktivieren',{method:'POST',
         headers:{'Content-Type':'application/json'},
-        body:JSON.stringify({session_id:sid})});
+        body:JSON.stringify({session_id:sid,geraet:this.geraetId()})});
       License.ZEIT.ausAntwort(r);   // Serverzeit ernten, kostet keine Anfrage
       const d=await r.json().catch(()=>({}));
       /* Testphase schon genutzt (gleiche Karte/E-Mail): Abo läuft, freigeschaltet wird mit der ersten Zahlung.
          Den Ausweis behalten, damit die Erneuerung das später von selbst erledigt. */
+      if(!d.ok && d.geraeteGrenze){
+        if(d.abo){ const va=await this.verify(d.abo).catch(()=>({valid:false})); if(va.valid&&va.typ==='sub'){ State.settings.license={provider:'offline',sub:d.abo}; await State.saveSettings(); } }
+        saeubern(); this.geraeteGrenzeZeigen(d); return false;
+      }
       if(!d.ok && d.testGenutzt && d.abo){
         const va=await this.verify(d.abo).catch(()=>({valid:false}));
         if(va.valid&&va.typ==='sub'){ State.settings.license={provider:'offline',sub:d.abo,testGenutzt:true}; await State.saveSettings(); }
@@ -12102,6 +12139,13 @@ const License={
       const d=await r.json().catch(()=>({}));
       if(!d.ok||!d.url){ Toast.show('Abo-Verwaltung gerade nicht erreichbar','warn'); return; }
       window.open(d.url,'_blank','noopener');
+      /* Zurück aus „Abo verwalten“ (Stufe gewechselt, Karte erneuert): sofort neue Lizenz holen, damit die neue Stufe
+         gleich gilt und nicht erst bei der nächsten Erneuerung (20.11.2026). */
+      if(!this._portalHorcher){ this._portalHorcher=true;
+        const zurueck=async()=>{ if(document.visibilityState!=='visible') return; document.removeEventListener('visibilitychange',zurueck); window.removeEventListener('focus',zurueck); this._portalHorcher=false;
+          const vor=this.tier(); const e=await this.lizenzHolen('portal').catch(()=>({ok:false}));
+          if(e&&e.ok&&this.tier()!==vor) Toast.show(`Stufe gewechselt: ${this.TIERS[this.tier()].name}`,'ok'); };
+        setTimeout(()=>{ document.addEventListener('visibilitychange',zurueck); window.addEventListener('focus',zurueck); },1500); }
     }catch(e){ Toast.show('Abo-Verwaltung braucht Internet','warn'); }
   },
   /* NICHT "renew" nennen: License.renew() gibt es bereits (oeffnet das
@@ -12114,7 +12158,7 @@ const License={
     try{
       const r=await fetch(this.RENEW_URL,{method:'POST',
         headers:{'Content-Type':'application/json'},
-        body:JSON.stringify({token:s.sub})});
+        body:JSON.stringify({token:s.sub,geraet:this.geraetId()})});
       License.ZEIT.ausAntwort(r);   // Serverzeit ernten, kostet keine Anfrage
       const d=await r.json().catch(()=>({}));
       if(!d.ok){
@@ -12124,6 +12168,7 @@ const License={
            Genau diese Unterscheidung fehlte und war der Grund, warum ein
            Funkloch dieselbe Wirkung hatte wie eine Kuendigung. */
         console.warn('[CARLON] Erneuerung abgelehnt:', r.status, d.grund);
+        if(d.geraeteGrenze){ this._geraeteGrenze=d; if(grund!=='still') try{ this.geraeteGrenzeZeigen(d); }catch(_){ } return {ok:false,grund:d.grund,geraeteGrenze:true}; }
         if(r.status===402){
           s.abgelehntSeit=Math.floor(Date.now()/1000); s.letztePruefung=s.abgelehntSeit;
           State.settings.license=s; await State.saveSettings();
@@ -12200,6 +12245,13 @@ const License={
     if(!l||!l.key){State.license={tier:'demo'};return;}
     State.license=l;                          // sofort anwenden (Grace-Period, funktioniert offline)
     const r=await this.verify(l.key);
+    /* Lizenz eines ANDEREN Geräts (Backup, kopierte Einstellungen): gilt hier nicht. Der Abo-Ausweis bleibt; dieses Gerät
+       holt sich seine eigene Lizenz – und zählt damit als eigenes Gerät. */
+    if(r.ger && r.ger!==this.geraetId()){
+      State.license={tier:'demo',expiredTier:r.tier,lic:r.lic,hatAbo:!!l.sub,fremdesGeraet:true};
+      if(l.sub && !this._fremdGeholt){ this._fremdGeholt=true; setTimeout(()=>{ this.lizenzHolen('geraet').catch(()=>{}); },0); }
+      return;
+    }
     if(r.valid){
       State.license={provider:'offline',tier:r.tier,lic:r.lic,exp:r.exp,key:l.key,founder:r.founder,seats:r.seats,hatAbo:!!l.sub};
       // Alt-Lizenzen (abgeloester Lemon-Squeezy-/Trial-Pfad) einmalig auf 'offline' normalisieren
@@ -12543,7 +12595,7 @@ const Seed={
     await Seed.synthRoutineVisits();
     await Seed.feinschliff();
     try{ await Reha.demoAnlegen(); }catch(e){ try{ console.warn('[Reha-Demo]',e); }catch(_){ } }
-    State.settings.isDemo=true; await State.saveSettings();   // Demo-Daten sind wegwerfbar → kein Backup-Nag beim First-Touch
+    State.settings.isDemo=true; State.settings.demoPferde=State.horses.map(h=>h.id); await State.saveSettings();   // Demo-Daten sind wegwerfbar → kein Backup-Nag beim First-Touch
     /* DAS BAND NEU ZEICHNEN, SONST BLEIBT DER ALARM STEHEN.
        renderBanner() unterdrueckt die Verlustwarnung in der Demo — aber es
        lief lange VOR dieser Zeile, als isDemo noch falsch war, und wurde nie
