@@ -24,7 +24,7 @@
     inclinePercent:   { de: 'Steigung', en: 'Incline', einheit: '%', schritt: 0.5, min: -10, max: 20 },
     reverse:          { de: 'Rückwärts', en: 'Reverse', bool: true },
     waterHeight:      { de: 'Wasserhöhe', en: 'Water height', liste: ['none', 'fetlock', 'carpus', 'elbow', 'stifle', 'shoulder'] },
-    waterHeightCm:    { de: 'Wasserstand', en: 'Water level', einheit: 'cm', schritt: 5, min: 0, max: 200 },
+    waterHeightCm:    { de: 'Wasserhöhe in cm', en: 'Water height (cm)', einheit: 'cm', schritt: 5, min: 0, max: 200 },
     waterTempC:       { de: 'Wassertemperatur', en: 'Water temperature', einheit: '°C', schritt: 1, min: 0, max: 40 },
     vibrationHz:      { de: 'Frequenz', en: 'Frequency', einheit: 'Hz', schritt: 1, min: 0, max: 100 },
     amplitudeMm:      { de: 'Schwingweg', en: 'Displacement', einheit: 'mm', schritt: 0.01, min: 0, max: 5 },
@@ -63,7 +63,8 @@
   function lastschluessel(m) { const g = GERAETE[m.device] || GERAETE.keines; return [m.device].concat(g.felder.map(f => f + '=' + (m[f] == null ? '' : m[f]))).join('|'); }
 
   // ── Auswertung (Übergangsfassung) ─────────────────────────────────────────────
-  function zeitachse(rr) { const t = []; let a = 0; for (const x of rr) { a += x / 1000; t.push(a); } return t; }
+  let _zeit = null;   // Zeitachse von außen (Rohreihe), wenn die Werte aus der korrigierten Reihe kommen
+  function zeitachse(rr) { if (_zeit && _zeit.length === rr.length) return _zeit; const t = []; let a = 0; for (const x of rr) { a += x / 1000; t.push(a); } return t; }
   const mittel = a => a.length ? a.reduce((s, x) => s + x, 0) / a.length : null;
   const median = a => { if (!a.length) return null; const s = [...a].sort((x, y) => x - y), n = s.length; return n % 2 ? s[(n - 1) / 2] : (s[n / 2 - 1] + s[n / 2]) / 2; };
   function fenster(rr, t, a, b) { const i = []; for (let k = 0; k < rr.length; k++) if (t[k] > a && t[k] <= b) i.push(k); return i; }
@@ -114,8 +115,38 @@
     return { vorSec: a, rmssdVor: a >= 300 ? rmssd(rr, vor) : null, hfVor: vor.length ? mittel(hf(rr, vor)) : null,
              nachSec: nachAb != null ? Math.max(0, T - nachAb) : 0, rmssdNach: (nachAb != null && T - nachAb >= 300) ? rmssd(rr, nach) : null };
   }
-  function auswerten(rr, log) { const st = stufen(rr, log); return { stufen: st, erholung: erholung(rr, st), ruhe: ruhe(rr, st), version: VERSION }; }
-  const VERSION = 'Reha-Auswertung 1.0 (2026-11-20, Schema CarlonCore EquineGeraeteStufen)';
-  const api = { GERAETE, FELD, WASSER, label, lastschluessel, beschleunigungG, fliehkraftG, auswerten, stufen, erholung, ruhe, zeitachse, VERSION };
+  /* Belastungsende vergessen (Lehre aus dem Zeitraffer, 20.11.2026): Folgt auf die letzte Gerätestufe keine Marke
+     „Belastung Ende“, sucht die Auswertung den Pulsabfall selbst – Mittel über 20 s fällt um mindestens 15 bpm unter das
+     Niveau der Stufe (Median ab 60 % der Stufe bis dorthin) und bleibt 60 s darunter. Die erkannte Marke trägt
+     `erkannt: true` und wird im Bericht so benannt. Rückwirkend: gilt auch für alte Aufnahmen, die Rohdaten bleiben unberührt. */
+  function endeErgaenzen(rr, log) {
+    const l = (log || []).slice().sort((a, b) => a.startSec - b.startSec); if (!l.length) return l;
+    const letzte = l[l.length - 1]; if (letzte.device === 'keines' || !(GERAETE[letzte.device] || {}).last) return l;
+    const t = zeitachse(rr), T = t[t.length - 1] || 0, s = letzte.startSec; if (T - s < 240) return l;
+    /* Präfixsummen der Herzfrequenz + binäre Suche: jedes Fenstermittel in O(log n) statt einer Vollsuche */
+    const n = rr.length, S = new Float64Array(n + 1); for (let k = 0; k < n; k++) S[k + 1] = S[k] + 60000 / rr[k];
+    const pos = x => { let lo = 0, hi = n; while (lo < hi) { const m = (lo + hi) >> 1; if (t[m] <= x) lo = m + 1; else hi = m; } return lo; };
+    const mw = (a, b) => { const i = pos(a), j = pos(b); return j > i ? (S[j] - S[i]) / (j - i) : null; };
+    /* Grundniveau = Mittel der Stufe bis kurz vor x; sobald der Puls 5 bpm darunter fällt, wird es EINGEFROREN
+       (sonst sinkt es mit dem Abfall mit). Erreicht der Abfall binnen 180 s 15 bpm und hält 60 s → Belastungsende. */
+    let basis = null, abX = null;
+    for (let x = s + 120; x <= T - 60; x += 5) {
+      const jetzt = mw(x - 20, x); if (jetzt == null) continue;
+      if (abX == null) { basis = mw(s + 60, x - 20); if (basis == null) continue; if (jetzt <= basis - 5) abX = x; continue; }
+      if (x - abX > 180 || jetzt > basis - 3) { abX = null; continue; }
+      if (jetzt > basis - 15) continue;
+      let bleibt = true; for (let y = x; y <= x + 60; y += 10) { const m = mw(y - 10, y); if (m == null || m > basis - 15) { bleibt = false; break; } }
+      if (!bleibt) continue;
+      let start = abX - 20; for (let y = abX - 20; y > s + 60; y -= 2) { const m = mw(y - 6, y); if (m != null && m >= basis - 2) { start = y; break; } }
+      return l.concat([{ startSec: Math.round(start * 10) / 10, device: 'keines', erkannt: true }]);
+    }
+    return l;
+  }
+  /* opt.zeit: Zeitachse der ROHreihe. Werte dürfen aus der artefaktkorrigierten Reihe kommen (ersetzte AV-Block-Pausen),
+     die Zeit nicht – sonst rückten alle Stufenmarken je ersetzter Pause um ihre Länge zusammen. */
+  function auswerten(rr, log, opt) { _zeit = opt && opt.zeit && opt.zeit.length === rr.length ? opt.zeit : null; try { return auswertenInnen(rr, log); } finally { _zeit = null; } }
+  function auswertenInnen(rr, log) { const l2 = endeErgaenzen(rr, log); const st = stufen(rr, l2); return { stufen: st, erholung: erholung(rr, st), ruhe: ruhe(rr, st), endeErkannt: l2.length > (log || []).length, version: VERSION }; }
+  const VERSION = 'Reha-Auswertung 1.1 (2026-11-20, Schema CarlonCore EquineGeraeteStufen)';
+  const api = { GERAETE, FELD, WASSER, label, lastschluessel, beschleunigungG, fliehkraftG, auswerten, stufen, erholung, ruhe, zeitachse, endeErgaenzen, VERSION };
   if (typeof module !== 'undefined' && module.exports) module.exports = api; else root.RehaKern = api;
 })(typeof window !== 'undefined' ? window : globalThis);
