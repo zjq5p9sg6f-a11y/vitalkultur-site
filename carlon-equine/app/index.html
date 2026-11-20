@@ -3723,6 +3723,15 @@ const RehaLive={
     Toast.show(ausSpeicher?`Reha-Sitzung gespeichert · vollständig aus dem Gurtspeicher (${fmt0(mem.rr.length)} Schläge${fehlend?', davon '+fmt0(fehlend)+' im Funkloch nur dort':''})${geloescht?' · Gurt geleert':' · Aufnahme bleibt im Gurt'}`
       :(this.sp?'Reha-Sitzung gespeichert (live). Gurtspeicher: '+(grund||'nicht verfügbar'):'Reha-Sitzung gespeichert · in der Akte'),ausSpeicher?'ok':'warn');
     try{ Views.openHorse(hid); }catch(_){ }
+    /* Ergebnis gleich zeigen (Usability 20.11.2026): Kennzahlen der Einheit und der Bericht mit einem Tipp, statt ihn in der Tabelle zu suchen */
+    const _name=(this.h&&this.h.name)||'';
+    setTimeout(()=>{ try{ const s=Reha.sitzungen(hid).find(x=>x.rec.id===id); if(!s) return; const st=s.a.stufen.filter(x=>x.device!=='keines'), en=this.en();
+      const zeile=st.map((x,i)=>`<tr><td>${i+1}</td><td>${esc(x.label)}</td><td style="text-align:right">${Reha.mmss(x.endSec-x.startSec)}</td><td style="text-align:right">${x.hfMedian60!=null?'<b>'+Math.round(x.hfMedian60)+'</b> bpm':(en?'too short':'zu kurz')}</td></tr>`).join('');
+      UI.modal(`<div class="modal-head"><button class="closex" onclick="UI.closeModal()">${IC.x}</button><h3>${en?'Session saved':'Einheit gespeichert'} · ${esc(_name)}</h3></div><div class="modal-body">
+        <p style="font-size:13.5px;color:var(--text-secondary);margin:0 0 10px">${Math.round(s.rec.durationSec/60)} min · ${fmt0(s.rec.beatCount)} ${en?'beats':'Schläge'} · ${ausSpeicher?(en?'from the strap memory':'aus dem Gurtspeicher'):(en?'live':'live')}</p>
+        ${st.length?`<table class="tbl" style="width:100%;font-size:13px"><thead><tr><th>#</th><th>${en?'Stage':'Stufe'}</th><th style="text-align:right">${en?'Duration':'Dauer'}</th><th style="text-align:right">${en?'HR at stage end':'HF Stufenende'}</th></tr></thead><tbody>${zeile}</tbody></table>`:''}
+        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:14px"><button class="btn primary" onclick="UI.closeModal();Reha.drucken('${hid}','${id}','klinik')">${en?'Session report for the record':'Sitzungsbericht für die Akte'}</button><button class="btn ghost" onclick="UI.closeModal();Reha.drucken('${hid}','${id}','halter')">${en?'Report for the owner':'Bericht für die Halterin'}</button><button class="btn ghost" onclick="UI.closeModal()">${en?'Later':'Später'}</button></div></div>`);
+    }catch(_){ } },450);
   },
   schliessen(){ this.aktiv=false; clearInterval(this._takt); try{ this.sp&&this.sp.client&&this.sp.client.trennen(); }catch(_){ } try{ this.dev&&this.dev.gatt&&this.dev.gatt.connected&&this.dev.gatt.disconnect(); }catch(_){ } try{ this.wakelock&&this.wakelock.release(); }catch(_){ }
     const o=document.getElementById('rehaLive'); if(o) o.remove(); },
