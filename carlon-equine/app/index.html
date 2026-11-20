@@ -11736,8 +11736,12 @@ const License={
          nachtraeglich nicht setzen, deshalb neu angelegt. Ebenso deaktiviert:
          die alten 79/790-Links (plink_1U1tko… und plink_1U1tn3…), damit kein
          Bookmark zum Altpreis fuehrt. */
-      year :'https://buy.stripe.com/28EfZh4PteS1fcG9u3gbm06',   // 1.490 €/Jahr
-      month:'https://buy.stripe.com/28E3cvfu7aBLfcG0Xxgbm05',   //   149 €/Monat
+      /* 20.11.2026: Jahr = 11 Monatsbeiträge, neue Stufen Reha / Klinik + Reha / Center. Neue Preise am selben
+         Live-Produkt prod_V1xTYl1ssi7USy, je mit metadata.tier; Links mit Managed Payments, autom. Steuer, Steuer-ID,
+         Name + Unternehmensname Pflicht, AGB-Zustimmung, Rückleitung ?session_id=…; Monatslinks 14 Tage Test MIT Karte.
+         Jeder Link in der Detailansicht gegen seine Preis-ID gelesen (plink → price → tier). */
+      year :'https://buy.stripe.com/6oUcN52HlaBLggK8pZgbm0e',   // 1.639 €/Jahr  price_1Udt0D… vet_solo
+      month:'https://buy.stripe.com/28E3cvfu7aBLfcG0Xxgbm05',   //   149 €/Monat price_1U4V9l… vet_solo (14 T. Test)
       /* Klinik-Links, Stand 15.08.2026 (Claude im Stripe-Dashboard, Jans
          Sitzung): beide am LIVE-Produkt prod_V1xTYl1ssi7USy,
          Preise mit metadata.tier=vet_clinic:
@@ -11756,8 +11760,14 @@ const License={
          ⚠ Duplizieren ist KEIN Weg: Stripes "Duplikat" klont Produkt UND
          Preis, der Link haenge dann an einem "(Copy)"-Produkt statt an
          prod_V1xTYl1ssi7USy. Genau so ist prod_V494j8xRT7OVbC entstanden. */
-      clinicMonth:'https://buy.stripe.com/aFa6oH81F8tD4y2fSrgbm07',
-      clinicYear :'https://buy.stripe.com/28E7sL81F11b1lQ0Xxgbm08',
+      clinicMonth:'https://buy.stripe.com/aFa6oH81F8tD4y2fSrgbm07',   //   349 €/Monat price_1U4l7L… vet_clinic (14 T. Test)
+      clinicYear :'https://buy.stripe.com/dRm9ATdlZbFP8Oi8pZgbm0f',   // 3.839 €/Jahr  price_1Udt0W… vet_clinic
+      rehaMonth  :'https://buy.stripe.com/7sY3cveq3fW56Gaay7gbm0b',   //   349 €/Monat price_1Udt0k… vet_reha (14 T. Test)
+      rehaYear   :'https://buy.stripe.com/cNicN5eq3h091lQ8pZgbm0g',   // 3.839 €/Jahr  price_1Udt14… vet_reha
+      kombiMonth :'https://buy.stripe.com/4gMcN50zd8tD6Ga7lVgbm0c',   //   590 €/Monat price_1Udt1H… vet_klinik_reha (14 T. Test)
+      kombiYear  :'https://buy.stripe.com/bJeeVd1Dh8tDe8C0Xxgbm0h',   // 6.490 €/Jahr  price_1Udt1b… vet_klinik_reha
+      centerMonth:'https://buy.stripe.com/7sYdR90zddNXc0ubCbgbm0d',   //   890 €/Monat price_1Udt1o… vet_center (14 T. Test)
+      centerYear :'https://buy.stripe.com/3cI8wP1Dh8tD5C65dNgbm0i',   // 9.790 €/Jahr  price_1Udt24… vet_center
     }
   },
   get CHECKOUT(){ return this.CHECKOUT_ALL[LIVE?'live':'test']; },
@@ -11786,7 +11796,7 @@ const License={
      zusammenpasst. Wer den Preis erneut bewegt, bewegt PREIS,
      CHECKOUT_BETRAG und die Stripe-Links GEMEINSAM — einzeln angefasst ist
      die Betragssperre umgangen, nicht geloest. */
-  CHECKOUT_BETRAG:{ month:149, year:1490, clinicMonth:349, clinicYear:3490 },
+  CHECKOUT_BETRAG:{ month:149, year:1639, clinicMonth:349, clinicYear:3839, rehaMonth:349, rehaYear:3839, kombiMonth:590, kombiYear:6490, centerMonth:890, centerYear:9790 },   // = Live-Links 20.11.2026
   /* Die Zahlungs-Links zeigen noch auf Stripes Testumgebung. Wird die
      Beta-Sperre geloest, ohne sie zu tauschen, laeuft der Kunde durch eine
      Kasse, die kein Geld einzieht — und wir merken es an nichts ausser einer
