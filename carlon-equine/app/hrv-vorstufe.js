@@ -1275,17 +1275,23 @@
 
     // Stage 7.5: Frequenzbereich (Welch, equine Baender)
     let lfHfRatio = null, totalPowerMs2 = null, lfPowerMs2 = null, hfPowerMs2 = null;
-    let vlfPowerMs2 = null, lfNuPct = null, hfNuPct = null, psdMethodology = null;
+    let vlfPowerMs2 = null, lfNuPct = null, hfNuPct = null, psdMethodology = null, hfUpperEffectiveHz = null, hfUpperProfilHz = null;
     if (!(liveMode || skipWelchPSD) && corrected.length >= 60) {
+      /* HF NUR BIS ZUR SCHLAG-NYQUIST-GRENZE (wie EquineHRVAnalyzer.frequenzbereich, Breathwork B07 / CarlonCore rc.14):
+         oberhalb 1000/(2·mittleres RR) liegt kein Messinhalt. Pferd in Ruhe (RR 1700 ms): 0,294 Hz statt Profilband 0,60 Hz. */
+      const mittelRR = corrected.reduce((a, b) => a + b, 0) / corrected.length;
+      const nyquist = mittelRR > 0 ? 1000.0 / (2.0 * mittelRR) : profil.bandHfHiHz;
+      const hfOben = Math.max(profil.bandLfHiHz, Math.min(profil.bandHfHiHz, nyquist));
       const resampled = cubicSplineResampleTo4Hz(corrected);
       if (resampled.samples.length >= 64) {
         // Baender aus dem Messprofil — fuer equine-v1 identisch mit
         // BandConfigEquine (t-messprofil bewacht die Deckung).
         const psd = welchPSD(resampled.samples, resampled.fs, {
-          vlfHi: profil.bandVlfHiHz, lfHi: profil.bandLfHiHz, hfHi: profil.bandHfHiHz,
+          vlfHi: profil.bandVlfHiHz, lfHi: profil.bandLfHiHz, hfHi: hfOben,
           label: profil.bandLabel, citation: profil.bandCitation,
         });
         if (psd) {
+          hfUpperEffectiveHz = hfOben; hfUpperProfilHz = profil.bandHfHiHz;
           const lfHf = psd.lfPowerMs2 + psd.hfPowerMs2;
           lfPowerMs2 = psd.lfPowerMs2;
           hfPowerMs2 = psd.hfPowerMs2;
@@ -1363,6 +1369,8 @@
         'welch_psd_hann_256pt_50pct_overlap_4hz_resampled',
       ]),
       psdMethodology: psdMethodology,
+      hfUpperEffectiveHz: hfUpperEffectiveHz,
+      hfUpperProfilHz: hfUpperProfilHz,
     };
   }
 
