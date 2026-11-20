@@ -59,6 +59,10 @@ html.nur .verlauf-grid{grid-template-columns:1fr!important}
 
 /* Klicktest 20.11.2026: „Stufe übernehmen / Belastung Ende / Aufnahme beenden“ lagen auf dem iPad quer unter dem Bildrand – mit einer Hand am Pferd nicht erreichbar. Jetzt am unteren Rand angeheftet. */
 #rehaLive .rl-los{position:sticky;bottom:0;z-index:5;margin-left:-4px;margin-right:-4px;padding:12px 4px calc(12px + env(safe-area-inset-bottom,0px));background:linear-gradient(to top,rgba(0,0,0,.96) 70%,rgba(0,0,0,0));backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}
+
+/* 21.11.2026: Eingabefelder in Dialogen ohne .field (z. B. Reha-Abschlussbericht) sahen aus wie Browser-Standard */
+.modal-body :is(input:not([type=checkbox]):not([type=radio]):not([type=range]):not([type=file]),select,textarea){padding:9px 11px;background:var(--bg-deep);border:1px solid var(--border-subtle);border-radius:var(--r-s);color:var(--text-primary);font:inherit;font-size:14px;outline:none;box-sizing:border-box}
+.modal-body :is(input,select,textarea):focus{border-color:var(--cyan-deep);box-shadow:0 0 0 3px var(--cyan-g3)}
 </style>
 <link rel="stylesheet" href="assets/leaflet/leaflet.css">
 <style>
@@ -7842,7 +7846,10 @@ const Views={
   /* ---------------- COHERENCE ---------------- */
   _cohId:null,
   openCoh(id){Views._cohId=id;Nav.go('cohdetail');},
-  lockedView(feat,desc){
+  lockedView(feat,desc){ const bez=(()=>{ try{ return License.isPaid(); }catch(_){ return false; } })();   /* 21.11.2026: zahlende Stufen (z. B. Reha) sind keine Demo – dort „Nicht in Ihrer Stufe“ */
+    if(bez) return `<div class="view"><div class="view-head"><div><span class="eyebrow">Nicht in Ihrer Stufe</span><h1>${esc(feat)}</h1></div></div>
+      <div class="empty-state"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+      <h3>${esc(feat)}</h3><p>${esc(desc)}</p><button class="btn ghost" onclick="UI.upgrade('${esc(feat)}')">Stufen vergleichen</button></div></div>`;
     return `<div class="view"><div class="view-head"><div><span class="eyebrow">Vollversion</span><h1>${esc(feat)}</h1></div></div>
       <div class="empty-state">
         <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
@@ -14309,6 +14316,8 @@ const Sprache={
     'Noch keine eigene Basis (0 von 3 Aufnahmen in 30 Tagen) – Einstufung höchstens „beobachten“':'No own baseline yet (0 of 3 recordings in 30 days) – rating at most “observe”',
     'nicht verbunden':'not connected',
     'nicht berechenbar':'not computable',
+    'Nicht in Ihrer Stufe':'Not in your plan',
+    'Stufen vergleichen':'Compare plans',
     'Letzte Aufnahme ist eine Reha-Einheit ohne 5 min Ruhe vor der ersten Stufe: keine Ruhekennzahlen (unter Belastung nicht stationär).':'The latest recording is a rehab session without 5 min of rest before the first stage: no resting values (not stationary under load).',
     'Ruhephase der letzten Reha-Einheit nicht auswertbar (zu viele unsichere Schläge): keine Ruhekennzahlen.':'Rest phase of the latest rehab session not evaluable (too many uncertain beats): no resting values.',
     'Aus der Ruhephase vor der ersten Stufe der letzten Reha-Einheit.':'From the rest phase before the first stage of the latest rehab session.',

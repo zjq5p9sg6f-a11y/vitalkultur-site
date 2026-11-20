@@ -1090,7 +1090,7 @@ try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; 
     <a class="crumb" href="#oben" aria-label="CARLON Equine Visite – zum Seitenanfang"><img class="mark" src="/assets/equine-mark-112.png" width="26" height="26" alt=""><b>CARLON <span class="zeile2">Equine Visite · Reha</span></b></a>
     <div class="kapitel" role="navigation" aria-label="Kapitel">
       <button class="kap-knopf" id="kapKnopf" type="button" aria-expanded="false" aria-controls="kapListe"><span class="kap-nr">01</span><span class="kap-name">Einheit</span><svg viewBox="0 0 12 12" aria-hidden="true"><path d="M3 4.5l3 3 3-3" fill="none" stroke="currentColor" stroke-width="1.5"/></svg></button>
-      <ol class="kap-liste" id="kapListe"><li><a href="#einheit"><span class="kap-nr">01</span><span class="kap-titel">Einheit</span><span class="kap-was">Vier Schritte am Gerät</span></a></li><li><a href="#live"><span class="kap-nr">02</span><span class="kap-titel">Live</span><span class="kap-was">Was das Team sieht</span></a></li><li><a href="#berichte"><span class="kap-nr">03</span><span class="kap-titel">Berichte</span><span class="kap-was">Akte · Halterin · Station</span></a></li><li><a href="#verlauf"><span class="kap-nr">04</span><span class="kap-titel">Verlauf</span><span class="kap-was">8 Wochen Belastungsaufbau</span></a></li><li><a href="#gurtspeicher"><span class="kap-nr">05</span><span class="kap-titel">Gurtspeicher</span><span class="kap-was">Zeichnet weiter, wenn der Funk abreißt</span></a></li><li><a href="#rollen"><span class="kap-nr">06</span><span class="kap-titel">Nutzen</span><span class="kap-was">Leitung · Tierärztin · Team · Halterin</span></a></li><li><a href="#preis"><span class="kap-nr">07</span><span class="kap-titel">Preise</span><span class="kap-was">Reha · Klinik + Reha · Center</span></a></li><li><a href="#fragen"><span class="kap-nr">08</span><span class="kap-titel">Fragen</span><span class="kap-was">FAQ</span></a></li></ol>
+      <ol class="kap-liste" id="kapListe"><li><a href="#einheit"><span class="kap-nr">01</span><span class="kap-titel">Einheit</span><span class="kap-was">Vier Schritte am Gerät</span></a></li><li><a href="#berichte"><span class="kap-nr">02</span><span class="kap-titel">Berichte</span><span class="kap-was">Akte · Halterin · Station</span></a></li><li><a href="#verlauf"><span class="kap-nr">03</span><span class="kap-titel">Verlauf</span><span class="kap-was">8 Wochen Belastungsaufbau</span></a></li><li><a href="#grafiken"><span class="kap-nr">04</span><span class="kap-titel">Messung</span><span class="kap-was">Jeder Schlag, zurückspulbar</span></a></li><li><a href="#gurtspeicher"><span class="kap-nr">05</span><span class="kap-titel">Gurtspeicher</span><span class="kap-was">Zeichnet weiter, wenn der Funk abreißt</span></a></li><li><a href="#rollen"><span class="kap-nr">06</span><span class="kap-titel">Nutzen</span><span class="kap-was">Leitung · Tierärztin · Team · Halterin</span></a></li><li><a href="#preis"><span class="kap-nr">07</span><span class="kap-titel">Preise</span><span class="kap-was">Reha · Klinik + Reha · Center</span></a></li><li><a href="#fragen"><span class="kap-nr">08</span><span class="kap-titel">Fragen</span><span class="kap-was">FAQ</span></a></li></ol>
     </div>
     <div class="nav-r">
       <a class="lang nav-reha" href="/carlon-equine-visite/">Visite</a>
@@ -1328,19 +1328,26 @@ section h2 em{font-style:normal;color:var(--cyan)}
 .rx-grenze b{color:var(--text-primary)}
 .rx-kontakt{margin-top:18px;color:var(--text-secondary);font-size:15.5px}
 .rx-kontakt b{color:var(--text-primary)}
+
+.rx-bedingungen{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:10px;margin:22px 0 8px}
+.rx-bedingungen>div{border:1px solid var(--border-subtle);border-radius:14px;padding:12px 14px;background:rgba(12,12,13,.5)}
+.rx-bedingungen dt{font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--cyan,#3ECFB2);font-weight:600}
+.rx-bedingungen dd{margin:4px 0 0;color:var(--text-secondary);font-size:14.5px;line-height:1.5}
+.rx-cta-zeile{margin:10px 0 0;font-size:14px;color:var(--text-secondary)}
 </style>
 
 <section class="rx-hero hero" id="oben">
   <div class="wrap">
     <div class="eyebrow">Für Reha-Zentren und Kliniken mit Reha-Bereich · Polar H10</div>
     <h1>Jede Reha-Einheit dokumentiert. <em>Dieselbe Stufe, Woche für Woche vergleichbar.</em></h1>
-    <p class="hero-sub">Jede Einheit mit Herzfrequenz und Geräteeinstellung dokumentiert. Dieselbe Stufe über die Wochen verglichen, als Bericht mit Ihrem Briefkopf.</p>
+    <p class="hero-sub">Herzfrequenz und Geräteeinstellung tippen Sie während der Einheit am Tablet mit. Beim Auslesen des Gurts entsteht der Sitzungsbericht mit Ihrem Briefkopf, und der Verlauf zeigt, wie sich der Puls bei gleicher Einstellung über die Wochen verändert.</p>
     <div class="cta-row">
-      <a class="cta-primary" href="/carlon-equine/app/?demo=roster&amp;pferd=comet&amp;fokus=reha">Demo öffnen →</a>
+      <a class="cta-primary" href="/carlon-equine/app/?demo=roster&amp;pferd=comet&amp;fokus=reha">Demo im Browser öffnen →</a>
       <a class="btn btn-back" href="#preis">Ab 349&nbsp;€ netto im Monat ↓</a>
     </div>
+    <p class="rx-cta-zeile">Die Demo läuft sofort, ohne Anmeldung, mit acht Wochen Beispiel-Reha; jeder Bericht lässt sich öffnen.</p>
     <ul class="rx-belegzeile">
-      <li><svg class="ic" aria-hidden="true"><use href="#i-check"/></svg>Polar-H10-System an 28 Pferden in Ruhe und bei Bodenarbeit mit dem EKG verglichen</li>
+      <li><svg class="ic" aria-hidden="true"><use href="#i-check"/></svg>Schlagerfassung des Polar H10 an 28 Pferden mit dem EKG verglichen (Ruhe und Bodenarbeit; Kapteijn et al. 2022)</li>
       <li><svg class="ic" aria-hidden="true"><use href="#i-gurt"/></svg>Auswertung aus dem Gurtspeicher</li>
       <li><svg class="ic" aria-hidden="true"><use href="#i-schild"/></svg>Pferde- und Messdaten bleiben bei Ihnen</li>
     </ul>
@@ -1349,7 +1356,7 @@ section h2 em{font-style:normal;color:var(--cyan)}
         <video src="../assets/reha/rx-fuehranlage-v2.mp4" poster="../assets/reha/rx-fuehranlage-v2.jpg" width="768" height="1024" muted loop playsinline preload="auto"
           aria-label="Live-Ansicht in der Führanlage: HRV-Kennwerte der laufenden Stufe und die Puls- und HRV-Kurve mit Präzisionsraster"></video></div>
       <button class="rx-stapel rx-hero-blatt" data-bericht="fuehr" aria-label="Echten Sitzungsbericht dieser Aufnahme öffnen">
-        <span class="rx-blatt"><img src="../assets/reha/berichte/fuehr-sitzung-s1.jpg" width="1600" height="1131" alt="Seite 1 des Sitzungsberichts dieser Einheit in der Führanlage: Herzfrequenz Schlag für Schlag über 25 Minuten Führanlage und 6 Minuten danach, Referenzstufe 43 Schläge pro Minute, Datenqualität 99 Prozent, Artefakte als graue Punkte"></span>
+        <span class="rx-blatt"><img src="../assets/reha/berichte/fuehr-sitzung-s1.jpg" width="1600" height="1131" alt="Seite 1 des Sitzungsberichts dieser Einheit in der Führanlage: Herzfrequenz Schlag für Schlag über 25 Minuten Führanlage und 6 Minuten danach, Referenzstufe 43 Schläge pro Minute, Datenqualität 99 Prozent, korrigierte Schläge an der Zeitachse markiert"></span>
         <span class="rx-hero-blatt-t">Sitzungsbericht dieser Einheit · öffnen</span></button>
       <figcaption class="rx-quelle"><b>Eine echte Aufnahme:</b> Rennpferd unter dem Sattel, Polar H10, aus dem Speicher des Gurts. 25 Minuten in der Führanlage nach dem Training. Film (15-fach beschleunigt) und Bericht unverändert aus dem Cockpit, der Bericht zusätzlich mit den 6 Minuten danach (Weg und Ruhe in der Box); Pferde- und Betriebsname sind Beispiele.</figcaption>
     </figure>
@@ -1381,33 +1388,6 @@ section h2 em{font-style:normal;color:var(--cyan)}
 .rx-ww-k i{font-style:normal;color:var(--cyan);font-size:12.5px;margin-top:4px}
 .rx-ww-hier{border-color:rgba(62,207,178,.55);background:rgba(62,207,178,.06)}
 </style>
-<section id="grafiken" class="rx-spektrum">
-  <div class="wrap">
-    <div class="sec-eyebrow">Eine Einheit, alle Ansichten</div>
-    <h2>Jeder Schlag ein Punkt. <em>Spulen Sie die Einheit selbst zurück.</em></h2>
-    <div class="rx-pz-buehne">
-      <div class="rx-tablet rx-ipad rx-pz-tab"><figure class="pz" data-quelle="/carlon-equine/app/belege/poincare-fuehranlage.json" data-lang="de"></figure></div>
-      <div class="rx-pz-txt">
-        <p>Das ist der Poincaré-Baustein aus dem Cockpit, hier mit den 1.162 Schlägen von Nordwind in der Führanlage. Jeder Punkt ist ein Schlagpaar, die Ellipse aus SD1 und SD2 gilt für das gewählte Zeitfenster.</p>
-        <ul class="rx-haken">
-          <li>Ziehen Sie den Zeitregler vor und zurück.</li>
-          <li>Tippen Sie auf einen Punkt: Das Fadenkreuz nennt Schlag, Zeitpunkt und beide Abstände in Millisekunden.</li>
-          <li>Im Cockpit gibt es dieselbe Ansicht für jede Einheit, live und im Bericht.</li>
-        </ul>
-        <p class="rx-quelle" style="text-align:left;margin:0">Echte Aufnahme aus dem Gurtspeicher, Polar H10, 25 Minuten Führanlage.</p>
-      </div>
-    </div>
-    <div class="rx-kar" data-rxk><div class="rx-kbahn" tabindex="0" role="region" aria-roledescription="Karussell" aria-label="Weitere Ansichten einer Einheit">
-      <figure class="rx-gal rx-kdia"><div class="rx-blatt"><img src="../assets/reha/berichte/fuehr-sitzung-s2.jpg" width="1600" height="1131" loading="lazy" alt="Sitzungsbericht Seite 2: Tabelle der Stufen mit Herzfrequenz am Stufenende und Erholungskurve"></div><figcaption><b>Stufen und Erholung</b><span>Herzfrequenz am Ende jeder Stufe, Erholungskurve mit Zeitkonstante</span></figcaption></figure>
-      <figure class="rx-gal rx-kdia"><div class="rx-blatt"><img src="../assets/reha/berichte/fuehr-sitzung-s4.jpg" width="1600" height="1131" loading="lazy" alt="Sitzungsbericht Seite 4: Poincaré der ganzen Einheit, nach Uhrzeit eingefärbt, und je Stufe"></div><figcaption><b>Poincaré nach Uhrzeit</b><span>Die ganze Einheit farbig nach Zeitpunkt, daneben je Stufe</span></figcaption></figure>
-      <figure class="rx-gal rx-kdia"><div class="rx-blatt"><img src="../assets/reha/rx-vl-kurve.jpg" width="1400" height="219" loading="lazy" alt="Herzfrequenz bei gleicher Stufe über 8 Einheiten mit Trendlinie (Demo)"></div><figcaption><b>Acht Wochen bei gleicher Stufe</b><span>Herzfrequenz der Vergleichsübung mit Trend und Schwankungsband (Demo-Daten)</span></figcaption></figure>
-      <figure class="rx-gal rx-kdia"><div class="rx-blatt"><img src="../assets/reha/rx-vl-vier.jpg" width="1400" height="222" loading="lazy" alt="Vier Verläufe: Erholungszeit, Puls 5 Minuten nach Belastung, Ruhe-RMSSD, Ruhe-Herzfrequenz (Demo)"></div><figcaption><b>Erholung und Ruhe-HRV</b><span>Vier Verläufe über alle Einheiten (Demo-Daten)</span></figcaption></figure>
-      <figure class="rx-gal rx-kdia"><div class="rx-tablet"><img src="../assets/reha/rx-k1-akte.jpg" width="1000" height="750" loading="lazy" alt="Akte mit 8 Reha-Sitzungen, Verlauf 65 auf 57 bpm und den 13 Geräten (Demo)"></div><figcaption><b>Die Akte des Pferds</b><span>Alle Einheiten, der Verlauf in bpm und der Start jeder neuen Einheit</span></figcaption></figure>
-    </div>
-    <div class="rx-ksteuer"><button class="rx-kpfeil" type="button" data-r="-1" aria-label="Zurück">‹</button><div class="rx-kpunkte"></div><button class="rx-kpfeil" type="button" data-r="1" aria-label="Weiter">›</button></div></div>
-  </div>
-</section>
-
 <section class="rx-ww" aria-label="Wegweiser"><div class="wrap"><div class="sec-eyebrow" style="text-align:center">Welche Fassung passt zu Ihrem Betrieb?</div><nav class="rx-ww-l"><a class="rx-ww-k" href="/carlon-equine-visite/#preis"><svg class="ic" aria-hidden="true"><use href="#i-route"/></svg><b>Mobile Fahrpraxis</b><span>Tour planen, Ruhe-HRV der Patienten im Verlauf</span><i>149&nbsp;€ netto im Monat</i></a><a class="rx-ww-k" href="/carlon-equine-visite/#preis"><svg class="ic" aria-hidden="true"><use href="#i-wand"/></svg><b>Praxis &amp; Klinik</b><span>Team, Stationswand, Klinikname im Bericht</span><i>349&nbsp;€ netto im Monat</i></a><a class="rx-ww-k rx-ww-hier" href="#preis"><svg class="ic" aria-hidden="true"><use href="#i-verlauf"/></svg><b>Reha-Zentrum</b><span>Reha-Einheiten am Gerät, Sitzungsbericht, Verlauf</span><i>349&nbsp;€ netto im Monat · hier</i></a><a class="rx-ww-k" href="/carlon-equine-visite/reha/#preis"><svg class="ic" aria-hidden="true"><use href="#i-akte"/></svg><b>Klinik mit Reha</b><span>Alles aus Praxis &amp; Klinik und aus Reha, 8 Geräte, 40 Reha-Pferde</span><i>590&nbsp;€ netto im Monat</i></a><a class="rx-ww-k" href="/carlon-equine-visite/reha/#preis"><svg class="ic" aria-hidden="true"><use href="#i-ordner"/></svg><b>Equine Center</b><span>Geräte und Reha-Pferde ohne Grenze</span><i>890&nbsp;€ netto im Monat je Standort</i></a></nav></div></section>
 
 <section id="einheit">
@@ -1425,33 +1405,6 @@ section h2 em{font-style:normal;color:var(--cyan)}
         <div class="rx-nr">04</div><h3>Bericht beim Auslesen</h3><p>Nach dem Auslesen des Gurtspeichers erstellt das Cockpit den Sitzungsbericht: jede Stufe mit Herzfrequenz am Stufenende, Erholung und Datenqualität.</p></article>
     </div>
     <div class="rx-ksteuer"><button class="rx-kpfeil" type="button" data-r="-1" aria-label="Zurück">‹</button><div class="rx-kpunkte"></div><button class="rx-kpfeil" type="button" data-r="1" aria-label="Weiter">›</button></div></div>
-  </div>
-</section>
-
-<section id="live">
-  <div class="wrap">
-    <div class="sec-eyebrow">Live am Gerät</div>
-    <h2>Live am Gerät. <em>Mit dem Vergleich zur Vorwoche.</em></h2>
-    <div class="rx-live">
-      <div class="rx-tablet rx-ipad rx-auf"><video src="../assets/reha/rx-live-v2.mp4" poster="../assets/reha/rx-live-v2.jpg" width="768" height="1024" muted loop playsinline preload="none"
-        aria-label="Live-Ansicht zu Beginn der Einheit: Ruhe-Referenz mit Countdown bei 33 Schlägen pro Minute, danach die Stufen Schritt und Trab, 10-fach beschleunigt"></video></div>
-      <ol class="rx-punkte-liste">
-        <li><i>1</i><div><b>Puls, Aufnahmezeit, Stufenzeit</b><span>Groß oben, dazu der Hinweis, ob sich die Herzfrequenz stabilisiert hat und ob der Gurtspeicher mitläuft.</span></div></li>
-        <li><i>2</i><div><b>Stufe im Vergleich</b><span>Läuft eine Stufe drei Minuten, zeigt das Cockpit ihre Herzfrequenz neben allen früheren Einheiten dieses Pferds mit derselben Einstellung.</span></div></li>
-        <li><i>3</i><div><b>Stufen als Liste</b><span>Jede gesetzte Stufe mit Uhrzeit und Einstellung. Eine falsche Marke nehmen Sie mit einem Tipp zurück.</span></div></li>
-        <li><i>4</i><div><b>Puls- und HRV-Kurve</b><span>Die letzten 10 Minuten mit den Stufenmarken, darunter Poincaré der ganzen Sitzung mit Zeitregler.</span></div></li>
-        <li><i>5</i><div><b>HRV-Kennwerte</b><span>RMSSD, SDNN, SD1, SD2, DFA&nbsp;α1 und Artefakte der laufenden Stufe. Jeder Wert erklärt sich beim Antippen. In Bewegung dienen sie der Orientierung, ausgewertet wird die Ruhe-Referenz. SD1, SD2 und DFA&nbsp;α1 sind am Pferd nicht mit dem EKG verglichen.</span></div></li>
-      </ol>
-    </div>
-    <div class="rx-zwei">
-      <div class="rx-tablet rx-ipad rx-auf"><video src="../assets/reha/rx-fuehranlage-v2.mp4" poster="../assets/reha/rx-fuehranlage-v2.jpg" width="768" height="1024" muted loop playsinline preload="none"
-        aria-label="Live-Ansicht mit Gerät Führanlage: HRV-Kennwerte der laufenden Stufe und die Puls- und HRV-Kurve mit Präzisionsraster, Puls zwischen 44 und 55 Schlägen pro Minute"></video></div>
-      <div><div class="rx-marke"><i>F</i>Führanlage</div>
-        <h3>Auch die Erholung ist dokumentiert</h3>
-        <p>Dasselbe Rennpferd geht nach dem Galopp in der Führanlage. Der Puls liegt zwischen 44 und 55 Schlägen pro Minute, die HRV-Kennwerte laufen mit.</p>
-        <p>Ob ein Pferd nach der Arbeit steht oder in der Führanlage geht, kann die Erholung verändern. Das Cockpit dokumentiert, an welchem Gerät sich das Pferd erholt. Der Bericht vergleicht deshalb nur Erholungen unter derselben Bedingung.</p>
-        <p class="rx-quelle" style="text-align:left">Echte Aufnahme, Minute 32,5 bis 46,5 derselben 64-minütigen Aufzeichnung, 15-fach beschleunigt. Beginn und Ende der Erholungsphase haben wir aus der Pulskurve bestimmt.</p></div>
-    </div>
   </div>
 </section>
 
@@ -1501,25 +1454,59 @@ section h2 em{font-style:normal;color:var(--cyan)}
   </div>
 </section>
 
-<section id="nacharbeit">
+<section id="live">
   <div class="wrap">
-    <div class="sec-eyebrow">Ohne Nacharbeit</div>
-    <h2>Kein Zettel am Gerät. <em>Kein Nachtragen der Stufen.</em></h2>
-    <div class="rx-kar rx-kar-raster" data-rxk><div class="rx-kbahn rx-proz" tabindex="0" role="region" aria-roledescription="Karussell" aria-label="Was nicht mehr anfällt">
-      <div class="rx-pz rx-kdia"><div class="rx-pz-bild dunkel"><img src="../assets/reha/rx-k2-ruhe.jpg" alt="" loading="lazy"></div><div class="rx-pz-txt"><s>Mitschreiben am Gerät</s><b>Stufen werden während der Arbeit erfasst</b><span>mit Uhrzeit, dem nächsten Herzschlag zugeordnet</span></div></div>
-      <div class="rx-pz rx-kdia"><div class="rx-pz-bild"><img src="../assets/reha/rx-cover-sitzung.jpg" alt="" loading="lazy"></div><div class="rx-pz-txt"><s>Werte abtippen, Diagramm erstellen</s><b>Der Bericht entsteht beim Auslesen</b><span>mit Ihrem Briefkopf, als PDF</span></div></div>
-      <div class="rx-pz rx-kdia"><div class="rx-pz-bild"><img src="../assets/reha/rx-cover-verlauf.jpg" alt="" loading="lazy"></div><div class="rx-pz-txt"><s>Den Verlauf der Halterin erklären</s><b>Sie nimmt ihn schriftlich mit</b><span>in Alltagssprache, mit Feld für Ihre Einordnung</span></div></div>
-      <div class="rx-pz rx-kdia"><div class="rx-pz-bild dunkel"><img src="../assets/reha/rx-k1-akte.jpg" alt="" loading="lazy"></div><div class="rx-pz-txt"><s>Einheiten in Ordnern suchen</s><b>Alle Einheiten in der Akte des Pferds</b><span>mit Verlauf bei gleicher Stufe</span></div></div>
+    <div class="sec-eyebrow">Live am Gerät</div>
+    <h2>Live am Gerät. <em>Mit dem Vergleich zur Vorwoche.</em></h2>
+    <div class="rx-live">
+      <div class="rx-tablet rx-ipad rx-auf"><video src="../assets/reha/rx-live-v2.mp4" poster="../assets/reha/rx-live-v2.jpg" width="768" height="1024" muted loop playsinline preload="none"
+        aria-label="Live-Ansicht zu Beginn der Einheit: Ruhe-Referenz mit Countdown bei 33 Schlägen pro Minute, danach die Stufen Schritt und Trab, 10-fach beschleunigt"></video></div>
+      <ol class="rx-punkte-liste">
+        <li><i>1</i><div><b>Puls, Aufnahmezeit, Stufenzeit</b><span>Groß oben, dazu der Hinweis, ob sich die Herzfrequenz stabilisiert hat und ob der Gurtspeicher mitläuft.</span></div></li>
+        <li><i>2</i><div><b>Stufe im Vergleich</b><span>Läuft eine Stufe drei Minuten, zeigt das Cockpit ihre Herzfrequenz neben allen früheren Einheiten dieses Pferds mit derselben Einstellung.</span></div></li>
+        <li><i>3</i><div><b>Stufen als Liste</b><span>Jede gesetzte Stufe mit Uhrzeit und Einstellung. Eine falsche Marke nehmen Sie mit einem Tipp zurück.</span></div></li>
+        <li><i>4</i><div><b>Puls- und HRV-Kurve</b><span>Die letzten 10 Minuten mit den Stufenmarken, darunter Poincaré der ganzen Sitzung mit Zeitregler.</span></div></li>
+        <li><i>5</i><div><b>HRV-Kennwerte</b><span>RMSSD, SDNN, SD1, SD2, DFA&nbsp;α1 und Artefakte der laufenden Stufe. Jeder Wert erklärt sich beim Antippen. In Bewegung dienen sie der Orientierung, ausgewertet wird die Ruhe-Referenz. SD1, SD2 und DFA&nbsp;α1 sind am Pferd nicht mit dem EKG verglichen.</span></div></li>
+      </ol>
+    </div>
+    <div class="rx-zwei">
+      <div class="rx-tablet rx-ipad rx-auf"><video src="../assets/reha/rx-fuehranlage-v2.mp4" poster="../assets/reha/rx-fuehranlage-v2.jpg" width="768" height="1024" muted loop playsinline preload="none"
+        aria-label="Live-Ansicht mit Gerät Führanlage: HRV-Kennwerte der laufenden Stufe und die Puls- und HRV-Kurve mit Präzisionsraster, Puls zwischen 44 und 55 Schlägen pro Minute"></video></div>
+      <div><div class="rx-marke"><i>F</i>Führanlage</div>
+        <h3>Auch die Erholung ist dokumentiert</h3>
+        <p>Dasselbe Rennpferd geht nach dem Galopp in der Führanlage. Der Puls liegt zwischen 44 und 55 Schlägen pro Minute, die HRV-Kennwerte laufen mit.</p>
+        <p>Ob ein Pferd nach der Arbeit steht oder in der Führanlage geht, kann die Erholung verändern. Das Cockpit dokumentiert, an welchem Gerät sich das Pferd erholt. Der Bericht vergleicht deshalb nur Erholungen unter derselben Bedingung.</p>
+        <p class="rx-quelle" style="text-align:left">Echte Aufnahme, Minute 32,5 bis 46,5 derselben 64-minütigen Aufzeichnung, 15-fach beschleunigt. Beginn und Ende der Erholungsphase haben wir aus der Pulskurve bestimmt.</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="grafiken" class="rx-spektrum">
+  <div class="wrap">
+    <div class="sec-eyebrow">Eine Einheit, alle Ansichten</div>
+    <h2>Jeder Schlag ein Punkt. <em>Spulen Sie die Einheit selbst zurück.</em></h2>
+    <div class="rx-pz-buehne">
+      <div class="rx-tablet rx-ipad rx-pz-tab"><figure class="pz" data-quelle="/carlon-equine/app/belege/poincare-fuehranlage.json" data-lang="de"></figure></div>
+      <div class="rx-pz-txt">
+        <p>Das ist der Poincaré-Baustein aus dem Cockpit, hier mit den 1.162 Schlägen von Nordwind in der Führanlage. Jeder Punkt ist ein Schlagpaar, die Ellipse aus SD1 und SD2 gilt für das gewählte Zeitfenster.</p>
+        <ul class="rx-haken">
+          <li>Ziehen Sie den Zeitregler vor und zurück.</li>
+          <li>Tippen Sie auf einen Punkt: Das Fadenkreuz nennt Schlag, Zeitpunkt und beide Abstände in Millisekunden.</li>
+          <li>Im Cockpit gibt es dieselbe Ansicht für jede Einheit, live und im Bericht.</li>
+        </ul>
+        <p class="rx-quelle" style="text-align:left;margin:0">Echte Aufnahme aus dem Gurtspeicher, Polar H10, 25 Minuten Führanlage.</p>
+      </div>
+    </div>
+    <div class="rx-kar" data-rxk><div class="rx-kbahn" tabindex="0" role="region" aria-roledescription="Karussell" aria-label="Weitere Ansichten einer Einheit">
+      <figure class="rx-gal rx-kdia"><div class="rx-blatt"><img src="../assets/reha/berichte/fuehr-sitzung-s2.jpg" width="1600" height="1131" loading="lazy" alt="Sitzungsbericht Seite 2: Tabelle der Stufen mit Herzfrequenz am Stufenende und Erholungskurve"></div><figcaption><b>Stufen und Erholung</b><span>Herzfrequenz am Ende jeder Stufe, Erholungskurve mit Zeitkonstante</span></figcaption></figure>
+      <figure class="rx-gal rx-kdia"><div class="rx-blatt"><img src="../assets/reha/berichte/fuehr-sitzung-s4.jpg" width="1600" height="1131" loading="lazy" alt="Sitzungsbericht Seite 4: Poincaré der ganzen Einheit, nach Uhrzeit eingefärbt, und je Stufe"></div><figcaption><b>Poincaré nach Uhrzeit</b><span>Die ganze Einheit farbig nach Zeitpunkt, daneben je Stufe</span></figcaption></figure>
+      <figure class="rx-gal rx-kdia"><div class="rx-blatt"><img src="../assets/reha/rx-vl-kurve.jpg" width="1400" height="219" loading="lazy" alt="Herzfrequenz bei gleicher Stufe über 8 Einheiten mit Trendlinie (Demo)"></div><figcaption><b>Acht Wochen bei gleicher Stufe</b><span>Herzfrequenz der Vergleichsübung mit Trend und Schwankungsband (Demo-Daten)</span></figcaption></figure>
+      <figure class="rx-gal rx-kdia"><div class="rx-blatt"><img src="../assets/reha/rx-vl-vier.jpg" width="1400" height="222" loading="lazy" alt="Vier Verläufe: Erholungszeit, Puls 5 Minuten nach Belastung, Ruhe-RMSSD, Ruhe-Herzfrequenz (Demo)"></div><figcaption><b>Erholung und Ruhe-HRV</b><span>Vier Verläufe über alle Einheiten (Demo-Daten)</span></figcaption></figure>
+      <figure class="rx-gal rx-kdia"><div class="rx-tablet"><img src="../assets/reha/rx-k1-akte.jpg" width="1000" height="750" loading="lazy" alt="Akte mit 8 Reha-Sitzungen, Verlauf 65 auf 57 bpm und den 13 Geräten (Demo)"></div><figcaption><b>Die Akte des Pferds</b><span>Alle Einheiten, der Verlauf in bpm und der Start jeder neuen Einheit</span></figcaption></figure>
     </div>
     <div class="rx-ksteuer"><button class="rx-kpfeil" type="button" data-r="-1" aria-label="Zurück">‹</button><div class="rx-kpunkte"></div><button class="rx-kpfeil" type="button" data-r="1" aria-label="Weiter">›</button></div></div>
   </div>
 </section>
-
-<div class="rx-ansicht" id="rxAnsicht" hidden role="dialog" aria-modal="true" aria-labelledby="rxATitel">
-  <div class="rx-a-kopf"><span class="rx-a-titel" id="rxATitel"></span><a id="rxAPdf" href="#" target="_blank" rel="noopener">PDF ↗</a><button class="rx-a-zu" type="button" aria-label="Schließen">×</button></div>
-  <div class="rx-a-seiten" id="rxASeiten"></div>
-  <div class="rx-a-fuss"><button type="button" data-r="-1" aria-label="Vorige Seite">‹</button><span id="rxAZahl"></span><button type="button" data-r="1" aria-label="Nächste Seite">›</button></div>
-</div>
 
 <section id="gurtspeicher">
   <div class="wrap">
@@ -1562,6 +1549,27 @@ section h2 em{font-style:normal;color:var(--cyan)}
     </figure>
   </div>
 </section>
+
+<section id="nacharbeit">
+  <div class="wrap">
+    <div class="sec-eyebrow">Was wegfällt und was bleibt</div>
+    <h2>Kein Zettel am Gerät. <em>Kein Nachtragen der Stufen.</em></h2>
+    <p class="sec-lead" style="max-width:760px;color:var(--text-secondary)">Stufen, Kurven, Tabellen und Vergleichswerte entstehen beim Auslesen von selbst. Ihre Beurteilung, Indikation und Befunde tragen Sie für den Abschlussbericht selbst ein.</p>
+    <div class="rx-kar rx-kar-raster" data-rxk><div class="rx-kbahn rx-proz" tabindex="0" role="region" aria-roledescription="Karussell" aria-label="Was nicht mehr anfällt">
+      <div class="rx-pz rx-kdia"><div class="rx-pz-bild dunkel"><img src="../assets/reha/rx-k2-ruhe.jpg" alt="" loading="lazy"></div><div class="rx-pz-txt"><s>Mitschreiben am Gerät</s><b>Stufen werden während der Arbeit erfasst</b><span>mit Uhrzeit, dem nächsten Herzschlag zugeordnet</span></div></div>
+      <div class="rx-pz rx-kdia"><div class="rx-pz-bild"><img src="../assets/reha/rx-cover-sitzung.jpg" alt="" loading="lazy"></div><div class="rx-pz-txt"><s>Werte abtippen, Diagramm erstellen</s><b>Der Bericht entsteht beim Auslesen</b><span>mit Ihrem Briefkopf, als PDF</span></div></div>
+      <div class="rx-pz rx-kdia"><div class="rx-pz-bild"><img src="../assets/reha/rx-cover-verlauf.jpg" alt="" loading="lazy"></div><div class="rx-pz-txt"><s>Den Verlauf der Halterin erklären</s><b>Sie nimmt ihn schriftlich mit</b><span>in Alltagssprache, mit Feld für Ihre Einordnung</span></div></div>
+      <div class="rx-pz rx-kdia"><div class="rx-pz-bild dunkel"><img src="../assets/reha/rx-k1-akte.jpg" alt="" loading="lazy"></div><div class="rx-pz-txt"><s>Einheiten in Ordnern suchen</s><b>Alle Einheiten in der Akte des Pferds</b><span>mit Verlauf bei gleicher Stufe</span></div></div>
+    </div>
+    <div class="rx-ksteuer"><button class="rx-kpfeil" type="button" data-r="-1" aria-label="Zurück">‹</button><div class="rx-kpunkte"></div><button class="rx-kpfeil" type="button" data-r="1" aria-label="Weiter">›</button></div></div>
+  </div>
+</section>
+
+<div class="rx-ansicht" id="rxAnsicht" hidden role="dialog" aria-modal="true" aria-labelledby="rxATitel">
+  <div class="rx-a-kopf"><span class="rx-a-titel" id="rxATitel"></span><a id="rxAPdf" href="#" target="_blank" rel="noopener">PDF ↗</a><button class="rx-a-zu" type="button" aria-label="Schließen">×</button></div>
+  <div class="rx-a-seiten" id="rxASeiten"></div>
+  <div class="rx-a-fuss"><button type="button" data-r="-1" aria-label="Vorige Seite">‹</button><span id="rxAZahl"></span><button type="button" data-r="1" aria-label="Nächste Seite">›</button></div>
+</div>
 
 <section id="rollen">
   <div class="wrap">
@@ -1646,7 +1654,15 @@ section h2 em{font-style:normal;color:var(--cyan)}
         <a class="cta-primary tarif-knopf" href="/carlon-equine/app/?kasse=center">14 Tage testen · danach 890&nbsp;€ netto im Monat →</a>
       </div>
     </div>
-    <p class="test-bedingung"><b>14 Tage kostenlos testen:</b> Zahlungsdaten geben Sie beim Start an, heute wird nichts abgebucht. Die Testphase gibt es einmal je Betrieb; ein Stufenwechsel beendet sie. Kündigen Sie innerhalb der 14 Tage unter „Abo verwalten“, entstehen keine Kosten. Ihr Preis bleibt ab Vertragsbeginn 24 Monate fest. Danach ist das Monatsabo zum Ende des laufenden Abrechnungsmonats kündbar, das Jahresabo zum Ende seiner Laufzeit. Kauf und Abrechnung laufen über Link (Sold through Link, LLC, Stripe-Gruppe) als Verkäufer; von dort kommt die Rechnung. Nur für Tierarztpraxen, Kliniken und Reha-Betriebe als Unternehmer im Sinne des §&nbsp;14 BGB. <a href="/agb.html#visite">AGB</a> · <a href="/privacy.html">Datenschutz</a></p>
+    <dl class="rx-bedingungen">
+      <div><dt>Heute fällig</dt><dd>Nichts. Beim Monatsabo testen Sie 14 Tage, die Zahlungsdaten geben Sie beim Start an.</dd></div>
+      <div><dt>Erste Abbuchung</dt><dd>Am Tag nach den 14 Testtagen, danach monatlich. Das Jahresabo hat keine Testphase.</dd></div>
+      <div><dt>Kündigung</dt><dd>In den 14 Tagen kostenlos unter „Abo verwalten“. Danach das Monatsabo jederzeit zum Ende des Abrechnungsmonats, das Jahresabo zum Ende seiner Laufzeit.</dd></div>
+      <div><dt>Testphase</dt><dd>Einmal je Betrieb; ein Stufenwechsel beendet sie.</dd></div>
+      <div><dt>Verkäufer und Rechnung</dt><dd>Link (Sold through Link, LLC, Stripe-Gruppe); von dort kommt die Rechnung mit ausgewiesener USt.</dd></div>
+      <div><dt>Hardware</dt><dd>Nicht im Preis, siehe unten.</dd></div>
+    </dl>
+    <p class="test-bedingung">Nur für Tierarztpraxen, Kliniken und Reha-Betriebe als Unternehmer im Sinne des §&nbsp;14 BGB. <a href="/agb.html#visite">AGB</a> · <a href="/privacy.html">Datenschutz</a></p>
     <p class="reha-gurt"><b>Nicht im Preis:</b> je Pferd, das gleichzeitig in Reha steht, ein Polar H10 mit Pferdegurt aus dem Fachhandel; stehen 20 Pferde gleichzeitig in Reha, sind das 20 Sensoren mit Gurt. Ein Gurt geht nach der Abreise eines Pferds an das nächste.</p>
     <p class="reha-zurueck">Praxis ohne Reha-Betrieb? <a href="/carlon-equine-visite/#preis">Fahrpraxis ab 149&nbsp;€ und Praxis &amp; Klinik ab 349&nbsp;€ netto im Monat →</a></p>
   </div>
@@ -1682,7 +1698,7 @@ section h2 em{font-style:normal;color:var(--cyan)}
     <div class="sec-eyebrow">Vor der Entscheidung</div>
     <h2>Sehen Sie es selbst. <em>Acht Wochen Reha in der Demo.</em></h2>
     <p class="sec-lead">Das Demo-Cockpit zeigt die Funktionen der Reha-Stufen. Öffnen Sie die Akte von Comet, erstellen Sie Sitzungsbericht und Verlaufsdokumentation, und starten Sie mit Ihrem eigenen Gurt eine Reha-Aufnahme an einem Demo-Pferd. Eigene Pferde anlegen und dauerhaft führen Sie mit dem Abo.</p>
-    <div class="cta-row"><a class="cta-primary" href="/carlon-equine/app/?demo=roster&amp;pferd=comet&amp;fokus=reha">Demo öffnen →</a><a class="btn btn-back" href="/carlon-equine/app/?kasse=reha">14 Tage testen · danach 349&nbsp;€ netto im Monat →</a></div>
+    <div class="cta-row"><a class="cta-primary" href="/carlon-equine/app/?demo=roster&amp;pferd=comet&amp;fokus=reha">Demo im Browser öffnen →</a><a class="btn btn-back" href="/carlon-equine/app/?kasse=reha">14 Tage testen · danach 349&nbsp;€ netto im Monat →</a></div>
   </div>
 </section>
 
