@@ -35,7 +35,7 @@
 .kauf-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;align-items:start}
 .kauf-grid.kauf-fuenf{grid-template-columns:repeat(auto-fit,minmax(230px,1fr))}
 @media(max-width:760px){.kauf-grid{grid-template-columns:1fr}}
-.kauf-grid .tier-opt{padding:12px 14px}.kauf-spalte.gewaehlt>.tier-opt.feat:first-child{border-color:var(--cyan);box-shadow:0 0 0 2px rgba(62,207,178,.28)}.kauf-kurz{font-size:12px;color:var(--text-dim);margin:-6px 0 14px 2px}.kauf-b2b{display:flex;gap:10px;align-items:flex-start;margin:0 0 14px;padding:10px 12px;border:1px solid rgba(62,207,178,.35);border-radius:10px;font-size:13px;color:var(--text-primary);cursor:pointer}.kauf-b2b input{margin-top:3px;accent-color:var(--cyan)}.kauf-b2b a{color:var(--cyan)}.kauf-link[aria-disabled=true]{opacity:.82}.kauf-spalte.gewaehlt>.tier-opt.feat:first-child h4::after{content:"Gewählt";margin-left:8px;padding:2px 8px;border-radius:999px;font-size:11px;background:rgba(62,207,178,.18);color:var(--cyan);vertical-align:middle}.kauf-grid .tier-table{gap:8px}.kauf-spalte{display:flex;flex-direction:column}.kauf-spalte>.tier-table{order:-1;margin:0 0 10px!important}.kauf-grid .tier-opt ul{line-height:1.6}
+.kauf-grid .tier-opt{padding:12px 14px}.kauf-spalte.gewaehlt>.tier-opt.feat:first-child{border-color:var(--cyan);box-shadow:0 0 0 2px rgba(62,207,178,.28)}.kauf-kurz{font-size:12px;color:var(--text-dim);margin:-6px 0 14px 2px}.kauf-b2b{display:flex;gap:10px;align-items:flex-start;margin:0 0 14px;padding:10px 12px;border:1px solid rgba(62,207,178,.35);border-radius:10px;font-size:13px;color:var(--text-primary);cursor:pointer}.kauf-b2b input{margin-top:3px;accent-color:var(--cyan)}.kauf-b2b a{color:var(--cyan)}.kauf-link[aria-disabled=true]{opacity:.82}.kauf-spalte.gewaehlt>.tier-opt.feat:first-child h4::after{content:"Gewählt";margin-left:8px;padding:2px 8px;border-radius:999px;font-size:11px;background:rgba(62,207,178,.18);color:var(--cyan);vertical-align:middle}.kauf-grid .tier-table{gap:8px}.kauf-spalte{display:flex;flex-direction:column}.kauf-spalte>.tier-table{order:1;margin:10px 0 0!important}.kauf-grid .tier-opt ul{line-height:1.6}
 
 .vh-cta.ghost.hell,.verdict-hero .vh-cta.ghost.hell{color:#E8F8FF;border:1px solid rgba(62,207,178,.45);background:rgba(62,207,178,.08)}
 .pc-guete.lang{margin:10px 0 0;font-size:12.5px;color:var(--text-secondary)}
@@ -49,6 +49,16 @@ html.nur [data-nur-pfad]:not(html):not(body){padding-top:0!important;margin-top:
 html.nur,html.nur body{background:#000!important}
 html.nur body,html.nur #main{padding:10px 12px 28px!important;margin:0!important}
 html.nur .verlauf-grid{grid-template-columns:1fr!important}
+
+/* Klicktest 20.11.2026: neutraler Zustand ohne Werte (nicht grün) */
+.tri-none .dot{background:var(--text-dim)!important}.stri.tri-none,.mp-tri.tri-none{color:var(--text-secondary)}.tri-badge.tri-none{color:var(--text-secondary);background:rgba(255,255,255,.04);border:1px solid var(--border-faint)}.tri-badge.tri-none .dot{background:var(--text-dim)}
+.verdict-hero.v-none{border-color:var(--border-faint)}.verdict-hero.v-none .vh-dot{background:var(--text-dim);box-shadow:none}.verdict-hero.v-none .vh-lvl{color:var(--text-primary)}
+
+/* Klicktest 20.11.2026: iPad quer (1180 px) schnitt die Reiter ab („Pfe…“) – Beschriftungen der Kopf-Knöpfe weichen den Reitern */
+@media (max-width:1320px){.hb-verb-t{display:none}header .brand>div{display:none}}
+
+/* Klicktest 20.11.2026: „Stufe übernehmen / Belastung Ende / Aufnahme beenden“ lagen auf dem iPad quer unter dem Bildrand – mit einer Hand am Pferd nicht erreichbar. Jetzt am unteren Rand angeheftet. */
+#rehaLive .rl-los{position:sticky;bottom:0;z-index:5;margin-left:-4px;margin-right:-4px;padding:12px 4px calc(12px + env(safe-area-inset-bottom,0px));background:linear-gradient(to top,rgba(0,0,0,.96) 70%,rgba(0,0,0,0));backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}
 </style>
 <link rel="stylesheet" href="assets/leaflet/leaflet.css">
 <style>
@@ -3007,6 +3017,10 @@ const Reha={
      Ruhe-HRV nur aus der stationären Ruhephase vor der ersten Stufe (HRV-Vorstufe, artefaktkorrigiert). */
   RAUSCH:{hf:3,tau:10,rmssd:0.2},
   _kw:{},
+  /* Langzeittest 21.11.2026 (20 Pferde × 26 Wochen): die erste Akte eines Pferds brauchte 0,7–2 s, weil die Kennwerte aller Einheiten erst beim Öffnen gerechnet wurden.
+     Jetzt im Leerlauf vorrechnen, jüngste Einheiten zuerst, in Häppchen von ~12 ms (blockiert keine Eingabe). */
+  vorrechnen(){ if(this._vorLauf) return; const L=(State.recordings||[]).filter(r=>r.reha&&Array.isArray(r.rr)&&r.rr.length>30).sort((a,b)=>new Date(b.startedAt)-new Date(a.startedAt)); if(!L.length) return; this._vorLauf=true;
+    const schritt=()=>{ const t=performance.now(); while(L.length&&performance.now()-t<12){ try{ this.kennwerte(L.shift()); }catch(_){ } } if(L.length) (window.requestIdleCallback||setTimeout)(schritt); else this._vorLauf=false; }; (window.requestIdleCallback||setTimeout)(schritt); },
   kennwerte(rec){ const key=rec.id+':'+(rec.rr&&rec.rr.length)+':'+((rec.reha&&rec.reha.log)||[]).length; if(this._kw[key]) return this._kw[key];
     const roh=rec.rr.map(Number); let vGes=null; try{ vGes=HRVVorstufe.analysiere(roh); }catch(_){ }
     /* Filterkette JE PHASE (Ruhe, jede Stufe): über die ganze Sitzung gerechnet nimmt sie ihre Schwellen aus dem gesamten
@@ -3114,7 +3128,9 @@ const Reha={
     tk.forEach(q=>{ if(q<lo||q>hi) return; g+=`<line x1="${pad.l}" x2="${pad.l+W}" y1="${Y(q).toFixed(1)}" y2="${Y(q).toFixed(1)}" stroke="${C.achse}" stroke-opacity=".28" stroke-width=".7"/><text x="${pad.l-7}" y="${(Y(q)+3).toFixed(1)}" text-anchor="end" font-size="10" fill="${C.puls}" font-variant-numeric="tabular-nums">${fmt0(q)}</text>`; });
     g+=`<text x="${pad.l-7}" y="${pad.t-9}" text-anchor="end" font-size="9" font-weight="600" fill="${C.achse}">bpm</text><line x1="${pad.l}" x2="${pad.l+W}" y1="${pad.t+H}" y2="${pad.t+H}" stroke="${C.achse}" stroke-opacity=".55" stroke-width=".8"/>`;
     [...new Set(xs)].sort((a,b)=>a-b).forEach(x=>{ g+=`<line x1="${X(x).toFixed(1)}" x2="${X(x).toFixed(1)}" y1="${pad.t}" y2="${pad.t+H+4}" stroke="${C.achse}" stroke-opacity=".10" stroke-width=".6"/>`; });
-    [...new Set(xs)].sort((a,b)=>a-b).forEach(x=>{ g+=`<text x="${X(x).toFixed(1)}" y="${h-9-lh}" text-anchor="middle" font-size="10" fill="${C.achse}">${new Date(x).toLocaleDateString('de-DE',{day:'numeric',month:'short'})}</text>`; });
+    /* Langzeittest 21.11.2026: bei 52 Einheiten lagen alle Datumsangaben übereinander – höchstens eine Beschriftung je ~70 px, erste und letzte immer */
+    { const D=[...new Set(xs)].sort((a,b)=>a-b), maxN=Math.max(2,Math.floor(W/70)), schr=Math.ceil(D.length/maxN), F=D.length>maxN*1.5?{day:'numeric',month:'numeric'}:{day:'numeric',month:'short'};
+      D.forEach((x,i)=>{ if(i%schr!==0&&i!==D.length-1) return; if(i!==D.length-1&&D.length-1-i<schr*0.6&&i!==0) return; g+=`<text x="${X(x).toFixed(1)}" y="${h-9-lh}" text-anchor="${i===0?'start':i===D.length-1?'end':'middle'}" font-size="10" fill="${C.achse}">${new Date(x).toLocaleDateString('de-DE',F)}</text>`; }); }
     L.forEach((v,k)=>{ const pts=v.p.map(q=>[X(+new Date(q.datum)),Y(q.hf),q.hf]); g+=`<polyline fill="none" stroke="${F[k]}" stroke-width="2.2" ${DA[k]?`stroke-dasharray="${DA[k]}"`:''} points="${pts.map(q=>q[0].toFixed(1)+','+q[1].toFixed(1)).join(' ')}"/>`+pts.map((q,i)=>k===1?`<rect x="${(q[0]-4).toFixed(1)}" y="${(q[1]-4).toFixed(1)}" width="8" height="8" fill="${F[k]}"/>`:`<circle cx="${q[0].toFixed(1)}" cy="${q[1].toFixed(1)}" r="${i===pts.length-1?5:3.6}" fill="${F[k]}"/>`).join('');
       const a=Math.round(v.p[0].hf), b=Math.round(v.p[v.p.length-1].hf), tr=this.reihenTrend(v.p.map(q=>({x:q.datum,y:q.hf}))), dd=this._d(a,b,this.grenzeHF(hid,bis).wert,'bpm');
       const tw=tr&&tr.n>=4?tr.b*tr.wochen:null, tki=tr?tr.ki*tr.wochen:0, vz=x=>(x>0?'+':x<0?'−':'±')+fmt0(Math.abs(x)), ttxt=tw!=null?`Trend ${vz(tw)} bpm in ${fmt0(tr.wochen)} Wochen (95 %: ${vz(tw-tki)} bis ${vz(tw+tki)})`:dd.txt;
@@ -3122,7 +3138,7 @@ const Reha={
         g+=`<rect x="${xa}" y="${Y(yA+gr*2)}" width="${xb-xa}" height="${Y(yA-gr*2)-Y(yA+gr*2)}" fill="${C.achse}" opacity=".13"/><line x1="${xa}" y1="${Y(yA)}" x2="${xb}" y2="${Y(yB)}" stroke="${C.achse}" stroke-width="1.4" stroke-dasharray="6 4"/>`; }
       const txt=`${esc(v.label)}: gemessen ${a} → ${b} bpm (${b-a>0?'+':b-a<0?'−':'±'}${Math.abs(b-a)}) · ${ttxt} · ${v.p.length} Einheiten`;
       if(unten) g+=`<line x1="${pad.l}" x2="${pad.l+18}" y1="${h-lh+8+k*zh}" y2="${h-lh+8+k*zh}" stroke="${F[k]}" stroke-width="2.4" ${DA[k]?`stroke-dasharray="${DA[k]}"`:''}/>${eng?`<text x="${pad.l+24}" y="${h-lh+12+k*zh}" font-size="10" fill="${C.text}"><tspan font-weight="700">${esc(v.label)}</tspan>: gemessen ${a} → ${b} bpm (${b-a>0?'+':b-a<0?'−':'±'}${Math.abs(b-a)})</text><text x="${pad.l+24}" y="${h-lh+25+k*zh}" font-size="9.5" fill="${C.achse}">${ttxt} · ${v.p.length} Einheiten</text>`:`<text x="${pad.l+24}" y="${h-lh+12+k*16}" font-size="10" fill="${C.text}">${txt}</text>`}`;
-      else g+=`<line x1="${pad.l+W+12}" x2="${pad.l+W+30}" y1="${pad.t+10+k*36}" y2="${pad.t+10+k*36}" stroke="${F[k]}" stroke-width="2.4" ${DA[k]?`stroke-dasharray="${DA[k]}"`:''}/><text x="${pad.l+W+36}" y="${pad.t+14+k*36}" font-size="10.5" font-weight="700" fill="${C.text}">${esc(v.label)}</text><text x="${pad.l+W+36}" y="${pad.t+28+k*36}" font-size="10" fill="${C.achse}">gemessen ${a} → ${b} bpm (${b-a>0?'+':b-a<0?'−':'±'}${Math.abs(b-a)})</text><text x="${pad.l+W+36}" y="${pad.t+41+k*36}" font-size="9.5" fill="${C.achse}">${ttxt.replace(' in ',' · ')}</text>`; });
+      else g+=`<line x1="${pad.l+W+12}" x2="${pad.l+W+30}" y1="${pad.t+10+k*46}" y2="${pad.t+10+k*46}" stroke="${F[k]}" stroke-width="2.4" ${DA[k]?`stroke-dasharray="${DA[k]}"`:''}/><text x="${pad.l+W+36}" y="${pad.t+14+k*46}" font-size="10.5" font-weight="700" fill="${C.text}">${esc(v.label)}</text><text x="${pad.l+W+36}" y="${pad.t+28+k*46}" font-size="10" fill="${C.achse}">gemessen ${a} → ${b} bpm (${b-a>0?'+':b-a<0?'−':'±'}${Math.abs(b-a)})</text><text x="${pad.l+W+36}" y="${pad.t+41+k*46}" font-size="9.5" fill="${C.achse}">${ttxt.replace(' in ',' · ')}</text>`; });
     return `<svg viewBox="0 0 ${w} ${h}" style="width:100%;display:block">${g}</svg>`; },
   /* Kleiner Verlauf je Kennzahl mit EIGENER Achse und Mindest-Spannweite (keine gestauchten Achsen, Rauschen bleibt Rauschen) */
   _svgKlein(p,{w=255,h=150,einheit='',grenze=3,rel=false,minSpan=10,farbe=null}={}){ const C=this._C, P=p.filter(q=>q.y!=null&&isFinite(q.y)); if(P.length<2) return '';
@@ -3190,7 +3206,7 @@ const Reha={
     const zeile=(l,v2)=>v2?`<div class="rh-bz"><span>${l}</span><b>${v2}</b></div>`:'';
     const ERR={ja:'erreicht',teilweise:'teilweise erreicht',nein:'nicht erreicht'};
     const seiten=[];
-    seiten.push(`${kopf('Reha-Verlaufsdokumentation · Herz-Kreislauf-Antwort auf das Training')}
+    seiten.push(`${kopf('Reha-Verlaufsdokumentation')}
       <div class="rh-kern" style="font-size:20px;font-weight:800;padding:10px 16px">${kern}${laie?`<div style="font-size:13px;font-weight:600;margin-top:4px;line-height:1.45">${laie}</div>`:''}<div style="font-size:11px;font-weight:400;margin-top:4px;line-height:1.5;color:var(--dim)">${unter}</div></div>
       <div class="rh-zwei" style="grid-template-columns:1.45fr 1fr;margin-top:8px"><div class="rh-box" style="min-height:150px"><div class="rh-bt">Tierärztliche Beurteilung</div>
         ${zeile('Indikation',esc(rh.indikation||'')+(rh.indikationDatum?' · '+fmtDate(rh.indikationDatum):''))}${zeile('Ziel',esc(rh.ziel||'')+(rh.erreicht&&rh.ziel?' · <span style="color:'+(rh.erreicht==='ja'?'var(--acc)':'var(--ink)')+';font-weight:700">'+ERR[rh.erreicht]+'</span>'+(rh.grund?' ('+esc(rh.grund)+')':''):''))}
@@ -3201,8 +3217,10 @@ const Reha={
 %%VERLAUF%%`);
     const verlaufBlock=`<div class="rh-cap" style="margin-top:6px">Herzfrequenz bei gleicher Stufe über die Einheiten</div>${this._svgVerlauf(h.id,bis,{h:128})||'<div class="rh-mini">Ab zwei Einheiten mit identischer Einstellung.</div>'}
       <div class="rh-mini">Herzfrequenz am Stufenende (Median der letzten 60 s) bei identischen Geräteeinstellungen (Karpus = Wasser bis zur Vorderfußwurzel); ${gA.eigen?'kleinste sicher erkennbare Änderung an diesem Pferd '+this.rund(gA.wert)+' bpm':'±3 bpm gelten vorläufig als stabil'}. Die Heilung von Sehnen und Gelenken beurteilen Ultraschall und Lahmheitsuntersuchung; diese Dokumentation zeigt, wie das Herz-Kreislauf-System auf das Training antwortet.</div>`;
-    const zeileK=k=>`<tr><td>${fmtDate(k.rec.startedAt)}</td><td>${esc(k.geraet)}</td><td>${fmt0(k.lastMin)} min</td><td>${k.maxTempo!=null?Number(k.maxTempo).toFixed(1).replace('.',',')+' km/h':'–'}</td><td>${k.wasser.length?esc(k.wasser.map(w2=>(RehaKern.WASSER[w2]||[w2])[0]).join(', ')):'–'}${(()=>{ const tt=[...new Set(k.lastSt.map(x=>(x.markierung||{}).waterTempC).filter(v=>v!=null))]; return tt.length?' · '+tt.map(v=>Number(v).toFixed(1).replace('.',',')).join('/')+' °C':''; })()}</td><td><b style="color:var(--acc2)">${this.z(this.hfRef(k,ref))}</b> bpm</td><td>${k.tauE!=null&&tP.includes(k)?fmt0(k.tauE)+' s':(k.tauE!=null?'<span style="color:var(--faint)">'+fmt0(k.tauE)+' s*</span>':(k.tauUnsicher?'<span style="color:var(--faint)">unsicher (R² '+fmt2(k.tauGuete&&k.tauGuete.r2||0)+')</span>':'–'))}</td><td>${this.z(k.hf5)} bpm</td><td>${k.ruheRM!=null?((q=>q!=null&&q>=5?'<span style="color:var(--faint)">'+fmt1(k.ruheRM)+' ms · orientierend ('+fmt0(q)+' % ersetzt)</span>':Number(k.ruheRM).toFixed(1).replace('.',',')+' ms'+(k.avPausen?' <span style="color:var(--dim)">· '+k.avPausen+' lange Pausen</span>':''))(k.ruheSec?k.anteil(0,k.ruheSec):null)):(k.ruheSec?'<span style="color:var(--faint)">nicht auswertbar'+((q=>q!=null?' ('+fmt0(q)+' % ersetzt)':'')(k.anteil(0,k.ruheSec)))+'</span>':'– ms')}</td></tr>`;
-    const tabelleTeil=L=>`<table class="rh-tab"><thead><tr><th>Datum</th><th>Gerät</th><th>Belastung</th><th>Höchstes Tempo</th><th>Wasser</th><th>HF Vergleichsübung</th><th>Erholungszeit</th><th>HF +5 min</th><th>Ruhe-RMSSD</th></tr></thead><tbody>${L.map(zeileK).join('')}</tbody></table>`;
+    /* Langzeittest 21.11.2026: Spalten, die bei keinem Gerät dieses Pferds vorkommen (Tempo bei der Longe, Wasser beim Laufband), entfallen */
+    const _oT=K.some(k=>k.maxTempo!=null), _oW=K.some(k=>k.wasser&&k.wasser.length), _zT=k=>`<td>${k.maxTempo!=null?Number(k.maxTempo).toFixed(1).replace('.',',')+' km/h':'–'}</td>`, _zW=k=>`<td>${k.wasser.length?esc(k.wasser.map(w2=>(RehaKern.WASSER[w2]||[w2])[0]).join(', ')):'–'}${(()=>{ const tt=[...new Set(k.lastSt.map(x=>(x.markierung||{}).waterTempC).filter(v=>v!=null))]; return tt.length?' · '+tt.map(v=>Number(v).toFixed(1).replace('.',',')).join('/')+' °C':''; })()}`;
+    const zeileK=k=>`<tr><td>${fmtDate(k.rec.startedAt)}</td><td>${esc(k.geraet)}</td><td>${fmt0(k.lastMin)} min</td>${_oT?_zT(k):''}${_oW?_zW(k)+'</td>':''}<td><b style="color:var(--acc2)">${this.z(this.hfRef(k,ref))}</b> bpm</td><td>${k.tauE!=null&&tP.includes(k)?fmt0(k.tauE)+' s':(k.tauE!=null?'<span style="color:var(--faint)">'+fmt0(k.tauE)+' s*</span>':(k.tauUnsicher?'<span style="color:var(--faint)">unsicher (R² '+fmt2(k.tauGuete&&k.tauGuete.r2||0)+')</span>':'–'))}</td><td>${this.z(k.hf5)} bpm</td><td>${k.ruheRM!=null?((q=>q!=null&&q>=5?'<span style="color:var(--faint)">'+fmt1(k.ruheRM)+' ms · orientierend ('+fmt0(q)+' % ersetzt)</span>':Number(k.ruheRM).toFixed(1).replace('.',',')+' ms'+(k.avPausen?' <span style="color:var(--dim)">· '+k.avPausen+' lange Pausen</span>':''))(k.ruheSec?k.anteil(0,k.ruheSec):null)):(k.ruheSec?'<span style="color:var(--faint)">nicht auswertbar'+((q=>q!=null?' ('+fmt0(q)+' % ersetzt)':'')(k.anteil(0,k.ruheSec)))+'</span>':'– ms')}</td></tr>`;
+    const tabelleTeil=L=>`<table class="rh-tab"><thead><tr><th>Datum</th><th>Gerät</th><th>Belastung</th>${_oT?'<th>Höchstes Tempo</th>':''}${_oW?'<th>Wasser</th>':''}<th>HF Vergleichsübung</th><th>Erholungszeit</th><th>HF +5 min</th><th>Ruhe-RMSSD</th></tr></thead><tbody>${L.map(zeileK).join('')}</tbody></table>`;
     const kl=(t,p,o2)=>`<div><div class="rh-cap" style="margin:0 0 4px">${t}</div>${this._svgKlein(p,o2)||'<div class="rh-mini">zu wenige Werte</div>'}</div>`;
     const dauer4=K.map(k=>({x:k.rec.startedAt}));
     seiten.push(`${kopf('Training und Verlauf')}
@@ -4021,7 +4039,9 @@ const Normalizer = {
    Vitale 2020 · Gehlen 2020). Kein Diagnosewerkzeug — Priorisierungshilfe.
    ════════════════════════════════════════════════════════════════════════ */
 const Triage = {
-  label(t){ if(!t) return ''; if(t.ohneWerte) return 'Keine auswertbaren Ruhewerte'; return t.ohneBasis?'Basis im Aufbau':((this.LEVELS[t.level]||{}).label||''); },
+  /* CSS-Klasse der Einstufung: ohne Werte neutral (nicht grün), 21.11.2026 */
+  kl(t){ return t&&t.ohneWerte?'none':((t&&t.level)||'stable'); },
+  label(t){ if(!t) return ''; if(t.keineAufnahme) return 'Noch keine Aufnahme'; if(t.ohneWerte) return 'Keine auswertbaren Ruhewerte'; return t.ohneBasis?'Basis im Aufbau':((this.LEVELS[t.level]||{}).label||''); },
   LEVELS:{crit:{k:'crit',label:'Deutliche Abweichung',rank:3},elev:{k:'elev',label:'Mäßige Abweichung',rank:2},
           watch:{k:'watch',label:'Geringe Abweichung',rank:1},stable:{k:'stable',label:'Im Eigenbereich',rank:0}},
   score(n){
@@ -4109,7 +4129,7 @@ const Triage = {
       if(!flags.includes('nicht beurteilbar')) flags.push('nicht beurteilbar');
     }
     /* „Basis im Aufbau“ (18.11.2026, Kundenreise): eine erste Aufnahme ohne eigene Basis ist keine „Abweichung“ – nur der Name ändert sich, Rang und Spalte bleiben. */
-    return {level,score:Math.round(score),reasons,flags,ohneBasis:!!(ohneBasis&&level==='watch'&&!forced)};
+    return {level,score:Math.round(score),reasons,flags,ohneBasis:!!(ohneBasis&&(level==='watch'||level==='stable')&&!forced)};  /* 20.11.: auch „stabil“ ohne eigene Basis ist kein „Im Eigenbereich“ */
   },
   // Klinische Domäne der Auffälligkeit — zeigt dem Vet auf einen Blick WARUM (Atemweg/Rhythmus/Kolik/autonom).
   // Verbindet die Wissenschaft (Triage-Gründe) mit dem Feld-Blick (Route/Board). Mentale Vorbereitung vor Ort.
@@ -6842,7 +6862,7 @@ const Views={
             <b onclick="Views.openHorse('${h.id}')">${esc(h.name)}</b>
             <div class="sub">${esc(Stamm.rasse(h.breed)||'—')}${h.age?' · '+h.age+' J':''}${place?' · '+esc(place):''}${sammel?' <span class="hr-sammel">Sammelstall</span>':''}${Views.keyFlag(tri)}</div>
           </div>
-          <span class="tri-badge tri-${tri.level}" style="padding:4px 10px;font-size:11px"><span class="dot"></span>${Triage.label(tri)}</span>
+          <span class="tri-badge tri-${Triage.kl(tri)}" style="padding:4px 10px;font-size:11px"><span class="dot"></span>${Triage.label(tri)}</span>
         </div>
         <div class="hr-owner">${IC.owner}<b>${esc(h.owner||'Halter unbekannt')}</b>${h.phone?`<a href="tel:${esc(h.phone)}" onclick="event.stopPropagation()" class="hr-phone">${esc(h.phone)}</a>`:''}${sib?`<span class="hr-sib">+${sib} weitere${sib>1?'':''} dieses Halters</span>`:''}</div>
         <div class="hr-vitals">
@@ -6897,7 +6917,7 @@ const Views={
           ${Views.avatar(h,46)}
           <div style="min-width:0"><div class="nm">${esc(h.name)}</div><div class="brd">${esc(Stamm.rasse(h.breed)||'—')}${h.age?' · '+h.age+' J':''}</div></div>
         </div>
-        <span class="tri-badge tri-${tri.level}" style="padding:4px 9px;font-size:11px"><span class="dot"></span>${Triage.label(tri)}</span>
+        <span class="tri-badge tri-${Triage.kl(tri)}" style="padding:4px 9px;font-size:11px"><span class="dot"></span>${Triage.label(tri)}</span>
       </div>
       ${(h.lat==null||h.lng==null)?`<div class="chips" style="margin-top:10px"><span class="chip amber">Standort fehlt</span></div>`:''}
       <div class="foot" style="margin-top:12px">
@@ -7444,7 +7464,7 @@ const Views={
     const h=State.horses.find(x=>x.id===Views._detailId);
     if(!h) return Views.board();
     const recs=State.recsFor(h.id); const rec=recs[recs.length-1];
-    const tri=rec?rec.triage:{level:'stable',reasons:[],flags:[]};
+    const tri=rec?rec.triage:{level:'stable',reasons:[],flags:[],ohneWerte:true,keineAufnahme:true};   /* Klicktest 20.11.: ohne Aufnahme keine Einstufung */
     const m=rec?rec.metrics:{};
     const dfa=(m.dfa!=null)?m.dfa:(rec&&rec.rr?HRV.dfaAlpha1(rec.rr):null);
     const cons=State.consultsFor(h.id);
@@ -7460,9 +7480,9 @@ const Views={
             ${Views.avatar(h,74,{clickable:true})}
             <div>
               <h1 style="font-size:28px">${esc(h.name)}</h1>
-              <div class="sub" style="margin-top:4px">${esc(Stamm.rasse(h.breed)||'—')}${h.sex?' · '+esc(Stamm.geschlecht(h.sex)):''}${h.age?' · '+h.age+' J':''}${h.weightKg?' · '+h.weightKg+' kg':''}</div>
+              ${(()=>{ const t=[Stamm.rasse(h.breed),h.sex?Stamm.geschlecht(h.sex):'',h.age?h.age+' J':'',h.weightKg?h.weightKg+' kg':''].filter(Boolean); return t.length?`<div class="sub" style="margin-top:4px">${esc(t.join(' · '))}</div>`:`<button class="linkbtn sub" style="margin-top:4px;background:none;border:0;padding:0;color:var(--cyan);cursor:pointer" onclick="Views.editHorse('${h.id}')">+ Rasse, Alter, Gewicht ergänzen</button>`; })()}
               <div style="margin-top:8px;display:flex;gap:8px;align-items:center;flex-wrap:wrap">
-                <span class="tri-badge tri-${tri.level}"><span class="dot"></span>${Triage.label(tri)}</span>
+                <span class="tri-badge tri-${tri.ohneWerte?'none':tri.level}"><span class="dot"></span>${Triage.label(tri)}</span>
                 ${h.needsVisit?'<span class="chip visit">Auf der Tour</span>':''}
                 ${(tri.flags||[]).map(f=>`<span class="chip ${/Rhythmus|Kolik/.test(f)?'red':/Asthma|Atemweg|Signal/.test(f)?'amber':'cyan'}">${esc(Triage.zeig(f))}</span>`).join('')}
               </div>
@@ -7544,7 +7564,7 @@ const Views={
                 <div class="rmini">
                   <div class="m"><b>${fmt0(r.metrics.rmssd)}</b><span>RMSSD</span></div>
                   <div class="m"><b>${fmt0(r.metrics.meanHR)}</b><span>HF</span></div>
-                  <div class="m"><span class="tri-badge tri-${r.triage.level}" style="padding:2px 8px;font-size:10px"><span class="dot"></span>${Triage.label(r.triage)}</span></div>
+                  <div class="m"><span class="tri-badge tri-${Triage.kl(r.triage)}" style="padding:2px 8px;font-size:10px"><span class="dot"></span>${Triage.label(r.triage)}</span></div>
                 </div>
                 <button class="icon-btn" title="Exportieren: JSON, CSV, Kubios, FHIR R5" onclick="event.stopPropagation();Export.menu('${r.id}')">${IC.download}</button>
                 <button class="icon-btn" title="Bericht als eigenständige Datei weitergeben — Besitzer, Überweisungsklinik, Studie" onclick="event.stopPropagation();Handoff.build('${r.id}')">${IC.share||IC.download}</button>
@@ -7595,7 +7615,8 @@ const Views={
     </div>`;
   },
   stat(k,unit,v,c,dec){
-    if(v==null)return `<div class="stat"><div class="k">${k}</div><div class="v na" title="Bei 5-Min-Aufnahme bzw. ohne Frequenz-Export nicht valide berechenbar">n. v.</div><div class="cls" style="color:var(--text-faint)">kurze Aufnahme</div></div>`;
+    /* Klicktest 20.11.2026: „kurze Aufnahme“ war geraten (stand auch ohne jede Aufnahme) – jetzt neutral */
+    if(v==null)return `<div class="stat"><div class="k">${k}</div><div class="v na">—</div><div class="cls" style="color:var(--text-faint)">nicht berechenbar</div></div>`;
     return `<div class="stat"><div class="k">${k}</div><div class="v">${dec===2?fmt2(v):dec?fmt1(v):fmt0(v)}${unit?`<small> ${unit}</small>`:''}</div>${c?`<div class="cls ${c.cls}">${c.text}</div>`:''}</div>`;},
   /* 16.11.2026: Keine Etiketten nach Tabellengrenzen („im üblichen Bereich“, „über üblichem Ruhewert“) –
      beim Pferd gibt es dafür keinen Konsens-Normwert; eingeordnet wird gegen die eigene Basis (Triage).
@@ -7621,19 +7642,21 @@ const Views={
   // Antwort vor Tiefe (nicht chart-first). Der Sofort-Faktor-5 beim Öffnen einer Akte.
   verdictHero(h,rec,tri){
     if(!tri)return '';
+    /* Klicktest 20.11.2026: ohne Aufnahme bzw. ohne Ruhewerte keine Einstufung „Im Eigenbereich“ (erfunden) – neutraler Kopf mit dem nächsten Schritt */
+    if(tri.ohneWerte){ const reha=typeof Reha!=='undefined'&&Reha.erlaubt&&Reha.erlaubt(); return `<div class="verdict-hero v-none" style="--vc:var(--text-dim)"><div class="vh-top"><span class="vh-dot"></span><span class="vh-lvl">${tri.keineAufnahme?'Noch keine Aufnahme':'Keine auswertbaren Ruhewerte'}</span></div><div class="vh-reason">${tri.keineAufnahme?(reha?'Starten Sie unten eine Reha-Einheit am Gerät, oder nehmen Sie sieben Minuten Ruhe auf. Danach erscheinen hier die Werte dieses Pferds.':'Nehmen Sie sieben Minuten Ruhe auf („Selbst messen“) oder fordern Sie eine Messung bei der Halterin an. Danach erscheinen hier die Werte dieses Pferds.'):'Die letzte Aufnahme enthält keine auswertbare Ruhephase. Für Ruhewerte sieben Minuten Ruhe aufnehmen.'}</div></div>`; }
     const lvl=tri.level, L=Object.assign({},Triage.LEVELS[lvl]||{label:'—'},{label:Triage.label(tri)||'—'});
     const COL={crit:'var(--red)',elev:'var(--amber)',watch:'var(--cyan)',stable:'var(--good)'};
     const col=COL[lvl]||'var(--cyan)';
     const HEAD={crit:'Deutliche Abweichung von der Eigenbasis',elev:'Mäßige Abweichung von der Eigenbasis',watch:'Geringe Abweichung',stable:'Im Eigenbereich'};
     const m=rec?rec.metrics:{};
-    const reason=(tri.reasons&&tri.reasons[0])?tri.reasons[0]:(lvl==='stable'?'RMSSD im Bereich der eigenen Basis dieses Pferds. Die Einordnung liegt bei Ihnen.':'Beobachtung gegen die individuelle Baseline empfohlen.');
+    const reason=(tri.ohneBasis&&lvl==='stable')?'Die eigene Basis dieses Pferds entsteht aus drei Ruheaufnahmen innerhalb von 30 Tagen. Bis dahin zeigt CARLON die Werte ohne Einstufung.':(tri.reasons&&tri.reasons[0])?tri.reasons[0]:(lvl==='stable'?'RMSSD im Bereich der eigenen Basis dieses Pferds. Die Einordnung liegt bei Ihnen.':'Beobachtung gegen die individuelle Baseline empfohlen.');
     const streak=Triage.fallingStreak?Triage.fallingStreak(h.id):0;
     // Kontextuelle Primär-Aktion je Dringlichkeit
     const act=(lvl==='crit'||lvl==='elev')
       ? `<button class="vh-cta" onclick="Report.print('${h.id}')">${IC.check||''} Messwertbericht erstellen</button>`
       : `<button class="vh-cta ghost hell" onclick="Views.ownerFeedback('${h.id}')">Rückmeldung für Halter</button>`;
     return `<div class="verdict-hero v-${lvl}" style="--vc:${col}">
-      <div class="vh-top"><span class="vh-dot"></span><span class="vh-lvl">${HEAD[lvl]||L.label}</span>${m.rmssd!=null?`<span class="vh-vital">RMSSD <b>${fmt0(m.rmssd)}</b><small> ms</small>${streak>=3?` · <span style="color:var(--red)">${streak}× fallend</span>`:''}</span>`:''}</div>
+      <div class="vh-top"><span class="vh-dot"></span><span class="vh-lvl">${tri.ohneBasis?L.label:(HEAD[lvl]||L.label)}</span>${m.rmssd!=null?`<span class="vh-vital">RMSSD <b>${fmt0(m.rmssd)}</b><small> ms</small>${streak>=3?` · <span style="color:var(--red)">${streak}× fallend</span>`:''}</span>`:''}</div>
       <div class="vh-reason">${esc(Triage.zeig(reason))}</div>
       ${Views.gueteZeile(State.latestFor(h.id),true)}
       ${(tri.flags&&tri.flags.length)?`<div class="vh-flags">${tri.flags.map(f=>`<span class="vh-flag">${esc(Triage.zeig(f))}</span>`).join('')}</div>`:''}
@@ -7967,7 +7990,7 @@ const Views={
           <div class="panel coh-hero" style="margin-bottom:var(--s4)">
             <div class="che-top">
               <div class="che-lead">
-                <div class="che-eyebrow">Ist eure Kopplung echt?</div>
+                <div class="che-eyebrow">Ist die Kopplung echt?</div>
                 <div class="che-verdict" style="color:${band.color}">${band.label}</div>
                 <div class="che-interp">${esc(Coherence.interp(c))}</div>
               </div>
@@ -7980,7 +8003,7 @@ const Views={
             </div>
             <div class="che-bell">${Coherence.surrogateBell(c)}</div>
             ${c.identitySuspected?'<div class="chip amber" style="margin-top:12px">'+IC.warn+' Identity-Guard: beide Sensoren evtl. am selben Wesen</div>':''}
-            <div class="che-foot">Permutationstest: eure gemessene Kopplung gegen ${fmt0(c.nSurr)||'500'} zufällig zeitversetzte Surrogat-Zeitreihen (Tschacher 2014). Forschungs-Feature, keine medizinische Diagnose.</div>
+            <div class="che-foot">Permutationstest: die gemessene Kopplung gegen ${fmt0(c.nSurr)||'500'} zufällig zeitversetzte Surrogat-Zeitreihen (Tschacher 2014). Forschungs-Feature, keine medizinische Diagnose.</div>
           </div>`;})()}
 
           <div class="panel" style="margin-bottom:var(--s4)">
@@ -8462,7 +8485,7 @@ const Views={
     <div class="modal-body">
       <div class="field-row"><div class="field"><label>Name</label><input id="eName" value="${esc(h.name||'')}"></div>
         <div class="field"><label>Rasse</label><input id="eBreed" value="${esc(h.breed||'')}"></div></div>
-      <div class="field-row"><div class="field"><label>Besitzer</label><input id="eOwner" value="${esc(h.owner||'')}"></div>
+      <div class="field-row"><div class="field"><label>Halterin oder Halter</label><input id="eOwner" value="${esc(h.owner||'')}"></div>
         <div class="field"><label>Telefon</label><input id="ePhone" value="${esc(h.phone||'')}"></div></div>
       <div class="field-row"><div class="field"><label>Stall</label><input id="eStable" value="${esc(h.stable||'')}"></div>
         <div class="field"><label>Ort / Adresse</label>
@@ -8475,7 +8498,7 @@ const Views={
            Datensatz ihrem Patienten zuordnet. Ohne sie trägt der FHIR-Export nur
            unsere eigene ID und ist im ERP nicht anschlussfähig. -->
       <div class="field-row"><div class="field"><label>Klinik-Patienten-ID</label>
-          <input id="eIdClinic" value="${esc((h.extIds&&h.extIds.clinicPMS)||'')}" placeholder="ID aus eurer Praxissoftware">
+          <input id="eIdClinic" value="${esc((h.extIds&&h.extIds.clinicPMS)||'')}" placeholder="ID aus Ihrer Praxissoftware">
           <div class="hint">Wandert in den FHIR-Export → Ihr System erkennt das Pferd wieder.</div></div>
         <div class="field"><label>UELN</label><input id="eIdUeln" value="${esc((h.extIds&&h.extIds.ueln)||'')}" placeholder="Universal Equine Life Number"></div></div>
       <div class="field-row"><div class="field"><label>Mikrochip (ISO)</label>
@@ -8496,7 +8519,9 @@ const Views={
     h.fristen={}; for(const [k] of Fristen.ARTEN){ const v=($('#eFr_'+k)?.value||'').trim(); if(v) h.fristen[k]=v; }
     h.extIds={ clinicPMS:($('#eIdClinic')?.value||'').trim(), ueln:($('#eIdUeln')?.value||'').trim(),
                microchip:($('#eIdChip')?.value||'').trim(), passport:($('#eIdPass')?.value||'').trim() };
-    await DB.put('horses',h);if(!id)State.horses.push(h);UI.closeModal();Toast.show('Gespeichert','ok');Nav.refresh();
+    await DB.put('horses',h);if(!id)State.horses.push(h);UI.closeModal();
+    /* Klicktest 20.11.2026: ein neu angelegtes Pferd öffnet sofort seine Akte (vorher landete man auf „Heute“ ohne das Pferd) */
+    if(!id){ Toast.show(`${h.name||'Pferd'} angelegt`,'ok'); try{ Views.openHorse(h.id); }catch(_){ Nav.refresh(); } } else { Toast.show('Gespeichert','ok'); Nav.refresh(); }
   },
   async delHorse(id){if(!confirm('Pferd inkl. aller Aufnahmen löschen?'))return;
     await DB.del('horses',id);for(const r of State.recsFor(id))await DB.del('recordings',r.id);
@@ -8586,7 +8611,7 @@ const Handoff={
       chartNix:'Keine Kurvendaten in dieser Aufnahme (oder nur verdichtet gespeichert)',
       notiz:'Einschätzung der Praxis',
       handT:'Für die weiterbehandelnde Praxis',
-      handP:'Dieser Bericht enthält den vollständigen Datensatz als offenes FHIR-R5-Bundle — direkt in euer Praxis- oder Klinik-System übernehmbar, ohne Abtippen.',
+      handP:'Dieser Bericht enthält den vollständigen Datensatz als offenes FHIR-R5-Bundle — direkt in Ihr Praxis- oder Klinik-System übernehmbar, ohne Abtippen.',
       handA:'FHIR-Bundle speichern',
       methT:'Methode &amp; Grenzen.',
       methGeraet:'Aufzeichnung Polar H10 (RR-Intervalle).',
@@ -9272,7 +9297,7 @@ const Dispatch={
         <div class="ord">${i+1}</div>
         <div class="stime"><b>${fmtTime(row.arrive)}</b><span>${i===0?'ab Praxis':(row.driveMin?'+'+row.driveMin+' min':'gleicher Stall')}</span></div>
         <div class="sinfo">
-          <b>${esc(h.name)} <span class="stri tri-${x.tri.level}"><span class="dot"></span>${Triage.label(x.tri)}</span></b>
+          <b>${esc(h.name)} <span class="stri tri-${Triage.kl(x.tri)}"><span class="dot"></span>${Triage.label(x.tri)}</span></b>
           <span class="sowner">${IC.owner}<span class="sow-txt"><b>${esc(h.owner||'—')}</b>${h.phone?`<em>${esc(h.phone)}</em>`:''}</span></span>
           <span class="splace">${esc(h.place||h.stable||'—')}${m.rmssd!=null?` · RMSSD <b>${fmt0(m.rmssd)}</b> · HF <b>${fmt0(m.meanHR)}</b>${rec?' · vor '+relTime(rec.startedAt):''}`:' · keine Messung'}</span>
           ${flag}
@@ -9319,8 +9344,8 @@ const Dispatch={
       latlngs.push([x.h.lat,x.h.lng]);
       const h=x.h; const rec=State.latestFor(h.id); const m=rec?rec.metrics:{};
       const pop=`<div class="mappop">
-        <div class="mp-h"><span class="mp-ord tri-${x.tri.level}">${i+1}</span><b>${esc(h.name)}</b></div>
-        <div class="mp-tri tri-${x.tri.level}">${Triage.label(x.tri)} · ${fmt1(x.dist)} km</div>
+        <div class="mp-h"><span class="mp-ord tri-${Triage.kl(x.tri)}">${i+1}</span><b>${esc(h.name)}</b></div>
+        <div class="mp-tri tri-${Triage.kl(x.tri)}">${Triage.label(x.tri)} · ${fmt1(x.dist)} km</div>
         <div class="mp-row"><b>Halter:</b> ${esc(h.owner||'—')}${h.phone?` · ${esc(h.phone)}`:''}</div>
         ${h.place||h.stable?`<div class="mp-row"><b>Stall:</b> ${esc(h.place||h.stable)}</div>`:''}
         ${m.rmssd!=null?`<div class="mp-row"><b>HRV:</b> RMSSD ${fmt0(m.rmssd)} · HF ${fmt0(m.meanHR)}${rec?' · vor '+relTime(rec.startedAt):''}</div>`:'<div class="mp-row">keine Messung</div>'}
@@ -10097,6 +10122,8 @@ const UI={
     bg.innerHTML=`<div class="modal ${wide?'wide':''} ${sheet?'sheet':''}">${html}</div>`;
     bg.addEventListener('click',e=>{if(e.target===bg)this.closeModal();});
     { const m=bg.firstElementChild; if(m&&!m.querySelector(':scope > .modal-body')) m.style.overflowY='auto'; }   // Dialoge ohne .modal-body scrollen wie bisher als Ganzes
+    /* Barrierefreiheit (20.11.2026, Klicktest): Feldbeschriftungen mit ihrem Eingabefeld verbinden – VoiceOver liest dann die Beschriftung, Tippen auf die Beschriftung setzt den Fokus */
+    bg.querySelectorAll('.field').forEach(f=>{ const l=f.querySelector(':scope > label'), i=f.querySelector('input:not([type=checkbox]):not([type=radio]),select,textarea'); if(l&&i&&!l.htmlFor){ if(!i.id) i.id='f_'+Math.random().toString(36).slice(2,9); l.htmlFor=i.id; } });
     document.body.appendChild(bg); try{ Entwurf.anbinden(bg.firstElementChild); }catch(_){ } },
   closeModal(){const m=$('#modalBg');if(m)m.remove();},
   toggleFieldMode(){
@@ -10128,49 +10155,15 @@ const UI={
     setTimeout(()=>{ UI.einlVorschau(); ['sName','sVet','sPhone'].forEach(i=>{ const e=$('#'+i); if(e) e.addEventListener('input',()=>UI.einlVorschau()); }); },60);
     this.modal(`<div class="modal-head"><button class="closex" onclick="UI.closeModal()">${IC.x}</button><h3>Praxis-Einstellungen</h3></div>
     <div class="modal-body">
-      <div class="field"><label>Praxisname</label><input id="sName" value="${esc(s.clinicName)}"></div>
-      <div class="field"><label>Tierarzt / Tierärztin</label><input id="sVet" value="${esc(s.vetName||'')}"></div>
-      <label style="display:flex;align-items:center;gap:9px;font-size:13px;margin:-2px 0 12px;cursor:pointer"><input type="checkbox" style="width:auto;accent-color:var(--cyan)" ${document.documentElement.classList.contains('blume-an')?'checked':''} onchange="document.documentElement.classList.toggle('blume-an',this.checked);try{localStorage.setItem('carlon.blume',this.checked?'an':'aus')}catch(e){}"> Hintergrund „Blume des Lebens“ anzeigen</label>
-      ${Teilen.erlaubt()?`<div class="field"><label>Team-Ordner ${Teilen.aktiv?'<span style="color:var(--good);font-weight:400">— verbunden</span>':'<span style="color:var(--text-dim);font-weight:400">— ein Team, ein Bestand</span>'}</label>
-        <div style="font-size:12.5px;color:var(--text-dim);line-height:1.5;margin:-4px 0 8px">
-          Wählen Sie einen Ordner, den Ihre Geräte ohnehin teilen – in <b>OneDrive, Google Drive,
-          Dropbox</b> oder auf dem Netzlaufwerk. Die Daten liegen dann <b>bei Ihnen</b>, nicht bei uns.
-          Jede Minute gleicht CARLON ab: neue Aufnahmen, Änderungen und Löschungen kommen auf allen
-          Geräten an; was offline erfasst wurde, wird nachgetragen. Jedes Gerät behält zusätzlich seinen
-          vollständigen eigenen Stand. Verbinden: einmal je Rechner in Chrome oder Edge.
-        </div>
-        <button class="btn ghost" onclick="UI.klinikOrdner()">${Teilen.aktiv?'Ordner wechseln':'Ordner verbinden'}</button>
-        ${Teilen.letzterFehler?`<div style="font-size:12px;color:var(--amber);margin-top:6px">Zuletzt: ${esc(Teilen.letzterFehler)}</div>`:''}
-        ${Teilen.aktiv?`<div style="font-size:12px;color:var(--text-dim);margin-top:6px">Tägliche Sicherung im Ordner: ${State.settings.autoSicherung?esc(fmtDate(State.settings.autoSicherung)):'noch keine'}${Teilen.konflikte?` · ${Teilen.konflikte} gleichzeitige Änderung${Teilen.konflikte===1?'':'en'} – ältere Fassung aufgehoben`:''}</div>`:''}
-      </div>`:''}
-      <div class="field" id="eingangFeld"><label>Eingang für Aufnahmen ${Eingang.aktiv?'<span style="color:var(--good);font-weight:400">— übernimmt von selbst</span>':'<span style="color:var(--text-dim);font-weight:400">— ohne Hineinziehen</span>'}</label>
-        <div style="font-size:12.5px;color:var(--text-dim);line-height:1.5;margin:-4px 0 8px">
-          Neue Aufnahmen landen in einem Ordner Ihrer Praxis – CARLON übernimmt sie <b>von selbst</b> in die Akte. Zwei Wege, beide ohne Server von uns:
-          <b>①&nbsp;Upload-Link:</b> In Dropbox eine <b>Dateianfrage</b> anlegen (oder OneDrive für Arbeit „Dateien anfordern“, Nextcloud „Datei-Drop“) und den Link unten einfügen – er reist im Mess-Link mit, die Halterin lädt ohne Konto hoch.
-          <b>②&nbsp;Download-Ordner:</b> Was per WhatsApp Web oder Mail kommt, nur noch anklicken.
-          Dann hier den Ordner wählen (den Dateianfrage-Ordner auf diesem Rechner bzw. „Downloads“). Gelesen wird nur; nichts wird verschoben oder gelöscht.
-        </div>
-        <input id="sEingangLink" placeholder="https://www.dropbox.com/request/…  (optional)" value="${esc(s.eingangLink||'')}" style="margin-bottom:8px">
-        <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
-          ${Eingang.moeglich()?`<button class="btn ghost" onclick="UI.eingangOrdner()">${Eingang.aktiv?'Ordner wechseln':'Ordner wählen'}</button>`:`<span style="font-size:12px;color:var(--amber)">Ordner beobachten geht am Rechner in Chrome oder Edge – hier bitte Dateien öffnen.</span>`}
-          ${Eingang.letzterFehler==='freigeben'?`<button class="btn ghost" onclick="Eingang.freigeben().then(()=>{UI.closeModal();UI.openSettings();})">Freigeben</button>`:''}
-          ${Eingang.aktiv?`<button class="btn ghost" style="font-size:12px" onclick="Eingang.trennen().then(()=>{UI.closeModal();UI.openSettings();})">Trennen</button>`:''}
-        </div>
-        ${Eingang.aktiv&&Eingang.handle?`<div style="font-size:12px;color:var(--text-dim);margin-top:6px">Beobachtet: „${esc(Eingang.handle.name)}“${Eingang.zuletzt?' · zuletzt geprüft '+esc(new Date(Eingang.zuletzt).toLocaleTimeString('de-DE',{hour:'2-digit',minute:'2-digit'}))+' Uhr':''}</div>`:''}
-        <label style="display:block;font-size:12px;font-weight:600;color:var(--text-secondary);margin:12px 0 6px">Erinnerung für die Halterin</label>
-        <select id="sRhythmus" style="width:auto">${[[0,'keine'],[7,'alle 7 Tage'],[14,'alle 14 Tage'],[30,'alle 30 Tage']].map(([v,l])=>`<option value="${v}" ${Number(s.messRhythmus||0)===v?'selected':''}>${l}</option>`).join('')}</select>
-        <div style="font-size:12px;color:var(--text-dim);margin-top:4px">Die Messstation schlägt nach dem Senden den nächsten Termin für den Kalender der Halterin vor.</div>
-        <label style="display:block;font-size:12px;font-weight:600;color:var(--text-secondary);margin:12px 0 6px">Was die Halterin nach der Messung sieht</label>
-        <select id="sAnsicht" style="width:auto"><option value="signal" ${s.halterAnsicht!=='voll'?'selected':''}>Signalgüte und „gelungen“ – die Einordnung bleibt bei Ihnen (empfohlen)</option><option value="voll" ${s.halterAnsicht==='voll'?'selected':''}>Alle Kennwerte und Kurven</option></select>
-        <div style="font-size:12px;color:var(--text-dim);margin-top:4px">Gilt für Ihre Mess-Links. Einzelne HRV-Werte ohne Verlauf verunsichern leicht – so kommen weniger Rückfragen.</div>
-      </div>
+      <div class="field"><label>Name der Praxis, Klinik oder des Reha-Zentrums</label><input id="sName" value="${esc(s.clinicName)}"></div>
+      <div class="field"><label>Verantwortliche Tierärztin oder verantwortlicher Tierarzt</label><input id="sVet" value="${esc(s.vetName||'')}"></div>
       <div class="field"><label>Praxis-Logo <span style="color:var(--text-dim);font-weight:400">— erscheint auf Ihren Messwertberichten (Ihr Branding, nicht unseres)</span></label>
         <div class="logo-row">
           <div class="logo-prev" id="sLogoPrev">${s.logo?`<img src="${s.logo}" alt="Logo">`:'<span>kein Logo</span>'}</div>
           <button type="button" class="btn ghost" style="font-size:13px" onclick="UI.uploadLogo()">${IC.download||''} Logo hochladen</button>
           ${s.logo?`<button type="button" class="btn ghost" style="font-size:13px" onclick="UI.removeLogo()">Entfernen</button>`:''}
         </div>
-        <div class="hint">PNG/JPG, quer oder quadratisch — wird auf 320 px skaliert und lokal gespeichert.</div></div>
+        <div class="hint">PNG oder JPG, quer oder quadratisch; wird auf 320 px skaliert und auf diesem Gerät gespeichert.</div></div>
       <!-- Kontakt der Praxis. Erscheint auf dem Stall-Aushang: ein Blatt
            ohne Telefonnummer verschenkt genau die Kundin, die lieber anruft
            als scannt. Alles freiwillig — leere Felder werden weggelassen,
@@ -10221,7 +10214,43 @@ const UI={
         <button class="btn ghost" style="font-size:13px" onclick="UI.betaFeedback()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px"><path d="M4 4h16v12H5.17L4 17.17V4z"/></svg> Feedback senden</button>
         <div class="hint" style="margin-top:8px;opacity:.7">Build ${BUILD}</div>
       </div>
-    </div>
+          <details class="einst-mehr" style="margin-top:14px;border-top:1px solid var(--border-faint);padding-top:10px"><summary style="cursor:pointer;font-size:13.5px;font-weight:600;color:var(--text-secondary);padding:6px 0">Eingang, Team-Ordner und Darstellung</summary><div style="padding-top:8px">
+      <label style="display:flex;align-items:center;gap:9px;font-size:13px;margin:-2px 0 12px;cursor:pointer"><input type="checkbox" style="width:auto;accent-color:var(--cyan)" ${document.documentElement.classList.contains('blume-an')?'checked':''} onchange="document.documentElement.classList.toggle('blume-an',this.checked);try{localStorage.setItem('carlon.blume',this.checked?'an':'aus')}catch(e){}"> Hintergrund „Blume des Lebens“ anzeigen</label>
+      ${Teilen.erlaubt()?`<div class="field"><label>Team-Ordner ${Teilen.aktiv?'<span style="color:var(--good);font-weight:400"> · verbunden</span>':'<span style="color:var(--text-dim);font-weight:400"> · ein Team, ein Bestand</span>'}</label>
+        <div style="font-size:12.5px;color:var(--text-dim);line-height:1.5;margin:-4px 0 8px">
+          Wählen Sie einen Ordner, den Ihre Geräte ohnehin teilen – in <b>OneDrive, Google Drive,
+          Dropbox</b> oder auf dem Netzlaufwerk. Die Daten liegen dann <b>bei Ihnen</b>, nicht bei uns.
+          Jede Minute gleicht CARLON ab: neue Aufnahmen, Änderungen und Löschungen kommen auf allen
+          Geräten an; was offline erfasst wurde, wird nachgetragen. Jedes Gerät behält zusätzlich seinen
+          vollständigen eigenen Stand. Verbinden: einmal je Rechner in Chrome oder Edge.
+        </div>
+        <button class="btn ghost" onclick="UI.klinikOrdner()">${Teilen.aktiv?'Ordner wechseln':'Ordner verbinden'}</button>
+        ${Teilen.letzterFehler?`<div style="font-size:12px;color:var(--amber);margin-top:6px">Zuletzt: ${esc(Teilen.letzterFehler)}</div>`:''}
+        ${Teilen.aktiv?`<div style="font-size:12px;color:var(--text-dim);margin-top:6px">Tägliche Sicherung im Ordner: ${State.settings.autoSicherung?esc(fmtDate(State.settings.autoSicherung)):'noch keine'}${Teilen.konflikte?` · ${Teilen.konflikte} gleichzeitige Änderung${Teilen.konflikte===1?'':'en'} – ältere Fassung aufgehoben`:''}</div>`:''}
+      </div>`:''}
+      <div class="field" id="eingangFeld"><label>Eingang für Aufnahmen ${Eingang.aktiv?'<span style="color:var(--good);font-weight:400"> · übernimmt von selbst</span>':'<span style="color:var(--text-dim);font-weight:400"> · ohne Hineinziehen</span>'}</label>
+        <div style="font-size:12.5px;color:var(--text-dim);line-height:1.5;margin:-4px 0 8px">
+          Neue Aufnahmen landen in einem Ordner Ihrer Praxis – CARLON übernimmt sie <b>von selbst</b> in die Akte. Zwei Wege, beide ohne Server von uns:
+          <b>①&nbsp;Upload-Link:</b> In Dropbox eine <b>Dateianfrage</b> anlegen (oder OneDrive für Arbeit „Dateien anfordern“, Nextcloud „Datei-Drop“) und den Link unten einfügen – er reist im Mess-Link mit, die Halterin lädt ohne Konto hoch.
+          <b>②&nbsp;Download-Ordner:</b> Was per WhatsApp Web oder Mail kommt, nur noch anklicken.
+          Dann hier den Ordner wählen (den Dateianfrage-Ordner auf diesem Rechner bzw. „Downloads“). Gelesen wird nur; nichts wird verschoben oder gelöscht.
+        </div>
+        <input id="sEingangLink" placeholder="https://www.dropbox.com/request/…  (optional)" value="${esc(s.eingangLink||'')}" style="margin-bottom:8px">
+        <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
+          ${Eingang.moeglich()?`<button class="btn ghost" onclick="UI.eingangOrdner()">${Eingang.aktiv?'Ordner wechseln':'Ordner wählen'}</button>`:`<span style="font-size:12px;color:var(--amber)">Ordner beobachten geht am Rechner in Chrome oder Edge – hier bitte Dateien öffnen.</span>`}
+          ${Eingang.letzterFehler==='freigeben'?`<button class="btn ghost" onclick="Eingang.freigeben().then(()=>{UI.closeModal();UI.openSettings();})">Freigeben</button>`:''}
+          ${Eingang.aktiv?`<button class="btn ghost" style="font-size:12px" onclick="Eingang.trennen().then(()=>{UI.closeModal();UI.openSettings();})">Trennen</button>`:''}
+        </div>
+        ${Eingang.aktiv&&Eingang.handle?`<div style="font-size:12px;color:var(--text-dim);margin-top:6px">Beobachtet: „${esc(Eingang.handle.name)}“${Eingang.zuletzt?' · zuletzt geprüft '+esc(new Date(Eingang.zuletzt).toLocaleTimeString('de-DE',{hour:'2-digit',minute:'2-digit'}))+' Uhr':''}</div>`:''}
+        <label style="display:block;font-size:12px;font-weight:600;color:var(--text-secondary);margin:12px 0 6px">Erinnerung für die Halterin</label>
+        <select id="sRhythmus" style="width:auto">${[[0,'keine'],[7,'alle 7 Tage'],[14,'alle 14 Tage'],[30,'alle 30 Tage']].map(([v,l])=>`<option value="${v}" ${Number(s.messRhythmus||0)===v?'selected':''}>${l}</option>`).join('')}</select>
+        <div style="font-size:12px;color:var(--text-dim);margin-top:4px">Die Messstation schlägt nach dem Senden den nächsten Termin für den Kalender der Halterin vor.</div>
+        <label style="display:block;font-size:12px;font-weight:600;color:var(--text-secondary);margin:12px 0 6px">Was die Halterin nach der Messung sieht</label>
+        <select id="sAnsicht" style="width:auto"><option value="signal" ${s.halterAnsicht!=='voll'?'selected':''}>Signalgüte und „gelungen“ – die Einordnung bleibt bei Ihnen (empfohlen)</option><option value="voll" ${s.halterAnsicht==='voll'?'selected':''}>Alle Kennwerte und Kurven</option></select>
+        <div style="font-size:12px;color:var(--text-dim);margin-top:4px">Gilt für Ihre Mess-Links. Einzelne HRV-Werte ohne Verlauf verunsichern leicht – so kommen weniger Rückfragen.</div>
+      </div>
+      </div></details>
+</div>
     <div class="modal-foot"><button class="btn ghost" onclick="UI.closeModal()">Abbrechen</button><button class="btn primary" onclick="UI.saveSettings()">Speichern</button></div>`);
     this._fillStorage();
   },
@@ -10343,7 +10372,7 @@ const UI={
       ${feature?`<div class="demo-ribbon" style="margin-bottom:14px"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg><div><b>${esc(feature)}</b> gehört zum Abo – <b>die ersten 14 Tage sind kostenlos</b>, danach monatlich kündbar.</div></div>`:''}
       
       <label class="kauf-b2b"><input type="checkbox" id="kaufB2B" onchange="document.querySelectorAll('.kauf-link').forEach(l=>l.setAttribute('aria-disabled',this.checked?'false':'true'))"> <span>Ich bestelle als <b>Unternehmer (§ 14 BGB)</b> für meine Praxis oder Klinik und akzeptiere die <a href="/agb.html" target="_blank" rel="noopener">AGB</a>.</span></label>
-      <p class="kauf-kurz">Preise netto · Rechnung mit ausgewiesener USt. von Stripe · nach der Zahlung sofort freigeschaltet — kein Schlüssel, keine E-Mail.<br><b style="color:var(--text-primary)">14 Tage kostenlos testen</b> mit dem Monatsabo – volles Cockpit, eigene Pferde, Mess-Link. Kündigen Sie in den 14 Tagen, zahlen Sie nichts. Vorher ohne Karte: Demo mit Beispielpferden. Das Monatsabo ist zum Ende des laufenden Abrechnungsmonats kündbar; die Testphase gibt es einmal je Betrieb, ein Stufenwechsel beendet sie.</p>
+      <p class="kauf-kurz">Preise netto · Rechnung mit ausgewiesener USt. von Stripe · nach der Zahlung sofort freigeschaltet, ohne Schlüssel und ohne E-Mail.<br><b style="color:var(--text-primary)">14 Tage kostenlos testen</b> mit dem Monatsabo – volles Cockpit, eigene Pferde, Mess-Link. Kündigen Sie in den 14 Tagen, zahlen Sie nichts. Vorher ohne Karte: Demo mit Beispielpferden. Das Monatsabo ist zum Ende des laufenden Abrechnungsmonats kündbar; die Testphase gibt es einmal je Betrieb, ein Stufenwechsel beendet sie.</p>
       <div class="kauf-grid kauf-fuenf">${STUFEN.map(t=>`<div class="kauf-spalte" data-stufe="${t.k}">
       <div class="tier-opt feat" style="align-items:flex-start">
         <div style="flex:1"><h4>${esc(License.TIERS[t.tier].name)}</h4>
@@ -13462,13 +13491,13 @@ function showTour(){
   const t=el('div','','');t.id='tour';
   t.innerHTML=`<div class="tour-card">
     <img src="assets/carlon-logo-soft-512.png" alt="">
-    <h2>CARLON Equine — Praxis-Cockpit</h2>
-    <div class="lead">Ruhe-HRV Ihrer Pferde als Verlauf — und die Tour danach geplant. Ausgewertet hier im Browser, nichts liegt bei uns.</div>
+    <h2>CARLON Equine Visite</h2>
+    <div class="lead">Herzfrequenz und HRV Ihrer Pferde als Verlauf: in Ruhe, auf der Station und in der Reha. Ausgewertet hier im Browser, nichts liegt bei uns.</div>
     <div class="tour-steps">
       <div class="tstep"><div class="ti">${IC.qr}</div><div><b>1 · Aushang oder Mess-Link</b><span>Ein QR-Blatt für den Stall: Halterinnen nehmen sieben Minuten Ruhe-HRV auf, ohne Konto.</span></div></div>
       <div class="tstep"><div class="ti">${IC.postfach}</div><div><b>2 · Aufnahmen kommen an</b><span>Datei hineinziehen, fertig. Die Übersicht zeigt jedes Pferd gegen seine eigene Basis.</span></div></div>
-      <div class="tstep"><div class="ti">${IC.route}</div><div><b>3 · Tour planen</b><span>Kürzeste Strecke als Standard, auf Wunsch deutliche Abweichung zuerst. Die Einordnung treffen Sie.</span></div></div>
-      <div class="tstep"><div class="ti">${IC.doc}</div><div><b>4 · Dokumentieren</b><span>Messwertbericht mit Ihrem Briefkopf, Leistungen und Fahrten an einem Ort.</span></div></div>
+      <div class="tstep"><div class="ti">${IC.route}</div><div><b>3 · Tour planen oder Reha begleiten</b><span>Kürzeste Strecke zu den Ställen, oder Reha-Einheiten am Gerät mittippen und Woche für Woche vergleichen.</span></div></div>
+      <div class="tstep"><div class="ti">${IC.doc}</div><div><b>4 · Dokumentieren</b><span>Berichte mit Ihrem Briefkopf: für die Akte, für die Halterin und als Verlaufsdokumentation.</span></div></div>
     </div>
     <div class="tour-cta">
       <button class="btn primary" onclick="startWith(true)">Demo mit 15 Pferden ansehen</button>
@@ -13757,7 +13786,7 @@ const Sprache={
   WB:{
     /* 17.11.2026: Lücken aus der Sprachprobe (nur/enrest.mjs) */
     "gehört zum Abo –":"is part of the subscription –", "die ersten 14 Tage sind kostenlos":"the first 14 days are free", ", danach monatlich kündbar.":", then cancel monthly.",
-    "Basis im Aufbau":"Baseline building", "Keine auswertbaren Ruhewerte":"No evaluable resting values", "Abschlussbericht · alle Einheiten":"Final report · all sessions", "Für die CARLON Equine App":"For the CARLON Equine app", "Weiß (Druck)":"White (print)", "Dunkel":"Dark", "Bericht erstellen":"Create report", "Ohne Einschätzung":"Without assessment", "Einschätzung der Tierärztin / des Tierarztes":"Veterinary assessment", "Dokumentation":"Documentation", "Einschätzung und Empfehlung werden mit dem Bericht in der Akte des Pferds gespeichert.":"Assessment and recommendation are saved with the report in the horse’s record.", "Rückmeldung an die Halterin":"Feedback to the owner", "Nachricht an die Halterin":"Message to the owner", "Anfahrt und Zugang im Stall":"Access and arrival at the yard", "Zugang:":"Access:", "Gilt für alle Pferde in diesem Stall und steht auf der Tour beim Halt.":"Applies to all horses in this yard and appears at the stop on your round.", "Feierabend":"End of day", "Noch offen":"Still open", "Rückruf merken":"Note a callback", "Rückruf":"Callback", "Erledigt":"Done", "Erinnern":"Remind", "Anrufen":"Call", "Worum geht es?":"What is it about?", "Merken":"Save", "Messung angefordert":"Recording requested", "Abfahrtsbereit: offline startfähig, Sicherung frisch, jeder Halt mit Standort":"Ready to leave: starts offline, backup fresh, every stop has a location", "Sicherung älter als ein Tag":"Backup older than a day", "Vor der Abfahrt:":"Before you leave:", "Reha":"Rehab", "Klinikbericht":"Clinic report", "Bericht für die Halterin":"Report for the owner", "Neue Sitzung mit Gerät:":"New session with device:", "Noch keine Reha-Sitzung. Sitzung starten mit Gerät:":"No rehab session yet. Start a session with device:", "Verlauf bei gleicher Stufe (Herzfrequenz, letzte 60 s der Stufe):":"Course at the same stage (heart rate, last 60 s of the stage):", "Reha-Sitzung gespeichert · in der Akte":"Rehab session saved · in the record", "Bevor Sie zur Abo-Verwaltung gehen":"Before you go to subscription settings", "Ihr Monat mit Visite bisher:":"Your month with Visite so far:", "Besuche dokumentiert":"visits documented", "km Fahrtenbuch":"km in the logbook", "Aufnahmen eingegangen":"recordings received", "Messwertberichte":"measurement reports", "Nachrichten an Halterinnen":"messages to owners", "Pferde in der Akte":"horses on record", "Ihre Akten bleiben auf diesem Gerät. Auch nach einer Kündigung können Sie sie lesen und als CSV exportieren.":"Your records stay on this device. Even after cancelling you can read them and export them as CSV.", "Was passt nicht? (freiwillig, ein Tipp genügt)":"What is not working? (optional, one tap is enough)", "Was würde Visite für Sie besser machen? (freiwillig)":"What would make Visite better for you? (optional)", "Problem melden":"Report a problem", "Weiter zur Abo-Verwaltung":"Continue to subscription settings", "Zu wenig Zeit zum Einrichten":"Too little time to set up", "Halterinnen messen kaum":"Owners rarely record", "Eine Funktion fehlt":"A feature is missing", "Zu kompliziert im Alltag":"Too complicated day to day", "Zu teuer für unsere Praxis":"Too expensive for our practice", "Praxis ändert sich":"Our practice is changing", "Anderer Grund":"Other reason", "Drei Wege zurück in den Alltag:":"Three ways back into your routine:", "Pferde für die nächste Tour markieren":"Mark horses for the next round", "Messung anfordern":"Request a recording", "Was fehlt Ihnen?":"What are you missing?", "Sprachsteuerung":"Voice control", "Entwurf wiederhergestellt":"Draft restored", "Text kopiert · in der Akte vermerkt":"Text copied · noted in the record", "verschlüsselt zurück":"sent back encrypted", "kopiert":"copied", "Abgleich an die Praxis senden":"Send sync to the practice", "Abgleich an die Praxis":"Sync to the practice", "Teilen → im Eingangsordner der Praxis speichern; der Praxisrechner übernimmt es von selbst":"Share → save into the practice inbox folder; the practice computer picks it up by itself", "Abgleich geteilt – im Eingangsordner der Praxis speichern":"Sync shared – save it in the practice inbox folder", "Abgleich gespeichert – in den Eingangsordner der Praxis legen":"Sync saved – put it into the practice inbox folder", "Impfung":"Vaccination", "Entwurmung":"Deworming", "Zahnkontrolle":"Dental check", "Impfung fällig":"Vaccination due", "Entwurmung fällig":"Deworming due", "Zahnkontrolle fällig":"Dental check due", "Von Ihnen gesetzt – das Cockpit zeigt sie nur an, wenn Sie in diesem Stall sind.":"Set by you – the cockpit only shows them when you are at this stable.", "Im selben Stall:":"Same stable:", "gelernt":"learned", "Unterwegs":"On my way", "Unterwegs melden":"Tell the owner you're on your way", "Zeiten aus Ihren":"Times learned from your", "dokumentierten Besuchen gelernt: Behandlung meist":"documented visits: treatment usually", "· Fahrzeit ×":"· driving time ×", "Aus Ihren bisherigen Besuchen gelernt":"Learned from your previous visits", "Halterin: Sie sind unterwegs, Pferd bitte bereithalten":"Owner: you are on your way, please have the horse ready", "Pferde anlegen":"Add horses", "Einzeln – oder den ganzen Bestand aus Praxissoftware oder Excel übernehmen. Jedes Pferd steht dann auch für die Tour bereit.":"One by one – or bring in your whole list from practice software or Excel. Every horse is then ready for the round too.", "Bestand übernehmen (CSV)":"Import your list (CSV)", "Bestand übernehmen":"Import your list", "Pferde und Halterinnen aus Ihrer Praxissoftware, aus Excel oder aus dem Adressbuch – als CSV-Datei (in Excel: „Speichern unter → CSV“). Sie sehen vor dem Übernehmen, was wohin kommt; vorhandene Pferde werden nur in leeren Feldern ergänzt.":"Horses and owners from your practice software, Excel or address book – as a CSV file (in Excel: “Save as → CSV”). Before importing you see what goes where; existing horses are only completed in empty fields.", "CSV-Datei wählen":"Choose CSV file", "Vorlage laden":"Download template", "Zeilen":"rows", "Neue Pferde":"New horses", "Ergänzt":"Completed", "Schon vorhanden":"Already there", "Halterinnen":"Owners", "Keine Spalte als „Pferd“ zugeordnet – übernommen werden dann nur die Halterinnen als Kontakte. Ordnen Sie die Spalte mit dem Pferdenamen unten zu.":"No column assigned to “Horse” – only the owners will be imported as contacts. Assign the column with the horse name below.", "Spalte in Ihrer Datei":"Column in your file", "Beispiel":"Example", "Kommt nach":"Goes to", "– nicht übernehmen –":"– don’t import –", "(ohne Titel)":"(untitled)", "Zeilen ohne Pferdenamen:":"Rows without a horse name:", "– daraus werden nur Kontakte.":"– these become contacts only.", "Übernehmen":"Import", "Pferde angelegt":"Horses added", "Pferde ergänzt":"Horses completed", "Kontakte neu":"New contacts", "Pferde haben eine Adresse, aber noch keinen Kartenpunkt. Für Route und Fahrzeit ermittelt das Cockpit ihn über OpenStreetMap – eine Adresse pro Sekunde.":"horses have an address but no map point yet. For route and driving time the cockpit looks it up via OpenStreetMap – one address per second.", "Alle übernommenen Pferde mit Adresse stehen auf der Karte.":"All imported horses with an address are on the map.", "Fertig":"Done", "Kartenpunkte ermitteln":"Find map points", "Kartenpunkt gefunden:":"Map point found:", "· nicht gefunden:":"· not found:", "(Adresse in der Akte prüfen)":"(check the address in the record)", "Die Datei enthält keine Datenzeilen":"The file contains no data rows", "Halterin / Besitzer":"Owner", "Vorname (Halterin)":"First name (owner)", "Nachname (Halterin)":"Last name (owner)", "Telefon":"Phone", "E-Mail":"Email", "Stall":"Stable", "Straße":"Street", "PLZ":"Postcode", "Ort":"Town", "Rasse":"Breed", "Patienten-Nr. (Praxissoftware)":"Patient no. (practice software)", "UELN":"UELN", "Mikrochip":"Microchip", "Equidenpass-Nr.":"Equine passport no.", "Breitengrad":"Latitude", "Längengrad":"Longitude", "Notiz":"Note", "Erste Schritte":"First steps", "So kommt das erste Pferd in den Verlauf.":"How the first horse gets into the trend.", "Pferd anlegen":"Add a horse", "+ Pferd anlegen":"+ Add a horse",
+    "Basis im Aufbau":"Baseline building", "Keine auswertbaren Ruhewerte":"No evaluable resting values", "Noch keine Aufnahme":"No recording yet", "Die eigene Basis dieses Pferds entsteht aus drei Ruheaufnahmen innerhalb von 30 Tagen. Bis dahin zeigt CARLON die Werte ohne Einstufung.":"This horse’s own baseline is built from three resting recordings within 30 days. Until then CARLON shows the values without a rating.", "Starten Sie unten eine Reha-Einheit am Gerät, oder nehmen Sie sieben Minuten Ruhe auf. Danach erscheinen hier die Werte dieses Pferds.":"Start a rehab session on the device below, or record seven minutes of rest. The values of this horse will then appear here.", "Nehmen Sie sieben Minuten Ruhe auf („Selbst messen“) oder fordern Sie eine Messung bei der Halterin an. Danach erscheinen hier die Werte dieses Pferds.":"Record seven minutes of rest (“Measure yourself”) or request a measurement from the owner. The values of this horse will then appear here.", "Die letzte Aufnahme enthält keine auswertbare Ruhephase. Für Ruhewerte sieben Minuten Ruhe aufnehmen.":"The latest recording has no evaluable rest phase. Record seven minutes of rest for resting values.", "Abschlussbericht · alle Einheiten":"Final report · all sessions", "Für die CARLON Equine App":"For the CARLON Equine app", "Weiß (Druck)":"White (print)", "Dunkel":"Dark", "Bericht erstellen":"Create report", "Ohne Einschätzung":"Without assessment", "Einschätzung der Tierärztin / des Tierarztes":"Veterinary assessment", "Dokumentation":"Documentation", "Einschätzung und Empfehlung werden mit dem Bericht in der Akte des Pferds gespeichert.":"Assessment and recommendation are saved with the report in the horse’s record.", "Rückmeldung an die Halterin":"Feedback to the owner", "Nachricht an die Halterin":"Message to the owner", "Anfahrt und Zugang im Stall":"Access and arrival at the yard", "Zugang:":"Access:", "Gilt für alle Pferde in diesem Stall und steht auf der Tour beim Halt.":"Applies to all horses in this yard and appears at the stop on your round.", "Feierabend":"End of day", "Noch offen":"Still open", "Rückruf merken":"Note a callback", "Rückruf":"Callback", "Erledigt":"Done", "Erinnern":"Remind", "Anrufen":"Call", "Worum geht es?":"What is it about?", "Merken":"Save", "Messung angefordert":"Recording requested", "Abfahrtsbereit: offline startfähig, Sicherung frisch, jeder Halt mit Standort":"Ready to leave: starts offline, backup fresh, every stop has a location", "Sicherung älter als ein Tag":"Backup older than a day", "Vor der Abfahrt:":"Before you leave:", "Reha":"Rehab", "Klinikbericht":"Clinic report", "Bericht für die Halterin":"Report for the owner", "Neue Sitzung mit Gerät:":"New session with device:", "Noch keine Reha-Sitzung. Sitzung starten mit Gerät:":"No rehab session yet. Start a session with device:", "Verlauf bei gleicher Stufe (Herzfrequenz, letzte 60 s der Stufe):":"Course at the same stage (heart rate, last 60 s of the stage):", "Reha-Sitzung gespeichert · in der Akte":"Rehab session saved · in the record", "Bevor Sie zur Abo-Verwaltung gehen":"Before you go to subscription settings", "Ihr Monat mit Visite bisher:":"Your month with Visite so far:", "Besuche dokumentiert":"visits documented", "km Fahrtenbuch":"km in the logbook", "Aufnahmen eingegangen":"recordings received", "Messwertberichte":"measurement reports", "Nachrichten an Halterinnen":"messages to owners", "Pferde in der Akte":"horses on record", "Ihre Akten bleiben auf diesem Gerät. Auch nach einer Kündigung können Sie sie lesen und als CSV exportieren.":"Your records stay on this device. Even after cancelling you can read them and export them as CSV.", "Was passt nicht? (freiwillig, ein Tipp genügt)":"What is not working? (optional, one tap is enough)", "Was würde Visite für Sie besser machen? (freiwillig)":"What would make Visite better for you? (optional)", "Problem melden":"Report a problem", "Weiter zur Abo-Verwaltung":"Continue to subscription settings", "Zu wenig Zeit zum Einrichten":"Too little time to set up", "Halterinnen messen kaum":"Owners rarely record", "Eine Funktion fehlt":"A feature is missing", "Zu kompliziert im Alltag":"Too complicated day to day", "Zu teuer für unsere Praxis":"Too expensive for our practice", "Praxis ändert sich":"Our practice is changing", "Anderer Grund":"Other reason", "Drei Wege zurück in den Alltag:":"Three ways back into your routine:", "Pferde für die nächste Tour markieren":"Mark horses for the next round", "Messung anfordern":"Request a recording", "Was fehlt Ihnen?":"What are you missing?", "Sprachsteuerung":"Voice control", "Entwurf wiederhergestellt":"Draft restored", "Text kopiert · in der Akte vermerkt":"Text copied · noted in the record", "verschlüsselt zurück":"sent back encrypted", "kopiert":"copied", "Abgleich an die Praxis senden":"Send sync to the practice", "Abgleich an die Praxis":"Sync to the practice", "Teilen → im Eingangsordner der Praxis speichern; der Praxisrechner übernimmt es von selbst":"Share → save into the practice inbox folder; the practice computer picks it up by itself", "Abgleich geteilt – im Eingangsordner der Praxis speichern":"Sync shared – save it in the practice inbox folder", "Abgleich gespeichert – in den Eingangsordner der Praxis legen":"Sync saved – put it into the practice inbox folder", "Impfung":"Vaccination", "Entwurmung":"Deworming", "Zahnkontrolle":"Dental check", "Impfung fällig":"Vaccination due", "Entwurmung fällig":"Deworming due", "Zahnkontrolle fällig":"Dental check due", "Von Ihnen gesetzt – das Cockpit zeigt sie nur an, wenn Sie in diesem Stall sind.":"Set by you – the cockpit only shows them when you are at this stable.", "Im selben Stall:":"Same stable:", "gelernt":"learned", "Unterwegs":"On my way", "Unterwegs melden":"Tell the owner you're on your way", "Zeiten aus Ihren":"Times learned from your", "dokumentierten Besuchen gelernt: Behandlung meist":"documented visits: treatment usually", "· Fahrzeit ×":"· driving time ×", "Aus Ihren bisherigen Besuchen gelernt":"Learned from your previous visits", "Halterin: Sie sind unterwegs, Pferd bitte bereithalten":"Owner: you are on your way, please have the horse ready", "Pferde anlegen":"Add horses", "Einzeln – oder den ganzen Bestand aus Praxissoftware oder Excel übernehmen. Jedes Pferd steht dann auch für die Tour bereit.":"One by one – or bring in your whole list from practice software or Excel. Every horse is then ready for the round too.", "Bestand übernehmen (CSV)":"Import your list (CSV)", "Bestand übernehmen":"Import your list", "Pferde und Halterinnen aus Ihrer Praxissoftware, aus Excel oder aus dem Adressbuch – als CSV-Datei (in Excel: „Speichern unter → CSV“). Sie sehen vor dem Übernehmen, was wohin kommt; vorhandene Pferde werden nur in leeren Feldern ergänzt.":"Horses and owners from your practice software, Excel or address book – as a CSV file (in Excel: “Save as → CSV”). Before importing you see what goes where; existing horses are only completed in empty fields.", "CSV-Datei wählen":"Choose CSV file", "Vorlage laden":"Download template", "Zeilen":"rows", "Neue Pferde":"New horses", "Ergänzt":"Completed", "Schon vorhanden":"Already there", "Halterinnen":"Owners", "Keine Spalte als „Pferd“ zugeordnet – übernommen werden dann nur die Halterinnen als Kontakte. Ordnen Sie die Spalte mit dem Pferdenamen unten zu.":"No column assigned to “Horse” – only the owners will be imported as contacts. Assign the column with the horse name below.", "Spalte in Ihrer Datei":"Column in your file", "Beispiel":"Example", "Kommt nach":"Goes to", "– nicht übernehmen –":"– don’t import –", "(ohne Titel)":"(untitled)", "Zeilen ohne Pferdenamen:":"Rows without a horse name:", "– daraus werden nur Kontakte.":"– these become contacts only.", "Übernehmen":"Import", "Pferde angelegt":"Horses added", "Pferde ergänzt":"Horses completed", "Kontakte neu":"New contacts", "Pferde haben eine Adresse, aber noch keinen Kartenpunkt. Für Route und Fahrzeit ermittelt das Cockpit ihn über OpenStreetMap – eine Adresse pro Sekunde.":"horses have an address but no map point yet. For route and driving time the cockpit looks it up via OpenStreetMap – one address per second.", "Alle übernommenen Pferde mit Adresse stehen auf der Karte.":"All imported horses with an address are on the map.", "Fertig":"Done", "Kartenpunkte ermitteln":"Find map points", "Kartenpunkt gefunden:":"Map point found:", "· nicht gefunden:":"· not found:", "(Adresse in der Akte prüfen)":"(check the address in the record)", "Die Datei enthält keine Datenzeilen":"The file contains no data rows", "Halterin / Besitzer":"Owner", "Vorname (Halterin)":"First name (owner)", "Nachname (Halterin)":"Last name (owner)", "Telefon":"Phone", "E-Mail":"Email", "Stall":"Stable", "Straße":"Street", "PLZ":"Postcode", "Ort":"Town", "Rasse":"Breed", "Patienten-Nr. (Praxissoftware)":"Patient no. (practice software)", "UELN":"UELN", "Mikrochip":"Microchip", "Equidenpass-Nr.":"Equine passport no.", "Breitengrad":"Latitude", "Längengrad":"Longitude", "Notiz":"Note", "Erste Schritte":"First steps", "So kommt das erste Pferd in den Verlauf.":"How the first horse gets into the trend.", "Pferd anlegen":"Add a horse", "+ Pferd anlegen":"+ Add a horse",
     "Name, Halterin, Telefon und Stall – das Pferd steht dann auch für die Tour bereit.":"Name, owner, phone and stable – the horse is then ready for the round, too.",
     "Messung anfordern":"Request a recording", "Selbst messen":"Measure yourself", "Mit Ihrem eigenen Polar H10 jetzt selbst messen. Die Aufnahme landet von selbst in dieser Akte":"Measure now with your own Polar H10. The recording goes straight into this record", "Dieses Gerät kann im Browser kein Bluetooth (iPhone, iPad, Safari). Den Mess-Link auf einem Android-Handy oder Laptop mit Chrome oder Edge öffnen.":"This device has no Bluetooth in the browser (iPhone, iPad, Safari). Open the measuring link on an Android phone or a laptop with Chrome or Edge.", "Messstation geöffnet. Nach der Messung zu diesem Tab zurückkehren, die Aufnahme kommt von selbst in die Akte.":"Measuring station opened. Come back to this tab after the recording; it goes into the record by itself.", "In der Akte des Pferds: „Messung anfordern“ schickt der Halterin Ihren Mess-Link per WhatsApp oder SMS – mit Ihrem Praxisnamen.":"In the horse’s record, “Request a recording” sends the owner your measuring link via WhatsApp or SMS – with your practice name.",
     "Aufnahme kommt an":"The recording arrives", "Die Halterin misst sieben Minuten im Stall und sendet. Sie öffnen die Datei hier – oder richten einen Eingangs-Ordner ein, dann kommt sie von selbst.":"The owner records for seven minutes in the stable and sends it. You open the file here – or set up an inbox folder and it arrives by itself.",
@@ -14114,6 +14143,10 @@ const Sprache={
     'Praxis-Einstellungen':'Practice settings',
     'Praxisname':'Practice name',
     'Tierarzt / Tierärztin':'Veterinarian',
+    'Name der Praxis, Klinik oder des Reha-Zentrums':'Name of practice, clinic or rehab centre',
+    'Verantwortliche Tierärztin oder verantwortlicher Tierarzt':'Responsible veterinarian',
+    'Eingang, Team-Ordner und Darstellung':'Inbox, team folder and display',
+    ' · erscheint auf Ihren Berichten':' · appears on your reports',
     'Anschrift für den Aushang':'Address for the stable notice',
     'Telefon (erscheint auf dem Aushang)':'Phone (appears on the stable notice)',
     'Website (optional)':'Website (optional)',
@@ -14121,7 +14154,7 @@ const Sprache={
     'Logo hochladen':'Upload logo',
     'kein Logo':'no logo',
     '— erscheint auf Ihren Messwertberichten (Ihr Branding, nicht unseres)':'— appears on your measurement reports (your branding, not ours)',
-    'PNG/JPG, quer oder quadratisch — wird auf 320 px skaliert und lokal gespeichert.':'PNG/JPG, landscape or square — scaled to 320 px and stored locally.',
+    'PNG oder JPG, quer oder quadratisch; wird auf 320 px skaliert und auf diesem Gerät gespeichert.':'PNG/JPG, landscape or square — scaled to 320 px and stored locally.',
     'Startort der Route (Adresse oder Ort)':'Starting point of the route (address or place)',
     'Adresse eingeben und „Suchen" — Koordinaten werden automatisch ermittelt.':'Enter an address and press “Search” — the coordinates are found automatically.',
     'Breitengrad':'Latitude',
@@ -14248,6 +14281,7 @@ const Sprache={
     'Alle':'All',
     'heute':'today',
     'Kernwerte & Begründung':'Key values & reasoning',
+    'nicht berechenbar':'not computable',
     'Letzte Aufnahme ist eine Reha-Einheit ohne 5 min Ruhe vor der ersten Stufe: keine Ruhekennzahlen (unter Belastung nicht stationär).':'The latest recording is a rehab session without 5 min of rest before the first stage: no resting values (not stationary under load).',
     'Ruhephase der letzten Reha-Einheit nicht auswertbar (zu viele unsichere Schläge): keine Ruhekennzahlen.':'Rest phase of the latest rehab session not evaluable (too many uncertain beats): no resting values.',
     'Aus der Ruhephase vor der ersten Stufe der letzten Reha-Einheit.':'From the rest phase before the first stage of the latest rehab session.',
@@ -14370,7 +14404,7 @@ const Sprache={
     'Ruhe-HRV Ihrer Pferde als Verlauf — und die Tour danach geplant. Ausgewertet hier im Browser, nichts liegt bei uns.':'Your horses’ resting HRV as a trend — and the day’s route planned around it. Analysed here in the browser, nothing is stored with us.',
     '1 · Aushang oder Mess-Link':'1 · Poster or recording link', 'Ein QR-Blatt für den Stall: Halterinnen nehmen sieben Minuten Ruhe-HRV auf, ohne Konto.':'A QR sheet for the stable: owners record seven minutes of resting HRV, no account.',
     '2 · Aufnahmen kommen an':'2 · Recordings arrive', 'Datei hineinziehen, fertig. Die Übersicht zeigt jedes Pferd gegen seine eigene Basis.':'Drop the file in, done. The overview shows every horse against its own baseline.',
-    '3 · Tour planen':'3 · Plan the route', 'Kürzeste Strecke als Standard, auf Wunsch deutliche Abweichung zuerst. Die Einordnung treffen Sie.':'Shortest route by default, clear deviation first if you prefer. The assessment is yours.',
+    '3 · Tour planen':'3 · Plan the route', 'CARLON Equine Visite':'CARLON Equine Visite', 'Herzfrequenz und HRV Ihrer Pferde als Verlauf: in Ruhe, auf der Station und in der Reha. Ausgewertet hier im Browser, nichts liegt bei uns.':'Heart rate and HRV of your horses as a trend: at rest, on the ward and in rehab. Analysed here in the browser, nothing is stored with us.', '3 · Tour planen oder Reha begleiten':'3 · Plan the route or follow rehab', 'Kürzeste Strecke zu den Ställen, oder Reha-Einheiten am Gerät mittippen und Woche für Woche vergleichen.':'Shortest route to the yards, or tap rehab sessions on the device and compare week by week.', 'Berichte mit Ihrem Briefkopf: für die Akte, für die Halterin und als Verlaufsdokumentation.':'Reports with your letterhead: for the record, for the owner and as progress documentation.', 'Kürzeste Strecke als Standard, auf Wunsch deutliche Abweichung zuerst. Die Einordnung treffen Sie.':'Shortest route by default, clear deviation first if you prefer. The assessment is yours.',
     '4 · Dokumentieren':'4 · Document', 'Messwertbericht mit Ihrem Briefkopf, Leistungen und Fahrten an einem Ort.':'Measurement report on your letterhead, services and trips in one place.',
     'Demo mit 15 Pferden ansehen':'Explore the demo with 15 horses', 'Eigene Praxis einrichten':'Set up your own practice',
     'Aufnahme ansehen':'View recording', 'Erfassen':'Record', '✓ Aus der heutigen Tour genommen · Datensichtung dokumentiert':'✓ Removed from today’s route · data review documented', 'Beobachtung, Empfehlung…':'Observation, recommendation…', 'Datensichtung (Aufnahme)':'Data review (recording)',
@@ -14378,7 +14412,7 @@ const Sprache={
     'Messwertbericht erstellt':'Measurement report created',
     'Weiter zur Kasse →':'Continue to checkout →', 'zum Einstieg':'to start',
     'Ohne Gurt umsehen (Beispielpferde)':'Look around without a belt (example horses)',
-    'Preise netto · Rechnung mit ausgewiesener USt. von Stripe · nach der Zahlung sofort freigeschaltet — kein Schlüssel, keine E-Mail.':'Prices net · invoice with VAT shown, issued by Stripe · unlocked right after payment — no key, no email.',
+    'Preise netto · Rechnung mit ausgewiesener USt. von Stripe · nach der Zahlung sofort freigeschaltet, ohne Schlüssel und ohne E-Mail.':'Prices net · invoice with VAT shown, issued by Stripe · unlocked right after payment — no key, no email.',
     'Vorher kostenlos testen':'Try it free first','14 Tage kostenlos testen, danach monatlich kündbar':'14 days free trial, then cancel monthly','14 Tage gratis':'14 days free','14 Tage kostenlos testen':'Try 14 days free',
     'im Demo-Modus mit Beispielpferden. Das Monatsabo ist zum Ende des laufenden Abrechnungsmonats kündbar; die Testphase gibt es einmal je Betrieb, ein Stufenwechsel beendet sie.':'in demo mode with sample horses. The monthly plan can be cancelled at the end of the current billing month; the trial is available once per business, a tier change ends it.',
     'Als Leistung erfassen':'Record as a service',
@@ -14782,7 +14816,10 @@ const Sprache={
     });
     if(State.settings.fieldMode){document.body.classList.add('field-mode');const b=$('#fieldBtn');if(b)b.classList.add('on');}
     Chart.initHover();
+    /* Klicktest 20.11.2026: Stufe Reha hat keine Tourenplanung → Start in der Pferdeliste statt auf „Heute · Tagestour“ */
+    try{ if(Nav.cur==='today'&&License.tier()==='vet_reha') Nav.cur='roster'; }catch(_){ }
     Nav.go(Nav.cur);
+    setTimeout(()=>{ try{ if(typeof Reha!=='undefined'&&Reha.vorrechnen) Reha.vorrechnen(); }catch(_){ } },1200);
     Sprache.start();
     Safe.renderBanner();
     Saat.render();
