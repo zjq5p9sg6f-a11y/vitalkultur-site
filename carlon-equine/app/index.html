@@ -245,6 +245,23 @@ main{flex:1;overflow-y:auto;overflow-x:hidden;position:relative}
 
 /* ---- KPI strip ---- */
 .kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:var(--s3);margin-bottom:var(--s5)}
+/* links unten: rechts stehen die Meldungen; über dem Dialog-Hintergrund, damit man auch IM Dialog diktieren kann */
+.stimme-knopf{position:fixed;left:calc(16px + env(safe-area-inset-left,0px));bottom:calc(84px + env(safe-area-inset-bottom,0px));z-index:140;width:56px;height:56px;border-radius:50%;border:1px solid var(--border-subtle);background:var(--bg-raised,#0b1a26);color:var(--cyan);display:flex;align-items:center;justify-content:center;box-shadow:0 6px 20px rgba(0,0,0,.35);cursor:pointer}
+.stimme-knopf svg{width:24px;height:24px}
+#toasts>*{pointer-events:auto}
+body.hoert .stimme-knopf{background:var(--cyan);color:#02130f;animation:hoertPuls 1.2s ease-in-out infinite}
+@keyframes hoertPuls{0%,100%{box-shadow:0 0 0 0 rgba(62,207,178,.55)}50%{box-shadow:0 0 0 14px rgba(62,207,178,0)}}
+@media print{.stimme-knopf{display:none}}
+.rh-dg{display:grid;grid-template-columns:1fr 1fr;gap:8px 12px}.rh-dl{display:flex;flex-direction:column;gap:4px;font-size:12.5px;margin-bottom:6px}.rh-dl span{font-weight:600}.rh-dl input,.rh-dl select,.rh-dl textarea{width:100%}@media(max-width:600px){.rh-dg{grid-template-columns:1fr}}
+.rl-sp{grid-column:1/-1;font-size:13px;color:var(--text-secondary);display:flex;align-items:center;gap:8px;min-height:20px}.rl-sp i{width:9px;height:9px;border-radius:50%;background:var(--cyan);box-shadow:0 0 0 4px rgba(62,207,178,.18)}.rl-sp[data-zustand=info]{color:var(--amber,#f6b73c)}
+.reha-live{position:fixed;inset:0;z-index:130;background:var(--bg-deep,#02080d);overflow:auto;padding:calc(16px + env(safe-area-inset-top,0px)) 16px calc(90px + env(safe-area-inset-bottom,0px))}
+.rl-wrap{max-width:820px;margin:0 auto}.rl-top{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}.rl-top h2{margin:4px 0 0;font-size:24px}
+.rl-kopf{display:flex;align-items:flex-end;gap:22px;flex-wrap:wrap;margin:14px 0}.rl-hf{font-family:var(--font-brand);font-size:88px;line-height:1;color:var(--cyan)}.rl-hf small{font-size:18px;color:var(--text-dim);margin-left:6px}.rl-hf.alt{color:var(--amber,#ffb020)}
+.rl-zeit b{display:block;font-size:26px;font-family:var(--font-mono)}.rl-zeit span{font-size:12px;color:var(--text-dim)}
+.rl-felder{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:10px}.rl-feld{display:grid;grid-template-columns:58px 1fr 58px;grid-template-rows:auto auto;align-items:center;gap:6px 10px;background:var(--bg-raised,#0b1a26);border:1px solid var(--border-subtle);border-radius:16px;padding:10px 12px}
+.rl-feld span{grid-column:1/-1;font-size:13px;color:var(--text-secondary)}.rl-feld button{min-width:58px;min-height:58px;border-radius:14px;font-size:26px;font-weight:700;border:1px solid var(--border-subtle);background:transparent;color:inherit}.rl-feld b{text-align:center;font-size:22px}
+.rl-los{display:flex;gap:10px;margin:14px 0;flex-wrap:wrap}.rl-los .btn{flex:1;min-width:160px;min-height:64px;font-size:16px;border-radius:16px}.rl-los .btn:not(.primary){border:1px solid var(--border-subtle);background:var(--bg-raised,#0b1a26)}
+.rl-liste{font-size:13.5px;color:var(--text-secondary);line-height:1.7}
 .tfrist{display:flex;gap:8px;align-items:flex-start;font-size:12.5px;line-height:1.45;color:var(--text-secondary);background:var(--cyan-g3,rgba(62,207,178,.08));border-radius:10px;padding:8px 10px;margin:8px 0}.tfrist svg{width:14px;height:14px;flex:none;margin-top:2px;color:var(--cyan)}
 .today-lern{font-size:12.5px;color:var(--text-dim);margin:-4px 0 12px}.today-lern b{color:var(--text-secondary)}.tgelernt{font-size:10px;letter-spacing:.06em;text-transform:uppercase;color:var(--cyan);margin-left:4px}
 .erste-schritte{max-width:640px;margin:clamp(20px,6vh,64px) auto;padding:0 4px}.erste-schritte h1{margin:8px 0 22px}
@@ -1220,7 +1237,7 @@ h2 svg.ic{width:20px;height:20px}
 .imp-done .big svg{width:30px;height:30px}
 
 /* ---- Toast ---- */
-#toasts{position:fixed;bottom:24px;right:24px;z-index:150;display:flex;flex-direction:column;gap:10px;align-items:flex-end}
+#toasts{position:fixed;bottom:24px;right:24px;z-index:150;pointer-events:none;display:flex;flex-direction:column;gap:10px;align-items:flex-end}
 .toast{background:var(--bg-elev-2);border:1px solid var(--border-strong);border-radius:var(--r-m);padding:13px 18px;
   font-size:13px;font-weight:500;box-shadow:var(--shadow);display:flex;align-items:center;gap:11px;animation:slidein .3s ease;max-width:380px}
 .toast .st{width:19px;height:19px;flex-shrink:0}
@@ -2061,6 +2078,8 @@ header.k7 #tierPill,header.k7 .post-pill{display:none}
      bekamen eine falsche Atemwegs-Einstufung, alle nach oben. -->
 <script src="aufnahme-herkunft.js"></script>
 <script src="hrv-vorstufe.js"></script>
+<script src="reha-kern.js"></script>
+<script src="h10-speicher.js"></script>
 <script src="poincare-zeit.js?v=20261116d"></script>
 <script src="carlon-formate.js?v=20261116"></script>
 <script src="asthma.js"></script>
@@ -2494,12 +2513,12 @@ const Eingang = {
    dieselbe Herkunft, also liest das Cockpit diese Ablage beim Zurückkommen, übernimmt
    über den normalen Import (Umschlag, Dubletten, Anfrage erledigt) und markiert als gesendet. */
 const Selbst={
-  async messen(hid){
+  async messen(hid,reha){
     let bt=false; try{ bt=!!(navigator.bluetooth&&await navigator.bluetooth.getAvailability()); }catch(_){ }
     if(!bt){ Toast.show('Dieses Gerät kann im Browser kein Bluetooth (iPhone, iPad, Safari). Den Mess-Link auf einem Android-Handy oder Laptop mit Chrome oder Edge öffnen.','info'); return UI.messungAnfordern(hid); }
     const link=await Praxis.anfordern(hid); if(!link) return;
     /* Station auf DIESER Herkunft öffnen (nicht der Kanon-Adresse im Link): nur so teilen Station und Cockpit die Ablage. */
-    const u=new URL(link), hier=new URL('messen.html',location.href); hier.search=u.search; hier.hash=u.hash;
+    const u=new URL(link), hier=new URL('messen.html',location.href); hier.search=u.search; hier.hash=u.hash+(reha?'&reha='+encodeURIComponent(reha):'');
     window.open(hier.href,'_blank','noopener');
     Toast.show('Messstation geöffnet. Nach der Messung zu diesem Tab zurückkehren, die Aufnahme kommt von selbst in die Akte.','ok');
   },
@@ -2526,6 +2545,666 @@ const Selbst={
   }
 };
 document.addEventListener('visibilitychange',()=>{ if(!document.hidden&&State.horses) Selbst.abholen(); });
+
+/* AKTE-DOKUMENTATION (19.11.2026, Jan: „prüfe, ob es solchen Bullshit noch an anderer Stelle gibt“).
+   Befund: Text, den die Praxis schreibt, ging verloren oder war unsichtbar: Einschätzung und Empfehlung im
+   Messwertbericht (nur mit Leistung, gekürzt auf 240 Zeichen), Rückmeldungen an die Halterin (nur verschickt),
+   Notizen zu Beratungen (gespeichert, aber nirgends angezeigt). Jetzt landet alles mit Datum in der Pferdeakte
+   (h.doku), wird mit Sicherung und Team-Ordner übertragen und ist in der Akte nachlesbar. */
+const Akte={
+  async notiere(hid, art, felder){
+    const h=State.horses.find(x=>x.id===hid); if(!h) return null;
+    const e={id:'d_'+Math.abs(hashStr(hid+art+performance.now())).toString(36), datum:new Date().toISOString(), art, ...felder};
+    h.doku=(h.doku||[]).concat([e]); await DB.put('horses',h); return e;
+  },
+  letzte(hid, art){ const h=State.horses.find(x=>x.id===hid); const l=((h&&h.doku)||[]).filter(e=>e.art===art); return l[l.length-1]||null; },
+};
+
+/* STALLWISSEN (19.11.2026, Kano-Recherche: „Stallzugangs-Gedächtnis“, Großtier-Software-Muster). Zugang, Parken,
+   Tor, Ansprechperson gelten für den STALL, nicht für ein Pferd: einmal erfasst, steht es bei jedem Pferd dieses
+   Stalls auf der Tour, mit Datum der letzten Bestätigung (Vertretung findet hin, ohne anzurufen). */
+const Stallwissen={
+  _schluessel(h){ return ((h.stable||'').trim().toLowerCase()+'|'+(h.place||'').trim().toLowerCase()); },
+  gleicheStall(h){ const k=this._schluessel(h); return k==='|'?[h]:State.horses.filter(x=>this._schluessel(x)===k); },
+  fuer(h){ let best={}; for(const x of this.gleicheStall(h)) if(x.zugang&&(!best.stand||x.zugang.stand>best.stand)) best=x.zugang; return best; },
+  async setzen(h,text){ const z={text,stand:new Date().toISOString()};
+    for(const x of this.gleicheStall(h)){ x.zugang=z; if(x!==h) await DB.put('horses',x); } h.zugang=z; },
+};
+/* ENTWURFSSCHUTZ (19.11.2026, Kano-Recherche Rang 1 „unterbrechungsfester Besuch“). Ein Anruf, ein Tabwechsel,
+   ein versehentlich geschlossenes Fenster: Text in einem Dialog wird beim Tippen als Entwurf gemerkt und beim
+   nächsten Öffnen desselben Dialogs wieder eingesetzt. Erst ein Speichern-/Erstellen-Knopf löscht den Entwurf. */
+const Entwurf={
+  _key(m,id){ const t=(m.querySelector('.modal-head h3')||{}).textContent||''; return 'vk.entwurf:'+t.trim().slice(0,80)+':'+id; },
+  anbinden(m){
+    let n=0; try{ for(const k of Object.keys(localStorage)) if(k.startsWith('vk.entwurf:')){ const v=JSON.parse(localStorage.getItem(k)||'{}'); if(!v.t||Date.now()-v.t>7*864e5) localStorage.removeItem(k); } }catch(_){ }
+    m.querySelectorAll('textarea[id]').forEach(f=>{
+      const k=this._key(m,f.id); try{ const v=JSON.parse(localStorage.getItem(k)||'null'); if(v&&v.w&&v.w!==f.value){ f.value=v.w; n++; } }catch(_){ }
+      f.addEventListener('input',()=>{ try{ localStorage.setItem(k,JSON.stringify({w:f.value,t:Date.now()})); }catch(_){ } });
+    });
+    m.querySelectorAll('.modal-foot .btn.primary').forEach(b=>b.addEventListener('click',()=>{ m.querySelectorAll('textarea[id]').forEach(f=>{ try{ localStorage.removeItem(this._key(m,f.id)); }catch(_){ } }); },true));
+    if(n) setTimeout(()=>{ try{ Toast.show('Entwurf wiederhergestellt','info'); }catch(_){ } },50);
+  },
+};
+
+/* TAGESABSCHLUSS (19.11.2026, Kano-Recherche Rang 2/7/8): weniger offene Arbeit am Abend.
+   • offen(): Rückrufe, die nicht im Kopf bleiben dürfen, und lange unbeantwortete Messanfragen – je mit EINER Aktion.
+   • bereit(): vor der Abfahrt: offline startfähig, Sicherung frisch, jeder Halt mit Standort.
+   • feierabend: eigene Planungsgrenze; die Tour zeigt, ab welchem Halt sie überschritten wird (nichts wird blockiert). */
+const Tag={
+  offen(){
+    const r=[];
+    for(const h of State.horses) for(const e of (h.doku||[])) if(e.art==='Rückruf'&&!e.erledigt) r.push({art:'rueckruf',h,e});
+    const alt=Date.now()-7*864e5;
+    for(const a of (typeof Praxis!=='undefined'?Praxis.offeneAnfragen():[])) if(new Date(a.erstellt).getTime()<alt){ const h=State.horses.find(x=>x.id===a.pferdId); if(h) r.push({art:'anfrage',h,a}); }
+    return r;
+  },
+  bereit(order){
+    const fehlt=[];
+    if(!(navigator.serviceWorker&&navigator.serviceWorker.controller)) fehlt.push('Offline-Start noch nicht eingerichtet: Cockpit einmal mit Netz neu laden');
+    const b=State.settings.lastBackupAt; if(!b||Date.now()-new Date(b).getTime()>36*3600e3) fehlt.push('Sicherung älter als ein Tag');
+    const ohne=(order||[]).filter(x=>x.h.lat==null||x.h.lng==null).length; if(ohne) fehlt.push(ohne+' Halt ohne Standort');
+    return fehlt;
+  },
+  async rueckrufMerken(hid){
+    const grund=($('#rrGrund')&&$('#rrGrund').value||'').trim(); if(!grund) return;
+    await Akte.notiere(hid,'Rückruf',{text:grund,erledigt:false}); UI.closeModal(); Toast.show('Rückruf gemerkt · steht unter „Noch offen“','ok'); Nav.refresh();
+  },
+  rueckrufDialog(hid){ const h=State.horses.find(x=>x.id===hid); if(!h) return;
+    UI.modal(`<div class="modal-head"><h3>Rückruf merken — ${esc(h.name)}</h3><button class="closex" onclick="UI.closeModal()">${IC.x}</button></div>
+    <div class="modal-body"><div class="field"><label>Worum geht es?</label><textarea id="rrGrund" rows="3" placeholder="z. B. Halterin fragt nach Ergebnis der Aufnahme, ab 17 Uhr erreichbar"></textarea></div>
+      <div class="hint">Steht in „Heute“ unter „Noch offen“, bis Sie ihn als erledigt markieren.${h.phone?' Telefon: '+esc(h.phone):''}</div></div>
+    <div class="modal-foot"><button class="btn ghost" onclick="UI.closeModal()">Abbrechen</button><button class="btn primary" onclick="Tag.rueckrufMerken('${hid}')">Merken</button></div>`); },
+  async erledigt(hid,eid){ const h=State.horses.find(x=>x.id===hid); const e=h&&(h.doku||[]).find(x=>x.id===eid); if(!e) return;
+    e.erledigt=new Date().toISOString(); await DB.put('horses',h); Toast.show('Erledigt','ok'); Nav.refresh(); },
+  offenHTML(){ return (()=>{ const o=Tag.offen(); if(!o.length) return '';
+          return `<div class="panel" id="nochOffen" style="margin:14px 0"><h2 style="font-size:16px">Noch offen</h2><div class="rec-list">${o.map(x=>x.art==='rueckruf'
+            ?`<div class="rec" style="padding:9px 11px"><div><div class="rmeta"><b>Rückruf · ${esc(x.h.name)}</b>${x.h.owner?' · '+esc(x.h.owner):''}</div><div class="rmeta" style="white-space:pre-wrap">${esc(x.e.text)}</div></div><div style="margin-left:auto;display:flex;gap:6px">${x.h.phone?`<a class="btn ghost" href="tel:${esc(x.h.phone)}">Anrufen</a>`:''}<button class="btn ghost" onclick="Tag.erledigt('${x.h.id}','${x.e.id}')">Erledigt</button></div></div>`
+            :`<div class="rec" style="padding:9px 11px"><div><div class="rmeta"><b>Messung angefordert · ${esc(x.h.name)}</b></div><div class="rmeta">seit ${esc(fmtDate(x.a.erstellt))} ohne Aufnahme</div></div><div style="margin-left:auto"><button class="btn ghost" onclick="UI.messungAnfordern('${x.h.id}')">Erinnern</button></div></div>`).join('')}</div></div>`; })(); },
+  async setFeierabend(v){ State.settings.feierabend=v?parseTime(v):null; await State.saveSettings(); Nav.refresh(); },
+};
+
+/* SPRACHSTEUERUNG (20.11.2026, Jan: „alles per Sprechen steuerbar“). Erkennung NUR auf dem Gerät
+   (SpeechRecognition.processLocally, Chrome ≥ 139, Sprachpaket einmalig). Ohne lokale Erkennung bleibt sie aus:
+   Pferde- und Halterdaten gehen nicht an einen Spracherkennungs-Server. Feste Befehle statt Sprachmodell:
+   schneller, offline, erfindet nichts, deutet nichts (HWG). Nachrichten werden nur VORBEREITET, gesendet wird per Tipp.
+   Ist beim Antippen ein Textfeld aktiv, wird diktiert statt befohlen. */
+const Stimme={
+  _SR(){ return window.SpeechRecognition||window.webkitSpeechRecognition||null; },
+  moeglich(){ return !!this._SR(); },
+  lang(){ return (typeof Sprache!=='undefined'&&Sprache.cur==='en')?'en-US':'de-DE'; },
+  async lokalBereit(){
+    const SR=this._SR(); if(!SR) return 'nein';
+    if(typeof SR.available!=='function') return 'nein';
+    try{ const st=await SR.available({langs:[this.lang()],processLocally:true});
+      if(st==='available') return 'ja';
+      if((st==='downloadable'||st==='downloading')&&typeof SR.install==='function'){ Toast.show('Sprachpaket wird einmalig auf das Gerät geladen …','info'); const ok=await SR.install({langs:[this.lang()],processLocally:true}); return ok?'ja':'nein'; }
+    }catch(_){ }
+    return 'nein';
+  },
+  async hoeren(){
+    if(this._laeuft){ try{ this._rec&&this._rec.stop(); }catch(_){ } return; }
+    const ziel=document.activeElement&&/^(TEXTAREA|INPUT)$/.test(document.activeElement.tagName)&&document.activeElement.type!=='time'?document.activeElement:null;
+    if(await this.lokalBereit()!=='ja'){ Toast.show('Sprachsteuerung braucht die Spracherkennung auf dem Gerät (Chrome mit Sprachpaket). Ohne sie bleibt sie aus, damit keine Daten an einen Server gehen.','warn'); return; }
+    const SR=this._SR(), r=new SR(); r.lang=this.lang(); r.processLocally=true; r.interimResults=false; r.maxAlternatives=1;
+    this._rec=r; this._laeuft=true; document.body.classList.add('hoert');
+    r.onresult=e=>{ const t=(e.results[0]&&e.results[0][0]&&e.results[0][0].transcript||'').trim(); if(t) this.ausfuehren(t,ziel); };
+    r.onerror=e=>{ if(e.error!=='no-speech'&&e.error!=='aborted') Toast.show('Spracheingabe: '+e.error,'warn'); };
+    r.onend=()=>{ this._laeuft=false; document.body.classList.remove('hoert'); };
+    try{ r.start(); }catch(_){ this._laeuft=false; document.body.classList.remove('hoert'); }
+  },
+  _aktuell(){ try{ const o=Dispatch.plannedDay().order; return (o.find(x=>x.h.arrivedAt)||o[0]||{}).h||null; }catch(_){ return null; } },
+  _naechster(){ try{ const o=Dispatch.plannedDay().order; return (o.find(x=>!x.h.arrivedAt)||{}).h||null; }catch(_){ return null; } },
+  _pferd(){ return (Views._detailId&&State.horses.find(x=>x.id===Views._detailId))||this._aktuell(); },
+  async ausfuehren(t,ziel){
+    if(ziel){ const v=ziel.value; ziel.value=(v&&!/\s$/.test(v)?v+' ':v)+t; ziel.dispatchEvent(new Event('input',{bubbles:true})); ziel.dispatchEvent(new Event('change',{bubbles:true})); Toast.show('Diktiert: „'+t+'“','ok'); return 'diktat'; }
+    const s=t.toLowerCase().replace(/[.!?]+$/,'').trim(); let m;
+    if(typeof RehaLive!=='undefined'&&RehaLive.aktiv){
+      if(/^(stufe|neue stufe|stage|next stage)\b/.test(s)){ RehaLive.stufe(); Toast.show('„'+t+'“ · Stufe übernommen','ok'); return 'reha-stufe'; }
+      if(/^(ende|belastung ende|end( of load)?)\b/.test(s)){ RehaLive.ende(); Toast.show('„'+t+'“ · Belastung Ende','ok'); return 'reha-ende'; }
+      if(/^(fertig|finish|done)\b/.test(s)){ await RehaLive.fertig(); return 'reha-fertig'; }
+      if((m=s.match(/^(tempo|speed|steigung|incline|frequenz|frequency|temperatur|temperature|wasser|water)\s+(plus|minus|mehr|weniger|up|down)/))){
+        const map={tempo:'speedKmh',speed:'speedKmh',steigung:'inclinePercent',incline:'inclinePercent',frequenz:'vibrationHz',frequency:'vibrationHz',temperatur:'waterTempC',temperature:'waterTempC',wasser:'waterHeight',water:'waterHeight'};
+        const f=map[m[1]]; if(f&&RehaKern.GERAETE[RehaLive.art].felder.includes(f)){ RehaLive.aendern(f,/plus|mehr|up/.test(m[2])?1:-1); Toast.show('„'+t+'“ · '+RehaLive.wert(f),'ok'); return 'reha-wert'; } }
+    }
+    const zeig=(x)=>Toast.show('„'+t+'“ · '+x,'ok');
+    if(/^(angekommen|bin da|arrived|i'?m here)\b/.test(s)){ const h=this._naechster(); if(!h) return this._nix(t); await Views.arrive(h.id); return 'angekommen'; }
+    if(/^(besuch )?(fertig|abgeschlossen|erledigt)\b|^(visit )?(done|finished)\b/.test(s)){ const h=this._aktuell(); if(!h||!h.arrivedAt) return this._nix(t,'Kein laufender Besuch'); await Views.completeStop(h.id); return 'fertig'; }
+    if(/^(nächster halt|weiter|next stop)\b/.test(s)){ const h=this._naechster(); if(!h) return this._nix(t,'Kein weiterer Halt'); zeig('Navigation zu '+h.name); Dispatch.navTo(h.id); return 'naechster'; }
+    if(/^(navigation|navi|navigate)\b/.test(s)){ const h=this._aktuell(); if(!h) return this._nix(t); zeig('Navigation zu '+h.name); Dispatch.navTo(h.id); return 'navi'; }
+    if((m=s.match(/^(verspätung|delay)\s+(\d{1,3})/))){ const h=this._naechster(); if(!h) return this._nix(t); const r=Dispatch.plannedDay(); const i=r.order.findIndex(x=>x.h.id===h.id); const eta=(i>=0?r.sch.rows[i].arrive:0)+(+m[2]); Views.notifyDelay(h.id,eta); return 'verspaetung'; }
+    if((m=t.match(/^(notiz|note)[:,]?\s+(.+)$/i))){ const h=this._pferd(); if(!h) return this._nix(t,'Kein Pferd gewählt'); const n=(h.notes?h.notes+'\n':'')+m[2]; await Views.saveNotes(h.id,n,true); zeig('Notiz bei '+h.name); try{ Nav.refresh(); }catch(_){ } return 'notiz'; }
+    if((m=t.match(/^(rückruf|callback)[:,]?\s+(.+)$/i))){ const h=this._pferd(); if(!h) return this._nix(t,'Kein Pferd gewählt'); await Akte.notiere(h.id,'Rückruf',{text:m[2],erledigt:false}); zeig('Rückruf gemerkt bei '+h.name); try{ Nav.refresh(); }catch(_){ } return 'rueckruf'; }
+    return this._nix(t);
+  },
+  _nix(t,grund){ Toast.show((grund?grund+' · ':'')+'Nicht verstanden: „'+t+'“. Befehle: Angekommen · Besuch fertig · Nächster Halt · Verspätung 20 · Notiz … · Rückruf … · Navigation','warn'); return null; },
+};
+
+/* BINDUNG (20.11.2026, Jan: „Kündigungsrate so niedrig wie nur möglich“). Nicht durch Hürden, sondern durch
+   sichtbaren Nutzen und frühes Auffangen:
+   • bilanz(): was Visite der Praxis in diesem Monat gebracht hat, aus IHREN Daten gezählt (nichts geschätzt).
+   • vorPortal(): vor der Abo-Verwaltung Bilanz, Export-Zusage, Grund in einem Tipp, Problem melden. Kündigen bleibt
+     ein Klick (keine Hürde, kein Rabatt), nur informiert.
+   • ruhe(): lange keine Tour → ein freundlicher Halt mit drei Wegen zurück in den Alltag. */
+const Bindung={
+  bilanz(von){
+    const ab=von||new Date(new Date().getFullYear(),new Date().getMonth(),1).getTime(), t=x=>new Date(x).getTime()>=ab;
+    const log=(State.daylog||[]).filter(e=>e.departAt&&t(e.departAt));
+    const doku=[]; for(const h of State.horses) for(const e of (h.doku||[])) if(t(e.datum)) doku.push(e);
+    return { besuche:log.length, km:Math.round(log.reduce((a,e)=>a+(e.driveKm||0),0)), aufnahmen:State.recordings.filter(r=>r.startedAt&&t(r.startedAt)).length,
+      berichte:doku.filter(e=>e.art==='Messwertbericht').length, nachrichten:doku.filter(e=>/Halterin/.test(e.art)).length,
+      rueckrufe:doku.filter(e=>e.art==='Rückruf'&&e.erledigt).length, pferde:State.horses.length };
+  },
+  bilanzHTML(){ const b=this.bilanz(); const z=(n,w)=>`<div><b>${fmt0(n)}</b><span>${w}</span></div>`;
+    return `<div class="log-sum" style="margin:6px 0 12px">${z(b.besuche,'Besuche dokumentiert')}${z(b.km,'km Fahrtenbuch')}${z(b.aufnahmen,'Aufnahmen eingegangen')}${z(b.berichte,'Messwertberichte')}${z(b.nachrichten,'Nachrichten an Halterinnen')}${z(b.pferde,'Pferde in der Akte')}</div>`; },
+  GRUENDE:['Zu wenig Zeit zum Einrichten','Halterinnen messen kaum','Eine Funktion fehlt','Zu kompliziert im Alltag','Zu teuer für unsere Praxis','Praxis ändert sich','Anderer Grund'],
+  vorPortal(){
+    UI.modal(`<div class="modal-head"><h3>Bevor Sie zur Abo-Verwaltung gehen</h3><button class="closex" onclick="UI.closeModal()">${IC.x}</button></div>
+    <div class="modal-body"><p style="margin:0 0 6px;color:var(--text-secondary);font-size:13.5px">Ihr Monat mit Visite bisher:</p>${this.bilanzHTML()}
+      <p style="font-size:13px;color:var(--text-secondary);line-height:1.55">Ihre Akten bleiben auf diesem Gerät. Auch nach einer Kündigung können Sie sie lesen und als CSV exportieren.</p>
+      <div class="field"><label>Was passt nicht? (freiwillig, ein Tipp genügt)</label><div style="display:flex;flex-wrap:wrap;gap:6px" id="kgChips">${this.GRUENDE.map(g=>`<button type="button" class="btn ghost" style="font-size:12.5px;padding:6px 10px" onclick="this.parentNode.querySelectorAll('button').forEach(b=>b.classList.remove('on'));this.classList.add('on');Bindung._grund=${JSON.stringify(g).replace(/"/g,'&quot;')}">${esc(g)}</button>`).join('')}</div></div>
+      <div class="field"><label>Was würde Visite für Sie besser machen? (freiwillig)</label><textarea id="kgText" rows="2" placeholder="Ein Satz reicht. Wir lesen jede Antwort."></textarea></div></div>
+    <div class="modal-foot"><button class="btn ghost" onclick="Bindung._merken();UI.closeModal();UI.betaFeedback()">Problem melden</button><button class="btn primary" onclick="Bindung._merken();UI.closeModal();License.portalOeffnen(true)">Weiter zur Abo-Verwaltung</button></div>`);
+  },
+  _merken(){ const t=($('#kgText')&&$('#kgText').value||'').trim(); if(!this._grund&&!t) return;
+    const l=State.settings.kuendigungsGruende||[]; l.push({datum:new Date().toISOString(),grund:this._grund||null,text:t}); State.settings.kuendigungsGruende=l.slice(-20); State.saveSettings(); this._grund=null; },
+  ruheHTML(){ return (()=>{ const t=Bindung.ruhe(); return t?`<div class="panel" style="margin:4px 0 12px"><b>Seit ${t} Tagen keine Tour im Cockpit.</b><div style="font-size:13px;color:var(--text-secondary);margin:6px 0 10px">Drei Wege zurück in den Alltag:</div><div style="display:flex;flex-wrap:wrap;gap:8px"><button class="btn ghost" onclick="Nav.go('roster')">Pferde für die nächste Tour markieren</button><button class="btn ghost" onclick="UI.messungAnfordern()">Messung anfordern</button><button class="btn ghost" onclick="UI.betaFeedback()">Was fehlt Ihnen?</button></div></div>`:''; })(); },
+  ruhe(){ const l=State.daylog||[]; const letzte=l.reduce((m,e)=>Math.max(m,new Date(e.departAt||0).getTime()),0);
+    const offen=State.horses.some(h=>h.needsVisit); if(offen||!State.horses.length) return 0;
+    const tage=letzte?Math.floor((Date.now()-letzte)/864e5):null; return tage!=null&&tage>=14?tage:0; },
+};
+
+/* REHA (20.11.2026, Jan: „alles aus der iOS-Reha in Visite, high end, beste Metriken, Co-Branding-Export“).
+   Datenquelle: rec.reha.log = Rohmarken (deviceSettingsLog). Alle Stufenwerte entstehen bei jeder Ansicht neu aus rr
+   (RehaKern, Übergangsfassung bis Equines eingefrorener Port kommt). Verglichen wird nur bei gleichem Lastschlüssel.
+   Keine Wertung („fitter“), keine Diagnose: Zahlen mit Herkunft, die Einordnung macht die Tierärztin. */
+const Reha={
+  erlaubt(){ return !!(State.settings&&State.settings.isDemo) || License.can('reha'); },
+  /* Demo (20.11.2026): vier Aquatrainer-Einheiten über vier Wochen für ein Demo-Pferd, damit Partner wie SASCOTEC den
+     Verlauf bei gleicher Stufe sofort sehen. Synthetisch und als Demo markiert; HF bei gleicher Last sinkt leicht. */
+  async demoAnlegen(){
+    const h=State.horses[0]; if(!h||State.recordings.some(r=>r.reha)) return;
+    if(!h.reha){ h.reha={indikation:'Tendinitis oberflächliche Beugesehne vorne links',indikationDatum:'2026-10-16',ziel:'20 min Aquatrainer im Trab ohne Lahmheit, danach Aufbau an der Hand',erreicht:'teilweise',befundBeginn:'Ultraschall: hypoechogener Bezirk 18 % der Querschnittsfläche, Faserbild unterbrochen',befundEnde:'Ultraschall: Bezirk 9 %, Faserbild überwiegend parallel',lahmBeginn:'2',lahmEnde:'1',verantwortlich:'Dr. med. vet. Demo'}; h.ueln=h.ueln||'276098100012345'; try{ await DB.put('horses',h); }catch(_){ } }
+    const jetzt=Date.now();
+    for(let w=0;w<4;w++){
+      /* Stufe 1 = Referenz (jede Woche gleich: Karpus, 18 °C, 5 km/h), Stufe 2 wird jede Woche länger und schneller (Belastungsaufbau) */
+      const ruhe=36, s1=64-w*2, v2=6.5+w*0.5, s2=80+w, er=44-w, e2=960+600+w*120, T=e2+600; const rr=[]; let t=0, x=7+w;
+      const ph=[[0,360,ruhe,ruhe,1],[360,960,ruhe,s1,45],[960,e2,s1,s2,35],[e2,T,s2,er,78-w*5]];
+      while(t<T){ const p=ph.find(p=>t>=p[0]&&t<p[1]); const hf=p[3]+(p[2]-p[3])*Math.exp(-(t-p[0])/p[4]); x=(x*16807)%2147483647; const u=(x/2147483647)-0.5, k=Math.pow(ruhe/hf,3); const v=60000/hf+k*(38*Math.sin(2*Math.PI*0.17*t)+22*Math.sin(2*Math.PI*0.04*t+w))+k*30*u; rr.push(Math.round(v*100)/100); t+=v/1000; }
+      const log=[{startSec:360,device:'aquatrainer',waterHeight:'carpus',waterTempC:18,speedKmh:5,reverse:false},{startSec:960,device:'aquatrainer',waterHeight:'carpus',waterTempC:18,speedKmh:v2,reverse:false},{startSec:e2,device:'keines'}];
+      const start=new Date(jetzt-(21-w*7)*864e5); start.setHours(10,0,0,0);
+      const rec={id:'reha_demo_'+w,horseId:h.id,startedAt:start.toISOString(),durationSec:T,beatCount:rr.length,rr,reha:{log},metrics:{},_seed:true,source:{app:'Demo · Reha-Aufnahme'},triage:{level:'stable',reasons:[]}};
+      await DB.put('recordings',rec);
+    }
+  },
+  sitzungen(hid){ return State.recsFor(hid).filter(r=>r.reha&&r.reha.log&&r.reha.log.length&&Array.isArray(r.rr)&&r.rr.length>30)
+    .map(r=>({rec:r, a:RehaKern.auswerten(r.rr.map(Number), r.reha.log)})); },
+  geraet(s){ const d=(s.a.stufen.find(x=>x.device!=='keines')||{}).device||'keines'; const G=RehaKern.GERAETE[d]||{}; return (typeof Sprache!=='undefined'&&Sprache.cur==='en')?G.en:G.de; },
+  mmss(x){ x=Math.max(0,Math.round(x)); return Math.floor(x/60)+':'+String(x%60).padStart(2,'0'); },
+  z(v,d=0){ return v==null||!isFinite(v)?'–':(d?fmt1(v):fmt0(v)); },
+  /* Fairer Verlauf: je Lastschlüssel die Herzfrequenz (Median letzte 60 s) über die Sitzungen */
+  verlauf(hid){ const m={}; for(const s of this.sitzungen(hid)) for(const st of s.a.stufen) if(st.last&&st.hfMedian60!=null){ (m[st.schluessel]=m[st.schluessel]||{label:st.label,punkte:[]}).punkte.push({datum:s.rec.startedAt,hf:st.hfMedian60,art:st.artifactRatePct}); }
+    return Object.values(m).filter(x=>x.punkte.length>=1).sort((a,b)=>b.punkte.length-a.punkte.length); },
+  spark(p){ if(p.length<2) return ''; const w=180,h=40,v=p.map(x=>x.hf),lo=Math.min(...v)-2,hi=Math.max(...v)+2;
+    const X=i=>4+i*(w-8)/(p.length-1), Y=x=>h-4-(x-lo)/(hi-lo||1)*(h-8);
+    return `<svg viewBox="0 0 ${w} ${h}" width="${w}" height="${h}" aria-hidden="true"><polyline fill="none" stroke="var(--cyan)" stroke-width="2" points="${p.map((x,i)=>X(i).toFixed(1)+','+Y(x.hf).toFixed(1)).join(' ')}"/>${p.map((x,i)=>`<circle cx="${X(i).toFixed(1)}" cy="${Y(x.hf).toFixed(1)}" r="3" fill="${(x.art||0)>5?'none':'var(--cyan)'}" stroke="var(--cyan)"/>`).join('')}</svg>`; },
+  vergleichSatz(hid){ /* nur gleicher Lastschlüssel, nur Fakten */
+    for(const v of this.verlauf(hid)){ const p=v.punkte; if(p.length<2) continue; const a=p[p.length-2], b=p[p.length-1], d=Math.round(a.hf-b.hf);
+      if(Math.abs(d)>=2) return `Gleiche Stufe (${v.label}): Herzfrequenz ${Math.abs(d)} Schläge pro Minute ${d>0?'niedriger':'höher'} als am ${fmtDate(a.datum)}.`; }
+    return ''; },
+  panel(h){
+    if(!this.erlaubt()) return `<div class="panel" style="margin-bottom:var(--s4)" id="rehaAkte"><h2 style="font-size:16px">Reha</h2><p style="color:var(--text-dim);font-size:13px;line-height:1.55">Reha-Sitzungen am Aquatrainer, Laufband, an der Vibrationsplatte, im Solarium und in der Solekammer, mit Herzfrequenz je Stufe, Verlauf bei gleicher Last und Berichten für Klinik und Halterin. Enthalten in der Klinik-Stufe.</p><button class="btn ghost" onclick="UI.upgrade&&UI.upgrade()">Klinik-Stufe ansehen</button></div>`;
+    const S=this.sitzungen(h.id); const lang=(typeof Sprache!=='undefined'&&Sprache.cur==='en');
+    const start=`<div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:10px">${['aquatrainer','laufband','vibration','fuehranlage','solarium','solekammer'].map(g=>`<button class="btn ghost" style="font-size:12.5px" onclick="RehaLive.starten('${h.id}','${g}')">${esc(RehaKern.GERAETE[g][lang?'en':'de'])}</button>`).join('')}</div>`;
+    if(!S.length) return `<div class="panel" style="margin-bottom:var(--s4)" id="rehaAkte"><h2 style="font-size:16px">Reha</h2><p style="color:var(--text-dim);font-size:13px">Noch keine Reha-Sitzung. Sitzung starten mit Gerät:</p>${start}</div>`;
+    const ver=this.verlauf(h.id).filter(v=>v.punkte.length>=2);
+    return `<div class="panel" style="margin-bottom:var(--s4)" id="rehaAkte"><h2 style="font-size:16px">Reha · ${S.length} Sitzung${S.length>1?'en':''}</h2>
+      <div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin:6px 0 8px">${S.length>=2?`<button class="btn primary" style="font-size:12.5px" onclick="Reha.abschlussDialog('${h.id}')">Abschlussbericht · alle Einheiten</button>`:''}<button class="btn ghost" style="font-size:12.5px" onclick="EquineApp.alle('${h.id}',true)">Für die CARLON Equine App</button><span class="rh-thema" role="group" aria-label="Druckfarbe" style="display:inline-flex;border:1px solid var(--border);border-radius:999px;overflow:hidden;font-size:12px">${['hell','dunkel'].map(t=>`<button type="button" aria-pressed="${(State.settings.rehaThema||'hell')===t}" onclick="Reha.thema('${t}',this)" style="border:0;padding:6px 12px;cursor:pointer;background:${(State.settings.rehaThema||'hell')===t?'var(--cyan)':'transparent'};color:${(State.settings.rehaThema||'hell')===t?'#04161a':'inherit'}">${t==='hell'?'Weiß (Druck)':'Dunkel'}</button>`).join('')}</span></div>
+      ${ver.length?`<div style="font-size:12.5px;color:var(--text-secondary);margin:4px 0 6px">Verlauf bei gleicher Stufe (Herzfrequenz, letzte 60 s der Stufe):</div>${ver.slice(0,4).map(v=>`<div style="display:flex;align-items:center;gap:10px;margin:4px 0"><span style="flex:1;font-size:12.5px">${esc(v.label)}</span>${this.spark(v.punkte)}<b class="mono">${fmt0(v.punkte[v.punkte.length-1].hf)}</b></div>`).join('')}`:''}
+      <div class="rec-list" style="margin-top:8px">${S.slice().reverse().map(s=>`<details class="rec" style="display:block;padding:9px 11px"><summary style="cursor:pointer;list-style:none"><span class="rdate" style="font-size:12px">${fmtDate(s.rec.startedAt)}</span> <span class="rmeta">${esc(this.geraet(s))} · ${s.a.stufen.filter(x=>x.device!=='keines').length} Stufen${s.rec.rrQuelle==='gurtspeicher'?' · Gurtspeicher':''}</span></summary>
+        <table class="tbl" style="width:100%;font-size:12px;margin-top:8px"><thead><tr><th>Stufe</th><th>Dauer</th><th>HF Ende</th><th>ΔHF</th><th>τ63</th></tr></thead><tbody>${s.a.stufen.filter(x=>x.device!=='keines').map(x=>`<tr><td>${esc(x.label)}</td><td>${this.mmss(x.endSec-x.startSec)}</td><td>${this.z(x.hfMedian60)}</td><td>${x.deltaHRbpm==null?'–':(x.deltaHRbpm>0?'+':'')+fmt0(x.deltaHRbpm)}</td><td>${x.adaptationSec==null?'–':x.adaptationSec+' s'}</td></tr>`).join('')}</tbody></table>
+        ${s.a.erholung?`<div style="font-size:12px;color:var(--text-secondary);margin-top:6px">Erholung: HF am Ende ${this.z(s.a.erholung.hfEnde)} · nach 1 min ${this.z(s.a.erholung.hf60)} · 3 min ${this.z(s.a.erholung.hf180)} · 5 min ${this.z(s.a.erholung.hf300)}</div>`:''}
+        <div style="display:flex;gap:6px;margin-top:8px;flex-wrap:wrap"><button class="btn ghost" style="font-size:12.5px" onclick="Reha.drucken('${h.id}','${s.rec.id}','klinik')">Klinikbericht</button><button class="btn ghost" style="font-size:12.5px" onclick="Reha.drucken('${h.id}','${s.rec.id}','halter')">Bericht für die Halterin</button></div></details>`).join('')}</div>
+      <div style="font-size:12.5px;color:var(--text-dim);margin-top:10px">Neue Sitzung mit Gerät:</div>${start}</div>`;
+  },
+  /* ═══ REHA-BERICHT (20.11.2026) — Maßstab: Trainingsbericht der iOS-App (Talhof-Beispiel, 5 Seiten quer).
+     Gleiche Seitenfolge, gleiche Begriffe: Übersicht (Puls + HRV über die Sitzung), Belastungsstufen (Puls + Tempo +
+     Wasser, Stufentabelle), Herz-Dynamik (Poincaré + Erholung mit 63-%-Marke), HRV-Metriken. Dunkle Diagrammflächen
+     auf hellem Blatt, Einrichtung vorn, CARLON dezent. Keine Diagnose, jede Zahl mit Rechenweg. */
+  _CD:{bg:'#0b1114',rand:'#1b262c',grid:'#22313a',achse:'#7f949f',puls:'#f6b73c',hrv:'#3ecfb2',tempo:'#8f7cf0',wasser:'#1f6f78',wtext:'#ffffff',linie:'#ffffff',text:'#e8eef2'},
+  _CL:{bg:'#ffffff',rand:'#d9e3e8',grid:'#e6edf0',achse:'#5a7080',puls:'#d98a0b',hrv:'#0a9e88',tempo:'#6b55d6',wasser:'#cfe9ec',wtext:'#0b5560',linie:'#5a7080',text:'#14181b'},
+  _C:null,
+  /* Poincaré-Palette für den dunklen Druck (Report._P ist hell) */
+  _PD:{ink:'#e8eef2',dim:'#8fa3ad',faint:'#62757f',grid:'#24323a',minor:'#161f24',axis:'#3a4c56',teal:'#3ecfb2',dot:'#3ecfb2',amber:'#f6b73c',grau:'#33434b',bg:'#0b1114',bg2:'#0b1114'},
+  _svgHFHRV(rr,{w=1040,h=300}={}){ const C=this._C,t=RehaKern.zeitachse(rr),T=t[t.length-1]||1, pad={l:46,r:46,t:18,b:30}, W=w-pad.l-pad.r, H=h-pad.t-pad.b;
+    const hf=rr.map(x=>60000/x), lo=Math.floor(Math.min(...hf)/5)*5-5, hi=Math.ceil(Math.max(...hf)/5)*5+5;
+    const rm=[]; for(let i=0;i<rr.length;i++){ const a=Math.max(1,i-29); let q=0,n=0; for(let k=a;k<=i;k++){ const d=rr[k]-rr[k-1]; q+=d*d; n++; } rm.push(n>5?Math.sqrt(q/n):null); }
+    const rmv=rm.filter(x=>x!=null), rhi=Math.max(20,Math.ceil(Math.max(...rmv)/10)*10);
+    const X=s=>pad.l+s/T*W, Y=v=>pad.t+H-(v-lo)/(hi-lo)*H, Y2=v=>pad.t+H-v/rhi*H; const step=Math.max(1,Math.floor(rr.length/1400));
+    let g=`<rect width="${w}" height="${h}" rx="14" fill="${C.bg}" stroke="${C.rand}"/>`;
+    for(let k=0;k<=5;k++){ const v=lo+(hi-lo)*k/5, y=Y(v); g+=`<line x1="${pad.l}" x2="${w-pad.r}" y1="${y}" y2="${y}" stroke="${C.grid}"/><text x="${pad.l-8}" y="${y+4}" fill="${C.puls}" font-size="11" text-anchor="end">${Math.round(v)}</text><text x="${w-pad.r+8}" y="${y+4}" fill="${C.hrv}" font-size="11">${Math.round(rhi*k/5)}</text>`; }
+    const mi=Math.max(60,Math.ceil(T/10/60)*60); for(let s2=0;s2<=T;s2+=mi){ const x=X(s2); g+=`<line x1="${x}" x2="${x}" y1="${pad.t}" y2="${pad.t+H}" stroke="${C.grid}"/><text x="${x}" y="${h-10}" fill="${C.achse}" font-size="11" text-anchor="middle">${Reha.mmss(s2)}</text>`; }
+    g+=`<polyline fill="none" stroke="${C.hrv}" stroke-width="1.6" points="${rm.map((v,i)=>v==null||i%step?'':X(t[i]).toFixed(1)+','+Y2(v).toFixed(1)).filter(Boolean).join(' ')}"/>`;
+    g+=`<polyline fill="none" stroke="${C.puls}" stroke-width="1.6" points="${hf.map((v,i)=>i%step?'':X(t[i]).toFixed(1)+','+Y(v).toFixed(1)).filter(Boolean).join(' ')}"/>`;
+    return `<svg viewBox="0 0 ${w} ${h}" width="100%" style="display:block">${g}</svg>`; },
+  _svgStufen(rr,st,{w=1040,h=230}={}){ const C=this._C,t=RehaKern.zeitachse(rr),T=t[t.length-1]||1, pad={l:46,r:40,t:26,b:28}, W=w-pad.l-pad.r, H=h-pad.t-pad.b;
+    const hf=rr.map(x=>60000/x), lo=Math.floor(Math.min(...hf)/5)*5-5, hi=Math.ceil(Math.max(...hf)/5)*5+5, X=s=>pad.l+s/T*W, Y=v=>pad.t+H-(v-lo)/(hi-lo)*H;
+    const vmax=Math.max(6,...st.map(x=>x.markierung.speedKmh||0)), Yv=v=>pad.t+H-v/vmax*H; const wl={none:0,fetlock:1,carpus:2,elbow:3,stifle:4,shoulder:5};
+    let g=`<rect width="${w}" height="${h}" rx="14" fill="${C.bg}" stroke="${C.rand}"/>`;
+    st.forEach((x,i)=>{ const a=X(x.startSec), b=X(x.endSec); if(i%2) g+=`<rect x="${a}" y="${pad.t}" width="${b-a}" height="${H}" fill="#ffffff" opacity=".03"/>`;
+      g+=`<line x1="${a}" x2="${a}" y1="${pad.t}" y2="${pad.t+H}" stroke="${C.achse}" stroke-dasharray="3 3" opacity=".6"/><text x="${(a+b)/2}" y="${pad.t-9}" fill="${C.hrv}" font-size="12" font-weight="700" text-anchor="middle">${i+1}</text>`;
+      const m=x.markierung, lv=wl[m.waterHeight]||0; if(lv>0){ const hh=lv/5*H*0.55; g+=`<rect x="${a}" y="${pad.t+H-hh}" width="${b-a}" height="${hh}" fill="${C.wasser}" opacity=".85"/><text x="${a+6}" y="${pad.t+H-6}" fill="${C.wtext}" font-size="10.5" font-weight="700">${esc((RehaKern.WASSER[m.waterHeight]||[''])[0])}${m.waterTempC!=null?' · '+fmt0(m.waterTempC)+' °C':''}</text>`; } });
+    Chart.niceTicks(lo,hi,5).forEach(v=>{ if(v<lo||v>hi) return; const y=Y(v); g+=`<line x1="${pad.l}" x2="${w-pad.r}" y1="${y}" y2="${y}" stroke="${C.grid}" opacity=".7"/><text x="${pad.l-8}" y="${y+4}" fill="${C.puls}" font-size="11" text-anchor="end">${fmt0(v)}</text>`; });
+    let pts=[]; st.forEach(x=>{ const v=x.markierung.speedKmh||0; pts.push(X(x.startSec)+','+Yv(v), X(x.endSec)+','+Yv(v)); }); g+=`<polyline fill="none" stroke="${C.tempo}" stroke-width="2.4" points="${pts.join(' ')}"/><text x="${w-pad.r+6}" y="${Yv(vmax)+4}" fill="${C.tempo}" font-size="11">${fmt0(vmax)}</text><text x="${w-pad.r+6}" y="${Yv(0)+4}" fill="${C.tempo}" font-size="11">0</text>`;
+    const step=Math.max(1,Math.floor(rr.length/1400)); g+=`<polyline fill="none" stroke="${C.puls}" stroke-width="1.6" points="${hf.map((v,i)=>i%step?'':X(t[i]).toFixed(1)+','+Y(v).toFixed(1)).filter(Boolean).join(' ')}"/>`;
+    const mi=Math.max(60,Math.ceil(T/10/60)*60); for(let s2=0;s2<=T;s2+=mi) g+=`<text x="${X(s2)}" y="${h-9}" fill="${C.achse}" font-size="11" text-anchor="middle">${Reha.mmss(s2)}</text>`;
+    return `<svg viewBox="0 0 ${w} ${h}" width="100%" style="display:block">${g}</svg>`; },
+  /* ═══ EINE Quelle für alle Reha-Kennwerte (Audit-Runde 1, 20.11.2026) ═══
+     Referenzstufe = gleiche Geräteeinstellung mit den meisten Einheiten · Erholungszeit τ63 = angepasste Zeitkonstante
+     der Sprungantwort erster Ordnung in der Erholungsphase (dieselbe Rechnung wie die Anstiegszeit je Stufe) ·
+     Ruhe-HRV nur aus der stationären Ruhephase vor der ersten Stufe (HRV-Vorstufe, artefaktkorrigiert). */
+  RAUSCH:{hf:3,tau:10,rmssd:0.2},
+  _kw:{},
+  kennwerte(rec){ const key=rec.id+':'+(rec.rr&&rec.rr.length)+':'+((rec.reha&&rec.reha.log)||[]).length; if(this._kw[key]) return this._kw[key];
+    const rr=rec.rr.map(Number), a=RehaKern.auswerten(rr,rec.reha.log), t0=RehaKern.zeitachse(rr), seg=(x0,x1)=>rr.filter((_,k)=>t0[k]>x0&&t0[k]<=x1);
+    const lastSt=a.stufen.filter(x=>x.device!=='keines'), ende=lastSt.length?lastSt[lastSt.length-1]:null;
+    const erh=ende?a.stufen.find(x=>x.device==='keines'&&x.startSec>=ende.endSec-0.5)||null:null;
+    const ruheSec=a.ruhe&&a.ruhe.vorSec>=300?a.ruhe.vorSec:0, rrRuhe=ruheSec?seg(0,ruheSec):null;
+    let v=null; if(rrRuhe) try{ v=HRVVorstufe.analysiere(rrRuhe); }catch(_){ }
+    let vGes=null; try{ vGes=HRVVorstufe.analysiere(rr); }catch(_){ }
+    const tempo=lastSt.map(x=>(x.markierung||{}).speedKmh).filter(x=>x!=null);
+    const o={rec,a,rr,t0,seg,lastSt,erh,ruheSec,rrRuhe,v,vGes,geraet:this.geraet({a}),
+      lastMin:lastSt.reduce((p,x)=>p+(x.endSec-x.startSec),0)/60, maxTempo:tempo.length?Math.max(...tempo):null,
+      wasser:[...new Set(lastSt.map(x=>(x.markierung||{}).waterHeight).filter(Boolean))],
+      tauE:erh&&erh.adaptationSec!=null?erh.adaptationSec:null, hf5:a.erholung?a.erholung.hf300:null,
+      ruheHF:rrRuhe&&rrRuhe.length?60000*rrRuhe.length/rrRuhe.reduce((p,q)=>p+q,0):null, ruheRM:v&&v.rmssdMs!=null?v.rmssdMs:null,
+      dauer:t0[t0.length-1]||0, hfMittel:rr.length?60000*rr.length/rr.reduce((p,q)=>p+q,0):null};
+    return this._kw[key]=o; },
+  referenz(hid){ const v=this.verlauf(hid); return v.length?v[0]:null; },
+  hfRef(o,ref){ if(!ref||!o) return null; const s=o.a.stufen.find(y=>y.label===ref.label&&y.hfMedian60!=null); return s?s.hfMedian60:null; },
+  /* Veränderung aus den GERUNDET angezeigten Werten; innerhalb der Rauschgrenze → „stabil“ */
+  _d(a,b,grenze,einheit,rel){ if(a==null||b==null) return null; const ra=Math.round(a), rb=Math.round(b), d=rb-ra, g=rel?Math.abs(ra)*grenze:grenze;
+    return {d, stabil:Math.abs(d)<=g, txt:Math.abs(d)<=g?`stabil (${d>0?'+':d<0?'−':'±'}${Math.abs(d)} ${einheit})`:`${d>0?'+':'−'}${Math.abs(d)} ${einheit}`}; },
+  /* τ63-Anpassung: Modellkurve und Güte R² über das Stufenfenster (gleiche Formel wie RehaKern.adaptation) */
+  _tauGuete(o,s){ if(!s||s.adaptationSec==null) return null; const {rr,t0}=o; const vor=[],y=[],x=[];
+    for(let k=0;k<rr.length;k++){ const tt=t0[k]; if(tt>s.startSec-20&&tt<=s.startSec) vor.push(60000/rr[k]); if(tt>s.startSec&&tt<=s.endSec){ x.push(tt-s.startSec); y.push(60000/rr[k]); } }
+    if(!vor.length||y.length<10) return null; const h0=vor.reduce((p,q)=>p+q,0)/vor.length, ys=y.slice(Math.floor(y.length*0.6)), hEnd=ys.reduce((p,q)=>p+q,0)/ys.length, d=hEnd-h0, tau=s.adaptationSec;
+    const f=xx=>h0+d*(1-Math.exp(-xx/tau)), my=y.reduce((p,q)=>p+q,0)/y.length; let sse=0,sst=0; for(let j=0;j<y.length;j++){ sse+=(y[j]-f(x[j]))**2; sst+=(y[j]-my)**2; }
+    return {h0,hEnd,d,tau,f,r2:sst>0?1-sse/sst:null}; },
+  stamm(h,rec){ const r=h.reha||{}, S=this.sitzungen(h.id), erste=S.length?S[0].rec.startedAt:null;
+    const woche=rec&&erste?Math.floor((+new Date(rec.startedAt)-+new Date(erste))/6048e5)+1:null;
+    const z1=[h.breed, h.sex&&typeof Stamm!=='undefined'?Stamm.geschlecht(h.sex):null, h.age?h.age+' Jahre':null, h.ueln?'UELN/Chip '+h.ueln:null, h.owner?'Halter: '+h.owner:null].filter(Boolean).map(esc).join(' · ');
+    const z2=[r.indikation?'Indikation: '+r.indikation+(r.indikationDatum?' ('+fmtDate(r.indikationDatum)+')':''):null, woche?'Reha-Woche '+woche:null, (r.verantwortlich||State.settings.vetName)?'Verantwortlich: '+(r.verantwortlich||State.settings.vetName):null].filter(Boolean).map(esc).join(' · ');
+    return (z1||z2)?`<div class="rh-stamm">${z1}${z1&&z2?'<br>':''}${z2}</div>`:''; },
+  /* Erholung: Herzfrequenz ab 1 min vor Belastungsende bis 5 min danach, Modellkurve (gestrichelt), τ63-Punkt */
+  _svgErholung(o,{w=500,h=290}={}){ const C=this._C, s=o.erh, g0=this._tauGuete(o,s); if(!s) return null;
+    const a=s.startSec-60, b=Math.min(s.endSec,s.startSec+300), pad={l:40,r:14,t:16,b:30}, W=w-pad.l-pad.r, H=h-pad.t-pad.b; const pts=[];
+    for(let k=0;k<o.rr.length;k++){ const tt=o.t0[k]; if(tt>=a&&tt<=b) pts.push([tt,60000/o.rr[k]]); } if(pts.length<10) return null;
+    const ys=pts.map(p=>p[1]), tk=Chart.niceTicks(Math.min(...ys)-2,Math.max(...ys)+2,5), lo=Math.min(tk[0],Math.min(...ys)-2), hi=Math.max(tk[tk.length-1],Math.max(...ys)+2), X=tt=>pad.l+(tt-a)/(b-a)*W, Y=v=>pad.t+H-(v-lo)/(hi-lo)*H;
+    let g=`<rect width="${w}" height="${h}" rx="14" fill="${C.bg}" stroke="${C.rand}"/>`;
+    tk.forEach(q=>{ if(q<lo||q>hi) return; g+=`<line x1="${pad.l}" x2="${w-pad.r}" y1="${Y(q).toFixed(1)}" y2="${Y(q).toFixed(1)}" stroke="${C.grid}"/><text x="${pad.l-7}" y="${(Y(q)+3).toFixed(1)}" text-anchor="end" font-size="10" fill="${C.puls}">${fmt0(q)}</text>`; });
+    for(let m=-1;m<=5;m++){ const tt=s.startSec+m*60; if(tt<a||tt>b) continue; g+=`<text x="${X(tt).toFixed(1)}" y="${h-10}" text-anchor="middle" font-size="10" fill="${C.achse}">${m===0?'Ende':(m>0?'+':'−')+Math.abs(m)+' min'}</text>`; }
+    g+=`<line x1="${X(s.startSec)}" x2="${X(s.startSec)}" y1="${pad.t}" y2="${pad.t+H}" stroke="${C.linie}" stroke-dasharray="3 4" opacity=".5"/>`;
+    g+=`<polyline fill="none" stroke="${C.puls}" stroke-width="1.8" points="${pts.map(p=>X(p[0]).toFixed(1)+','+Y(p[1]).toFixed(1)).join(' ')}"/>`;
+    if(g0){ let d=''; for(let tt=s.startSec;tt<=b;tt+=3) d+=(d?' ':'')+X(tt).toFixed(1)+','+Y(g0.f(tt-s.startSec)).toFixed(1); g+=`<polyline fill="none" stroke="${C.tempo}" stroke-width="1.6" stroke-dasharray="5 4" points="${d}"/>`;
+      const tx=s.startSec+g0.tau, ty=g0.h0+0.63*g0.d; if(tx<=b){ g+=`<circle cx="${X(tx).toFixed(1)}" cy="${Y(ty).toFixed(1)}" r="5" fill="${C.tempo}"/><text x="${(X(tx)+9).toFixed(1)}" y="${(Y(ty)-7).toFixed(1)}" fill="${C.text}" font-size="11">τ63 = ${fmt0(g0.tau)} s</text>`; } }
+    return {svg:`<svg viewBox="0 0 ${w} ${h}" width="100%" style="display:block">${g}</svg>`, g:g0}; },
+  /* Poincaré über die Zeit: Farbe = Zeitpunkt, mit Achsen und Zeitlegende */
+  _svgPoinZeit(rr,{size=300,dauer=null}={}){ const n=rr.length; if(n<20) return ''; const C=this._C, q=[...rr].sort((x,y)=>x-y), p=f=>q[Math.round(f*(n-1))];
+    const tk=Chart.niceTicks(p(.005)*0.97,p(.995)*1.03,5), lo=tk[0], hi=tk[tk.length-1], pad=40, W=size-pad-12, S=v=>pad+(Math.max(lo,Math.min(hi,v))-lo)/(hi-lo)*W, Sy=v=>12+W-(Math.max(lo,Math.min(hi,v))-lo)/(hi-lo)*W;
+    const farbe=k=>{ const u=k/(n-1); const a=[62,207,178], b=[246,183,60], c=[143,124,240]; const m=u<.5?[a,b,u*2]:[b,c,(u-.5)*2]; return 'rgb('+m[0].map((x,i)=>Math.round(x+(m[1][i]-x)*m[2])).join(',')+')'; };
+    let g=`<rect width="${size}" height="${size+46}" rx="14" fill="${C.bg}" stroke="${C.rand}"/>`;
+    tk.forEach(v=>{ g+=`<line x1="${S(v)}" x2="${S(v)}" y1="12" y2="${12+W}" stroke="${C.grid}"/><line x1="${pad}" x2="${pad+W}" y1="${Sy(v)}" y2="${Sy(v)}" stroke="${C.grid}"/><text x="${S(v)}" y="${W+25}" text-anchor="middle" font-size="9" fill="${C.achse}">${fmt0(v)}</text><text x="${pad-5}" y="${Sy(v)+3}" text-anchor="end" font-size="9" fill="${C.achse}">${fmt0(v)}</text>`; });
+    g+=`<line x1="${S(lo)}" y1="${Sy(lo)}" x2="${S(hi)}" y2="${Sy(hi)}" stroke="${C.achse}" stroke-dasharray="4 4" opacity=".6"/>`;
+    const step=Math.max(1,Math.floor(n/1600)); for(let k=0;k<n-1;k+=step) g+=`<circle cx="${S(rr[k]).toFixed(1)}" cy="${Sy(rr[k+1]).toFixed(1)}" r="1.6" fill="${farbe(k)}" opacity=".85"/>`;
+    const gy=size+8; g+=`<defs><linearGradient id="pzG"><stop offset="0" stop-color="rgb(62,207,178)"/><stop offset=".5" stop-color="rgb(246,183,60)"/><stop offset="1" stop-color="rgb(143,124,240)"/></linearGradient></defs><rect x="${pad}" y="${gy}" width="${W}" height="7" rx="3" fill="url(#pzG)"/><text x="${pad}" y="${gy+19}" font-size="9" fill="${C.achse}">0:00</text><text x="${pad+W}" y="${gy+19}" text-anchor="end" font-size="9" fill="${C.achse}">${dauer!=null?Reha.mmss(dauer):'Ende'}</text><text x="${pad+W/2}" y="${gy+19}" text-anchor="middle" font-size="9" fill="${C.achse}">Zeitpunkt</text><text x="${pad+W/2}" y="${gy+32}" text-anchor="middle" font-size="9" fill="${C.achse}">RRₙ gegen RRₙ₊₁ (ms)</text>`;
+    return `<svg viewBox="0 0 ${size} ${size+46}" style="width:100%;display:block">${g}</svg>`; },
+  /* Verlauf gleicher Stufen über die Einheiten. Farben: Puls-Gelb ist der Herzfrequenz vorbehalten → Stufen in Tinte-Abstufungen,
+     unterschieden durch Strich + Marke. legende 'rechts' (breit) oder 'unten' (halbe Seite). */
+  _svgVerlauf(hid,bis,{w=1080,h=190,legende='rechts',nur=null}={}){ const C=this._C, dunkel=C===this._CD, F=dunkel?['#eef3f5','#9fb2bb','#62757f']:['#14181b','#5a7080','#9aabb5'], DA=['','6 4','2 3'];
+    let L=this.verlauf(hid).map(v=>({label:v.label,p:v.punkte.filter(q=>+new Date(q.datum)<=+new Date(bis)+6e4)})).filter(v=>v.p.length>=2); if(nur) L=L.filter(v=>v.label===nur); L=L.slice(0,3); if(!L.length) return '';
+    const unten=legende==='unten', lh=unten?L.length*16+8:0, xs=L.flatMap(v=>v.p.map(q=>+new Date(q.datum))), ys=L.flatMap(v=>v.p.map(q=>q.hf)); let x0=Math.min(...xs),x1=Math.max(...xs); const sp=(x1-x0)||864e5; x0-=sp*.06; x1+=sp*.06;
+    const mitte=(Math.min(...ys)+Math.max(...ys))/2, halb=Math.max(10,(Math.max(...ys)-Math.min(...ys))/2+3), tk=Chart.niceTicks(mitte-halb,mitte+halb,4), lo=Math.min(tk[0],mitte-halb), hi=Math.max(tk[tk.length-1],mitte+halb);
+    const pad={l:40,r:unten?16:250,t:12,b:26+lh}, W=w-pad.l-pad.r, H=h-pad.t-pad.b, X=x=>pad.l+(x-x0)/(x1-x0)*W, Y=y=>pad.t+H-(y-lo)/(hi-lo||1)*H;
+    let g=`<rect width="${w}" height="${h}" rx="14" fill="${C.bg}" stroke="${C.rand}"/>`;
+    tk.forEach(q=>{ if(q<lo||q>hi) return; g+=`<line x1="${pad.l}" x2="${pad.l+W}" y1="${Y(q).toFixed(1)}" y2="${Y(q).toFixed(1)}" stroke="${C.grid}"/><text x="${pad.l-7}" y="${(Y(q)+3).toFixed(1)}" text-anchor="end" font-size="10" fill="${C.puls}">${fmt0(q)}</text>`; });
+    [...new Set(xs)].sort((a,b)=>a-b).forEach(x=>{ g+=`<text x="${X(x).toFixed(1)}" y="${h-9-lh}" text-anchor="middle" font-size="10" fill="${C.achse}">${new Date(x).toLocaleDateString('de-DE',{day:'numeric',month:'short'})}</text>`; });
+    L.forEach((v,k)=>{ const pts=v.p.map(q=>[X(+new Date(q.datum)),Y(q.hf),q.hf]); g+=`<polyline fill="none" stroke="${F[k]}" stroke-width="2.2" ${DA[k]?`stroke-dasharray="${DA[k]}"`:''} points="${pts.map(q=>q[0].toFixed(1)+','+q[1].toFixed(1)).join(' ')}"/>`+pts.map((q,i)=>k===1?`<rect x="${(q[0]-4).toFixed(1)}" y="${(q[1]-4).toFixed(1)}" width="8" height="8" fill="${F[k]}"/>`:`<circle cx="${q[0].toFixed(1)}" cy="${q[1].toFixed(1)}" r="${i===pts.length-1?5:3.6}" fill="${F[k]}"/>`).join('');
+      const a=Math.round(v.p[0].hf), b=Math.round(v.p[v.p.length-1].hf), dd=this._d(a,b,this.RAUSCH.hf,'bpm'); const txt=`${esc(v.label)}: ${a} → ${b} bpm (${dd.txt}) · ${v.p.length} Einheiten`;
+      if(unten) g+=`<line x1="${pad.l}" x2="${pad.l+18}" y1="${h-lh+8+k*16}" y2="${h-lh+8+k*16}" stroke="${F[k]}" stroke-width="2.4" ${DA[k]?`stroke-dasharray="${DA[k]}"`:''}/><text x="${pad.l+24}" y="${h-lh+12+k*16}" font-size="10" fill="${C.text}">${txt}</text>`;
+      else g+=`<line x1="${pad.l+W+12}" x2="${pad.l+W+30}" y1="${pad.t+10+k*36}" y2="${pad.t+10+k*36}" stroke="${F[k]}" stroke-width="2.4" ${DA[k]?`stroke-dasharray="${DA[k]}"`:''}/><text x="${pad.l+W+36}" y="${pad.t+14+k*36}" font-size="10.5" font-weight="700" fill="${C.text}">${esc(v.label)}</text><text x="${pad.l+W+36}" y="${pad.t+28+k*36}" font-size="10" fill="${C.achse}">${a} → ${b} bpm · ${dd.txt}</text>`; });
+    return `<svg viewBox="0 0 ${w} ${h}" style="width:100%;display:block">${g}</svg>`; },
+  /* Kleiner Verlauf je Kennzahl mit EIGENER Achse und Mindest-Spannweite (keine gestauchten Achsen, Rauschen bleibt Rauschen) */
+  _svgKlein(p,{w=255,h=140,einheit='',grenze=3,rel=false,minSpan=10,farbe=null}={}){ const C=this._C, P=p.filter(q=>q.y!=null&&isFinite(q.y)); if(P.length<2) return '';
+    const ys=P.map(q=>q.y), xs=P.map(q=>+new Date(q.x)), m=(Math.min(...ys)+Math.max(...ys))/2, half=Math.max(minSpan/2,(Math.max(...ys)-Math.min(...ys))/2*1.15);
+    const tk=Chart.niceTicks(m-half,m+half,3), lo=Math.min(tk[0],m-half), hi=Math.max(tk[tk.length-1],m+half); let x0=Math.min(...xs),x1=Math.max(...xs); const sp=(x1-x0)||864e5; x0-=sp*.08; x1+=sp*.08;
+    const pad={l:34,r:10,t:10,b:22}, W=w-pad.l-pad.r, H=h-pad.t-pad.b, X=x=>pad.l+(x-x0)/(x1-x0)*W, Y=y=>pad.t+H-(y-lo)/(hi-lo||1)*H, f=farbe||C.text;
+    let g=`<rect width="${w}" height="${h}" rx="12" fill="${C.bg}" stroke="${C.rand}"/>`;
+    tk.forEach(q=>{ if(q<lo||q>hi) return; g+=`<line x1="${pad.l}" x2="${pad.l+W}" y1="${Y(q).toFixed(1)}" y2="${Y(q).toFixed(1)}" stroke="${C.grid}"/><text x="${pad.l-5}" y="${(Y(q)+3).toFixed(1)}" text-anchor="end" font-size="9" fill="${C.achse}">${fmt0(q)}</text>`; });
+    const a0=Math.round(ys[0]), g0=rel?Math.abs(a0)*grenze:grenze; g+=`<rect x="${pad.l}" y="${Y(a0+g0).toFixed(1)}" width="${W}" height="${(Y(a0-g0)-Y(a0+g0)).toFixed(1)}" fill="${C.achse}" opacity=".12"/>`;
+    g+=`<polyline fill="none" stroke="${f}" stroke-width="2" points="${P.map(q=>X(+new Date(q.x)).toFixed(1)+','+Y(q.y).toFixed(1)).join(' ')}"/>`+P.map((q,i)=>`<circle cx="${X(+new Date(q.x)).toFixed(1)}" cy="${Y(q.y).toFixed(1)}" r="${i===P.length-1?4.5:3}" fill="${f}"/>`).join('');
+    g+=`<text x="${pad.l}" y="${h-7}" font-size="9" fill="${C.achse}">${new Date(xs[0]).toLocaleDateString('de-DE',{day:'numeric',month:'short'})}</text><text x="${pad.l+W}" y="${h-7}" text-anchor="end" font-size="9" fill="${C.achse}">${new Date(xs[xs.length-1]).toLocaleDateString('de-DE',{day:'numeric',month:'short'})}</text>`;
+    return `<svg viewBox="0 0 ${w} ${h}" style="width:100%;display:block">${g}</svg>`; },
+  /* Trainingsumfang je Einheit: Minuten unter Belastung (Balken), höchstes Tempo und Wasserstand als Beschriftung */
+  _svgUmfang(K,{w=1080,h=150}={}){ const C=this._C; if(!K.length) return ''; const pad={l:40,r:14,t:16,b:30}, W=w-pad.l-pad.r, H=h-pad.t-pad.b, mx=Math.max(10,...K.map(k=>k.lastMin)), tk=Chart.niceTicks(0,mx,3), hi=Math.max(mx,tk[tk.length-1]);
+    const bw=Math.min(70,W/K.length*0.55), X=i=>pad.l+(i+0.5)*W/K.length, Y=v=>pad.t+H-v/hi*H; let g=`<rect width="${w}" height="${h}" rx="14" fill="${C.bg}" stroke="${C.rand}"/>`;
+    tk.forEach(q=>{ g+=`<line x1="${pad.l}" x2="${pad.l+W}" y1="${Y(q).toFixed(1)}" y2="${Y(q).toFixed(1)}" stroke="${C.grid}"/><text x="${pad.l-6}" y="${(Y(q)+3).toFixed(1)}" text-anchor="end" font-size="9.5" fill="${C.achse}">${fmt0(q)}</text>`; });
+    K.forEach((k,i)=>{ const x=X(i); g+=`<rect x="${(x-bw/2).toFixed(1)}" y="${Y(k.lastMin).toFixed(1)}" width="${bw.toFixed(1)}" height="${(Y(0)-Y(k.lastMin)).toFixed(1)}" rx="4" fill="${C.wasser}"/><text x="${x.toFixed(1)}" y="${(Y(k.lastMin)-5).toFixed(1)}" text-anchor="middle" font-size="10" fill="${C.text}">${fmt0(k.lastMin)} min${k.maxTempo!=null?' · '+String(k.maxTempo).replace('.',',')+' km/h':''}</text><text x="${x.toFixed(1)}" y="${h-10}" text-anchor="middle" font-size="9.5" fill="${C.achse}">${new Date(k.rec.startedAt).toLocaleDateString('de-DE',{day:'numeric',month:'short'})}</text>`; });
+    return `<svg viewBox="0 0 ${w} ${h}" style="width:100%;display:block">${g}</svg>`; },
+  abschlussDialog(hid){ const h=State.horses.find(x=>x.id===hid); if(!h) return; const S=this.sitzungen(hid), r=h.reha||{};
+    const f=(id,l,v,ph,typ)=>`<label class="rh-dl"><span>${l}</span>${typ==='ta'?`<textarea id="${id}" rows="3" placeholder="${ph||''}">${esc(v||'')}</textarea>`:`<input id="${id}" ${typ==='date'?'type="date"':''} value="${esc(v||'')}" placeholder="${ph||''}">`}</label>`;
+    const sel=(id,l,v,opts)=>`<label class="rh-dl"><span>${l}</span><select id="${id}">${opts.map(o=>`<option value="${o[0]}" ${String(v??'')===String(o[0])?'selected':''}>${o[1]}</option>`).join('')}</select></label>`;
+    const aaep=[['','–'],['0','0 · lahmfrei'],['1','1'],['2','2'],['3','3'],['4','4'],['5','5']];
+    UI.modal(`<div class="modal-head"><button class="closex" onclick="UI.closeModal()">${IC.x}</button><h3>Reha-Abschlussbericht · ${esc(h.name)}</h3></div><div class="modal-body">
+      <p style="font-size:13px;color:var(--text-secondary);line-height:1.5;margin:0 0 10px">${S.length} Einheiten von ${fmtDate(S[0].rec.startedAt)} bis ${fmtDate(S[S.length-1].rec.startedAt)}. Die Messwerte rechnet Visite; Indikation, Ziel und Befunde tragen Sie ein. Alles wird beim Pferd gespeichert.</p>
+      <div class="rh-dg">${f('rhInd','Indikation',r.indikation,'z. B. Tendinitis OBS vorne links')}${f('rhIndD','Datum der Diagnose',r.indikationDatum,'','date')}${f('rhZiel','Ziel der Reha',r.ziel,'z. B. 20 min Aquatrainer im Trab ohne Lahmheit')}${sel('rhErr','Ziel erreicht',r.erreicht,[['','offen'],['ja','erreicht'],['teilweise','teilweise'],['nein','nicht erreicht']])}
+      ${f('rhB0','Befund zu Beginn (Ultraschall, Klinik)',r.befundBeginn,'','ta')}${f('rhB1','Befund zum Abschluss',r.befundEnde,'','ta')}${sel('rhL0','Lahmheit zu Beginn (AAEP 0–5)',r.lahmBeginn,aaep)}${sel('rhL1','Lahmheit zum Abschluss (AAEP 0–5)',r.lahmEnde,aaep)}
+      ${f('rhVer','Verantwortlich',r.verantwortlich||State.settings.vetName,'Name der Tierärztin / des Tierarztes')}${f('rhChip','UELN / Chip-Nummer',h.ueln,'')}</div>
+      ${f('rhFazit','Einschätzung der Tierärztin / des Tierarztes',h.rehaFazit,'Verlauf, Empfehlung für die nächsten Wochen','ta')}
+      <div style="display:flex;gap:8px;margin-top:12px;flex-wrap:wrap"><button class="btn primary" onclick="Reha.abschluss('${hid}')">Bericht erstellen</button><button class="btn ghost" onclick="Reha.abschluss('${hid}',true)">Ohne Eintragungen</button></div></div>`); },
+  async abschluss(hid,ohne){ const h=State.horses.find(x=>x.id===hid); if(!h) return; const g=id=>{ const e=document.getElementById(id); return e?e.value.trim():null; };
+    if(!ohne&&document.getElementById('rhFazit')){ h.reha=Object.assign({},h.reha||{},{indikation:g('rhInd'),indikationDatum:g('rhIndD'),ziel:g('rhZiel'),erreicht:g('rhErr'),befundBeginn:g('rhB0'),befundEnde:g('rhB1'),lahmBeginn:g('rhL0'),lahmEnde:g('rhL1'),verantwortlich:g('rhVer')});
+      h.ueln=g('rhChip')||h.ueln||''; h.rehaFazit=g('rhFazit'); await DB.put('horses',h); }
+    try{ UI.closeModal(); }catch(_){ }
+    const thema=(State.settings&&State.settings.rehaThema)||'hell', dunkel=thema==='dunkel', P0=Report._P; this._C=dunkel?this._CD:this._CL; if(dunkel) Report._P=Object.assign({},P0,this._PD);
+    try{ await this._abschluss(h,ohne,dunkel); } finally { Report._P=P0; } },
+  async _abschluss(h,ohne,dunkel){ const C=this._C, st=State.settings, S=this.sitzungen(h.id); if(!S.length) return; const K=S.map(s=>this.kennwerte(s.rec)), R=this.RAUSCH, rh=ohne?{}:(h.reha||{}), fazit=ohne?'':(h.rehaFazit||'');
+    const praxis=esc(st.clinicName||'Ihre Einrichtung'), zusatz=esc([st.clinicAddr,st.clinicWeb].filter(Boolean).join(' · '));
+    const logo=st.logo?`<img src="${st.logo}" style="width:74px;height:58px;object-fit:contain;border:1px solid var(--line);border-radius:8px;background:#fff">`:'';
+    const von=S[0].rec.startedAt, bis=S[S.length-1].rec.startedAt, tage=Math.round((+new Date(bis)-+new Date(von))/864e5);
+    const kopf=t=>`<div class="rh-kopf">${logo}<div style="flex:1"><div class="rh-ein">${praxis}</div><div class="rh-tit">${t}</div><div class="rh-zus">${zusatz}</div></div><div style="text-align:right"><div class="rh-pf">${esc(h.name)}</div><div class="rh-zus">${fmtDate(von)} bis ${fmtDate(bis)}</div><div class="rh-zus"><b>${S.length} Einheiten · ${tage} Tage</b></div></div></div>${this.stamm(h,S[S.length-1].rec)}`;
+    const fuss=(n,m)=>`<div class="rh-fuss"><div>Dokumentation der Herz-Kreislauf-Antwort auf das Reha-Training mit CARLON Equine Visite (Polar H10). Kein Medizinprodukt, keine Diagnose. Prüfwerte der Originalaufnahmen stehen in den Sitzungsberichten.</div><div class="rh-fz"><span>Erstellt von ${praxis} · <b style="color:var(--acc);letter-spacing:.12em">CARLON EQUINE VISITE</b></span><span>${n} / ${m}</span><span>vitalkultur.com/carlon-equine-visite</span></div></div>`;
+    const kpi=(l,w,e,f,u)=>`<div class="rh-kpi"><span>${l}</span><b style="color:${f||'var(--ink)'}">${w}</b><em>${e||''}</em>${u?`<div class="rh-ku">${u}</div>`:''}</div>`;
+    const ref=this.referenz(h.id), rp=ref?K.map(k=>({x:k.rec.startedAt,y:this.hfRef(k,ref)})).filter(q=>q.y!=null):[];
+    const hA=rp.length?Math.round(rp[0].y):null, hB=rp.length?Math.round(rp[rp.length-1].y):null, dH=rp.length>=2?this._d(hA,hB,R.hf,'bpm'):null;
+    const tP=K.filter(k=>k.tauE!=null), dT=tP.length>=2?this._d(tP[0].tauE,tP[tP.length-1].tauE,R.tau,'s'):null, minGes=K.reduce((p,k)=>p+k.lastMin,0);
+    const kern=dH?(dH.stabil?'Gleiche Arbeit, Herzfrequenz stabil.':`Gleiche Arbeit, ${Math.abs(dH.d)} Schläge pro Minute ${dH.d<0?'weniger':'mehr'}.`):'Verlauf der Herz-Kreislauf-Antwort über die Reha.';
+    const unter=dH?`Auf der Referenzstufe (${esc(ref.label)}) lag die Herzfrequenz in der ersten Einheit bei ${hA} und zuletzt bei ${hB} Schlägen pro Minute (${rp.length} Einheiten mit identischer Einstellung).${dT?` Nach der Belastung hatte sich die Herzfrequenz zuletzt nach ${fmt0(tP[tP.length-1].tauE)} s zu knapp zwei Dritteln beruhigt (erste Einheit: ${fmt0(tP[0].tauE)} s).`:''}`:'';
+    const zeile=(l,v2)=>v2?`<div class="rh-bz"><span>${l}</span><b>${v2}</b></div>`:'';
+    const ERR={ja:'erreicht',teilweise:'teilweise erreicht',nein:'nicht erreicht'};
+    const seiten=[];
+    seiten.push(`${kopf('Reha-Verlaufsdokumentation · Herz-Kreislauf-Belastbarkeit')}
+      <div class="rh-kern" style="font-size:20px;font-weight:800;padding:10px 16px">${kern}<div style="font-size:12px;font-weight:400;margin-top:4px;line-height:1.5">${unter}</div></div>
+      <div class="rh-zwei" style="grid-template-columns:1.45fr 1fr;margin-top:8px"><div class="rh-box" style="min-height:150px"><div class="rh-bt">Tierärztliche Beurteilung</div>
+        ${zeile('Indikation',esc(rh.indikation||'')+(rh.indikationDatum?' · '+fmtDate(rh.indikationDatum):''))}${zeile('Ziel',esc(rh.ziel||'')+(rh.erreicht&&rh.ziel?' · <span style="color:var(--acc)">'+ERR[rh.erreicht]+'</span>':''))}
+        ${zeile('Befund zu Beginn',esc(rh.befundBeginn||''))}${zeile('Befund zum Abschluss',esc(rh.befundEnde||''))}${zeile('Lahmheit (AAEP)',rh.lahmBeginn||rh.lahmEnde?esc((rh.lahmBeginn||'–')+' → '+(rh.lahmEnde||'–')):'')}
+        <div style="font-size:12.5px;line-height:1.55;white-space:pre-wrap;margin-top:4px">${fazit?esc(fazit):(rh.indikation?'':'<span style="color:var(--faint)">Hier stehen Indikation, Ziel, Befunde und die Einschätzung der Praxis.</span>')}</div></div>
+        <div class="rh-box" style="display:flex;flex-direction:column;min-height:150px"><div class="rh-kpis" style="margin:0">${dH?kpi('HF Referenzstufe',(dH.d>0?'+':dH.d<0?'−':'±')+Math.abs(dH.d),'bpm',dH.stabil?'var(--ink)':(dH.d<0?'var(--acc)':'var(--acc2)'),hA+' → '+hB+' bpm'):''}${dT?kpi('Erholungszeit τ63',fmt0(tP[tP.length-1].tauE),'s','var(--vio)','erste Einheit '+fmt0(tP[0].tauE)+' s'):''}${kpi('Training',fmt0(minGes),'min','var(--ink)',S.length+' Einheiten · '+esc([...new Set(K.map(k=>k.geraet))].join(', ')))}</div><div style="flex:1"></div>
+          <div style="border-top:1px solid var(--dim);padding-top:5px;font-size:10px;color:var(--dim);display:flex;justify-content:space-between;margin-top:18px"><span>Ort, Datum</span><span>Unterschrift, Stempel${rh.verantwortlich?' · '+esc(rh.verantwortlich):''}</span></div></div></div>
+      <div class="rh-cap" style="margin-top:6px">Herzfrequenz bei gleicher Stufe über die Einheiten</div>${this._svgVerlauf(h.id,bis,{h:150})||'<div class="rh-mini">Ab zwei Einheiten mit identischer Einstellung.</div>'}
+      <div class="rh-mini">Herzfrequenz am Stufenende (Median der letzten 60 s) bei identischen Geräteeinstellungen; ±3 bpm gelten als stabil. Die Heilung von Sehnen und Gelenken beurteilen Ultraschall und Lahmheitsuntersuchung; diese Dokumentation zeigt, wie das Herz-Kreislauf-System auf das Training antwortet.</div>`);
+    const kl=(t,p,o2)=>`<div><div class="rh-cap" style="margin:0 0 4px">${t}</div>${this._svgKlein(p,o2)||'<div class="rh-mini">zu wenige Werte</div>'}</div>`;
+    const dauer4=K.map(k=>({x:k.rec.startedAt}));
+    seiten.push(`${kopf('Training und Verlauf')}<div class="rh-cap">Trainingsumfang je Einheit · Minuten unter Belastung, höchstes Tempo</div>${this._svgUmfang(K,{h:140})}
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:10px">${kl('Erholungszeit τ63 (s)',K.map(k=>({x:k.rec.startedAt,y:k.tauE})),{einheit:'s',grenze:R.tau,minSpan:40,farbe:C.tempo})}${kl('HF 5 min nach Belastung (bpm)',K.map(k=>({x:k.rec.startedAt,y:k.hf5})),{grenze:R.hf,minSpan:10,farbe:C.puls})}${kl('Ruhe-RMSSD (ms)',K.map(k=>({x:k.rec.startedAt,y:k.ruheRM})),{grenze:R.rmssd,rel:true,minSpan:20,farbe:C.hrv})}${kl('Ruhe-Herzfrequenz (bpm)',K.map(k=>({x:k.rec.startedAt,y:k.ruheHF})),{grenze:R.hf,minSpan:10,farbe:C.puls})}</div>
+      <div class="rh-mini">Grau hinterlegt: Rauschgrenze um den ersten Wert (HF ±3 bpm, τ63 ±10 s, RMSSD ±20 %). Innerhalb davon gilt ein Wert als stabil.</div>
+      <table class="rh-tab"><thead><tr><th>Datum</th><th>Gerät</th><th>Belastung</th><th>Höchstes Tempo</th><th>Wasserstand</th><th>HF Referenzstufe</th><th>Erholungszeit τ63</th><th>Ruhe-RMSSD</th></tr></thead><tbody>${K.map(k=>`<tr><td>${fmtDate(k.rec.startedAt)}</td><td>${esc(k.geraet)}</td><td>${fmt0(k.lastMin)} min</td><td>${k.maxTempo!=null?String(k.maxTempo).replace('.',',')+' km/h':'–'}</td><td>${k.wasser.length?esc(k.wasser.map(w2=>(RehaKern.WASSER[w2]||[w2])[0]).join(', ')):'–'}</td><td><b style="color:var(--acc2)">${this.z(this.hfRef(k,ref))}</b> bpm</td><td style="color:var(--vio)">${this.z(k.tauE)} s</td><td>${this.z(k.ruheRM)} ms</td></tr>`).join('')}</tbody></table>
+      <div class="rh-mini"><b>Einordnung.</b> Ein sinkender Puls bei gleicher Stufe ist typisch für Trainingsanpassung, kann aber auch Gewöhnung an das Gerät widerspiegeln (Nankervis &amp; Williams 2006); auch die Wassertemperatur beeinflusst die Herzfrequenz (Nankervis et al. 2008). Darum vergleicht Visite nur identische Einstellungen und weist Rauschgrenzen aus. Methoden und Prüfwerte je Einheit: Sitzungsbericht.</div>`);
+    $('#printArea').innerHTML=this._stil(dunkel)+seiten.map((x,i)=>`<section class="rh-seite">${x}${fuss(i+1,seiten.length)}</section>`).join('');
+    try{ await Akte.notiere(h.id,'Reha-Abschlussbericht',{text:kern+' '+unter+(fazit?'\n\nEinschätzung: '+fazit:'')}); }catch(_){ }
+    const alt=document.title; document.title=`${h.name} · Reha-Verlaufsdokumentation`; setTimeout(()=>{ window.print(); document.title=alt; },150);
+  },
+  thema(t,el){ State.settings.rehaThema=t; State.saveSettings(); const g=el&&el.parentNode; if(g) [...g.children].forEach(b=>{ const an=b===el; b.setAttribute('aria-pressed',an); b.style.background=an?'var(--cyan)':'transparent'; b.style.color=an?'#04161a':'inherit'; }); },
+  async drucken(hid,rid,art,thema){
+    thema=thema||(State.settings&&State.settings.rehaThema)||'hell'; const dunkel=thema==='dunkel', P0=Report._P;
+    this._C=dunkel?this._CD:this._CL; if(dunkel) Report._P=Object.assign({},P0,this._PD);
+    try{ await this._drucken(hid,rid,art,dunkel); } finally { Report._P=P0; }
+  },
+  _stil(dunkel){
+    const V=dunkel?'--bg:#050708;--ink:#eef3f5;--dim:#8fa3ad;--faint:#62757f;--line:#1f2b31;--line2:#141c20;--acc:#3ecfb2;--acc2:#f6b73c;--vio:#a597f5;--chip:#0b1a18;--chipr:#1f4a43;--card:#0a0f12'
+                  :'--bg:#ffffff;--ink:#14181b;--dim:#5a7080;--faint:#8a9aa8;--line:#e2eaee;--line2:#f0f4f6;--acc:#0f8f79;--acc2:#b8730a;--vio:#6b55d6;--chip:#effaf7;--chipr:#b9e6dc;--card:#ffffff';
+    return `<style>@page{size:A4 landscape;margin:0}#printArea{${V}}.rh-seite{${V};width:297mm;height:210mm;padding:9mm 11mm 0;background:var(--bg);break-after:page;font-family:Inter,-apple-system,system-ui,sans-serif;color:var(--ink);position:relative;box-sizing:border-box;overflow:hidden}.rh-seite:last-child{break-after:auto}
+      .rh-kopf{display:flex;gap:16px;align-items:center;border-bottom:3px solid var(--acc);padding-bottom:9px;margin-bottom:11px}.rh-ein{letter-spacing:.22em;font-weight:800;font-size:12px;color:var(--ink)}.rh-tit{font-size:23px;font-weight:800;color:var(--acc);letter-spacing:.01em}.rh-zus{font-size:10.5px;color:var(--dim)}.rh-pf{font-size:18px;font-weight:700}
+      .rh-q{display:flex;gap:10px;align-items:flex-start;background:var(--chip);border:1px solid var(--chipr);border-radius:12px;padding:8px 14px;margin-bottom:8px;font-size:11.5px}.rh-q i{width:9px;height:9px;border-radius:50%;margin-top:4px;flex:none}
+      .rh-cap{font-size:10px;letter-spacing:.14em;text-transform:uppercase;font-weight:700;color:var(--dim);margin:6px 0}.rh-mini{font-size:9.5px;color:var(--dim);line-height:1.5;margin:6px 0}.rh-fig{font-size:9.5px;color:var(--dim);line-height:1.5;margin:5px 0 8px}.rh-fig b,.rh-mini b{color:var(--ink)}
+      .rh-kpis{display:flex;gap:10px;flex-wrap:wrap;margin-top:6px}.rh-kpi{border:1px solid var(--line);background:var(--card);border-radius:12px;padding:7px 14px;min-width:118px}.rh-kpi span{display:block;font-size:9.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--dim);font-weight:700}.rh-kpi b{font-size:27px}.rh-kpi em{font-style:normal;font-size:11px;color:var(--dim);margin-left:4px}
+      .rh-satz{flex:1;min-width:260px;background:var(--chip);border:1px solid var(--chipr);border-radius:12px;padding:9px 14px;font-size:12px;line-height:1.5}
+      .rh-tab{width:100%;border-collapse:collapse;font-size:11.5px;margin-top:8px;border:1px solid var(--line)}.rh-tab th{text-align:left;font-size:9.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--dim);padding:6px 8px;border-bottom:1px solid var(--line)}.rh-tab td{padding:5px 8px;border-bottom:1px solid var(--line2);color:var(--ink);background:transparent}.rh-tab tr,.rh-tab th{background:transparent}.rh-tab,.rh-tab tr,.rh-tab th,.rh-tab td{border-color:var(--line)!important;border-left:0;border-right:0}.rh-tab tr{border-top:0}
+      .rh-zwei{display:grid;grid-template-columns:1fr 1fr;gap:18px}.rh-box{border:1px solid var(--line);background:var(--card);border-radius:12px;padding:10px 14px;margin-bottom:10px}.rh-bt{font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--acc);font-weight:800;margin-bottom:5px}
+      .rh-m{display:grid;grid-template-columns:120px 100px 1fr;gap:8px;align-items:baseline;padding:5px 0;border-bottom:1px solid var(--line2);font-size:11px}.rh-m .w{font-size:17px;font-weight:800}.rh-m .d{color:var(--dim);font-size:10px}
+      .rh-psg{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.rh-ps svg{max-height:224px}.rh-p4 .pr-svg{max-height:380px;width:auto;max-width:100%;display:block;margin:0 auto}.rh-ps{border:1px solid var(--line);background:var(--card);border-radius:10px;padding:6px 6px 4px}.rh-ps svg{width:100%;height:auto;display:block;margin:0 auto}.rh-pst{font-size:10px;font-weight:700;color:var(--ink);margin:0 0 2px 4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.rh-psw{font-size:9px;color:var(--dim);margin:2px 4px 0;font-variant-numeric:tabular-nums}
+      .rh-in{display:grid;grid-template-columns:1fr 1fr;column-gap:28px;row-gap:2px;margin-top:10px;border-top:1px solid var(--line);padding-top:8px}.rh-in div{display:flex;gap:10px;font-size:10.5px;align-items:baseline}.rh-in b{color:var(--acc);width:46px;flex:none}.rh-in span{flex:1;border-bottom:1px dotted var(--line);padding-bottom:1px}.rh-in em{font-style:normal;color:var(--dim)}
+      .rh-meth{font-size:10.5px;line-height:1.55;margin:0}.rh-ref{font-size:9px;color:var(--dim);line-height:1.45;margin:0 0 3px}.rh-pv{display:grid;grid-template-columns:120px 1fr;gap:8px;font-size:9.5px;padding:2px 0;color:var(--dim)}.rh-pv code{font-family:ui-monospace,Menlo,monospace;color:var(--ink);word-break:break-all;font-size:9px}
+      .rh-qr{display:flex;gap:14px;align-items:center;margin-top:14px;border-top:1px solid var(--line);padding-top:10px;font-size:10.5px;color:var(--dim);line-height:1.45}
+      .rh-stamm{font-size:10.5px;color:var(--dim);margin:-4px 0 9px;line-height:1.5}.rh-kern{background:var(--chip);border:1px solid var(--chipr);border-radius:12px;padding:9px 14px;font-size:13px;font-weight:600;line-height:1.45;margin-bottom:8px}.rh-ku{font-size:9.5px;color:var(--dim);margin-top:2px;max-width:230px}.rh-kpi{flex:1}
+      .rh-hrv td{padding:4px 8px}.rh-hrv small{color:var(--dim)}.rh-hin{font-size:9.5px;color:var(--dim)}.rh-bz{display:grid;grid-template-columns:150px 1fr;gap:8px;font-size:11.5px;padding:3px 0;border-bottom:1px solid var(--line2)}.rh-bz span{color:var(--dim)}
+      .rh-fuss{position:absolute;left:11mm;right:11mm;bottom:7mm;border-top:1px solid var(--line);padding-top:5px;font-size:9px;color:var(--dim)}.rh-fz{display:flex;justify-content:space-between;margin-top:3px;font-weight:600}</style>`;
+  },
+  async _drucken(hid,rid,art,dunkel){
+    const C=this._C, h=State.horses.find(x=>x.id===hid), r=State.recordings.find(x=>x.id===rid); if(!h||!r) return;
+    const st=State.settings, sha=await Pruefwert.rr(r.rr), o=this.kennwerte(r), {a,rr,lastSt,erh,ruheSec,rrRuhe,v,vGes}=o;
+    const S=this.sitzungen(hid), ix=Math.max(0,S.findIndex(s=>s.rec.id===rid)), K=S.slice(0,ix+1).map(s=>this.kennwerte(s.rec)), vor=ix>0?K[ix-1]:null, erst=ix>0?K[0]:null;
+    const ref=this.referenz(hid), hfR=this.hfRef(o,ref), hfRv=this.hfRef(vor,ref), hfRe=this.hfRef(erst,ref), R=this.RAUSCH;
+    const praxis=esc(st.clinicName||'Ihre Einrichtung'), zusatz=esc([st.clinicAddr,st.clinicWeb].filter(Boolean).join(' · ')), dauer=Math.round(o.dauer);
+    const logo=st.logo?`<img src="${st.logo}" style="width:74px;height:58px;object-fit:contain;border:1px solid var(--line);border-radius:8px;background:#fff">`:'';
+    const kopf=t=>`<div class="rh-kopf">${logo}<div style="flex:1"><div class="rh-ein">${praxis}</div><div class="rh-tit">${t}</div><div class="rh-zus">${zusatz}</div></div><div style="text-align:right"><div class="rh-pf">${esc(h.name)}</div><div class="rh-zus">${Report._dt(r.startedAt)}</div><div class="rh-zus"><b>${Math.round(dauer/60)} min · ${fmt0(rr.length)} Schläge · Einheit ${ix+1} von ${S.length}</b></div></div></div>${this.stamm(h,r)}`;
+    const fuss=(n,m)=>`<div class="rh-fuss"><div>Verlaufsbeobachtung mit CARLON Equine Visite (Polar H10, RR-Intervalle 1 ms). Kein Medizinprodukt, keine Diagnose; die Einordnung trifft die Tierärztin oder der Tierarzt.</div><div class="rh-fz"><span>Erstellt von ${praxis} · <b style="color:var(--acc);letter-spacing:.12em">CARLON EQUINE VISITE</b></span><span>${n} / ${m}</span><span>vitalkultur.com/carlon-equine-visite</span></div></div>`;
+    const kpi=(l,w,e,f,u)=>`<div class="rh-kpi"><span>${l}</span><b style="color:${f||'var(--ink)'}">${w}</b><em>${e||''}</em>${u?`<div class="rh-ku">${u}</div>`:''}</div>`;
+    let abb=0; const fig=t=>`<div class="rh-fig"><b>Abbildung ${++abb}.</b> ${t}</div>`;
+    const dR=this._d(hfRv,hfR,R.hf,'bpm'), dRe=this._d(hfRe,hfR,R.hf,'bpm'), dT=this._d(vor&&vor.tauE,o.tauE,R.tau,'s'), dM=this._d(vor&&vor.ruheRM,o.ruheRM,R.rmssd,'ms',true);
+    const ar=vGes&&vGes.artefaktRatePct!=null?vGes.artefaktRatePct:null, stufeQ=ar==null?'ausgewertet':ar<1?'sehr gut':ar<3?'gut':ar<10?'eingeschränkt':'nicht belastbar';
+    const quelle=r.rrQuelle==='gurtspeicher'?'Gurtspeicher, lückenlos':(r.live&&r.live.luecken&&r.live.luecken.length?`live, ${r.live.luecken.length} Funklücke(n)`:'live');
+    const kern=[]; const wort=x=>x.stabil?`stabil (${x.d>0?'+':x.d<0?'−':'±'}${Math.abs(x.d)})`:`${x.d>0?'+':'−'}${Math.abs(x.d)}`;
+    if(ref&&hfR!=null) kern.push(ix>0&&hfRv!=null?`Gleiche Stufe wie zuletzt (${esc(ref.label)}): Herzfrequenz ${fmt0(hfR)} bpm, gegenüber der Vor-Einheit ${wort(dR)} bpm${dRe&&ix>1?', gegenüber der ersten Einheit '+wort(dRe)+' bpm':''}.`:`Erste Einheit auf der Referenzstufe (${esc(ref.label)}): Herzfrequenz ${fmt0(hfR)} bpm. Sie ist der Ausgangswert für die folgenden Einheiten.`);
+    if(o.tauE!=null) kern.push(`Nach der Belastung hatte sich die Herzfrequenz nach ${fmt0(o.tauE)} s zu knapp zwei Dritteln beruhigt${dT?' (gegenüber der Vor-Einheit '+wort(dT)+' s)':''}.`);
+    // Tabelle Stufen
+    const tg=x=>this._tauGuete(o,x);
+    const zeilen=a.stufen.map((x,i)=>{ const q=tg(x), art2=x.device==='keines'; const ar2=x.artifactRatePct;
+      return `<tr><td style="color:var(--acc)">${i+1}</td><td>${art2?(x===erh?'Erholung ohne Gerät':'Ohne Gerät'):esc(x.label)}</td><td>${this.mmss(x.startSec)}</td><td>${this.mmss(x.endSec-x.startSec)}</td><td><b>${this.z(x.hfMedian60)}</b></td><td>${x.deltaHRbpm==null||Math.abs(x.deltaHRbpm)<3?'—':(x.deltaHRbpm>0?'+':'−')+fmt0(Math.abs(x.deltaHRbpm))}</td><td style="color:var(--vio)">${x.adaptationSec==null?'—':fmt0(x.adaptationSec)+' s'}${q&&q.r2!=null?` <small style="color:var(--dim)">R² ${fmt2(q.r2)}</small>`:''}</td><td>${ar2==null?'—':(ar2<5?'ok':'eingeschränkt')+` <small style="color:var(--dim)">${fmt1(ar2)} %</small>`}</td></tr>`; }).join('');
+    const tabelle=`<table class="rh-tab"><thead><tr><th>#</th><th>Stufe · Einstellungen</th><th>Beginn</th><th>Dauer</th><th>HF Stufenende</th><th>Δ HF</th><th>τ63 (Modell)</th><th>Signal (Artefakte)</th></tr></thead><tbody>${zeilen}</tbody></table>`;
+    const E=this._svgErholung(o,{w:520,h:250}); const VL=this._svgVerlauf(hid,r.startedAt,{w:520,h:250,legende:'unten'});
+    const seiten=[];
+    // ── Seite 1: Cockpit ──
+    seiten.push(`${kopf(art==='halter'?'Reha-Einheit':'Reha-Sitzungsbericht')}
+      ${kern.length?`<div class="rh-kern">${kern.join(' ')}</div>`:''}
+      <div class="rh-kpis">${hfR!=null?kpi('HF Referenzstufe',fmt0(hfR),'bpm','var(--acc2)',ix>0&&dR?'Vor-Einheit '+fmt0(hfRv)+' · '+dR.txt:'Ausgangswert'):''}${o.tauE!=null?kpi('Erholungszeit τ63',fmt0(o.tauE),'s','var(--vio)',dT?'Vor-Einheit '+fmt0(vor.tauE)+' s · '+dT.txt:'Ausgangswert'):''}${o.ruheRM!=null?kpi('Ruhe-RMSSD',fmt0(o.ruheRM),'ms','var(--acc)',dM?'Vor-Einheit '+fmt0(vor.ruheRM)+' ms · '+dM.txt:'vor der ersten Stufe'):''}${kpi('Datenqualität',ar!=null?fmt0(100-ar):'–','%',ar!=null&&ar<3?'var(--acc)':'var(--acc2)',stufeQ+' · '+quelle)}</div>
+      <div class="rh-cap" style="margin-top:10px">Herzfrequenz und Gerätestufen über die Sitzung <span style="float:right"><i style="color:${C.puls}">●</i> Herzfrequenz (bpm) &nbsp; <i style="color:${C.tempo}">●</i> Tempo (km/h) &nbsp; <i style="color:${C.wasser}">■</i> Wasserstand</span></div>${this._svgStufen(rr,a.stufen,{h:250})}
+      ${fig('Herzfrequenz je Schlag mit den während der Aufnahme gesetzten Gerätestufen. Die Herzfrequenz einer Stufe ist der Median der letzten 60 s (eingeschwungener Zustand).')}`);
+    // ── Seite 2: Stufen, Erholung, Verlauf ──
+    seiten.push(`${kopf(esc(o.geraet)+' · Stufen und Erholung')}${tabelle}
+      <div class="rh-mini"><b>Tabelle 1.</b> HF Stufenende = Median der letzten 60 s. Δ HF = Mittel der letzten 40 % minus Mittel der 20 s vor Stufenbeginn. τ63 = Zeitkonstante einer an die Stufe angepassten Sprungantwort erster Ordnung (63 % der Änderung), R² = Anpassungsgüte. Signal ok = unter 5 % Artefakte. „—“: Änderung unter 3 bpm oder Stufe zu kurz.</div>
+      <div class="rh-zwei" style="margin-top:6px"><div><div class="rh-cap">Erholung nach Belastungsende</div>${E?E.svg:'<div class="rh-mini">Keine Erholungsphase nach der letzten Stufe markiert.</div>'}${E?fig(`Herzfrequenz ab 1 min vor Belastungsende bis 5 min danach; gestrichelt die angepasste Modellkurve (τ63 ${fmt0(E.g?E.g.tau:o.tauE)} s${E.g&&E.g.r2!=null?', R² '+fmt2(E.g.r2):''}).`):''}</div>
+        <div><div class="rh-cap">Referenzstufe über die Einheiten</div>${VL||'<div class="rh-mini">Verlauf ab der zweiten Einheit mit gleicher Einstellung.</div>'}${VL?fig('Herzfrequenz am Stufenende bei identischen Geräteeinstellungen. Veränderungen bis ±3 bpm gelten als stabil (festgelegte Rauschgrenze).'):''}</div></div>`);
+    if(art!=='halter'){
+      // ── Seite 3: Poincaré ──
+      const sdF=v&&v.sd1Ms&&v.sd2Ms?{sd1:v.sd1Ms,sd2:v.sd2Ms}:null, bereich=x=>{ const q=[...x].sort((m,n)=>m-n), p=f=>q[Math.round(f*(q.length-1))]; const lo=p(.01), hi=p(.99), d=Math.max(40,(hi-lo)*.12); return {lo:Math.floor((lo-d)/10)*10, hi:Math.ceil((hi+d)/10)*10}; };
+      const pr=rrRuhe&&rrRuhe.length>=20?(()=>{ const b=bereich(rrRuhe); return Report._poin(rrRuhe,{size:420,lo:b.lo,hi:b.hi,sdFest:sdF}); })():null;
+      const nachAb=a.ruhe&&a.ruhe.rmssdNach!=null&&lastSt.length?lastSt[lastSt.length-1].endSec+300:null;
+      const kurzL=x=>{ const t=String(x.label||'').split(' · '); return t.length>1?t[t.length-1]:x.label; }; const phasen=lastSt.map(x=>({n:'Stufe '+(a.stufen.indexOf(x)+1)+' · '+esc(kurzL(x)),r2:o.seg(x.startSec+120,x.endSec),last:true})).concat(nachAb!=null?[{n:'Ruhe nachher (ab +5 min)',r2:o.seg(nachAb,1e9),last:false}]:[]).filter(x=>x.r2.length>=20);
+      const span=Math.max(80,...phasen.map(x=>{ const b=bereich(x.r2); return b.hi-b.lo; }));
+      const klein=phasen.map(x=>{ const q=[...x.r2].sort((m,n)=>m-n), c=Math.round(q[Math.floor(q.length/2)]/10)*10, P=Report._poin(x.r2,{size:210,lo:c-span/2,hi:c+span/2,klein:true}); return P?`<div class="rh-ps"><div class="rh-pst">${x.n}</div>${P.svg}<div class="rh-psw">SD1 ${fmt1(P.sd.sd1)} ms${x.last?'':' · SD2 '+fmt1(P.sd.sd2)+' ms'} · ${fmt0(P.n)} Paare</div></div>`:''; }).join('');
+      seiten.push(`${kopf('Poincaré · Schlag-zu-Schlag-Dynamik')}<div class="rh-zwei" style="grid-template-columns:1fr 1.15fr"><div class="rh-p4"><div class="rh-cap">Ruhe-Referenz vor der Belastung${ruheSec?' (0:00–'+this.mmss(ruheSec)+')':''}</div>${pr?pr.svg:'<div class="rh-mini">Keine Ruhephase von mindestens 5 min vor der ersten Stufe; unter wechselnder Belastung wären SD1/SD2 verfälscht.</div>'}<div class="rh-kpis">${sdF?kpi('SD1',fmt1(sdF.sd1),'ms','var(--acc)','≙ RMSSD/√2')+kpi('SD2',fmt1(sdF.sd2),'ms','var(--ink)')+kpi('SD2/SD1',fmt2(sdF.sd2/sdF.sd1),'',null):''}</div>${fig('Ruhe-Referenz: jeder Punkt = zwei aufeinanderfolgende Schläge (RRₙ gegen RRₙ₊₁), Ellipse nach Brennan et al. (2001), Werte aus der artefaktkorrigierten Reihe.')}</div>
+        <div><div class="rh-cap">Über die Zeit und je Phase</div><div style="display:grid;grid-template-columns:240px 1fr;gap:10px;align-items:start"><div>${this._svgPoinZeit(rr,{size:240,dauer})}</div><div class="rh-psg">${klein}</div></div>${fig(`Links die ganze Sitzung, Farbe = Zeitpunkt. Rechts je Phase auf gleicher Spannweite (${fmt0(span)} ms) um den eigenen Median; Belastungsstufen ohne die ersten 2 min und nur mit SD1, weil SD2 unter wechselnder Last künstlich steigt.`)}</div></div>`);
+      // ── Seite 4: HRV der Ruhe-Referenz im Verlauf ──
+      const med=f=>{ const x=K.map(f).filter(y=>y!=null&&isFinite(y)).sort((p,q)=>p-q); return x.length?x[Math.floor((x.length-1)/2)]:null; };
+      const vv=k=>k&&k.v?k.v:null, kurz=ruheSec&&ruheSec<1020, hfOben=o.ruheHF?Math.min(0.6,o.ruheHF/120):0.6;
+      const zeile=(n,f,e,d,hin)=>`<tr><td><b>${n}</b></td><td><b>${f(o)==null?'–':d(f(o))}</b> <small>${e}</small></td><td>${vor&&f(vor)!=null?d(f(vor))+' <small>'+e+'</small>':'–'}</td><td>${med(f)!=null&&K.length>1?d(med(f))+' <small>'+e+'</small>':'–'}</td><td class="rh-hin">${hin}</td></tr>`;
+      const F1=x=>fmt1(x), F0=x=>fmt0(x), F2=x=>fmt2(x);
+      seiten.push(`${kopf('HRV der Ruhe-Referenz')}<div class="rh-mini" style="font-size:11px;color:var(--ink);margin:0 0 6px">${rrRuhe?`Ruhephase vor der ersten Stufe, ${this.mmss(ruheSec)} min, ${fmt0(rrRuhe.length)} Schläge, Artefakte ${v&&v.artefaktRatePct!=null?fmt1(v.artefaktRatePct):'–'} %. HRV-Kennzahlen setzen einen gleichbleibenden Zustand voraus; Belastungsphasen werden deshalb nicht ausgewertet.`:'Keine Ruhephase von mindestens 5 min vor der ersten Stufe: Ruhe-Kennzahlen werden nicht ausgewiesen.'}</div>
+        <table class="rh-tab rh-hrv"><thead><tr><th>Kennzahl</th><th>Diese Einheit</th><th>Vor-Einheit</th><th>Median aller Einheiten</th><th>Hinweis</th></tr></thead><tbody>
+        ${zeile('Herzfrequenz Ruhe',k=>k.ruheHF,'bpm',F0,'Mittel über die Ruhephase (Schläge je Minute)')}
+        ${zeile('RMSSD',k=>vv(k)&&vv(k).rmssdMs,'ms',F1,'kurzfristige Schlag-zu-Schlag-Variabilität')}
+        ${zeile('SD1',k=>vv(k)&&vv(k).sd1Ms,'ms',F1,'≙ RMSSD/√2 (Brennan 2001), keine eigene Information')}
+        ${zeile('SDNN',k=>vv(k)&&vv(k).sdnnMs,'ms',F1,'Gesamtstreuung der Ruhephase')}
+        ${zeile('SD2',k=>vv(k)&&vv(k).sd2Ms,'ms',F1,'Poincaré, längerfristig')}
+        ${zeile('pNN50',k=>vv(k)&&vv(k).pnn50Pct,'%',F1,'Anteil Differenzen über 50 ms')}
+        ${zeile('LF-Leistung',k=>vv(k)&&vv(k).lfPowerMs2,'ms²',F0,(kurz?'orientierend: unter 17 min Aufnahme (Task Force 1996). ':'')+'0,01–0,07 Hz, equine (Kuwahara 1996)')}
+        ${zeile('HF-Leistung',k=>vv(k)&&vv(k).hfPowerMs2,'ms²',F0,`0,07–${fmt2(hfOben)} Hz wirksam: oberhalb der halben Schlagfrequenz keine Information`)}
+        ${zeile('LF/HF',k=>vv(k)&&vv(k).lfHfRatio,'',F2,kurz?'orientierend (siehe LF)':'Verhältnis der Bänder')}
+        ${zeile('DFA α₁',k=>vv(k)&&vv(k).nichtlineareBelastbar?vv(k).dfaAlpha1:null,'',F2,'Kurzzeit-Skalierung, 4–16 Schläge (Peng 1995)')}
+        ${zeile('Sample-Entropie',k=>vv(k)&&vv(k).sampleEntropy!=null?vv(k).sampleEntropy:null,'',F2,'m = 2, r = 0,2 · SD; ab 200 Schlägen')}
+        ${zeile('AV-Block-Muster',k=>vv(k)?(vv(k).avBlockCount||0):null,'',F0,'RR-basiert erkannt; Bestätigung nur im EKG, keine Diagnose')}
+        </tbody></table>
+        <div class="rh-mini"><b>Tabelle 2.</b> Alle Werte aus der artefaktkorrigierten Ruhephase derselben Rechenkette wie der Visite-Messwertbericht. Vergleiche nur innerhalb desselben Pferds; Tagesschwankungen kurzer HRV-Aufnahmen sind beim Pferd erheblich (Eggensperger &amp; Schwarzwald 2017), Veränderungen unter 20 % gelten daher als stabil.</div>`);
+      // ── Seite 5: Methoden ──
+      const ref2=['Brennan M, Palaniswami M, Kamen P (2001). Do existing measures of Poincaré plot geometry reflect nonlinear features of heart rate variability? IEEE Trans Biomed Eng 48(11):1342–1347.','Eggensperger BH, Schwarzwald CC (2017). Influence of 2nd-degree AV blocks, ECG recording length, and recording time on heart rate variability analyses in horses. J Vet Cardiol 19:160–174.','Kuwahara M, Hashimoto S, Ishii K et al. (1996). Assessment of autonomic nervous function by power spectral analysis of heart rate variability in the horse. J Auton Nerv Syst 60:43–48.','Lipponen JA, Tarvainen MP (2019). A robust algorithm for heart rate variability time series artefact correction using novel beat classification. J Med Eng Technol 43(3):173–181.','Nankervis KJ, Williams RJ (2006). Heart rate responses during acclimation of horses to water treadmill exercise. Equine Vet J 38(S36):110–112.','Nankervis KJ, Thomas S, Marlin DJ (2008). Effect of water temperature on heart rate of horses during water treadmill exercise. Comp Exerc Physiol 5(3–4):127.','Peng CK, Havlin S, Stanley HE, Goldberger AL (1995). Quantification of scaling exponents and crossover phenomena in nonstationary heartbeat time series. Chaos 5:82–87.','Task Force of the ESC and NASPE (1996). Heart rate variability: standards of measurement, physiological interpretation and clinical use. Circulation 93:1043–1065.'];
+      let qrM=''; try{ qrM=QR.svg('https://vitalkultur.com/carlon-equine-visite/',{hell:'#ffffff',dunkel:'#04303a'}); }catch(_){ }
+      const zl=(k,w2)=>`<div class="rh-pv"><span>${k}</span><code>${w2}</code></div>`;
+      seiten.push(`${kopf('Methoden, Herkunft, Literatur')}<div class="rh-zwei" style="grid-template-columns:1.3fr 1fr"><div><div class="rh-bt">Methoden</div><p class="rh-meth">RR-Intervalle wurden mit einem Polar-H10-Brustgurt im Equine-Gurt aufgezeichnet (1 ms Auflösung)${r.rrQuelle==='gurtspeicher'?', parallel live und im Gurtspeicher; ausgewertet wird die lückenlose Reihe aus dem Gurtspeicher':''}. Die Geräteeinstellungen (${esc(o.geraet)}) wurden während der Aufnahme als Zeitmarken gesetzt und gliedern die Sitzung in Stufen. Schläge wurden mit einer fünfstufigen Filterkette nach Lipponen und Tarvainen (2019) mit für Pferde skalierten Schwellen klassifiziert; physiologische AV-Block-Pausen 2. Grades werden eigens erkannt, zählen nicht als Artefakt und werden für die HRV-Berechnung wie alle Nicht-Normalschläge aus den Nachbarschlägen interpoliert, damit sie RMSSD und SD1 nicht verfälschen (vgl. Eggensperger &amp; Schwarzwald 2017). Je Stufe: Herzfrequenz am Stufenende (Median der letzten 60 s), Δ HF und die Zeitkonstante τ63 einer angepassten Sprungantwort erster Ordnung samt Anpassungsgüte R²; dieselbe Rechnung liefert die Erholungszeit nach der letzten Stufe. HRV-Kennzahlen stammen ausschließlich aus der stationären Ruhephase vor der ersten Stufe (Task Force 1996); Spektralleistung nach 4-Hz-Spline-Resampling mit Welch-Verfahren, Bänder für Pferde nach Kuwahara et al. (1996). Ein Puls, der bei gleicher Stufe über die Wochen sinkt, kann neben Trainingsanpassung auch Gewöhnung an das Gerät widerspiegeln (Nankervis &amp; Williams 2006); die Wassertemperatur beeinflusst die Herzfrequenz ebenfalls (Nankervis et al. 2008). Rauschgrenzen für „stabil“ (Festlegung CARLON, konservativ): Herzfrequenz ±3 bpm, τ63 ±10 s, HRV ±20 %. Die Originalintervalle bleiben unverändert gespeichert; alle Kennzahlen werden bei jeder Ansicht neu berechnet.</p>
+        <div class="rh-bt" style="margin-top:10px">Literatur</div>${ref2.map(x=>`<div class="rh-ref">${x}</div>`).join('')}</div>
+        <div><div class="rh-bt">Herkunft</div>${zl('Aufnahme',esc(r.id))}${zl('RR-Reihe SHA-256',sha||'–')}${zl('Sensor',esc((r.source&&r.source.sensor)||'Polar H10')+' · '+esc(r.rrQuelle==='gurtspeicher'?'Gurtspeicher (PSFTP) + live':'live (Bluetooth)'))}${r.speicher&&r.speicher.schlaege?zl('Gurtspeicher',fmt0(r.speicher.schlaege)+' Schläge · Versatz '+fmt1(r.speicher.versatzSec||0)+' s'+(r.live&&r.live.schlaege!=null?' · live '+fmt0(r.live.schlaege):'')):''}${zl('Rechenkette','HRV-Vorstufe '+esc((typeof HRVVorstufe!=='undefined'&&HRVVorstufe.VERSION)||''))}${zl('Reha-Auswertung',esc(a.version))}${zl('Bericht erstellt',new Date().toISOString().replace(/\.\d+Z$/,'Z'))}
+        <div class="rh-bt" style="margin-top:10px">Zitierweise</div><div class="rh-ref" style="font-size:10px">Rohwedder, J. (2026). CARLON Equine Visite [Browser-Software]. Vitalkultur. https://vitalkultur.com/carlon-equine-visite/</div>
+        <div class="rh-qr" style="border:1px solid var(--line);border-radius:12px;padding:10px;margin-top:12px"><div style="width:72px;background:#fff;border-radius:8px;padding:4px">${qrM}</div><div>Aufgezeichnet und ausgewertet mit CARLON Equine Visite.</div></div></div></div>`);
+    } else {
+      let qr=''; try{ qr=QR.svg('https://vitalkultur.com/carlon-equine/app/messen.html',{hell:'#ffffff',dunkel:'#04303a'}); }catch(_){ }
+      seiten[1]+=`<div class="rh-qr"><div style="width:76px;background:#fff;border-radius:8px;padding:4px">${qr}</div><div>Die Einordnung macht Ihre Tierärztin oder Ihr Tierarzt. Zwischen den Einheiten können Sie Ihr Pferd zu Hause in Ruhe messen: kostenlose CARLON Messstation im Browser.</div></div>`;
+    }
+    $('#printArea').innerHTML=this._stil(dunkel)+seiten.map((x,i)=>`<section class="rh-seite">${x}${fuss(i+1,seiten.length)}</section>`).join('');
+    try{ await Akte.notiere(hid, art==='klinik'?'Reha-Klinikbericht':'Reha-Bericht für die Halterin',{text:kern.join(' ')+(kern.length?'\n':'')+lastSt.map(x=>x.label).join('\n'),aufnahme:rid}); }catch(_){ }
+    const alt=document.title; document.title=`${h.name} · Reha ${fmtDate(r.startedAt)}`; setTimeout(()=>{ window.print(); document.title=alt; },150);
+  },
+};
+
+/* REHA-AUFNAHME IM COCKPIT (20.11.2026, Jan: „nicht die kostenlose Messstation, sondern die Reha-App selbst“).
+   Vollbild am Gerät: H10 per Web Bluetooth (Herzfrequenz-Dienst, RR in 1/1024 s), große Live-Herzfrequenz, Stufen per
+   großem Tipp oder per Sprache („Stufe“, „Ende“, „Fertig“, „Tempo plus“), Bildschirm bleibt wach. Fertig = die Aufnahme
+   liegt sofort in der Akte (kein Dateiweg). Gespeichert werden Rohreihe und Rohmarken; Auswertung bei jeder Ansicht neu. */
+const RehaLive={
+  aktiv:false,
+  START:{aquatrainer:{waterHeight:'carpus',waterTempC:18,speedKmh:4,reverse:false},laufband:{speedKmh:6,inclinePercent:0,reverse:false},
+    vibration:{vibrationHz:30,amplitudeMm:0.2},fuehranlage:{speedKmh:6,directionChanges:0,radiusM:10},solarium:{intensityPercent:80,distanceCm:60},solekammer:{intensityPercent:50}},
+  en(){ return typeof Sprache!=='undefined'&&Sprache.cur==='en'; },
+  async starten(hid,art){
+    const h=State.horses.find(x=>x.id===hid); if(!h) return;
+    if(!Reha.erlaubt()){ if(UI.upgrade) UI.upgrade(); return; }
+    let bt=false; try{ bt=!!(navigator.bluetooth&&await navigator.bluetooth.getAvailability()); }catch(_){ }
+    if(!bt){ Toast.show('Die Reha-Aufnahme braucht Bluetooth im Browser: Chrome oder Edge am Rechner oder auf Android. Auf iPhone und iPad lässt Apple das nicht zu.','warn'); return; }
+    /* Letztes Profil dieses Pferds an diesem Gerät vorbelegen („wie letztes Mal“) */
+    let letzt=null; try{ const ss=Reha.sitzungen(hid).filter(s=>s.rec.reha.log.some(m=>m.device===art)); if(ss.length){ const l=ss[ss.length-1].rec.reha.log.filter(m=>m.device===art); letzt=l[0]; } }catch(_){ }
+    const akt=Object.assign({device:art},this.START[art]||{},letzt?Object.fromEntries((RehaKern.GERAETE[art].felder||[]).filter(k=>letzt[k]!=null).map(k=>[k,letzt[k]])):{});
+    Object.assign(this,{h,art,akt,rr:[],log:[],luecken:[],start:null,dev:null,hrNow:null,lastBeat:0,aktiv:true,wakelock:null,sp:null,spText:'',phase:''});
+    this.zeichnen();
+    try{
+      const opt=['battery_service']; if(typeof H10Speicher!=='undefined') opt.push(H10Speicher.UUID.dienst);
+      const dev=await navigator.bluetooth.requestDevice({filters:[{services:['heart_rate']}],optionalServices:opt}); this.dev=dev;
+      dev.addEventListener&&dev.addEventListener('gattserverdisconnected',()=>this.wiederverbinden());
+      await this.verbinden();
+      this.start=new Date(); this.kennung=(typeof H10Speicher!=='undefined')?H10Speicher.kennung(+this.start,h.id):null; this.entwurf();
+      try{ this.wakelock=await navigator.wakeLock.request('screen'); }catch(_){ }
+      this._takt=setInterval(()=>this.kopf(),1000); this.zeichnen();
+      this.speicherStarten();
+    }catch(e){ Toast.show('Gurt nicht verbunden: '+(e&&e.message||e),'warn'); this.schliessen(); }
+  },
+  async verbinden(){ const g=await this.dev.gatt.connect(); this._g=g; const svc=await g.getPrimaryService('heart_rate'); const c=await svc.getCharacteristic('heart_rate_measurement');
+    c.addEventListener('characteristicvaluechanged',e=>this.schlag(e.target.value)); await c.startNotifications(); this._char=c;
+    /* Gurtspeicher-Kanal hängt an der Verbindung: nach jedem Wiederverbinden neu aufbauen (die Aufnahme im Gurt läuft weiter) */
+    if(this.sp&&this.sp.client){ try{ this.sp.client.trennen(); }catch(_){ } try{ this.sp.client=await new H10Speicher.Client(g).init(); }catch(_){ this.sp.client=null; } } },
+  /* Funkloch (Wasser, Abstand): ohne Ende weiter versuchen, solange die Sitzung läuft. Der Gurt zeichnet im Speicher weiter. */
+  async wiederverbinden(){ if(!this.aktiv||this._wv) return; this._wv=true; this.luecken.push({abSec:this.tw(),nachSchlag:this.rr.length}); this.kopf();
+    try{ for(let i=0;this.aktiv;i++){ await new Promise(r=>setTimeout(r,i<3?1500:3000)); try{ await this.verbinden(); const l=this.luecken[this.luecken.length-1]; if(l) l.bisSec=this.tw(); Toast.show(this.sp&&this.sp.laeuft?'Gurt wieder verbunden · die Lücke füllt der Gurtspeicher':'Gurt wieder verbunden','ok'); return; }catch(_){ }
+      if(i===3) Toast.show(this.sp&&this.sp.laeuft?'Funkloch: der Gurt zeichnet im Speicher weiter. Verbindung wird weiter gesucht.':'Gurt getrennt. Sitz und Feuchtigkeit prüfen, Verbindung wird weiter gesucht.','warn'); } }
+    finally{ this._wv=false; this.kopf(); } },
+  schlag(v){ const fl=v.getUint8(0); let i=1; const hr=(fl&1)?v.getUint16(i,true):v.getUint8(i); i+=(fl&1)?2:1; if(fl&8) i+=2;
+    /* Grenzen wie der Kanon (CarlonCore, PolarH10PSFTP.absurd*): nur < 200 oder > 12 000 ms ist absurd – AV-Block 2. Grades bleibt erhalten */
+    if(fl&16){ while(i+1<v.byteLength){ const rr=v.getUint16(i,true)*1000/1024; i+=2; if(rr>=200&&rr<=12000&&this.rr.length<200000) this.rr.push(rr); } }
+    this.hrNow=hr; this.lastBeat=Date.now(); if(!this._k||Date.now()-this._k>500){ this._k=Date.now(); this.kopf(); } },
+  /* Zwei Zeitachsen: t() = Summe der live angekommenen Schläge (passt exakt zur Live-Reihe, auch nach einem Funkloch),
+     tw() = Wanduhr seit Start (passt zur lückenlosen Gurtspeicher-Reihe). Jede Marke trägt beide. */
+  t(){ return Math.round(this.rr.reduce((a,b)=>a+b,0)/100)/10; },
+  tw(){ return this.start?Math.round((Date.now()-this.start.getTime())/100)/10:0; },
+  /* Entwurf im Browser: stürzt der Browser ab, setzt der nächste Start Stufen + Gurtspeicher wieder zur Sitzung zusammen */
+  entwurf(weg){ try{ const k='vk.rehaEntwurf'; if(weg){ localStorage.removeItem(k); return; } const l=JSON.parse(localStorage.getItem(k)||'{}'); if(this.kennung) l[this.kennung]={hid:this.h.id,art:this.art,startMs:+this.start,log:this.log,spStartMs:this.sp&&this.sp.startMs||null,stand:Date.now()}; localStorage.setItem(k,JSON.stringify(l)); }catch(_){ } },
+  entwurfWeg(k){ try{ const l=JSON.parse(localStorage.getItem('vk.rehaEntwurf')||'{}'); delete l[k]; localStorage.setItem('vk.rehaEntwurf',JSON.stringify(l)); }catch(_){ } },
+  /* ═══ Gurtspeicher parallel zum Livestrom (H10, PSFTP 0xFEEE) ═══
+     1 vorhandene Aufnahmen ernten → sichern → gegenlesen → erst dann löschen (ein Aufnahmeplatz)
+     2 eigene Aufnahme starten (Kennung CV-…)   3 am Ende stoppen, auslesen, Speicher = Hauptreihe */
+  async speicherStarten(){
+    if(typeof H10Speicher==='undefined'||!this._g) return; const sp={laeuft:false}; this.sp=sp;
+    try{ sp.client=await new H10Speicher.Client(this._g).init(); }catch(_){ this.sp=null; this.spText='Nur live: dieser Gurt hat keinen Speicher-Dienst'; this.kopf(); return; }
+    const versuch=async()=>{
+      const st=await sp.client.status(); if(st.laeuft){ this.spText='Ältere Gurtaufnahme wird beendet und gesichert …'; this.kopf(); await sp.client.stopp(); }
+      const alt=await sp.client.aufnahmen();
+      for(const a of alt){ this.spText='Ältere Gurtaufnahme wird gesichert …'; this.kopf(); const e=await sp.client.ernte(a,n=>{ this.spText=`Ältere Gurtaufnahme wird gesichert … ${a.groesse?Math.min(99,Math.round(n/a.groesse*100)):''} %`; this.kopf(); });
+        if(await RehaLive.fundSichern(e)) await sp.client.loeschen(a.ordner); }
+      await sp.client.start(this.kennung); sp.startMs=Date.now(); sp.liveIdx=this.rr.length; sp.laeuft=true; this.entwurf(); };
+    try{ await versuch(); }
+    catch(e){ if(e&&e.code===106){ this.spText='Gurt wird gekoppelt: bitte den Dialog des Systems bestätigen'; this.kopf(); await sp.client.koppeln(); try{ await versuch(); }catch(e2){ return this.spAus(e2); } } else return this.spAus(e); }
+    this.spText=''; this.kopf(); },
+  spAus(e){ if(this.sp){ this.sp.laeuft=false; this.sp.fehler=String((e&&e.message)||e); } try{ console.warn('[Gurtspeicher]',e); }catch(_){ }
+    this.spText=e&&e.code===106?'Nur live: Der Gurt ist nicht gekoppelt. Beim nächsten Start den Kopplungsdialog bestätigen.':'Nur live: Der Gurtspeicher antwortet nicht. Die Aufnahme läuft live weiter.'; this.kopf(); },
+  /* Fund aus dem Gurt sichern: eigene Kennung + Entwurf im Browser → vollständige Sitzung; sonst als Fund zum Zuordnen.
+     true erst, wenn der Datensatz aus der Datenbank gelesen bitgleich ist (dann darf der Gurt löschen). */
+  async fundSichern(e){ if(!e||!e.rr||e.rr.length<10) return true;
+    const k=(e.ordner||'').replace(/\//g,''), info=H10Speicher.kennungLesen(k)||H10Speicher.kennungLesen(e.kennung||'');
+    let ent=null; try{ ent=(JSON.parse(localStorage.getItem('vk.rehaEntwurf')||'{}'))[k]||null; }catch(_){ }
+    const gleich=async(store,id,rr)=>{ const z=await DB.get(store,id); const a=store==='recordings'?z&&z.rr:z&&z.liste&&(z.liste.find(x=>x.ordner===e.ordner)||{}).rr; return !!a&&a.length===rr.length&&a.every((x,i)=>x===rr[i]); };
+    if(ent&&State.horses.some(h=>h.id===ent.hid)){ const off=ent.spStartMs?(ent.spStartMs-ent.startMs)/1000:0;
+      const log=(ent.log||[]).map(m=>{ const o=Object.assign({},m); o.startSec=Math.max(0,Math.round(((m.wandSec!=null?m.wandSec:m.startSec)-off)*10)/10); delete o.wandSec; return o; });
+      const id='reha_'+ent.hid+'_'+ent.startMs; if(State.recordings.some(r=>r.id===id)) return true;
+      const rec={id,horseId:ent.hid,startedAt:new Date(ent.spStartMs||ent.startMs).toISOString(),durationSec:Math.round(e.rr.reduce((a,b)=>a+b,0)/1000),beatCount:e.rr.length,rr:e.rr.slice(),
+        reha:{log:log.length?log:[{device:ent.art,startSec:0}]},rrQuelle:'gurtspeicher',wiederhergestellt:true,speicher:{kennung:k,schlaege:e.rr.length,verworfen:e.verworfen,bytes:e.bytes},metrics:{},source:{app:'CARLON Equine Visite · Reha-Aufnahme (aus dem Gurtspeicher wiederhergestellt)'},triage:{level:'stable',reasons:[]}};
+      await DB.put('recordings',rec); if(!(await gleich('recordings',id,rec.rr))) return false; State.recordings.push(rec); this.entwurfWeg(k);
+      Toast.show('Unterbrochene Reha-Sitzung aus dem Gurtspeicher wiederhergestellt','ok'); return true; }
+    const f=(await DB.get('settings','gurtFunde'))||{id:'gurtFunde',liste:[]}; if(!f.liste.some(x=>x.ordner===e.ordner&&x.rr.length===e.rr.length))
+      f.liste.push({ordner:e.ordner,kennung:k||e.kennung||null,startMs:info?info.startMs:null,rr:e.rr.slice(),verworfen:e.verworfen,gefunden:new Date().toISOString()});
+    await DB.put('settings',f); return gleich('settings','gurtFunde',e.rr); },
+  mmss(x){ x=Math.max(0,Math.round(x)); return Math.floor(x/60)+':'+String(x%60).padStart(2,'0'); },
+  wert(f){ const F=RehaKern.FELD[f], v=this.akt[f], en=this.en(); if(F.bool) return v?(en?'yes':'ja'):(en?'no':'nein'); if(F.liste) return (RehaKern.WASSER[v]||[v,v])[en?1:0];
+    const d=F.schritt<1?(F.schritt<0.1?2:1):0; return (v==null?'–':(+v).toFixed(d).replace('.',en?'.':','))+' '+(F.einheit||''); },
+  stufe(){ if(!this.start) return; this.log.push(Object.assign({},this.akt,{startSec:this.t(),wandSec:this.tw()})); this.entwurf(); if(navigator.vibrate) navigator.vibrate(40); this.zeichnen(); },
+  ende(){ if(!this.start) return; this.log.push({startSec:this.t(),wandSec:this.tw(),device:'keines'}); this.entwurf(); if(navigator.vibrate) navigator.vibrate([40,40,40]); this.zeichnen(); },
+  aendern(f,r){ const F=RehaKern.FELD[f]; if(F.bool) this.akt[f]=!this.akt[f]; else if(F.liste){ const i=F.liste.indexOf(this.akt[f]); this.akt[f]=F.liste[Math.max(0,Math.min(F.liste.length-1,i+r))]; }
+    else { const v=(+this.akt[f]||0)+r*F.schritt; this.akt[f]=Math.round(Math.max(F.min,Math.min(F.max,v))*100)/100; } this.zeichnen(); },
+  kopf(){ const k=document.getElementById('rlKopf'); if(!k) return; const alt=this.lastBeat&&Date.now()-this.lastBeat>5000;
+    const s=this.log.length?this.tw()-(this.log[this.log.length-1].wandSec??this.log[this.log.length-1].startSec):0;
+    k.innerHTML=`<div class="rl-hf ${alt?'alt':''}">${this.hrNow!=null&&!alt?this.hrNow:'–'}<small>/min</small></div><div class="rl-zeit"><b>${this.mmss(this.tw())}</b><span>${this.en()?'recording':'Aufnahme'}</span></div><div class="rl-zeit"><b>${this.log.length?this.mmss(s):'–'}</b><span>${this.en()?'stage':'Stufe'}</span></div><div class="rl-zeit"><b>${fmt0(this.rr.length)}</b><span>${this.en()?'beats':'Schläge'}</span></div>
+      <div class="rl-sp" id="rlSpeicher" data-zustand="${this.sp&&this.sp.laeuft?'an':(this.spText?'info':'aus')}">${this.sp&&this.sp.laeuft&&!this.spText?`<i></i>${this.en()?'Strap memory records in parallel':'Gurtspeicher zeichnet parallel auf'}${this._wv?' · '+(this.en()?'radio gap, nothing is lost':'Funkloch, nichts geht verloren'):''}`:esc(this.spText||(this.start?(this.en()?'Starting strap memory …':'Gurtspeicher wird gestartet …'):''))}</div>`; },
+  zeichnen(){
+    let o=document.getElementById('rehaLive'); if(!o){ o=document.createElement('div'); o.id='rehaLive'; o.className='reha-live'; document.body.appendChild(o);
+      o.addEventListener('click',e=>{ const b=e.target.closest('button[data-rl]'); if(!b) return; const a=b.dataset.rl;
+        if(a==='stufe') this.stufe(); else if(a==='ende') this.ende(); else if(a==='fertig') this.fertig(); else if(a==='abbrechen') this.schliessen(); else if(a==='+'||a==='-') this.aendern(b.dataset.f,a==='+'?1:-1); }); }
+    const G=RehaKern.GERAETE[this.art], en=this.en();
+    o.innerHTML=`<div class="rl-wrap"><div class="rl-top"><div><div class="eyebrow">${en?'Rehab session':'Reha-Sitzung'} · ${esc(en?G.en:G.de)}</div><h2>${esc(this.h.name)}</h2></div><button class="btn ghost" data-rl="abbrechen">${en?'Cancel':'Abbrechen'}</button></div>
+      <div id="rlKopf" class="rl-kopf"></div>
+      ${this.start?'':`<div class="chip" style="display:block;margin:10px 0">${en?'Choose the Polar H10 in the browser dialog. Recording starts as soon as it is connected.':'Polar H10 im Browser-Dialog wählen. Die Aufnahme startet, sobald er verbunden ist.'}</div>`}
+      <div class="rl-felder">${G.felder.map(f=>{ const F=RehaKern.FELD[f]; return `<div class="rl-feld"><span>${esc(en?F.en:F.de)}</span>${F.bool?`<span style="display:none"></span><button data-rl="-" data-f="${f}" aria-label="umschalten" style="grid-column:1/-1;width:100%">${esc(this.wert(f))} ⇄</button>`:`<button data-rl="-" data-f="${f}" aria-label="−">−</button><b>${esc(this.wert(f))}</b><button data-rl="+" data-f="${f}" aria-label="+">+</button>`}</div>`; }).join('')}</div>
+      <div class="rl-los"><button class="btn primary" data-rl="stufe">${en?'Start stage':'Stufe übernehmen'}</button><button class="btn" data-rl="ende">${en?'End of load':'Belastung Ende'}</button><button class="btn" data-rl="fertig">${en?'Finish':'Fertig'}</button></div>
+      <div class="rl-liste">${this.log.length?this.log.map((m,i)=>`<div>${i+1}. ${this.mmss(m.startSec)} · ${m.device==='keines'?(en?'end of load':'Belastung Ende'):esc(RehaKern.label(m,!en))}</div>`).join(''):`<div>${en?'No stage yet. Set the device, then tap “Start stage” or say “stage”.':'Noch keine Stufe. Gerät einstellen, dann „Stufe übernehmen“ tippen oder „Stufe“ sagen.'}</div>`}</div></div>`;
+    this.kopf();
+  },
+  async fertig(){
+    if(this.phase==='ernte') return;
+    const live=this.rr.slice(); if(!this.start||(live.length<30&&!(this.sp&&this.sp.laeuft))){ Toast.show('Noch zu wenige Schläge für eine Sitzung','warn'); return; }
+    if(!this.log.some(m=>m.device!=='keines')) this.log.unshift(Object.assign({},this.akt,{startSec:0}));
+    this.phase='ernte'; this.aktiv=false; clearInterval(this._takt);
+    let mem=null, ziel=null, grund='';
+    if(this.sp&&this.sp.laeuft){
+      this.spText='Gurtspeicher wird ausgelesen …'; this.kopf();
+      try{
+        for(let i=0;i<5&&!(this.dev.gatt.connected&&this.sp.client);i++){ try{ await this.verbinden(); }catch(_){ await new Promise(r=>setTimeout(r,2000)); } }
+        if(!this.sp.client) throw new Error('Gurt nicht erreichbar');
+        await this.sp.client.stopp(); const al=await this.sp.client.aufnahmen(); ziel=al.find(a=>a.ordner==='/'+this.kennung+'/')||null;
+        if(ziel){ mem=await this.sp.client.ernte(ziel,n=>{ this.spText=`Gurtspeicher wird ausgelesen … ${ziel.groesse?Math.min(99,Math.round(n/ziel.groesse*100)):''} %`; this.kopf(); });
+          if(mem.kennung&&mem.kennung!==this.kennung) { grund='fremde Kennung'; mem=null; } }
+        else grund='Aufnahme im Gurt nicht gefunden';
+      }catch(e){ grund=(e&&e.message)||String(e); mem=null; }
+    }
+    /* Unvollständig (weniger Schläge als live angekommen) → nicht übernehmen, Datei bleibt im Gurt */
+    /* Vergleich nur mit den live angekommenen Schlägen NACH dem Speicherstart (der Speicher beginnt einige Sekunden später) */
+    const liveNach=this.sp?live.length-(this.sp.liveIdx||0):live.length;
+    if(mem&&mem.rr.length<liveNach-2){ grund=`Gurtdatei unvollständig (${mem.rr.length} statt mindestens ${liveNach} Schläge)`; mem=null; ziel=null; }
+    const ausSpeicher=!!(mem&&mem.rr.length>=30), off=ausSpeicher?(this.sp.startMs-this.start.getTime())/1000:0;
+    const rr=ausSpeicher?mem.rr.slice():live.map(x=>Math.round(x*100)/100);
+    const log=this.log.map(m=>{ const o=Object.assign({},m); if(ausSpeicher&&m.wandSec!=null) o.startSec=Math.max(0,Math.round((m.wandSec-off)*10)/10); delete o.wandSec; return o; });
+    const startIso=new Date(ausSpeicher?this.sp.startMs:this.start.getTime()).toISOString();
+    const id='reha_'+this.h.id+'_'+this.start.getTime(), dauer=Math.round(rr.reduce((a,b)=>a+b,0)/1000);
+    const rec={id,horseId:this.h.id,startedAt:startIso,durationSec:dauer,beatCount:rr.length,rr,reha:{log},metrics:{},
+      rrQuelle:ausSpeicher?'gurtspeicher':'live',
+      live:{schlaege:live.length,luecken:this.luecken.map(l=>({abSec:Math.max(0,Math.round((l.abSec-off)*10)/10),bisSec:l.bisSec!=null?Math.max(0,Math.round((l.bisSec-off)*10)/10):null,nachSchlag:l.nachSchlag}))},
+      speicher:ausSpeicher?{kennung:this.kennung,schlaege:mem.rr.length,verworfen:mem.verworfen,bytes:mem.bytes,versatzSec:Math.round(off*1000)/1000,geloescht:false}:(this.sp?{fehler:grund||'nicht gelaufen'}:null),
+      source:{app:'CARLON Equine Visite · Reha-Aufnahme',sensor:(this.dev&&this.dev.name)||null,weg:ausSpeicher?'Polar H10 Gurtspeicher (PSFTP) + live':'Polar H10 live (Bluetooth)'},triage:{level:'stable',reasons:[]}};
+    try{ if(typeof Neuauswertung!=='undefined'){ rec.neuauswertung=Neuauswertung._rechnen(rec,Neuauswertung.version()); Neuauswertung._uebernehmen(rec); } }catch(_){ }
+    await DB.put('recordings',rec); State.recordings.push(rec);
+    /* Löschen im Gurt NUR, wenn die gespeicherte Reihe aus der Datenbank bitgleich zurückkommt */
+    let geloescht=false;
+    if(ausSpeicher&&ziel){ try{ const z=await DB.get('recordings',id); if(z&&z.rr.length===rr.length&&z.rr.every((x,i)=>x===rr[i])){ await this.sp.client.loeschen(ziel.ordner); geloescht=true; rec.speicher.geloescht=true; await DB.put('recordings',rec); } }catch(_){ } }
+    this.entwurfWeg(this.kennung); const hid=this.h.id, fehlend=ausSpeicher?Math.max(0,mem.rr.length-liveNach):0; this.phase=''; this.schliessen();
+    Toast.show(ausSpeicher?`Reha-Sitzung gespeichert · vollständig aus dem Gurtspeicher (${fmt0(mem.rr.length)} Schläge${fehlend?', davon '+fmt0(fehlend)+' im Funkloch nur dort':''})${geloescht?' · Gurt geleert':' · Aufnahme bleibt im Gurt'}`
+      :(this.sp?'Reha-Sitzung gespeichert (live). Gurtspeicher: '+(grund||'nicht verfügbar'):'Reha-Sitzung gespeichert · in der Akte'),ausSpeicher?'ok':'warn');
+    try{ Views.openHorse(hid); }catch(_){ }
+  },
+  schliessen(){ this.aktiv=false; clearInterval(this._takt); try{ this.sp&&this.sp.client&&this.sp.client.trennen(); }catch(_){ } try{ this.dev&&this.dev.gatt&&this.dev.gatt.connected&&this.dev.gatt.disconnect(); }catch(_){ } try{ this.wakelock&&this.wakelock.release(); }catch(_){ }
+    const o=document.getElementById('rehaLive'); if(o) o.remove(); },
+};
 
 const DB = {
   _db:null, _c:{},
@@ -2743,6 +3422,9 @@ const Normalizer = {
       durationSec: num(sess.durationSec), beatCount:num(sess.beatCount)||rr.length,
       intent: sess.intent||null,
       kontext: (sess.kontext&&typeof sess.kontext==='object')?sess.kontext:null,   // Ruheprotokoll aus der Messstation (13.11.)
+      /* Reha (20.11.2026): Rohmarken der Gerätestufen im Format der iOS-App (Forschungs-JSON 2.0). Gespeichert wird NUR die
+         Rohmarke; Stufenwerte entstehen bei jeder Ansicht neu aus rr (Regel „rückwirkend besser“). */
+      reha: Array.isArray(sess.deviceSettingsLog)&&sess.deviceSettingsLog.length?{log:sess.deviceSettingsLog.filter(x=>x&&typeof x.startSec==='number'&&typeof x.device==='string').slice(0,200)}:null,
       metrics, rr,
       clinical:{
         colic: ci.acuteColic||null,
@@ -3803,7 +4485,7 @@ const Importer = {
     const triage=Triage.score(_eigen?{...n,baselineRMSSD:_eigen.wert}:n);
     const rec={
       id:recId, horseId:horse.id, startedAt:n.startedAt, durationSec:n.durationSec, beatCount:n.beatCount,
-      intent:n.intent, kontext:n.kontext||null, metrics:n.metrics, triage, clinical:n.clinical, device:n.device,
+      intent:n.intent, kontext:n.kontext||null, reha:n.reha||null, metrics:n.metrics, triage, clinical:n.clinical, device:n.device,
       /* VOLLE Schlagfolge (05.11.2026). Bis heute blieb ueber 2000 Schlaegen nur jeder
          n-te — jede Pferdeaufnahme ueber ~50 min. Spektrum, Poincaré („jeder Punkt ein
          Schlag gegen den naechsten"), SampEn und Verteilung liefen dann auf Werten, die
@@ -5752,7 +6434,7 @@ const Views={
         :`<div class="today-empty">${IC.route}<div style="font-size:14px;margin:12px 0 6px;color:var(--text-secondary)">Kein Besuch für heute markiert.</div>
         <div style="font-size:12.5px;max-width:340px;margin:0 auto">Markieren Sie Pferde im Board oder in der Liste als „Auf der Tour" — oder schieben Sie einen Analog-Patienten (ohne H10) direkt ein.</div>
         <div style="margin-top:20px"><button class="btn primary" onclick="Views.insertAnalog()">+ Pferd ohne Aufnahme einschieben</button></div></div>`;
-      return `<div class="view"><div class="view-head"><div><span class="eyebrow">Tagestour${doneToday?` · ${doneToday} erledigt`:''}</span><h1>Heute</h1></div></div>${doneMsg}</div>`;
+      return `<div class="view"><div class="view-head"><div><span class="eyebrow">Tagestour${doneToday?` · ${doneToday} erledigt`:''}</span><h1>Heute</h1></div></div>${Bindung.ruheHTML()}${doneMsg}${Tag.offenHTML()}</div>`;
     }
 
     const driveMin=Math.round(optKm/45*60);            // reine Fahrzeit ~45 km/h
@@ -5793,6 +6475,7 @@ const Views={
           ${flag}
           ${(()=>{ const auf=new Set(order.map(o=>o.h.id)); const eig=Fristen.offen(h), da=Fristen.imStall(h,auf);
             return eig.length||da.length?`<div class="tfrist">${IC.clock}<span>${eig.length?`<b>${esc(h.name)}:</b> ${eig.map(x=>esc(Fristen.text(x))).join(', ')}`:''}${eig.length&&da.length?' · ':''}${da.length?`<b>Im selben Stall:</b> ${da.map(x=>`${esc(x.h.name)} (${x.f.map(y=>esc(Fristen.text(y))).join(', ')})`).join(' · ')}`:''}</span></div>`:''; })()}
+          ${(()=>{ const z=Stallwissen.fuer(h); return z.text?`<div class="tfrist tzugang">${IC.pin}<span><b>Zugang:</b> ${esc(z.text)}${z.stand?` <em style="opacity:.7">(bestätigt ${esc(fmtDate(z.stand))})</em>`:''}</span></div>`:''; })()}
           ${h.arrivedAt?`<div class="tarrived">${IC.check} angekommen ${fmtTime(new Date(h.arrivedAt).getHours()*60+new Date(h.arrivedAt).getMinutes())} — Besuch läuft</div>`:''}
           <div class="tsched">
             <span class="tvisit"><button onclick="event.stopPropagation();Views.setVisit('${h.id}',-5)">−</button><b title="${r.gelernt?'Aus Ihren bisherigen Besuchen gelernt':''}">${IC.clock}${r.visitMin} min${r.gelernt?' <span class="tgelernt">gelernt</span>':''}</b><button onclick="event.stopPropagation();Views.setVisit('${h.id}',5)">+</button></span>
@@ -5831,15 +6514,24 @@ const Views={
       <div class="today-time">
         <label>${IC.clock}<span>Abfahrt</span> <input type="time" value="${fmtTime(sch.start)}" onchange="Views.setDayStart(this.value)" onclick="event.stopPropagation()"></label>
         <span class="tt-end">Fertig ca. <b>${fmtTime(sch.end)}</b></span>
+        <label class="tt-fa" title="Ihre eigene Planungsgrenze">Feierabend <input type="time" value="${State.settings.feierabend!=null?fmtTime(State.settings.feierabend):''}" onchange="Tag.setFeierabend(this.value)" onclick="event.stopPropagation()"></label>
         <span id="nowStatus" class="tt-plan"></span>
         ${sch.anyLate?`<span class="tconflict">${IC.warn} Terminkonflikt</span>`:''}
         ${order.length>1?`<button class="tt-compact ${State.settings.tourSortierung==='abweichung'?'on':''}" onclick="State.settings.tourSortierung=State.settings.tourSortierung==='abweichung'?'route':'abweichung';State.saveSettings();Nav.render()" title="Sortierung der Tour wählen: kürzeste Strecke oder Pferde mit deutlicher Abweichung von der Eigenbasis zuerst">${State.settings.tourSortierung==='abweichung'?'Sortierung: Abweichung':'Sortierung: Strecke'}</button>`:''}
         ${order.length>1?`<button class="tt-compact ${Views._compactStops?'on':''}" onclick="Views.toggleCompact()" title="${Views._compactStops?'Details zeigen':'Alle Karten minimieren — Überblick & Verschieben'}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/></svg>${Views._compactStops?'Details':'Kompakt'}</button>`:''}
       </div>
+      ${(()=>{ const fa=State.settings.feierabend; if(fa==null||!order.length||sch.end<=fa) return '';
+          const i=srows.findIndex(r=>r.depart>fa); const h=i>=0?order[i].h:null;
+          return `<div class="chip amber" style="display:block;margin:2px 0 10px">${IC.clock} Der Plan endet ${Math.round(sch.end-fa)} min nach Ihrem Feierabend${h?` · ab ${esc(h.name)} über der Grenze`:''}</div>`; })()}
+      ${(()=>{ if(!order.length) return ''; const f=Tag.bereit(order);
+          return f.length?`<div class="chip amber" style="display:block;margin:2px 0 10px">${IC.warn} Vor der Abfahrt: ${f.map(esc).join(' · ')}</div>`
+                         :`<div class="chip" style="display:block;margin:2px 0 10px">${IC.check} Abfahrtsbereit: offline startfähig, Sicherung frisch, jeder Halt mit Standort</div>`; })()}
+      ${Bindung.ruheHTML()}
       ${progress}${why}${noLocHtml}
       ${manual?`<div class="today-manual"><span>◇ Manuell umgeplant${manualDelta>0?` · +${fmt1(manualDelta)} km / +${Math.round(manualDelta/45*60)} min ggü. optimal`:''}</span><button onclick="Views.resetOrder()">${IC.refresh} Optimal</button></div>`:''}
       <div id="todayStops"${Views._compactStops?' class="compact"':''}>${order.length?`<div id="nowLine" class="now-line"><span class="nl-dot"></span><span class="nl-lbl">JETZT <b class="nl-time"></b></span></div>`:''}${stops}</div>
       ${logSummary}
+      ${Tag.offenHTML()}
       <div class="today-cta">
         <button class="btn primary" onclick="Views.insertAnalog()">+ Pferd ohne Aufnahme einschieben</button>
         <button class="btn gmaps" onclick="Dispatch.openGoogleMaps()">${IC.nav} Ganzer Tag → Maps</button>
@@ -5927,14 +6619,15 @@ const Views={
       <div class="qa-head"><span style="width:42px;height:42px;border-radius:12px;background:var(--amber-g);color:var(--amber);display:flex;align-items:center;justify-content:center">${IC.clock}</span><div class="qa-id"><b>${art==='unterwegs'?'Unterwegs melden':'Verspätung melden'}</b><span>${esc(h.name)}${h.owner?' · '+esc(h.owner):''} · neue Ankunft ca. ${eta}</span></div></div>
       <div style="padding:2px 20px 0"><textarea id="delayMsg" class="delay-msg" rows="4">${esc(msg)}</textarea></div>
       <div class="qa-grid">
-        ${hasP?`<button class="qa-item primary" onclick="Views.sendDelay('wa','${esc(h.phone)}')">${IC.phone}<span>WhatsApp</span></button>`:''}
-        ${hasP?`<button class="qa-item" onclick="Views.sendDelay('sms','${esc(h.phone)}')">${IC.phone}<span>SMS</span></button>`:''}
+        ${hasP?`<button class="qa-item primary" onclick="Views.sendDelay('wa','${esc(h.phone)}','${h.id}')">${IC.phone}<span>WhatsApp</span></button>`:''}
+        ${hasP?`<button class="qa-item" onclick="Views.sendDelay('sms','${esc(h.phone)}','${h.id}')">${IC.phone}<span>SMS</span></button>`:''}
         ${hasP?`<a class="qa-item call" href="tel:${esc(h.phone)}" onclick="UI.closeModal()">${IC.phone}<span>Anrufen</span></a>`:''}
         <button class="qa-item" onclick="Views.shareLocation('${hasP?esc(h.phone):''}')">${IC.pin}<span>Standort teilen</span></button>
       </div></div>`,{sheet:true});
   },
-  sendDelay(kind,phone){
-    const t=encodeURIComponent(($('#delayMsg')&&$('#delayMsg').value)||'');
+  sendDelay(kind,phone,hid){
+    const roh=($('#delayMsg')&&$('#delayMsg').value)||''; const t=encodeURIComponent(roh);
+    if(hid&&roh) try{ Akte.notiere(hid,'Nachricht an die Halterin',{text:roh,weg:kind==='wa'?'WhatsApp':'SMS'}); }catch(_){ }
     const p=(phone||'').replace(/[^0-9+]/g,'');
     UI.closeModal();
     if(kind==='wa'){ const wp=p.replace(/^\+/,'').replace(/^0/,'49'); window.open(`https://wa.me/${wp}?text=${t}`,'_blank'); }
@@ -6177,6 +6870,7 @@ const Views={
           <button class="btn ghost" onclick="Views.planVisit('${h.id}')" title="Termin in Google/Apple Kalender">${IC.calendar} Termin</button>
           <button class="btn ghost" onclick="Views.ownerMode('${h.id}')" title="Vollbild zum Zeigen für den Besitzer — iPad umdrehen">${IC.eye||''} Besitzer-Modus</button>
           <button class="btn ghost" onclick="Views.ownerFeedback('${h.id}')" title="Messwertbericht für den Halter zusammenstellen">Rückmeldung</button>
+          <button class="btn ghost" onclick="Tag.rueckrufDialog('${h.id}')" title="Rückruf vormerken, er steht dann in „Heute“ unter „Noch offen“">${IC.phone} Rückruf merken</button>
           ${License.can('nachsorge')?`<button class="btn ghost" onclick="Views.nachsorge('${h.id}')" title="Entlass-Karte mit QR — die Halterin misst zu Hause weiter, der Verlauf kommt zu Ihnen">Nachsorge einrichten</button>`:''}
           <button class="btn ghost" onclick="Views.editHorse('${h.id}')">Stammdaten</button>
         </div>
@@ -6263,7 +6957,7 @@ const Views={
           <div class="panel" style="margin-bottom:var(--s4)">
             <h2 style="font-size:16px"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6M8 13h8M8 17h6"/></svg>Beratungen</h2>
             ${cons.length?`<div class="rec-list">${cons.map(c=>`<div class="rec" style="padding:9px 11px">
-              <div><div class="rdate" style="font-size:12px;min-width:auto">${fmtDate(c.date)}</div><div class="rmeta">${esc(c.type)}${c.durationMin?' · '+c.durationMin+' Min':''}</div></div>
+              <div><div class="rdate" style="font-size:12px;min-width:auto">${fmtDate(c.date)}</div><div class="rmeta">${esc(c.type)}${c.durationMin?' · '+c.durationMin+' Min':''}</div>${c.notes&&c.notes!==c.type?`<div class="rmeta" style="white-space:pre-wrap;color:var(--text-secondary);margin-top:3px">${esc(c.notes)}</div>`:''}</div>
               <div style="margin-left:auto;text-align:right"><span class="pill ${c.billed?'paid':'open'}">${c.billed?'erledigt':'offen'}</span></div>
             </div>`).join('')}</div>
             <div style="margin-top:12px;font-size:13px;color:var(--text-secondary);display:flex;justify-content:space-between">
@@ -6271,9 +6965,15 @@ const Views={
             :`<p style="color:var(--text-dim);font-size:13px">Noch keine Leistung erfasst.</p>`}
             <button class="btn ghost block" style="margin-top:14px" onclick="Views.logConsult('${h.id}')">+ Beratung erfassen</button>
           </div>
+          ${typeof Reha!=='undefined'&&typeof RehaKern!=='undefined'?Reha.panel(h):''}
+          ${(h.doku&&h.doku.length)?`<div class="panel" style="margin-bottom:var(--s4)" id="akteDoku">
+            <h2 style="font-size:16px">Dokumentation</h2>
+            <div class="rec-list">${h.doku.slice().reverse().map(e=>`<details class="rec" style="padding:9px 11px;display:block"><summary style="cursor:pointer;list-style:none"><span class="rdate" style="font-size:12px">${fmtDate(e.datum)}</span> <span class="rmeta">${esc(e.art)}${e.weg?' · '+esc(e.weg):''}${e.von?' · '+esc(e.von):''}</span></summary>
+              <div style="white-space:pre-wrap;font-size:13px;color:var(--text-secondary);margin-top:8px">${esc(e.text||'')}${e.empfehlung?'\n\nEmpfehlung: '+esc(e.empfehlung):''}${e.naechste?'\nNächste Kontrolle: '+esc(fmtDate(e.naechste)):''}</div></details>`).join('')}</div>
+          </div>`:''}
           <div class="panel">
             <h2 style="font-size:16px">Notizen</h2>
-            <textarea id="horseNotes" placeholder="Klinische Notizen, Verlauf, Absprachen…" style="width:100%;min-height:120px;background:var(--bg-deep);border:1px solid var(--border-subtle);border-radius:var(--r-s);color:var(--text-primary);padding:12px;resize:vertical" onchange="Views.saveNotes('${h.id}',this.value)">${esc(h.notes||'')}</textarea>
+            <textarea id="horseNotes" placeholder="Klinische Notizen, Verlauf, Absprachen…" style="width:100%;min-height:120px;background:var(--bg-deep);border:1px solid var(--border-subtle);border-radius:var(--r-s);color:var(--text-primary);padding:12px;resize:vertical" oninput="clearTimeout(window._notizT);window._notizT=setTimeout(()=>Views.saveNotes('${h.id}',this.value,true),1200)" onchange="Views.saveNotes('${h.id}',this.value)">${esc(h.notes||'')}</textarea>
           </div>
         </div>
       </div>
@@ -6771,7 +7471,7 @@ const Views={
 
   /* ---------------- Actions ---------------- */
   async toggleVisit(id,val){const h=State.horses.find(x=>x.id===id);h.needsVisit=val;await DB.put('horses',h);Nav.updateBadges();},
-  async saveNotes(id,val){const h=State.horses.find(x=>x.id===id);h.notes=val;await DB.put('horses',h);Toast.show('Notiz gespeichert','ok');},
+  async saveNotes(id,val,still){const h=State.horses.find(x=>x.id===id);if(!h||h.notes===val)return;h.notes=val;await DB.put('horses',h);if(!still)Toast.show('Notiz gespeichert','ok');},
   async delRec(id){const r=State.recordings.find(x=>x.id===id);if(!confirm('Diese Aufnahme wirklich löschen?'))return;await DB.del('recordings',id);State.recordings=State.recordings.filter(x=>x.id!==id);Toast.show('Aufnahme gelöscht','info');Nav.refresh();},
   /* ── HERKUNFT ────────────────────────────────────────────────────────
      Bis heute gab der Export die Quelldaten weiter — und nur die. Wer den
@@ -7051,7 +7751,7 @@ const Views={
       <button class="btn ghost" onclick="Views.mailOwner('${hid}')">Per E-Mail</button>
       ${(POSTFACH_AN && rec.rueckadresse)
         ? `<button class="btn primary" onclick="Views.befundZurueck('${hid}')">Verschlüsselt zurücksenden</button>`
-        : `<button class="btn primary" onclick="navigator.clipboard.writeText($('#ownerTxt').value).then(()=>Toast.show('Text kopiert','ok'))">Kopieren</button>`}
+        : `<button class="btn primary" onclick="navigator.clipboard.writeText($('#ownerTxt').value).then(()=>{Akte.notiere('${hid}','Rückmeldung an die Halterin',{text:$('#ownerTxt').value,weg:'kopiert'});Toast.show('Text kopiert · in der Akte vermerkt','ok');})">Kopieren</button>`}
     </div>`);
   },
   /* Ein Klick. Der Besitzer sieht den Befund beim naechsten Oeffnen seines
@@ -7070,6 +7770,7 @@ const Views={
     const txt=$('#ownerTxt')?$('#ownerTxt').value:'';
     if(!rec||!txt) return;
     if(!rec.rueckadresse){ Toast.show('Diese Aufnahme kam über den alten Weg — bitte kopieren','warn'); return; }
+    try{ await Akte.notiere(hid,'Rückmeldung an die Halterin',{text:txt,weg:'verschlüsselt zurück'}); }catch(_){ }
     const s=State.settings;
     const r=await Postfach.befundEinreihen(rec.rueckadresse, {
       v:1, art:'befund',
@@ -7099,6 +7800,7 @@ const Views={
       r.sofort?'ok':'info');
   },
   mailOwner(hid){const h=State.horses.find(x=>x.id===hid);const body=encodeURIComponent($('#ownerTxt').value);
+    Akte.notiere(hid,'Rückmeldung an die Halterin',{text:$('#ownerTxt').value,weg:'E-Mail'});
     const subj=encodeURIComponent(`Ruhemessung ${h.name} · ${State.settings.clinicName||'CARLON Equine'}`);
     window.open(`mailto:?subject=${subj}&body=${body}`,'_blank');},
   // BESITZER-MODUS — der „iPad umdrehen"-Moment: ruhige Vollbild-Ansicht in Klartext, ohne Fachjargon/Zitate.
@@ -7150,6 +7852,9 @@ const Views={
         <div class="field"><label>Ort / Adresse</label>
           <div style="display:flex;gap:6px"><input id="ePlace" value="${esc(h.place||'')}" placeholder="Stalladresse" style="flex:1">
           <button class="btn ghost" style="padding:0 12px" onclick="geoLookup('ePlace','eLat','eLng',this)" title="Koordinaten aus Adresse ermitteln">${IC.pin}</button></div></div></div>
+      <div class="field"><label>Anfahrt und Zugang im Stall</label>
+        <textarea id="eZugang" rows="2" placeholder="Einfahrt, Parken, Tor oder Code, wer vor Ort ist, Strom und Wasser, Licht …">${esc(Stallwissen.fuer(h).text||'')}</textarea>
+        <div class="hint">Gilt für alle Pferde in diesem Stall und steht auf der Tour beim Halt.${Stallwissen.fuer(h).stand?' Zuletzt bestätigt am '+esc(fmtDate(Stallwissen.fuer(h).stand))+'.':''}</div></div>
       <!-- Externe Kennungen = der Schlüssel, über den eine Klinik-Software den
            Datensatz ihrem Patienten zuordnet. Ohne sie trägt der FHIR-Export nur
            unsere eigene ID und ist im ERP nicht anschlussfähig. -->
@@ -7171,6 +7876,7 @@ const Views={
     let h=id?State.horses.find(x=>x.id===id):{id:'h_manual_'+Math.abs(hashStr('m'+performance.now())).toString(36),subjectId:'manual:'+performance.now(),createdAt:new Date().toISOString(),needsVisit:false};
     h.name=$('#eName').value||'Unbenannt';h.breed=$('#eBreed').value;h.owner=$('#eOwner').value;h.phone=$('#ePhone').value;
     h.stable=$('#eStable').value;h.place=$('#ePlace').value;h.lat=num($('#eLat').value);h.lng=num($('#eLng').value);
+    { const z=($('#eZugang')?.value||'').trim(); if(z!==(Stallwissen.fuer(h).text||'')) await Stallwissen.setzen(h,z); }
     h.fristen={}; for(const [k] of Fristen.ARTEN){ const v=($('#eFr_'+k)?.value||'').trim(); if(v) h.fristen[k]=v; }
     h.extIds={ clinicPMS:($('#eIdClinic')?.value||'').trim(), ueln:($('#eIdUeln')?.value||'').trim(),
                microchip:($('#eIdChip')?.value||'').trim(), passport:($('#eIdPass')?.value||'').trim() };
@@ -7554,6 +8260,7 @@ const Export={
       ${z(`Export.csv('${id}')`,'CSV','Jeder Schlag: Zeit, RR in ms, Klasse, bereinigter Wert – für Excel, R, Python')}
       ${z(`Export.kubios('${id}')`,'Kubios','RR-Textdatei in ms, eine Zahl je Zeile – öffnet in Kubios HRV und anderer HRV-Software')}
       ${z(`FHIR.export('${id}')`,'FHIR R5','Bundle mit Pferd, Kennwerten und Roh-RR – für Praxis- und Kliniksoftware')}
+      ${z(`EquineApp.eine('${id}')`,'CARLON Equine App','Für iPhone und iPad: Datei antippen, die Aufnahme steht lückenlos beim Pferd, mit Reha-Stufen')}
     </div><p class="ex-fuss">Alle Exporte enthalten die RR-Reihe ungerundet, wie aufgezeichnet. Der Prüfwert (SHA-256) belegt, dass sie unverändert ist.</p></div>`);
   }
 };
@@ -8188,6 +8895,35 @@ const Voice={
 /* PRÜFWERT (16.11.2026): Die Visite-Seite verspricht „ein SHA-256-Prüfwert je Datensatz“ – bis heute rechnete ihn niemand.
    Jetzt: SHA-256 über die RR-Rohreihe (Millisekunden, kommagetrennt, in Aufnahmereihenfolge). Derselbe Wert steht im
    JSON-Export, im FHIR-Bundle (identifier) und im Messwertbericht – so lässt sich jede Datei gegen den Bericht prüfen. */
+/* ═══ Übergabe an die CARLON Equine iOS-App (20.11.2026) ═══
+   Format carlon_equine_v1 wie EquineSessionImporter (CarlonEquine, H10LongTerm/EquineSessionImporter.swift):
+   schema.name/version 1.x, session.id + subject.id als UUID, session.startedAt ISO, rrData[].rrMs (≥ 10).
+   Kennungen sind aus Visite-Kennungen abgeleitet (SHA-256 → UUID): gleiche Aufnahme = gleiche UUID,
+   so erkennt die App Dubletten beim erneuten Import. Reha-Stufen reisen als session.deviceSettingsLog
+   (Schlüssel wie der App-Export) und lesbar in session.notes. */
+const EquineApp={
+  async uuid(saat){ const d=new Uint8Array(await crypto.subtle.digest('SHA-256',new TextEncoder().encode('carlon-visite:'+saat))).slice(0,16);
+    d[6]=(d[6]&0x0f)|0x50; d[8]=(d[8]&0x3f)|0x80; const h=[...d].map(b=>b.toString(16).padStart(2,'0')).join('');
+    return `${h.slice(0,8)}-${h.slice(8,12)}-${h.slice(12,16)}-${h.slice(16,20)}-${h.slice(20)}`.toUpperCase(); },
+  protokoll(r){ if(!r.reha||!r.reha.log) return ''; const rr=r.rr.map(Number), a=RehaKern.auswerten(rr,r.reha.log);
+    return 'Reha-Protokoll (CARLON Equine Visite)\n'+a.stufen.map((x,i)=>`${Reha.mmss(x.startSec)}–${Reha.mmss(x.endSec)} · ${i+1} · ${x.device==='keines'?'Ohne Gerät · Erholung':x.label}${x.meanHRbpm!=null?' · Ø '+Math.round(x.meanHRbpm)+' bpm':''}`).join('\n'); },
+  async json(r){ const h=State.horses.find(x=>x.id===r.horseId)||{name:'Pferd',id:r.horseId}; const rr=r.rr.map(Number);
+    const start=new Date(r.startedAt), dauer=rr.reduce((p,q)=>p+q,0)/1000; let t=0;
+    const notiz=[this.protokoll(r), r.note||r.notiz||''].filter(Boolean).join('\n\n');
+    let rm=null; try{ rm=HRVVorstufe.analysiere(rr).rmssdMs; }catch(_){ }
+    return { schema:{name:'carlon_equine_v1',version:'1.2',softwareBuild:'CARLON Equine Visite · '+(typeof SW_VERSION!=='undefined'?SW_VERSION:'web')},
+      subject:{id:await this.uuid('pferd:'+h.id), nameAtTime:h.name, species:'horse'},
+      session:{id:await this.uuid('aufnahme:'+r.id), startedAt:start.toISOString(), endedAt:new Date(+start+dauer*1000).toISOString(), durationSec:Math.round(dauer*10)/10,
+        intent:r.reha?'training':'rest', notes:notiz||undefined, deviceSettingsLog:r.reha&&r.reha.log?r.reha.log.map(x=>Object.assign({},x)):undefined},
+      rrData:rr.map(v=>{ const o={tSec:Math.round(t*1000)/1000,rrMs:v}; t+=v/1000; return o; }),
+      metrics:rm!=null?{timeDomain:{rmssdMs:Math.round(rm*10)/10}}:undefined,
+      provenance:{source:'CARLON Equine Visite', visiteRecordingId:r.id, rrSha256:await Pruefwert.rr(r.rr)} }; },
+  dateiname(r){ const h=State.horses.find(x=>x.id===r.horseId); return 'CARLON_'+((h&&h.name)||'Pferd').replace(/[^\p{L}\p{N}]+/gu,'_')+'_'+r.startedAt.slice(0,16).replace(/[:T]/g,'-')+(r.reha?'_Reha':'')+'.json'; },
+  async eine(id){ const r=State.recordings.find(x=>x.id===id); if(!r) return; Export.laden(this.dateiname(r),JSON.stringify(await this.json(r)),'application/json');
+    Toast.show('Für die CARLON Equine App exportiert · Datei auf dem iPhone oder iPad antippen'); },
+  async alle(hid,nurReha){ const l=State.recsFor(hid).filter(r=>Array.isArray(r.rr)&&r.rr.length>=10&&(!nurReha||r.reha)); for(const r of l){ Export.laden(this.dateiname(r),JSON.stringify(await this.json(r)),'application/json'); await new Promise(x=>setTimeout(x,350)); }
+    Toast.show(l.length+' Aufnahmen für die CARLON Equine App exportiert · per AirDrop aufs iPhone, dort öffnen'); return l.length; }
+};
 const Pruefwert={
   BESCHREIBUNG:'SHA-256 über die RR-Rohreihe: Werte in ms wie gespeichert (Dezimalpunkt), mit Komma ohne Leerzeichen verbunden, UTF-8, ohne Zeilenende, in Aufnahmereihenfolge',
   async rr(arr){ if(!Array.isArray(arr)||!arr.length||!(window.crypto&&crypto.subtle)) return null;
@@ -8222,7 +8958,8 @@ const Report={
         <div class="hint">Rechts oben steht klein „CARLON Equine Visite“ – so sieht jede Empfängerin, womit der Bericht erstellt wurde.</div>
       </div>
       <div class="field"><label>Tierärztliche Einschätzung (von Ihnen)</label><textarea id="bfAssess" rows="4" placeholder="Ihre Beurteilung…">${esc(suggest)}</textarea></div>
-      <div class="field"><label>Empfehlung / weiteres Vorgehen</label><textarea id="bfRec" rows="2" placeholder="z. B. nächste Ruhe-Vergleichsaufnahme in 14 Tagen im gewohnten Stallprotokoll …"></textarea></div>
+      <div class="field"><label>Empfehlung / weiteres Vorgehen</label><textarea id="bfRec" rows="2" placeholder="z. B. nächste Ruhe-Vergleichsaufnahme in 14 Tagen im gewohnten Stallprotokoll …">${esc((Akte.letzte(hid,'Messwertbericht')||{}).empfehlung||'')}</textarea>
+      <div class="hint">Einschätzung und Empfehlung werden mit dem Bericht in der Akte des Pferds gespeichert.</div></div>
       <div class="field-row"><div class="field"><label>Nächste Kontrolle (optional)</label><input id="bfNext" type="date"></div>
         <div class="field"><label>Ausstellende:r</label><input id="bfVet" value="${esc(s.vetName||s.clinicName||'')}"></div></div>
       <div class="field"><label>Pferd zuletzt von Ihnen untersucht am (optional, erscheint bei der Unterschrift)</label><input id="bfUnters" type="date"></div>
@@ -8256,6 +8993,8 @@ const Report={
       const n=nimm('bfName'); if(n) S.clinicName=n; ['clinicAddr:bfAddr','clinicPhone:bfPhone','clinicMail:bfMail','clinicWeb:bfWeb'].forEach(x=>{const [k,id]=x.split(':'); const v=nimm(id); if(v!=null) S[k]=v;});
       if(d.vet&&!S.vetName) S.vetName=d.vet; try{ await State.saveSettings(); }catch(e){} }
     UI.closeModal();
+    { const rc=State.recsFor(hid).slice(-1)[0];
+      try{ await Akte.notiere(hid,'Messwertbericht',{text:d.assess,empfehlung:d.recom,naechste:d.next||'',von:d.vet,untersucht:d.untersucht||'',aufnahme:rc?rc.id:null}); }catch(_){ } }
     if(bill){
       const c={id:'c_'+Math.abs(hashStr(hid+performance.now())).toString(36),horseId:hid,date:new Date().toISOString(),
         type:'Datensichtung (Aufnahme)',durationMin:0,fee,notes:d.assess?('Notiz: '+d.assess).slice(0,240):'Datensichtung (Aufnahme)',billed:!!paid,report:true};
@@ -8322,7 +9061,7 @@ const Report={
     const W=size-pL-pR, H=W, h=pT+H+pB;
     const C=v=>Math.max(lo,Math.min(hi,v)), PX=v=>pL+(C(v)-lo)/(hi-lo)*W, PY=v=>pT+H-(C(v)-lo)/(hi-lo)*H;
     const tk=Chart.niceTicks(lo,hi,klein?4:6), st=tk.length>1?tk[1]-tk[0]:100, mst=st/5;
-    let g=`<rect x="${pL}" y="${pT}" width="${W}" height="${H}" fill="#fbfdfd"/>`;
+    let g=`<rect x="${pL}" y="${pT}" width="${W}" height="${H}" fill="${P.bg||'#fbfdfd'}"/>`;
     for(let v=tk[0]-st;v<=hi+1e-6;v+=mst){ if(v<lo-1e-6) continue; const maj=tk.some(q=>Math.abs(q-v)<mst*.1);
       g+=`<line x1="${PX(v).toFixed(1)}" x2="${PX(v).toFixed(1)}" y1="${pT}" y2="${pT+H}" stroke="${maj?P.grid:P.minor}" stroke-width="${maj?.8:.45}"/><line x1="${pL}" x2="${pL+W}" y1="${PY(v).toFixed(1)}" y2="${PY(v).toFixed(1)}" stroke="${maj?P.grid:P.minor}" stroke-width="${maj?.8:.45}"/>`; }
     tk.forEach(q=>{ if(q<lo||q>hi) return; g+=`<text x="${PX(q).toFixed(1)}" y="${(pT+H+13).toFixed(1)}" text-anchor="middle" font-size="${klein?8:9}" fill="${P.dim}" font-family="var(--font-mono)">${Report._n0(q)}</text><text x="${pL-6}" y="${(PY(q)+3).toFixed(1)}" text-anchor="end" font-size="${klein?8:9}" fill="${P.dim}" font-family="var(--font-mono)">${Report._n0(q)}</text>`; });
@@ -8337,7 +9076,7 @@ const Report={
       const e2=[cx+Math.cos(a)*sd.sd2*sc, cy+Math.sin(a)*sd.sd2*sc], e1=[cx+Math.cos(a+Math.PI/2)*sd.sd1*sc, cy+Math.sin(a+Math.PI/2)*sd.sd1*sc];
       g+=`<line x1="${cx.toFixed(1)}" y1="${cy.toFixed(1)}" x2="${e2[0].toFixed(1)}" y2="${e2[1].toFixed(1)}" stroke="${P.ink}" stroke-width=".9"/><line x1="${cx.toFixed(1)}" y1="${cy.toFixed(1)}" x2="${e1[0].toFixed(1)}" y2="${e1[1].toFixed(1)}" stroke="${P.ink}" stroke-width=".9"/>`;
       g+=`<circle cx="${cx.toFixed(1)}" cy="${cy.toFixed(1)}" r="${klein?2:2.6}" fill="${P.ink}"/>`;
-      if(!klein){ const lab=(x,y,txt,anc)=>`<g><rect x="${(anc==='start'?x:x-7*txt.length-8).toFixed(1)}" y="${(y-11).toFixed(1)}" width="${(7*txt.length+8).toFixed(1)}" height="16" rx="4" fill="#fff" stroke="${P.amber}" stroke-width=".8"/><text x="${(anc==='start'?x+4:x-4).toFixed(1)}" y="${(y+1).toFixed(1)}" text-anchor="${anc}" font-size="10" font-weight="700" fill="${P.amber}" font-family="var(--font-mono)">${txt}</text></g>`;
+      if(!klein){ const lab=(x,y,txt,anc)=>`<g><rect x="${(anc==='start'?x:x-7*txt.length-8).toFixed(1)}" y="${(y-11).toFixed(1)}" width="${(7*txt.length+8).toFixed(1)}" height="16" rx="4" fill="${P.bg2||'#fff'}" stroke="${P.amber}" stroke-width=".8"/><text x="${(anc==='start'?x+4:x-4).toFixed(1)}" y="${(y+1).toFixed(1)}" text-anchor="${anc}" font-size="10" font-weight="700" fill="${P.amber}" font-family="var(--font-mono)">${txt}</text></g>`;
         g+=lab(e2[0]+6,e2[1]-4,'SD2 '+Report._zk(sd.sd2,1)+' ms','start')+lab(e1[0]-6,e1[1]+4,'SD1 '+Report._zk(sd.sd1,1)+' ms','end'); } }
     if(rand){ const nb=Math.max(10,Math.round((hi-lo)/mst)), bw=(hi-lo)/nb, hx=new Array(nb).fill(0), hy=new Array(nb).fill(0);
       xs.forEach(v=>{ if(v>=lo&&v<hi) hx[Math.floor((v-lo)/bw)]++; }); ys.forEach(v=>{ if(v>=lo&&v<hi) hy[Math.floor((v-lo)/bw)]++; });
@@ -8740,7 +9479,7 @@ const UI={
     bg.innerHTML=`<div class="modal ${wide?'wide':''} ${sheet?'sheet':''}">${html}</div>`;
     bg.addEventListener('click',e=>{if(e.target===bg)this.closeModal();});
     { const m=bg.firstElementChild; if(m&&!m.querySelector(':scope > .modal-body')) m.style.overflowY='auto'; }   // Dialoge ohne .modal-body scrollen wie bisher als Ganzes
-    document.body.appendChild(bg);},
+    document.body.appendChild(bg); try{ Entwurf.anbinden(bg.firstElementChild); }catch(_){ } },
   closeModal(){const m=$('#modalBg');if(m)m.remove();},
   toggleFieldMode(){
     const on=!document.body.classList.contains('field-mode');
@@ -8859,8 +9598,8 @@ const UI={
         <button class="btn ghost" style="margin-top:12px;color:var(--red);font-size:12px" onclick="UI.wipe()">Alle lokalen Daten löschen</button>
       </div>
       <div style="border-top:1px solid var(--border-faint);margin-top:8px;padding-top:16px">
-        <label style="display:block;font-size:12px;font-weight:600;color:var(--text-secondary);margin-bottom:9px">Test-Beta</label>
-        <div class="hint" style="margin-bottom:10px">Danke fürs Testen! Was gut läuft, was hakt, was fehlt — jede Rückmeldung hilft.</div>
+        <label style="display:block;font-size:12px;font-weight:600;color:var(--text-secondary);margin-bottom:9px">Rückmeldung</label>
+        <div class="hint" style="margin-bottom:10px">Was gut läuft, was hakt, was fehlt: Jede Rückmeldung fließt in die nächste Fassung ein.</div>
         <button class="btn ghost" style="font-size:13px" onclick="UI.betaFeedback()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px"><path d="M4 4h16v12H5.17L4 17.17V4z"/></svg> Feedback senden</button>
         <div class="hint" style="margin-top:8px;opacity:.7">Build ${BUILD}</div>
       </div>
@@ -10672,6 +11411,7 @@ const License={
                 'nachsorge',        // Entlass-Nachsorge-Flow (13.08., s. u.)
                 'clinicBranding',   // Klinik-Name im Kopf (additiv, AP2)
                 'station',          // Stationswand — Wand-Monitor (15.08.)
+                'reha',             // Reha-Aufnahme, Reha-Akte, Reha-Berichte (20.11.2026)
                 'sharedFolder']     // geteilter Klinik-Ordner, Mehrbenutzer (15.08.)
   },
   /* ENTSCHIEDEN (Jan, 13.08.2026) — der offene Punkt unten ist damit
@@ -10711,7 +11451,7 @@ const License={
      kuenstlicher Riegel um ein identisches Produkt, sondern beschreibt genau
      den Unterschied: Eine Fahrpraxis hat keine Stationswand, weil sie keine
      Station hat, und keinen geteilten Ordner, weil sie ein Geraet ist. */
-  CLINIC_ONLY:['clinicBranding','multiSeat','nachsorge','station'],
+  CLINIC_ONLY:['clinicBranding','multiSeat','nachsorge','station','reha'],
   /* Die Platzzahl steht im Schluessel und wird ANGEZEIGT, nicht technisch
      erzwungen — ohne Server laesst sich geraeteuebergreifend nichts durchsetzen,
      und ein Schein-Schutz waere schlechter als eine klare Angabe. Sie ist eine
@@ -10838,7 +11578,8 @@ const License={
 
   /* Karte wechseln, Rechnungen holen, kuendigen — alles bei Stripe.
      Jede dieser drei Sachen waere sonst eine E-Mail an Jan. */
-  async portalOeffnen(){
+  async portalOeffnen(direkt){
+    if(!direkt&&typeof Bindung!=='undefined'){ Bindung.vorPortal(); return; }
     const s=State.settings.license||{};
     if(!s.sub){ Toast.show('Kein Abo hinterlegt','warn'); return; }
     Toast.show('Abo-Verwaltung wird geöffnet…','info');
@@ -11290,6 +12031,7 @@ const Seed={
     await State.load();
     await Seed.synthRoutineVisits();
     await Seed.feinschliff();
+    try{ await Reha.demoAnlegen(); }catch(_){ }
     State.settings.isDemo=true; await State.saveSettings();   // Demo-Daten sind wegwerfbar → kein Backup-Nag beim First-Touch
     /* DAS BAND NEU ZEICHNEN, SONST BLEIBT DER ALARM STEHEN.
        renderBanner() unterdrueckt die Verlustwarnung in der Demo — aber es
@@ -12255,7 +12997,7 @@ const Sprache={
   WB:{
     /* 17.11.2026: Lücken aus der Sprachprobe (nur/enrest.mjs) */
     "gehört zum Abo –":"is part of the subscription –", "die ersten 14 Tage sind kostenlos":"the first 14 days are free", ", danach monatlich kündbar.":", then cancel monthly.",
-    "Basis im Aufbau":"Baseline building", "Abgleich an die Praxis senden":"Send sync to the practice", "Abgleich an die Praxis":"Sync to the practice", "Teilen → im Eingangsordner der Praxis speichern; der Praxisrechner übernimmt es von selbst":"Share → save into the practice inbox folder; the practice computer picks it up by itself", "Abgleich geteilt – im Eingangsordner der Praxis speichern":"Sync shared – save it in the practice inbox folder", "Abgleich gespeichert – in den Eingangsordner der Praxis legen":"Sync saved – put it into the practice inbox folder", "Impfung":"Vaccination", "Entwurmung":"Deworming", "Zahnkontrolle":"Dental check", "Impfung fällig":"Vaccination due", "Entwurmung fällig":"Deworming due", "Zahnkontrolle fällig":"Dental check due", "Von Ihnen gesetzt – das Cockpit zeigt sie nur an, wenn Sie in diesem Stall sind.":"Set by you – the cockpit only shows them when you are at this stable.", "Im selben Stall:":"Same stable:", "gelernt":"learned", "Unterwegs":"On my way", "Unterwegs melden":"Tell the owner you're on your way", "Zeiten aus Ihren":"Times learned from your", "dokumentierten Besuchen gelernt: Behandlung meist":"documented visits: treatment usually", "· Fahrzeit ×":"· driving time ×", "Aus Ihren bisherigen Besuchen gelernt":"Learned from your previous visits", "Halterin: Sie sind unterwegs, Pferd bitte bereithalten":"Owner: you are on your way, please have the horse ready", "Pferde anlegen":"Add horses", "Einzeln – oder den ganzen Bestand aus Praxissoftware oder Excel übernehmen. Jedes Pferd steht dann auch für die Tour bereit.":"One by one – or bring in your whole list from practice software or Excel. Every horse is then ready for the round too.", "Bestand übernehmen (CSV)":"Import your list (CSV)", "Bestand übernehmen":"Import your list", "Pferde und Halterinnen aus Ihrer Praxissoftware, aus Excel oder aus dem Adressbuch – als CSV-Datei (in Excel: „Speichern unter → CSV“). Sie sehen vor dem Übernehmen, was wohin kommt; vorhandene Pferde werden nur in leeren Feldern ergänzt.":"Horses and owners from your practice software, Excel or address book – as a CSV file (in Excel: “Save as → CSV”). Before importing you see what goes where; existing horses are only completed in empty fields.", "CSV-Datei wählen":"Choose CSV file", "Vorlage laden":"Download template", "Zeilen":"rows", "Neue Pferde":"New horses", "Ergänzt":"Completed", "Schon vorhanden":"Already there", "Halterinnen":"Owners", "Keine Spalte als „Pferd“ zugeordnet – übernommen werden dann nur die Halterinnen als Kontakte. Ordnen Sie die Spalte mit dem Pferdenamen unten zu.":"No column assigned to “Horse” – only the owners will be imported as contacts. Assign the column with the horse name below.", "Spalte in Ihrer Datei":"Column in your file", "Beispiel":"Example", "Kommt nach":"Goes to", "– nicht übernehmen –":"– don’t import –", "(ohne Titel)":"(untitled)", "Zeilen ohne Pferdenamen:":"Rows without a horse name:", "– daraus werden nur Kontakte.":"– these become contacts only.", "Übernehmen":"Import", "Pferde angelegt":"Horses added", "Pferde ergänzt":"Horses completed", "Kontakte neu":"New contacts", "Pferde haben eine Adresse, aber noch keinen Kartenpunkt. Für Route und Fahrzeit ermittelt das Cockpit ihn über OpenStreetMap – eine Adresse pro Sekunde.":"horses have an address but no map point yet. For route and driving time the cockpit looks it up via OpenStreetMap – one address per second.", "Alle übernommenen Pferde mit Adresse stehen auf der Karte.":"All imported horses with an address are on the map.", "Fertig":"Done", "Kartenpunkte ermitteln":"Find map points", "Kartenpunkt gefunden:":"Map point found:", "· nicht gefunden:":"· not found:", "(Adresse in der Akte prüfen)":"(check the address in the record)", "Die Datei enthält keine Datenzeilen":"The file contains no data rows", "Halterin / Besitzer":"Owner", "Vorname (Halterin)":"First name (owner)", "Nachname (Halterin)":"Last name (owner)", "Telefon":"Phone", "E-Mail":"Email", "Stall":"Stable", "Straße":"Street", "PLZ":"Postcode", "Ort":"Town", "Rasse":"Breed", "Patienten-Nr. (Praxissoftware)":"Patient no. (practice software)", "UELN":"UELN", "Mikrochip":"Microchip", "Equidenpass-Nr.":"Equine passport no.", "Breitengrad":"Latitude", "Längengrad":"Longitude", "Notiz":"Note", "Erste Schritte":"First steps", "So kommt das erste Pferd in den Verlauf.":"How the first horse gets into the trend.", "Pferd anlegen":"Add a horse", "+ Pferd anlegen":"+ Add a horse",
+    "Basis im Aufbau":"Baseline building", "Abschlussbericht · alle Einheiten":"Final report · all sessions", "Für die CARLON Equine App":"For the CARLON Equine app", "Weiß (Druck)":"White (print)", "Dunkel":"Dark", "Bericht erstellen":"Create report", "Ohne Einschätzung":"Without assessment", "Einschätzung der Tierärztin / des Tierarztes":"Veterinary assessment", "Dokumentation":"Documentation", "Einschätzung und Empfehlung werden mit dem Bericht in der Akte des Pferds gespeichert.":"Assessment and recommendation are saved with the report in the horse’s record.", "Rückmeldung an die Halterin":"Feedback to the owner", "Nachricht an die Halterin":"Message to the owner", "Anfahrt und Zugang im Stall":"Access and arrival at the yard", "Zugang:":"Access:", "Gilt für alle Pferde in diesem Stall und steht auf der Tour beim Halt.":"Applies to all horses in this yard and appears at the stop on your round.", "Feierabend":"End of day", "Noch offen":"Still open", "Rückruf merken":"Note a callback", "Rückruf":"Callback", "Erledigt":"Done", "Erinnern":"Remind", "Anrufen":"Call", "Worum geht es?":"What is it about?", "Merken":"Save", "Messung angefordert":"Recording requested", "Abfahrtsbereit: offline startfähig, Sicherung frisch, jeder Halt mit Standort":"Ready to leave: starts offline, backup fresh, every stop has a location", "Sicherung älter als ein Tag":"Backup older than a day", "Vor der Abfahrt:":"Before you leave:", "Reha":"Rehab", "Klinikbericht":"Clinic report", "Bericht für die Halterin":"Report for the owner", "Neue Sitzung mit Gerät:":"New session with device:", "Noch keine Reha-Sitzung. Sitzung starten mit Gerät:":"No rehab session yet. Start a session with device:", "Verlauf bei gleicher Stufe (Herzfrequenz, letzte 60 s der Stufe):":"Course at the same stage (heart rate, last 60 s of the stage):", "Reha-Sitzung gespeichert · in der Akte":"Rehab session saved · in the record", "Bevor Sie zur Abo-Verwaltung gehen":"Before you go to subscription settings", "Ihr Monat mit Visite bisher:":"Your month with Visite so far:", "Besuche dokumentiert":"visits documented", "km Fahrtenbuch":"km in the logbook", "Aufnahmen eingegangen":"recordings received", "Messwertberichte":"measurement reports", "Nachrichten an Halterinnen":"messages to owners", "Pferde in der Akte":"horses on record", "Ihre Akten bleiben auf diesem Gerät. Auch nach einer Kündigung können Sie sie lesen und als CSV exportieren.":"Your records stay on this device. Even after cancelling you can read them and export them as CSV.", "Was passt nicht? (freiwillig, ein Tipp genügt)":"What is not working? (optional, one tap is enough)", "Was würde Visite für Sie besser machen? (freiwillig)":"What would make Visite better for you? (optional)", "Problem melden":"Report a problem", "Weiter zur Abo-Verwaltung":"Continue to subscription settings", "Zu wenig Zeit zum Einrichten":"Too little time to set up", "Halterinnen messen kaum":"Owners rarely record", "Eine Funktion fehlt":"A feature is missing", "Zu kompliziert im Alltag":"Too complicated day to day", "Zu teuer für unsere Praxis":"Too expensive for our practice", "Praxis ändert sich":"Our practice is changing", "Anderer Grund":"Other reason", "Drei Wege zurück in den Alltag:":"Three ways back into your routine:", "Pferde für die nächste Tour markieren":"Mark horses for the next round", "Messung anfordern":"Request a recording", "Was fehlt Ihnen?":"What are you missing?", "Sprachsteuerung":"Voice control", "Entwurf wiederhergestellt":"Draft restored", "Text kopiert · in der Akte vermerkt":"Text copied · noted in the record", "verschlüsselt zurück":"sent back encrypted", "kopiert":"copied", "Abgleich an die Praxis senden":"Send sync to the practice", "Abgleich an die Praxis":"Sync to the practice", "Teilen → im Eingangsordner der Praxis speichern; der Praxisrechner übernimmt es von selbst":"Share → save into the practice inbox folder; the practice computer picks it up by itself", "Abgleich geteilt – im Eingangsordner der Praxis speichern":"Sync shared – save it in the practice inbox folder", "Abgleich gespeichert – in den Eingangsordner der Praxis legen":"Sync saved – put it into the practice inbox folder", "Impfung":"Vaccination", "Entwurmung":"Deworming", "Zahnkontrolle":"Dental check", "Impfung fällig":"Vaccination due", "Entwurmung fällig":"Deworming due", "Zahnkontrolle fällig":"Dental check due", "Von Ihnen gesetzt – das Cockpit zeigt sie nur an, wenn Sie in diesem Stall sind.":"Set by you – the cockpit only shows them when you are at this stable.", "Im selben Stall:":"Same stable:", "gelernt":"learned", "Unterwegs":"On my way", "Unterwegs melden":"Tell the owner you're on your way", "Zeiten aus Ihren":"Times learned from your", "dokumentierten Besuchen gelernt: Behandlung meist":"documented visits: treatment usually", "· Fahrzeit ×":"· driving time ×", "Aus Ihren bisherigen Besuchen gelernt":"Learned from your previous visits", "Halterin: Sie sind unterwegs, Pferd bitte bereithalten":"Owner: you are on your way, please have the horse ready", "Pferde anlegen":"Add horses", "Einzeln – oder den ganzen Bestand aus Praxissoftware oder Excel übernehmen. Jedes Pferd steht dann auch für die Tour bereit.":"One by one – or bring in your whole list from practice software or Excel. Every horse is then ready for the round too.", "Bestand übernehmen (CSV)":"Import your list (CSV)", "Bestand übernehmen":"Import your list", "Pferde und Halterinnen aus Ihrer Praxissoftware, aus Excel oder aus dem Adressbuch – als CSV-Datei (in Excel: „Speichern unter → CSV“). Sie sehen vor dem Übernehmen, was wohin kommt; vorhandene Pferde werden nur in leeren Feldern ergänzt.":"Horses and owners from your practice software, Excel or address book – as a CSV file (in Excel: “Save as → CSV”). Before importing you see what goes where; existing horses are only completed in empty fields.", "CSV-Datei wählen":"Choose CSV file", "Vorlage laden":"Download template", "Zeilen":"rows", "Neue Pferde":"New horses", "Ergänzt":"Completed", "Schon vorhanden":"Already there", "Halterinnen":"Owners", "Keine Spalte als „Pferd“ zugeordnet – übernommen werden dann nur die Halterinnen als Kontakte. Ordnen Sie die Spalte mit dem Pferdenamen unten zu.":"No column assigned to “Horse” – only the owners will be imported as contacts. Assign the column with the horse name below.", "Spalte in Ihrer Datei":"Column in your file", "Beispiel":"Example", "Kommt nach":"Goes to", "– nicht übernehmen –":"– don’t import –", "(ohne Titel)":"(untitled)", "Zeilen ohne Pferdenamen:":"Rows without a horse name:", "– daraus werden nur Kontakte.":"– these become contacts only.", "Übernehmen":"Import", "Pferde angelegt":"Horses added", "Pferde ergänzt":"Horses completed", "Kontakte neu":"New contacts", "Pferde haben eine Adresse, aber noch keinen Kartenpunkt. Für Route und Fahrzeit ermittelt das Cockpit ihn über OpenStreetMap – eine Adresse pro Sekunde.":"horses have an address but no map point yet. For route and driving time the cockpit looks it up via OpenStreetMap – one address per second.", "Alle übernommenen Pferde mit Adresse stehen auf der Karte.":"All imported horses with an address are on the map.", "Fertig":"Done", "Kartenpunkte ermitteln":"Find map points", "Kartenpunkt gefunden:":"Map point found:", "· nicht gefunden:":"· not found:", "(Adresse in der Akte prüfen)":"(check the address in the record)", "Die Datei enthält keine Datenzeilen":"The file contains no data rows", "Halterin / Besitzer":"Owner", "Vorname (Halterin)":"First name (owner)", "Nachname (Halterin)":"Last name (owner)", "Telefon":"Phone", "E-Mail":"Email", "Stall":"Stable", "Straße":"Street", "PLZ":"Postcode", "Ort":"Town", "Rasse":"Breed", "Patienten-Nr. (Praxissoftware)":"Patient no. (practice software)", "UELN":"UELN", "Mikrochip":"Microchip", "Equidenpass-Nr.":"Equine passport no.", "Breitengrad":"Latitude", "Längengrad":"Longitude", "Notiz":"Note", "Erste Schritte":"First steps", "So kommt das erste Pferd in den Verlauf.":"How the first horse gets into the trend.", "Pferd anlegen":"Add a horse", "+ Pferd anlegen":"+ Add a horse",
     "Name, Halterin, Telefon und Stall – das Pferd steht dann auch für die Tour bereit.":"Name, owner, phone and stable – the horse is then ready for the round, too.",
     "Messung anfordern":"Request a recording", "Selbst messen":"Measure yourself", "Mit Ihrem eigenen Polar H10 jetzt selbst messen. Die Aufnahme landet von selbst in dieser Akte":"Measure now with your own Polar H10. The recording goes straight into this record", "Dieses Gerät kann im Browser kein Bluetooth (iPhone, iPad, Safari). Den Mess-Link auf einem Android-Handy oder Laptop mit Chrome oder Edge öffnen.":"This device has no Bluetooth in the browser (iPhone, iPad, Safari). Open the measuring link on an Android phone or a laptop with Chrome or Edge.", "Messstation geöffnet. Nach der Messung zu diesem Tab zurückkehren, die Aufnahme kommt von selbst in die Akte.":"Measuring station opened. Come back to this tab after the recording; it goes into the record by itself.", "In der Akte des Pferds: „Messung anfordern“ schickt der Halterin Ihren Mess-Link per WhatsApp oder SMS – mit Ihrem Praxisnamen.":"In the horse’s record, “Request a recording” sends the owner your measuring link via WhatsApp or SMS – with your practice name.",
     "Aufnahme kommt an":"The recording arrives", "Die Halterin misst sieben Minuten im Stall und sendet. Sie öffnen die Datei hier – oder richten einen Eingangs-Ordner ein, dann kommt sie von selbst.":"The owner records for seven minutes in the stable and sends it. You open the file here – or set up an inbox folder and it arrives by itself.",
@@ -12671,8 +13413,8 @@ const Sprache={
     'Fehler':'Problem','Idee':'Idea','Fehlt mir':'Missing','Unklar':'Unclear','Das war gut':'That was good','Beschreibung':'Description',
     'Mail an den Entwickler öffnen':'Open mail to the developer','In Zwischenablage':'Copy to clipboard','Erklärung unklar? Sagen Sie es uns':'Explanation unclear? Tell us',
     'Keine Pferdenamen, keine Besitzer, keine Messwerte, keine Notizen — nur die Angaben oben.':'No horse names, no owners, no measurements, no notes — only the details above.',
-    'Danke fürs Testen! Was gut läuft, was hakt, was fehlt — jede Rückmeldung hilft.':'Thanks for testing. What works, what gets in the way, what is missing — every note helps.',
-    'Test-Beta':'Test beta',
+    'Was gut läuft, was hakt, was fehlt: Jede Rückmeldung fließt in die nächste Fassung ein.':'Thanks for testing. What works, what gets in the way, what is missing — every note helps.',
+    'Rückmeldung':'Feedback', 'Was gut läuft, was hakt, was fehlt: Jede Rückmeldung fließt in die nächste Fassung ein.':'What works, what sticks, what is missing: every piece of feedback goes into the next version.',
     'Test-Beta — Feedback willkommen':'Test beta — feedback welcome',
     'E-Mail':'Email',
 
@@ -13215,6 +13957,12 @@ const Sprache={
       }
     }catch(e){}
     try{ await Selbst.abholen(); }catch(_){ }
+    /* Sprachsteuerung: Knopf nur, wenn der Browser Spracherkennung kennt; ob sie LOKAL läuft, prüft der erste Tipp. */
+    try{ if(Stimme.moeglich()&&!document.getElementById('stimmeKnopf')){ const b=document.createElement('button'); b.id='stimmeKnopf'; b.className='stimme-knopf'; b.type='button';
+      b.setAttribute('aria-label','Sprachsteuerung'); b.title='Sprachsteuerung: Angekommen · Besuch fertig · Nächster Halt · Verspätung 20 · Notiz … · Rückruf … (in einem Textfeld: diktieren)';
+      b.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0014 0M12 18v3"/></svg>';
+      b.addEventListener('pointerdown',e=>e.preventDefault());   /* Fokus im Textfeld behalten → Diktat */
+      b.addEventListener('click',()=>Stimme.hoeren()); document.body.appendChild(b); } }catch(_){ }
     /* EINGANG (17.11.2026): beobachteten Ordner wieder aufnehmen; nach Browser-Neustart einmal freigeben lassen. */
     try{ if(await Eingang.wiederaufnehmen()) await Eingang.pruefen({laut:true});
       else if(Eingang.letzterFehler==='freigeben') Toast.show('Eingangs-Ordner: einmal freigeben, dann kommen neue Aufnahmen wieder von selbst','info',{label:'Freigeben',fn:()=>Eingang.freigeben()}); }catch(_){ }

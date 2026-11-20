@@ -1,0 +1,121 @@
+// reha-kern.js — Reha-Kern für Visite (20.11.2026). EINE Datenwahrheit mit der iOS-App:
+// Gerätearten und Stufen-Felder 1:1 aus CarlonCore/Sources/CarlonCore/EquineGeraeteStufen.swift
+// (EquineGeraeteart, EquineWaterHeight, AquaStageMarker.label, beschleunigungG, fliehkraftG).
+// Austauschformat = Forschungs-JSON 2.0 der App: session.deviceSettingsLog[] (Rohmarken) mit den
+// StageInfo-Schlüsseln startSec, device, speedKmh, reverse, inclinePercent, waterHeight, waterHeightCm,
+// waterTempC, vibrationHz, amplitudeMm, directionChanges, radiusM, intensityPercent, distanceCm.
+// Auswertung je Stufe ist eine ÜBERGANGSFASSUNG (Definitionen nach Modellrat 20.11. und Equine:
+// deltaHRbpm = Mittel der letzten 40 % der Stufe minus Mittel der 20 s davor; adaptationSec = Zeit bis 63 %
+// der HF-Änderung, Sprungantwort 1. Ordnung, kleinste Quadrate). Sie wird durch Equines eingefrorenen
+// JS-Port ersetzt; ein Kreuztest wacht dann über Gleichheit. Keine Diagnose, keine Bewertung.
+(function (root) {
+  const GERAETE = {
+    keines:      { de: 'Ohne Gerät',  en: 'No device',      last: false, felder: [] },
+    laufband:    { de: 'Laufband',    en: 'Treadmill',      last: true,  felder: ['speedKmh', 'inclinePercent', 'reverse'] },
+    aquatrainer: { de: 'Aquatrainer', en: 'Aqua treadmill', last: true,  felder: ['waterHeight', 'waterHeightCm', 'waterTempC', 'speedKmh', 'reverse'] },
+    vibration:   { de: 'Vibration',   en: 'Vibration',      last: false, felder: ['vibrationHz', 'amplitudeMm'] },
+    fuehranlage: { de: 'Führanlage',  en: 'Horse walker',   last: true,  felder: ['speedKmh', 'directionChanges', 'radiusM'] },
+    solarium:    { de: 'Solarium',    en: 'Solarium',       last: false, felder: ['intensityPercent', 'distanceCm'] },
+    solekammer:  { de: 'Solekammer',  en: 'Salt chamber',   last: false, felder: ['intensityPercent'] },
+  };
+  // Eingabehilfen (Schritt, Bereich) für große Plus/Minus-Tasten am Gerät
+  const FELD = {
+    speedKmh:         { de: 'Tempo', en: 'Speed', einheit: 'km/h', schritt: 0.5, min: 0, max: 40 },
+    inclinePercent:   { de: 'Steigung', en: 'Incline', einheit: '%', schritt: 0.5, min: -10, max: 20 },
+    reverse:          { de: 'Rückwärts', en: 'Reverse', bool: true },
+    waterHeight:      { de: 'Wasserhöhe', en: 'Water height', liste: ['none', 'fetlock', 'carpus', 'elbow', 'stifle', 'shoulder'] },
+    waterHeightCm:    { de: 'Wasserstand', en: 'Water level', einheit: 'cm', schritt: 5, min: 0, max: 200 },
+    waterTempC:       { de: 'Wassertemperatur', en: 'Water temperature', einheit: '°C', schritt: 1, min: 0, max: 40 },
+    vibrationHz:      { de: 'Frequenz', en: 'Frequency', einheit: 'Hz', schritt: 1, min: 0, max: 100 },
+    amplitudeMm:      { de: 'Schwingweg', en: 'Displacement', einheit: 'mm', schritt: 0.01, min: 0, max: 5 },
+    directionChanges: { de: 'Richtungswechsel', en: 'Reversals', einheit: '×', schritt: 1, min: 0, max: 50 },
+    radiusM:          { de: 'Radius', en: 'Radius', einheit: 'm', schritt: 1, min: 1, max: 40 },
+    intensityPercent: { de: 'Intensität', en: 'Intensity', einheit: '%', schritt: 5, min: 0, max: 100 },
+    distanceCm:       { de: 'Abstand', en: 'Distance', einheit: 'cm', schritt: 5, min: 0, max: 300 },
+  };
+  const WASSER = { none: ['Kein Wasser', 'No water'], fetlock: ['Fessel', 'Fetlock'], carpus: ['Karpus', 'Carpus'],
+                   elbow: ['Ellbogen', 'Elbow'], stifle: ['Knie', 'Stifle'], shoulder: ['Schulter', 'Shoulder'] };
+
+  // Abgeleitete Dosen wie in der App: Spitze-zu-Spitze → Amplitude = Weg/2; a_c = v²/r
+  function beschleunigungG(m) { const f = m.vibrationHz, w = m.amplitudeMm; if (!(f > 0) || !(w > 0)) return null; return Math.pow(2 * Math.PI * f, 2) * ((w / 2) / 1000) / 9.81; }
+  function fliehkraftG(m) { const v = m.speedKmh, r = m.radiusM; if (v == null || !(r > 0)) return null; const vms = v / 3.6; return (vms * vms / r) / 9.81; }
+
+  // Port von AquaStageMarker.label(de:) — gleiche Reihenfolge, gleiche Einheiten
+  function label(m, de = true) {
+    const z = (v, d) => { const t = (+v).toFixed(d); return de ? t.replace('.', ',') : t; };
+    const p = [];
+    if (m.vibrationHz != null) p.push(`${z(m.vibrationHz, 1)} Hz`);
+    if (m.amplitudeMm != null) p.push(`${z(m.amplitudeMm, 2)} mm`);
+    if (m.inclinePercent != null) p.push(de ? `Steigung ${z(m.inclinePercent, 1)} %` : `incline ${z(m.inclinePercent, 1)} %`);
+    if (m.waterHeight) p.push(WASSER[m.waterHeight] ? WASSER[m.waterHeight][de ? 0 : 1] : m.waterHeight);
+    if (m.waterHeightCm != null) p.push(`${z(m.waterHeightCm, 0)} cm`);
+    if (m.waterTempC != null && (m.waterHeight !== 'none' || (m.waterHeightCm || 0) > 0)) p.push(de ? `Wasser ${z(m.waterTempC, 1)} °C` : `water ${z(m.waterTempC, 1)} °C`);
+    if (m.speedKmh != null) p.push(`${z(m.speedKmh, 1)} km/h`);
+    if (m.reverse === true) p.push(de ? 'rückwärts' : 'reverse');
+    if (m.directionChanges != null) p.push(de ? `${m.directionChanges}× Wechsel` : `${m.directionChanges}× reversal`);
+    const g = fliehkraftG(m); if (g != null) p.push(`${z(g, 2)} g`);
+    if (m.intensityPercent != null) p.push(`${m.device === 'solekammer' ? (de ? 'Vernebelung' : 'nebulisation') : (de ? 'Intensität' : 'intensity')} ${z(m.intensityPercent, 0)} %`);
+    if (m.distanceCm != null) p.push(de ? `${z(m.distanceCm, 0)} cm Abstand` : `${z(m.distanceCm, 0)} cm distance`);
+    if (!p.length && m.note) p.push(m.note);
+    return p.join(' · ');
+  }
+  // Lastschlüssel: verglichen werden nur Sitzungen mit identischem Schlüssel (fairer Verlauf)
+  function lastschluessel(m) { const g = GERAETE[m.device] || GERAETE.keines; return [m.device].concat(g.felder.map(f => f + '=' + (m[f] == null ? '' : m[f]))).join('|'); }
+
+  // ── Auswertung (Übergangsfassung) ─────────────────────────────────────────────
+  function zeitachse(rr) { const t = []; let a = 0; for (const x of rr) { a += x / 1000; t.push(a); } return t; }
+  const mittel = a => a.length ? a.reduce((s, x) => s + x, 0) / a.length : null;
+  const median = a => { if (!a.length) return null; const s = [...a].sort((x, y) => x - y), n = s.length; return n % 2 ? s[(n - 1) / 2] : (s[n / 2 - 1] + s[n / 2]) / 2; };
+  function fenster(rr, t, a, b) { const i = []; for (let k = 0; k < rr.length; k++) if (t[k] > a && t[k] <= b) i.push(k); return i; }
+  function hf(rr, idx) { return idx.map(k => 60000 / rr[k]); }
+  function artefaktPct(rr, idx) { if (!idx.length) return null; let n = 0; for (const k of idx) { const h = 60000 / rr[k]; const prev = k > 0 ? rr[k - 1] : rr[k]; if (h < 20 || h > 230 || Math.abs(rr[k] - prev) / prev > 0.2) n++; } return 100 * n / idx.length; }
+  function rmssd(rr, idx) { const d = []; for (let j = 1; j < idx.length; j++) if (idx[j] === idx[j - 1] + 1) d.push(rr[idx[j]] - rr[idx[j - 1]]); return d.length > 1 ? Math.sqrt(mittel(d.map(x => x * x))) : null; }
+  // Sprungantwort 1. Ordnung: HF(t) = h0 + Δ·(1 − e^(−t/τ)); τ per Gittersuche (kleinste Quadrate); Zeit bis 63 % = τ
+  function adaptation(rr, t, s, e, h0) {
+    const idx = fenster(rr, t, s, e); if (idx.length < 10 || h0 == null) return null;
+    const x = idx.map(k => t[k] - s), y = hf(rr, idx); const hEnd = mittel(y.slice(Math.floor(y.length * 0.6))); const d = hEnd - h0;
+    if (Math.abs(d) < 1) return null; let best = null;
+    for (let tau = 2; tau <= Math.min(600, (e - s)); tau += 1) { let sse = 0; for (let j = 0; j < x.length; j++) { const f = h0 + d * (1 - Math.exp(-x[j] / tau)); sse += (y[j] - f) * (y[j] - f); } if (!best || sse < best.sse) best = { tau, sse }; }
+    return best ? best.tau : null;
+  }
+  function stufen(rr, log) {
+    const t = zeitachse(rr), T = t[t.length - 1] || 0;
+    const l = (log || []).slice().sort((a, b) => a.startSec - b.startSec);
+    return l.map((m, i) => {
+      const s = m.startSec, e = i + 1 < l.length ? l[i + 1].startSec : T;
+      const idx = fenster(rr, t, s, e), h = hf(rr, idx);
+      const vor = hf(rr, fenster(rr, t, s - 20, s)), h0 = mittel(vor);
+      const spaet = hf(rr, fenster(rr, t, s + 0.6 * (e - s), e));
+      const ende60 = hf(rr, fenster(rr, t, e - 60, e));
+      return { index: i, startSec: s, endSec: e, device: m.device, label: label(m), schluessel: lastschluessel(m), last: !!(GERAETE[m.device] || {}).last,
+        beats: idx.length, meanHRbpm: mittel(h), hfMedian60: (e - s) >= 120 ? median(ende60) : null,
+        deltaHRbpm: (h0 != null && spaet.length) ? mittel(spaet) - h0 : null,
+        adaptationSec: adaptation(rr, t, s, e, h0),
+        /* RMSSD je Stufe wie in der App (Trainingsbericht): ohne die ersten 2 min der Stufe (Anpassung), nur bei stabiler Datenqualität (< 5 % Artefakte, ≥ 60 Schläge) */
+        rmssdMs: (() => { const j = fenster(rr, t, s + 120, e); return (j.length >= 60 && (artefaktPct(rr, j) || 0) < 5) ? rmssd(rr, j) : null; })(),
+        hrvValide: (() => { const j = fenster(rr, t, s + 120, e); return j.length >= 60 && (artefaktPct(rr, j) || 0) < 5; })(),
+        artifactRatePct: artefaktPct(rr, idx), markierung: m };
+    });
+  }
+  // Erholung nach der letzten Belastungsstufe: HF bei +60/180/300 s (±10 s), Abfall gegenüber dem Lastende
+  function erholung(rr, st) {
+    const t = zeitachse(rr); const lastSt = st.filter(x => x.last && x.device !== 'keines'); if (!lastSt.length) return null;
+    const ende = lastSt[lastSt.length - 1].endSec, hEnde = median(hf(rr, fenster(rr, t, ende - 30, ende)));
+    const bei = s => { const h = hf(rr, fenster(rr, t, ende + s - 10, ende + s + 10)); return h.length >= 5 ? mittel(h) : null; };
+    const r = { endeSec: ende, hfEnde: hEnde };
+    for (const s of [60, 180, 300]) { const v = bei(s); r['hf' + s] = v; r['abfall' + s] = (v != null && hEnde != null) ? hEnde - v : null; }
+    return r;
+  }
+  function ruhe(rr, st) {
+    const t = zeitachse(rr), T = t[t.length - 1] || 0; if (!st.length) return null;
+    const a = st[0].startSec, vor = fenster(rr, t, 0, a);
+    const lastSt = st.filter(x => x.last); const nachAb = lastSt.length ? lastSt[lastSt.length - 1].endSec + 300 : null;
+    const nach = nachAb != null ? fenster(rr, t, nachAb, T) : [];
+    return { vorSec: a, rmssdVor: a >= 300 ? rmssd(rr, vor) : null, hfVor: vor.length ? mittel(hf(rr, vor)) : null,
+             nachSec: nachAb != null ? Math.max(0, T - nachAb) : 0, rmssdNach: (nachAb != null && T - nachAb >= 300) ? rmssd(rr, nach) : null };
+  }
+  function auswerten(rr, log) { const st = stufen(rr, log); return { stufen: st, erholung: erholung(rr, st), ruhe: ruhe(rr, st), version: VERSION }; }
+  const VERSION = 'Reha-Auswertung 1.0 (2026-11-20, Schema CarlonCore EquineGeraeteStufen)';
+  const api = { GERAETE, FELD, WASSER, label, lastschluessel, beschleunigungG, fliehkraftG, auswerten, stufen, erholung, ruhe, zeitachse, VERSION };
+  if (typeof module !== 'undefined' && module.exports) module.exports = api; else root.RehaKern = api;
+})(typeof window !== 'undefined' ? window : globalThis);
