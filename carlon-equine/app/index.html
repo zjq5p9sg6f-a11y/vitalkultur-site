@@ -737,6 +737,7 @@ h2.sech svg{width:17px;height:17px;color:var(--cyan);flex:none}
 .st-hf{font-size:52px;font-weight:200;letter-spacing:-.04em;line-height:1;color:#3ECFB2}.st-hf small{font-size:14px;color:rgba(255,255,255,.55);margin-left:6px;letter-spacing:0;font-weight:500}.st-hf.alt{color:var(--amber)}
 .st-spark{width:100%;height:54px;display:block}.st-meta{font-size:12.5px;color:rgba(255,255,255,.64)}.st-text{font-size:12.5px;color:var(--amber)}
 .st-ziel{position:relative;height:22px;border-radius:999px;background:rgba(255,255,255,.06);overflow:hidden}.st-ziel i{position:absolute;inset:0 auto 0 0;background:rgba(62,207,178,.28)}.st-ziel.ok i{background:rgba(62,207,178,.5)}.st-ziel span{position:relative;display:block;font-size:12px;line-height:22px;padding-left:10px;color:rgba(255,255,255,.9)}
+.st-ev{display:flex;flex-wrap:wrap;gap:6px;margin-top:4px}.st-ev .btn{min-height:36px;padding:0 10px;font-size:12.5px}.st-ev input{flex:1;min-width:120px;min-height:36px;border-radius:10px;border:1px solid rgba(255,255,255,.12);background:transparent;color:inherit;padding:0 10px}
 .st-knoepfe{display:flex;flex-wrap:wrap;gap:8px;margin-top:4px}.st-leer{color:var(--text-dim);font-size:13.5px;padding:16px}
 /* Stationswand (Klinik-Monitor) */
 .station-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(228px,1fr));gap:var(--s3);align-items:stretch}
@@ -2890,7 +2891,7 @@ const Reha={
       ${S.slice().reverse().map((s2,i)=>{ const k=K[S.length-1-i]; return `<tr><td style="white-space:nowrap">${fmtDate(s2.rec.startedAt)}</td><td>${esc(k.geraet)}</td><td>${fmt0(k.lastMin)} min</td><td><b>${this.z(this.hfRef(k,ref))}</b> bpm</td><td>${k.tauE!=null?fmt0(k.tauE)+' s':'–'}</td><td>${k.ruheRM!=null?Number(k.ruheRM).toFixed(1).replace('.',',')+' ms':'–'}</td><td>${s2.rec._seed?'Demo':s2.rec.rrQuelle==='gurtspeicher'?'Gurtspeicher':'live'}</td>${(()=>{ const t=st(k), ok=t==='auswertbar'||/^Ende erkannt$|^\d+ lange Pausen$/.test(t); return `<td style="color:${ok?'var(--cyan)':'var(--amber,#f6b73c)'};font-weight:600">${ok?'ja':'teilweise'}</td><td style="color:var(--text-secondary)">${t==='auswertbar'?'–':t}</td>`; })()}<td style="white-space:nowrap"><button class="btn ghost" style="font-size:11.5px;padding:4px 8px" onclick="Reha.drucken('${h.id}','${s2.rec.id}','klinik')">Klinik</button> <button class="btn ghost" style="font-size:11.5px;padding:4px 8px" onclick="Reha.drucken('${h.id}','${s2.rec.id}','halter')">Halterin</button></td></tr>`; }).join('')}</tbody></table>
       <div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin-top:10px">${vgl>=2?`<button class="btn primary" style="font-size:12.5px" onclick="Reha.abschlussDialog('${h.id}')">Verlaufsdokumentation · alle Einheiten</button>`:'<span style="font-size:12.5px;color:var(--text-dim)">Verlaufsdokumentation ab zwei vergleichbaren Einheiten</span>'}<button class="btn ghost" style="font-size:12.5px" onclick="EquineApp.alle('${h.id}',true)" title="Alle Einheiten als Dateien für die CARLON Equine App der Halterin (iPhone, iPad): antippen, und die Messungen stehen dort lückenlos beim Pferd">Für die CARLON Equine App</button><span style="font-size:12px;color:var(--text-dim)">Übergabe an die App der Halterin: dort lückenlos beim Pferd, auch für Messungen zu Hause.</span></div></div>`; },
   panel(h){
-    if(!this.erlaubt()) return `<div class="panel" style="margin-bottom:var(--s4)" id="rehaAkte"><h2 style="font-size:16px">Reha</h2><p style="color:var(--text-dim);font-size:13px;line-height:1.55">Reha-Sitzungen am Aquatrainer, Laufband, in der Führanlage, beim Führen, an der Longe, unter dem Reiter, an der Vibrationsplatte, im Solarium, in der Solekammer und bei Anwendungen im Stand, mit Herzfrequenz je Stufe, Verlauf bei gleicher Last und Berichten für Klinik und Halterin. Enthalten in der Klinik-Stufe.</p><button class="btn ghost" onclick="UI.upgrade&&UI.upgrade()">Klinik-Stufe ansehen</button></div>`;
+    if(!this.erlaubt()) return `<div class="panel" style="margin-bottom:var(--s4)" id="rehaAkte"><h2 style="font-size:16px">Reha</h2><p style="color:var(--text-dim);font-size:13px;line-height:1.55">Reha-Sitzungen am Aquatrainer, Laufband, in der Führanlage, beim Führen, an der Longe, unter dem Reiter, an der Vibrationsplatte, im Solarium, in der Solekammer und bei Anwendungen im Stand, mit Herzfrequenz je Stufe, Verlauf bei gleicher Last und Berichten für Klinik und Halterin. Enthalten in den Stufen Reha und Klinik + Reha.</p><button class="btn ghost" onclick="UI.upgrade&&UI.upgrade()">Stufen ansehen</button></div>`;
     const S=this.sitzungen(h.id); const lang=(typeof Sprache!=='undefined'&&Sprache.cur==='en');
     const start=`<div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:10px">${RehaLive.LISTE.map(g=>`<button class="btn ghost" style="font-size:12.5px" onclick="RehaLive.starten('${h.id}','${g}')">${esc(RehaKern.GERAETE[g][lang?'en':'de'])}</button>`).join('')}</div>`;
     if(!S.length) return `<div class="panel" style="margin-bottom:var(--s4)" id="rehaAkte"><h2 style="font-size:16px">Reha</h2><p style="color:var(--text-dim);font-size:13px">Noch keine Reha-Sitzung. Sitzung starten mit Gerät:</p>${start}</div>`;
@@ -3092,7 +3093,7 @@ const Reha={
     const praxis=esc(st.clinicName||'Ihre Einrichtung'), zusatz=esc([st.clinicAddr,st.clinicWeb].filter(Boolean).join(' · '));
     const logo=st.logo?`<img src="${st.logo}" style="width:74px;height:58px;object-fit:contain;border:1px solid var(--line);border-radius:8px;background:#fff">`:'';
     const von=S[0].rec.startedAt, bis=S[S.length-1].rec.startedAt, tage=Math.round((+new Date(bis)-+new Date(von))/864e5);
-    const kopf=t=>`<div class="rh-kopf">${logo}<div style="flex:1"><div class="rh-ein">${praxis}</div><div class="rh-tit">${t}</div><div class="rh-zus">${zusatz}</div></div><div style="text-align:right"><div class="rh-pf">${esc(h.name)}</div><div class="rh-zus">${fmtDate(von)} bis ${fmtDate(bis)}</div><div class="rh-zus"><b>${S.length} Einheiten · ${tage} Tage</b></div></div></div>${this.stamm(h,S[S.length-1].rec)}`;
+    const kopf=t=>this._kopf(t,esc(h.name),`${fmtDate(von)} bis ${fmtDate(bis)} · <b>${S.length} Einheiten · ${tage} Tage</b>`)+this.stamm(h,S[S.length-1].rec);
     const fuss=(n,m)=>`<div class="rh-fuss"><div>Dokumentation der Herz-Kreislauf-Antwort auf das Reha-Training mit CARLON Equine Visite (Polar H10). Kein Medizinprodukt. Die Software stellt keine Diagnose; Befund und Beurteilung stammen von der Tierärztin oder dem Tierarzt. Prüfwerte der Originalaufnahmen stehen in den Sitzungsberichten.</div><div class="rh-fz"><span>Erstellt von ${praxis} · <b style="color:var(--acc);letter-spacing:.12em">CARLON EQUINE VISITE</b></span><span>${n} / ${m}</span><span>vitalkultur.com/carlon-equine-visite</span></div></div>`;
     const kpi=(l,w,e,f,u)=>`<div class="rh-kpi"><span>${l}</span><b style="color:${f||'var(--ink)'}">${w}</b><em>${e||''}</em>${u?`<div class="rh-ku">${u}</div>`:''}</div>`;
     const ref=this.referenz(h.id), rp=ref?K.map(k=>({x:k.rec.startedAt,y:this.hfRef(k,ref)})).filter(q=>q.y!=null):[];
@@ -3150,6 +3151,13 @@ const Reha={
     this._C=dunkel?this._CD:this._CL; if(dunkel) Report._P=Object.assign({},P0,this._PD);
     try{ await this._drucken(hid,rid,art,dunkel); } finally { Report._P=P0; }
   },
+  /* CO-BRANDING (20.11.2026, Jan: „Hof oder Klinik links oben, wir rechts oben“): Absender ist der Betrieb; CARLON klein als
+     Wortmarke rechts, wie im Messwertbericht. Darunter Titel und Pferd mit Datum. Für alle Reha- und Langzeitberichte. */
+  _kopf(titel,pferd,info){ const st=State.settings||{}, praxis=esc(st.clinicName||'Ihre Einrichtung'), zus=[st.clinicAddr,st.clinicPhone,st.clinicWeb].filter(Boolean).map(esc).join(' · ');
+    const logo=st.logo?`<img src="${st.logo}" alt="" class="rh-logo">`:'';
+    const marke=`<svg class="rh-wm" viewBox="0 0 124 27" width="118" height="26" role="img" aria-label="CARLON Equine Visite"><text x="0" y="15.5" textLength="124" lengthAdjust="spacing" style="font-family:var(--font-brand,Inter);font-weight:500;font-size:19px" fill="var(--ink)">CARLON</text><text x="0.3" y="26" textLength="122.7" lengthAdjust="spacing" style="font-family:Inter,system-ui,sans-serif;font-weight:600;font-size:7px" fill="var(--acc)">EQUINE VISITE</text></svg>`;
+    return `<div class="rh-co-kopf"><div class="rh-absender">${logo}<div><div class="rh-praxis">${praxis}</div>${zus?`<div class="rh-zus">${zus}</div>`:''}</div></div><div class="rh-co-marke">${marke}</div></div>
+      <div class="rh-titelzeile"><div class="rh-tit">${titel}</div><div class="rh-pfz"><div class="rh-pf">${pferd}</div>${info?`<div class="rh-zus">${info}</div>`:''}</div></div>`; },
   _stil(dunkel){
     const V=dunkel?'--bg:#050708;--ink:#eef3f5;--dim:#8fa3ad;--faint:#62757f;--line:#1f2b31;--line2:#141c20;--acc:#3ecfb2;--acc2:#f6b73c;--vio:#a597f5;--chip:#0b1a18;--chipr:#1f4a43;--card:#0a0f12'
                   :'--bg:#ffffff;--ink:#14181b;--dim:#5a7080;--faint:#8a9aa8;--line:#e2eaee;--line2:#f0f4f6;--acc:#0f8f79;--acc2:#b8730a;--vio:#6b55d6;--chip:#effaf7;--chipr:#b9e6dc;--card:#ffffff';
@@ -3169,6 +3177,8 @@ const Reha={
       .rh-mstufen{display:flex;gap:8px;flex-wrap:wrap;margin-top:4px}.rh-mstufen div{border:1px solid var(--line);border-radius:10px;padding:6px 12px;min-width:120px}.rh-mstufen span{display:block;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--dim);font-weight:700}.rh-mstufen b{font-size:17px}.rh-mstufen em{display:block;font-style:normal;font-size:9.5px;color:var(--dim)}
       .rh-stamm{font-size:10.5px;color:var(--dim);margin:-4px 0 9px;line-height:1.5}.rh-kern{background:var(--chip);border:1px solid var(--chipr);border-radius:12px;padding:9px 14px;font-size:13px;font-weight:600;line-height:1.45;margin-bottom:8px}.rh-ku{font-size:9.5px;color:var(--dim);margin-top:2px;max-width:230px}.rh-kpi{flex:1}
       .rh-hrv td{padding:3px 7px;font-size:10.5px}.rh-hrv th{font-size:8.5px}.rh-hrv small{color:var(--dim)}.rh-hin{font-size:9.5px;color:var(--dim)}.rh-bz{display:grid;grid-template-columns:150px 1fr;gap:8px;font-size:11.5px;padding:3px 0;border-bottom:1px solid var(--line2)}.rh-bz span{color:var(--dim)}
+      .rh-co-kopf{display:flex;justify-content:space-between;align-items:center;gap:16px;padding-bottom:7px;border-bottom:1px solid var(--line)}.rh-absender{display:flex;gap:12px;align-items:center}.rh-logo{width:auto;height:44px;max-width:120px;object-fit:contain}.rh-praxis{font-size:15px;font-weight:800;letter-spacing:.01em;color:var(--ink)}.rh-co-marke{opacity:.92}
+      .rh-titelzeile{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;border-bottom:3px solid var(--acc);padding:8px 0 8px;margin-bottom:11px}.rh-pfz{text-align:right}
       .rh-fuss{position:absolute;left:11mm;right:11mm;bottom:7mm;border-top:1px solid var(--line);padding-top:5px;font-size:9px;color:var(--dim)}.rh-fz{display:flex;justify-content:space-between;margin-top:3px;font-weight:600}</style>`;
   },
   async _drucken(hid,rid,art,dunkel){
@@ -3178,7 +3188,7 @@ const Reha={
     const ref=this.referenz(hid), hfR=this.hfRef(o,ref), hfRv=this.hfRef(vor,ref), hfRe=this.hfRef(erst,ref), R=this.RAUSCH;
     const praxis=esc(st.clinicName||'Ihre Einrichtung'), zusatz=esc([st.clinicAddr,st.clinicWeb].filter(Boolean).join(' · ')), dauer=Math.round(o.dauer);
     const logo=st.logo?`<img src="${st.logo}" style="width:74px;height:58px;object-fit:contain;border:1px solid var(--line);border-radius:8px;background:#fff">`:'';
-    const kopf=t=>`<div class="rh-kopf">${logo}<div style="flex:1"><div class="rh-ein">${praxis}</div><div class="rh-tit">${t}</div><div class="rh-zus">${zusatz}</div></div><div style="text-align:right"><div class="rh-pf">${esc(h.name)}</div><div class="rh-zus">${Report._dt(r.startedAt)}</div><div class="rh-zus"><b>${Math.round(dauer/60)} min · ${fmt0(rr.length)} Schläge · Einheit ${ix+1} von ${S.length}</b></div></div></div>${this.stamm(h,r)}`;
+    const kopf=t=>this._kopf(t,esc(h.name),`${Report._dt(r.startedAt)} · <b>${Math.round(dauer/60)} min · ${fmt0(rr.length)} Schläge · Einheit ${ix+1} von ${S.length}</b>`)+this.stamm(h,r);
     const fuss=(n,m)=>`<div class="rh-fuss"><div>Verlaufsbeobachtung mit CARLON Equine Visite (Polar H10, RR-Intervalle 1 ms). Kein Medizinprodukt. Die Software stellt keine Diagnose; Befund und Beurteilung stammen von der Tierärztin oder dem Tierarzt.</div><div class="rh-fz"><span>Erstellt von ${praxis} · <b style="color:var(--acc);letter-spacing:.12em">CARLON EQUINE VISITE</b></span><span>${n} / ${m}</span><span>vitalkultur.com/carlon-equine-visite</span></div></div>`;
     const kpi=(l,w,e,f,u)=>`<div class="rh-kpi"><span>${l}</span><b style="color:${f||'var(--ink)'}">${w}</b><em>${e||''}</em>${u?`<div class="rh-ku">${u}</div>`:''}</div>`;
     let abb=0; const fig=t=>`<div class="rh-fig"><b>Abbildung ${++abb}.</b> ${t}</div>`;
@@ -11447,7 +11457,12 @@ const License={
     },
     zurueckgedreht(){ return Date.now() < this.marke()-3600000; },
   },
-  TIERS:{demo:{name:'Demo',color:'demo'},vet_solo:{name:'Praxis',color:'paid'},vet_clinic:{name:'Klinik',color:'paid'},research:{name:'Research',color:'paid'}},
+  /* Stufen ab 20.11.2026 (Jan, nach Preisrunden R4/R5 + Bindungs-Simulation): feste Preise, großzügige Obergrenzen, nie sperren,
+     nie nachberechnen. vet_solo/vet_clinic behalten ihre Schlüssel (gültige Lizenzen bleiben gültig), heißen jetzt Fahrpraxis bzw.
+     Praxis & Klinik. Neu: vet_reha, vet_klinik_reha, vet_center (Lizenzdienst muss sie signieren können). */
+  TIERS:{demo:{name:'Demo',color:'demo'},vet_solo:{name:'Fahrpraxis',color:'paid'},vet_clinic:{name:'Praxis & Klinik',color:'paid'},vet_reha:{name:'Reha',color:'paid'},vet_klinik_reha:{name:'Klinik + Reha',color:'paid'},vet_center:{name:'Equine Center',color:'paid'},research:{name:'Research',color:'paid'}},
+  /* Obergrenzen je Stufe: Hinweis ab dem 2. Monat in Folge darüber, mit Ein-Klick-Wechsel; nie Sperre, nie Nachberechnung */
+  GRENZEN:{vet_solo:{tierarzt:1},vet_clinic:{tierarzt:4},vet_reha:{pferde:20},vet_klinik_reha:{tierarzt:6,pferde:40},vet_center:{}},
   /* EINE Quelle für jede Preisangabe. Vorher standen 49 € an fünf Stellen
      verstreut — Anzeige, ROI-Rechnung, Preistabelle, Kommentar. Genau so
      entsteht der Fall, dass eine Stelle beim Ändern übersehen wird und die
@@ -11498,7 +11513,9 @@ const License={
      ⚠ Die Stufe bleibt trotzdem NICHT frei kaufbar, bis die Stripe-Preise
      auf 349/3490 stehen. CHECKOUT_BETRAG bindet Anzeige an Einzug — solange
      dort 199 steht, wuerde eine Klinik 199 zahlen und 349 lesen. */
-  PREIS:{ soloMonat:149, soloJahr:1490, klinikMonat:349, klinikJahr:3490 },
+  /* Jahresabo = 11 Monatsbeiträge (Jan, 20.11.2026). Die Jahreslinks gelten noch für 10 × → checkoutLink() sperrt sie, bis die
+     neuen Stripe-Links angelegt sind (CHECKOUT_BETRAG unten). */
+  PREIS:{ soloMonat:149, soloJahr:1639, klinikMonat:349, klinikJahr:3839, rehaMonat:349, rehaJahr:3839, kombiMonat:590, kombiJahr:6490, centerMonat:890, centerJahr:9790 },
   /* ABGELEITET, nicht abgeschrieben. Hier stand '79 €/Mo' als Text — direkt
      unter dem Kommentar, der „EINE Quelle für jede Preisangabe" verspricht.
      Zwei Quellen für dieselbe Zahl sind keine Quelle, sondern eine Wette
@@ -11513,6 +11530,7 @@ const License={
        ist die Haltung, die zu einem Klinikpreis passt. Abgeleitet aus
        PREIS, nicht abgeschrieben. */
     vet_clinic: this.PREIS.klinikMonat+' €/Mo zzgl. MwSt. · auf Anfrage',
+    vet_reha: this.PREIS.rehaMonat+' €/Mo zzgl. MwSt.', vet_klinik_reha: this.PREIS.kombiMonat+' €/Mo zzgl. MwSt.', vet_center: this.PREIS.centerMonat+' €/Mo je Standort zzgl. MwSt.',
     research:'auf Anfrage' }; },
   /* ── ZAHLUNG (Stripe) ist von BERECHTIGUNG (eigene signierte Keys) ENTKOPPELT ──
      Bewusste Architektur-Entscheidung 2026-08-06: Lemon Squeezy wurde von Stripe
@@ -11642,7 +11660,9 @@ const License={
     }
     // 1) Angezeigter Preis gegen den Betrag, fuer den der Link angelegt wurde
     const SOLL={month:this.PREIS.soloMonat, year:this.PREIS.soloJahr,
-                clinicMonth:this.PREIS.klinikMonat, clinicYear:this.PREIS.klinikJahr};
+                clinicMonth:this.PREIS.klinikMonat, clinicYear:this.PREIS.klinikJahr,
+                rehaMonth:this.PREIS.rehaMonat, rehaYear:this.PREIS.rehaJahr, kombiMonth:this.PREIS.kombiMonat, kombiYear:this.PREIS.kombiJahr,
+                centerMonth:this.PREIS.centerMonat, centerYear:this.PREIS.centerJahr};
     const soll=SOLL[art];
     const ist=(this.CHECKOUT_BETRAG||{})[art];
     if(ist!==soll){
@@ -11743,8 +11763,10 @@ const License={
                 'nachsorge',        // Entlass-Nachsorge-Flow (13.08., s. u.)
                 'clinicBranding',   // Klinik-Name im Kopf (additiv, AP2)
                 'station',          // Stationswand — Wand-Monitor (15.08.)
-                'reha',             // Reha-Aufnahme, Reha-Akte, Reha-Berichte (20.11.2026)
-                'sharedFolder']     // geteilter Klinik-Ordner, Mehrbenutzer (15.08.)
+                'sharedFolder'],
+    vet_reha:  ['pdf','csv','coherence','ownerFeedback','sharedFolder','langzeit','reha','clinicBranding'],   // Reha (20.11.2026)
+    vet_klinik_reha:['pdf','csv','routeHandoff','coherence','ownerFeedback','langzeit','multiSeat','nachsorge','clinicBranding','station','reha','sharedFolder'],
+    vet_center:['pdf','csv','routeHandoff','coherence','ownerFeedback','langzeit','multiSeat','nachsorge','clinicBranding','station','reha','sharedFolder','standorte']     // geteilter Klinik-Ordner, Mehrbenutzer (15.08.)
   },
   /* ENTSCHIEDEN (Jan, 13.08.2026) — der offene Punkt unten ist damit
      beantwortet: Die Klinik-Stufe (jetzt 199 €/Monat, PREIS-Quelle oben)
