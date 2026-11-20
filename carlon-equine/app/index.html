@@ -2939,7 +2939,7 @@ const Reha={
     setTimeout(()=>{ const el=document.getElementById('rehaSpeicher'); if(!el) return; Promise.resolve(navigator.storage&&navigator.storage.persisted?navigator.storage.persisted():false).then(ok=>{ const lb=State.settings&&State.settings.lastBackupAt; el.innerHTML=(ok?'✓ Daten dauerhaft im Browser gespeichert':'')+(ok&&lb?' · letzte Sicherung '+fmtDate(lb):'')||(lb?'Letzte Sicherung '+fmtDate(lb)+' · ':'Noch keine Sicherung · ')+'Ohne Installation darf der Browser diese Daten nach einigen Wochen löschen. <button class="btn ghost" style="font-size:12px;padding:4px 10px" onclick="PWA.install()">Dauerhaft speichern (installieren)</button> <button class="btn ghost" style="font-size:12px;padding:4px 10px" onclick="Backup.doExport()">Sicherung jetzt</button>'; }).catch(()=>{}); },0);
     const st=k=>{ const z=[]; if(k.tauUnsicher) z.push('Erholung unsicher'); if(k.ruheSec&&k.ruheRM==null) z.push('Ruhe nicht auswertbar'); else if(k.ruheSec&&k.anteil(0,k.ruheSec)>=5) z.push('Ruhe orientierend'); if(!k.ruheSec) z.push('ohne Ruhe-Referenz'); if(k.a.endeErkannt) z.push('Ende erkannt'); if(k.avPausen) z.push(k.avPausen+' lange Pausen'); return z.length?z.join(' · '):'auswertbar'; };
     return `<div class="panel" style="margin-bottom:var(--s4)" id="rehaHaupt"><div style="display:flex;justify-content:space-between;align-items:baseline;gap:10px;flex-wrap:wrap"><h2 style="font-size:17px;margin:0">Reha · ${S.length} Einheit${S.length>1?'en':''} seit ${fmtDate(S[0].rec.startedAt)}</h2><span style="font-size:12.5px;color:var(--text-secondary)" id="rehaSpeicher"></span></div>
-      ${ref?`<div style="font-size:13px;color:var(--text-secondary);margin:6px 0">Referenzstufe: <b>${esc(ref.label)}</b> · in ${vgl} von ${S.length} Einheiten${tr?` · Trend ${tr.b>0?'+':'−'}${fmt1(Math.abs(tr.b))} bpm je Woche (±${fmt1(tr.ki)})`:''} · stabil heißt ±${g.eigen?fmt0(Math.round(g.wert))+' bpm (an diesem Pferd gemessen)':'3 bpm (vorläufig)'}</div>`:''}
+      ${ref?(()=>{ const en=typeof Sprache!=='undefined'&&Sprache.cur==='en'; return en?`<div style="font-size:13px;color:var(--text-secondary);margin:6px 0">Reference stage: <b>${esc(RehaKern.label(ref.markierung||{},false)||ref.label)}</b> · in ${vgl} of ${S.length} sessions${tr?` · trend ${tr.b>0?'+':'−'}${fmt1(Math.abs(tr.b))} bpm per week (±${fmt1(tr.ki)})`:''} · stable means ±${g.eigen?fmt0(Math.round(g.wert))+' bpm (measured on this horse)':'3 bpm (provisional)'}</div>`:`<div style="font-size:13px;color:var(--text-secondary);margin:6px 0">Referenzstufe: <b>${esc(ref.label)}</b> · in ${vgl} von ${S.length} Einheiten${tr?` · Trend ${tr.b>0?'+':'−'}${fmt1(Math.abs(tr.b))} bpm je Woche (±${fmt1(tr.ki)})`:''} · stabil heißt ±${g.eigen?fmt0(Math.round(g.wert))+' bpm (an diesem Pferd gemessen)':'3 bpm (vorläufig)'}</div>`; })():''}
       ${VL||'<div style="font-size:13px;color:var(--text-dim)">Verlauf ab zwei Einheiten mit derselben Einstellung.</div>'}
       <table class="tbl" style="width:100%;font-size:12.5px;margin-top:10px"><thead><tr><th>Datum</th><th>Gerät</th><th>Belastung</th><th>HF Referenzstufe</th><th>Erholung</th><th>Ruhe-RMSSD</th><th>Quelle</th><th>Auswertbar</th><th>Hinweis</th><th>Bericht</th></tr></thead><tbody>
       ${S.slice().reverse().map((s2,i)=>{ const k=K[S.length-1-i]; return `<tr><td style="white-space:nowrap">${fmtDate(s2.rec.startedAt)}</td><td>${esc(k.geraet)}</td><td>${fmt0(k.lastMin)} min</td><td><b>${this.z(this.hfRef(k,ref))}</b> bpm</td><td>${k.tauE!=null?fmt0(k.tauE)+' s':'–'}</td><td>${k.ruheRM!=null?Number(k.ruheRM).toFixed(1).replace('.',',')+' ms':'–'}</td><td>${s2.rec._seed?'Demo':/gurtspeicher/.test(s2.rec.rrQuelle||'')?'Gurtspeicher':'live'}</td>${(()=>{ const t=st(k), ok=t==='auswertbar'||/^Ende erkannt$|^\d+ lange Pausen$/.test(t); return `<td style="color:${ok?'var(--cyan)':'var(--amber,#f6b73c)'};font-weight:600">${ok?'ja':'teilweise'}</td><td style="color:var(--text-secondary)">${t==='auswertbar'?'–':t}</td>`; })()}<td style="white-space:nowrap"><button class="btn ghost" style="font-size:11.5px;padding:4px 8px" onclick="Reha.drucken('${h.id}','${s2.rec.id}','klinik')">Klinik</button> <button class="btn ghost" style="font-size:11.5px;padding:4px 8px" onclick="Reha.drucken('${h.id}','${s2.rec.id}','halter')">Halterin</button></td></tr>`; }).join('')}</tbody></table>
@@ -3710,7 +3710,7 @@ const RehaLive={
         else if(a==='fertig'){ if(!this.start){ this.schliessen(); return; } if(sicher('fertig')) this.fertig(); } else if(a==='abbrechen'){ if(sicher('abbrechen')) this.schliessen(); } else if(a==='+'||a==='-') this.aendern(b.dataset.f,a==='+'?1:-1); }); }
     const G=RehaKern.GERAETE[this.art], en=this.en();
     o.innerHTML=`<div class="rl-wrap"><div class="rl-top"><div><div class="eyebrow">${en?'Rehab session':'Reha-Sitzung'} · ${esc(en?G.en:G.de)}${this.dev&&this.dev.name?` · <span class="rl-gurt">${esc(this.dev.name.replace(/^Polar H10 /,'H10 '))}</span>`:''}</div><h2>${esc(this.h.name)}</h2></div><button class="btn ghost" data-rl="abbrechen">${this._sicher==='abbrechen'?(en?'Discard? Tap again':'Verwerfen? Nochmal tippen'):(en?'Cancel':'Abbrechen')}</button></div>
-      <label class="rl-modell"><span>${en?'Device on the report':'Gerät im Bericht'}</span><input data-rl-modell value="${esc((State.settings.rehaModelle||{})[this.art]||'')}" placeholder="${en?'Manufacturer and model, e.g. from the type plate':'Hersteller und Modell, z. B. vom Typenschild'}" maxlength="60"></label>
+      <label class="rl-modell"><span>${en?'Device on the report':'Gerät im Bericht'}</span><input data-rl-modell value="${esc((State.settings.rehaModelle||{})[this.art]||'')}" placeholder="${en?'Manufacturer and model, e.g. from the type plate':'Hersteller und Modell, z. B. vom Typenschild'}" maxlength="60" style="min-width:0;max-width:100%;flex:1 1 auto"></label>
       <div id="rlKopf" class="rl-kopf"></div>
       ${this.start?'':`<div class="chip rl-gurtwahl" style="display:block;margin:10px 0">${this.h.gurt?(en?`Strap of this horse: <b>${esc(this.h.gurt)}</b>. Select it in the browser dialog.`:`Gurt dieses Pferds: <b>${esc(this.h.gurt)}</b>. Im Browser-Dialog auswählen.`):(en?'Choose the Polar H10 in the browser dialog. Recording starts as soon as it is connected.':'Polar H10 im Browser-Dialog wählen. Die Aufnahme startet, sobald er verbunden ist.')}${this.h.gurt?` <button class="btn ghost" data-rl="gurtfrei" style="margin-left:8px">${en?'Choose another strap':'Anderen Gurt wählen'}</button>`:''}</div>`}
       <div class="rl-felder">${G.felder.map(f=>{ const F=RehaKern.FELD[f];
@@ -8099,11 +8099,15 @@ const Views={
     return `<div class="view"><div class="erste-schritte">
       <span class="eyebrow">${praxis?praxis+' · ':''}Erste Schritte</span>
       <h1>So kommt das erste Pferd in den Verlauf.</h1>
-      <ol>
+      ${(()=>{ try{ return License.tier()==='vet_reha'; }catch(_){ return false; } })()?`<ol>
+        ${schritt(1,'Pferd anlegen','Einzeln oder den ganzen Bestand aus Ihrer Software oder Excel übernehmen.',`<div class="es-knoepfe"><button class="btn primary" onclick="Views.editHorse()">+ Pferd anlegen</button><button class="btn ghost" onclick="Bestand.oeffnen()">Bestand übernehmen (CSV)</button></div>`)}
+        ${schritt(2,'Einheit am Gerät starten','In der Akte das Gerät wählen (Aquatrainer, Laufband, Longe …). Polar H10 am Pferd, fünf Minuten Ruhe, dann die Stufen mittippen.','')}
+        ${schritt(3,'Berichte und Vergleich','Nach dem Beenden: Sitzungsbericht für die Akte und Bericht für die Halterin. Ab der zweiten Einheit vergleicht Visite dieselbe Einstellung Woche für Woche.','')}
+      </ol>`:`<ol>
         ${schritt(1,'Pferde anlegen','Einzeln – oder den ganzen Bestand aus Praxissoftware oder Excel übernehmen. Jedes Pferd steht dann auch für die Tour bereit.',`<div class="es-knoepfe"><button class="btn primary" onclick="Views.editHorse()">+ Pferd anlegen</button><button class="btn ghost" onclick="Bestand.oeffnen()">Bestand übernehmen (CSV)</button></div>`)}
         ${schritt(2,'Messung anfordern','In der Akte des Pferds: „Messung anfordern“ schickt der Halterin Ihren Mess-Link per WhatsApp oder SMS – mit Ihrem Praxisnamen.','')}
         ${schritt(3,'Aufnahme kommt an','Die Halterin misst sieben Minuten im Stall und sendet. Sie öffnen die Datei hier – oder richten einen Eingangs-Ordner ein, dann kommt sie von selbst.',`<div class="es-knoepfe"><button class="btn ghost" onclick="Importer.open()">Datei öffnen</button><button class="btn ghost" onclick="UI.openSettings();setTimeout(()=>{const e=document.getElementById('eingangFeld');if(e)e.scrollIntoView({block:'center'});},200)">Eingang einrichten</button></div>`)}
-      </ol>
+      </ol>`}
       <p class="es-fuss">Alles bleibt auf diesem Gerät bzw. in Ihrem eigenen Team-Ordner – kein Server von uns. <a href="?schaufenster=1&amp;demo=today" target="_blank" rel="noopener">Lieber erst die Demo mit 15 Pferden ansehen</a> (eigener Tab, getrennt von Ihren Daten)</p>
     </div></div>`;
   },
@@ -10155,7 +10159,7 @@ const UI={
     setTimeout(()=>{ UI.einlVorschau(); ['sName','sVet','sPhone'].forEach(i=>{ const e=$('#'+i); if(e) e.addEventListener('input',()=>UI.einlVorschau()); }); },60);
     this.modal(`<div class="modal-head"><button class="closex" onclick="UI.closeModal()">${IC.x}</button><h3>Praxis-Einstellungen</h3></div>
     <div class="modal-body">
-      <div class="field"><label>Name der Praxis, Klinik oder des Reha-Zentrums</label><input id="sName" value="${esc(s.clinicName)}"></div>
+      <div class="field"><label>Name der Praxis, Klinik oder des Reha-Zentrums</label><input id="sName" value="${esc(s.clinicName&&s.clinicName!=='Meine Pferdepraxis'?s.clinicName:'')}" placeholder="z. B. Reha-Zentrum Sonnental oder Pferdepraxis Berg"></div>
       <div class="field"><label>Verantwortliche Tierärztin oder verantwortlicher Tierarzt</label><input id="sVet" value="${esc(s.vetName||'')}"></div>
       <div class="field"><label>Praxis-Logo <span style="color:var(--text-dim);font-weight:400">— erscheint auf Ihren Messwertberichten (Ihr Branding, nicht unseres)</span></label>
         <div class="logo-row">
@@ -14281,6 +14285,29 @@ const Sprache={
     'Alle':'All',
     'heute':'today',
     'Kernwerte & Begründung':'Key values & reasoning',
+    'Datum':'Date',
+    'Gerät':'Device',
+    'Belastung':'Load',
+    'HF Referenzstufe':'HR reference stage',
+    'Ruhe-RMSSD':'Resting RMSSD',
+    'Quelle':'Source',
+    'Auswertbar':'Evaluable',
+    'Hinweis':'Note',
+    'Bericht':'Report',
+    'teilweise':'partly',
+    'Klinik':'Clinic',
+    'Halterin':'Owner',
+    'Erholung unsicher':'Recovery uncertain',
+    'Ruhe nicht auswertbar':'Rest not evaluable',
+    'ohne Ruhe-Referenz':'no rest reference',
+    'Ruhe orientierend':'rest indicative',
+    'Übergabe an die App der Halterin: dort lückenlos beim Pferd, auch für Messungen zu Hause.':'Hand-over to the owner’s app: complete with the horse, also for measurements at home.',
+    'Verlauf bei gleicher Stufe (Herzfrequenz, letzte 60 s der Stufe):':'Trend at the same stage (heart rate, last 60 s of the stage):',
+    'Abschlussbericht · alle Einheiten':'Final report · all sessions',
+    'Verlaufsdokumentation · alle Einheiten':'Progress documentation · all sessions',
+    'Neue Sitzung mit Gerät:':'New session with device:',
+    'Noch keine eigene Basis (0 von 3 Aufnahmen in 30 Tagen) – Einstufung höchstens „beobachten“':'No own baseline yet (0 of 3 recordings in 30 days) – rating at most “observe”',
+    'nicht verbunden':'not connected',
     'nicht berechenbar':'not computable',
     'Letzte Aufnahme ist eine Reha-Einheit ohne 5 min Ruhe vor der ersten Stufe: keine Ruhekennzahlen (unter Belastung nicht stationär).':'The latest recording is a rehab session without 5 min of rest before the first stage: no resting values (not stationary under load).',
     'Ruhephase der letzten Reha-Einheit nicht auswertbar (zu viele unsichere Schläge): keine Ruhekennzahlen.':'Rest phase of the latest rehab session not evaluable (too many uncertain beats): no resting values.',
@@ -14483,7 +14510,7 @@ const Sprache={
     [/^(\d+) neue Aufnahmen? aus dem Eingang übernommen$/,'$1 new recording(s) taken in from the inbox'],
     [/^— Browser könnte Daten bei langer Nichtnutzung löschen · (.+) belegt$/,'— the browser could delete data after long non-use · $1 used'],
     [/^(.+) — Akte öffnen$/,'$1 — open record'],
-    [/^(.+) anrufen$/,'Call $1'],
+    [/^(.+) anrufen$/,'Call $1'], [/^Detrended Fluctuation Analysis \(4–16 Schläge\).*$/,'Detrended fluctuation analysis (4–16 beats): correlation structure of the beat sequence. 0.5 = white noise · 1.0 = 1/f · 1.5 = Brownian noise (Peng et al. 1995). There are no validated target ranges for horses – compare with the horse’s own history.'], [/^Equine Bänder VLF.*$/,'Equine bands VLF 0–0.01 · LF 0.01–0.07 · HF 0.07–0.6 Hz (Kuwahara 1996). Lomb-Scargle spectrum and values from the beat-to-beat series of the Polar H10. Poincaré SD1/SD2 (Brennan 2001), shape patterns after Woo 1992 · Baevsky (1984; scale 0–30 set by CARLON) · SampEn (Richman 2000). Prioritisation aid, no diagnosis.'], [/^Equine-spezifische HRV-Atemwegs-Beobachtung.*$/,'Equine-specific HRV airway observation (Nyerges-Bohák 2025 · random forest · n=40 · BAL-validated). Observation, no diagnosis – clinical work-up (BAL) remains with the veterinarian.'], [/^Trainings-Steuerung auf HRV-Basis.*$/,'HRV-based training guidance against the horse’s individual baseline – training domain, no veterinary assessment.'], [/^Aufgenommene Pferde als Kachelwand.*$/,'Admitted horses as a tile wall, with signal quality and deviation from their own history. For the monitor in the ward room: the whole team sees the same status, on every device via your clinic folder.'], [/^Ohne Installation darf der Browser diese Daten nach einigen Wochen löschen\.?$/,'Without installation the browser may delete this data after a few weeks.'], [/^Noch keine Sicherung · $/,'No backup yet · '], [/^Noch nicht genug Verlauf für ein individuelles Normband\. Ab ~(\d+)–(\d+) Aufnahmen über mehrere Tage zeigt CARLON hier die Lage zum eigenen Normband \(beschreibend, keine Trainingsfreigabe\)$/,'Not enough history for an individual normal band yet. From about $1–$2 recordings over several days CARLON shows the position within the horse’s own band here (descriptive, not a training clearance)'], [/^\(aktuell (\d+)\)$/,'(currently $1)'], [/^Offline-Start noch nicht eingerichtet: Cockpit einmal mit Netz neu laden$/,'Offline start not set up yet: reload the cockpit once with a connection'], [/^Sicherung älter als ein Tag$/,'Backup older than one day'], [/^RMSSD im Bereich der eigenen Basis dieses Pferds\. Die Einordnung liegt bei Ihnen\.$/,'RMSSD within this horse’s own baseline. The assessment is yours.'], [/^(\d+) Messungen über 30 Tage · Score (\d+)$/,'$1 measurements over 30 days · score $2'], [/^Dauerhaft speichern \(installieren\)$/,'Keep permanently (install)'], [/^Sicherung jetzt$/,'Back up now'], [/^(\d+) Min · ([\d.]+) Schläge$/,'$1 min · $2 beats'], [/^(\d+) lange Pausen?$/,'$1 long pauses'], [/^Reha · (\d+) (Einheit|Einheiten) seit (.+)$/,'Rehab · $1 sessions since $3'], [/^Noch keine eigene Basis \((\d) von 3 Aufnahmen in 30 Tagen\) – Einstufung höchstens „beobachten“$/,'No own baseline yet ($1 of 3 recordings in 30 days) – rating at most “observe”'], [/^Trend ([−+±]\d+) bpm · (\d+) Wochen \(95 %: ([−+±]\d+) bis ([−+±]\d+)\)$/,'Trend $1 bpm · $2 weeks (95 %: $3 to $4)'],
     [/^Baevsky-Index (\d[\d.,]*)$/,'Stress index $1'],
     [/^Trend stabil · vor (\d+) Mon$/,'Trend stable · $1 mo ago'],
     [/^vor (\d+) Mon$/,'$1 mo ago'],
