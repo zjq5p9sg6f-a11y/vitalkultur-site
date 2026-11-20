@@ -2980,7 +2980,10 @@ const Reha={
       const tx=[m.speedKmh!=null?String(m.speedKmh).replace('.',',')+' km/h':null, wNeu&&lv>0?(RehaKern.WASSER[m.waterHeight]||[''])[0]+(m.waterTempC!=null?' · '+fmt0(m.waterTempC)+' °C':''):null].filter(Boolean).join(' · ');
       if(lv>0){ const hh=lv/5*spH; g+=`<rect x="${a}" y="${sp0+spH-hh}" width="${b-a}" height="${hh}" fill="${C.wasser}" opacity=".85"/>`; }
       if(tx&&x.device!=='keines') g+=`<text x="${a+6}" y="${Math.max(sp0+10,Yv(m.speedKmh||0)-4)}" fill="${C.text}" font-size="10" font-weight="700">${esc(tx)}</text>`; });
-    Chart.niceTicks(lo,hi,4).forEach(v=>{ if(v<lo||v>hi) return; const y=Y(v); g+=`<line x1="${pad.l}" x2="${w-pad.r}" y1="${y}" y2="${y}" stroke="${C.grid}" opacity=".7"/><text x="${pad.l-8}" y="${y+4}" fill="${C.puls}" font-size="11" text-anchor="end">${fmt0(v)}</text>`; });
+    /* Präzisionsraster wie in der Live-Ansicht (20.11.2026): feine Linien in Fünfteln zwischen den Marken, senkrecht je Minute */
+    { const tk=Chart.niceTicks(lo,hi,4), hs=tk.length>1?tk[1]-tk[0]:10; for(let v=Math.ceil(lo/(hs/5))*(hs/5); v<=hi+1e-6; v+=hs/5){ const y=Y(v); g+=`<line x1="${pad.l}" x2="${w-pad.r}" y1="${y}" y2="${y}" stroke="${C.achse}" stroke-opacity=".12" stroke-width=".6"/>`; }
+      for(let s2=0; s2<=T+1e-6; s2+=60){ const x=X(s2); g+=`<line x1="${x}" x2="${x}" y1="${pad.t}" y2="${pad.t+H1}" stroke="${C.achse}" stroke-opacity=".12" stroke-width=".6"/>`; } }
+    Chart.niceTicks(lo,hi,4).forEach(v=>{ if(v<lo||v>hi) return; const y=Y(v); g+=`<line x1="${pad.l}" x2="${w-pad.r}" y1="${y}" y2="${y}" stroke="${C.achse}" stroke-opacity=".3" stroke-width=".8"/><text x="${pad.l-8}" y="${y+4}" fill="${C.puls}" font-size="11" text-anchor="end">${fmt0(v)}</text>`; });
     /* 20.11.2026: Tempo-Treppe und km/h-Skala nur, wenn eine Stufe ein Tempo trägt (Reiten, Longe … haben keins; vorher stand dort „6 km/h“) */
     const hatTempo=st.some(x=>x.markierung.speedKmh!=null&&x.device!=='keines');
     let pts=[]; st.forEach(x=>{ const v=x.markierung.speedKmh||0; pts.push(X(x.startSec)+','+Yv(v), X(x.endSec)+','+Yv(v)); }); if(hatTempo) g+=`<polyline fill="none" stroke="${C.tempo}" stroke-width="2" points="${pts.join(' ')}"/><text x="${w-pad.r+6}" y="${sp0+8}" fill="${C.tempo}" font-size="10">${fmt0(vmax)} km/h</text>`; g+=`<text x="${pad.l-8}" y="${sp0+spH/2+4}" fill="${C.achse}" font-size="9.5" text-anchor="end">Gerät</text>`;
@@ -5406,7 +5409,7 @@ const Chart={
     let g=`<rect x="${pad.l}" y="${pad.t}" width="${plotW.toFixed(1)}" height="${plotH.toFixed(1)}" rx="8" fill="#0E0E0E"/>`;
     [1,0.5,-0.5,-1].forEach(v=>{const yy=Y(v);g+=`<line class="grid-minor" x1="${pad.l}" x2="${w-pad.r}" y1="${yy.toFixed(1)}" y2="${yy.toFixed(1)}"/>`;});
     const xt=Chart.niceTicks(0,T,6);const xs=xt.length>1?xt[1]-xt[0]:30;
-    for(let v=0;v<=T+1e-6;v+=xs){const xx=X(v);g+=`<line class="grid-minor" x1="${xx.toFixed(1)}" x2="${xx.toFixed(1)}" y1="${pad.t}" y2="${h-pad.b}"/><text x="${xx.toFixed(1)}" y="${h-pad.b+13}" text-anchor="middle">${fmt0(v)}s</text>`;}
+    for(let v=0;v<=T+1e-6;v+=xs){const xx=X(v);g+=`<line class="grid-major" x1="${xx.toFixed(1)}" x2="${xx.toFixed(1)}" y1="${pad.t}" y2="${h-pad.b}"/><text x="${xx.toFixed(1)}" y="${h-pad.b+13}" text-anchor="middle">${fmt0(v)}s</text>`;}
     g+=`<line x1="${pad.l}" x2="${w-pad.r}" y1="${midY.toFixed(1)}" y2="${midY.toFixed(1)}" stroke="#fff" stroke-opacity=".28" stroke-width=".8" stroke-dasharray="4 4"/>`;
     // Flächen ober-/unterhalb der Nulllinie (Koralle über, Blau unter)
     let above=`M${X(sm[0].t).toFixed(1)},${midY.toFixed(1)}`,below=`M${X(sm[0].t).toFixed(1)},${midY.toFixed(1)}`;
@@ -5574,10 +5577,14 @@ const Chart={
     const uid=Chart._uid(w,h);
     let g=Chart._area(uid,CY)
       +`<rect x="${pad.l}" y="${pad.t}" width="${plotW.toFixed(1)}" height="${plotH.toFixed(1)}" rx="8" fill="#0E0E0E"/>`;
-    Chart.niceTicks(hfLo,hfHi,4).forEach(tk=>{if(tk<hfLo||tk>hfHi)return;g+=`<line class="grid-minor" x1="${pad.l}" x2="${w-pad.r}" y1="${YH(tk).toFixed(1)}" y2="${YH(tk).toFixed(1)}"/><text x="${pad.l-7}" y="${(YH(tk)+3).toFixed(1)}" text-anchor="end" style="fill:${GOLD}">${fmt0(tk)}</text>`;});
+    /* Präzisionsraster (20.11.2026, Jan: „Präzisionsgrid“): Hauptlinien an den Achsmarken, dazwischen je 5 feine Linien wie Messpapier */
+    { const ht=Chart.niceTicks(hfLo,hfHi,4), hs=ht.length>1?ht[1]-ht[0]:10, fx=Chart.niceTicks(0,T,6), fs=fx.length>1?fx[1]-fx[0]:30;
+      for(let v=Math.ceil(hfLo/(hs/5))*(hs/5); v<=hfHi+1e-6; v+=hs/5){ const y=YH(v).toFixed(1); g+=`<line class="grid-minor" style="stroke-opacity:.09" x1="${pad.l}" x2="${w-pad.r}" y1="${y}" y2="${y}"/>`; }
+      for(let v=0; v<=T+1e-6; v+=fs/5){ const x=X(v).toFixed(1); g+=`<line class="grid-minor" style="stroke-opacity:.09" x1="${x}" x2="${x}" y1="${pad.t}" y2="${(h-pad.b).toFixed(1)}"/>`; } }
+    Chart.niceTicks(hfLo,hfHi,4).forEach(tk=>{if(tk<hfLo||tk>hfHi)return;g+=`<line class="grid-major" x1="${pad.l}" x2="${w-pad.r}" y1="${YH(tk).toFixed(1)}" y2="${YH(tk).toFixed(1)}"/><text x="${pad.l-7}" y="${(YH(tk)+3).toFixed(1)}" text-anchor="end" style="fill:${GOLD}">${fmt0(tk)}</text>`;});
     Chart.niceTicks(hvLo,hvHi,4).forEach(tk=>{if(tk<hvLo||tk>hvHi)return;g+=`<text x="${(w-pad.r+7).toFixed(1)}" y="${(YV(tk)+3).toFixed(1)}" text-anchor="start" style="fill:${CY}">${fmt0(tk)}</text>`;});
     const xt=Chart.niceTicks(0,T,6);const xs=xt.length>1?xt[1]-xt[0]:30;
-    for(let v=0;v<=T+1e-6;v+=xs){const xx=X(v);g+=`<line class="grid-minor" x1="${xx.toFixed(1)}" x2="${xx.toFixed(1)}" y1="${pad.t}" y2="${(h-pad.b).toFixed(1)}"/><text x="${xx.toFixed(1)}" y="${(h-pad.b+14).toFixed(1)}" text-anchor="middle">${fmt0(v)}s</text>`;}
+    for(let v=0;v<=T+1e-6;v+=xs){const xx=X(v);g+=`<line class="grid-major" x1="${xx.toFixed(1)}" x2="${xx.toFixed(1)}" y1="${pad.t}" y2="${(h-pad.b).toFixed(1)}"/><text x="${xx.toFixed(1)}" y="${(h-pad.b+14).toFixed(1)}" text-anchor="middle">${fmt0(v)}s</text>`;}
     /* Flaeche gehoert der HRV, der Puls bleibt reine Linie — zwei gefuellte
        Flaechen wuerden sich gegenseitig truebe machen. Reihenfolge: Flaeche,
        dann Puls, HRV zuletzt obenauf. Ausgeduennt wird nur das Zeichnen. */
