@@ -2190,7 +2190,7 @@ header.k7 #tierPill,header.k7 .post-pill{display:none}
 <script src="reha-kern.js"></script>
 <script src="h10-speicher.js"></script>
 <script src="stall.js?v=20261120a"></script>
-<script src="poincare-zeit.js?v=20261120a"></script>
+<script src="poincare-zeit.js?v=20261120b"></script>
 <script src="carlon-formate.js?v=20261116"></script>
 <script src="asthma.js"></script>
 <script src="krypto.js"></script>
@@ -5341,7 +5341,7 @@ const Chart={
       +`<text y="0" style="fill:var(--cyan);font-family:var(--font-ui);font-size:14px;font-weight:700;letter-spacing:.01em">SD1 · ${sd1!=null?fmt1(sd1):'—'} ms</text>`
       +`<text y="20" style="fill:var(--cyan);font-family:var(--font-ui);font-size:14px;font-weight:700;letter-spacing:.01em">SD2 · ${sd2!=null?fmt1(sd2):'—'} ms</text>`
       +`<text y="37" style="fill:var(--text-dim);font-family:var(--font-mono);font-size:10.5px;letter-spacing:.02em">SD2/SD1 · ${ratio}</text>`
-      +`<text y="52" style="fill:var(--text-dim);font-family:var(--font-mono);font-size:10.5px;letter-spacing:.02em">${fmt0(xs.length)} Paare</text>`
+      +`<text y="52" style="fill:var(--text-dim);font-family:var(--font-mono);font-size:10.5px;letter-spacing:.02em">${fmt0(xs.length)} Paare · alle, unbereinigt</text>`
       +(_pout?`<text y="69" style="fill:var(--amber);font-family:var(--font-mono);font-size:10.5px;letter-spacing:.02em;opacity:.85">${fmt0(_pout)} am Rand gehalten</text>`:'')
       +`</g>`;
     g+=`<text x="${(pL+W/2).toFixed(0)}" y="${size-2}" text-anchor="middle" class="label-axis" style="fill:var(--cyan)">RRₙ<tspan style="fill:var(--cyan-deep)"> (ms)</tspan></text>`;
@@ -5560,6 +5560,10 @@ const Chart={
     if(!rr||rr.length<8) return `<div style="color:var(--text-faint);font-size:12px;text-align:center;padding:30px">Zu wenige Schläge für Dual-Vitals</div>`;
     const n=rr.length;
     const hf=rr.map(v=>60000/v);
+    /* Präzision (20.11.2026): einzelne Fehlschläge (> 20 % vom lokalen Median aus 11 Schlägen) zeichnet die Pulslinie nicht als Spitze;
+       sie erscheinen als graue Punkte am Wert des Fehlschlags (bei Achsenende am Rand). */
+    const _artD=rr.map((x,i)=>{ const w=rr.slice(Math.max(0,i-5),i+6).slice().sort((p,q)=>p-q), m=w[w.length>>1]; return Math.abs(x-m)/m>0.2; });
+    const hfL=hf.map((v,i)=>{ if(!_artD[i]) return v; const w=rr.slice(Math.max(0,i-5),i+6).slice().sort((p,q)=>p-q); return 60000/w[w.length>>1]; });
     const Wb=Math.min(30,Math.max(5,Math.floor(n/3)));
     const hrv=rr.map((_,i)=>{const lo=Math.max(1,i-Wb+1);let s=0,c=0;for(let j=lo;j<=i;j++){const d=rr[j]-rr[j-1];s+=d*d;c++;}return c?Math.sqrt(s/c):0;});
     /* Wo traegt das gleitende Fenster ein auffaelliges Paar? Siehe
@@ -5576,7 +5580,7 @@ const Chart={
        110 lag — das eigentliche Geschehen lag dann in einem Band von wenigen
        Pixeln. Ausserhalb liegende Werte werden am Rand gehalten, nicht
        verworfen, und ausgewiesen. */
-    const rHF=Chart._robustRange(hf,{pad:0.14,minSpan:8});
+    const rHF=Chart._robustRange(hfL,{pad:0.14,minSpan:8});
     const rHV=Chart._robustRange(hrv,{pad:0.14,minSpan:4});
     const hfLo=rHF.min,hfHi=rHF.max,hvLo=rHV.min,hvHi=rHV.max;
     const YH=v=>pad.t+(1-(Math.max(hfLo,Math.min(hfHi,v))-hfLo)/(hfHi-hfLo))*plotH;
@@ -5596,7 +5600,7 @@ const Chart={
        Flaechen wuerden sich gegenseitig truebe machen. Reihenfolge: Flaeche,
        dann Puls, HRV zuletzt obenauf. Ausgeduennt wird nur das Zeichnen. */
     const cols=Math.round(plotW);
-    const dHF=Chart._decimate(hf,cols), dHV=Chart._decimate(hrv,cols);
+    const dHF=Chart._decimate(hfL,cols), dHV=Chart._decimate(hrv,cols);
     const pHV=dHV.map(([i,v],k)=>`${k?'L':'M'}${X(t[i]).toFixed(1)},${YV(v).toFixed(1)}`).join(' ');
     g+=`<path d="${pHV} L${X(T).toFixed(1)},${(h-pad.b).toFixed(1)} L${pad.l},${(h-pad.b).toFixed(1)} Z" fill="url(#ar-${uid})" stroke="none"/>`;
     /* Die Baender liegen UNTER den Kurven und ueber der Flaeche — sichtbar,
@@ -5611,6 +5615,7 @@ const Chart={
     g+=bandLaeufe.slice(0,60).map(([a,b])=>
       `<rect x="${X(a).toFixed(1)}" y="${pad.t}" width="${Math.max(1,X(b)-X(a)).toFixed(1)}" height="${plotH.toFixed(1)}" fill="var(--amber)" fill-opacity=".055"/>`).join('');
     g+=`<path d="${dHF.map(([i,v],k)=>`${k?'L':'M'}${X(t[i]).toFixed(1)},${YH(v).toFixed(1)}`).join(' ')}" fill="none" stroke="${GOLD}" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round"/>`;
+    { let nA=0; for(let i=0;i<n&&nA<400;i++) if(_artD[i]){ nA++; g+=`<circle cx="${X(t[i]).toFixed(1)}" cy="${YH(hf[i]).toFixed(1)}" r="1.6" fill="#8a8f96" fill-opacity=".6"/>`; } }
     /* Die HRV-Linie in Stuecke gleicher Sicherheit. Der Anschlusspunkt
        gehoert zum FOLGENDEN Stueck, sonst klafft an jeder Grenze ein Pixel —
        und das saehe aus wie ein Messaussetzer. */

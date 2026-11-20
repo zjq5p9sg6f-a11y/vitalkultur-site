@@ -10,8 +10,8 @@
 (function () {
   'use strict';
   var DE = (document.documentElement.lang || 'de').indexOf('en') !== 0;
-  var T = DE ? { x: 'RRₙ (ms)', y: 'RRₙ₊₁ (ms)', schlag: 'Schlag', bis: 'bis', paare: 'Paare', av: 'lange Pause', zeit: 'Zeit', spielen: 'Abspielen', halt: 'Anhalten' }
-             : { x: 'RRₙ (ms)', y: 'RRₙ₊₁ (ms)', schlag: 'Beat', bis: 'to', paare: 'pairs', av: 'long pause', zeit: 'Time', spielen: 'Play', halt: 'Pause' };
+  var T = DE ? { x: 'RRₙ (ms)', y: 'RRₙ₊₁ (ms)', schlag: 'Schlag', bis: 'bis', paare: 'Paare · alle, unbereinigt', av: 'lange Pause', zeit: 'Zeit', spielen: 'Abspielen', halt: 'Anhalten' }
+             : { x: 'RRₙ (ms)', y: 'RRₙ₊₁ (ms)', schlag: 'Beat', bis: 'to', paare: 'pairs · all, uncleaned', av: 'long pause', zeit: 'Time', spielen: 'Play', halt: 'Pause' };
   var CYAN = '#3ECFB2', AMBER = '#FFB547', GRID = 'rgba(255,255,255,.06)', GRID2 = 'rgba(255,255,255,.14)', TXT = '#a8a49c';
   function fmtZeit(s) { s = Math.max(0, Math.round(s)); return Math.floor(s / 60) + ':' + String(s % 60).padStart(2, '0'); }
   function nett(a, b, n) { var r = (b - a) / n, m = Math.pow(10, Math.floor(Math.log10(r))), f = r / m; var st = (f < 1.5 ? 1 : f < 3.5 ? 2 : f < 7.5 ? 5 : 10) * m; var o = []; for (var v = Math.ceil(a / st) * st; v <= b + 1e-9; v += st) o.push(Math.round(v)); return { werte: o, schritt: st }; }
