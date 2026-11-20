@@ -10262,7 +10262,7 @@ const UI={
       ${feature?`<div class="demo-ribbon" style="margin-bottom:14px"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg><div><b>${esc(feature)}</b> gehört zum Abo – <b>die ersten 14 Tage sind kostenlos</b>, danach monatlich kündbar.</div></div>`:''}
       
       <label class="kauf-b2b"><input type="checkbox" id="kaufB2B" onchange="document.querySelectorAll('.kauf-link').forEach(l=>l.setAttribute('aria-disabled',this.checked?'false':'true'))"> <span>Ich bestelle als <b>Unternehmer (§ 14 BGB)</b> für meine Praxis oder Klinik und akzeptiere die <a href="/agb.html" target="_blank" rel="noopener">AGB</a>.</span></label>
-      <p class="kauf-kurz">Preise netto · Rechnung mit ausgewiesener USt. von Stripe · nach der Zahlung sofort freigeschaltet — kein Schlüssel, keine E-Mail.<br><b style="color:var(--text-primary)">14 Tage kostenlos testen</b> mit dem Monatsabo – volles Cockpit, eigene Pferde, Mess-Link. Kündigen Sie in den 14 Tagen, zahlen Sie nichts. Vorher ohne Karte: Demo mit Beispielpferden. Das Monatsabo ist jederzeit zum Monatsende kündbar.</p>
+      <p class="kauf-kurz">Preise netto · Rechnung mit ausgewiesener USt. von Stripe · nach der Zahlung sofort freigeschaltet — kein Schlüssel, keine E-Mail.<br><b style="color:var(--text-primary)">14 Tage kostenlos testen</b> mit dem Monatsabo – volles Cockpit, eigene Pferde, Mess-Link. Kündigen Sie in den 14 Tagen, zahlen Sie nichts. Vorher ohne Karte: Demo mit Beispielpferden. Das Monatsabo ist zum Ende des laufenden Abrechnungsmonats kündbar; die Testphase gibt es einmal je Betrieb, ein Stufenwechsel beendet sie.</p>
       <div class="kauf-grid kauf-fuenf">${STUFEN.map(t=>`<div class="kauf-spalte" data-stufe="${t.k}">
       <div class="tier-opt feat" style="align-items:flex-start">
         <div style="flex:1"><h4>${esc(License.TIERS[t.tier].name)}</h4>
@@ -10277,7 +10277,7 @@ const UI={
           <div style="font-size:12px;color:var(--text-dim)">11 Monatsbeiträge · ${brutto(t.py)} inkl. 19 % USt.</div></div>
           <div class="price"><b>${t.py.toLocaleString('de-DE')}</b><span>€ netto / Jahr</span>${knopf(t.y,'Weiter zur Kasse →')}</div></div>
       </div></div>`).join('')}</div>
-      <p style="font-size:12.5px;color:var(--text-secondary);margin-top:12px">Ein Abo gilt für einen Betrieb an einem Standort. Geräte je Stufe: Fahrpraxis 2, Praxis &amp; Klinik 6, Reha 6, Klinik + Reha 8, Equine Center ohne Grenze; Reha-Pferde in 30 Tagen: Reha 20, Klinik + Reha 40. Über der Grenze schaltet sich ein weiteres Gerät oder Pferd mit der größeren Stufe frei; Vorhandenes bleibt nutzbar, nachberechnet wird nichts.</p>
+      <p style="font-size:12.5px;color:var(--text-secondary);margin-top:12px">Ein Abo gilt für einen Betrieb an einem Standort. Geräte je Stufe: Fahrpraxis 2, Praxis &amp; Klinik 6, Reha 6, Klinik + Reha 8, Equine Center ohne Grenze; Reha-Pferde in 30 Tagen: Reha 20, Klinik + Reha 40. Über der Grenze schaltet sich ein weiteres Gerät oder Pferd mit der größeren Stufe frei; Ihre Daten bleiben nutzbar, nachberechnet wird nichts; nach einem Wechsel auf eine kleinere Stufe gelten deren Grenzen.</p>
       <p style="font-size:12px;color:var(--text-dim);margin-top:4px">Verkäufer und Rechnungssteller ist Stripe (Link) im eigenen Namen; die Rechnung kommt von dort. Nach der Zahlung sind Sie sofort freigeschaltet — kein Schlüssel, keine E-Mail.</p>
     </div>
     <div class="modal-foot"><button class="btn ghost" onclick="UI.closeModal()">Später</button><button class="btn ghost" onclick="UI.activate()">Ich habe einen Schlüssel</button></div>`,{wide:true});
@@ -14296,7 +14296,7 @@ const Sprache={
     'Ohne Gurt umsehen (Beispielpferde)':'Look around without a belt (example horses)',
     'Preise netto · Rechnung mit ausgewiesener USt. von Stripe · nach der Zahlung sofort freigeschaltet — kein Schlüssel, keine E-Mail.':'Prices net · invoice with VAT shown, issued by Stripe · unlocked right after payment — no key, no email.',
     'Vorher kostenlos testen':'Try it free first','14 Tage kostenlos testen, danach monatlich kündbar':'14 days free trial, then cancel monthly','14 Tage gratis':'14 days free','14 Tage kostenlos testen':'Try 14 days free',
-    'im Demo-Modus mit Beispielpferden. Das Monatsabo ist jederzeit zum Monatsende kündbar.':'in demo mode with sample horses. The monthly plan can be cancelled at any time to the end of the month.',
+    'im Demo-Modus mit Beispielpferden. Das Monatsabo ist zum Ende des laufenden Abrechnungsmonats kündbar; die Testphase gibt es einmal je Betrieb, ein Stufenwechsel beendet sie.':'in demo mode with sample horses. The monthly plan can be cancelled at the end of the current billing month; the trial is available once per business, a tier change ends it.',
     'Als Leistung erfassen':'Record as a service',
     'RMSSD':'RMSSD',
     'SDNN':'SDNN',
