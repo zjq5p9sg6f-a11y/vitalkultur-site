@@ -1918,12 +1918,6 @@ try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; 
       <li><b>Sofort freigeschaltet.</b> Nach der Zahlung kehren Sie ins Cockpit zurück, und es schaltet sich von selbst frei, ohne Benutzerkonto. Weitere Geräte schalten Sie mit einem Geräte-Link vom ersten Gerät frei.</li>
       <li><b>Selbst verwalten.</b> Rechnungen, Zahlungsart, Stufenwechsel und Kündigung jederzeit unter „Abo verwalten“. Ein Stufenwechsel gilt sofort und wird anteilig verrechnet. Das Monatsabo ist zum Ende des laufenden Abrechnungsmonats kündbar, das Jahresabo (ohne Testphase) zum Ende des Abrechnungsjahres.</li>
     </ol>
-    <div class="gruender">
-      <div class="g-k">Ihr Ansprechpartner</div>
-      <p><b>Entwickelt und betreut von Jan Rohwedder</b> (Vitalkultur, Iffezheim). Sie erreichen den Entwickler
-         direkt, vor und nach dem Kauf. Methode, Musterbericht und Demo können Sie vorab selbst prüfen.</p>
-      <p class="g-kontakt">Frage vorab? Schreiben Sie an <a href="mailto:jan@vitalkultur.com">jan@vitalkultur.com</a>, die Antwort kommt meist am selben Tag.</p>
-    </div>
     <p class="b2b-hinweis">Nur für Tierarztpraxen, Pferdekliniken und Reha-Betriebe. Bestellung ausschließlich als Unternehmen (§ 14 BGB).</p>
     <div class="abo-grenze m-wisch"><div><b>Ohne Abo</b><span>Demo mit 15 Pferden; zugeschickte Dateien ansehen.</span></div><div><b>Mit Abo</b><span>Tagestour mit Termin und Verspätungsnachricht, Besuchsdokumentation, Wegegeld-Vorschlag und Übergabe an Google Maps (alle Stufen außer Reha); dazu unbegrenzt Pferde, eigener Mess-Link und QR-Aushang, Messwertbericht mit Briefkopf als PDF und Team-Ordner.</span></div></div>
 <div class="preis-bruecke">
@@ -1980,7 +1974,6 @@ try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; 
       <b>In jedem Abo laufend enthalten</b>
       <ul><li>Neue Funktionen ohne Installation: Im Browser läuft immer die aktuelle Version</li>
         <li>Gepflegte Auswertungsmethode mit Versionsangabe in jedem Bericht</li>
-        <li>Persönliche Begleitung beim Start und bei Fragen, per E-Mail an den Entwickler</li>
         <li>Tägliche automatische Sicherung, sobald ein Team-Ordner verbunden ist</li></ul>
     </div>
     <div class="tarif tarif-fussblock">
@@ -2006,8 +1999,8 @@ try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; 
         if (f) {
           var h = f.querySelector('h3'), l = f.querySelector('.anm-lead'), b = f.querySelector('.anm-senden');
           if (h) h.textContent = de ? 'Lieber erst sprechen? Persönliche Einführung' : 'Prefer to talk first? Personal introduction';
-          if (l) l.textContent = de ? 'Wir gehen den Ablauf mit Ihren eigenen Aufnahmen schriftlich durch — Schritt für Schritt, in Ruhe. Ihre Anfrage liest der Entwickler selbst und meldet sich meist am selben Tag.'
-                                    : 'We walk through the workflow with your own recordings in writing — step by step, at your pace. The developer reads every request personally and usually replies the same day.';
+          if (l) l.textContent = de ? 'Wir gehen den Ablauf mit Ihren eigenen Aufnahmen schriftlich durch — Schritt für Schritt, in Ruhe.'
+                                    : 'We walk through the workflow with your own recordings in writing — step by step, at your pace.';
           if (b) b.textContent = de ? 'Einführung anfragen →' : 'Request an introduction →';
           ['data-de','data-en'].forEach(function(k){ [h,l,b].forEach(function(e){ if (e) e.removeAttribute(k); }); });
         }
@@ -2211,12 +2204,12 @@ if(_lb) _lb.addEventListener('click', function(){
         ['.anm-raster','.anm-weit','.anm-art'].forEach(function(sel){
           var e2=f.querySelector(sel); if(e2) e2.style.display='none'; });
         knopf.style.display='none';
-        status.textContent='Angekommen. Wir melden uns bei Ihnen — meist am selben Tag.';
+        status.textContent='Angekommen. Wir melden uns bei Ihnen.';
       })
       .catch(function(err){
         status.className='anm-status fehler';
         status.innerHTML='Das hat gerade nicht geklappt. Schreiben Sie uns bitte direkt an '+
-          '<a href="mailto:jan@vitalkultur.com">jan@vitalkultur.com</a> — wir antworten genauso schnell.';
+          '<a href="mailto:jan@vitalkultur.com">jan@vitalkultur.com</a>.';
         knopf.disabled=false;
       });
   });

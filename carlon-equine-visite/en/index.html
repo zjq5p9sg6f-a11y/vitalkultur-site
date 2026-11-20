@@ -1914,12 +1914,6 @@ try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; 
       <li><b>Activated at once.</b> After payment you return to the cockpit, and it activates itself, no user account. Further devices are activated with a device link from the first device.</li>
       <li><b>Manage it yourself.</b> Invoices, payment method, tier changes and cancellation any time under “Manage subscription”. A tier change applies at once and is prorated. The monthly plan can be cancelled at the end of the current billing month, the annual plan (no trial) at the end of the billing year.</li>
     </ol>
-    <div class="gruender">
-      <div class="g-k">Your contact</div>
-      <p><b>Built and supported by Jan Rohwedder</b> (Vitalkultur, Iffezheim, Germany). You reach the developer
-         directly, before and after you buy. You can check the method, sample report and demo yourself first.</p>
-      <p class="g-kontakt">A question first? Write to <a href="mailto:jan@vitalkultur.com">jan@vitalkultur.com</a>; you usually get an answer the same day.</p>
-    </div>
     <p class="b2b-hinweis">For veterinary practices, equine clinics and rehab centres only. Orders from businesses only (§ 14 German Civil Code, BGB).</p>
     <div class="abo-grenze m-wisch"><div><b>Without a subscription</b><span>Demo with 15 horses; view files sent to you.</span></div><div><b>With a subscription</b><span>Day round with appointments and delay messages, visit records, mileage-fee proposal and hand-off to Google Maps (all tiers except Rehab); plus unlimited horses, your own measuring link and QR poster, measurement report on letterhead as PDF and team folder.</span></div></div>
 <div class="preis-bruecke">
@@ -1976,7 +1970,6 @@ try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; 
       <b>Included on an ongoing basis in every subscription</b>
       <ul><li>Improvements without updates: open the browser and the new version is there</li>
         <li>A maintained analysis method with its version stated in every report</li>
-        <li>Personal support at the start and with questions, by e-mail to the developer</li>
         <li>Daily automatic backup as soon as a team folder is connected</li></ul>
     </div>
     <div class="tarif tarif-fussblock">
@@ -2002,8 +1995,8 @@ try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; 
         if (f) {
           var h = f.querySelector('h3'), l = f.querySelector('.anm-lead'), b = f.querySelector('.anm-senden');
           if (h) h.textContent = de ? 'Lieber erst sprechen? Persönliche Einführung' : 'Prefer to talk first? Personal introduction';
-          if (l) l.textContent = de ? 'Wir gehen den Ablauf mit Ihren eigenen Aufnahmen schriftlich durch — Schritt für Schritt, in Ruhe. Ihre Anfrage liest der Entwickler selbst und meldet sich meist am selben Tag.'
-                                    : 'We walk through the workflow with your own recordings in writing — step by step, at your pace. The developer reads every request personally and usually replies the same day.';
+          if (l) l.textContent = de ? 'Wir gehen den Ablauf mit Ihren eigenen Aufnahmen schriftlich durch — Schritt für Schritt, in Ruhe.'
+                                    : 'We walk through the workflow with your own recordings in writing — step by step, at your pace.';
           if (b) b.textContent = de ? 'Einführung anfragen →' : 'Request an introduction →';
           ['data-de','data-en'].forEach(function(k){ [h,l,b].forEach(function(e){ if (e) e.removeAttribute(k); }); });
         }
@@ -2209,12 +2202,12 @@ if(_lb) _lb.addEventListener('click', function(){
         ['.anm-raster','.anm-weit','.anm-art'].forEach(function(sel){
           var e2=f.querySelector(sel); if(e2) e2.style.display='none'; });
         knopf.style.display='none';
-        status.textContent='Received. We will get back to you — usually the same day.';
+        status.textContent='Received. We will get back to you.';
       })
       .catch(function(err){
         status.className='anm-status fehler';
         status.innerHTML='That did not work just now. Please write to us directly at '+
-          '<a href="mailto:jan@vitalkultur.com">jan@vitalkultur.com</a> — we answer just as quickly.';
+          '<a href="mailto:jan@vitalkultur.com">jan@vitalkultur.com</a>.';
         knopf.disabled=false;
       });
   });

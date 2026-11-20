@@ -1683,7 +1683,6 @@ section h2 em{font-style:normal;color:var(--cyan)}
     <h2>Sehen Sie es selbst. <em>Acht Wochen Reha in der Demo.</em></h2>
     <p class="sec-lead">Das Demo-Cockpit zeigt die Funktionen der Reha-Stufen. Öffnen Sie die Akte von Comet, erstellen Sie Sitzungsbericht und Verlaufsdokumentation, und starten Sie mit Ihrem eigenen Gurt eine Reha-Aufnahme an einem Demo-Pferd. Eigene Pferde anlegen und dauerhaft führen Sie mit dem Abo.</p>
     <div class="cta-row"><a class="cta-primary" href="/carlon-equine/app/?demo=roster&amp;pferd=comet&amp;fokus=reha">Demo öffnen →</a><a class="btn btn-back" href="/carlon-equine/app/?kasse=reha">14 Tage testen · danach 349&nbsp;€ netto im Monat →</a></div>
-    <p class="rx-kontakt">Fragen vorab beantwortet <b>Jan Rohwedder</b>, Vitalkultur, per E-Mail an <a href="mailto:jan@vitalkultur.com">jan@vitalkultur.com</a>. Die Antwort kommt meist am selben Tag.</p>
   </div>
 </section>
 
@@ -1844,12 +1843,12 @@ if(_lb) _lb.addEventListener('click', function(){
         ['.anm-raster','.anm-weit','.anm-art'].forEach(function(sel){
           var e2=f.querySelector(sel); if(e2) e2.style.display='none'; });
         knopf.style.display='none';
-        status.textContent='Angekommen. Wir melden uns bei Ihnen — meist am selben Tag.';
+        status.textContent='Angekommen. Wir melden uns bei Ihnen.';
       })
       .catch(function(err){
         status.className='anm-status fehler';
         status.innerHTML='Das hat gerade nicht geklappt. Schreiben Sie uns bitte direkt an '+
-          '<a href="mailto:jan@vitalkultur.com">jan@vitalkultur.com</a> — wir antworten genauso schnell.';
+          '<a href="mailto:jan@vitalkultur.com">jan@vitalkultur.com</a>.';
         knopf.disabled=false;
       });
   });
