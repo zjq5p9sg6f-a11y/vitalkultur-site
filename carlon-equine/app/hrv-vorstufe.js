@@ -430,7 +430,7 @@
     const t3 = t2 * t;
     return 0.5 * (
       (2 * p1.y) +
-      (-p0.y + p3.y) * t +
+      (-p0.y + p2.y) * t +   /* Standard-Catmull-Rom (20.11.2026, Befund Equine-Kreuztest: stand p3, CarlonCore rc.15) */
       (2 * p0.y - 5 * p1.y + 4 * p2.y - p3.y) * t2 +
       (-p0.y + 3 * p1.y - 3 * p2.y + p3.y) * t3
     );

@@ -26,15 +26,25 @@
         zeitEl = fig.querySelector('.pz-zeit'), werteEl = fig.querySelector('.pz-werte'), knopf = fig.querySelector('.pz-knopf');
     var rr = [], t = [], av = {}, n = 0, lo = 400, hi = 2000, vlo = 400, vhi = 2000, k = 0, spielt = null, vorgefuehrt = false;
 
-    (fig._daten ? Promise.resolve(fig._daten) : fetch(url).then(function (r) { return r.json(); })).then(function (d) {
+    var LIVE = fig.hasAttribute('data-live');
+    /* LIVE (20.11.2026, Reha-Aufnahme): neue Schläge kommen dazu, ohne neu zu starten. Steht der Regler am Ende, folgt die
+       Wolke; wer zurückgespult oder gezoomt hat, bleibt, wo er ist. */
+    function laden(d, erstes) {
+      var amEnde = erstes || k >= n - 1, ungezoomt = erstes || (vlo === lo && vhi === hi);
       rr = (d.rrMs || []).map(Number); n = rr.length; var acc = 0; t = rr.map(function (v) { acc += v / 1000; return acc; });
-      Object.keys(d.etiketten || {}).forEach(function (i) { av[+i] = d.etiketten[i]; });
+      av = {}; Object.keys(d.etiketten || {}).forEach(function (i) { av[+i] = d.etiketten[i]; });
       var s = rr.slice().sort(function (a, b) { return a - b; }); var q = function (p) { return s[Math.floor(p * (s.length - 1))]; };
-      lo = Math.floor((Math.min(q(0.005), 700)) / 100) * 100; hi = Math.ceil(Math.max(q(1), 1000) / 100) * 100 + 100;
-      regler.max = String(n - 1); regler.value = String(n - 1); k = n - 1; vlo = lo; vhi = hi;
-      cv.setAttribute('aria-label', (DE ? 'Poincaré-Diagramm einer Ruheaufnahme über ' : 'Poincaré plot of a resting recording over ') + n + (DE ? ' Schläge mit Zeitregler' : ' beats with time slider'));
+      if (LIVE) { var a0 = q(0.005), b0 = q(0.995), rand = Math.max(40, (b0 - a0) * 0.12); lo = Math.floor((a0 - rand) / 50) * 50; hi = Math.ceil((b0 + rand) / 50) * 50; }   /* live: Fläche = Daten */
+      else { lo = Math.floor((Math.min(q(0.005), 700)) / 100) * 100; hi = Math.ceil(Math.max(q(1), 1000) / 100) * 100 + 100; }
+      regler.max = String(n - 1); if (amEnde) { k = n - 1; regler.value = String(n - 1); } if (ungezoomt) { vlo = lo; vhi = hi; }
+      if (!erstes && !spielt) zeichne();
+    }
+    fig._aktualisieren = function (d) { if (n) laden(d, false); };
+    (fig._daten ? Promise.resolve(fig._daten) : fetch(url).then(function (r) { return r.json(); })).then(function (d) {
+      laden(d, true);
+      cv.setAttribute('aria-label', (DE ? (LIVE ? 'Poincaré-Diagramm der laufenden Aufnahme über ' : 'Poincaré-Diagramm einer Ruheaufnahme über ') : (LIVE ? 'Poincaré plot of the running recording over ' : 'Poincaré plot of a resting recording over ')) + n + (DE ? ' Schläge mit Zeitregler' : ' beats with time slider'));
       groesse(); zeichne();
-      if ('IntersectionObserver' in window && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      if (!LIVE && 'IntersectionObserver' in window && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
         var io = new IntersectionObserver(function (es) { es.forEach(function (e) { if (e.isIntersecting && !vorgefuehrt) { vorgefuehrt = true; abspielen(true); io.disconnect(); } }); }, { threshold: 0.55 });
         io.observe(fig);
       }

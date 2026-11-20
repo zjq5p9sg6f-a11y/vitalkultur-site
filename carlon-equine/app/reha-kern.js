@@ -11,12 +11,21 @@
 (function (root) {
   const GERAETE = {
     keines:      { de: 'Ohne Gerät',  en: 'No device',      last: false, felder: [] },
-    laufband:    { de: 'Laufband',    en: 'Treadmill',      last: true,  felder: ['speedKmh', 'inclinePercent', 'reverse'] },
-    aquatrainer: { de: 'Aquatrainer', en: 'Aqua treadmill', last: true,  felder: ['waterHeight', 'waterHeightCm', 'waterTempC', 'speedKmh', 'reverse'] },
+    laufband:    { de: 'Laufband',    en: 'Treadmill',      last: true,  felder: ['speedKmh', 'inclinePercent', 'reverse', 'vibrationAn'] },
+    aquatrainer: { de: 'Aquatrainer', en: 'Aqua treadmill', last: true,  felder: ['waterHeight', 'waterHeightCm', 'waterTempC', 'speedKmh', 'inclinePercent', 'reverse'] },
     vibration:   { de: 'Vibration',   en: 'Vibration',      last: false, felder: ['vibrationHz', 'amplitudeMm'] },
     fuehranlage: { de: 'Führanlage',  en: 'Horse walker',   last: true,  felder: ['speedKmh', 'directionChanges', 'radiusM'] },
     solarium:    { de: 'Solarium',    en: 'Solarium',       last: false, felder: ['intensityPercent', 'distanceCm'] },
     solekammer:  { de: 'Solekammer',  en: 'Salt chamber',   last: false, felder: ['intensityPercent'] },
+    /* Bewegungsarbeit und weitere Anwendungen (20.11.2026, Recherche 13 Reha-Zentren DE/AT/CH/NL/UK: Reha-Pläne = Minuten je
+       Gangart). gangStufe: ein Tipp auf Gangart oder Hand beginnt die nächste Stufe (Dauer entsteht von selbst). */
+    handfuehren: { de: 'Führen an der Hand', en: 'In-hand walking', last: true, gangStufe: true, felder: ['gangart', 'untergrund', 'steigung', 'stangen'] },
+    longe:       { de: 'Longe',       en: 'Lungeing',       last: true,  gangStufe: true, felder: ['longenArt', 'gangart', 'hand', 'zirkelM', 'hilfszuegel', 'stangen'] },
+    reiten:      { de: 'Reiten',      en: 'Ridden work',    last: true,  gangStufe: true, felder: ['gangart', 'untergrund', 'gelaende', 'stangen'] },
+    wasser:      { de: 'Wasser ohne Band', en: 'Water (no treadmill)', last: true, felder: ['wasserArt', 'waterHeight', 'waterTempC'] },
+    anwendung:   { de: 'Anwendung im Stand', en: 'Standing therapy', last: false, felder: ['anwendungArt', 'intensityPercent'] },
+    paddock:     { de: 'Freie Bewegung', en: 'Free movement', last: false, felder: ['untergrund'] },
+    sonstiges:   { de: 'Sonstiges',   en: 'Other',          last: false, felder: ['bezeichnung'] },
   };
   // Eingabehilfen (Schritt, Bereich) für große Plus/Minus-Tasten am Gerät
   const FELD = {
@@ -32,9 +41,65 @@
     radiusM:          { de: 'Radius', en: 'Radius', einheit: 'm', schritt: 1, min: 1, max: 40 },
     intensityPercent: { de: 'Intensität', en: 'Intensity', einheit: '%', schritt: 5, min: 0, max: 100 },
     distanceCm:       { de: 'Abstand', en: 'Distance', einheit: 'cm', schritt: 5, min: 0, max: 300 },
+    vibrationAn:      { de: 'Vibration', en: 'Vibration', bool: true },
+    gangart:          { de: 'Gangart', en: 'Gait', liste: ['stand', 'schritt', 'trab', 'galopp'], namen: { stand: ['Stehen', 'Standing'], schritt: ['Schritt', 'Walk'], trab: ['Trab', 'Trot'], galopp: ['Galopp', 'Canter'] } },
+    untergrund:       { de: 'Boden', en: 'Ground', liste: ['sand', 'gras', 'fest', 'tief'], namen: { sand: ['Sand', 'Sand'], gras: ['Gras', 'Grass'], fest: ['Fester Boden', 'Firm ground'], tief: ['Tiefer Boden', 'Deep ground'] } },
+    steigung:         { de: 'Gelände', en: 'Slope', liste: ['eben', 'leicht', 'steil'], namen: { eben: ['Eben', 'Flat'], leicht: ['Leicht bergauf', 'Gentle slope'], steil: ['Steil', 'Steep'] } },
+    gelaende:         { de: 'Ort', en: 'Where', liste: ['bahn', 'gelaende', 'huegel'], namen: { bahn: ['Reitbahn', 'Arena'], gelaende: ['Gelände eben', 'Flat terrain'], huegel: ['Hügel', 'Hills'] } },
+    hand:             { de: 'Hand', en: 'Rein', liste: ['links', 'rechts'], namen: { links: ['Linke Hand', 'Left rein'], rechts: ['Rechte Hand', 'Right rein'] } },
+    longenArt:        { de: 'Art', en: 'Type', liste: ['longe', 'doppellonge', 'langzuegel', 'freilauf'], namen: { longe: ['Longe', 'Lunge line'], doppellonge: ['Doppellonge', 'Double lunge'], langzuegel: ['Langzügel', 'Long reins'], freilauf: ['Freilauf', 'Free lungeing'] } },
+    zirkelM:          { de: 'Zirkel', en: 'Circle', einheit: 'm', schritt: 2, min: 8, max: 30 },
+    hilfszuegel:      { de: 'Hilfszügel', en: 'Training aid', bool: true },
+    stangen:          { de: 'Stangen', en: 'Poles', einheit: '', schritt: 1, min: 0, max: 12 },
+    wasserArt:        { de: 'Art', en: 'Type', liste: ['kaltspa', 'schwimmen'], namen: { kaltspa: ['Kaltwasser-Spa', 'Cold-water spa'], schwimmen: ['Schwimmen', 'Swimming'] } },
+    anwendungArt:     { de: 'Anwendung', en: 'Therapy', liste: ['magnetfeld', 'laser', 'stosswelle', 'kuehlung', 'massage', 'physio'], namen: { magnetfeld: ['Magnetfeld', 'Magnetic field'], laser: ['Laser', 'Laser'], stosswelle: ['Stoßwelle', 'Shockwave'], kuehlung: ['Kühlung', 'Cooling'], massage: ['Massage', 'Massage'], physio: ['Physiotherapie', 'Physiotherapy'] } },
+    bezeichnung:      { de: 'Bezeichnung', en: 'Name', text: true },
   };
   const WASSER = { none: ['Kein Wasser', 'No water'], fetlock: ['Fessel', 'Fetlock'], carpus: ['Karpus', 'Carpus'],
                    elbow: ['Ellbogen', 'Elbow'], stifle: ['Knie', 'Stifle'], shoulder: ['Schulter', 'Shoulder'] };
+  // Alltagserklärung für jede Wasserhöhe (für Stallpersonal ohne Anatomie-Begriffe), Reihenfolge = Höhe am Pferd
+  const WASSER_ERKL = {
+    none:     ['Laufband ohne Wasser', 'Treadmill without water'],
+    fetlock:  ['bis zum dicken Gelenk eine Handbreit über dem Huf', 'up to the joint a hand above the hoof'],
+    carpus:   ['bis zum „Knie“ am Vorderbein (Vorderfußwurzel)', 'up to the "knee" of the front leg'],
+    elbow:    ['bis dahin, wo das Vorderbein hinten an die Brust stößt', 'up to where the front leg meets the chest at the back'],
+    stifle:   ['bis zum Kniegelenk vorn am Hinterbein, etwa Bauchunterseite', 'up to the knee joint at the front of the hind leg, about belly level'],
+    shoulder: ['bis zur Spitze der Brust vorn (Buggelenk)', 'up to the point of the shoulder at the front of the chest'],
+  };
+  // Rangfolge der Höhe am Pferd. Ellbogen und Knie (hinten) liegen etwa gleich hoch: kein Vergleich untereinander.
+  const WASSER_RANG = { none: 0, fetlock: 1, carpus: 2, elbow: 3, stifle: 3, shoulder: 4 };
+  // Abweichung zur bisher bei DIESEM Pferd gemessenen cm-Zahl derselben Höhe, ab der nachgefragt wird (CARLON-Festlegung:
+  // drei Rasterschritte des Felds, 15 cm; Tagesschwankung durch Einfüllmenge bleibt darunter)
+  const WASSER_TOLERANZ_CM = 15;
+  // Widerspruchsprüfung Höhe ↔ cm. karte = { höhe: cm } aus früheren Stufen dieses Pferds. Ergebnis null = stimmig,
+  // sonst { de, en, hoehe?, cm? } mit Vorschlägen für eine Ein-Tipp-Korrektur.
+  function wasserPruefen(m, karte) {
+    const h = m.waterHeight, cm = m.waterHeightCm; karte = karte || {};
+    if (!h || cm == null) return null;
+    const naechste = () => { let best = null; for (const [k, v] of Object.entries(karte)) if (best == null || Math.abs(v - cm) < Math.abs(karte[best] - cm)) best = k; return best; };
+    if (h === 'none' && cm > 0) { const n = naechste(); return { de: `„Kein Wasser“ gewählt, aber ${cm} cm eingestellt.`, en: `“No water” selected but ${cm} cm set.`, hoehe: n || 'fetlock', cm: 0 }; }
+    if (h !== 'none' && cm === 0) return { de: `${WASSER[h][0]} gewählt, aber 0 cm eingestellt.`, en: `${WASSER[h][1]} selected but 0 cm set.`, hoehe: 'none', cm: karte[h] != null ? karte[h] : null };
+    if (h === 'none') return null;
+    const r = WASSER_RANG[h];
+    for (const [k, v] of Object.entries(karte)) {
+      if (k === h || k === 'none') continue; const rk = WASSER_RANG[k];
+      if ((rk < r && v >= cm) || (rk > r && v <= cm)) {
+        const n = naechste();
+        return { de: `Bei diesem Pferd war ${WASSER[k][0]} bisher ${v} cm. ${cm} cm passt deshalb nicht zu ${WASSER[h][0]}.`,
+                 en: `For this horse ${WASSER[k][1]} was ${v} cm so far, so ${cm} cm does not fit ${WASSER[h][1]}.`, hoehe: n !== h ? n : null, cm: karte[h] != null ? karte[h] : null };
+      }
+    }
+    if (karte[h] != null && Math.abs(karte[h] - cm) > WASSER_TOLERANZ_CM) {
+      const n = naechste();
+      return { de: `${WASSER[h][0]} war bei diesem Pferd bisher ${karte[h]} cm, jetzt ${cm} cm.`, en: `${WASSER[h][1]} was ${karte[h]} cm for this horse so far, now ${cm} cm.`, hoehe: n && n !== h ? n : null, cm: karte[h] };
+    }
+    return null;
+  }
+  // cm je Höhe aus Stufen-Marken (Median), z. B. aller bisherigen Sitzungen eines Pferds
+  function wasserKarte(marken) {
+    const L = {}; for (const m of marken || []) if (m && m.waterHeight && m.waterHeight !== 'none' && m.waterHeightCm > 0) (L[m.waterHeight] = L[m.waterHeight] || []).push(+m.waterHeightCm);
+    const k = {}; for (const [h, v] of Object.entries(L)) { v.sort((x, y) => x - y); const n = v.length; const md = n % 2 ? v[(n - 1) / 2] : (v[n / 2 - 1] + v[n / 2]) / 2; k[h] = Math.round(md / 5) * 5; } return k;
+  }
 
   // Abgeleitete Dosen wie in der App: Spitze-zu-Spitze → Amplitude = Weg/2; a_c = v²/r
   function beschleunigungG(m) { const f = m.vibrationHz, w = m.amplitudeMm; if (!(f > 0) || !(w > 0)) return null; return Math.pow(2 * Math.PI * f, 2) * ((w / 2) / 1000) / 9.81; }
@@ -44,6 +109,9 @@
   function label(m, de = true) {
     const z = (v, d) => { const t = (+v).toFixed(d); return de ? t.replace('.', ',') : t; };
     const p = [];
+    /* neue Typen (20.11.2026) zuerst mit ihrem Namen; bei den Gerätetypen kommen diese Felder nicht vor (Reihenfolge wie bisher) */
+    const nm = (f, v) => { const F = FELD[f]; return F && F.namen && F.namen[v] ? F.namen[v][de ? 0 : 1] : v; };
+    for (const f of ['bezeichnung', 'anwendungArt', 'wasserArt', 'longenArt', 'gangart', 'hand', 'untergrund', 'steigung', 'gelaende']) if (m[f]) p.push(f === 'bezeichnung' ? String(m[f]) : nm(f, m[f]));
     if (m.vibrationHz != null) p.push(`${z(m.vibrationHz, 1)} Hz`);
     if (m.amplitudeMm != null) p.push(`${z(m.amplitudeMm, 2)} mm`);
     if (m.inclinePercent != null) p.push(de ? `Steigung ${z(m.inclinePercent, 1)} %` : `incline ${z(m.inclinePercent, 1)} %`);
@@ -56,6 +124,10 @@
     const g = fliehkraftG(m); if (g != null) p.push(`${z(g, 2)} g`);
     if (m.intensityPercent != null) p.push(`${m.device === 'solekammer' ? (de ? 'Vernebelung' : 'nebulisation') : (de ? 'Intensität' : 'intensity')} ${z(m.intensityPercent, 0)} %`);
     if (m.distanceCm != null) p.push(de ? `${z(m.distanceCm, 0)} cm Abstand` : `${z(m.distanceCm, 0)} cm distance`);
+    if (m.zirkelM != null) p.push(de ? `Zirkel ${z(m.zirkelM, 0)} m` : `circle ${z(m.zirkelM, 0)} m`);
+    if (m.hilfszuegel === true) p.push(de ? 'Hilfszügel' : 'training aid');
+    if (m.stangen > 0) p.push(de ? `${m.stangen} Stangen` : `${m.stangen} poles`);
+    if (m.vibrationAn === true) p.push('Vibration');
     if (!p.length && m.note) p.push(m.note);
     return p.join(' · ');
   }
@@ -147,6 +219,6 @@
   function auswerten(rr, log, opt) { _zeit = opt && opt.zeit && opt.zeit.length === rr.length ? opt.zeit : null; try { return auswertenInnen(rr, log); } finally { _zeit = null; } }
   function auswertenInnen(rr, log) { const l2 = endeErgaenzen(rr, log); const st = stufen(rr, l2); return { stufen: st, erholung: erholung(rr, st), ruhe: ruhe(rr, st), endeErkannt: l2.length > (log || []).length, version: VERSION }; }
   const VERSION = 'Reha-Auswertung 1.1 (2026-11-20, Schema CarlonCore EquineGeraeteStufen)';
-  const api = { GERAETE, FELD, WASSER, label, lastschluessel, beschleunigungG, fliehkraftG, auswerten, stufen, erholung, ruhe, zeitachse, endeErgaenzen, VERSION };
+  const api = { GERAETE, FELD, WASSER, WASSER_ERKL, WASSER_RANG, WASSER_TOLERANZ_CM, wasserPruefen, wasserKarte, label, lastschluessel, beschleunigungG, fliehkraftG, auswerten, stufen, erholung, ruhe, zeitachse, endeErgaenzen, VERSION };
   if (typeof module !== 'undefined' && module.exports) module.exports = api; else root.RehaKern = api;
 })(typeof window !== 'undefined' ? window : globalThis);

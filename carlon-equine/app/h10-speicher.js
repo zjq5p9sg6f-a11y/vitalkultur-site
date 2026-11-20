@@ -28,8 +28,11 @@
   };
   const GRENZE = { untenMs: 200, obenMs: 12000 };
   const RR_TYP = 16;          // PbSampleType SAMPLE_TYPE_RR_INTERVAL
-  const RAHMEN_NUTZ = 19;     // Web Bluetooth kennt die MTU nicht: 20-Byte-Pakete sind immer erlaubt
-  const VERSION = 'h10-speicher 1.0 (Port PolarH10PSFTP.swift, 2026-11-20)';
+  const RAHMEN_NUTZ = 19;     // Rückfall: 20-Byte-Pakete, Folgepakete mit next-Bit (RFC76 Bit 0)
+  /* EIN Paket wie PolarH10PSFTP.swift (maximumWriteValueLength .withResponse = 512 unter CoreBluetooth; Chrome am Mac nutzt
+     denselben Stapel). Am echten H10 (18CE9C3D, 20.11.2026) lehnte der Gurt das zweite 20-Byte-Paket ohne next-Bit ab und trennte. */
+  const RAHMEN_GROSS = 500;
+  const VERSION = 'h10-speicher 1.1 (Port PolarH10PSFTP.swift + h10StartVersuch, Sync-Sitzung, ein Paket, 2026-11-20)';
 
   /* ── Protobuf, minimal ─────────────────────────────────────────────────── */
   function varint(v) { const o = []; v = Number(v); do { let b = v % 128; v = Math.floor(v / 128); if (v) b |= 0x80; o.push(b); } while (v); return o; }
@@ -89,7 +92,7 @@
 
   /* ── Client über eine Web-Bluetooth-Verbindung ─────────────────────────── */
   class Client {
-    constructor(server, opt) { this.server = server; this.gnadeMs = (opt && opt.gnadeMs) || 2000; this._kette = Promise.resolve(); this._w = null; this.protokoll = (opt && opt.protokoll) || (() => {}); }
+    constructor(server, opt) { this.server = server; this.gross = !(opt && opt.gross === false); this.gnadeMs = (opt && opt.gnadeMs) || 2000; this._kette = Promise.resolve(); this._w = null; this.protokoll = (opt && opt.protokoll) || (() => {}); }
     async init() {
       const svc = await this.server.getPrimaryService(UUID.dienst);
       this.mtu = await svc.getCharacteristic(UUID.mtu);
@@ -121,21 +124,45 @@
         this._w = { ja, nein, teile: [], n: 0, fortschritt, fristMs: fristMs || 15000, gnade: null };
         this._w.frist = setTimeout(() => this._abbruch(new Fehler(-2, 'Zeitüberschreitung')), this._w.fristMs);
         (async () => {
+          if (this.gross && nutz.length <= RAHMEN_GROSS) {
+            try { await this.mtu.writeValueWithResponse(new Uint8Array([0x02, ...nutz])); this.protokoll('ein Paket', nutz.length); return; }
+            catch (e) { if (!(this.server && this.server.connected) || nutz.length <= RAHMEN_NUTZ) throw e; this.gross = false; this.protokoll('Rückfall auf 20-Byte-Pakete', String(e && e.message)); }
+          }
           let off = 0, seq = 0;
           do { const ende = Math.min(off + RAHMEN_NUTZ, nutz.length), st = ende === nutz.length ? 1 : 2;
-            await this.mtu.writeValueWithResponse(new Uint8Array([((seq & 0x0f) << 4) | (st << 1), ...nutz.slice(off, ende)]));
+            await this.mtu.writeValueWithResponse(new Uint8Array([((seq & 0x0f) << 4) | (st << 1) | (seq > 0 ? 1 : 0), ...nutz.slice(off, ende)]));
             off = ende; seq++; } while (off < nutz.length);
         })().catch(e => this._abbruch(e instanceof Fehler ? e : new Fehler(-3, String(e && e.message || e))));
       });
       const p = this._kette.then(lauf, lauf); this._kette = p.catch(() => {}); return p;
     }
     async status() { return status(await this._senden(query(16))); }
-    async start(kennung) { await this._senden(query(14, startParameter(kennung))); }
+    /** Mitteilung Host→Gerät über H2D (ohne Antwort), wie sendNotification in PolarH10PSFTP.swift */
+    async mitteilung(id, nutz) { if (!this.h2d) return; const d = new Uint8Array([0x02, id, ...(nutz || [])]);
+      await (this.h2d.writeValueWithoutResponse ? this.h2d.writeValueWithoutResponse(d) : this.h2d.writeValue(d)); await new Promise(r => setTimeout(r, 150)); }
+    /** Sync-Sitzung (Polar SyncImplementationGuideline): Query 13 + Mitteilung 8 INITIALIZE_SESSION + 0 START_SYNC.
+        Ohne sie verweigert der H10 den Aufnahmebefehl (Research-App, hardware-bewiesen 14.08.2026). */
+    async sitzungAuf() { await this._senden(query(13)); await this.mitteilung(8); await this.mitteilung(0); }
+    async sitzungZu() { try { await this.mitteilung(1, [0x08, 0x01]); await this.mitteilung(9); } catch (_) { } }
+    /** Start genau wie h10StartVersuch (ResearchSensorService.swift): STOP auch ohne laufende Aufnahme, Sitzung schließen,
+        für den Start eine NEUE Sitzung, darin noch einmal STOP, dann Query 14, Sitzung schließen. */
+    async start(kennung) {
+      try { await this.sitzungAuf(); } catch (_) { } try { await this.stopp(); } catch (_) { } await this.sitzungZu();
+      try { await this.sitzungAuf(); } catch (_) { } try { await this.stopp(); } catch (_) { }
+      try { await this._senden(query(14, startParameter(kennung))); } finally { await this.sitzungZu(); }
+    }
     async stopp() { await this._senden(query(15)); }
     async liste(pfad) { return liste(await this._senden(anfrage(0, pfad || '/'))); }
     /** Frist wie der App-Client: 15 s + 1 s je 3 KB, höchstens 300 s */
     async datei(pfad, groesse, fortschritt) { return this._senden(anfrage(0, pfad), Math.min(300000, 15000 + ((groesse || 0) / 3000) * 1000), fortschritt); }
-    async loeschen(pfad) { await this._senden(anfrage(3, pfad)); }
+    /** Ordner: erst die Dateien, dann den Ordner (Research-App: der Platz wird frei, wenn SAMPLES.BPB weg ist; ein nicht
+        leerer Ordner antwortet mit 103). Ein Fehler beim Ordner selbst zählt nicht, die Dateien müssen weg sein. */
+    async loeschen(pfad) {
+      if (!pfad.endsWith('/')) return void await this._senden(anfrage(3, pfad));
+      let inhalt = []; try { inhalt = await this.liste(pfad); } catch (e) { if (e && e.code === 103) return; throw e; }
+      for (const f of inhalt) await this._senden(anfrage(3, pfad + f.name));
+      try { await this._senden(anfrage(3, pfad)); } catch (_) { }
+    }
     /** Kopplung anstoßen: Lesen der verschlüsselten Charakteristik lässt das System koppeln */
     async koppeln() { try { await this.mtu.readValue(); } catch (_) { } await new Promise(r => setTimeout(r, 800)); }
     /** Alle Aufnahmen auf dem Gurt (Ordner mit SAMPLES*), eigener Kopplungs-Rest PROBE wird entfernt */

@@ -479,7 +479,7 @@ svg.viz text{fill:var(--sec);font-size:9px;font-family:var(--font-mono)}
 svg.viz .label-axis{fill:var(--sec);font-size:9.5px;letter-spacing:.1em;font-family:var(--font-ui);font-weight:600}
 svg.viz .label-unit{fill:var(--dim);font-weight:400}
 /* Interaktion — 1:1 aus dem Cockpit: Fadenkreuz + Fokuspunkt + Tooltip.
-   touch-action:pan-y laesst die Seite vertikal weiterscrollen, waehrend ein
+   touch-action:pan-y laesst die Seite vertikal weiterscrollen, während ein
    waagerechtes Wischen ueber dem Diagramm die Werte abtastet. */
 .viz-hov{position:relative;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none;touch-action:pan-y}
 /* Fadenkreuz und Fokuspunkte gleiten, statt zu springen. cx/cy/x1/x2 sind in
@@ -1293,7 +1293,7 @@ const HAUS={ appImStore:false, appUrl:'https://carlon.app' };
 <!-- Die EINE Stelle, die auch das Impressum und das Cockpit lesen. Hier steht,
      ob das Postfach an ist. Stuende die Zeile an zwei Orten, liefe sie
      irgendwann auseinander — und dann sendet die Station in einen
-     Zwischenspeicher, waehrend die Datenschutzerklaerung behauptet, es gebe
+     Zwischenspeicher, während die Datenschutzerklaerung behauptet, es gebe
      keinen. Genau diese Sorte Widerspruch faellt zuerst jemandem auf, der
      Aerger sucht. -->
 <script src="live.js"></script>
@@ -1359,7 +1359,7 @@ const HAUS={ appImStore:false, appUrl:'https://carlon.app' };
      Hier stand assets/icon-512.png — das App-Icon. Es traegt per
      iOS-Konvention einen deckenden, gerundeten Kasten (Ecke Alpha 255),
      und der stand im Fussband als schwarzes Quadrat um die Marke,
-     waehrend die Kopfzeile das freie Zeichen zeigt. Zwei Marken-
+     während die Kopfzeile das freie Zeichen zeigt. Zwei Marken-
      darstellungen auf einer Seite, eine davon billig.
      carlon-logo-soft-128.png ist freigestellt (Ecke Alpha < 30) und
      dasselbe Zeichen wie oben. Gemessen, nicht geschaetzt.
@@ -1482,7 +1482,7 @@ de:{
  reconnZurueck:'Wieder verbunden. Die Lücke wird in der Aufnahme vermerkt, deine Tierärztin sieht sie mit.',
  reconnFehl:'Noch nicht erreichbar. Gurt kurz abnehmen, Elektroden nachfeuchten, wieder anlegen und erneut tippen.',
  liveHint:'Halte das Gerät in der Nähe und lass den Bildschirm an. Schläft er ein, bricht die Bluetooth-Verbindung ab.',
- /* Weitersagen-Moment waehrend der Messung (#jetztTeilen) */
+ /* Weitersagen-Moment während der Messung (#jetztTeilen) */
  jtTitel:'Messstation weitergeben',
  jtSub:'Nur der Link zur Messstation, ohne deine Daten.',
  jtBtn:'Weitersagen',
@@ -2225,7 +2225,7 @@ const Chart={
     const uid=Chart._uid(w,h);
     /* Robuste Grenzen statt min/max — siehe Chart._robust. Beim Tachogramm
        faellt es besonders auf: ein einziger halbierter Abstand (T-Welle als
-       Schlag gezaehlt) zog die Achse bis 500 ms hinunter, waehrend die Reihe
+       Schlag gezaehlt) zog die Achse bis 500 ms hinunter, während die Reihe
        zwischen 1500 und 2100 lag. Zwei Drittel der Hoehe blieben leer. */
     const rT=Chart._robustRange(rr,{pad:0.08,minSpan:40});
     const mn=rT.min, mx=rT.max;
@@ -2603,7 +2603,7 @@ const Chart={
     const xs=rr.slice(0,-1), ys=rr.slice(1), pad=52;
     /* ROBUSTE SPANNE statt Minimum/Maximum.
        Ein einziger Artefakt-Schlag — ein Ruck am Gurt, ein Schritt — reisst
-       die Achsen sonst von 300 bis 1000 ms auf, waehrend die Wolke zwischen
+       die Achsen sonst von 300 bis 1000 ms auf, während die Wolke zwischen
        600 und 800 liegt. Vier Fuenftel der Flaeche bleiben leer und die
        Wolke schrumpft zum Fleck. Gerechnet wird deshalb ueber das 1.- bis
        99.-Perzentil; was draussen liegt, wird NICHT verschwiegen, sondern
@@ -2885,130 +2885,132 @@ de:{
     ['Gold','Der Puls in Schlägen pro Minute, über die gesamte Aufnahme. Linke Achse.'],
     ['Cyan','Die Herzratenvariabilität als gleitendes RMSSD. Rechte Achse, eigene Skala.'],
     ['Warum zusammen','Nebeneinander gelegt wird sichtbar, wie beide sich zueinander verhalten. Zwei getrennte Bilder verstecken genau das.'],
-    ['Fenster','Die HRV wird über ein gleitendes Fenster gerechnet und reagiert deshalb auf Puls-Übergänge. Sie ist ein Verlaufsmaß, kein ruhender Einzelwert.'],
-    ['Einordnung','Was der Verlauf für dein Pferd bedeutet, sagt dir deine Tierärztin. Dafür braucht es den Vergleich mit früheren Aufnahmen desselben Pferds.']]},
+    ['Fenster','Die HRV wird jeweils aus den letzten 30 Schlägen gerechnet. Ändert sich der Puls, schlägt die Kurve mit aus. Sie zeigt einen Verlauf, keinen Ruhewert; so kurze Fenster sind am Pferd nicht validiert.'],
+    ['Einordnung','Die Kurve allein erlaubt keine Aussage über dein Pferd. Die Beurteilung liegt bei deiner Tierärztin und braucht den Vergleich mit früheren Aufnahmen desselben Pferds.']]},
   rr:{t:'Herzschlag-Abstände',r:[
     ['Was','Der Abstand zwischen zwei aufeinanderfolgenden Herzschlägen, in Millisekunden. Jeder Punkt der Kurve ist ein einzelner Schlag.'],
-    ['Zickzack','Ein gesundes Herz schlägt nicht wie ein Metronom. Die Abstände schwanken. Unter anderem im Takt der Atmung.'],
+    ['Zickzack','Die Abstände zwischen den Schlägen sind nie genau gleich. Sie schwanken, unter anderem im Takt der Atmung.'],
     ['Rohsignal','Das hier ist die unbearbeitete Messung. Alle anderen Zahlen dieser Seite werden daraus gerechnet.'],
-    ['Achse','Unten steht die Schlag-Nummer, die gestrichelte Linie ist der Mittelwert der Aufnahme.']]},
+    ['Achse','Unten steht die Schlag-Nummer, die gestrichelte Linie ist der Mittelwert der Aufnahme.'],
+    ['Störungen','Kauen, Wiehern, Fliegenabwehr und Gewichtsverlagerung verändern die Abstände; notiere, was während der Aufnahme passiert ist.']]},
   breath:{t:'Atemkurve',r:[
-    ['Idee','Die Atmung verändert den Herzschlag: beim Einatmen wird er kürzer, beim Ausatmen länger. Diese Schwankung lässt sich aus den Herzschlag-Abständen herausrechnen.'],
-    ['Farben','Koralle nach oben ist die Einatmungs-Phase, Blau nach unten die Ausatmung. Grau sind Pausen ohne klare Richtung.'],
+    ['Idee','Die Kurve schätzt die Atmung aus dem Herzschlag. Beim Atmen schwanken die Abstände zwischen den Schlägen leicht mit: meist kürzer beim Einatmen, länger beim Ausatmen.'],
+    ['Farben','Koralle nach oben: Abstände werden kürzer (meist Einatmung). Blau nach unten: Abstände werden länger (meist Ausatmung). Grau: keine klare Richtung.'],
     ['Zahl','Oben links steht die daraus geschätzte Atemfrequenz in Atemzügen pro Minute.'],
-    ['Grenze','Das ist eine Ableitung aus dem Herzschlag, keine direkte Atemmessung. Bei unruhigem Pferd oder gestörtem Signal wird sie ungenau.']]},
+    ['Grenze','Keine direkte Atemmessung, nur für ruhige Aufnahmen im Stand. Auch andere Einflüsse und lange Pausen lassen die Abstände schwanken; bei schneller Atmung und langsamem Puls bildet die Kurve die Atmung nicht mehr ab. Zähle zur Kontrolle die Flankenbewegungen eine Minute lang.']]},
   poin:{t:'Schlag zu Schlag · Poincaré',r:[
-    ['Idee','Jeder Punkt trägt zwei Werte: waagerecht ein Herzschlag-Abstand, senkrecht der unmittelbar darauffolgende.'],
+    ['Idee','Jeder Punkt vergleicht einen Herzschlag-Abstand mit dem nächsten: waagerecht der eine, senkrecht der darauffolgende.'],
     ['Diagonale','Läge jeder Schlag exakt wie der vorige, lägen alle Punkte auf der gestrichelten Linie. Die Streuung darum herum ist die Variabilität.'],
-    ['Ellipse','Fasst die Wolke zusammen: SD1 quer zur Diagonale (kurzfristig), SD2 entlang (längerfristig).'],
-    ['Herkunft','Eine seit Jahrzehnten etablierte Standard-Darstellung der Herzratenanalyse.']]},
+    ['Ellipse','Fasst die Wolke zusammen. SD1 ist die Breite quer zur Diagonale (Änderung von Schlag zu Schlag, praktisch RMSSD geteilt durch 1,41). SD2 ist die Länge entlang der Diagonale (Streuung über längere Abschnitte).'],
+    ['Ausreißer','Einzelne Punkte weit außerhalb der Wolke sind lange Pausen, Extraschläge oder Fehlerkennungen. Was davon vorliegt, zeigt nur ein EKG.']]},
   beats:{t:'Herzschläge',r:[
     ['Was','Die Anzahl einzeln erfasster Herzschläge in dieser Aufnahme.'],
-    ['Warum wichtig','Je mehr Schläge, desto ruhiger stehen die abgeleiteten Werte. Sehr kurze Aufnahmen schwanken stark.'],
-    ['Erfassung','Der Gurt meldet jeden Schlag einzeln. Gezählt wird nicht geschätzt.']]},
+    ['Warum wichtig','Je mehr Schläge, desto weniger schwanken die daraus berechneten Werte.'],
+    ['Erfassung','Der Gurt meldet jeden erkannten Schlag einzeln. Er kann Schläge verpassen oder doppelt zählen; solche Sprünge senken die Signalgüte.']]},
   dur:{t:'Aufnahmedauer',r:[
     ['Was','Die Zeit zwischen erstem und letztem erfassten Schlag.'],
-    ['Empfehlung','Sieben Minuten in ruhiger Box, mindestens 200 Schläge. Kürzere Aufnahmen sind möglich, aber das Atemmuster-Profil verwirft sie bewusst: Ihre Schwellen stammen aus längeren Ruheaufnahmen und würden auf kurzen Messungen zu häufig anschlagen.'],
-    ['Hinweis','Die Dauer sagt nichts über die Qualität. Dafür steht die Signalgüte im Messprotokoll.']]},
+    ['Empfehlung','Miss in ruhiger Box, bis mindestens 200 Schläge erfasst sind; das dauert je nach Puls etwa fünf bis gut sieben Minuten. Das ist eine Festlegung von CARLON, kein veröffentlichter Standard für das Pferd. Kürzere Aufnahmen werden gespeichert, aber nicht für das Atemmuster-Profil (die Auswertung der Atemkurve) verwendet.'],
+    ['Hinweis','Die Dauer sagt nichts über die Qualität. Dafür steht die Signalgüte im Messprotokoll.'],
+    ['Vergleichbar','Miss immer zur gleichen Tageszeit, am gleichen Ort und vor dem Füttern oder Arbeiten; sonst vergleichst du Situationen, nicht Aufnahmen. Eine eigene Basis entsteht erst aus mehreren Aufnahmen an verschiedenen Tagen.']]},
   hr:{t:'Ø Herzfrequenz',r:[
     ['Was','Der durchschnittliche Puls über die Aufnahme, in Schlägen pro Minute.'],
-    ['Rechenweg','Zeitgewichtet gerechnet: 60000 geteilt durch den mittleren Schlagabstand. Den Mittelwert der einzelnen Puls-Werte zu nehmen wäre systematisch zu hoch. Ein kurzer, schneller Schlag zählte dort genauso viel wie ein langer, obwohl er weniger Zeit ausfüllt (Jensen-Ungleichung).'],
-    ['Spannweite','Die Pille über der Grafik zeigt zusätzlich den niedrigsten und höchsten Wert der Aufnahme.'],
+    ['Rechenweg','Gerechnet wird 60.000 geteilt durch den mittleren Schlagabstand in Millisekunden. So zählt jeder Schlag nach der Zeit, die er ausfüllt; der Mittelwert einzelner Puls-Werte fiele etwas zu hoch aus.'],
+    ['Spannweite','Das Feld über der Grafik zeigt zusätzlich den niedrigsten und höchsten Wert der Aufnahme.'],
     ['Einordnung','Ob ein Wert für dein Pferd üblich ist, hängt von Alter, Rasse, Training und Situation ab. Das beurteilt deine Tierärztin.']]},
-  rmssd:{t:'HRV · RMSSD',r:[
-    ['Warum zwei Zahlen','Die obere Zahl nimmt jeden Schlag. Die untere lässt Paare weg, bei denen der Abstand um mehr als 20 % vom vorigen abweicht (Task Force 1996). Beim Pferd stecken in dieser Lücke zwei völlig verschiedene Dinge: echte Störungen und der AV-Block zweiten Grades, eine Pause, die beim ruhenden Pferd normal ist. Ein Filter kann beides nicht auseinanderhalten, er wirft es zusammen weg.'],
-    ['Was das bedeutet','Liegen die beiden Zahlen weit auseinander, war die Messung nicht schlecht. Es heißt, dass in dieser Aufnahme etwas steckt, das eine Einordnung braucht. Und genau die leistet die tierärztliche Auswertung: sie unterscheidet Pause von Störung. Deshalb darf dort eine dritte Zahl stehen, ohne dass eine der beiden hier falsch wäre.'],
-    ['Was','Ein Maß für die Streuung von einem Schlag zum nächsten, in Millisekunden.'],
-    ['Rechenweg','Wurzel aus dem Mittel der quadrierten Differenzen aufeinanderfolgender Schlagabstände (Task Force 1996).'],
-    ['Lesart','Große Werte heißen: die Abstände ändern sich von Schlag zu Schlag deutlich. Kleine Werte: das Herz läuft gleichmäßiger.'],
-    ['Achtung','Ein einzelner Wert sagt wenig. Aussagekräftig wird er im Vergleich mit früheren Messungen desselben Pferds unter ähnlichen Bedingungen.']]},
+  rmssd:{t:'HRV · RMSSD',r:[['Was','Zeigt, wie stark sich der Abstand von einem Herzschlag zum nächsten ändert, in Millisekunden.'],
+    ['Lesart','Große Werte: die Abstände ändern sich von Schlag zu Schlag deutlich. Kleine Werte: die Abstände sind gleichmäßiger.'],
+    ['Warum zwei Zahlen','Die obere Zahl rechnet mit jedem Schlag. Die untere lässt Schlagpaare weg, deren Abstand um mehr als 20 % vom vorigen abweicht (gängige Filterregel, am Pferd nicht eigens validiert). Hinter so einem Sprung kann eine Fehlerkennung des Gurts stecken, eine echte lange Pause oder ein unregelmäßiger Ruherhythmus; beides ist bei ruhenden Pferden häufig beschrieben. Der Filter kann das nicht unterscheiden.'],
+    ['Was das bedeutet','Liegen die Zahlen weit auseinander, enthält die Aufnahme viele Sprünge. Ob das Pausen oder Fehlerkennungen sind, zeigt diese Messung nicht; das klärt nur ein EKG bei der Tierärztin.'],
+    ['Achtung','Ein einzelner Wert sagt wenig. Vergleiche nur mit mehreren früheren Messungen desselben Pferds, zur gleichen Tageszeit und unter ähnlichen Bedingungen; auch dann schwanken kurze Aufnahmen von Tag zu Tag deutlich.'],
+    ['Rechenweg','Wurzel aus dem Mittel der quadrierten Differenzen aufeinanderfolgender Schlagabstände (Task Force 1996).']]},
   sdnn:{t:'HRV · SDNN',r:[
-    ['Was','Die Standardabweichung aller Schlagabstände der Aufnahme, in Millisekunden.'],
-    ['Unterschied','RMSSD schaut auf benachbarte Schläge, SDNN auf die gesamte Aufnahme. SDNN wächst deshalb mit der Länge und mit jedem Wechsel der Belastung.'],
-    ['Lesart','SDNN beschreibt die Gesamt-Spannweite. Es ist kein Fitnessmaß.'],
+    ['Was','Zeigt, wie weit alle Schlagabstände der Aufnahme um ihren Durchschnitt streuen, in Millisekunden.'],
+    ['Unterschied','RMSSD schaut auf benachbarte Schläge, SDNN auf die gesamte Aufnahme. SDNN wird deshalb meist größer, je länger die Aufnahme ist und je stärker sich der Puls währenddessen ändert.'],
+    ['Lesart','SDNN beschreibt die Gesamtstreuung. Es ist kein Fitnessmaß.'],
     ['Achtung','Nur zwischen vergleichbaren Aufnahmen sinnvoll zu vergleichen.']]},
   qual:{t:'Signalgüte',r:[
-    ['Was','Der Anteil aufeinanderfolgender Schläge ohne unplausiblen Sprung.'],
-    ['Wofür','Eine rein technische Aussage über die MESSUNG. Sitzt der Gurt, ist die Elektrodenfläche feucht genug. Über das Pferd sagt sie nichts.'],
-    ['Konsequenz','Bei niedriger Güte lohnt eine zweite Aufnahme mehr als jede Auswertung der ersten.']]},
+    ['Was','Der Anteil der Schlagpaare ohne Sprung von mehr als 20 %.'],
+    ['Wofür','Sagt vor allem, wie sauber die Messung war: Sitzt der Gurt, ist die Elektrodenfläche feucht genug, stand das Pferd ruhig. Lange Pausen im Herzschlag senken den Wert ebenfalls; er ist deshalb keine Aussage über das Pferd.'],
+    ['Konsequenz','Bei niedriger Güte zuerst Gurtsitz und Feuchtigkeit prüfen und neu messen: Fell und Elektroden gut anfeuchten, Gurt hinter dem Ellbogen fest anlegen, das Pferd zwei Minuten ruhig stehen lassen. Bleibt der Wert trotz gutem Sitz niedrig, lässt sich die Ursache mit dieser Messung nicht klären.']]},
   pairs:{t:'Auswertbare Schlagpaare',r:[
-    ['Was','Wie viele benachbarte Schlag-Paare sauber aufeinanderfolgen. Die Grundlage der Schlag-zu-Schlag-Rechnung.'],
+    ['Was','Die Zahl der benachbarten Schlagpaare ohne Sprung von mehr als 20 %. Nur sie gehen in die gefilterte Schlag-zu-Schlag-Rechnung ein.'],
     ['Warum Paare','RMSSD und die Poincaré-Wolke entstehen aus Paaren, nicht aus einzelnen Schlägen.']]},
   sensor:{t:'Sensor',r:[
     ['Was','Das Gerät, das die Aufnahme geliefert hat.'],
-    ['Warum notiert','Messwerte sind ohne Angabe des Geräts nicht nachvollziehbar. Der Sensor geht deshalb mit in die Datei an die Praxis.']]},
+    ['Warum notiert','Messwerte sind ohne Angabe des Geräts nicht nachvollziehbar. Der Sensor steht deshalb in der Datei, die du an die Praxis weitergeben kannst. Der Gurt liefert nur Schlagabstände, kein EKG-Bild; die Art eines Rhythmus lässt sich damit nicht bestimmen.']]},
   batt:{t:'Gurt-Akku',r:[
     ['Was','Der Ladestand der Knopfzelle im Polar-Gurt.'],
-    ['Warum sichtbar','Ein leerer Gurt ist die haeufigste Ursache fuer abgebrochene Aufnahmen. Bei unter etwa 15 Prozent lohnt der Wechsel vor der Messung, nicht danach.'],
-    ['Hinweis','Der Wert kommt vom Gurt selbst und wird waehrend der Messung aktualisiert.']]},
+    ['Warum sichtbar','Ein leerer Gurt bricht die Aufnahme ab. Bei niedrigem Stand die Knopfzelle vor der Messung wechseln.'],
+    ['Hinweis','Der Wert kommt vom Gurt selbst und wird während der Messung aktualisiert.']]},
   res:{t:'Zeitauflösung',r:[
-    ['Was','Der Gurt meldet Schlagabstände in Schritten von 1/1024 Sekunde, also knapp einer Millisekunde.'],
-    ['Warum wichtig','Die Herzratenvariabilität lebt von Unterschieden im Millisekundenbereich. Eine gröbere Auflösung würde genau das Signal verschlucken, um das es geht.']]}
+    ['Was','Der Gurt überträgt Schlagabstände in Schritten von 1/1024 Sekunde, also knapp einer Millisekunde.'],
+    ['Warum wichtig','Die HRV beruht auf Unterschieden von wenigen Millisekunden. Das feine Raster sagt aber nicht, wie genau der Gurt den Schlag am Pferd trifft; dafür steht die Signalgüte.']]}
 },
 en:{
   vitals:{t:'Pulse + HRV · over time',r:[
     ['Gold','The pulse in beats per minute, across the whole recording. Left axis.'],
     ['Cyan','Heart rate variability as a rolling RMSSD. Right axis, its own scale.'],
     ['Why together','Placed side by side, you can see how the two relate to each other. Two separate pictures hide exactly that.'],
-    ['Window','HRV is computed over a rolling window and therefore responds to changes in pulse. It is a measure of the course over time, not a resting single value.'],
-    ['Interpretation','What the course means for your horse is something your veterinarian will tell you. That requires comparison with earlier recordings of the same horse.']]},
+    ['Window','The HRV is computed from the last 30 beats each time. When the pulse changes, the curve swings with it. It shows a course, not a resting value; windows this short are not validated in horses.'],
+    ['Interpretation','The curve alone allows no statement about your horse. Assessment lies with your vet and needs comparison with earlier recordings of the same horse.']]},
   rr:{t:'Beat-to-beat intervals',r:[
     ['What','The interval between two consecutive heartbeats, in milliseconds. Every point on the curve is a single beat.'],
-    ['Zigzag','A healthy heart does not beat like a metronome. The intervals fluctuate. Among other things in time with the breathing.'],
+    ['Zigzag','The intervals between beats are never exactly equal. They fluctuate, among other things in time with breathing.'],
     ['Raw signal','This is the unprocessed measurement. Every other number on this page is calculated from it.'],
-    ['Axis','Below is the beat number; the dashed line is the mean of the recording.']]},
+    ['Axis','Below is the beat number; the dashed line is the mean of the recording.'],
+    ['Disturbances','Chewing, neighing, fending off flies and shifting weight change the intervals; note what happened during the recording.']]},
   breath:{t:'Breathing curve',r:[
-    ['Idea','Breathing changes the heartbeat: on breathing in it shortens, on breathing out it lengthens. This fluctuation can be extracted from the beat intervals.'],
-    ['Colours','Coral upwards is the inhalation phase, blue downwards the exhalation. Grey marks pauses without a clear direction.'],
+    ['Idea','The curve estimates breathing from the heartbeat. With each breath the intervals between beats fluctuate slightly: usually shorter on inspiration, longer on expiration.'],
+    ['Colours','Coral upwards: intervals become shorter (usually inspiration). Blue downwards: intervals become longer (usually expiration). Grey: no clear direction.'],
     ['Number','Top left shows the breathing rate estimated from this, in breaths per minute.'],
-    ['Limit','This is derived from the heartbeat, not a direct measurement of breathing. With a restless horse or a disturbed signal it becomes imprecise.']]},
+    ['Limit','Not a direct respiration measurement, only for calm recordings while standing. Other influences and long pauses also make the intervals fluctuate; with fast breathing and a slow pulse the curve no longer reflects breathing. To check, count the flank movements for one minute.']]},
   poin:{t:'Beat to beat · Poincaré',r:[
-    ['Idea','Every point carries two values: horizontally one beat interval, vertically the one immediately following it.'],
+    ['Idea','Each point compares one heartbeat interval with the next: horizontally the one, vertically the following one.'],
     ['Diagonal','If every beat were exactly like the one before, all points would lie on the dashed line. The scatter around it is the variability.'],
-    ['Ellipse','Summarises the cloud: SD1 across the diagonal (short-term), SD2 along it (longer-term).'],
-    ['Origin','A standard representation in heart rate analysis, established for decades.']]},
+    ['Ellipse','Summarises the cloud. SD1 is the width across the diagonal (beat-to-beat change, practically RMSSD divided by 1.41). SD2 is the length along the diagonal (spread over longer stretches).'],
+    ['Outliers','Single points far outside the cloud are long pauses, extra beats or detection errors. Which of these it is, only an ECG can show.']]},
   beats:{t:'Heartbeats',r:[
     ['What','The number of individually captured heartbeats in this recording.'],
-    ['Why it matters','The more beats, the steadier the derived values. Very short recordings fluctuate strongly.'],
-    ['Capture','The strap reports every beat individually. Counted, not estimated.']]},
+    ['Why it matters','The more beats, the less the values computed from them fluctuate.'],
+    ['Capture','The strap reports each detected beat individually. It can miss beats or count them twice; such jumps lower the signal quality.']]},
   dur:{t:'Recording length',r:[
     ['What','The time between the first and the last captured beat.'],
-    ['Recommendation','Seven minutes in a quiet box, at least 200 beats. Shorter recordings are possible, but the breathing-pattern profile deliberately discards them: its thresholds come from longer resting recordings and would trigger too often on short ones.'],
-    ['Note','Length says nothing about quality. Signal quality in the recording log covers that.']]},
+    ['Recommendation','Record in a quiet stable until at least 200 beats are captured; depending on the pulse this takes about five to a good seven minutes. This is a CARLON setting, not a published standard for horses. Shorter recordings are saved but not used for the breathing-pattern profile (the analysis of the breathing curve).'],
+    ['Note','Length says nothing about quality. Signal quality in the recording log covers that.'],
+    ['Comparable','Always record at the same time of day, in the same place and before feeding or work; otherwise you compare situations, not recordings. A personal baseline only emerges from several recordings on different days.']]},
   hr:{t:'Average pulse',r:[
     ['What','The average pulse across the recording, in beats per minute.'],
-    ['How it is calculated','Time-weighted: 60000 divided by the mean beat interval. Averaging the individual pulse values would be systematically too high. A short, fast beat would count as much as a long one although it fills less time (Jensen’s inequality).'],
-    ['Range','The pill above the chart additionally shows the lowest and highest value of the recording.'],
+    ['How it is calculated','Computed as 60,000 divided by the mean beat interval in milliseconds. Each beat thus counts by the time it fills; the mean of single pulse values would come out slightly too high.'],
+    ['Range','The field above the chart also shows the lowest and highest value of the recording.'],
     ['Interpretation','Whether a value is usual for your horse depends on age, breed, training and situation. Your veterinarian assesses that.']]},
-  rmssd:{t:'HRV · RMSSD',r:[
-    ['Why two numbers','The upper number uses every beat. The lower one drops pairs whose interval deviates by more than 20 % from the preceding one (Task Force 1996). In the horse that gap holds two entirely different things: genuine disturbances and second-degree AV block, a pause that is normal in a resting horse. A filter cannot tell them apart; it discards both together.'],
-    ['What it means','If the two numbers are far apart, the recording was not poor. It means this recording contains something that needs interpreting. Which is exactly what the veterinary assessment provides: it separates pause from disturbance. A third number may well appear there without either of these two being wrong.'],
-    ['What','A measure of the variation from one beat to the next, in milliseconds.'],
-    ['How it is calculated','Root of the mean squared differences between consecutive beat intervals (Task Force 1996).'],
-    ['Reading it','Large values mean the intervals change noticeably from beat to beat. Small values: the heart runs more evenly.'],
-    ['Caution','A single value says little. It becomes meaningful in comparison with earlier recordings of the same horse under similar conditions.']]},
+  rmssd:{t:'HRV · RMSSD',r:[['What','Shows how much the interval changes from one heartbeat to the next, in milliseconds.'],
+    ['Reading it','Large values: the intervals change noticeably from beat to beat. Small values: the intervals are more even.'],
+    ['Why two numbers','The upper number uses every beat. The lower one drops beat pairs whose interval deviates by more than 20 % from the preceding one (a common filter rule, not specifically validated in horses). Behind such a jump there may be a detection error of the strap, a genuine long pause or an irregular resting rhythm; both are frequently described in resting horses. The filter cannot tell them apart.'],
+    ['What it means','If the numbers are far apart, the recording contains many jumps. Whether these are pauses or detection errors this measurement cannot show; only an ECG at the vet can tell.'],
+    ['Caution','A single value says little. Compare only with several earlier recordings of the same horse, at the same time of day and under similar conditions; even then short recordings vary noticeably from day to day.'],
+    ['How it is calculated','Root of the mean squared differences between consecutive beat intervals (Task Force 1996).']]},
   sdnn:{t:'HRV · SDNN',r:[
-    ['What','The standard deviation of all beat intervals in the recording, in milliseconds.'],
-    ['Difference','RMSSD looks at neighbouring beats, SDNN at the whole recording. SDNN therefore grows with length and with every change in load.'],
+    ['What','Shows how widely all beat intervals of the recording scatter around their mean, in milliseconds.'],
+    ['Difference','RMSSD looks at neighbouring beats, SDNN at the whole recording. SDNN therefore usually grows the longer the recording and the more the pulse changes during it.'],
     ['Reading it','SDNN describes the overall spread. It is not a fitness measure.'],
     ['Caution','Only meaningful to compare between comparable recordings.']]},
   qual:{t:'Signal quality',r:[
-    ['What','The share of consecutive beats without an implausible jump.'],
-    ['What it is for','A purely technical statement about the MEASUREMENT. Whether the strap sits well and the electrode area is moist enough. It says nothing about the horse.'],
-    ['Consequence','At low quality, a second recording is worth more than any analysis of the first.']]},
+    ['What','The share of beat pairs without a jump of more than 20 %.'],
+    ['What it is for','Mainly shows how clean the measurement was: is the strap in place, are the electrodes wet enough, did the horse stand still. Long pauses in the heartbeat also lower the value; it is therefore not a statement about the horse.'],
+    ['Consequence','If quality is low, first check strap fit and moisture and record again: wet coat and electrodes well, fit the strap firmly behind the elbow, let the horse stand quietly for two minutes. If the value stays low despite a good fit, the cause cannot be clarified with this recording.']]},
   pairs:{t:'Usable beat pairs',r:[
-    ['What','How many neighbouring beat pairs follow one another cleanly. The basis of the beat-to-beat calculation.'],
+    ['What','The number of neighbouring beat pairs without a jump of more than 20 %. Only these enter the filtered beat-to-beat calculation.'],
     ['Why pairs','RMSSD and the Poincaré cloud arise from pairs, not from individual beats.']]},
   sensor:{t:'Sensor',r:[
     ['What','The device that produced the recording.'],
-    ['Why recorded','Readings are not traceable without stating the device. The sensor therefore travels with the file to the practice.']]},
+    ['Why recorded','Measurements cannot be traced without naming the device. The sensor is therefore stated in the file you can pass on to the practice. The strap delivers only beat intervals, not an ECG; the type of a rhythm cannot be determined from it.']]},
   batt:{t:'Belt battery',r:[
     ['What','The charge level of the coin cell in the Polar strap.'],
-    ['Why visible','An empty strap is the most common cause of aborted recordings. Below roughly 15 percent it pays to change it before the recording, not after.'],
+    ['Why visible','An empty strap stops the recording. If the level is low, replace the coin cell before measuring.'],
     ['Note','The value comes from the strap itself and is updated during the recording.']]},
   res:{t:'Time resolution',r:[
-    ['What','The strap reports beat intervals in steps of 1/1024 second, that is just under one millisecond.'],
-    ['Why it matters','Heart rate variability lives on differences in the millisecond range. A coarser resolution would swallow exactly the signal that matters.']]}
+    ['What','The strap transmits beat intervals in steps of 1/1024 second, just under one millisecond.'],
+    ['Why it matters','HRV is based on differences of a few milliseconds. The fine grid does not say how accurately the strap hits the beat on the horse; the signal quality shows that.']]}
 }
 };
 function infoFor(k){ const d=INFO_ALL[LANG]||INFO_ALL.de; return d[k]||INFO_ALL.de[k]; }
@@ -4124,7 +4126,7 @@ function rrFehltMelden(){
    EquineAsthmaScreener.swift:161 — `n >= 200, dauer >= 420`.
 
    Vorher stand hier 300. Damit empfahl die Station fuenf Minuten,
-   waehrend die Auswertung alles unter sieben Minuten als
+   während die Auswertung alles unter sieben Minuten als
    „Datengrundlage zu klein" verwirft: Wer der Station folgte, bekam
    eine Aufnahme, die der Screener ablehnt.
 
@@ -4155,7 +4157,7 @@ function tick(){
   const secs=laufzeitSek();
   $('#dur').textContent=mmss(secs);
   /* Der Fortschritt ist das MINIMUM aus beiden Bedingungen — sonst zeigt
-     der Balken „fertig", waehrend dem Screener noch Schlaege fehlen.
+     der Balken „fertig", während dem Screener noch Schlaege fehlen.
      Ein ruhiges Pferd erreicht die 200 Schlaege spaeter als die Uhr. */
   const schlaege = (S.rr && S.rr.length) || 0;
   const pZeit = Math.min(1, secs/REC_SEC);
@@ -4484,7 +4486,7 @@ function finish(){
   const fill=$('#qfill');
   fill.className = q>=0.90?'':(q>=0.75?'mid':'bad');
   requestAnimationFrame(()=>{ fill.style.width=(q*100).toFixed(1)+'%'; });
-  /* Abgeleitet, nicht getippt. Hier stand 300, waehrend die andere
+  /* Abgeleitet, nicht getippt. Hier stand 300, während die andere
      Stelle bereits REC_SEC benutzte — zwei Wahrheiten fuer dieselbe Frage. */
   const kurz = secs < REC_SEC;
   $('#protoVerdict').textContent = q>=0.90 ? (kurz?t('verdictCleanShort'):t('verdictClean'))
