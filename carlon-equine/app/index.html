@@ -11752,6 +11752,10 @@ const License={
          nachtraeglich nicht setzen, deshalb neu angelegt. Ebenso deaktiviert:
          die alten 79/790-Links (plink_1U1tko… und plink_1U1tn3…), damit kein
          Bookmark zum Altpreis fuehrt. */
+      /* 20.11.2026 (2. Fassung): JE STUFE EIN PRODUKT – sonst lässt das Stripe-Kundenportal keinen Stufenwechsel zu (ein Preis je
+         Intervall und Produkt). Fahrpraxis bleibt prod_V1xTYl1ssi7USy (laufendes Abo), Praxis & Klinik prod_VfEBtJQfm0ID0M, Reha
+         prod_VfEFA7koUcv4d7, Klinik + Reha prod_VfEHjtP9B8UZxP, Equine Center prod_VfEJEUfQALoohy. Die Links der ersten Fassung
+         (alle am Fahrpraxis-Produkt) sind deaktiviert.
       /* 20.11.2026: Jahr = 11 Monatsbeiträge, neue Stufen Reha / Klinik + Reha / Center. Neue Preise am selben
          Live-Produkt prod_V1xTYl1ssi7USy, je mit metadata.tier; Links mit Managed Payments, autom. Steuer, Steuer-ID,
          Name + Unternehmensname Pflicht, AGB-Zustimmung, Rückleitung ?session_id=…; Monatslinks 14 Tage Test MIT Karte.
@@ -11776,14 +11780,14 @@ const License={
          ⚠ Duplizieren ist KEIN Weg: Stripes "Duplikat" klont Produkt UND
          Preis, der Link haenge dann an einem "(Copy)"-Produkt statt an
          prod_V1xTYl1ssi7USy. Genau so ist prod_V494j8xRT7OVbC entstanden. */
-      clinicMonth:'https://buy.stripe.com/aFa6oH81F8tD4y2fSrgbm07',   //   349 €/Monat price_1U4l7L… vet_clinic (14 T. Test)
-      clinicYear :'https://buy.stripe.com/dRm9ATdlZbFP8Oi8pZgbm0f',   // 3.839 €/Jahr  price_1Udt0W… vet_clinic
-      rehaMonth  :'https://buy.stripe.com/7sY3cveq3fW56Gaay7gbm0b',   //   349 €/Monat price_1Udt0k… vet_reha (14 T. Test)
-      rehaYear   :'https://buy.stripe.com/cNicN5eq3h091lQ8pZgbm0g',   // 3.839 €/Jahr  price_1Udt14… vet_reha
-      kombiMonth :'https://buy.stripe.com/4gMcN50zd8tD6Ga7lVgbm0c',   //   590 €/Monat price_1Udt1H… vet_klinik_reha (14 T. Test)
-      kombiYear  :'https://buy.stripe.com/bJeeVd1Dh8tDe8C0Xxgbm0h',   // 6.490 €/Jahr  price_1Udt1b… vet_klinik_reha
-      centerMonth:'https://buy.stripe.com/7sYdR90zddNXc0ubCbgbm0d',   //   890 €/Monat price_1Udt1o… vet_center (14 T. Test)
-      centerYear :'https://buy.stripe.com/3cI8wP1Dh8tD5C65dNgbm0i',   // 9.790 €/Jahr  price_1Udt24… vet_center
+      clinicMonth:'https://buy.stripe.com/eVq14nfu7dNX5C67lVgbm0j',   // 349 €/Monat price_1UdtjV… vet_clinic (14 T. Test)
+      clinicYear :'https://buy.stripe.com/aFacN56XB6lv4y2ay7gbm0n',   // 3.839 €/Jahr  price_1Udtkz… vet_clinic
+      rehaMonth  :'https://buy.stripe.com/bJe8wPgybdNXfcGbCbgbm0k',   // 349 €/Monat price_1Udtmm… vet_reha (14 T. Test)
+      rehaYear   :'https://buy.stripe.com/eVqbJ13LpfW57KedKjgbm0o',   // 3.839 €/Jahr  price_1Udtoo… vet_reha
+      kombiMonth :'https://buy.stripe.com/28E8wP6XBcJT6GadKjgbm0l',   // 590 €/Monat price_1UdtpI… vet_klinik_reha (14 T. Test)
+      kombiYear  :'https://buy.stripe.com/cNiaEXeq34dn3tY9u3gbm0p',   // 6.490 €/Jahr  price_1UdtqU… vet_klinik_reha
+      centerMonth:'https://buy.stripe.com/6oUaEXfu78tD5C60Xxgbm0m',   // 890 €/Monat price_1Udtql… vet_center (14 T. Test)
+      centerYear :'https://buy.stripe.com/28E9ATbdRaBL5C69u3gbm0q',   // 9.790 €/Jahr  price_1Udtrm… vet_center
     }
   },
   get CHECKOUT(){ return this.CHECKOUT_ALL[LIVE?'live':'test']; },
