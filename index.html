@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="theme-color" content="#050505">
-  <title>Vitalkultur · Every heart has its own normal</title>
+  <title>Vitalkultur · See what happens between two heartbeats</title>
   <meta name="description" content="Vitalkultur — an independent team building wellness apps with documented methods. Heart-rate variability, haptic breathwork, heart-rate variability for horses. Built for owners, athletes, vets and researchers who want answers — not promises.">
   <meta property="og:title" content="Vitalkultur — Heart · Breath · Movement">
   <meta property="og:description" content="Software for the Polar H10: browser software for equine practices and rehab centres, apps for horse owners, research and breathwork. Data stays on your devices.">
@@ -530,8 +530,8 @@ document.head.appendChild(s);})();</script>
       <span data-en="Heart rate and HRV" data-de="Herzfrequenz und HRV">Heart rate and HRV</span><span class="dot"></span>
       <span data-en="For horses and people" data-de="Für Pferde und Menschen">For horses and people</span>
     </div>
-    <h1 data-en="Every heart has its own normal. <em>We show when it changes.</em>"
-        data-de="Jedes Herz hat sein eigenes Normal. <em>Wir zeigen, wann es sich verändert.</em>">Every heart has its own normal. <em>We show when it changes.</em></h1>
+    <h1 data-en="See what happens <em>between two heartbeats.</em>"
+        data-de="Sehen, was <em>zwischen zwei Herzschlägen</em> passiert.">See what happens <em>between two heartbeats.</em></h1>
     <p data-en="Measured with the Polar H10, beat by beat. Compared with the individual’s own baseline, not with norm tables. For observation, not diagnosis, and recordings stay on your own devices."
        data-de="Gemessen mit dem Polar H10, Schlag für Schlag. Verglichen mit den eigenen Ausgangswerten, nicht mit Normtabellen. Zur Beobachtung, keine Diagnose, und die Aufnahmen bleiben auf den eigenen Geräten.">Measured with the Polar H10, beat by beat. Compared with the individual’s own baseline, not with norm tables. For observation, not diagnosis, and recordings stay on your own devices.</p>
     <nav class="fuer-wen" aria-label="Für wen">
@@ -789,7 +789,7 @@ document.head.appendChild(s);})();</script>
     let lang = detectLang();
     function applyLang() {
       document.documentElement.lang = lang;
-      document.title = lang === 'de' ? 'Vitalkultur · Jedes Herz hat sein eigenes Normal' : 'Vitalkultur · Every heart has its own normal';
+      document.title = lang === 'de' ? 'Vitalkultur · Sehen, was zwischen zwei Herzschlägen passiert' : 'Vitalkultur · See what happens between two heartbeats';
       document.querySelectorAll('[data-en]').forEach(el => {
         const txt = el.getAttribute('data-' + lang);
         if (txt != null) el.innerHTML = txt;
