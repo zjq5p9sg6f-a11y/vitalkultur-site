@@ -389,7 +389,7 @@ body:has(#rehaLive) .modal-bg,body:has(#rehaLive) #chartZoom{z-index:150}
 .erste-schritte{max-width:640px;margin:clamp(20px,6vh,64px) auto;padding:0 4px}.erste-schritte h1{margin:8px 0 22px}
 .erste-schritte ol{list-style:none;margin:0;padding:0;display:grid;gap:14px}
 .es-schritt{display:grid;grid-template-columns:36px 1fr;gap:14px;padding:16px 18px;border:1px solid var(--border-faint);border-radius:16px;background:var(--bg-surface,rgba(255,255,255,.02))}
-.es-nr{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;background:rgba(62,207,178,.14);color:var(--cyan);font-weight:650}
+.es-schritt .es-nr{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;background:rgba(62,207,178,.14);color:var(--cyan);font-weight:650}
 .es-schritt b{display:block;font-size:16px;color:var(--text-primary);margin-bottom:3px}.es-schritt span{display:block;font-size:13.5px;line-height:1.5;color:var(--text-secondary)}
 .es-schritt .btn{margin-top:12px}.es-knoepfe{display:flex;gap:8px;flex-wrap:wrap}.es-knoepfe .btn{margin-top:12px}
 .es-fuss{margin-top:18px;font-size:12.5px;color:var(--text-dim);line-height:1.5}.es-fuss a{color:var(--cyan)}
@@ -2079,7 +2079,7 @@ html.schau .demo-ribbon,html.schau #toasts,html.schau [class*=toast],html.schau 
 /* KOPF PASST SICH SELBST AN (16.11.2026, Jan: „Demo freischalten geht über den Rand“; Passform-Prüfstand:
    Überlauf 246/160/153 px bei 1280/1366/1600 px). Statt fester Breakpoints misst Kopf.passen() die Leiste und
    verdichtet stufenweise, bis alles passt – auf jedem Tablet- und Telefonformat. */
-header.k1 .speicher-pill #speicherTxt{display:none}
+header.k1 .speicher-pill #speicherTxt{display:none}header.k1 .speicher-pill{min-width:36px;min-height:36px;justify-content:center}
 header.k2 nav.tabs button{padding:8px 9px;gap:5px}
 header.k2 .hbtn.primary .lbl-full{display:none}
 header.k3 nav.tabs button .ic{display:none}
@@ -11222,22 +11222,23 @@ const UI={
     const l=State.license||{tier:'demo'}; const link=License.geraetLink();
     const eingerichtet=!!((State.settings.clinicName||'').trim() && State.settings.clinicName!=='Meine Pferdepraxis');
     let qr=''; try{ if(link) qr=QR.svg(link,{hell:'#ffffff',dunkel:'#0A0A0C'}); }catch(e){ qr=''; }
+    const E=(de,en)=>Sprache.cur==='en'?en:de;   /* 21.11.2026 Prüfkauf: Willkommen war nur deutsch */
     const schritt=(n,h,t)=>`<div style="display:flex;gap:12px;align-items:flex-start;margin:10px 0"><div style="flex:none;width:26px;height:26px;border-radius:50%;border:1px solid var(--cyan,#3ECFB2);color:var(--cyan,#3ECFB2);display:flex;align-items:center;justify-content:center;font-size:13px">${n}</div><div><div style="font-weight:600">${h}</div><div style="font-size:13px;color:var(--text-secondary)">${t}</div></div></div>`;
-    this.modal(`<div class="modal-head"><button class="closex" onclick="UI.closeModal()">${IC.x}</button><h3>${erstkauf?'Willkommen bei CARLON Equine':'Gerät freigeschaltet'}</h3></div>
+    this.modal(`<div class="modal-head"><button class="closex" onclick="UI.closeModal()">${IC.x}</button><h3>${erstkauf?E('Willkommen bei CARLON Equine','Welcome to CARLON Equine'):E('Gerät freigeschaltet','Device activated')}</h3></div>
     <div class="modal-body" id="willkommen">
-      <p style="margin:0 0 6px">${esc(l.lic||'Ihre Praxis')} · <b>${License.TIERS[l.tier]?.name||''}</b></p>
-      <p style="margin:0 0 12px;color:var(--text-secondary);font-size:13px">In vier Schritten zur ersten eigenen Akte mit Verlauf:</p>
-      ${schritt(1,'Praxis einrichten'+(eingerichtet?' ✓':''),eingerichtet?'Name und Kontakt sind hinterlegt.':'Praxisname und Kontakt – sie stehen auf Ihrem Aushang und in der Messstation. <a href="#" onclick="UI.closeModal();UI.openSettings();return false">Jetzt einrichten</a>')}
-      ${schritt(2,'Gurt vorbereiten','Polar-H10-Gurt anlegen, Elektrodenfläche gut anfeuchten.')}
-      ${schritt(3,'Etwa sieben Minuten Ruhe aufnehmen','Mit der Messstation im Browser (Android, Chrome/Edge am Computer) oder der CARLON-Equine-App auf iPhone/iPad.')}
-      ${schritt(4,'Verlauf lesen','Die Aufnahme dem Pferd zuordnen – ab der zweiten sehen Sie den Verlauf gegen die eigene Basis.')}
-      <div style="margin:4px 0 0 38px;font-size:12.5px;color:var(--text-dim)">${License.can('station')?'Klinik: Verbinden Sie in den Einstellungen Ihren Klinik-Ordner – dann sieht jedes Gerät des Teams denselben Stand.':'Mehrere Geräte im Team? Im Klinik-Tarif teilt der Klinik-Ordner denselben Stand auf allen Geräten.'}</div>
+      <p style="margin:0 0 6px">${esc(l.lic||E('Ihre Praxis','Your practice'))} · <b>${(Sprache.cur==='en'?({vet_solo:'Mobile practice',vet_clinic:'Practice & clinic',vet_reha:'Rehab',vet_klinik_reha:'Clinic + rehab',vet_center:'Equine Center'})[l.tier]:'')||License.TIERS[l.tier]?.name||''}</b></p>
+      <p style="margin:0 0 12px;color:var(--text-secondary);font-size:13px">${E('In vier Schritten zur ersten eigenen Akte mit Verlauf:','Four steps to your first own record with a trend:')}</p>
+      ${schritt(1,E('Praxis einrichten','Set up your practice')+(eingerichtet?' ✓':''),eingerichtet?E('Name und Kontakt sind hinterlegt.','Name and contact details are saved.'):E('Praxisname und Kontakt. Beides steht auf Ihrem Aushang und in der Messstation.','Practice name and contact details. Both appear on your notice and in the measuring station.')+` <a href="#" onclick="UI.closeModal();UI.openSettings();return false">${E('Jetzt einrichten','Set up now')}</a>`)}
+      ${schritt(2,E('Gurt vorbereiten','Prepare the strap'),E('Polar-H10-Gurt anlegen, Elektrodenfläche gut anfeuchten.','Fit the Polar H10 strap and moisten the electrode area well.'))}
+      ${schritt(3,E('Etwa sieben Minuten Ruhe aufnehmen','Record about seven minutes at rest'),E('Mit der Messstation im Browser (Android, Chrome/Edge am Computer) oder der CARLON-Equine-App auf iPhone/iPad.','With the measuring station in the browser (Android, Chrome/Edge on a computer) or the CARLON Equine app on iPhone/iPad.'))}
+      ${schritt(4,E('Verlauf lesen','Read the trend'),E('Die Aufnahme dem Pferd zuordnen. Ab der zweiten Aufnahme sehen Sie den Verlauf gegen die eigene Basis.','Assign the recording to the horse. From the second recording on, you see the trend against the horse’s own baseline.'))}
+      <div style="margin:4px 0 0 38px;font-size:12.5px;color:var(--text-dim)">${E('Mehrere Geräte? Verbinden Sie in den Einstellungen Ihren Team-Ordner, dann sieht jedes Gerät denselben Stand.','Several devices? Connect your team folder in the settings, and every device shows the same records.')}</div>
       ${qr?`<div style="display:flex;gap:14px;align-items:center;margin:16px 0 6px;padding:12px;border:1px solid var(--border,rgba(255,255,255,.12));border-radius:12px">
         <div style="flex:none;width:112px;height:112px;background:#fff;border-radius:8px;padding:6px">${qr}</div>
-        <div style="font-size:13px"><b>Auf weiterem Gerät nutzen</b><br><span style="color:var(--text-secondary)">Mit iPad oder Praxis-PC scannen – die Lizenz gilt dann dort ohne Schlüssel. Ihre Akten liegen je Gerät; sie kommen per Backup oder Klinik-Ordner mit. Link nur innerhalb der Praxis weitergeben.</span>
-        <div style="margin-top:8px"><button class="btn ghost" onclick="navigator.clipboard&&navigator.clipboard.writeText(License.geraetLink()).then(()=>Toast.show('Geräte-Link kopiert','ok'))">Link kopieren</button></div></div></div>`:''}
-      <div style="margin-top:14px;font-size:13px;color:var(--text-secondary)">Fragen zum Produkt: <b>Jan Rohwedder</b> · <a href="mailto:jan@vitalkultur.com">jan@vitalkultur.com</a><br>Rechnung, Karte, Kündigung: „Abo verwalten“ in der Lizenz-Ansicht.</div>
-      <div style="display:flex;gap:8px;margin-top:16px;flex-wrap:wrap"><button class="btn primary" onclick="(typeof Praxis!=='undefined'?Praxis.einladung():Promise.resolve(null)).then(l=>{ if(l) window.open(l,'_blank','noopener'); else location.href='messen.html'; })">Erste Aufnahme starten</button>${(State.horses||[]).length?'':`<button class="btn ghost" title="Lädt 15 Beispielpferde – in den Einstellungen jederzeit wieder entfernbar" onclick="UI.closeModal();startWith(true).then(()=>Nav.go('today'))">Ohne Gurt umsehen (Beispielpferde)</button>`}<button class="btn ghost" onclick="UI.closeModal()">Später</button></div>
+        <div style="font-size:13px"><b>${E('Auf weiterem Gerät nutzen','Use on another device')}</b><br><span style="color:var(--text-secondary)">${E('Mit iPad oder Praxis-PC scannen, dann gilt die Lizenz dort ohne Schlüssel. Ihre Akten liegen je Gerät und kommen per Backup oder Team-Ordner mit. Den Link nur innerhalb der Praxis weitergeben.','Scan with an iPad or practice computer and the licence applies there without a key. Records are stored per device and move across by backup or team folder. Share the link only within your practice.')}</span>
+        <div style="margin-top:8px"><button class="btn ghost" onclick="navigator.clipboard&&navigator.clipboard.writeText(License.geraetLink()).then(()=>Toast.show(E('Geräte-Link kopiert','Device link copied'),'ok'))">${E('Link kopieren','Copy link')}</button></div></div></div>`:''}
+      <div style="margin-top:14px;font-size:13px;color:var(--text-secondary)">${E('Fragen zum Produkt','Questions about the product')}: <b>Jan Rohwedder</b> · <a href="mailto:jan@vitalkultur.com">jan@vitalkultur.com</a><br>${E('Rechnung, Karte, Kündigung: „Abo verwalten“ in der Lizenz-Ansicht.','Invoices, card, cancellation: “Manage subscription” in the licence view.')}</div>
+      <div style="display:flex;gap:8px;margin-top:16px;flex-wrap:wrap"><button class="btn primary" onclick="(typeof Praxis!=='undefined'?Praxis.einladung():Promise.resolve(null)).then(l=>{ if(l) window.open(l,'_blank','noopener'); else location.href='messen.html'; })">${E('Erste Aufnahme starten','Start first recording')}</button>${(State.horses||[]).length?'':`<button class="btn ghost" title="${E('Lädt 15 Beispielpferde, in den Einstellungen jederzeit wieder entfernbar','Loads 15 sample horses; you can remove them in the settings at any time')}" onclick="UI.closeModal();startWith(true).then(()=>Nav.go('today'))">${E('Ohne Gurt umsehen (Beispielpferde)','Look around without a strap (sample horses)')}</button>`}<button class="btn ghost" onclick="UI.closeModal()">${E('Später','Later')}</button></div>
     </div>`);
   },
   licenseInfo(){
@@ -15335,13 +15336,15 @@ const Kopf={
   passen(){
     const h=document.querySelector('header'); if(!h) return;
     for(let k=1;k<=7;k++) h.classList.remove('k'+k);
-    const zuBreit=()=>h.scrollWidth>h.clientWidth+1 || [...h.children].some(c=>c.offsetParent&&c.getBoundingClientRect().right>innerWidth+0.5);
+    const nav=h.querySelector('nav.tabs');   /* 21.11.2026 Prüfkauf: die Reiter schrumpften unbemerkt (1512 px: 197 von 614 px sichtbar) */
+    const zuBreit=()=>h.scrollWidth>h.clientWidth+1 || (nav&&nav.offsetParent&&nav.scrollWidth>nav.clientWidth+1) || [...h.children].some(c=>c.offsetParent&&c.getBoundingClientRect().right>innerWidth+0.5);
     for(let k=1;k<=7&&zuBreit();k++) h.classList.add('k'+k);
   },
   start(){
     let f=0; const neu=()=>{cancelAnimationFrame(f); f=requestAnimationFrame(()=>Kopf.passen());};
     addEventListener('resize',neu); addEventListener('orientationchange',neu);
     if(window.ResizeObserver){ const h=document.querySelector('header'); if(h) new ResizeObserver(neu).observe(h); }
+    { const n=document.querySelector('header nav.tabs'); if(n&&window.MutationObserver) new MutationObserver(neu).observe(n,{childList:true,subtree:true,attributes:true,attributeFilter:['hidden','class']}); }
     if(document.fonts&&document.fonts.ready) document.fonts.ready.then(neu);
     neu();
   }
