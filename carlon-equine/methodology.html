@@ -13,7 +13,7 @@
 <meta property="og:locale" content="de_DE">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Methods documentation · CARLON Equine</title>
-<meta name="description" content="Sensor, filter chain with all thresholds, data flow, analysis gates, sources and limitations of HRV recording in horses. For institutions, ethics committees and research partners.">
+<meta name="description" content="Sensor, artefact-correction algorithm with all thresholds, data flow, analysis gates, sources and limitations of HRV recording in horses. For institutions, ethics committees and research partners.">
 <meta name="robots" content="index,follow">
 <link rel="icon" href="/assets/equine-mark-224.png">
 
@@ -98,38 +98,38 @@ footer{margin-top:44px;padding-top:16px;border-top:1px solid var(--line);font-si
 <header>
   <div class="marke"><span class="wm">CARLON</span><span class="tag">EQUINE BIOMETRICS</span><a class="sprache" href="/carlon-equine/methodology.html" hreflang="de" lang="de" style="margin-left:auto;font-size:13px;color:#3ECFB2;text-decoration:none">Deutsch</a></div>
   <h1>Methods documentation</h1>
-  <div class="unter">Sensor, filter chain, data flow, analysis gates, sources and limits of
-    heart rate variability recording in the horse.</div>
+  <div class="unter">Sensor, artefact-correction algorithm, data flow, analysis gates, sources and limitations of
+    heart rate variability recording in horses.</div>
   <div class="stand">Version <span id="stand">2026-08-14</span> · Measurement profile <code>equine-v1</code> ·
     For institutions, research partners and ethics committees</div>
 </header>
 
 <div class="kasten">
   <h4 aria-level="2">Purpose of this document</h4>
-  <p>If you measure with CARLON Equine and have to describe the results in an application, a study or a
+  <p>If you take measurements with CARLON Equine and need to describe the results in an application, a study or a
   horse’s record, you need the numbers behind them. This document states every filter stage
   with its actual threshold and the source for it. It also states explicitly where
-  a value is a reasoned setting of our own and not a value from the literature. The values
-  are compared against the shipped code in every test run.</p>
+  a value is a reasoned setting of our own rather than a value from the literature. The values
+  are checked against the shipped code on every test run.</p>
 </div>
 
 <h2>1 · Recording</h2>
-<p>The recording consists of <strong>RR intervals</strong> — the time between two heartbeats
-in milliseconds. The browser measuring station records no raw ECG signal, no images or audio and no location data; the iOS app can additionally save an ECG strip (Vet mode) and, if switched on, a GPS track.</p>
+<p>What is recorded are <strong>RR intervals</strong>, the time between two heartbeats,
+in milliseconds. The browser measuring station records no raw ECG signal, no images or audio and no location data; the iOS app can also save an ECG strip (Vet mode) and, if enabled, a GPS track.</p>
 <div class="wrap" tabindex="0" role="region" aria-label="Table, scrolls horizontally"><table>
   <tr><th>Parameter</th><th>Value</th><th>Note</th></tr>
-  <tr><td>Sensor</td><td class="wert">Polar H10</td><td class="quelle">Electrical chest strap; tested against ECG in horses at rest and during groundwork (Kapteijn et al. 2022, narrowly limited)</td></tr>
+  <tr><td>Sensor</td><td class="wert">Polar H10</td><td class="quelle">Electrode-based chest strap; tested against ECG in horses at rest and during groundwork (Kapteijn et al. 2022; limited scope)</td></tr>
   <tr><td>Transmission</td><td class="wert">Bluetooth Low Energy</td><td class="quelle">Heart Rate Profile with RR intervals</td></tr>
   <tr><td>Temporal resolution</td><td class="wert">1 ms</td><td class="quelle">Resolution of the strap’s RR intervals</td></tr>
-  <tr><td>Recording location</td><td class="wert">End device</td><td class="quelle">Browser or app of the person taking the measurement; no server involved (Section 5)</td></tr>
+  <tr><td>Recording location</td><td class="wert">User’s device</td><td class="quelle">Browser or app of the person taking the measurement; no server involved (Section 5)</td></tr>
 </table></div>
 
 <h2>2 · Filter chain</h2>
-<p>In the resting horse, rhythm irregularities are normal, and in an unfiltered
-calculation they distort the indices severely. The chain runs in a fixed order; each stage
+<p>Certain rhythm irregularities are normal in the resting horse, and they severely distort the indices
+if the calculation is unfiltered. The chain runs in a fixed order; each stage
 is listed below with its actual threshold. All values belong to the measurement profile
-<code>equine-v1</code> — exactly <em>one</em> profile is supplied; for other species
-the values are unsupported.</p>
+<code>equine-v1</code>, exactly <em>one</em> profile is supplied; there is no evidence
+to support the values for other species.</p>
 
 <p><em>Order in the code:</em> The detection stages run first and the plausibility stamp
 afterwards. This is deliberate: an interval that has been detected as a physiological block may
@@ -142,10 +142,10 @@ these pauses before they could be detected as a block at all.</p>
   <p>An interval is considered plausible between <strong>200 ms</strong> (equivalent to 300 beats/min)
   and <strong>8,000 ms</strong> (7.5 beats/min). Beyond <strong>12,000 ms</strong>, a
   value is considered unusable even as a block candidate.</p>
-  <p>The upper limit was deliberately set high: a longest RR above 4 s is common in healthy
-  horses with little training. A narrower limit would cut out exactly the pauses
-  that are physiological.<span class="eigen">our own setting</span> No published equine
-  plausibility range exists.</p>
+  <p>The upper limit was deliberately set high: a longest RR interval of more than 4 s is common in healthy,
+  lightly trained horses. A narrower limit would cut out precisely those pauses
+  that are physiological.<span class="eigen">our own setting</span> There is no published
+  plausibility range for horses.</p>
 </div>
 
 <div class="stufe">
@@ -163,24 +163,24 @@ these pauses before they could be detected as a block at all.</p>
   <h3>Method after Lipponen &amp; Tarvainen (2019), adapted for the horse</h3>
   <p>An established method for detecting ectopic and erroneous beats from the
   distribution of the interval differences. The threshold factor is <strong>α = 5.2</strong>;
-  the dispersion is estimated from the quartile deviation and is therefore robust against individual outliers.</p>
+  the dispersion is estimated from the quartile deviation and is therefore robust to individual outliers.</p>
 </div>
 
 <div class="stufe">
-  <div class="nr">Stage 3 · Second-degree AV block · the decisive step</div>
+  <div class="nr">Stage 3 · Second-degree AV block · the crucial step</div>
   <h3>Detect longer pauses and report them separately</h3>
   <p>Second-degree atrioventricular block is a
   <em>physiological</em> finding in the resting horse: one beat is dropped and the interval is about twice as
   long. It disappears during exercise. It is detected from the ratio to the local median
   (window of <strong>10 beats</strong>): if an interval is between
   <strong>1.8</strong> and <strong>2.2 times</strong> the local median and the neighbouring intervals deviate by
-  no more than <strong>25%</strong>, it is marked as a presumably physiological pause. Whether it is in fact an AV block can only be shown by P waves in the ECG. <span class="eigen">our own setting</span></p>
-  <p>Why this matters: if such pauses are included raw, RMSSD and SDNN rise considerably — in our test series (300 beats, three pauses, test bench, 13 November 2026) raw RMSSD was 285 ms instead of 86 ms once the pauses were excluded. The very markers that flag <em>low</em> values are thereby turned into their opposite.</p>
-  <p><strong>What happens to the block — exactly:</strong> It does <em>not</em> count towards the
-  artefact rate and therefore not against signal quality (neither in the numerator nor in the denominator). In the
-  cleaned series it is nevertheless interpolated like any other marked interval; it is retained
+  no more than <strong>25%</strong>, it is marked as a presumed physiological pause. Only P waves on the ECG can show whether it really is an AV block. <span class="eigen">our own setting</span></p>
+  <p>Why this matters: if such pauses are included uncorrected in the calculation, RMSSD and SDNN rise considerably, in our test series (300 beats, three pauses, as tested on 13 November 2026) raw RMSSD was 285 ms, compared with 86 ms after the pauses were excluded. As a result, the very markers that respond to <em>low</em> values swing to the opposite extreme.</p>
+  <p><strong>Exactly what happens to the block:</strong> It does <em>not</em> count towards the
+  artefact rate and so does not count against signal quality (it appears in neither the numerator nor the denominator). In the
+  corrected series it is nevertheless interpolated like any other marked interval; it is retained
   as a separate label alongside the series. If you want to analyse the pauses yourself, you will
-  therefore find them in the data set — they are simply not included in the time-domain indices.</p>
+  therefore find them in the dataset, they are simply not included in the time-domain indices.</p>
 </div>
 
 <div class="stufe">
@@ -188,17 +188,17 @@ these pauses before they could be detected as a block at all.</p>
   <h3>Interpolation of marked intervals</h3>
   <p>Every interval that one of the stages above has marked as not regular is corrected by
   cubic spline interpolation (Catmull-Rom) through the nearest regular neighbouring beats.
-  It is therefore not deleted but estimated — the original marking is retained
+  In other words, it is estimated rather than deleted, the original marking is retained
   alongside the series.</p>
   <div class="kasten warn">
     <h4>Accuracy over completeness</h4>
-    <p>The measurement profile carries four sensitivity stages modelled on Kubios
+    <p>The measurement profile includes four sensitivity stages modelled on Kubios
     (<strong>0.4</strong> / <strong>0.6</strong> / <strong>0.9</strong> / <strong>1.2 s</strong>,
-    scaled by a factor of 3 relative to human values). They are carried in the data set as
+    scaled by a factor of 3 relative to human values). They are recorded in the dataset as
     profile information, <strong>but do not control the correction path in the current
     version</strong>: every marked beat is corrected, regardless of the size of the deviation.
-    We state this here because a methods section that presents an unapplied threshold as applied
-    would be verifiably wrong at exactly this point.</p>
+    We state this here because a methods section that presents a threshold as applied when it is not
+    would be demonstrably wrong at precisely this point.</p>
   </div>
 </div>
 
@@ -220,49 +220,49 @@ horse’s heart beats more slowly, so the respiratory and regulatory components 
 lower frequencies.</p>
 <div class="wrap" tabindex="0" role="region" aria-label="Table, scrolls horizontally"><table>
   <tr><th>Band</th><th>Range</th><th>Source</th></tr>
-  <tr><td>VLF</td><td class="wert">0 – 0.01 Hz</td><td class="quelle" rowspan="3">Original source of the band limits: <strong>Kuwahara et al. (1996)</strong>, J Auton Nerv Syst 60:43–48 (PMID 8884694). Secondary citations: Visser (2002); Stucke (2015, review); Wonghanchao (2025) — they pass the limits on but do not define them. For historical reasons, the identifier in the dataset remains <code>Equine-Visser-2002</code>.</td></tr>
-  <tr><td>LF</td><td class="wert">0.01 – 0.07 Hz</td></tr>
-  <tr><td>HF</td><td class="wert">0.07 – 0.60 Hz</td></tr>
+  <tr><td>VLF</td><td class="wert">0–0.01 Hz</td><td class="quelle" rowspan="3">Primary source of the band limits: <strong>Kuwahara et al. (1996)</strong>, J Auton Nerv Syst 60:43–48 (PMID 8884694). Secondary sources: Visser (2002); Stucke (2015, review); Wonghanchao (2025), they reproduce the limits but do not define them. For historical reasons, the identifier in the dataset remains <code>Equine-Visser-2002</code>.</td></tr>
+  <tr><td>LF</td><td class="wert">0.01–0.07 Hz</td></tr>
+  <tr><td>HF</td><td class="wert">0.07–0.60 Hz</td></tr>
 </table></div>
 
 <h2>4 · Analysis gates</h2>
-<p>Not every recording supports every analysis. Where the data basis is too small, no result
-is shown — not even a cautious estimate. A systematically biased figure does more harm
-than a missing one.</p>
+<p>Not every recording supports every analysis. Where there is too little data to go on, no result
+is shown, not even a cautious estimate. A systematically biased figure does more harm
+than no figure at all.</p>
 <div class="wrap" tabindex="0" role="region" aria-label="Table, scrolls horizontally"><table>
   <tr><th>Analysis</th><th>Minimum requirement</th><th>Rationale</th></tr>
   <tr><td>Overall variability profile</td><td class="wert">≥ 420 s <span style="color:var(--dim)">and</span> ≥ 200 beats</td>
-      <td class="quelle">The reference study analysed longer resting recordings; 420 s is our own minimum duration, so that short recordings do not trigger a flag too often</td></tr>
+      <td class="quelle">The reference study analysed longer resting recordings; 420 s is our own minimum duration, set so that short recordings do not raise a flag too often</td></tr>
   <tr><td>Individual baseline</td><td class="wert">≥ 4 recordings of the same animal</td>
       <td class="quelle">Below this, the comparison value is not called an ‘individual baseline’</td></tr>
   <tr><td>Non-linear indices</td><td class="wert">&lt; 5% artefacts</td><td class="quelle">see the hard limit above</td></tr>
 </table></div>
 
-<h3>Breathing pattern profile: origin of the comparison limits</h3>
+<h3>Breathing pattern profile: where the comparison limits come from</h3>
 <p>The reference study is <strong>Nyerges-Bohák et al. (2025)</strong>, Equine Veterinary Journal,
 DOI <code>10.1111/evj.14414</code>. It compares n = 40 horses: 20 with
 <em>severe</em> equine asthma (sEA), BAL-referenced, against 20 controls with no
-respiratory abnormalities — <strong>no</strong> BAL was performed in the controls.
+respiratory abnormalities, <strong>no</strong> BAL was performed in the controls.
 The study reports group differences and names SD2, SDNN, TINN and SD2/SD1 as the
 more discriminating measures. <strong>It does not contain a diagnostic threshold.</strong></p>
 <p>Our thresholds lie between the published group means, not exactly midway. They are therefore
-a reasoned derivation of our own and not a literature value.<span class="eigen">own definition</span>
+our own reasoned derivation, not values taken from the literature.<span class="eigen">set by us</span>
 Core thresholds: SDNN <strong>55 ms</strong>, SD2 <strong>65 ms</strong>,
 SD2/SD1 <strong>1.50</strong>, TINN <strong>300 ms</strong>, DFA-α₁ <strong>0.70</strong>,
 sample entropy <strong>0.80</strong>.</p>
 <div class="kasten warn">
-  <h4>We removed one threshold without replacement</h4>
+  <h4>We have removed one threshold without replacing it</h4>
   <p>Until August 2026, an RMSSD value of 95 ms was also listed here. It was
   attributed to the reference study, but appears there only as a <em>95% confidence interval</em> —
   and it was <strong>above</strong> the mean of the healthy control group in the same
-  study (86.0 ms). A threshold that would have flagged the majority of the healthy study horses as abnormal
-  could be refuted from its own citation. It was removed and
-  <strong>not replaced</strong> — group means are not thresholds.</p>
+  study (86.0 ms). A threshold that would have flagged the majority of the healthy study horses
+  could be refuted from the very paper it cited. It was removed and
+  <strong>not replaced</strong>, group means are not thresholds.</p>
 </div>
 <div class="kasten warn">
-  <h4>Limit of this classification</h4>
+  <h4>Limits of this classification</h4>
   <p>This is a <strong>classification of measured values, not a diagnosis</strong>.
-  The profile does not replace an examination; for airway diagnosis, bronchoalveolar lavage (BAL) remains the gold standard. Any assessment is made solely by the veterinary practice.</p>
+  The profile is no substitute for an examination; for airway diagnosis, bronchoalveolar lavage (BAL) remains the gold standard. Any assessment is a matter for the veterinary practice alone.</p>
 </div>
 
 <h2>5 · Data flow</h2>
@@ -270,31 +270,31 @@ sample entropy <strong>0.80</strong>.</p>
 <ol>
   <li>The strap transmits the RR intervals via Bluetooth to the <strong>device of the person
       taking the measurement</strong> (browser or app).</li>
-  <li>The recording is created and remains <strong>on that device</strong>. There is no
-      intermediate storage on our side and no upload.</li>
-  <li>For sharing, a <strong>file</strong> is created, which the person taking the measurement sends
-      themselves — by whatever route they already use. If the measurement was opened via a
+  <li>The recording is created and stays <strong>on that device</strong>. Nothing is stored with us along the way,
+      and nothing is uploaded.</li>
+  <li>To share a recording, a <strong>file</strong> is created, which the person taking the measurement sends
+      themselves, by whatever channel they already use. If the measurement was opened via a
       practice's link, the file is already encrypted for that practice.</li>
-  <li>The receiving institution imports the file into its own system. The complete
+  <li>The receiving organisation imports the file into its own system. The complete
       dataset is also included as an open <strong>FHIR R5 bundle</strong>.</li>
 </ol>
-<p>For a data protection impact assessment, this means: no service of ours sits between the
-person taking the measurement and the receiving institution. Which personal data a
-recording carries is decided by the recording party — the file itself contains no
+<p>For a data protection impact assessment, this means that no service of ours sits between the
+person taking the measurement and the receiving organisation. The recording party decides
+which personal data a recording carries, the file itself contains no
 contact details.</p>
 
 <h2>6 · Traceability</h2>
-<p>Every reported index carries a <strong>provenance note</strong>: whether it was calculated by the
-recording app and passed through the filter chain, or whether it was derived here from the
-raw series. If the note is missing, the filter chain is <em>not</em> claimed —
+<p>Every reported index carries a <strong>provenance note</strong> stating whether it was calculated by the
+recording app and passed through the artefact-correction algorithm, or derived here from the
+raw series. If the note is missing, we do <em>not</em> claim that the artefact-correction algorithm was applied —
 the report then states explicitly that the values are unfiltered and must not be compared
-against reference values.</p>
-<p>This is not a formality. A document that declares an artefact correction that never
-ran makes raw values look like checked ones — and in the resting horse, raw and
-cleaned values lie far apart (see stage 3: 285 instead of 86 ms RMSSD). The rule is therefore: <strong>Artefact
-correction is stated only where it has actually taken place.</strong></p>
-<p>In a separate section, ‘Method &amp; limits’, the report states the chain that
-actually ran, together with its sources. Raw data (RR series) can be exported at any time as
+with reference values.</p>
+<p>This is not a formality. A document that reports an artefact correction that never
+ran makes raw values look as though they have been checked, and in the resting horse, raw and
+corrected values are far apart (see stage 3: an RMSSD of 285 ms rather than 86 ms). Hence the rule: <strong>Artefact
+correction is mentioned only where it has actually taken place.</strong></p>
+<p>In its own section, ‘Method &amp; limits’, the report sets out the chain that was
+actually run, together with its sources. Raw data (RR series) can be exported at any time as
 JSON, CSV or in a Kubios-compatible format, so that every calculation can be verified
 independently.</p>
 
@@ -302,49 +302,49 @@ independently.</p>
 <ul>
   <li><strong>Not a medical device.</strong> CARLON Equine is not intended to detect, monitor,
       treat or alleviate disease. No diagnosis, no
-      treatment recommendation. Regulation (EU) 2017/745 applies to devices for human
-      use and is not applicable to the horse. For advertising, the German Heilmittelwerbegesetz (Act on Advertising in the Field of Healthcare) also applies to animals; CARLON therefore does not promise detection or remote assessment of disease.</li>
-  <li><strong>Not an emergency channel.</strong> A file that has been sent is not a phone call. For acute
-      problems, the usual rule applies: seek veterinary attention immediately.</li>
-  <li><strong>No robust reference value.</strong> There is no generally valid
-      reference range for HRV in the horse. What is meaningful is the comparison against the animal's own
-      history — not the absolute value. One example shows how thin the evidence is:
+      treatment recommendations. Regulation (EU) 2017/745 applies to devices for human
+      use and does not apply to horses. In advertising, the German Heilmittelwerbegesetz (Act on Advertising in the Field of Healthcare) applies to animals as well; CARLON therefore makes no promise to detect or remotely assess disease.</li>
+  <li><strong>Not an emergency channel.</strong> Sending a file is not a phone call. If there is an acute
+      problem, the rule is the same as always: seek veterinary attention immediately.</li>
+  <li><strong>No reliable reference value.</strong> There is no universally valid
+      reference range for HRV in the horse. What is informative is comparison with the animal's own
+      history, not the absolute value. One example shows how thin the evidence is:
       the healthy control horses in the reference study cited above had a mean
-      RMSSD of 86.0 ms — below our own working range (own definition, not a norm).
+      RMSSD of 86.0 ms, below our own working range (set by us, not a norm).
       This does not refute our range (different recording duration, different population, n = 20), but
-      it is the first hard data point against it. We list it here rather than leave it out.</li>
+      it is the first hard data point against it. We list it here rather than leaving it out.</li>
   <li><strong>Movement limits what can be concluded.</strong> The indices require a calm
       recording that is as stationary as possible. Movement artefacts are corrected, but every
       correction is an estimate.</li>
   <li><strong>One profile, one species.</strong> The values above apply to the horse. For other
-      species they are unsupported; the measurement profile permits other values but does not recommend any.</li>
+      species they are unsubstantiated; the measurement profile permits other values but does not recommend any.</li>
   <li><strong>Disputed indices remain disputed.</strong> The LF/HF ratio is
-      classically read as sympathovagal balance; this interpretation is scientifically
+      traditionally interpreted as sympathovagal balance; this reading is scientifically
       contested. We report the value as a trend against the baseline, not as an absolute statement.</li>
 </ul>
 
 <h2>8 · Sources</h2>
 <p>Grouped by what a paper actually supports in our method. A paper that fits the
-topic but does not contain the cited statement is not listed here as evidence — it would do
+topic but does not contain the cited statement is not listed here as evidence, it would do
 more harm than a missing source.</p>
-<h3>Support a figure or a classification</h3>
+<h3>Supporting a figure or a classification</h3>
 <ul>
-  <li>Kuwahara M. et al. (1996): <em>Assessment of autonomic nervous function by power spectral analysis of heart rate variability in the horse.</em> J Auton Nerv Syst 60(1–2):43–48, PMID 8884694 — original source of the equine frequency bands (Section 3).</li>
-  <li>van Loon G. (2019): <em>Cardiac arrhythmias in horses.</em> Veterinary Clinics of North America: Equine Practice 35:85–102 — supports the AV block classification (Section 2).</li>
-  <li>Nyerges-Bohák Z. et al. (2025): Equine Veterinary Journal, DOI <a href="https://doi.org/10.1111/evj.14414">10.1111/evj.14414</a>, n = 40 (20 sEA, BAL-referenced; 20 controls without BAL) — supports the group differences from which our breathing pattern limits are derived, not the thresholds themselves.</li>
-  <li>Lipponen J. A., Tarvainen M. P. (2019): <em>A robust algorithm for heart rate variability time series artefact correction using novel beat classification.</em> Journal of Medical Engineering &amp; Technology — artefact correction method (Section 2).</li>
-  <li>Richman J. S., Moorman J. R. (2000): sample entropy — computation method.</li>
-  <li>Tarvainen M. P. et al.: Kubios HRV — model for the correction levels.</li>
+  <li>Kuwahara M. et al. (1996): <em>Assessment of autonomic nervous function by power spectral analysis of heart rate variability in the horse.</em> J Auton Nerv Syst 60(1–2):43–48, PMID 8884694, original source of the equine frequency bands (Section 3).</li>
+  <li>van Loon G. (2019): <em>Cardiac arrhythmias in horses.</em> Veterinary Clinics of North America: Equine Practice 35:85–102, supports the AV block classification (Section 2).</li>
+  <li>Nyerges-Bohák Z. et al. (2025): Equine Veterinary Journal, DOI <a href="https://doi.org/10.1111/evj.14414">10.1111/evj.14414</a>, n = 40 (20 sEA, BAL-referenced; 20 controls without BAL), supports the group differences from which our breathing-pattern limits are derived, not the thresholds themselves.</li>
+  <li>Lipponen J. A., Tarvainen M. P. (2019): <em>A robust algorithm for heart rate variability time series artefact correction using novel beat classification.</em> Journal of Medical Engineering &amp; Technology, artefact correction method (Section 2).</li>
+  <li>Richman J. S., Moorman J. R. (2000): sample entropy, calculation method.</li>
+  <li>Tarvainen M. P. et al.: Kubios HRV, the template for the correction levels.</li>
 </ul>
-<h3>Methodological reviews — they support no figure here</h3>
+<h3>Methodological reviews, no figure here is based on them</h3>
 <ul>
-  <li>Visser E. K. et al. (2002) and Wonghanchao T. et al. (2025): report the equine frequency bands but do not define them.</li>
+  <li>Visser E. K. et al. (2002) and Wonghanchao T. et al. (2025): cite the equine frequency bands but do not define them.</li>
   <li>Stucke D. et al. (2015), Appl Anim Behav Sci 166:1–10: methodological review <strong>without a cohort of its own and without reference ranges</strong>.</li>
   <li>von Borell E. et al. (2007), Physiol Behav 92(3):293–316, PMID 17320122: review covering several farm animal species <strong>without species-specific normal values</strong>.</li>
 </ul>
 <div class="kasten warn">
   <h4>What we withdrew in August 2026</h4>
-  <p>A check of all source references against the primary papers did not confirm several attributions. Those affected included: the origin of the RMSSD and SDNN bands (Stucke 2015, von Borell 2007, Ille 2014 — none of these papers supports them), a resting heart rate range, an artefact limit and a reliability figure whose purported sources could not be found. In our version, one reference was entirely invented in its title, journal and page numbers. The affected figures have either been deleted or now appear, wherever they occur, as <span class="eigen">our own specification</span> — none has been attributed to a substitute source.</p>
+  <p>When we checked every citation against the primary papers, several attributions could not be confirmed. Those affected included: the origin of the RMSSD and SDNN bands (Stucke 2015, von Borell 2007, Ille 2014, none of these papers supports them), a resting heart rate range, an artefact limit and a reliability figure whose purported sources could not be traced. One reference, as it appeared in our version, had an entirely invented title, journal and page number. The affected figures have either been removed or now appear, wherever they occur, as <span class="eigen">our own specification</span>, none has been attributed to a substitute source.</p>
 </div>
 
 <footer>
@@ -352,7 +352,7 @@ more harm than a missing source.</p>
   <a href="/carlon-equine/">CARLON Equine iOS app</a> · <a href="/carlon-equine-visite/en/">Practice view</a> ·
   <a href="/privacy-en.html">Privacy</a> ·
   <a href="/impressum.html">Legal notice</a><br>
-  This version describes measurement profile <code>equine-v1</code>. Every figure stated here is checked against the shipped code on every test run.
+  This version describes the <code>equine-v1</code> measurement profile. Every figure stated here is checked against the shipped code on every test run.
 </footer>
 
 </div>
