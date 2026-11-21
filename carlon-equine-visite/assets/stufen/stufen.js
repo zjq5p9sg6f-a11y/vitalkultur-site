@@ -98,6 +98,8 @@
 .st-ein output{float:right;color:var(--text-primary,#f4f4f4);font-weight:700;font-variant-numeric:tabular-nums}
 .st-ein input[type=range]{width:100%;accent-color:#3ECFB2;min-height:32px}
 .st-ein [hidden]{display:none!important}
+.st-bz{float:right;display:inline-flex;align-items:center;gap:4px;color:var(--text-primary,#f4f4f4);font-weight:700}
+.st-bz input{width:84px;min-height:36px;padding:4px 8px;border-radius:10px;border:1px solid var(--border-subtle,rgba(255,255,255,.18));background:#0b0c0d;color:inherit;font:inherit;text-align:right}
 .st-erg{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1.9fr);gap:16px;align-items:stretch}
 @media (max-width:760px){.st-erg{grid-template-columns:1fr}}
 .st-wahl{border:1px solid rgba(62,207,178,.55);border-radius:16px;padding:16px;background:rgba(0,0,0,.35);display:flex;flex-direction:column;gap:6px}
@@ -162,15 +164,20 @@
         <label>${esc(t.gerL)} <output data-o="ger"></output><input type="range" data-i="ger" min="1" max="12" value="${start === 'reha' ? 3 : 2}"></label>
         <label data-nur="reha">${esc(t.pfL)} <output data-o="pf"></output><input type="range" data-i="pf" min="1" max="80" value="12"></label>
         <label data-nur="reha">${esc(t.eL)} <output data-o="e"></output><input type="range" data-i="e" min="1" max="7" value="3"></label>
-        <label data-nur="reha">${esc(t.bL)} <output data-o="b"></output><input type="range" data-i="b" min="0" max="20" step="0.5" value="5"></label></div>
+        <label data-nur="reha">${esc(t.bL)} <span class="st-bz">${EN ? "€" : ""}<input type="number" data-i="bz" min="0" max="500" step="0.5" value="5" inputmode="decimal" aria-label="${esc(t.bL)}">${EN ? "" : " €"}</span><input type="range" data-i="b" min="0" max="60" step="1" value="10"></label></div>
       <div class="st-erg"><div class="st-wahl" aria-live="polite"></div><div class="st-graf"><p class="st-gt"></p><div class="st-svg"></div></div></div>
       <div class="st-zahlen" data-nur="reha" aria-live="polite"></div>
       <p class="st-satz" data-nur="reha"></p><p class="st-fuss">${esc(t.fuss)} <span data-nur="reha">${esc(t.fussReha)}</span></p>`;
     const $ = s => el.querySelector(s), wert = n => +$(`[data-i="${n}"]`).value, an = w => $(`[data-w="${w}"]`).checked;
+    const zuBetrag = v => v <= 20 ? v / 2 : v - 10, zuRegler = b => b <= 10 ? Math.round(b * 2) : Math.min(60, Math.round(b + 10));
+    let bet = 5;
+    el.addEventListener('input', ev => { const d = ev.target && ev.target.dataset && ev.target.dataset.i;
+      if (d === 'b') { bet = zuBetrag(+ev.target.value); $('[data-i="bz"]').value = bet; }
+      if (d === 'bz') { const v = parseFloat(String(ev.target.value).replace(',', '.')); bet = isFinite(v) && v >= 0 ? v : 0; $('[data-i="b"]').value = zuRegler(bet); } }, true);
     function r() {
-      const b = { tour: an('tour'), station: an('station'), reha: an('reha'), ger: wert('ger'), pf: wert('pf'), e: wert('e'), bet: wert('b') };
+      const b = { tour: an('tour'), station: an('station'), reha: an('reha'), ger: wert('ger'), pf: wert('pf'), e: wert('e'), bet };
       el.querySelectorAll('[data-nur="reha"]').forEach(x => x.hidden = !b.reha);
-      $('[data-o="ger"]').textContent = b.ger > 8 ? t.gerMehr : b.ger; $('[data-o="pf"]').textContent = b.pf; $('[data-o="e"]').textContent = b.e; $('[data-o="b"]').textContent = t.eu(b.bet);
+      $('[data-o="ger"]').textContent = b.ger > 8 ? t.gerMehr : b.ger; $('[data-o="pf"]').textContent = b.pf; $('[data-o="e"]').textContent = b.e;
       const s = passend(b);
       // Grund: welche Anforderung bindet
       const gr = [];
