@@ -84,6 +84,19 @@ body.ohne-tour .nur-tour{display:none!important}body.ohne-tour .hr-acts{grid-tem
 .akte-kapitel a:hover{border-color:var(--cyan)}
 .akte-tiefe-kopf{margin:var(--s5) 0 var(--s3);padding-top:var(--s4);border-top:1px solid var(--border-subtle)}
 .akte-tiefe-kopf h2{font-size:18px;margin:4px 0 4px}.akte-tiefe-kopf p{color:var(--text-dim);font-size:13px;margin:0;max-width:720px}
+
+/* Demo-Fuß (21.11.2026) */
+.demo-fuss{margin:var(--s6) 0 96px;padding:18px 20px;border:1px solid var(--border-subtle);border-radius:16px;background:rgba(255,255,255,.025)}
+.demo-fuss.nur-recht{padding:10px 4px;border:0;background:none;margin-top:var(--s5)}
+.demo-fuss .df-k{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--text-dim);margin-bottom:10px}
+.demo-fuss .df-schritte{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px;counter-reset:df}
+.demo-fuss .df-schritte li{counter-increment:df;padding:10px 12px;border-radius:12px;background:rgba(62,207,178,.06);display:flex;flex-direction:column;gap:3px}
+.demo-fuss .df-schritte li b{font-size:14px}.demo-fuss .df-schritte li b::before{content:counter(df) ' · ';color:var(--cyan)}
+.demo-fuss .df-schritte li span{font-size:12.5px;color:var(--text-dim)}
+.demo-fuss .df-knopf{margin-top:12px;display:flex;justify-content:flex-end}
+.demo-fuss .df-recht{display:flex;flex-wrap:wrap;gap:6px 16px;margin-top:12px;font-size:12px;color:var(--text-dim);align-items:center}
+.demo-fuss .df-recht a{color:var(--text-secondary);text-decoration:none;min-height:32px;display:inline-flex;align-items:center}
+.demo-fuss .df-recht a:hover{color:var(--cyan)}
 </style>
 <link rel="stylesheet" href="assets/leaflet/leaflet.css">
 <style>
@@ -7962,6 +7975,18 @@ const Views={
   },
   /* 21.11.2026 (Jan: Minto – von der Übersicht in die Tiefe, ohne dass Tiefe übersehen wird): jede tragende Aussage verweist auf ihren Beleg,
      dazu eine Kapitelleiste. Nichts wird eingeklappt. */
+  /* 21.11.2026 (Comet: Preis/Kaufweg 57, Vertrauen 56): in der Demo am Ende jeder Ansicht der Kaufweg in drei Schritten,
+     ehrlich und ohne Rabattsprache, dazu Methode, Impressum, Datenschutz. Außerhalb der Demo: nur die Rechtslinks. */
+  demoFuss(){
+    const en=typeof Sprache!=='undefined'&&Sprache.cur==='en', E=(d,e)=>en?e:d, demo=!!(State.settings&&State.settings.isDemo)&&!License.isPaid();
+    const recht=`<div class="df-recht"><a href="/carlon-equine/${en?'methodology':'methodik'}.html" target="_blank" rel="noopener">${E('Methode','Method')}</a><a href="/impressum.html" target="_blank" rel="noopener">${E('Impressum','Legal notice')}</a><a href="/${en?'privacy-en':'privacy'}.html" target="_blank" rel="noopener">${E('Datenschutz','Privacy')}</a><a href="/${en?'terms':'agb'}.html" target="_blank" rel="noopener">${E('AGB','Terms')}</a><span>${E('Kein Medizinprodukt · Beobachtung, keine Diagnose','Not a medical device · observation, not diagnosis')}</span></div>`;
+    if(!demo) return `<footer class="demo-fuss nur-recht">${recht}</footer>`;
+    return `<footer class="demo-fuss"><div class="df-k">${E('Sie sehen die Demo mit Beispielpferden','You are viewing the demo with sample horses')}</div>
+      <ol class="df-schritte"><li><b>${E('Stufe wählen','Choose a tier')}</b><span>${E('ab 149 € netto im Monat, nach Geräten und Bereichen','from €149 a month excl. VAT, by devices and areas')}</span></li>
+      <li><b>${E('14 Tage testen','Try for 14 days')}</b><span>${E('im Bezahlfenster von Stripe, monatlich kündbar','in Stripe’s checkout, cancel monthly')}</span></li>
+      <li><b>${E('Sofort freigeschaltet','Unlocked straight away')}</b><span>${E('ohne Konto und ohne Schlüssel, Ihre Daten bleiben auf Ihren Geräten','no account and no key, your data stays on your devices')}</span></li></ol>
+      <div class="df-knopf"><button class="btn primary" onclick="UI.upgrade()">${E('Stufen und Preise','Tiers and prices')}</button></div>${recht}</footer>`;
+  },
   aktePyramide(h){
     const en=Sprache.cur==='en', E=(d,e)=>en?e:d, hin=(id)=>`onclick="event.preventDefault();const z=document.getElementById('${id}');if(z)z.scrollIntoView({behavior:'smooth',block:'start'})"`;
     const reha=typeof Reha!=='undefined'&&Reha.erlaubt&&Reha.erlaubt(h.id)&&(Reha.sitzungen?Reha.sitzungen(h.id).length:0)>0;
@@ -13866,7 +13891,7 @@ const Nav={
       if(sicht[this.cur]===false) this.cur=sicht.start||'roster'; }
     const enterToday=(this.cur==='today' && this._lastCur!=='today');
     const map={today:Views.today,board:Views.board,station:Views.station,map:Views.map,roster:Views.roster,detail:Views.detail,revenue:Views.revenue,logbook:Views.logbook,coherence:Views.coherence,cohdetail:Views.coherenceDetail,pairdetail:Views.pairDetail};
-    $('#main').innerHTML=(map[this.cur]||Views.today).call(Views);
+    $('#main').innerHTML=(map[this.cur]||Views.today).call(Views)+Views.demoFuss();
     if(this.cur==='map')setTimeout(()=>Dispatch.render(),60);
     ChartZoom.enhance();Chart.initVizHover&&Chart.initVizHover();
     clearInterval(Views._tlTimer); Views._tlTimer=null;
