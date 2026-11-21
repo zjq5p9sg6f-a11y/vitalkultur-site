@@ -8,7 +8,7 @@
    Sprache aus <html lang>. Weitere Sprachen: Block in T ergänzen (Sprachmotor kann ihn übersetzen). */
 (function () {
   const ST = [
-    { k: 'fahrpraxis', kasse: 'praxis', p: 149, ger: 2, reha: 0, tour: 1, station: 0 },
+    { k: 'fahrpraxis', kasse: 'praxis', p: 149, ger: 3, reha: 0, tour: 1, station: 0 },
     { k: 'praxis', kasse: 'klinik', p: 349, ger: 6, reha: 0, tour: 1, station: 1 },
     { k: 'reha', kasse: 'reha', p: 349, ger: 6, reha: 20, tour: 0, station: 0 },
     { k: 'kombi', kasse: 'kombi', p: 590, ger: 8, reha: 40, tour: 1, station: 1 },
