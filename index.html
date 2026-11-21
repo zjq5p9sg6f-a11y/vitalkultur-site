@@ -747,6 +747,8 @@ document.head.appendChild(s);})();</script>
 <script>
   (function() {
     function detectLang() {
+      const q = new URLSearchParams(location.search).get('lang');   /* 21.11.2026: ?lang=en|de für geteilte Links und Audits */
+      if (q === 'en' || q === 'de') { try { localStorage.setItem('vk.lang', q); } catch (e) {} return q; }
       const stored = localStorage.getItem('vk.lang');
       if (stored === 'en' || stored === 'de') return stored;
       return (navigator.language || 'en').toLowerCase().startsWith('de') ? 'de' : 'en';
