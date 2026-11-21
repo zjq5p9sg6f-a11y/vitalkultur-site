@@ -37,7 +37,7 @@
       eu: v => v.toLocaleString('de-DE', { minimumFractionDigits: v % 1 ? 2 : 0, maximumFractionDigits: 2 }) + ' €', zahl: v => v.toLocaleString('de-DE')
     },
     en: {
-      name: { fahrpraxis: 'Mobile practice', praxis: 'Practice & clinic', reha: 'Rehab', kombi: 'Clinic + rehab', center: 'Equine Center' },
+      name: { fahrpraxis: 'Ambulatory practice', praxis: 'Practice & clinic', reha: 'Rehab', kombi: 'Clinic + rehab', center: 'Equine Center' },
       fuer: { fahrpraxis: 'Ambulatory vet', praxis: 'Practice or clinic with a ward', reha: 'Rehab centre without a ward', kombi: 'Clinic with a ward and a rehab unit', center: 'Large centre, several units' },
       wwT: 'Five tiers. Which one fits you?', wwRehaSeite: 'Rehab page', ab: 'from ',
       stufe: 'Tier', fuerWen: 'For', preis: 'Price per month, excl. VAT', proStandort: ' per site', geraete: 'Devices (computers, tablets, phones)', rehaPf: 'Rehab horses in 30 days',
