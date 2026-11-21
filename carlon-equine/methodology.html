@@ -169,12 +169,10 @@ these pauses before they could be detected as a block at all.</p>
 <div class="stufe">
   <div class="nr">Stage 3 · Second-degree AV block · the crucial step</div>
   <h3>Detect longer pauses and report them separately</h3>
-  <p>Second-degree atrioventricular block is a
-  <em>physiological</em> finding in the resting horse: one beat is dropped and the interval is about twice as
-  long. It disappears during exercise. It is detected from the ratio to the local median
+  <p>A vagally mediated second-degree atrioventricular block (usually Mobitz type I) is common in the resting horse and is regarded as <em>physiological</em> when it disappears with excitement or exercise: one beat is dropped and the interval is roughly twice as long. A roughly doubled interval can, however, equally be a beat the strap failed to detect, a sinus pause or a blocked atrial premature beat. It is detected from the ratio to the local median
   (window of <strong>10 beats</strong>): if an interval is between
   <strong>1.8</strong> and <strong>2.2 times</strong> the local median and the neighbouring intervals deviate by
-  no more than <strong>25%</strong>, it is marked as a presumed physiological pause. Only P waves on the ECG can show whether it really is an AV block. <span class="eigen">our own setting</span></p>
+  no more than <strong>25%</strong>, it is marked as a long pause and reported separately. Only P waves on the ECG can show whether it really is an AV block. <span class="eigen">our own setting</span></p>
   <p>Why this matters: if such pauses are included uncorrected in the calculation, RMSSD and SDNN rise considerably, in our test series (300 beats, three pauses, as tested on 13 November 2026) raw RMSSD was 285 ms, compared with 86 ms after the pauses were excluded. As a result, the very markers that respond to <em>low</em> values swing to the opposite extreme.</p>
   <p><strong>Exactly what happens to the block:</strong> It does <em>not</em> count towards the
   artefact rate and so does not count against signal quality (it appears in neither the numerator nor the denominator). In the
@@ -247,9 +245,7 @@ The study reports group differences and names SD2, SDNN, TINN and SD2/SD1 as the
 more discriminating measures. <strong>It does not contain a diagnostic threshold.</strong></p>
 <p>Our thresholds lie between the published group means, not exactly midway. They are therefore
 our own reasoned derivation, not values taken from the literature.<span class="eigen">set by us</span>
-Core thresholds: SDNN <strong>55 ms</strong>, SD2 <strong>65 ms</strong>,
-SD2/SD1 <strong>1.50</strong>, TINN <strong>300 ms</strong>, DFA-α₁ <strong>0.70</strong>,
-sample entropy <strong>0.80</strong>.</p>
+Core thresholds from the group means: SDNN <strong>55 ms</strong>, SD2 <strong>65 ms</strong>, SD2/SD1 <strong>1.50</strong>, TINN <strong>300 ms</strong>. DFA-α₁ <strong>0.70</strong> and sample entropy <strong>0.80</strong> do not appear in the reference study; these two thresholds are purely our own settings without a literature basis. The reference study analysed one 5-minute window per horse from a 1-hour resting recording (LF 0.04–0.13 Hz, HF 0.13–0.26 Hz), compared 20 horses with severe asthma (confirmed by BAL) with 20 unremarkable horses without BAL, and used MANOVA and random forest. The sensitivity and specificity of our thresholds are unknown.</p>
 <div class="kasten warn">
   <h4>We have removed one threshold without replacing it</h4>
   <p>Until August 2026, an RMSSD value of 95 ms was also listed here. It was
@@ -300,6 +296,7 @@ independently.</p>
 
 <h2>7 · Limits</h2>
 <ul>
+  <li><strong>No ECG, no rhythm assessment.</strong> The basis is the chest strap’s RR intervals. HRV metrics assume sinus rhythm; second-degree AV block, premature beats or atrial fibrillation cannot be reliably distinguished from artefacts without an ECG. If a rhythm disorder is suspected, an ECG decides.</li>
   <li><strong>Not a medical device.</strong> CARLON Equine is not intended to detect, monitor,
       treat or alleviate disease. No diagnosis, no
       treatment recommendations. Regulation (EU) 2017/745 applies to devices for human

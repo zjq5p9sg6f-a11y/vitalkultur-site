@@ -32,7 +32,7 @@
       var s = rr.slice().sort(function (a, b) { return a - b; }); var q = function (p) { return s[Math.floor(p * (s.length - 1))]; };
       lo = Math.floor((Math.min(q(0.005), 700)) / 100) * 100; hi = Math.ceil(Math.max(q(1), 1000) / 100) * 100 + 100;
       regler.max = String(n - 1); regler.value = String(n - 1); k = n - 1; vlo = lo; vhi = hi;
-      cv.setAttribute('aria-label', (DE ? 'Poincaré-Diagramm einer Ruheaufnahme über ' : 'Poincaré plot of a resting recording over ') + n + (DE ? ' Schläge mit Zeitregler' : ' beats with time slider'));
+      cv.setAttribute('aria-label', (DE ? 'Poincaré-Diagramm der Aufnahme über ' : 'Poincaré plot of the recording over ') + n + (DE ? ' Schläge mit Zeitregler' : ' beats with time slider'));
       groesse(); zeichne();
       if ('IntersectionObserver' in window && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
         var io = new IntersectionObserver(function (es) { es.forEach(function (e) { if (e.isIntersecting && !vorgefuehrt) { vorgefuehrt = true; abspielen(true); io.disconnect(); } }); }, { threshold: 0.55 });
