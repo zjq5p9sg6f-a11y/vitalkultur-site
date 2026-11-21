@@ -643,32 +643,36 @@ document.head.appendChild(s);})();</script>
         </div>
       </a>
 
-      <a class="product-card visite" href="/carlon-equine-visite/">
+      <div class="product-card visite">
         <div class="product-head">
           <div class="product-mark" aria-hidden="true">
             <img src="/assets/equine-mark-224.png" alt="" width="56" height="56">
           </div>
           <span class="product-accent-dot"></span>
         </div>
-        <div class="pair-tag" data-en="Partner to the CARLON Equine app" data-de="Partner zur CARLON Equine App">Partner to the CARLON Equine app</div>
-        <div class="platform" data-en="Browser · no account · analysis in the browser" data-de="Browser · ohne Konto · Auswertung im Browser">Browser · no account · analysis in the browser</div>
+        <div class="pair-tag" data-en="Browser cockpit for practices, clinics and rehab centres" data-de="Browser-Cockpit für Praxen, Kliniken und Reha-Zentren">Browser cockpit for practices, clinics and rehab centres</div>
+        <div class="platform" data-en="Browser · no installation · 14-day trial" data-de="Browser · ohne Installation · 14 Tage testen">Browser · no installation · 14-day trial</div>
         <h3>CARLON Equine <strong>Visite</strong></h3>
         <div class="tagline"
-             data-en="For the vet and the clinic. Your patients' recordings, made readable."
-             data-de="Für Tierärztin und Klinik. Die Messungen deiner Patienten, lesbar gemacht.">For the vet and the clinic. Your patients' recordings, made readable.</div>
-        <div class="desc"
-             data-en="The owner sends the file, you open it in the browser — no upload, no login. Course over weeks against the horse's own baseline, an overview that lists first the horse whose values differ most from its own baseline, route, logbook and PDF report. The data stays in your folder; the browser only makes it legible."
-             data-de="Der Halter schickt die Datei, du öffnest sie im Browser — kein Upload, kein Login. Verlauf über Wochen gegen die eigene Baseline des Pferdes, eine Übersicht, die das Pferd mit der größten Abweichung von seiner eigenen Baseline zuerst zeigt, dazu Route, Logbuch und PDF-Bericht. Die Daten bleiben in deinem Ordner; der Browser macht sie nur lesbar.">The owner sends the file, you open it in the browser — no upload, no login. Course over weeks against the horse's own baseline, an overview that lists first the horse whose values differ most from its own baseline, route, logbook and PDF report. The data stays in your folder; the browser only makes it legible.</div>
-        <div class="meta">
-          <span class="meta-pill featured" data-en="Nothing is uploaded" data-de="Nichts wird hochgeladen">Nothing is uploaded</span>
-          <span class="meta-pill" data-en="Mobile vets &amp; clinics" data-de="Mobile Vets &amp; Kliniken">Mobile vets &amp; clinics</span>
-          <span class="meta-pill" data-en="Works offline" data-de="Läuft offline">Works offline</span>
+             data-en="Resting HRV before the visit, the tour day under control, rehab sessions documented at the equipment."
+             data-de="Ruhe-HRV vor dem Besuch, der Tourtag im Griff, Reha-Einheiten am Gerät dokumentiert.">Resting HRV before the visit, the tour day under control, rehab sessions documented at the equipment.</div>
+        <div class="vk-einstieg">
+          <a class="vk-e" href="/carlon-equine-visite/en/" data-href-en="/carlon-equine-visite/en/" data-href-de="/carlon-equine-visite/">
+            <b data-en="Practice &amp; clinic" data-de="Praxis &amp; Klinik">Practice &amp; clinic</b>
+            <span data-en="Tour planning, resting HRV trend, measurement report, ward display" data-de="Tourenplanung, Ruhe-HRV im Verlauf, Messwertbericht, Stationswand">Tour planning, resting HRV trend, measurement report, ward display</span>
+            <i data-en="from €149 a month, excl. VAT →" data-de="ab 149&nbsp;€ netto im Monat →">from €149 a month, excl. VAT →</i>
+          </a>
+          <a class="vk-e vk-e-reha" href="/carlon-equine-visite/reha/en/" data-href-en="/carlon-equine-visite/reha/en/" data-href-de="/carlon-equine-visite/reha/">
+            <b data-en="Rehab" data-de="Reha">Rehab</b>
+            <span data-en="13 modalities from water treadmill to lunge, session report, progress report for the owner" data-de="13 Anwendungen vom Aquatrainer bis zur Longe, Sitzungsbericht, Verlauf für die Halterin">13 modalities from water treadmill to lunge, session report, progress report for the owner</span>
+            <i data-en="from €349 a month, excl. VAT →" data-de="ab 349&nbsp;€ netto im Monat →">from €349 a month, excl. VAT →</i>
+          </a>
         </div>
         <div class="cta-row">
-          <span class="cta" data-en="Open product" data-de="Produkt öffnen">Open product</span>
-          <span class="status" data-en="Live · co-creators welcome" data-de="Live · Mitgestalter willkommen">Live · founding partners</span>
+          <a class="cta" href="/carlon-equine/app/?demo=today" data-en="Open the demo" data-de="Demo öffnen">Open the demo</a>
+          <span class="status" data-en="Live · 14-day trial" data-de="Live · 14 Tage testen">Live · 14-day trial</span>
         </div>
-      </a>
+      </div>
 
     </div>
 
@@ -754,6 +758,7 @@ document.head.appendChild(s);})();</script>
         const txt = el.getAttribute('data-' + lang);
         if (txt != null) el.innerHTML = txt;
       });
+      document.querySelectorAll('[data-href-en]').forEach(el => el.setAttribute('href', el.getAttribute('data-href-' + lang)));
       document.querySelectorAll('[data-lang-en]').forEach(el => el.classList.toggle('active', lang === 'en'));
       document.querySelectorAll('[data-lang-de]').forEach(el => el.classList.toggle('active', lang === 'de'));
     }
@@ -766,5 +771,9 @@ document.head.appendChild(s);})();</script>
   })();
 </script>
 
+<style>.vk-einstieg{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:14px 0 6px}@media(max-width:520px){.vk-einstieg{grid-template-columns:1fr}}
+.vk-e{display:flex;flex-direction:column;gap:4px;padding:12px 14px;border:1px solid rgba(255,255,255,.12);border-radius:14px;background:rgba(0,0,0,.25);text-decoration:none;color:inherit;transition:border-color .2s,transform .2s;min-height:44px}
+.vk-e:hover,.vk-e:focus-visible{border-color:rgba(62,207,178,.6);transform:translateY(-1px)}.vk-e b{font-size:15px;font-weight:600}.vk-e span{font-size:12.5px;line-height:1.4;opacity:.78}.vk-e i{font-style:normal;font-size:13px;color:#3ECFB2;margin-top:auto}
+.vk-e-reha{border-color:rgba(242,196,107,.35)}.product-card.visite .cta{text-decoration:none}</style>
 </body>
 </html>
