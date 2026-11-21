@@ -76,6 +76,14 @@ html.nur .verlauf-grid{grid-template-columns:1fr!important}
 #main button,.modal button{min-height:28px}
 @media (pointer:coarse){#main button:not(.info-i),.modal button:not(.info-i){min-height:44px!important}}
 body.ohne-tour .nur-tour{display:none!important}body.ohne-tour .hr-acts{grid-template-columns:repeat(3,1fr)}
+
+/* Akte als Pyramide (21.11.2026) */
+.akte-kapitel{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin-top:14px;padding-top:12px;border-top:1px solid var(--border-faint)}
+.akte-kapitel>span{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--text-dim);margin-right:4px}
+.akte-kapitel a{font-size:12.5px;padding:8px 12px;min-height:36px;display:inline-flex;align-items:center;border-radius:999px;border:1px solid var(--border-subtle);color:var(--text-primary);text-decoration:none;background:rgba(255,255,255,.03)}
+.akte-kapitel a:hover{border-color:var(--cyan)}
+.akte-tiefe-kopf{margin:var(--s5) 0 var(--s3);padding-top:var(--s4);border-top:1px solid var(--border-subtle)}
+.akte-tiefe-kopf h2{font-size:18px;margin:4px 0 4px}.akte-tiefe-kopf p{color:var(--text-dim);font-size:13px;margin:0;max-width:720px}
 </style>
 <link rel="stylesheet" href="assets/leaflet/leaflet.css">
 <style>
@@ -4814,7 +4822,7 @@ const Asthma={
        nichts       · dann steht nur der Marker-Verlauf da */
   kopf(a,sev,inds){
     if(a.ausgeduennt) return `<p style="font-size:12px;color:var(--text-dim);margin-bottom:10px">Die gespeicherte Schlagfolge dieser Aufnahme ist verdichtet — darauf lässt sich keine belastbare Atemwegs-Beobachtung rechnen.</p>`;
-    if(a.unzureichend) return `<p style="font-size:12px;color:var(--text-dim);margin-bottom:10px">Datengrundlage zu klein — die Atemwegs-Beobachtung braucht sieben Minuten Ruhe und 200 Schläge.</p>`;
+    if(a.unzureichend) return `<p style="font-size:12px;color:var(--text-dim);margin-bottom:10px">Die Atemwegs-Beobachtung braucht eine Ruhephase von mindestens sieben Minuten mit 200 Schlägen. Diese Aufnahme enthält keine solche Ruhephase, etwa weil das Pferd in Bewegung war.</p>`;
     if(!a.severity&&a.triggered==null) return `<p style="font-size:12px;color:var(--text-dim);margin-bottom:10px">Für diese Aufnahme liegt keine Atemwegs-Beobachtung vor.</p>`;
 
     const herkunft = a.quelle==='praxis'
@@ -6722,7 +6730,8 @@ const Conditioning={
     const hr=recs.map(r=>({x:(new Date(r.startedAt)-t0)/86400000,y:r.metrics.meanHR,t:r.startedAt}));
     const rm=recs.map(r=>({x:(new Date(r.startedAt)-t0)/86400000,y:r.metrics.rmssd,t:r.startedAt}));
     const hrSlopeWk=this._slope(hr)*7, rmSlopeWk=this._slope(rm)*7;
-    const hrDelta=hr[hr.length-1].y-hr[0].y, rmDelta=rm[rm.length-1].y-rm[0].y;
+    /* 21.11.2026 Comet: Zahl und Überschrift aus DERSELBEN Rechnung (Trendgerade über den Zeitraum), vorher erste gegen letzte Messung → „sinkt“ neben „+1 bpm“ */
+    const spanne=Math.max(0,hr[hr.length-1].x-hr[0].x); const hrDelta=this._slope(hr)*spanne, rmDelta=this._slope(rm)*spanne;
     // Kondition-Index je Session: HF invertiert + RMSSD, auf horse-Range normiert, gemittelt
     const hrs=hr.map(p=>p.y), rms=rm.map(p=>p.y);
     const hMin=Math.min(...hrs),hMax=Math.max(...hrs),rMin=Math.min(...rms),rMax=Math.max(...rms);
@@ -6986,11 +6995,11 @@ const Views={
       <div class="cnd-verdict ${C.state}"><span class="cnd-arrow">${arrow}</span><div><b>${C.label}</b><span>über ${C.weeks} Wochen · ${C.n} Messungen</span></div></div>
       <div class="cnd-charts">
         <div class="cnd-metric">
-          <div class="cnd-mlabel">Ruhe-Herzfrequenz <b class="${C.hrDelta<=-1?'good':C.hrDelta>=1?'bad':''}">${C.hrDelta>=0?'+':''}${fmt0(C.hrDelta)} bpm</b></div>
+          <div class="cnd-mlabel">Ruhe-Herzfrequenz <small style="color:var(--text-dim)">Trend</small> <b class="${C.hrDelta<=-1?'good':C.hrDelta>=1?'bad':''}">${C.hrDelta>=0?'+':''}${fmt0(C.hrDelta)} bpm</b></div>
           ${Conditioning.trendChart(C.hr,{goodDir:-1,unit:'bpm'})}
         </div>
         <div class="cnd-metric">
-          <div class="cnd-mlabel">RMSSD (eigene Basis) <b class="${C.rmDelta>=2?'good':C.rmDelta<=-2?'bad':''}">${C.rmDelta>=0?'+':''}${fmt0(C.rmDelta)} ms</b></div>
+          <div class="cnd-mlabel">RMSSD <small style="color:var(--text-dim)">Trend</small> <b class="${C.rmDelta>=2?'good':C.rmDelta<=-2?'bad':''}">${C.rmDelta>=0?'+':''}${fmt0(C.rmDelta)} ms</b></div>
           ${Conditioning.trendChart(C.rm,{goodDir:1,unit:'ms'})}
         </div>
       </div>
@@ -7798,7 +7807,7 @@ const Views={
         <div class="detail-topmain">
           ${Views.verdictHero(h,rec,tri)}
           ${typeof Reha!=='undefined'&&Reha.hauptbereich?Reha.hauptbereich(h):''}
-          <div class="panel" style="margin-bottom:var(--s4)">
+          <div class="panel" id="kernwerteAkte" style="margin-bottom:var(--s4)">
             <h2 style="font-size:13px;color:var(--text-dim);letter-spacing:.06em;text-transform:uppercase"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12h4l3 8 4-16 3 8h4"/></svg>Kernwerte &amp; Begründung</h2>
             ${(()=>{const amp=Triage.baselineAmpel(h,rec);const streak=Triage.fallingStreak(h.id);if(!amp&&streak<3)return'';const lvl=amp?amp.level:'warn';const parts=[];if(amp)parts.push(amp.text);if(streak>=3)parts.push(`RMSSD ${streak}× in Folge fallend`);return `<div class="warnbanner ${lvl}">${IC.bolt}<div><b>Auffällig · gegen ${amp&&amp.eigen===false?'den angegebenen Ausgangswert':'die individuelle Baseline'}</b><span>${parts.map(esc).join(' · ')}</span></div></div>`;})()}
             ${rec&&rec.reha?`<div style="font-size:12.5px;color:var(--text-dim);margin:-2px 0 8px">${m.ohneRuhe?'Letzte Aufnahme ist eine Reha-Einheit ohne 5 min Ruhe vor der ersten Stufe: keine Ruhekennzahlen (unter Belastung nicht stationär).':(m.rmssd==null?'Ruhephase der letzten Reha-Einheit nicht auswertbar (zu viele unsichere Schläge): keine Ruhekennzahlen.':'Aus der Ruhephase vor der ersten Stufe der letzten Reha-Einheit.')}</div>`:''}
@@ -7842,7 +7851,7 @@ const Views={
           ${Views.signalPanel(rec)}
           ${Views.asthmaPanel(recs)}
           ${Views.trainingPanel(recs,h)}
-          <div class="panel">
+          <div class="panel" id="aufnahmenAkte">
             <h2><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>Aufnahmen (${recs.length})</h2>
             <div class="rec-list">
               ${recs.slice().reverse().map(r=>`<div class="rec">
@@ -7916,7 +7925,8 @@ const Views={
     const sev=a.severity?Asthma.SEV[a.severity]:null;
     const labels={rmssd_low:'RMSSD reduziert',sdnn_low:'SDNN reduziert',sd2_low:'SD2 reduziert',sd2_sd1_ratio_low:'SD2/SD1-Ratio reduziert',sd1_low:'SD1 reduziert'};
     const inds=a.indicators?Object.entries(a.indicators).filter(([k,v])=>v).map(([k])=>labels[k]||k):[];
-    return `<div class="panel" style="margin-bottom:var(--s4)">
+    return `<div class="akte-tiefe-kopf" id="tiefeAkte"><span class="eyebrow">${Sprache.cur==='en'?'In depth':'Tiefe'}</span><h2>${Sprache.cur==='en'?'Every analysis of the latest recording':'Alle Analysen der letzten Aufnahme'}</h2><p>${Sprache.cur==='en'?'The evidence behind the summary above: heart rate and HRV over time, Poincaré, breathing, spectrum and indices.':'Die Belege zur Übersicht oben: Puls und HRV über die Zeit, Poincaré, Atmung, Spektrum und Indizes.'}</p></div>
+<div class="panel" style="margin-bottom:var(--s4)">
       <h2 style="font-size:16px"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v7M8.5 9C6 10 5 12.5 5 15a3 3 0 006 0M15.5 9c2.5 1 3.5 3.5 3.5 6a3 3 0 01-6 0"/></svg>Atemwegs-Beobachtung (HRV)</h2>
       ${Asthma.kopf(a,sev,inds)}
       ${Asthma.verlauf(a)}
@@ -7947,7 +7957,16 @@ const Views={
       ${Views.gueteZeile(State.latestFor(h.id),true)}
       ${(tri.flags&&tri.flags.length)?`<div class="vh-flags">${tri.flags.map(f=>`<span class="vh-flag">${esc(Triage.zeig(f))}</span>`).join('')}</div>`:''}
       <div class="vh-act">${act}</div>
+      ${Views.aktePyramide(h)}
     </div>`;
+  },
+  /* 21.11.2026 (Jan: Minto – von der Übersicht in die Tiefe, ohne dass Tiefe übersehen wird): jede tragende Aussage verweist auf ihren Beleg,
+     dazu eine Kapitelleiste. Nichts wird eingeklappt. */
+  aktePyramide(h){
+    const en=Sprache.cur==='en', E=(d,e)=>en?e:d, hin=(id)=>`onclick="event.preventDefault();const z=document.getElementById('${id}');if(z)z.scrollIntoView({behavior:'smooth',block:'start'})"`;
+    const reha=typeof Reha!=='undefined'&&Reha.erlaubt&&Reha.erlaubt(h.id)&&(Reha.sitzungen?Reha.sitzungen(h.id).length:0)>0;
+    const kap=[['kernwerteAkte',E('Kernwerte','Key values')],['verlaufAkte',E('Verlauf','Trend')],...(reha?[['rehaAkte',E('Reha','Rehab')]]:[]),['aufnahmenAkte',E('Aufnahmen','Recordings')],['tiefeAkte',E('Tiefe','In depth')]];
+    return `<nav class="akte-kapitel" aria-label="${E('Kapitel der Akte','Sections of the record')}"><span>${E('In dieser Akte','In this record')}</span>${kap.map(([id,t])=>`<a href="#${id}" data-ziel="${id}" ${hin(id)}>${t}</a>`).join('')}</nav>`;
   },
   /* Gespeicherte Reihe kuerzer als die Schlagzahl ⇒ vor dem 05.11.2026 verdichtet. */
   verdichtet(rec){ return !!(rec&&rec.rr&&rec.beatCount&&rec.rr.length<rec.beatCount); },
@@ -14357,7 +14376,7 @@ const Sprache={
     'Ausgangswert':'Initial value',
     // Atemwegs-Beobachtung — im Cockpit gerechnet (09.08.2026)
     'Die gespeicherte Schlagfolge dieser Aufnahme ist verdichtet — darauf lässt sich keine belastbare Atemwegs-Beobachtung rechnen.':'The stored RR series of this recording is condensed — no dependable airway observation can be computed from it.',
-    'Datengrundlage zu klein — die Atemwegs-Beobachtung braucht sieben Minuten Ruhe und 200 Schläge.':'Too little data — the airway observation needs seven minutes at rest and 200 beats.',
+    'Die Atemwegs-Beobachtung braucht eine Ruhephase von mindestens sieben Minuten mit 200 Schlägen. Diese Aufnahme enthält keine solche Ruhephase, etwa weil das Pferd in Bewegung war.':'Airway observation needs a resting phase of at least seven minutes with 200 beats. This recording contains no such resting phase, for example because the horse was moving.',
     'Für diese Aufnahme liegt keine Atemwegs-Beobachtung vor.':'No airway observation is available for this recording.',
     'in dieser Praxis aus der Aufnahme gerechnet':'computed in this practice from the recording',
     'aus CARLON Equine übernommen':'taken from CARLON Equine',
