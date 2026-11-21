@@ -3900,7 +3900,7 @@ const DB = {
 /* ---------- App state ---------- */
 const State = {
   horses:[], recordings:[], consults:[], coherence:[], daylog:[],
-  settings:{clinicName:'Meine Pferdepraxis',vetName:'',originLat:48.8760,originLng:8.1940,originLabel:'Praxis Rastatt',tariff:75,onboarded:false,dayStart:480,defaultVisitMin:20},
+  settings:{clinicName:'Meine Pferdepraxis',vetName:'',originLat:48.8760,originLng:8.1940,originLabel:'Praxis Musterstadt',tariff:75,onboarded:false,dayStart:480,defaultVisitMin:20},
   route:{},  // horseId -> on route (bool)
   async load(){
     this.horses=await DB.all('horses');
@@ -9938,7 +9938,7 @@ const Report={
         <div class="logo-row"><div class="logo-prev" id="sLogoPrev">${s.logo?`<img src="${s.logo}" alt="Logo">`:'<span>kein Logo</span>'}</div>
           <button type="button" class="btn ghost" style="font-size:13px" onclick="UI.uploadLogo()">${IC.download||''} Logo hochladen</button></div>
         <div class="field-row"><div class="field"><label>Praxisname</label><input id="bfName" value="${esc(s.clinicName&&s.clinicName!=='Meine Pferdepraxis'?s.clinicName:'')}" placeholder="Pferdepraxis …"></div>
-          <div class="field"><label>Anschrift</label><input id="bfAddr" value="${esc(s.clinicAddr||'')}" placeholder="Musterstr. 1, 76473 Iffezheim"></div></div>
+          <div class="field"><label>Anschrift</label><input id="bfAddr" value="${esc(s.clinicAddr||'')}" placeholder="${Sprache.cur==='en'?'1 Sample Street, Sampletown':'Musterstraße 1, 12345 Musterstadt'}"></div></div>
         <div class="field-row"><div class="field"><label>Telefon</label><input id="bfPhone" value="${esc(s.clinicPhone||'')}" placeholder="07229 …"></div>
           <div class="field"><label>E-Mail</label><input id="bfMail" value="${esc(s.clinicMail||'')}" placeholder="praxis@…"></div>
           <div class="field"><label>Website</label><input id="bfWeb" value="${esc(s.clinicWeb||'')}" placeholder="www.…"></div></div>
@@ -10520,7 +10520,7 @@ const UI={
         <div class="field"><label>Telefon (erscheint auf dem Aushang)</label><input id="sPhone" value="${esc(s.clinicPhone||'')}" placeholder="07229 …"></div>
         <div class="field"><label>E-Mail</label><input id="sMail" value="${esc(s.clinicMail||'')}" placeholder="praxis@…"></div></div>
       <div class="field-row">
-        <div class="field"><label>Anschrift für den Aushang</label><input id="sAddr" value="${esc(s.clinicAddr||'')}" placeholder="Musterstr. 1, 76473 Iffezheim"></div>
+        <div class="field"><label>Anschrift für den Aushang</label><input id="sAddr" value="${esc(s.clinicAddr||'')}" placeholder="${Sprache.cur==='en'?'1 Sample Street, Sampletown':'Musterstraße 1, 12345 Musterstadt'}"></div>
         <div class="field"><label>Website (optional)</label><input id="sWeb" value="${esc(s.clinicWeb||'')}" placeholder="www.…"></div></div>
       <div class="field"><label>Einladungstext für Halter:innen <span style="color:var(--text-dim);font-weight:400">— geht mit jedem Mess-Link per WhatsApp, SMS oder Teilen</span></label>
         <textarea id="sEinl" rows="8" style="width:100%;font:inherit;font-size:13px;line-height:1.5;resize:vertical" oninput="UI.einlVorschau()">${esc(s.einladungText||Praxis.std())}</textarea>
@@ -10528,7 +10528,7 @@ const UI={
         <div style="margin-top:8px;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--text-dim)">So kommt er an (Beispiel „Champion“)</div>
         <div id="sEinlVor" style="margin-top:6px;white-space:pre-line;background:var(--cyan-faint);border:1px solid var(--cyan-g2);border-radius:14px 14px 14px 4px;padding:11px 13px;font-size:13px;line-height:1.5;color:var(--text-primary)"></div></div>
       <div class="field"><label>Startort der Route (Adresse oder Ort)</label>
-        <div style="display:flex;gap:8px"><input id="sOrigin" value="${esc(s.originLabel)}" placeholder="z. B. Tierklinik, Musterstr. 1, Rastatt" style="flex:1">
+        <div style="display:flex;gap:8px"><input id="sOrigin" value="${esc(s.originLabel)}" placeholder="${Sprache.cur==='en'?'e.g. equine clinic, 1 Sample Street, Sampletown':'z. B. Tierklinik, Musterstraße 1, Musterstadt'}" style="flex:1">
         <button class="btn ghost" style="padding:0 14px;white-space:nowrap" onclick="geoLookup('sOrigin','sLat','sLng',this)">${IC.pin} Suchen</button></div>
         <div class="hint">Adresse eingeben und „Suchen" — Koordinaten werden automatisch ermittelt.</div></div>
       <div class="field-row"><div class="field"><label>Breitengrad</label><input id="sLat" type="number" step="0.00001" value="${s.originLat}"></div>
@@ -11692,7 +11692,7 @@ const Bestand={
   },
   vorlage(){
     const t='﻿Pferd;Halterin;Telefon;Stall;Straße;PLZ;Ort;Rasse;Patienten-Nr.;UELN;Mikrochip\r\n'
-           +'Mistral;Anna Weber;+49 170 1234567;Reitstall Sonnenhof;Hofweg 3;76473;Iffezheim;Hannoveraner;10234;276098765432109;276098106543210\r\n';
+           +'Mistral;Anna Muster;+49 170 1234567;Reitstall Musterhof;Hofweg 3;12345;Musterstadt;Hannoveraner;10234;276098765432109;276098106543210\r\n';
     const a=document.createElement('a'); a.href=URL.createObjectURL(new Blob([t],{type:'text/csv;charset=utf-8'}));
     a.download='CARLON-Bestand-Vorlage.csv'; document.body.appendChild(a); a.click(); a.remove();
   },
