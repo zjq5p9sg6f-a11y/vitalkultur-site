@@ -5,10 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="theme-color" content="#050505">
-  <title>Vitalkultur — Heart · Breath · Movement · Research-grade wellness apps</title>
+  <title>Vitalkultur · Every heart responds. We make it readable.</title>
   <meta name="description" content="Vitalkultur — an independent team building wellness apps with documented methods. Heart-rate variability, haptic breathwork, heart-rate variability for horses. Built for owners, athletes, vets and researchers who want answers — not promises.">
   <meta property="og:title" content="Vitalkultur — Heart · Breath · Movement">
-  <meta property="og:description" content="Research-grade wellness apps for heart, breath and movement. CARLON · CARLON Equine · CARLON HRV Research.">
+  <meta property="og:description" content="Software for the Polar H10: browser software for equine practices and rehab centres, apps for horse owners, research and breathwork. Data stays on your devices.">
   <meta property="og:image" content="https://vitalkultur.com/og-image.png?v=2">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
@@ -167,6 +167,13 @@ document.head.appendChild(s);})();</script>
       margin: 0 12px 1px;
       vertical-align: middle;
     }
+    .fuer-wen{display:flex;flex-wrap:wrap;justify-content:center;gap:10px;max-width:1080px;margin:30px auto 0;padding:0 4px}
+    .fuer-wen .fw-k{flex-basis:100%;text-align:center;font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted,#8a94a6);margin-bottom:2px}
+    .fuer-wen .fw{display:flex;flex-direction:column;gap:3px;min-width:180px;flex:1 1 180px;max-width:206px;padding:13px 15px;border-radius:14px;border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.035);text-decoration:none;color:inherit;text-align:left;min-height:44px;transition:border-color .2s,background .2s}
+    .fuer-wen .fw:hover,.fuer-wen .fw:focus-visible{border-color:rgba(62,207,178,.6);background:rgba(62,207,178,.07)}
+    .fuer-wen .fw b{font-size:14.5px;font-weight:600}
+    .fuer-wen .fw span{font-size:12.5px;color:var(--muted,#8a94a6);line-height:1.35}
+    @media(max-width:560px){.fuer-wen .fw{max-width:none;flex-basis:calc(50% - 5px);min-width:0}}
     .hero h1 {
       font-size: clamp(44px, 8vw, 84px);
       font-weight: 200;
@@ -506,19 +513,26 @@ document.head.appendChild(s);})();</script>
   <section class="hero">
     <div class="hero-glow"></div>
     <div class="eyebrow">
-      <span data-en="Independent" data-de="Unabhängig">Independent</span><span class="dot"></span>
-      <span data-en="Research-grade" data-de="Forschungs-Grade">Research-grade</span><span class="dot"></span>
-      <span data-en="Local-first" data-de="Lokal auf deinen Geräten">Local-first</span>
+      <span data-en="Heart rate and HRV" data-de="Herzfrequenz und HRV">Heart rate and HRV</span><span class="dot"></span>
+      <span data-en="For horses and people" data-de="Für Pferde und Menschen">For horses and people</span>
     </div>
-    <h1 data-en="Science. <em>Made tangible.</em>"
-        data-de="Wissenschaft. <em>Greifbar gemacht.</em>">Science. <em>Made tangible.</em></h1>
-    <p data-en="Apps for heart, breath and equine HRV — built so the underlying research is something you can feel, decide on, and act on. Independent, local-first, honest with every number."
-       data-de="Apps für Herz, Atem und equine HRV — so gebaut, dass die dahinterliegende Forschung etwas wird, das du fühlen, entscheiden und handeln kannst. Unabhängig, lokal-first, ehrlich bei jeder Zahl.">Apps for heart, breath and equine HRV — built so the underlying research is something you can feel, decide on, and act on. Independent, local-first, honest with every number.</p>
+    <h1 data-en="Every heart responds to work, rest and stress. <em>We make that response readable.</em>"
+        data-de="Jedes Herz antwortet auf Arbeit, Ruhe und Belastung. <em>Wir machen diese Antwort lesbar.</em>">Every heart responds to work, rest and stress. <em>We make that response readable.</em></h1>
+    <p data-en="With the Polar H10 chest strap, beat by beat, compared with each individual’s own baseline rather than a table. Every method is disclosed, every value can be exported, and recordings stay on your own devices."
+       data-de="Mit dem Brustgurt Polar H10, Schlag für Schlag, verglichen mit der eigenen Basis jedes Pferds und jedes Menschen statt mit einer Tabelle. Jede Methode offengelegt, jeder Wert exportierbar, die Aufnahmen bleiben auf den eigenen Geräten.">With the Polar H10 chest strap, beat by beat, compared with each individual’s own baseline rather than a table. Every method is disclosed, every value can be exported, and recordings stay on your own devices.</p>
+    <nav class="fuer-wen" aria-label="Für wen" data-en-aria="Who is it for">
+      <span class="fw-k" data-en="Who is it for?" data-de="Für wen?">Who is it for?</span>
+      <a class="fw" href="/carlon-equine-visite/en/" data-href-en="/carlon-equine-visite/en/" data-href-de="/carlon-equine-visite/"><b data-en="Equine practices &amp; clinics" data-de="Pferdepraxen &amp; Kliniken">Equine practices &amp; clinics</b><span data-en="Visite · browser · from €149/month" data-de="Visite · Browser · ab 149 €/Monat">Visite · browser · from €149/month</span></a>
+      <a class="fw" href="/carlon-equine-visite/reha/en/" data-href-en="/carlon-equine-visite/reha/en/" data-href-de="/carlon-equine-visite/reha/"><b data-en="Rehab centres" data-de="Reha-Zentren">Rehab centres</b><span data-en="Session report per stage · from €349/month" data-de="Sitzungsbericht je Stufe · ab 349 €/Monat">Session report per stage · from €349/month</span></a>
+      <a class="fw" href="/carlon-equine/"><b data-en="Horse owners &amp; trainers" data-de="Pferdebesitzer &amp; Trainer">Horse owners &amp; trainers</b><span data-en="CARLON Equine · iPhone" data-de="CARLON Equine · iPhone">CARLON Equine · iPhone</span></a>
+      <a class="fw" href="/hrv-research/"><b data-en="Research" data-de="Forschung">Research</b><span data-en="CARLON HRV Research · iPhone" data-de="CARLON HRV Research · iPhone">CARLON HRV Research · iPhone</span></a>
+      <a class="fw" href="/breathwork/"><b data-en="Breathwork" data-de="Atemarbeit">Breathwork</b><span data-en="CARLON Breathwork · Apple Watch" data-de="CARLON Breathwork · Apple Watch">CARLON Breathwork · Apple Watch</span></a>
+    </nav>
   </section>
 
   <section class="products-section" id="apps">
     <div class="products-eyebrow" data-en="One engine · one ecosystem" data-de="Eine Engine · ein Ökosystem">Eine Engine · ein Ökosystem</div>
-    <p class="products-intro" style="max-width:660px;margin:6px auto 30px;text-align:center;font-size:15px;line-height:1.65;color:var(--muted,#8a94a6)" data-en="Three apps, one foundation — the same research-grade HRV engine behind each: Polar H10, local on your devices, honest with every number. From human breath on the wrist (<strong style='color:var(--text,#e8eef5);font-weight:500'>Breathwork</strong>) to a horse's heart biometry (<strong style='color:var(--text,#e8eef5);font-weight:500'>Equine</strong>) to raw RR intervals for science (<strong style='color:var(--text,#e8eef5);font-weight:500'>Research</strong>): one platform, one shared analysis core in every&nbsp;app." data-de="Drei Apps, ein Fundament — hinter jeder dieselbe forschungsnahe HRV-Engine: Polar H10, lokal auf deinen Geräten, ehrlich bei jeder Zahl. Vom menschlichen Atem am Handgelenk (<strong style='color:var(--text,#e8eef5);font-weight:500'>Breathwork</strong>) über die Herzbiometrie des Pferds (<strong style='color:var(--text,#e8eef5);font-weight:500'>Equine</strong>) bis zu Roh-RR-Intervallen für die Forschung (<strong style='color:var(--text,#e8eef5);font-weight:500'>Research</strong>): eine Plattform, ein gemeinsamer Analysekern in jeder&nbsp;App.">Drei Apps, ein Fundament — hinter jeder dieselbe forschungsnahe HRV-Engine: Polar H10, lokal auf deinen Geräten, ehrlich bei jeder Zahl. Vom menschlichen Atem am Handgelenk (<strong style="color:var(--text,#e8eef5);font-weight:500">Breathwork</strong>) über die Herzbiometrie des Pferds (<strong style="color:var(--text,#e8eef5);font-weight:500">Equine</strong>) bis zu Roh-RR-Intervallen für die Forschung (<strong style="color:var(--text,#e8eef5);font-weight:500">Research</strong>): eine Plattform, ein gemeinsamer Analysekern in jeder&nbsp;App.</p>
+    <p class="products-intro" style="max-width:660px;margin:6px auto 30px;text-align:center;font-size:15px;line-height:1.65;color:var(--muted,#8a94a6)" data-en="One foundation behind every product: the same HRV analysis core, the Polar H10 and recordings that stay on your own devices. From breath on the wrist (<strong style='color:var(--text,#e8eef5);font-weight:500'>Breathwork</strong>) and the horse’s heart (<strong style='color:var(--text,#e8eef5);font-weight:500'>Equine</strong>, <strong style='color:var(--text,#e8eef5);font-weight:500'>Visite</strong>) to raw RR intervals for science (<strong style='color:var(--text,#e8eef5);font-weight:500'>Research</strong>)." data-de="Ein Fundament hinter jedem Produkt: derselbe HRV-Rechenkern, der Polar H10 und Aufnahmen, die auf den eigenen Geräten bleiben. Vom Atem am Handgelenk (<strong style='color:var(--text,#e8eef5);font-weight:500'>Breathwork</strong>) über das Herz des Pferds (<strong style='color:var(--text,#e8eef5);font-weight:500'>Equine</strong>, <strong style='color:var(--text,#e8eef5);font-weight:500'>Visite</strong>) bis zu rohen RR-Intervallen für die Forschung (<strong style='color:var(--text,#e8eef5);font-weight:500'>Research</strong>).">One foundation behind every product: the same HRV analysis core, the Polar H10 and recordings that stay on your own devices. From breath on the wrist (<strong style='color:var(--text,#e8eef5);font-weight:500'>Breathwork</strong>) and the horse’s heart (<strong style='color:var(--text,#e8eef5);font-weight:500'>Equine</strong>, <strong style='color:var(--text,#e8eef5);font-weight:500'>Visite</strong>) to raw RR intervals for science (<strong style='color:var(--text,#e8eef5);font-weight:500'>Research</strong>).</p>
     <div class="products">
 
       <a class="product-card breathwork" href="/breathwork/">
@@ -695,7 +709,7 @@ document.head.appendChild(s);})();</script>
     </div>
     <div class="trust-item">
       <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 19l5-9 4 5 4-8 3 4"/></svg>
-      <span data-en="Research-grade" data-de="Forschungs-Grade">Research-grade</span>
+      <span data-en="Methods disclosed" data-de="Methode offengelegt">Methods disclosed</span>
     </div>
     <div class="trust-item">
       <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 12c0 5-3 9-9 9s-9-4-9-9 4-9 9-9c2 0 4 .5 5 1.5"/><path d="M9 12l2 2 5-5"/></svg>
@@ -709,8 +723,8 @@ document.head.appendChild(s);})();</script>
 
   <section class="about-strip">
     <div class="label" data-en="The philosophy" data-de="Die Philosophie">The philosophy</div>
-    <h2 data-en="We don't just show the science — we make it <em>tangible.</em> Peer‑reviewed depth, translated into something you can feel, decide on, act on."
-        data-de="Wir zeigen die Wissenschaft nicht nur — wir machen sie <em>greifbar.</em> Peer‑reviewte Tiefe, übersetzt in etwas, das du fühlen, entscheiden, handeln kannst.">We don't just show the science — we make it <em>tangible.</em> Peer‑reviewed depth, translated into something you can feel, decide on, act on.</h2>
+    <h2 data-en="We don't just show numbers. <em>We show where they come from.</em> Methods disclosed, raw data exportable, observation rather than diagnosis."
+        data-de="Wir zeigen nicht nur Werte. <em>Wir zeigen, woher sie kommen.</em> Methode offengelegt, Rohdaten exportierbar, Beobachtung statt Diagnose.">We don't just show the science — we make it <em>tangible.</em> Peer‑reviewed depth, translated into something you can feel, decide on, act on.</h2>
   </section>
 
 </main>
