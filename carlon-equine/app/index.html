@@ -12503,6 +12503,7 @@ const License={
     const u = new URL(location.href);
     const k = u.searchParams.get('kasse');
     if (!['1','praxis','klinik','reha','kombi','center'].includes(k)) return;
+    this._kasseAusLink = true;   /* 21.11.2026 Prüfkauf: sonst legt sich das Willkommen 1 s später über den Kaufdialog */
     /* 21.11.2026: Bereiche aus dem Website-Rechner übernehmen (Tour, Station, Reha) – die Reiter passen ab dem ersten Start */
     { const br = u.searchParams.get('bereiche'); if (br != null) { const L = br.split(',');
         State.settings.bereiche = { tour: L.includes('tour'), station: L.includes('station'), reha: L.includes('reha'), _tier: ({praxis:'vet_solo',klinik:'vet_clinic',reha:'vet_reha',kombi:'vet_klinik_reha',center:'vet_center'})[k] };
@@ -13885,6 +13886,7 @@ const Nav={
 function tourFaellig(){
   const s=(State&&State.settings)||{};
   if(s.onboarded) return false;
+  if(typeof License!=='undefined'&&License._kasseAusLink) return false;   // Kauf von der Verkaufsseite: der Kaufdialog führt (21.11.)
   if(typeof License!=='undefined'&&License.isPaid&&License.isPaid()) return false;   // Käufer: das Willkommen führt (13.11.)
   if(State.horses&&State.horses.length) return false;
   if(s.uebergabeGesehen>0) return false;   // der Beweis liegt schon auf dem Tisch
