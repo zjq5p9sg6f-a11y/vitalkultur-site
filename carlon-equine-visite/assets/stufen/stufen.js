@@ -60,7 +60,7 @@
   const basis = { visite: EN ? '/carlon-equine-visite/en/' : '/carlon-equine-visite/', reha: EN ? '/carlon-equine-visite/reha/en/' : '/carlon-equine-visite/reha/' };
   const AUF = { visite: ['fahrpraxis', 'praxis', 'reha', 'kombi', 'center'], reha: ['reha', 'kombi', 'center'] };
   const ziel = (seite, k) => (AUF[seite].includes(k) ? '' : basis.visite) + '#tarif-' + k;
-  const kasse = s => '/carlon-equine/app/?kasse=' + s.kasse + (EN ? '&lang=en' : '');
+  const kasse = (s, b) => '/carlon-equine/app/?kasse=' + s.kasse + (b ? '&bereiche=' + ['tour', 'station', 'reha'].filter(k => b[k]).join(',') : '') + (EN ? '&lang=en' : '');
   const esc = x => String(x).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
   const css = `.st-ww{margin:var(--sp-34,34px) 0 0}
 .st-ww h3{margin:0 0 12px;font-size:clamp(17px,1.8vw,20px);color:var(--text-primary,#f4f4f4);text-align:center}
@@ -186,7 +186,7 @@
       }
       $('.st-wahl').innerHTML = `<div class="st-k">${esc(t.passt)}</div><div class="st-n">${esc(t.name[s.k])}</div><div class="st-p">${t.eu(s.p)}<small>${esc(t.imMonat)}${s.k === 'center' ? esc(t.proStandort) : ''}</small></div>
         <div class="st-k" style="margin-top:6px">${esc(t.weil)}</div><ul>${gr.map(x => `<li>${esc(x)}</li>`).join('') || `<li>${esc(t.grundBasis)}</li>`}</ul>
-        <p class="st-sprung">${esc(sprung)}</p><div class="st-knopf"><a class="st-a1" href="${kasse(s)}">${esc(t.test)} →</a><a class="st-a2" href="${ziel(seite, s.k)}">${esc(t.zumAng)}</a></div>`;
+        <p class="st-sprung">${esc(sprung)}</p><div class="st-knopf"><a class="st-a1" href="${kasse(s, b)}">${esc(t.test)} →</a><a class="st-a2" href="${ziel(seite, s.k)}">${esc(t.zumAng)}</a></div>`;
       // Grafik
       const box = $('.st-svg'), W = Math.max(300, Math.min(620, Math.round((box.clientWidth || 560)))), H = W < 420 ? 236 : 240, pl = 48, pr = 10, pt = W < 420 ? 36 : 22, pb = 34, eng = W < 420;
       let g = '', xs, lic, inc = null, xmax, xlab;

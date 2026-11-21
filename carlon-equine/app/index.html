@@ -64,6 +64,18 @@ html.nur .verlauf-grid{grid-template-columns:1fr!important}
 .modal-body :is(input:not([type=checkbox]):not([type=radio]):not([type=range]):not([type=file]),select,textarea){padding:9px 11px;background:var(--bg-deep);border:1px solid var(--border-subtle);border-radius:var(--r-s);color:var(--text-primary);font:inherit;font-size:14px;outline:none;box-sizing:border-box}
 .modal-body :is(input,select,textarea):focus{border-color:var(--cyan-deep);box-shadow:0 0 0 3px var(--cyan-g3)}
 #tabs button[hidden],#bottomNav button[hidden]{display:none!important}
+
+/* FINGERFLÄCHEN (21.11.2026, Beschnitt-Scan): am Tablet im Stall mindestens 44 px; Maus-Geräte behalten das dichte Layout */
+@media (pointer:coarse){
+  .btn,.icon-btn,.chart-zoombtn,.qa-btn,.seg button,.chips button,.filter button,.ref-navi,#tierPill,#speicherPill,.tabs button,.bottom-nav button,.hbtn,#fieldBtn,.view-head button,.roster-tools button{min-height:44px!important}
+  .icon-btn,.chart-zoombtn,.qa-btn{min-width:44px}
+  .btn.ghost{padding-top:8px;padding-bottom:8px}
+}
+.info-i{position:relative}.info-i::after{content:'';position:absolute;inset:-10px}
+.tbl .btn{min-height:30px}
+#main button,.modal button{min-height:28px}
+@media (pointer:coarse){#main button:not(.info-i),.modal button:not(.info-i){min-height:44px!important}}
+body.ohne-tour .nur-tour{display:none!important}body.ohne-tour .hr-acts{grid-template-columns:repeat(3,1fr)}
 </style>
 <link rel="stylesheet" href="assets/leaflet/leaflet.css">
 <style>
@@ -2911,7 +2923,7 @@ const RehaMassnahmen={
 const Reha={
   /* 20.11.2026: in der Demo NUR an den Demo-Pferden (beim Laden gemerkt) – sonst nahm eine bezahlte Fahrpraxis über den
      Demo-Schalter Reha an eigenen Pferden auf (Leistung der teureren Stufe). */
-  erlaubt(hid){ if(License.can('reha')) return true; const s=State.settings||{}; return !!(s.isDemo && hid && (s.demoPferde||[]).includes(hid)); },
+  erlaubt(hid){ if(License.can('reha')&&(typeof Nav==='undefined'||!Nav.bereiche||Nav.bereiche().reha)) return true; const s=State.settings||{}; return !!(s.isDemo && hid && (s.demoPferde||[]).includes(hid)); },
   /* Obergrenze Reha-Pferde (GRENZEN.pferde): zählt Pferde mit Reha-Einheit in den letzten 30 Tagen. Ein NEUES Pferd über der
      Grenze öffnet den Stufenwechsel; vorhandene Pferde, Akten und Berichte bleiben voll nutzbar. */
   grenzePruefen(hid){
@@ -2988,7 +3000,7 @@ const Reha={
       if(Math.abs(d)>=2) return `Gleiche Stufe (${v.label}): Herzfrequenz ${Math.abs(d)} Schläge pro Minute ${d>0?'niedriger':'höher'} als am ${fmtDate(a.datum)}.`; }
     return ''; },
   /* Reha in der HAUPTFLÄCHE der Akte (Audit Runde 6): Verlauf der Vergleichsübung, jede Einheit mit Status, Berichte, Datensicherung */
-  hauptbereich(h){ if(!this.erlaubt()) return ''; const S=this.sitzungen(h.id); if(!S.length) return ''; const K=S.map(s=>this.kennwerte(s.rec)), ref=this.referenz(h.id), kL=K[K.length-1];
+  hauptbereich(h){ if(!this.erlaubt()) return ''; const S=this.sitzungen(h.id); if(!S.length) return (h.reha||RehaMassnahmen.liste(h).length||(License.tier&&License.tier()==='vet_reha'))?`<div class="panel" style="margin-bottom:var(--s4)" id="rehaHaupt">${RehaMassnahmen.block(h)}</div>`:''; const K=S.map(s=>this.kennwerte(s.rec)), ref=this.referenz(h.id), kL=K[K.length-1];
     const P0=this._C; this._C=this._CD; let VL=''; try{ VL=this._svgVerlauf(h.id,new Date().toISOString(),{w:1000,h:190}); }finally{ this._C=P0; }
     const tr=this.hfTrend(h.id), g=this.grenzeHF(h.id), vgl=K.filter(k=>this.hfRef(k,ref)!=null).length;
     setTimeout(()=>{ const el=document.getElementById('rehaSpeicher'); if(!el) return; Promise.resolve(navigator.storage&&navigator.storage.persisted?navigator.storage.persisted():false).then(ok=>{ const lb=State.settings&&State.settings.lastBackupAt; el.innerHTML=(ok?'✓ Daten dauerhaft im Browser gespeichert':'')+(ok&&lb?' · letzte Sicherung '+fmtDate(lb):'')||(lb?'Letzte Sicherung '+fmtDate(lb)+' · ':'Noch keine Sicherung · ')+'Ohne Installation darf der Browser diese Daten nach einigen Wochen löschen. <button class="btn ghost" style="font-size:12px;padding:4px 10px" onclick="PWA.install()">Dauerhaft speichern (installieren)</button> <button class="btn ghost" style="font-size:12px;padding:4px 10px" onclick="Backup.doExport()">Sicherung jetzt</button>'; }).catch(()=>{}); },0);
@@ -2996,8 +3008,8 @@ const Reha={
     return `<div class="panel" style="margin-bottom:var(--s4)" id="rehaHaupt"><div style="display:flex;justify-content:space-between;align-items:baseline;gap:10px;flex-wrap:wrap"><h2 style="font-size:17px;margin:0">Reha · ${S.length} Einheit${S.length>1?'en':''} seit ${fmtDate(S[0].rec.startedAt)}</h2><span style="font-size:12.5px;color:var(--text-secondary)" id="rehaSpeicher"></span></div>${RehaMassnahmen.block(h)}
       ${ref?(()=>{ const en=typeof Sprache!=='undefined'&&Sprache.cur==='en'; return en?`<div style="font-size:13px;color:var(--text-secondary);margin:6px 0">Reference stage: <b>${esc(RehaKern.label(ref.markierung||{},false)||ref.label)}</b> · in ${vgl} of ${S.length} sessions${tr?` · trend ${tr.b>0?'+':'−'}${fmt1(Math.abs(tr.b))} bpm per week (±${fmt1(tr.ki)})`:''} · stable means ±${g.eigen?fmt0(Math.round(g.wert))+' bpm (derived from this horse’s own data)':'3 bpm (provisional)'}</div>`:`<div style="font-size:13px;color:var(--text-secondary);margin:6px 0">Referenzstufe: <b>${esc(ref.label)}</b> · in ${vgl} von ${S.length} Einheiten${tr?` · Trend ${tr.b>0?'+':'−'}${fmt1(Math.abs(tr.b))} bpm je Woche (±${fmt1(tr.ki)})`:''} · stabil heißt ±${g.eigen?fmt0(Math.round(g.wert))+' bpm (an diesem Pferd gemessen)':'3 bpm (vorläufig)'}</div>`; })():''}
       ${VL||'<div style="font-size:13px;color:var(--text-dim)">Verlauf ab zwei Einheiten mit derselben Einstellung.</div>'}
-      <table class="tbl" style="width:100%;font-size:12.5px;margin-top:10px"><thead><tr><th>Datum</th><th>Gerät</th><th>Belastung</th><th>HF Referenzstufe</th><th>Erholung</th><th>Ruhe-RMSSD</th><th>Quelle</th><th>Auswertbar</th><th>Hinweis</th><th>Bericht</th></tr></thead><tbody>
-      ${S.slice().reverse().map((s2,i)=>{ const k=K[S.length-1-i]; return `<tr><td style="white-space:nowrap">${fmtDate(s2.rec.startedAt)}</td><td>${esc(k.geraet)}</td><td>${fmt0(k.lastMin)} min</td><td><b>${this.z(this.hfRef(k,ref))}</b> bpm</td><td>${k.tauE!=null?fmt0(k.tauE)+' s':'–'}</td><td>${k.ruheRM!=null?Number(k.ruheRM).toFixed(1).replace('.',',')+' ms':'–'}</td><td>${s2.rec._seed?'Demo':/gurtspeicher/.test(s2.rec.rrQuelle||'')?'Gurtspeicher':'live'}</td>${(()=>{ const t=st(k), ok=t==='auswertbar'||/^Ende erkannt$|^\d+ lange Pausen$/.test(t); return `<td style="color:${ok?'var(--cyan)':'var(--amber,#f6b73c)'};font-weight:600">${ok?'ja':'teilweise'}</td><td style="color:var(--text-secondary)">${t==='auswertbar'?'–':t}</td>`; })()}<td style="white-space:nowrap"><button class="btn ghost" style="font-size:11.5px;padding:4px 8px" onclick="Reha.drucken('${h.id}','${s2.rec.id}','klinik')">Klinik</button> <button class="btn ghost" style="font-size:11.5px;padding:4px 8px" onclick="Reha.drucken('${h.id}','${s2.rec.id}','halter')">Halterin</button></td></tr>`; }).join('')}</tbody></table>
+      <div class="table-scroll"><table class="tbl" style="width:100%;font-size:12.5px;margin-top:10px"><thead><tr><th>Datum</th><th>Gerät</th><th>Belastung</th><th>HF Referenzstufe</th><th>Erholung</th><th>Ruhe-RMSSD</th><th>Quelle</th><th>Auswertbar</th><th>Hinweis</th><th>Bericht</th></tr></thead><tbody>
+      ${S.slice().reverse().map((s2,i)=>{ const k=K[S.length-1-i]; return `<tr><td style="white-space:nowrap">${fmtDate(s2.rec.startedAt)}</td><td>${esc(k.geraet)}</td><td>${fmt0(k.lastMin)} min</td><td><b>${this.z(this.hfRef(k,ref))}</b> bpm</td><td>${k.tauE!=null?fmt0(k.tauE)+' s':'–'}</td><td>${k.ruheRM!=null?Number(k.ruheRM).toFixed(1).replace('.',',')+' ms':'–'}</td><td>${s2.rec._seed?'Demo':/gurtspeicher/.test(s2.rec.rrQuelle||'')?'Gurtspeicher':'live'}</td>${(()=>{ const t=st(k), ok=t==='auswertbar'||/^Ende erkannt$|^\d+ lange Pausen$/.test(t); return `<td style="color:${ok?'var(--cyan)':'var(--amber,#f6b73c)'};font-weight:600">${ok?'ja':'teilweise'}</td><td style="color:var(--text-secondary)">${t==='auswertbar'?'–':t}</td>`; })()}<td style="white-space:nowrap"><button class="btn ghost" style="font-size:11.5px;padding:4px 8px" onclick="Reha.drucken('${h.id}','${s2.rec.id}','klinik')">Klinik</button> <button class="btn ghost" style="font-size:11.5px;padding:4px 8px" onclick="Reha.drucken('${h.id}','${s2.rec.id}','halter')">Halterin</button></td></tr>`; }).join('')}</tbody></table></div>
       <div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin-top:10px">${vgl>=2?`<button class="btn primary" style="font-size:12.5px" onclick="Reha.abschlussDialog('${h.id}')">Verlaufsdokumentation · alle Einheiten</button>`:'<span style="font-size:12.5px;color:var(--text-dim)">Verlaufsdokumentation ab zwei vergleichbaren Einheiten</span>'}<button class="btn ghost" style="font-size:12.5px" onclick="EquineApp.alle('${h.id}',true)" title="Alle Einheiten als Dateien für die CARLON Equine App der Halterin (iPhone, iPad): antippen, und die Messungen stehen dort lückenlos beim Pferd">Für die CARLON Equine App</button><span style="font-size:12px;color:var(--text-dim)">Übergabe an die App der Halterin: dort lückenlos beim Pferd, auch für Messungen zu Hause.</span></div></div>`; },
   panel(h){
     if(!this.erlaubt()) return `<div class="panel" style="margin-bottom:var(--s4)" id="rehaAkte"><h2 style="font-size:16px">Reha</h2><p style="color:var(--text-dim);font-size:13px;line-height:1.55">Reha-Sitzungen am Aquatrainer, Laufband, in der Führanlage, beim Führen, an der Longe, unter dem Reiter, an der Vibrationsplatte, im Solarium, in der Solekammer und bei Anwendungen im Stand, mit Herzfrequenz je Stufe, Verlauf bei gleicher Last und Berichten für Klinik und Halterin. Enthalten in den Stufen Reha und Klinik + Reha.</p><button class="btn ghost" onclick="UI.upgrade&&UI.upgrade()">Stufen ansehen</button></div>`;
@@ -3009,7 +3021,7 @@ const Reha={
       <div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin:6px 0 8px">${S.length>=2?`<button class="btn primary" style="font-size:12.5px" onclick="Reha.abschlussDialog('${h.id}')">Abschlussbericht · alle Einheiten</button>`:''}${S.length>=2&&License.can('rueckbericht')?`<button class="btn ghost" style="font-size:12.5px" onclick="Rueckbericht.oeffnen('${h.id}')">Rückbericht an Überweiser</button>`:''}<button class="btn ghost" style="font-size:12.5px" onclick="EquineApp.alle('${h.id}',true)">Für die CARLON Equine App</button><span class="rh-thema" role="group" aria-label="Druckfarbe" style="display:inline-flex;border:1px solid var(--border);border-radius:999px;overflow:hidden;font-size:12px">${['hell','dunkel'].map(t=>`<button type="button" aria-pressed="${(State.settings.rehaThema||'hell')===t}" onclick="Reha.thema('${t}',this)" style="border:0;padding:6px 12px;cursor:pointer;background:${(State.settings.rehaThema||'hell')===t?'var(--cyan)':'transparent'};color:${(State.settings.rehaThema||'hell')===t?'#04161a':'inherit'}">${t==='hell'?'Weiß (Druck)':'Dunkel'}</button>`).join('')}</span></div>
       ${ver.length?`<div style="font-size:12.5px;color:var(--text-secondary);margin:4px 0 6px">Verlauf bei gleicher Stufe (Herzfrequenz, letzte 60 s der Stufe):</div>${ver.slice(0,4).map(v=>`<div style="font-size:12.5px;font-weight:600;margin:8px 0 2px">${esc(v.label)} <span style="font-weight:400;color:var(--text-dim)">· ${v.punkte.length} ${(typeof Sprache!=='undefined'&&Sprache.cur==='en')?'sessions':'Einheiten'}</span></div><div style="display:flex;align-items:center;gap:10px;margin:0 0 4px">${this.spark(v.punkte)}<span class="mono" style="font-size:12.5px;white-space:nowrap">${fmt0(v.punkte[0].hf)} → <b>${fmt0(v.punkte[v.punkte.length-1].hf)}</b> bpm</span></div>`).join('')}`:''}
       <div class="rec-list" style="margin-top:8px">${S.slice().reverse().map(s=>`<details class="rec" style="display:block;padding:9px 11px"><summary style="cursor:pointer;list-style:none"><span class="rdate" style="font-size:12px">${fmtDate(s.rec.startedAt)}</span> <span class="rmeta">${esc(this.geraet(s))} · ${s.a.stufen.filter(x=>x.device!=='keines').length} Stufen${/gurtspeicher/.test(s.rec.rrQuelle||'')?' · Gurtspeicher':''}</span></summary>
-        <table class="tbl" style="width:100%;font-size:12px;margin-top:8px"><thead><tr><th>Stufe</th><th>Dauer</th><th>HF Ende</th><th>ΔHF</th><th>τ63</th></tr></thead><tbody>${s.a.stufen.filter(x=>x.device!=='keines').map(x=>`<tr><td>${esc(x.label)}</td><td>${this.mmss(x.endSec-x.startSec)}</td><td>${this.z(x.hfMedian60)}</td><td>${x.deltaHRbpm==null?'–':(x.deltaHRbpm>0?'+':'')+fmt0(x.deltaHRbpm)}</td><td>${x.adaptationSec==null?'–':((g=>g&&g.r2!=null&&g.r2<0.6||x.adaptationSec<5)(this._tauGuete(this.kennwerte(s.rec),x))?'unsicher':x.adaptationSec+' s')}</td></tr>`).join('')}</tbody></table>
+        <div class="table-scroll"><table class="tbl" style="width:100%;font-size:12px;margin-top:8px"><thead><tr><th>Stufe</th><th>Dauer</th><th>HF Ende</th><th>ΔHF</th><th>τ63</th></tr></thead><tbody>${s.a.stufen.filter(x=>x.device!=='keines').map(x=>`<tr><td>${esc(x.label)}</td><td>${this.mmss(x.endSec-x.startSec)}</td><td>${this.z(x.hfMedian60)}</td><td>${x.deltaHRbpm==null?'–':(x.deltaHRbpm>0?'+':'')+fmt0(x.deltaHRbpm)}</td><td>${x.adaptationSec==null?'–':((g=>g&&g.r2!=null&&g.r2<0.6||x.adaptationSec<5)(this._tauGuete(this.kennwerte(s.rec),x))?'unsicher':x.adaptationSec+' s')}</td></tr>`).join('')}</tbody></table></div>
         ${s.a.erholung?(()=>{ const kw=this.kennwerte(s.rec); return `<div style="font-size:12px;color:var(--text-secondary);margin-top:6px">Erholungszeit ${kw.tauE!=null?fmt0(kw.tauE)+' s':(kw.tauUnsicher?'unsicher':'–')} · HF am Ende ${this.z(s.a.erholung.hfEnde)} · nach 1 min ${this.z(s.a.erholung.hf60)} · 5 min ${this.z(s.a.erholung.hf300)}${s.a.endeErkannt?' · Ende automatisch erkannt':''}</div>`; })():''}
         <div style="display:flex;gap:6px;margin-top:8px;flex-wrap:wrap"><button class="btn ghost" style="font-size:12.5px" onclick="Reha.drucken('${h.id}','${s.rec.id}','klinik')">Klinikbericht</button><button class="btn ghost" style="font-size:12.5px" onclick="Reha.drucken('${h.id}','${s.rec.id}','halter')">Bericht für die Halterin</button></div></details>`).join('')}</div>
       <div style="font-size:12.5px;color:var(--text-dim);margin-top:10px">Neue Sitzung mit Gerät:</div>${start}</div>`;
@@ -3842,7 +3854,7 @@ const RehaLive={
       const zeile=st.map((x,i)=>`<tr><td>${i+1}</td><td>${esc(x.label)}</td><td style="text-align:right">${Reha.mmss(x.endSec-x.startSec)}</td><td style="text-align:right">${x.hfMedian60!=null?'<b>'+Math.round(x.hfMedian60)+'</b> bpm':(en?'too short':'zu kurz')}</td></tr>`).join('');
       UI.modal(`<div class="modal-head"><button class="closex" onclick="UI.closeModal()">${IC.x}</button><h3>${en?'Session saved':'Einheit gespeichert'} · ${esc(_name)}</h3></div><div class="modal-body">
         <p style="font-size:13.5px;color:var(--text-secondary);margin:0 0 10px">${Math.round(s.rec.durationSec/60)} min · ${fmt0(s.rec.beatCount)} ${en?'beats':'Schläge'} · ${ausSpeicher?(en?'from the strap memory':'aus dem Gurtspeicher'):(en?'live':'live')}</p>
-        ${st.length?`<table class="tbl" style="width:100%;font-size:13px"><thead><tr><th>#</th><th>${en?'Stage':'Stufe'}</th><th style="text-align:right">${en?'Duration':'Dauer'}</th><th style="text-align:right">${en?'HR at stage end':'HF Stufenende'}</th></tr></thead><tbody>${zeile}</tbody></table>`:''}
+        ${st.length?`<div class="table-scroll"><table class="tbl" style="width:100%;font-size:13px"><thead><tr><th>#</th><th>${en?'Stage':'Stufe'}</th><th style="text-align:right">${en?'Duration':'Dauer'}</th><th style="text-align:right">${en?'HR at stage end':'HF Stufenende'}</th></tr></thead><tbody>${zeile}</tbody></table></div>`:''}
         <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:14px"><button class="btn primary" onclick="UI.closeModal();Reha.drucken('${hid}','${id}','klinik')">${en?'Session report for the record':'Sitzungsbericht für die Akte'}</button><button class="btn ghost" onclick="UI.closeModal();Reha.drucken('${hid}','${id}','halter')">${en?'Report for the owner':'Bericht für die Halterin'}</button><button class="btn ghost" onclick="UI.closeModal()">${en?'Later':'Später'}</button></div></div>`);
     }catch(_){ } },450);
   },
@@ -4496,7 +4508,7 @@ const AuditMappe={
         <div class="kpi"><div class="lbl">Signal ok</div><div class="val">${pz(S.signalOk,S.signalBek)}</div><div class="hint">unter 5 % ersetzte Schläge</div></div>
         <div class="kpi"><div class="lbl">Aus dem Gurtspeicher</div><div class="val">${pz(S.speicher,S.n)}</div><div class="hint">lückenlos ausgelesen</div></div>
       </div>
-      <table class="tbl" style="width:100%;font-size:12.5px"><thead><tr><th>Gerät</th><th style="text-align:right">Einheiten</th><th style="text-align:right">Belastung</th><th style="text-align:right">Pferde</th><th style="text-align:right">vollständig</th></tr></thead><tbody>${Object.entries(S.je).map(([k,g])=>`<tr><td>${esc(k)}</td><td style="text-align:right">${g.n}</td><td style="text-align:right">${Math.round(g.min/60*10)/10} h</td><td style="text-align:right">${g.pferde.size}</td><td style="text-align:right">${pz(g.vollst,g.n)}</td></tr>`).join('')||'<tr><td colspan="5">Keine Reha-Einheiten in diesem Zeitraum.</td></tr>'}</tbody></table>
+      <div class="table-scroll"><table class="tbl" style="width:100%;font-size:12.5px"><thead><tr><th>Gerät</th><th style="text-align:right">Einheiten</th><th style="text-align:right">Belastung</th><th style="text-align:right">Pferde</th><th style="text-align:right">vollständig</th></tr></thead><tbody>${Object.entries(S.je).map(([k,g])=>`<tr><td>${esc(k)}</td><td style="text-align:right">${g.n}</td><td style="text-align:right">${Math.round(g.min/60*10)/10} h</td><td style="text-align:right">${g.pferde.size}</td><td style="text-align:right">${pz(g.vollst,g.n)}</td></tr>`).join('')||'<tr><td colspan="5">Keine Reha-Einheiten in diesem Zeitraum.</td></tr>'}</tbody></table></div>
       </div><div class="modal-foot"><button class="btn ghost" onclick="AuditMappe.csv()" ${S.n?'':'disabled'}>${IC.download||''} CSV</button><button class="btn primary" onclick="AuditMappe.drucken()" ${S.n?'':'disabled'}>Als PDF drucken</button></div>`,{wide:true}); },
   csv(){ const Z=this.zeilen(this._zeitraum), q=v=>'"'+String(v==null?'':v).replace(/"/g,'""')+'"', k=v=>v==null?'':String(Math.round(v*10)/10).replace('.',',');
     const kopf=['Datum','Uhrzeit','Pferd','Gerät','Modell','Stufen','Belastung (min)','Aufnahme (min)','Einstellung vollständig','Stufen ohne Einstellung','Erholung markiert','Ende aus Pulsabfall erkannt','Quelle','Ersetzte Schläge (%)'];
@@ -6787,7 +6799,7 @@ const Views={
       </div>
       <div class="kpis">
         <button class="kpi act ${critN?'red':'good'}" onclick="Views.kpiGo('crit')" title="Pferde mit deutlicher Abweichung anzeigen"><div class="lbl">Deutliche Abweichung</div><div class="val">${critN}</div><div class="hint">${critN?'von der eigenen Basis':'keine deutliche Abweichung'}</div><span class="go">${IC.arrow}</span></button>
-        <button class="kpi act amber" onclick="Views.kpiGo('visit')" title="Abfahrroute planen"><div class="lbl">Auf der Tour</div><div class="val">${visitsN}</div><div class="hint">Für Routenplanung markiert</div><span class="go">${IC.arrow}</span></button>
+        <button class="kpi act amber nur-tour" onclick="Views.kpiGo('visit')" title="Abfahrroute planen"><div class="lbl">Auf der Tour</div><div class="val">${visitsN}</div><div class="hint">Für Routenplanung markiert</div><span class="go">${IC.arrow}</span></button>
         <button class="kpi act" onclick="Views.kpiGo('horses')" title="Alle Pferde"><div class="lbl">Betreute Pferde</div><div class="val">${horses.length}</div><div class="hint">${State.horses.length} gesamt im System</div><span class="go">${IC.arrow}</span></button>
         <button class="kpi act" onclick="Views.kpiGo('recs')" title="Zuletzt gemessene Pferde"><div class="lbl">Aufnahmen</div><div class="val">${totalRecs}</div><div class="hint">Aufnahmen gesamt</div><span class="go">${IC.arrow}</span></button>
       </div>
@@ -7010,7 +7022,7 @@ const Views={
       ${flags?`<div class="chips">${flags}</div>`:''}
       ${(h.owner||h.phone)?`<div class="pc-owner">${IC.owner}<b>${esc(h.owner||'—')}</b>${(h.place||h.stable)?`<span>· ${esc(h.place||h.stable)}</span>`:''}${h.phone?`<a class="pc-call" href="tel:${esc(h.phone)}" onclick="event.stopPropagation()" title="${esc(h.phone)} anrufen">${IC.phone}</a>`:''}</div>`:''}
       <div class="foot">
-        ${h.needsVisit?'<span class="chip visit">Auf der Tour</span>':'<span class="chip" style="opacity:.5" onclick="event.stopPropagation();Views.toggleVisit(\''+h.id+'\',true).then(()=>Nav.refresh())">+ Zu Route</span>'}
+        ${h.needsVisit?'<span class="chip visit nur-tour">Auf der Tour</span>':'<span class="chip nur-tour" style="opacity:.5" onclick="event.stopPropagation();Views.toggleVisit(\''+h.id+'\',true).then(()=>Nav.refresh())">+ Zu Route</span>'}
         ${h.nachsorge?'<span class="chip cyan" title="Entlass-Nachsorge läuft — die Halterin misst zu Hause">Nachsorge</span>':''}
         <span class="age">vor ${relTime(rec.startedAt)}</span>
       </div>
@@ -7026,7 +7038,7 @@ const Views={
         <div><span class="eyebrow">Pferdebestand</span><h1>Pferde</h1>
           <div class="sub">Alle betreuten Pferde mit Besitzer, Standort und Aufnahme-Historie.</div></div>
         <div style="display:flex;gap:8px;flex-wrap:wrap">
-          <button class="btn ghost" onclick="Dispatch._showAll=true;Nav.go('map')" title="Alle Kunden auf der Karte">${IC.nav} Alle auf Karte</button>
+          <button class="btn ghost nur-tour" onclick="Dispatch._showAll=true;Nav.go('map')" title="Alle Kunden auf der Karte">${IC.nav} Alle auf Karte</button>
           <button class="btn ghost" onclick="Bestand.oeffnen()">Bestand übernehmen</button>
           <button class="btn ghost" onclick="Views.editHorse()">+ Neues Pferd anlegen</button>
         </div>
@@ -7036,7 +7048,7 @@ const Views={
           <input id="rosterSearch" autocomplete="off" placeholder="Pferd, Halter oder Stall suchen…" value="${esc(Views._rosterQuery)}" oninput="Views._rosterQuery=this.value;Views.updateSuggest(this.value);$('#rosterBody').innerHTML=Views.rosterBody()" onkeydown="Views.suggestKey(event)" onblur="setTimeout(()=>{const s=$('#searchSuggest');if(s)s.classList.remove('on')},160)" onfocus="Views.updateSuggest(this.value)">
           <div id="searchSuggest" class="search-suggest"></div></div>
         <div class="seg">
-          ${[['all','Alle'],['crit','Deutlich'],['elev','Mäßig'],['visit','Auf der Tour']].map(([k,l])=>`<button class="${Views._rosterFilter===k?'on':''}" onclick="Views._rosterFilter='${k}';$$('.tools .seg')[0].querySelectorAll('button').forEach(b=>b.classList.remove('on'));this.classList.add('on');$('#rosterBody').innerHTML=Views.rosterBody()">${l}</button>`).join('')}
+          ${[['all','Alle'],['crit','Deutlich'],['elev','Mäßig']].concat(Nav.reiterSichtbar().today===false?[]:[['visit','Auf der Tour']]).map(([k,l])=>`<button class="${Views._rosterFilter===k?'on':''}" onclick="Views._rosterFilter='${k}';$$('.tools .seg')[0].querySelectorAll('button').forEach(b=>b.classList.remove('on'));this.classList.add('on');$('#rosterBody').innerHTML=Views.rosterBody()">${l}</button>`).join('')}
         </div>
         <select id="rosterSortSel" onchange="Views._rosterSort=this.value;$('#rosterBody').innerHTML=Views.rosterBody()" style="padding:9px 12px;background:var(--bg-deep);border:1px solid var(--border-faint);border-radius:var(--r-m);color:var(--text-secondary);font-size:12px;outline:none">
           ${[['urgency','Abweichung'],['recent','Zuletzt gemessen'],['distance','Entfernung'],['owner','Besitzer'],['name','Name']].map(([k,l])=>`<option value="${k}" ${Views._rosterSort===k?'selected':''}>Sortieren: ${l}</option>`).join('')}
@@ -7143,12 +7155,12 @@ const Views={
           <div class="m"><b>${m.rmssd!=null?fmt0(m.rmssd):'—'} ${trS}</b><span>RMSSD ms</span></div>
           <div class="m"><b>${m.meanHR!=null?fmt0(m.meanHR):'—'}</b><span>Ruhe-HF</span></div>
           ${(Baseline.wert(h)&&m.rmssd!=null)?`<div class="m"><b class="mdelta ${m.rmssd<Baseline.wert(h)*0.7?'bad':m.rmssd<Baseline.wert(h)*0.86?'warn':'ok'}">${m.rmssd>=Baseline.wert(h)?'+':''}${fmt0((m.rmssd-Baseline.wert(h))/Baseline.wert(h)*100)}%</b><span>vs Baseline</span></div>`:''}
-          <div class="hr-last">${spark}<span>${rec?'vor '+relTime(rec.startedAt):'keine Messung'}${d!=null?' · '+Einh.km(d,0):''}</span></div>
+          <div class="hr-last">${spark}<span>${rec?'vor '+relTime(rec.startedAt):'keine Messung'}${d!=null?'<span class="nur-tour"> · '+Einh.km(d,0)+'</span>':''}</span></div>
         </div>
         <input class="hr-note" placeholder="Beobachtungsnotiz eintragen…" value="${esc(h.shortNote||'')}" onclick="event.stopPropagation()" onchange="Views.saveNote('${h.id}',this.value)">
         <div class="hr-acts">
           <a class="hr-act ${h.phone?'call':'off'}" ${h.phone?`href="tel:${esc(h.phone)}"`:''}>${IC.phone}<span>Anrufen</span></a>
-          <button class="hr-act ${h.needsVisit?'on':''}" onclick="Views.rowRoute('${h.id}')">${IC.route}<span>${h.needsVisit?'In Route':'Zu Route'}</span></button>
+          <button class="hr-act nur-tour ${h.needsVisit?'on':''}" onclick="Views.rowRoute('${h.id}')">${IC.route}<span>${h.needsVisit?'In Route':'Zu Route'}</span></button>
           <button class="hr-act" onclick="Views.openHorse('${h.id}')">${IC.eye}<span>Akte</span></button>
           <button class="hr-act" onclick="Views.quickSheet('${h.id}')"><svg viewBox="0 0 24 24" fill="currentColor"><circle cx="5" cy="12" r="1.9"/><circle cx="12" cy="12" r="1.9"/><circle cx="19" cy="12" r="1.9"/></svg><span>Mehr</span></button>
         </div>
@@ -8064,7 +8076,57 @@ const Views={
   },
 
   /* ---------------- REVENUE ---------------- */
+  /* REHA-DOKUMENTATION (21.11.2026): die Reha-Stufe hat keine Fahrpraxis – statt Leistungen, Fahrtenbuch und Wegegeld
+     zeigt die Dokumentation, was ein Reha-Zentrum täglich braucht: Einheiten, Reha-Pferde gegen die Stufengrenze,
+     Maßnahmen ohne Gurt, Sicherung. Jede Zeile führt in die Akte bzw. den Bericht. */
+  rehaDoku(){
+    const en=typeof Sprache!=='undefined'&&Sprache.cur==='en', T=(d,e)=>en?e:d;
+    const jetzt=Date.now(), seit30=jetzt-30*864e5, m0=new Date(); m0.setDate(1); m0.setHours(0,0,0,0);
+    const E=[]; State.horses.forEach(h=>{ let S=[]; try{ S=Reha.sitzungen(h.id); }catch(_){ } S.forEach(x=>E.push({h,s:x})); });
+    E.sort((a,b)=>new Date(b.s.rec.startedAt)-new Date(a.s.rec.startedAt));
+    const monat=E.filter(x=>new Date(x.s.rec.startedAt)>=m0).length;
+    const pf30=new Set(E.filter(x=>new Date(x.s.rec.startedAt).getTime()>seit30).map(x=>x.h.id)).size;
+    const grenze=((License.GRENZEN||{})[License.tier()]||{}).pferde;
+    const M=[]; State.horses.forEach(h=>RehaMassnahmen.liste(h).forEach(m=>M.push({h,m}))); M.sort((a,b)=>a.m.datum<b.m.datum?1:-1);
+    const mMonat=M.filter(x=>new Date(x.m.datum)>=m0).length;
+    const dauer=x=>{ const d=x.s.rec.durationSec||((x.s.rec.rr||[]).reduce((a,b)=>a+b,0)/1000); return d?Math.round(d/60)+' min':'–'; };
+    const ger=x=>{ try{ return Reha.geraet(x.s); }catch(_){ return '–'; } };
+    const lb=State.settings.lastBackupAt;
+    return `<div class="view">
+      <div class="view-head">
+        <div><span class="eyebrow">${T('Reha-Dokumentation','Rehab documentation')}</span><h1>${T('Dokumentation','Documentation')}</h1>
+          <div class="sub">${T('Alle Reha-Einheiten und Maßnahmen Ihres Betriebs, mit Sprung in Akte und Bericht. Sicherung und Abgleich für den Team-Ordner.','All rehab sessions and treatments of your business, with a jump to the record and the report. Backup and sync for the team folder.')}</div></div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <button class="btn primary" onclick="Views.rehaCSV()">${IC.download} ${T('Einheiten als CSV','Sessions as CSV')}</button>
+          <button class="btn ghost" onclick="Backup.doExport()">${IC.download} ${T('Backup sichern','Save backup')}</button>
+          ${(typeof Teilen==='undefined'||!Teilen.aktiv)?`<button class="btn ghost" onclick="Backup.abgleichSenden()">${T('Abgleich an die Praxis','Sync to the practice')}</button>`:''}
+        </div>
+      </div>
+      <div class="kpis">
+        <div class="kpi good"><div class="lbl">${T('Reha-Einheiten diesen Monat','Rehab sessions this month')}</div><div class="val">${monat}</div><div class="hint">${T('gemessen, mit Bericht','measured, with report')}</div></div>
+        <div class="kpi"><div class="lbl">${T('Reha-Pferde in 30 Tagen','Rehab horses in 30 days')}</div><div class="val">${pf30}${grenze?`<small> / ${grenze}</small>`:''}</div><div class="hint">${grenze?T('Grenze Ihrer Stufe','limit of your tier'):T('ohne Obergrenze','no upper limit')}</div></div>
+        <div class="kpi"><div class="lbl">${T('Maßnahmen ohne Gurt','Treatments without the strap')}</div><div class="val">${mMonat}</div><div class="hint">${T('diesen Monat','this month')}</div></div>
+        <div class="kpi"><div class="lbl">${T('Letzte Datensicherung','Last backup')}</div><div class="val" style="font-size:20px">${lb?fmtDate(lb):'—'}</div><div class="hint">${lb?'':T('noch keine','none yet')}</div></div>
+      </div>
+      <div class="panel">
+        <h2>${T('Letzte Reha-Einheiten','Latest rehab sessions')}</h2>
+        ${E.length?`<div class="table-scroll"><table class="ledger"><thead><tr><th>${T('Datum','Date')}</th><th>${T('Pferd','Horse')}</th><th>${T('Gerät','Equipment')}</th><th>${T('Dauer','Duration')}</th><th>${T('Stufen','Stages')}</th><th></th></tr></thead><tbody>
+          ${E.slice(0,30).map(x=>`<tr><td class="mono">${fmtDate(x.s.rec.startedAt)}</td><td><b>${esc(x.h.name)}</b></td><td>${esc(ger(x))}</td><td>${dauer(x)}</td><td>${(x.s.a.stufen||[]).filter(z=>z.device!=='keines').length}</td>
+            <td style="text-align:right;white-space:nowrap"><button class="btn ghost" onclick="Views.openHorse('${x.h.id}')">${T('Akte','Record')}</button> <button class="btn ghost" onclick="Reha.drucken('${x.h.id}','${x.s.rec.id}','klinik','hell')">${T('Bericht','Report')}</button></td></tr>`).join('')}
+        </tbody></table></div>`:`<div class="empty" style="padding:18px 4px;color:var(--text-secondary)">${T('Noch keine Reha-Einheit. Öffnen Sie die Akte eines Pferds und starten Sie dort die Einheit am Gerät.','No rehab session yet. Open a horse’s record and start the session at the equipment there.')}</div>`}
+      </div>
+      ${M.length?`<div class="panel" style="margin-top:var(--s4)"><h2>${T('Maßnahmen ohne Gurt','Treatments without the strap')}</h2><div class="table-scroll"><table class="ledger"><thead><tr><th>${T('Datum','Date')}</th><th>${T('Pferd','Horse')}</th><th>${T('Anwendung','Treatment')}</th><th>${T('Angabe','Detail')}</th><th>${T('Dauer','Duration')}</th></tr></thead><tbody>
+        ${M.slice(0,30).map(x=>`<tr><td class="mono">${fmtDate(x.m.datum)}</td><td><b>${esc(x.h.name)}</b></td><td>${esc(RehaMassnahmen.name(x.m.art))}</td><td>${esc(x.m.detail||'–')}</td><td>${x.m.dauerMin?esc(x.m.dauerMin)+' min':'–'}</td></tr>`).join('')}
+      </tbody></table></div></div>`:''}
+    </div>`;
+  },
+  rehaCSV(){ const q=v=>'"'+String(v==null?'':v).replace(/"/g,'""')+'"'; const L=['datum;pferd;geraet;dauer_min;stufen;art'];
+    State.horses.forEach(h=>{ let S=[]; try{ S=Reha.sitzungen(h.id); }catch(_){ } S.forEach(x=>{ const d=x.rec.durationSec||((x.rec.rr||[]).reduce((a,b)=>a+b,0)/1000); let g='';
+        try{ g=Reha.geraet(x); }catch(_){ } L.push([x.rec.startedAt.slice(0,10),h.name,g,Math.round(d/60),(x.a.stufen||[]).filter(z=>z.device!=='keines').length,'einheit'].map(q).join(';')); });
+      RehaMassnahmen.liste(h).forEach(m=>L.push([m.datum,h.name,RehaMassnahmen.name(m.art)+(m.detail?' · '+m.detail:''),m.dauerMin||'','','massnahme_ohne_gurt'].map(q).join(';'))); });
+    const b=new Blob(['﻿'+L.join('\r\n')],{type:'text/csv;charset=utf-8'}); const a=document.createElement('a'); a.href=URL.createObjectURL(b); a.download='Reha-Einheiten_'+new Date().toISOString().slice(0,10)+'.csv'; document.body.appendChild(a); a.click(); a.remove(); },
   revenue(){
+    try{ if(License.isPaid()&&!(State.settings&&State.settings.demo)&&!License.can('routeHandoff')&&License.can('reha')) return this.rehaDoku(); }catch(_){ }
     const cons=State.consults.slice().sort((a,b)=>new Date(b.date)-new Date(a.date));
     const total=cons.reduce((s,c)=>s+(c.fee||0),0);
     const open=cons.filter(c=>!c.billed).reduce((s,c)=>s+(c.fee||0),0);
@@ -10442,6 +10504,7 @@ const UI={
     <div class="modal-body">
       <div class="field"><label>Name der Praxis, Klinik oder des Reha-Zentrums</label><input id="sName" value="${esc(s.clinicName&&s.clinicName!=='Meine Pferdepraxis'?s.clinicName:'')}" placeholder="z. B. Reha-Zentrum Sonnental oder Pferdepraxis Berg"></div>
       <div class="field"><label>Verantwortliche Tierärztin oder verantwortlicher Tierarzt</label><input id="sVet" value="${esc(s.vetName||'')}"></div>
+      ${Nav.bereicheFeld()}
       <div class="field"><label>Praxis-Logo <span style="color:var(--text-dim);font-weight:400">— erscheint auf Ihren Messwertberichten (Ihr Branding, nicht unseres)</span></label>
         <div class="logo-row">
           <div class="logo-prev" id="sLogoPrev">${s.logo?`<img src="${s.logo}" alt="Logo">`:'<span>kein Logo</span>'}</div>
@@ -10586,6 +10649,7 @@ const UI={
     { const e=$('#sEingangLink'); if(e){ const v=e.value.trim(); s.eingangLink=/^https:\/\/\S+$/.test(v)?v:''; if(v&&!s.eingangLink) Toast.show('Upload-Link bitte mit https:// einfügen','warn'); } }
     { const e=$('#sRhythmus'); if(e) s.messRhythmus=Number(e.value)||0; }
     { const e=$('#sAnsicht'); if(e) s.halterAnsicht=e.value==='voll'?'voll':'signal'; }
+    { const g=k=>document.getElementById('sBer_'+k); if(g('tour')||g('station')||g('reha')) s.bereiche={tour:g('tour')?g('tour').checked:true, station:g('station')?g('station').checked:true, reha:g('reha')?g('reha').checked:true, _tier:(License.tier&&License.tier())}; }
     s.clinicName=$('#sName').value;s.vetName=$('#sVet').value;{ const ze=x=>{ const t=String(((document.getElementById(x)||{}).value)||'').trim().replace(',','.'); const n=parseFloat(t); return t===''||!isFinite(n)?null:n; }; const ei=$('#sEinh'); if(ei){ s.einheiten=ei.value; s.wegModell=$('#sWegModell').value; s.wegSatz=ze('sWegSatz'); s.wegWaehrung=$('#sWegW').value; s.wegMindest=ze('sWegMin'); Einh.neu(); } }s.originLabel=$('#sOrigin').value;
     /* Kontakt fuer den Aushang — getrimmt, damit ein versehentliches
        Leerzeichen nicht als "vorhanden" durchgeht und eine leere Zeile
@@ -12439,6 +12503,11 @@ const License={
     const u = new URL(location.href);
     const k = u.searchParams.get('kasse');
     if (!['1','praxis','klinik','reha','kombi','center'].includes(k)) return;
+    /* 21.11.2026: Bereiche aus dem Website-Rechner übernehmen (Tour, Station, Reha) – die Reiter passen ab dem ersten Start */
+    { const br = u.searchParams.get('bereiche'); if (br != null) { const L = br.split(',');
+        State.settings.bereiche = { tour: L.includes('tour'), station: L.includes('station'), reha: L.includes('reha'), _tier: ({praxis:'vet_solo',klinik:'vet_clinic',reha:'vet_reha',kombi:'vet_klinik_reha',center:'vet_center'})[k] };
+        if (!L.length || (L.length === 1 && !L[0])) delete State.settings.bereiche;
+        try { State.saveSettings(); } catch (_) { } u.searchParams.delete('bereiche'); } }
     u.searchParams.delete('kasse');
     history.replaceState(null, '', u.pathname + (u.search || '') + u.hash);
     // Zahlt die Praxis schon, waere ein Kaufdialog verwirrend — dann die Lizenz zeigen.
@@ -13701,10 +13770,20 @@ document.addEventListener('keydown',e=>{if(e.key==='Escape')ChartZoom.close();})
 
 const Nav={
   cur:'today',
+  /* BEREICHE (21.11.2026): eine Stufe kann mehr enthalten, als der Betrieb nutzt (Reha-Zentrum mit 21 Pferden braucht
+     Klinik + Reha, hat aber keine Fahrpraxis). Der Betrieb wählt seine Bereiche; die Reiter folgen. Standard = alles der Stufe. */
+  bereiche(){ let b=(State.settings&&State.settings.bereiche)||{}; try{ if(b._tier&&b._tier!==License.tier()) b={}; }catch(_){ }   /* Stufenwechsel: neue Stufe zeigt erst einmal alles */
+    return {tour:b.tour!==false, station:b.station!==false, reha:b.reha!==false}; },
+  bereicheFeld(){ try{ if(!License.isPaid()||(State.settings&&State.settings.demo)) return ''; }catch(_){ return ''; }
+    const kann={tour:License.can('routeHandoff'), station:License.can('station'), reha:License.can('reha')};
+    if(Object.values(kann).filter(Boolean).length<2) return '';
+    const en=typeof Sprache!=='undefined'&&Sprache.cur==='en', b=this.bereiche();
+    const box=(k,de,e)=>kann[k]?`<label style="display:inline-flex;align-items:center;gap:8px;min-height:44px;padding:6px 12px;border:1px solid var(--border-subtle);border-radius:999px;cursor:pointer"><input type="checkbox" id="sBer_${k}" ${b[k]?'checked':''} style="width:18px;height:18px;accent-color:var(--cyan)"> ${en?e:de}</label>`:'';
+    return `<div class="field"><label>${en?'Areas of your business':'Bereiche Ihres Betriebs'}</label><div style="display:flex;flex-wrap:wrap;gap:8px">${box('tour','Fahrpraxis (Tour, Karte)','Ambulatory work (tour, map)')}${box('station','Station (Stationswand)','Ward (ward display)')}${box('reha','Reha (Einheiten am Gerät)','Rehab (sessions at the equipment)')}</div><div class="hint">${en?'Only the areas you use appear in the navigation. You can change this at any time; your tier stays the same.':'Nur die genutzten Bereiche erscheinen in der Navigation. Jederzeit änderbar; Ihre Stufe bleibt gleich.'}</div></div>`; },
   reiterSichtbar(){ let t='demo'; try{ t=License.tier(); }catch(_){ }
     const demo=(State.settings&&State.settings.demo)||t==='demo'||!License.isPaid();
     if(demo) return {};
-    const tour=License.can('routeHandoff'), station=License.can('station');
+    const ber=this.bereiche(), tour=License.can('routeHandoff')&&ber.tour, station=License.can('station')&&ber.station;
     return {today:tour, map:tour, station:station, start:tour?'today':'roster'}; },
   go(tab){this.cur=tab;
     const match=b=>b.dataset.tab===tab||(tab==='detail'&&b.dataset.tab==='roster')||(['cohdetail','pairdetail'].includes(tab)&&b.dataset.tab==='coherence');
@@ -13753,6 +13832,7 @@ const Nav={
       kn.textContent=zeig?(' · '+License.lic()):''; }
     /* STUFEN-REITER (21.11.2026, Jan: Betriebe sollen ihre Prozesse optimal nutzen): jede bezahlte Stufe zeigt nur die
        Reiter ihrer Ablaeufe. Reha: kein Tourtag, keine Karte; ohne Station-Merkmal kein Station-Reiter. Demo zeigt alles. */
+    document.body.classList.toggle('ohne-tour', this.reiterSichtbar().today===false);
     { const sicht=this.reiterSichtbar(); $$('#tabs button,#bottomNav button').forEach(b=>{ b.hidden=(sicht[b.dataset.tab]===false); });
       if(sicht[this.cur]===false) this.cur=sicht.start||'roster'; }
     const enterToday=(this.cur==='today' && this._lastCur!=='today');
