@@ -2955,7 +2955,7 @@ const Reha={
     if(!S.length) return `<div class="panel" style="margin-bottom:var(--s4)" id="rehaAkte"><h2 style="font-size:16px">Reha</h2><p style="color:var(--text-dim);font-size:13px">Noch keine Reha-Sitzung. Sitzung starten mit Gerät:</p>${start}</div>`;
     const ver=this.verlauf(h.id).filter(v=>v.punkte.length>=2);
     return `<div class="panel" style="margin-bottom:var(--s4)" id="rehaAkte"><h2 style="font-size:16px">Reha · ${S.length} Sitzung${S.length>1?'en':''}</h2>
-      <div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin:6px 0 8px">${S.length>=2?`<button class="btn primary" style="font-size:12.5px" onclick="Reha.abschlussDialog('${h.id}')">Abschlussbericht · alle Einheiten</button>`:''}<button class="btn ghost" style="font-size:12.5px" onclick="EquineApp.alle('${h.id}',true)">Für die CARLON Equine App</button><span class="rh-thema" role="group" aria-label="Druckfarbe" style="display:inline-flex;border:1px solid var(--border);border-radius:999px;overflow:hidden;font-size:12px">${['hell','dunkel'].map(t=>`<button type="button" aria-pressed="${(State.settings.rehaThema||'hell')===t}" onclick="Reha.thema('${t}',this)" style="border:0;padding:6px 12px;cursor:pointer;background:${(State.settings.rehaThema||'hell')===t?'var(--cyan)':'transparent'};color:${(State.settings.rehaThema||'hell')===t?'#04161a':'inherit'}">${t==='hell'?'Weiß (Druck)':'Dunkel'}</button>`).join('')}</span></div>
+      <div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin:6px 0 8px">${S.length>=2?`<button class="btn primary" style="font-size:12.5px" onclick="Reha.abschlussDialog('${h.id}')">Abschlussbericht · alle Einheiten</button>`:''}${S.length>=2&&License.can('rueckbericht')?`<button class="btn ghost" style="font-size:12.5px" onclick="Rueckbericht.oeffnen('${h.id}')">Rückbericht an Überweiser</button>`:''}<button class="btn ghost" style="font-size:12.5px" onclick="EquineApp.alle('${h.id}',true)">Für die CARLON Equine App</button><span class="rh-thema" role="group" aria-label="Druckfarbe" style="display:inline-flex;border:1px solid var(--border);border-radius:999px;overflow:hidden;font-size:12px">${['hell','dunkel'].map(t=>`<button type="button" aria-pressed="${(State.settings.rehaThema||'hell')===t}" onclick="Reha.thema('${t}',this)" style="border:0;padding:6px 12px;cursor:pointer;background:${(State.settings.rehaThema||'hell')===t?'var(--cyan)':'transparent'};color:${(State.settings.rehaThema||'hell')===t?'#04161a':'inherit'}">${t==='hell'?'Weiß (Druck)':'Dunkel'}</button>`).join('')}</span></div>
       ${ver.length?`<div style="font-size:12.5px;color:var(--text-secondary);margin:4px 0 6px">Verlauf bei gleicher Stufe (Herzfrequenz, letzte 60 s der Stufe):</div>${ver.slice(0,4).map(v=>`<div style="font-size:12.5px;font-weight:600;margin:8px 0 2px">${esc(v.label)} <span style="font-weight:400;color:var(--text-dim)">· ${v.punkte.length} ${(typeof Sprache!=='undefined'&&Sprache.cur==='en')?'sessions':'Einheiten'}</span></div><div style="display:flex;align-items:center;gap:10px;margin:0 0 4px">${this.spark(v.punkte)}<span class="mono" style="font-size:12.5px;white-space:nowrap">${fmt0(v.punkte[0].hf)} → <b>${fmt0(v.punkte[v.punkte.length-1].hf)}</b> bpm</span></div>`).join('')}`:''}
       <div class="rec-list" style="margin-top:8px">${S.slice().reverse().map(s=>`<details class="rec" style="display:block;padding:9px 11px"><summary style="cursor:pointer;list-style:none"><span class="rdate" style="font-size:12px">${fmtDate(s.rec.startedAt)}</span> <span class="rmeta">${esc(this.geraet(s))} · ${s.a.stufen.filter(x=>x.device!=='keines').length} Stufen${/gurtspeicher/.test(s.rec.rrQuelle||'')?' · Gurtspeicher':''}</span></summary>
         <table class="tbl" style="width:100%;font-size:12px;margin-top:8px"><thead><tr><th>Stufe</th><th>Dauer</th><th>HF Ende</th><th>ΔHF</th><th>τ63</th></tr></thead><tbody>${s.a.stufen.filter(x=>x.device!=='keines').map(x=>`<tr><td>${esc(x.label)}</td><td>${this.mmss(x.endSec-x.startSec)}</td><td>${this.z(x.hfMedian60)}</td><td>${x.deltaHRbpm==null?'–':(x.deltaHRbpm>0?'+':'')+fmt0(x.deltaHRbpm)}</td><td>${x.adaptationSec==null?'–':((g=>g&&g.r2!=null&&g.r2<0.6||x.adaptationSec<5)(this._tauGuete(this.kennwerte(s.rec),x))?'unsicher':x.adaptationSec+' s')}</td></tr>`).join('')}</tbody></table>
@@ -4342,6 +4342,159 @@ const Baseline={
    Schlag) und Reihen, an denen ein Riegel greift (zu kurz, zu viele Artefakte) – dort bleibt
    der Importwert mit seinem Herkunftsvermerk stehen.
    ════════════════════════════════════════════════════════════════════════ */
+
+/* ── AUDIT-MAPPE (21.11.2026, Equine Center) ─────────────────────────────
+   Nachweis des therapeutischen Geräteeinsatzes über einen Zeitraum: je Einheit Datum, Pferd, Gerät/Modell,
+   Stufen, Belastungsdauer, Einstellung vollständig erfasst, Quelle (Gurtspeicher/live), ersetzte Schläge.
+   Anker: bpt-Anforderungskatalog GVP Gold 4.0, K11-08 „Wird der therapeutische Geräteeinsatz (z. B. Laser,
+   Wasserlaufband) nachvollziehbar dokumentiert?“ (am Original geprüft 21.11.2026). Rechnet nur aus vorhandenen Daten. */
+const AuditMappe={
+  _zeitraum:'quartal',
+  grenzen(z){ const n=new Date(), b=new Date(n); let a;
+    if(z==='monat'){ a=new Date(n.getFullYear(),n.getMonth()-1,n.getDate()); }
+    else if(z==='quartal'){ a=new Date(n.getFullYear(),n.getMonth()-3,n.getDate()); }
+    else if(z==='jahr'){ a=new Date(n.getFullYear()-1,n.getMonth(),n.getDate()); }
+    else a=new Date(2000,0,1); return [a,b]; },
+  zeilen(z){ const [a,b]=this.grenzen(z), out=[];
+    for(const h of State.horses){ let S=[]; try{ S=Reha.sitzungen(h.id); }catch(_){ }
+      for(const s of S){ const t=new Date(s.rec.startedAt); if(t<a||t>b) continue;
+        const st=s.a.stufen.filter(x=>x.device!=='keines'), erh=s.a.stufen.some(x=>x.device==='keines');
+        let ers=null; try{ ers=Reha.kennwerte(s.rec).anteil(0,1e9); }catch(_){ }
+        const offen=st.filter(x=>/nicht erfasst|not recorded/.test(x.label||'')).length;
+        out.push({t, pferd:h.name||'–', geraet:Reha.geraet(s), modell:(s.rec.reha&&s.rec.reha.modell)||'', stufen:st.length, belMin:st.reduce((p,x)=>p+(x.endSec-x.startSec),0)/60,
+          dauerMin:(s.rec.durationSec||0)/60, vollst:st.length>0&&offen===0, offen, erh, endeErkannt:!!s.a.endeErkannt,
+          quelle:/gurtspeicher/.test(s.rec.rrQuelle||'')?'Gurtspeicher':(s.rec.rrQuelle==='live'?'live':'Import/Demo'), ers }); } }
+    return out.sort((x,y)=>x.t-y.t); },
+  zusammen(Z){ const je={}; Z.forEach(r=>{ const k=r.geraet+(r.modell?' · '+r.modell:''); const g=je[k]||(je[k]={n:0,min:0,pferde:new Set(),vollst:0}); g.n++; g.min+=r.belMin; g.pferde.add(r.pferd); if(r.vollst) g.vollst++; });
+    return {n:Z.length, pferde:new Set(Z.map(r=>r.pferd)).size, vollst:Z.filter(r=>r.vollst).length, signalOk:Z.filter(r=>r.ers!=null&&r.ers<5).length, signalBek:Z.filter(r=>r.ers!=null).length, speicher:Z.filter(r=>r.quelle==='Gurtspeicher').length, erh:Z.filter(r=>r.erh).length, je}; },
+  oeffnen(){ if(!License.can('auditMappe')){ UI.upgrade('Audit-Mappe'); return; } this.zeichnen(); },
+  zeichnen(){ const Z=this.zeilen(this._zeitraum), S=this.zusammen(Z), pz=(a,b)=>b?Math.round(a/b*100)+' %':'–';
+    const opt=[['monat','Letzter Monat'],['quartal','Letztes Quartal'],['jahr','Letztes Jahr'],['alles','Gesamter Bestand']].map(([v,l])=>`<option value="${v}" ${this._zeitraum===v?'selected':''}>${l}</option>`).join('');
+    UI.modal(`<div class="modal-head"><button class="closex" onclick="UI.closeModal()">${IC.x}</button><h3>Audit-Mappe · Geräteeinsatz</h3></div><div class="modal-body">
+      <p style="font-size:13.5px;color:var(--text-secondary);margin:0 0 10px">Nachweis, dass der therapeutische Geräteeinsatz nachvollziehbar dokumentiert ist (z. B. für GVP oder ISO 9001): jede Reha-Einheit mit Gerät, Einstellung, Dauer und Signalqualität.</p>
+      <div class="field"><label>Zeitraum</label><select onchange="AuditMappe._zeitraum=this.value;AuditMappe.zeichnen()">${opt}</select></div>
+      <div class="kpis" style="margin:10px 0">
+        <div class="kpi"><div class="lbl">Einheiten</div><div class="val">${S.n}</div><div class="hint">${S.pferde} Pferde</div></div>
+        <div class="kpi"><div class="lbl">Einstellung vollständig</div><div class="val">${pz(S.vollst,S.n)}</div><div class="hint">${S.n-S.vollst} mit Lücke</div></div>
+        <div class="kpi"><div class="lbl">Signal ok</div><div class="val">${pz(S.signalOk,S.signalBek)}</div><div class="hint">unter 5 % ersetzte Schläge</div></div>
+        <div class="kpi"><div class="lbl">Aus dem Gurtspeicher</div><div class="val">${pz(S.speicher,S.n)}</div><div class="hint">lückenlos ausgelesen</div></div>
+      </div>
+      <table class="tbl" style="width:100%;font-size:12.5px"><thead><tr><th>Gerät</th><th style="text-align:right">Einheiten</th><th style="text-align:right">Belastung</th><th style="text-align:right">Pferde</th><th style="text-align:right">vollständig</th></tr></thead><tbody>${Object.entries(S.je).map(([k,g])=>`<tr><td>${esc(k)}</td><td style="text-align:right">${g.n}</td><td style="text-align:right">${Math.round(g.min/60*10)/10} h</td><td style="text-align:right">${g.pferde.size}</td><td style="text-align:right">${pz(g.vollst,g.n)}</td></tr>`).join('')||'<tr><td colspan="5">Keine Reha-Einheiten in diesem Zeitraum.</td></tr>'}</tbody></table>
+      </div><div class="modal-foot"><button class="btn ghost" onclick="AuditMappe.csv()" ${S.n?'':'disabled'}>${IC.download||''} CSV</button><button class="btn primary" onclick="AuditMappe.drucken()" ${S.n?'':'disabled'}>Als PDF drucken</button></div>`,{wide:true}); },
+  csv(){ const Z=this.zeilen(this._zeitraum), q=v=>'"'+String(v==null?'':v).replace(/"/g,'""')+'"', k=v=>v==null?'':String(Math.round(v*10)/10).replace('.',',');
+    const kopf=['Datum','Uhrzeit','Pferd','Gerät','Modell','Stufen','Belastung (min)','Aufnahme (min)','Einstellung vollständig','Stufen ohne Einstellung','Erholung markiert','Ende aus Pulsabfall erkannt','Quelle','Ersetzte Schläge (%)'];
+    const L=[kopf.map(q).join(';')].concat(Z.map(r=>[r.t.toLocaleDateString('de-DE'),r.t.toLocaleTimeString('de-DE',{hour:'2-digit',minute:'2-digit'}),r.pferd,r.geraet,r.modell,r.stufen,k(r.belMin),k(r.dauerMin),r.vollst?'ja':'nein',r.offen,r.erh?'ja':'nein',r.endeErkannt?'ja':'nein',r.quelle,k(r.ers)].map(q).join(';')));
+    CenterAus.datei(`Audit-Mappe_${this._zeitraum}_${new Date().toISOString().slice(0,10)}.csv`,'﻿'+L.join('\r\n'),'text/csv;charset=utf-8'); },
+  drucken(){ const Z=this.zeilen(this._zeitraum), S=this.zusammen(Z), st=State.settings||{}, [a,b]=this.grenzen(this._zeitraum), pz=(x,y)=>y?Math.round(x/y*100)+' %':'–', d=t=>t.toLocaleDateString('de-DE');
+    const pa=document.getElementById('printArea'); if(!pa) return;
+    pa.innerHTML=`<style>.am{font-family:var(--font-ui);color:#1A1A1E;font-size:10.5px}.am h1{font-size:18px;margin:0 0 2px}.am .s{color:#555;margin-bottom:10px}.am table{width:100%;border-collapse:collapse;margin:6px 0 12px}.am th,.am td{border-bottom:1px solid #ddd;padding:3px 5px;text-align:left}.am th{font-size:9.5px;text-transform:uppercase;letter-spacing:.04em;color:#555}.am .r{text-align:right}.am .k{display:flex;gap:18px;margin:6px 0 10px}.am .k b{font-size:15px;display:block}.am .f{color:#666;font-size:9px;margin-top:10px}</style>
+    <div class="am"><h1>Audit-Mappe · Therapeutischer Geräteeinsatz</h1><div class="s">${esc(st.clinicName&&st.clinicName!=='Meine Pferdepraxis'?st.clinicName:'')}${st.vetName?' · verantwortlich '+esc(st.vetName):''} · Zeitraum ${this._zeitraum==='alles'?'gesamter Bestand':d(a)+' bis '+d(b)} · erstellt ${new Date().toLocaleString('de-DE')}</div>
+    <div class="k"><div><b>${S.n}</b>Einheiten</div><div><b>${S.pferde}</b>Pferde</div><div><b>${pz(S.vollst,S.n)}</b>Einstellung vollständig</div><div><b>${pz(S.signalOk,S.signalBek)}</b>Signal ok (unter 5 % ersetzt)</div><div><b>${pz(S.speicher,S.n)}</b>aus dem Gurtspeicher</div></div>
+    <table><thead><tr><th>Gerät</th><th class="r">Einheiten</th><th class="r">Belastung</th><th class="r">Pferde</th><th class="r">vollständig</th></tr></thead><tbody>${Object.entries(S.je).map(([k,g])=>`<tr><td>${esc(k)}</td><td class="r">${g.n}</td><td class="r">${Math.round(g.min/60*10)/10} h</td><td class="r">${g.pferde.size}</td><td class="r">${pz(g.vollst,g.n)}</td></tr>`).join('')}</tbody></table>
+    <table><thead><tr><th>Datum</th><th>Pferd</th><th>Gerät</th><th class="r">Stufen</th><th class="r">Belastung</th><th>Einstellung</th><th>Erholung</th><th>Quelle</th><th class="r">ersetzt</th></tr></thead><tbody>${Z.map(r=>`<tr><td>${d(r.t)} ${r.t.toLocaleTimeString('de-DE',{hour:'2-digit',minute:'2-digit'})}</td><td>${esc(r.pferd)}</td><td>${esc(r.geraet)}${r.modell?' · '+esc(r.modell):''}</td><td class="r">${r.stufen}</td><td class="r">${Math.round(r.belMin)} min</td><td>${r.vollst?'vollständig':r.offen+' ohne Einstellung'}</td><td>${r.erh?'markiert':'–'}${r.endeErkannt?' (Ende erkannt)':''}</td><td>${r.quelle}</td><td class="r">${r.ers==null?'–':String(Math.round(r.ers*10)/10).replace('.',',')+' %'}</td></tr>`).join('')}</tbody></table>
+    <div class="f">Erstellt mit CARLON Equine Visite aus den gespeicherten Reha-Einheiten. „Einstellung vollständig“: jede Stufe mit erfasster Geräteeinstellung. „ersetzt“: Anteil der von der Filterkette ersetzten Schläge. Kein Medizinprodukt; die Beurteilung trifft die Tierärztin oder der Tierarzt.</div></div>`;
+    const alt=document.title; document.title='Audit-Mappe'; setTimeout(()=>{ window.print(); document.title=alt; },150); }
+};
+
+/* ── GERÄTEBUCH (21.11.2026, Equine Center) ─────────────────────────────
+   Je Gerät (Art + Modell aus „Gerät im Bericht“) automatisch aus den Einheiten: Einheiten, Belastungsstunden, Pferde,
+   erste/letzte Nutzung, Nutzung der letzten 8 Wochen; dazu eigene Einträge (Pflege, Funktionsprüfung, Wartung, Einweisung)
+   mit Datum und Kürzel. Anker: GVP Gold K11-01/02/04 (Gerätebestand, Wartung, Einweisung). Gespeichert in den Einstellungen. */
+const Geraetebuch={
+  _key(s){ return Reha.geraet(s)+((s.rec.reha&&s.rec.reha.modell)?' · '+s.rec.reha.modell:''); },
+  daten(){ const G={}; const jetzt=Date.now();
+    for(const h of State.horses){ let S=[]; try{ S=Reha.sitzungen(h.id); }catch(_){ }
+      for(const s of S){ const k=this._key(s), t=+new Date(s.rec.startedAt), st=s.a.stufen.filter(x=>x.device!=='keines'); const g=G[k]||(G[k]={k,n:0,sek:0,pferde:new Set(),erst:t,letzt:t,woche:new Array(8).fill(0)});
+        g.n++; g.sek+=st.reduce((p,x)=>p+(x.endSec-x.startSec),0); g.pferde.add(h.id); g.erst=Math.min(g.erst,t); g.letzt=Math.max(g.letzt,t);
+        const w=Math.floor((jetzt-t)/6048e5); if(w>=0&&w<8) g.woche[7-w]++; } }
+    return Object.values(G).sort((a,b)=>b.n-a.n); },
+  eintraege(k){ return ((State.settings||{}).geraetebuch||[]).filter(e=>!k||e.k===k).sort((a,b)=>String(b.datum).localeCompare(String(a.datum))); },
+  oeffnen(){ if(!License.can('geraetebuch')){ UI.upgrade('Gerätebuch'); return; } this.zeichnen(); },
+  zeichnen(){ const D=this.daten(), d=t=>new Date(t).toLocaleDateString('de-DE'), ART=['Funktionsprüfung','Pflege/Reinigung','Wartung durch Hersteller','Einweisung','Störung'];
+    const spark=w=>{ const m=Math.max(1,...w); return `<svg viewBox="0 0 80 22" width="80" height="22" aria-hidden="true">${w.map((v,i)=>`<rect x="${i*10+1}" y="${(20-v/m*18).toFixed(1)}" width="8" height="${(v/m*18).toFixed(1)}" rx="1.5" fill="var(--cyan)" opacity="${v?'.85':'.15'}"/>`).join('')}</svg>`; };
+    UI.modal(`<div class="modal-head"><button class="closex" onclick="UI.closeModal()">${IC.x}</button><h3>Gerätebuch</h3></div><div class="modal-body">
+      <p style="font-size:13.5px;color:var(--text-secondary);margin:0 0 10px">Nutzung je Gerät rechnet Visite aus den Reha-Einheiten. Pflege, Funktionsprüfung und Wartung tragen Sie mit Datum und Kürzel ein. Der Gerätename kommt aus „Gerät im Bericht“ bei der Aufnahme.</p>
+      ${D.length?D.map((g,i)=>`<div class="panel" style="padding:12px 14px;margin:0 0 10px">
+        <div style="display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;align-items:baseline"><b style="font-size:15px">${esc(g.k)}</b><span style="font-size:12.5px;color:var(--text-dim)">letzte 8 Wochen ${spark(g.woche)}</span></div>
+        <div style="font-size:13px;color:var(--text-secondary);margin:4px 0 8px">${g.n} Einheiten · ${Math.round(g.sek/360)/10} h Belastung · ${g.pferde.size} Pferde · genutzt ${d(g.erst)} bis ${d(g.letzt)}</div>
+        ${this.eintraege(g.k).slice(0,6).map(e=>`<div style="font-size:12.5px;display:flex;gap:8px;padding:2px 0"><span class="mono" style="color:var(--text-dim)">${esc(d(e.datum))}</span><b>${esc(e.art)}</b><span>${esc(e.text||'')}</span><span style="color:var(--text-dim)">${esc(e.kuerzel||'')}</span></div>`).join('')||'<div style="font-size:12.5px;color:var(--text-dim)">Noch keine Einträge.</div>'}
+        <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:8px"><select id="gbA${i}" aria-label="Art des Eintrags" style="width:auto">${ART.map(x=>`<option>${x}</option>`).join('')}</select><input id="gbT${i}" placeholder="Was wurde gemacht?" aria-label="Was wurde gemacht" style="flex:1;min-width:140px"><input id="gbK${i}" placeholder="Kürzel" aria-label="Kürzel" style="width:80px"><input id="gbD${i}" type="date" aria-label="Datum" value="${new Date().toISOString().slice(0,10)}" style="width:auto"><button class="btn ghost" onclick="Geraetebuch.neu(${i})">Eintragen</button></div></div>`).join(''):'<p>Noch keine Reha-Einheiten.</p>'}
+      </div><div class="modal-foot"><button class="btn ghost" onclick="Geraetebuch.csv()" ${D.length?'':'disabled'}>${IC.download||''} CSV</button><button class="btn primary" onclick="Geraetebuch.drucken()" ${D.length?'':'disabled'}>Als PDF drucken</button></div>`,{wide:true}); },
+  async neu(i){ const D=this.daten(), g=D[i]; if(!g) return; const v=x=>((document.getElementById(x+i)||{}).value||'').trim();
+    const e={k:g.k, art:v('gbA'), text:v('gbT'), kuerzel:v('gbK'), datum:v('gbD')||new Date().toISOString().slice(0,10), am:new Date().toISOString()};
+    if(!e.text&&!e.kuerzel){ Toast.show('Bitte kurz eintragen, was gemacht wurde','warn'); return; }
+    const st=State.settings; st.geraetebuch=(st.geraetebuch||[]).concat([e]); await State.saveSettings(); Toast.show('Eingetragen','ok'); this.zeichnen(); },
+  csv(){ const q=v=>'"'+String(v==null?'':v).replace(/"/g,'""')+'"', d=t=>new Date(t).toLocaleDateString('de-DE'); const L=[['Gerät','Einheiten','Belastung (h)','Pferde','erste Nutzung','letzte Nutzung'].map(q).join(';')];
+    this.daten().forEach(g=>L.push([g.k,g.n,String(Math.round(g.sek/360)/10).replace('.',','),g.pferde.size,d(g.erst),d(g.letzt)].map(q).join(';')));
+    L.push(''); L.push(['Gerät','Datum','Art','Eintrag','Kürzel'].map(q).join(';')); this.eintraege().forEach(e=>L.push([e.k,d(e.datum),e.art,e.text,e.kuerzel].map(q).join(';')));
+    CenterAus.datei(`Geraetebuch_${new Date().toISOString().slice(0,10)}.csv`,'﻿'+L.join('\r\n'),'text/csv;charset=utf-8'); },
+  drucken(){ const D=this.daten(), st=State.settings||{}, d=t=>new Date(t).toLocaleDateString('de-DE'), pa=document.getElementById('printArea'); if(!pa) return;
+    pa.innerHTML=`${CenterAus.druckStil()}<div class="am"><h1>Gerätebuch</h1><div class="s">${esc(st.clinicName&&st.clinicName!=='Meine Pferdepraxis'?st.clinicName:'')} · erstellt ${new Date().toLocaleString('de-DE')}</div>
+    ${D.map(g=>`<h2>${esc(g.k)}</h2><div class="s">${g.n} Einheiten · ${Math.round(g.sek/360)/10} h Belastung · ${g.pferde.size} Pferde · genutzt ${d(g.erst)} bis ${d(g.letzt)}</div>
+      <table><thead><tr><th>Datum</th><th>Art</th><th>Eintrag</th><th>Kürzel</th></tr></thead><tbody>${this.eintraege(g.k).map(e=>`<tr><td>${esc(d(e.datum))}</td><td>${esc(e.art)}</td><td>${esc(e.text||'')}</td><td>${esc(e.kuerzel||'')}</td></tr>`).join('')||'<tr><td colspan="4">Keine Einträge im Gerätebuch.</td></tr>'}</tbody></table>`).join('')}
+    <div class="f">Nutzung aus den gespeicherten Reha-Einheiten berechnet; Einträge vom Betrieb. Erstellt mit CARLON Equine Visite.</div></div>`;
+    CenterAus.druck('Gerätebuch'); }
+};
+/* Gemeinsame Helfer für Center-Ausgaben (Datei speichern, Druckstil, Druck) */
+const CenterAus={
+  datei(name,inhalt,typ){ const b=new Blob([inhalt],{type:typ}), u=URL.createObjectURL(b), a=document.createElement('a'); a.href=u; a.download=name; document.body.appendChild(a); a.click(); setTimeout(()=>{ URL.revokeObjectURL(u); a.remove(); },800); },
+  druckStil(){ return `<style>.am{font-family:var(--font-ui);color:#1A1A1E;font-size:10.5px}.am h1{font-size:18px;margin:0 0 2px}.am h2{font-size:13px;margin:14px 0 2px}.am .s{color:#555;margin-bottom:8px}.am table{width:100%;border-collapse:collapse;margin:6px 0 12px}.am th,.am td{border-bottom:1px solid #ddd;padding:3px 5px;text-align:left;vertical-align:top}.am th{font-size:9.5px;text-transform:uppercase;letter-spacing:.04em;color:#555}.am .r{text-align:right}.am .k{display:flex;gap:18px;margin:6px 0 10px}.am .k b{font-size:15px;display:block}.am .f{color:#666;font-size:9px;margin-top:10px}.am .brief{font-size:12px;line-height:1.55;max-width:640px}.am .brief p{margin:0 0 9px}</style>`; },
+  druck(titel){ const alt=document.title; document.title=titel; setTimeout(()=>{ window.print(); document.title=alt; },150); }
+};
+/* ── RÜCKBERICHT AN ÜBERWEISER (21.11.2026, Equine Center) ─────────────
+   Begleitschreiben an die überweisende Praxis + die vollständige Verlaufsdokumentation in einem Druck.
+   Anker: Musterberufsordnung BTK § 12 Abs. 11 (Rücküberweisung mit Begleitbericht). Überweiser wird am Pferd gespeichert. */
+const Rueckbericht={
+  oeffnen(hid){ if(!License.can('rueckbericht')){ UI.upgrade('Rückbericht an Überweiser'); return; } const h=State.horses.find(x=>x.id===hid); if(!h) return; const u=(h.reha&&h.reha.ueberweiser)||{}, st=State.settings||{};
+    let S=[]; try{ S=Reha.sitzungen(hid); }catch(_){ }
+    const text=u.text||`vielen Dank für die Überweisung von ${h.name}. Anbei die Verlaufsdokumentation der Reha-Einheiten${S.length?' vom '+fmtDate(S[0].rec.startedAt)+' bis '+fmtDate(S[S.length-1].rec.startedAt)+' ('+S.length+' Einheiten)':''} mit unserer Beurteilung. Für Rückfragen sind wir gern erreichbar.`;
+    UI.modal(`<div class="modal-head"><button class="closex" onclick="UI.closeModal()">${IC.x}</button><h3>Rückbericht an Überweiser · ${esc(h.name)}</h3></div><div class="modal-body">
+      <p style="font-size:13.5px;color:var(--text-secondary);margin:0 0 10px">Begleitschreiben und Verlaufsdokumentation in einem PDF. Die Angaben zur überweisenden Praxis bleiben beim Pferd gespeichert.</p>
+      <div class="field"><label>Überweisende Praxis oder Klinik</label><input id="rbPraxis" value="${esc(u.praxis||'')}" placeholder="z. B. Pferdepraxis am Deich"></div>
+      <div class="field"><label>Tierärztin oder Tierarzt</label><input id="rbTa" value="${esc(u.tierarzt||'')}" placeholder="z. B. Dr. med. vet. …"></div>
+      <div class="field"><label>Anschrift (optional)</label><textarea id="rbAdr" rows="2">${esc(u.adresse||'')}</textarea></div>
+      <div class="field"><label>Begleittext</label><textarea id="rbText" rows="5">${esc(text)}</textarea></div>
+      <div class="field"><label>Unterschrift</label><input id="rbUnt" value="${esc(u.unterschrift||st.vetName||'')}"></div>
+      ${S.length<2?'<p style="font-size:12.5px;color:var(--amber)">Für die Verlaufsdokumentation braucht es mindestens zwei Einheiten.</p>':''}
+      </div><div class="modal-foot"><button class="btn ghost" onclick="UI.closeModal()">Abbrechen</button><button class="btn primary" onclick="Rueckbericht.drucken('${hid}')" ${S.length<2?'disabled':''}>Rückbericht als PDF</button></div>`); },
+  async drucken(hid){ const h=State.horses.find(x=>x.id===hid); if(!h) return; const v=x=>((document.getElementById(x)||{}).value||'').trim(), st=State.settings||{};
+    const u={praxis:v('rbPraxis'),tierarzt:v('rbTa'),adresse:v('rbAdr'),text:v('rbText'),unterschrift:v('rbUnt')};
+    h.reha=Object.assign({},h.reha||{},{ueberweiser:u}); try{ await DB.put('horses',h); }catch(_){ }
+    const brief=`<section class="rh-seite rb-brief">${CenterAus.druckStil()}<div class="am brief" style="padding:28px 34px">
+      <div style="display:flex;justify-content:space-between;gap:20px"><div>${st.logo?`<img src="${st.logo}" alt="" style="max-height:46px;max-width:200px">`:''}<div style="font-weight:700;font-size:14px;margin-top:6px">${esc(st.clinicName&&st.clinicName!=='Meine Pferdepraxis'?st.clinicName:'')}</div></div><div style="text-align:right;color:#555">${new Date().toLocaleDateString('de-DE')}</div></div>
+      <div style="margin:26px 0 18px;white-space:pre-line">${esc([u.praxis,u.tierarzt,u.adresse].filter(Boolean).join('\n'))}</div>
+      <div style="font-weight:700;font-size:13.5px;margin-bottom:12px">Rückbericht Reha · ${esc(h.name)}${h.ueln?' · UELN '+esc(h.ueln):''}${h.owner?' · Halterin/Halter '+esc(h.owner):''}</div>
+      <p>${u.tierarzt?'Sehr geehrte Kollegin, sehr geehrter Kollege,':'Sehr geehrte Damen und Herren,'}</p>${u.text.split(/\n{2,}/).map(x=>`<p>${esc(x)}</p>`).join('')}
+      <p style="margin-top:18px">Mit kollegialen Grüßen<br>${esc(u.unterschrift||'')}</p>
+      <div class="f">Anlage: Reha-Verlaufsdokumentation. Verlaufsbeobachtung mit CARLON Equine Visite; kein Medizinprodukt, die Beurteilung trifft die Tierärztin oder der Tierarzt.</div></div></section>`;
+    UI.closeModal(); const orig=window.print;
+    window.print=()=>{ window.print=orig; const pa=document.getElementById('printArea'); if(pa) pa.insertAdjacentHTML('afterbegin',brief); document.title=`${h.name} · Rückbericht`; orig.call(window); };
+    try{ await Reha.abschluss(hid,true); }catch(e){ window.print=orig; Toast.show('Rückbericht konnte nicht erstellt werden','warn'); } }
+};
+/* ── FORSCHUNGS-EXPORT (21.11.2026, Equine Center) ─────────────────────
+   Alle Reha-Einheiten aller Pferde pseudonymisiert als eine Tabelle (eine Zeile je Stufe) + Datenwörterbuch.
+   Pseudonym statt Name, Tage seit der ersten Einheit statt Datum (optional mit Datum). Keine Halter-, Hof- oder Ortsdaten. */
+const ForschungsExport={
+  oeffnen(){ if(!License.can('forschungsExport')){ UI.upgrade('Forschungs-Export'); return; } let n=0,p=0; for(const h of State.horses){ let S=[]; try{ S=Reha.sitzungen(h.id); }catch(_){ } if(S.length){ p++; n+=S.length; } }
+    UI.modal(`<div class="modal-head"><button class="closex" onclick="UI.closeModal()">${IC.x}</button><h3>Forschungs-Export</h3></div><div class="modal-body">
+      <p style="font-size:13.5px;color:var(--text-secondary);margin:0 0 10px">${n} Reha-Einheiten von ${p} Pferden als eine Tabelle, eine Zeile je Stufe, für Auswertungen über viele Pferde (Doktorarbeit, Qualitätsbericht, Studie). Dazu ein Datenwörterbuch mit der Bedeutung jeder Spalte.</p>
+      <ul style="font-size:13px;color:var(--text-secondary);margin:0 0 10px 18px;line-height:1.6"><li>Pferde als Pseudonym (P001 …), ohne Name, Halterin, Hof oder Ort</li><li>Zeit als Tage seit der ersten Einheit des Pferds</li><li>Pseudonymisiert ist nicht anonymisiert: Wer die Zuordnungsliste hat, kann zurückführen. Sie bleibt bei Ihnen.</li></ul>
+      <label style="display:flex;gap:8px;align-items:center;font-size:13px"><input type="checkbox" id="feDatum" style="width:auto"> Datum der Einheit mit ausgeben</label>
+      <label style="display:flex;gap:8px;align-items:center;font-size:13px;margin-top:6px"><input type="checkbox" id="feListe" style="width:auto"> Zuordnungsliste (Pseudonym ↔ Pferd) getrennt speichern</label>
+      </div><div class="modal-foot"><button class="btn primary" onclick="ForschungsExport.los()" ${n?'':'disabled'}>Export speichern</button></div>`); },
+  spalten:[['pferd','Pseudonym des Pferds (P001 …)'],['einheit','laufende Nummer der Einheit beim Pferd'],['tag','Tage seit der ersten Einheit des Pferds'],['datum','Datum der Einheit (nur wenn gewählt)'],['geraet','Art der Anwendung'],['modell','Hersteller und Modell laut „Gerät im Bericht“'],['stufe','Nummer der Stufe in der Einheit'],['einstellung','Geräteeinstellung der Stufe als Text'],['wasser','Wasserhöhe (Schlüssel)'],['wasser_cm','Wasserhöhe in cm, falls erfasst'],['wasser_c','Wassertemperatur °C'],['tempo_kmh','Tempo km/h'],['steigung_pct','Steigung %'],['beginn_s','Beginn der Stufe ab Aufnahmestart (s)'],['dauer_s','Dauer der Stufe (s)'],['hf_ende','Herzfrequenz am Stufenende, Median der letzten 60 s (bpm)'],['delta_hf','Änderung gegenüber den 20 s vor der Stufe (bpm)'],['tau63_s','Zeitkonstante der Sprungantwort (s)'],['ersetzt_pct','Anteil ersetzter Schläge in der Stufe (%)'],['ruhe_hf','Ruhe-HF vor der ersten Stufe (bpm), je Einheit'],['ruhe_rmssd','Ruhe-RMSSD vor der ersten Stufe (ms), je Einheit'],['erholung_tau_s','Erholungszeit τ63 nach der letzten Stufe (s), je Einheit'],['hf_5min','Herzfrequenz 5 min nach Belastungsende (bpm), je Einheit'],['quelle','Gurtspeicher, live oder Import']],
+  los(){ const mitDatum=(document.getElementById('feDatum')||{}).checked, liste=(document.getElementById('feListe')||{}).checked; const q=v=>'"'+String(v==null?'':v).replace(/"/g,'""')+'"', z=v=>v==null||!isFinite(v)?'':String(Math.round(v*100)/100);
+    const L=[this.spalten.map(x=>x[0]).join(';')], Z=[['pseudonym','pferd'].join(';')]; let nr=0;
+    for(const h of State.horses){ let S=[]; try{ S=Reha.sitzungen(h.id); }catch(_){ } if(!S.length) continue; nr++; const pid='P'+String(nr).padStart(3,'0'); Z.push([pid,h.name].map(q).join(';')); const t0=+new Date(S[0].rec.startedAt);
+      S.forEach((s,i)=>{ let k=null; try{ k=Reha.kennwerte(s.rec); }catch(_){ } const st=s.a.stufen.filter(x=>x.device!=='keines');
+        st.forEach((x,j)=>{ const m=x.markierung||{}; let ers=null; try{ ers=k?k.anteil(x.startSec,x.endSec):null; }catch(_){ }
+          L.push([pid,i+1,Math.round((+new Date(s.rec.startedAt)-t0)/864e5),mitDatum?new Date(s.rec.startedAt).toISOString().slice(0,10):'',x.device,(s.rec.reha&&s.rec.reha.modell)||'',j+1,x.label,m.waterHeight||'',z(m.waterHeightCm),z(m.waterTempC),z(m.speedKmh),z(m.inclinePercent),z(x.startSec),z(x.endSec-x.startSec),z(x.hfMedian60),z(x.deltaHRbpm),z(x.adaptationSec),z(ers),z(k&&k.ruheHF),z(k&&k.ruheRM),z(k&&k.tauE),z(k&&k.hf5),/gurtspeicher/.test(s.rec.rrQuelle||'')?'gurtspeicher':(s.rec.rrQuelle||'import')].map(q).join(';')); }); }); }
+    const tag=new Date().toISOString().slice(0,10);
+    CenterAus.datei(`Reha-Forschungsexport_${tag}.csv`,'﻿'+L.join('\r\n'),'text/csv;charset=utf-8');
+    setTimeout(()=>CenterAus.datei(`Reha-Forschungsexport_${tag}_Datenwoerterbuch.csv`,'﻿'+['spalte;bedeutung'].concat(this.spalten.map(x=>x.map(q).join(';'))).concat(['"Hinweis";"Dezimalpunkt; Trennzeichen Semikolon; eine Zeile je Stufe. HRV-Kennwerte nur aus der Ruhephase. Erstellt mit CARLON Equine Visite."']).join('\r\n'),'text/csv;charset=utf-8'),600);
+    if(liste) setTimeout(()=>CenterAus.datei(`Reha-Forschungsexport_${tag}_Zuordnung_VERTRAULICH.csv`,'﻿'+Z.join('\r\n'),'text/csv;charset=utf-8'),1200);
+    UI.closeModal(); Toast.show('Export gespeichert','ok'); }
+};
 const Neuauswertung={
   /* Rechenkosten (gemessen 15.11.): ~3 ms je 420 Schläge, ~19 ms je 2100. Darum: Ergebnis je Aufnahme
      MIT Methodenversion an der Aufnahme gespeichert (`neuauswertung.werte`). Gleiche Version ⇒ sofort
@@ -7807,6 +7960,7 @@ const Views={
           <div class="sub">Leistungen, Besuchs- und Zeitprotokoll, Fahrtenbuch und Datensicherung — fertig zur Übergabe an Ihre Praxissoftware.</div></div>
         <div style="display:flex;gap:8px;flex-wrap:wrap">
           <button class="btn primary" onclick="Nav.go('logbook')">${IC.doc} Fahrtenbuch &amp; Zeiten</button>
+          ${License.can('auditMappe')?`<button class="btn ghost" onclick="AuditMappe.oeffnen()">${IC.doc} Audit-Mappe Geräteeinsatz</button><button class="btn ghost" onclick="Geraetebuch.oeffnen()">${IC.doc} Gerätebuch</button><button class="btn ghost" onclick="ForschungsExport.oeffnen()">${IC.download} Forschungs-Export</button>`:''}
           <button class="btn ghost" onclick="Revenue.exportCSV()">${IC.download} Leistungen als CSV</button>
           <button class="btn ghost" onclick="Backup.doExport()" title="Praxis-Backup jetzt sichern">${IC.download} Backup sichern</button>
           ${(typeof Teilen==='undefined'||!Teilen.aktiv)?`<button class="btn ghost" onclick="Backup.abgleichSenden()" title="Teilen → im Eingangsordner der Praxis speichern; der Praxisrechner übernimmt es von selbst">${IC.upload} Abgleich an die Praxis</button>`:''}
@@ -12068,7 +12222,7 @@ const License={
                 'sharedFolder'],
     vet_reha:  ['pdf','csv','coherence','ownerFeedback','sharedFolder','langzeit','reha','clinicBranding'],   // Reha (20.11.2026)
     vet_klinik_reha:['pdf','csv','routeHandoff','coherence','ownerFeedback','langzeit','multiSeat','nachsorge','clinicBranding','station','reha','sharedFolder'],
-    vet_center:['pdf','csv','routeHandoff','coherence','ownerFeedback','langzeit','multiSeat','nachsorge','clinicBranding','station','reha','sharedFolder','standorte']     // geteilter Klinik-Ordner, Mehrbenutzer (15.08.)
+    vet_center:['pdf','csv','routeHandoff','coherence','ownerFeedback','langzeit','multiSeat','nachsorge','clinicBranding','station','reha','sharedFolder','standorte','auditMappe','geraetebuch','rueckbericht','forschungsExport']     // geteilter Klinik-Ordner, Mehrbenutzer (15.08.)
   },
   /* ENTSCHIEDEN (Jan, 13.08.2026) — der offene Punkt unten ist damit
      beantwortet: Die Klinik-Stufe (jetzt 199 €/Monat, PREIS-Quelle oben)
@@ -12107,7 +12261,7 @@ const License={
      kuenstlicher Riegel um ein identisches Produkt, sondern beschreibt genau
      den Unterschied: Eine Fahrpraxis hat keine Stationswand, weil sie keine
      Station hat, und keinen geteilten Ordner, weil sie ein Geraet ist. */
-  CLINIC_ONLY:['clinicBranding','multiSeat','nachsorge','station','reha'],
+  CLINIC_ONLY:['clinicBranding','multiSeat','nachsorge','station','reha','auditMappe','geraetebuch','rueckbericht','forschungsExport'],
   /* Die Platzzahl steht im Schluessel und wird ANGEZEIGT, nicht technisch
      erzwungen — ohne Server laesst sich geraeteuebergreifend nichts durchsetzen,
      und ein Schein-Schutz waere schlechter als eine klare Angabe. Sie ist eine
