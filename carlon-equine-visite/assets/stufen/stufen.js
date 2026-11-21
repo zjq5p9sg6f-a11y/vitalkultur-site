@@ -20,17 +20,17 @@
       fuer: { fahrpraxis: 'Mobile Tierärztin, mobiler Tierarzt', praxis: 'Praxis oder Klinik mit Station', reha: 'Reha-Zentrum ohne eigene Station', kombi: 'Klinik mit Station und Reha-Bereich', center: 'Großes Zentrum, mehrere Bereiche' },
       wwT: 'Fünf Stufen. Welche passt zu Ihnen?', wwRehaSeite: 'Reha-Seite', ab: 'ab ',
       stufe: 'Stufe', fuerWen: 'Für wen', preis: 'Preis netto im Monat', proStandort: ' je Standort', geraete: 'Geräte (Rechner, Tablets, Telefone)', rehaPf: 'Reha-Pferde in 30 Tagen',
-      ohne: 'ohne Grenze', zum: 'Zum Angebot', zumKurz: 'Angebot →', tabAria: 'Alle fünf Stufen im Vergleich',
+      ohne: 'ohne Grenze', zum: 'Details', zumKurz: 'Zur Stufe →', tabAria: 'Alle fünf Stufen im Vergleich',
       zeilen: [['Akte, Mess-Link, Messwertbericht mit Ihrem Briefkopf', [1, 1, 1, 1, 1]], ['Stallrunde und Langzeit im Gurt', [1, 1, 1, 1, 1]], ['Team-Ordner mit täglicher Sicherung', [1, 1, 1, 1, 1]], ['Export JSON, CSV, Kubios, FHIR R5', [1, 1, 1, 1, 1]], ['Tourenplanung mit Maps-Übergabe, Wegegeld', [1, 1, 0, 1, 1]], ['Stationswand und Nachsorge', [0, 1, 0, 1, 1]], ['Reha-Aufnahme, Sitzungsbericht, Verlauf', [0, 0, 1, 1, 1]], ['Audit-Mappe und Gerätebuch zum Geräteeinsatz', [0, 0, 0, 0, 1]], ['Rückbericht an Überweiser, Forschungs-Export', [0, 0, 0, 0, 1]]],
-      rTitel: 'Welche Stufe passt zu Ihrem Betrieb?', rLead: 'Wählen Sie, was Sie nutzen. Der Rechner nimmt die günstigste Stufe, die das hergibt, und zeigt, wo die nächste beginnt.',
+      rTitel: 'Welche Stufe passt zu Ihrem Betrieb?', rLead: 'Wählen Sie, was Sie nutzen. Der Rechner wählt die niedrigste Stufe, die Ihre Auswahl abdeckt, und zeigt, wo die nächste beginnt.',
       nutzen: 'Was Sie nutzen', tour: 'Tourenplanung', station: 'Stationswand über Nacht', rehaE: 'Reha-Einheiten am Gerät',
       gerL: 'Geräte mit Cockpit', gerMehr: 'mehr als 8', pfL: 'Reha-Pferde in 30 Tagen', eL: 'Einheiten je Pferd und Woche', bL: 'Ihr Betrag für den Sitzungsbericht je Einheit', pmL: 'Pferde mit Messwertbericht im Monat', bLM: 'Ihr Betrag für den Messwertbericht je Pferd',
-      passt: 'Passende Stufe', imMonat: 'netto im Monat', weil: 'Warum diese Stufe', test: '14 Tage testen', zumAng: 'Zum Angebot',
+      passt: 'Passende Stufe', imMonat: 'netto im Monat', weil: 'Warum diese Stufe', test: '14 Tage testen', zumAng: 'Stufe ansehen',
       grundBasis: 'Kleinste Stufe für Ihre Auswahl', grundGer: n => `${n} Geräte`, grundPf: n => `${n} Reha-Pferde in 30 Tagen`, grundTour: 'Tourenplanung', grundStation: 'Stationswand',
       naechste: (was, s, p) => `Nächster Sprung: ${was} → ${s} für ${p} im Monat.`, abPf: n => `ab ${n} Reha-Pferden`, abGer: n => `ab ${n} Geräten`, keinSprung: 'Darüber gibt es keine Grenze mehr.',
       einh: 'Einheiten im Monat', jeEinh: 'Lizenz je Einheit', einn: 'Einnahmen aus dem Bericht', erg: 'Ergebnis im Monat', einhM: 'Berichte im Monat', jeEinhM: 'Lizenz je Bericht',
-      traegtM: n => `Die Lizenz ist ab ${n} Messwertbericht${n === 1 ? '' : 'en'} im Monat getragen.`, traegtNieM: 'Ohne eigenen Betrag gehört der Messwertbericht zu Ihrer Untersuchung; der Rechner zeigt dann nur die Lizenz.',
-      traegt: (np, E) => `Die Lizenz ist ab ${np} Reha-Pferd${np === 1 ? '' : 'en'} mit ${E} Einheit${E === 1 ? '' : 'en'} je Woche getragen.`, traegtNie: 'Mit diesem Betrag trägt der Bericht die Lizenz in keiner Stufe; ohne eigenen Betrag gehört er zu Ihrem Reha-Paket.',
+      traegtM: n => `Ab ${n} Messwertbericht${n === 1 ? '' : 'en'} im Monat decken die Einnahmen aus dem Bericht den Monatspreis.`, traegtNieM: 'Ohne eigenen Betrag gehört der Messwertbericht zu Ihrer Untersuchung; der Rechner zeigt dann nur die Lizenz.',
+      traegt: (np, E) => `Ab ${np} Reha-Pferd${np === 1 ? '' : 'en'} mit ${E} Einheit${E === 1 ? '' : 'en'} je Woche decken die Einnahmen aus dem Bericht den Monatspreis.`, traegtNie: 'Mit diesem Betrag trägt der Bericht die Lizenz in keiner Stufe; ohne eigenen Betrag gehört er zu Ihrem Reha-Paket.',
       grafikT: 'Lizenz und Einnahmen nach Zahl der Reha-Pferde', grafikTG: 'Lizenz nach Zahl der Geräte', lizenz: 'Lizenz (Stufen)', einnahmen: 'Einnahmen aus dem Bericht', pferde: 'Reha-Pferde in 30 Tagen', geraeteAchse: 'Geräte',
       fuss: 'Preise netto. Grenzen je Stufe wie in der Tabelle; über einer Grenze wechseln Sie unter „Abo verwalten“ selbst in die nächste Stufe.',
       fussReha: 'Beispielrechnung ohne Sensoren (einmalig, Fachhandel). Ob und wie Sie den Bericht berechnen, entscheiden Sie; für tierärztliche Leistungen gelten die Gebührenregeln Ihres Landes.',
@@ -41,17 +41,17 @@
       fuer: { fahrpraxis: 'Ambulatory vet', praxis: 'Practice or clinic with a ward', reha: 'Rehab centre without a ward', kombi: 'Clinic with a ward and a rehab unit', center: 'Large centre, several units' },
       wwT: 'Five tiers. Which one fits you?', wwRehaSeite: 'Rehab page', ab: 'from ',
       stufe: 'Tier', fuerWen: 'For', preis: 'Price per month, excl. VAT', proStandort: ' per site', geraete: 'Devices (computers, tablets, phones)', rehaPf: 'Rehab horses in 30 days',
-      ohne: 'no limit', zum: 'View offer', zumKurz: 'Offer →', tabAria: 'All five tiers compared',
+      ohne: 'no limit', zum: 'Details', zumKurz: 'Tier details →', tabAria: 'All five tiers compared',
       zeilen: [['Records, measurement link, measurement report on your letterhead', [1, 1, 1, 1, 1]], ['Yard round and long-term recording in the strap', [1, 1, 1, 1, 1]], ['Team folder with daily backup', [1, 1, 1, 1, 1]], ['Export JSON, CSV, Kubios, FHIR R5', [1, 1, 1, 1, 1]], ['Tour planning with Maps hand-off, mileage', [1, 1, 0, 1, 1]], ['Ward display and aftercare', [0, 1, 0, 1, 1]], ['Rehab recording, session report, progress report', [0, 0, 1, 1, 1]], ['Audit file and equipment log', [0, 0, 0, 0, 1]], ['Report back to the referring vet, research export', [0, 0, 0, 0, 1]]],
-      rTitel: 'Which tier suits your business?', rLead: 'Choose what you use. The calculator picks the cheapest tier that covers it and shows where the next one starts.',
+      rTitel: 'Which tier suits your business?', rLead: 'Choose what you use. The calculator picks the lowest tier that covers your selection and shows where the next one starts.',
       nutzen: 'What you use', tour: 'Tour planning', station: 'Overnight ward display', rehaE: 'Rehab sessions at the equipment',
       gerL: 'Devices with the cockpit', gerMehr: 'more than 8', pfL: 'Rehab horses in 30 days', eL: 'Sessions per horse per week', bL: 'Your charge for the session report', pmL: 'Horses with a measurement report per month', bLM: 'Your charge for the measurement report per horse',
-      passt: 'Matching tier', imMonat: 'a month, excl. VAT', weil: 'Why this tier', test: 'Try for 14 days', zumAng: 'View offer',
+      passt: 'Matching tier', imMonat: 'a month, excl. VAT', weil: 'Why this tier', test: 'Try for 14 days', zumAng: 'See tier',
       grundBasis: 'Smallest tier for your selection', grundGer: n => `${n} devices`, grundPf: n => `${n} rehab horses in 30 days`, grundTour: 'tour planning', grundStation: 'ward display',
       naechste: (was, s, p) => `Next step up: ${was} → ${s} at ${p} a month.`, abPf: n => `from ${n} rehab horses`, abGer: n => `from ${n} devices`, keinSprung: 'There is no further limit above this.',
       einh: 'Sessions per month', jeEinh: 'Licence per session', einn: 'Income from the report', erg: 'Monthly balance', einhM: 'Reports per month', jeEinhM: 'Licence per report',
-      traegtM: n => `The licence pays for itself from ${n} measurement report${n === 1 ? '' : 's'} per month.`, traegtNieM: 'Without a separate charge the measurement report is part of your examination; the calculator then shows the licence only.',
-      traegt: (np, E) => `The licence pays for itself from ${np} rehab horse${np === 1 ? '' : 's'} with ${E} session${E === 1 ? '' : 's'} per week.`, traegtNie: 'At this charge the report does not cover the licence in any tier; without a separate charge it is part of your rehab package.',
+      traegtM: n => `From ${n} measurement report${n === 1 ? '' : 's'} a month, the report income covers the monthly price.`, traegtNieM: 'Without a separate charge the measurement report is part of your examination; the calculator then shows the licence only.',
+      traegt: (np, E) => `From ${np} rehab horse${np === 1 ? '' : 's'} with ${E} session${E === 1 ? '' : 's'} per week, the report income covers the monthly price.`, traegtNie: 'At this charge the report does not cover the licence in any tier; without a separate charge it is part of your rehab package.',
       grafikT: 'Licence and income by number of rehab horses', grafikTG: 'Licence by number of devices', lizenz: 'Licence (tiers)', einnahmen: 'Income from the report', pferde: 'Rehab horses in 30 days', geraeteAchse: 'Devices',
       fuss: 'Prices excl. VAT. Limits per tier as in the table; above a limit you switch to the next tier yourself under “Manage subscription”.',
       fussReha: 'Example calculation without sensors (one-off purchase from specialist retailers). Whether and how you charge for the report is your decision; veterinary fees follow the rules of your country.',
@@ -179,7 +179,7 @@
       if (d === 'bz') { const v = parseFloat(String(ev.target.value).replace(',', '.')); bet = isFinite(v) && v >= 0 ? v : 0; $('[data-i="b"]').value = zuRegler(bet); } }, true);
     function r() {
       const b = { tour: an('tour'), station: an('station'), reha: an('reha'), ger: wert('ger'), pf: wert('pf'), e: wert('e'), pm: wert('pm'), bet };
-      el.querySelectorAll('[data-nur="reha"]').forEach(x => x.hidden = !b.reha); el.querySelectorAll('[data-nur="mess"]').forEach(x => x.hidden = b.reha); $('[data-o="pm"]').textContent = b.pm;
+      el.querySelectorAll('[data-nur="reha"]').forEach(x => x.hidden = !b.reha); el.querySelectorAll('[data-nur="mess"]').forEach(x => x.hidden = b.reha); $('[data-i="bz"]').setAttribute('aria-label', b.reha ? t.bL : t.bLM); $('[data-i="b"]').setAttribute('aria-label', b.reha ? t.bL : t.bLM); $('[data-o="pm"]').textContent = b.pm;
       $('[data-o="ger"]').textContent = b.ger > 8 ? t.gerMehr : b.ger; $('[data-o="pf"]').textContent = b.pf; $('[data-o="e"]').textContent = b.e;
       const s = passend(b);
       // Grund: welche Anforderung bindet
@@ -228,7 +228,7 @@
       g += `<line x1="${X(cur)}" x2="${X(cur)}" y1="${pt}" y2="${H - pb}" stroke="rgba(255,255,255,.35)" stroke-dasharray="3 3"/><circle cx="${X(cur)}" cy="${Y(lic[ci])}" r="4.5" fill="#3ECFB2"/>`;
       if (inc && inc[ci] <= ymax) g += `<circle cx="${X(cur)}" cy="${Y(inc[ci])}" r="4.5" fill="#F2C46B"/>`;
       const leg = `<g font-size="10.5"><rect x="${pl + 6}" y="${eng ? pt - 30 : pt - 14}" width="12" height="3" fill="#3ECFB2"/><text x="${pl + 22}" y="${eng ? pt - 26 : pt - 10}" fill="#cfd5da">${esc(t.lizenz)}</text>${inc ? `<rect x="${eng ? pl + 6 : pl + 130}" y="${eng ? pt - 30 + 14 : pt - 14}" width="12" height="3" fill="#F2C46B"/><text x="${eng ? pl + 22 : pl + 146}" y="${eng ? pt - 26 + 14 : pt - 10}" fill="#cfd5da">${esc(t.einnahmen)}</text>` : ''}</g>`;
-      $('.st-svg').innerHTML = `<svg viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" role="img" aria-label="${esc(b.reha ? t.grafikT : t.grafikTG)}">${g}${leg}</svg>`;
+      $('.st-svg').innerHTML = `<svg viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" role="img" aria-label="${esc((b.reha ? t.grafikT : t.grafikTG) + ': ' + t.name[s.k] + ' ' + t.eu(s.p))}">${g}${leg}</svg>`;
       if (b.reha) {
         const N = Math.round(b.pf * b.e * 52 / 12), U = N * b.bet, G = U - s.p;
         $('.st-zahlen').innerHTML = `<div><span>${esc(t.einh)}</span><b>${t.zahl(N)}</b></div><div><span>${esc(t.jeEinh)}</span><b>${N ? t.eu(Math.round(s.p / N * 100) / 100) : '–'}</b></div><div><span>${esc(t.einn)}</span><b>${t.eu(Math.round(U))}</b></div><div class="${G >= 0 ? 'st-gut' : 'st-neg'}"><span>${esc(t.erg)}</span><b>${G >= 0 ? '+' : '−'}${t.eu(Math.abs(Math.round(G)))}</b></div>`;

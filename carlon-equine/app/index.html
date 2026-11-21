@@ -3012,7 +3012,7 @@ const Reha={
       ${S.slice().reverse().map((s2,i)=>{ const k=K[S.length-1-i]; return `<tr><td style="white-space:nowrap">${fmtDate(s2.rec.startedAt)}</td><td>${esc(k.geraet)}</td><td>${fmt0(k.lastMin)} min</td><td><b>${this.z(this.hfRef(k,ref))}</b> bpm</td><td>${k.tauE!=null?fmt0(k.tauE)+' s':'–'}</td><td>${k.ruheRM!=null?Number(k.ruheRM).toFixed(1).replace('.',',')+' ms':'–'}</td><td>${s2.rec._seed?'Demo':/gurtspeicher/.test(s2.rec.rrQuelle||'')?'Gurtspeicher':'live'}</td>${(()=>{ const t=st(k), ok=t==='auswertbar'||/^Ende erkannt$|^\d+ lange Pausen$/.test(t); return `<td style="color:${ok?'var(--cyan)':'var(--amber,#f6b73c)'};font-weight:600">${ok?'ja':'teilweise'}</td><td style="color:var(--text-secondary)">${t==='auswertbar'?'–':t}</td>`; })()}<td style="white-space:nowrap"><button class="btn ghost" style="font-size:11.5px;padding:4px 8px" onclick="Reha.drucken('${h.id}','${s2.rec.id}','klinik')">Klinik</button> <button class="btn ghost" style="font-size:11.5px;padding:4px 8px" onclick="Reha.drucken('${h.id}','${s2.rec.id}','halter')">Halterin</button></td></tr>`; }).join('')}</tbody></table></div>
       <div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin-top:10px">${vgl>=2?`<button class="btn primary" style="font-size:12.5px" onclick="Reha.abschlussDialog('${h.id}')">Verlaufsdokumentation · alle Einheiten</button>`:'<span style="font-size:12.5px;color:var(--text-dim)">Verlaufsdokumentation ab zwei vergleichbaren Einheiten</span>'}<button class="btn ghost" style="font-size:12.5px" onclick="EquineApp.alle('${h.id}',true)" title="Alle Einheiten als Dateien für die CARLON Equine App der Halterin (iPhone, iPad): antippen, und die Messungen stehen dort lückenlos beim Pferd">Für die CARLON Equine App</button><span style="font-size:12px;color:var(--text-dim)">Übergabe an die App der Halterin: dort lückenlos beim Pferd, auch für Messungen zu Hause.</span></div></div>`; },
   panel(h){
-    if(!this.erlaubt()) return `<div class="panel" style="margin-bottom:var(--s4)" id="rehaAkte"><h2 style="font-size:16px">Reha</h2><p style="color:var(--text-dim);font-size:13px;line-height:1.55">Reha-Sitzungen am Aquatrainer, Laufband, in der Führanlage, beim Führen, an der Longe, unter dem Reiter, an der Vibrationsplatte, im Solarium, in der Solekammer und bei Anwendungen im Stand, mit Herzfrequenz je Stufe, Verlauf bei gleicher Last und Berichten für Klinik und Halterin. Enthalten in den Stufen Reha und Klinik + Reha.</p><button class="btn ghost" onclick="UI.upgrade&&UI.upgrade()">Stufen ansehen</button></div>`;
+    if(!this.erlaubt(h&&h.id)) return `<div class="panel" style="margin-bottom:var(--s4)" id="rehaAkte"><h2 style="font-size:16px">Reha</h2><p style="color:var(--text-dim);font-size:13px;line-height:1.55">Reha-Sitzungen am Aquatrainer, Laufband, in der Führanlage, beim Führen, an der Longe, unter dem Reiter, an der Vibrationsplatte, im Solarium, in der Solekammer und bei Anwendungen im Stand, mit Herzfrequenz je Stufe, Verlauf bei gleicher Last und Berichten für Klinik und Halterin. Enthalten in den Stufen Reha und Klinik + Reha.</p><button class="btn ghost" onclick="UI.upgrade&&UI.upgrade()">Stufen ansehen</button></div>`;
     const S=this.sitzungen(h.id); const lang=(typeof Sprache!=='undefined'&&Sprache.cur==='en');
     const start=`<div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:10px">${RehaLive.LISTE.map(g=>`<button class="btn ghost" style="font-size:12.5px" onclick="RehaLive.starten('${h.id}','${g}')">${esc(RehaKern.GERAETE[g][lang?'en':'de'])}</button>`).join('')}</div>`;
     if(!S.length) return `<div class="panel" style="margin-bottom:var(--s4)" id="rehaAkte"><h2 style="font-size:16px">Reha</h2><p style="color:var(--text-dim);font-size:13px">Noch keine Reha-Sitzung. Sitzung starten mit Gerät:</p>${start}</div>`;
@@ -4883,7 +4883,7 @@ const Training={
     let status,cls,txt;
     if(rmssdTrend<-8&&hrTrend>2){status='Belastung hoch';cls='alert';txt='RMSSD fällt und Ruhe-HF steigt über die letzten Einheiten — Zeichen unvollständiger Erholung. Regenerationstag einplanen, Intensität zurücknehmen.';}
     else if(belowBase||rmssdTrend<-5){status='Beobachten';cls='warn';txt='HRV unter dem individuellen Normalniveau des Pferds — Belastung im Blick behalten, vor harter Einheit erneut messen.';}
-    else{status='Erholt · belastbar';cls='good';txt='HRV stabil oder steigend auf Baseline-Niveau — gute parasympathische Erholung, belastbar.';}
+    else{status='Im eigenen Bereich';cls='good';txt='HRV stabil oder steigend auf Höhe der eigenen Basis. Die Einordnung für das Training liegt bei Ihnen.';}
     return {status,cls,txt,rmssdTrend,hrTrend,cur,base};
   }
 };
@@ -5843,7 +5843,7 @@ const Chart={
     const med=Float64Array.from(vs).sort()[vs.length>>1];
     g+=`<line x1="${pad.l}" x2="${w-pad.r}" y1="${Y(med).toFixed(1)}" y2="${Y(med).toFixed(1)}" stroke="#fff" stroke-opacity=".28" stroke-width=".8" stroke-dasharray="4 4"/>`;
     g+=`<rect x="${pad.l}" y="${pad.t}" width="${plotW.toFixed(1)}" height="${plotH.toFixed(1)}" fill="none" class="axis"/>`;
-    g+=`<text x="12" y="${(pad.t+plotH/2).toFixed(0)}" transform="rotate(-90 12 ${(pad.t+plotH/2).toFixed(0)})" text-anchor="middle" class="label-axis" style="fill:${COL.exhale}">ATEMZUEGE<tspan class="label-unit"> (/min)</tspan></text>`;
+    g+=`<text x="12" y="${(pad.t+plotH/2).toFixed(0)}" transform="rotate(-90 12 ${(pad.t+plotH/2).toFixed(0)})" text-anchor="middle" class="label-axis" style="fill:${COL.exhale}">ATEMZÜGE<tspan class="label-unit"> (/min)</tspan></text>`;
     g+=`<text x="${(pad.l+plotW/2).toFixed(0)}" y="${h-2}" text-anchor="middle" class="label-axis">ZEIT<tspan class="label-unit"> (min)</tspan></text>`;
     g+=`<g transform="translate(${pad.l+8},${pad.t+6})"><rect x="0" y="0" width="188" height="19" rx="9.5" fill="rgba(0,0,0,.6)" stroke="${COL.exhale}" stroke-opacity=".4"/>`
       +`<text x="9" y="13.5" style="fill:var(--text-secondary);font-size:10px;font-family:var(--font-mono)">Verlauf · Median ${fmt0(med)}/min</text></g>`;
@@ -14825,8 +14825,8 @@ const Sprache={
     'Moderat':'Moderate',
     'Erholung':'Recovery',
     'Belastung & Erholung':'Load & recovery',
-    'Erholt · belastbar':'Recovered · ready for work',
-    'HRV stabil oder steigend auf Baseline-Niveau — gute parasympathische Erholung, belastbar.':'HRV stable or rising at baseline level — good parasympathetic recovery, ready for work.',
+    'Im eigenen Bereich':'Within own range',
+    'HRV stabil oder steigend auf Höhe der eigenen Basis. Die Einordnung für das Training liegt bei Ihnen.':'HRV stable or rising at the level of the horse’s own baseline. How this informs training is your call.',
     'Konditions-Verlauf':'Conditioning over time',
     'Kondition verbessert sich':'Conditioning is improving',
     'Ruhe-HF sinkt und/oder HRV steigt über den Zeitraum — Zeichen zunehmender aerober Anpassung.':'Resting HR falls and/or HRV rises over the period — a sign of growing aerobic adaptation.',
@@ -15306,6 +15306,8 @@ const Sprache={
           const v=_p.get('demo'), erlaubt=['today','board','roster','station','map','revenue','coherence'];
           const pf=(_p.get('pferd')||'').toLowerCase(), h=pf&&(State.horses||[]).find(x=>String(x.name||'').toLowerCase()===pf);
           if(h) Views.openHorse(h.id); else Nav.go(erlaubt.includes(v)?v:'today');
+          /* 21.11.2026 Comet (Reha-Leitung): &fokus=reha springt zur Reha-Akte statt sie unten zu lassen */
+          if(h && _p.get('fokus')==='reha' && !_p.has('nur')) setTimeout(()=>{ const r=document.getElementById('rehaAkte'); if(r) r.scrollIntoView({block:'start'}); },900);
           if(!_p.get('fokus') && _p.has('schaufenster')) setTimeout(()=>{ try{ parent.postMessage({carlonSchaufenster:'bereit'},'*'); }catch(_){} },1500);
           /* &fokus=poincare (16.11.2026): Visite-Seite bettet die echte Akte ein und springt zur Poincaré-Karte mit Zeitregler. */
           /* &nur=1 (16.11.2026, Jan am iPhone: „öffnet das ganze Programm, statt nur diesen Aspekt“): Fokus-Fenster der Visite-Seite –
