@@ -28,7 +28,7 @@
       passt: 'Passende Stufe', imMonat: 'netto im Monat', weil: 'Warum diese Stufe', test: '14 Tage testen', zumAng: 'Stufe ansehen',
       grundBasis: 'Kleinste Stufe für Ihre Auswahl', grundGer: n => `${n} Geräte`, grundPf: n => `${n} Reha-Pferde in 30 Tagen`, grundTour: 'Tourenplanung', grundStation: 'Stationswand',
       naechste: (was, s, p) => `Nächster Sprung: ${was} → ${s} für ${p} im Monat.`, abPf: n => `ab ${n} Reha-Pferden`, abGer: n => `ab ${n} Geräten`, keinSprung: 'Darüber gibt es keine Grenze mehr.',
-      einh: 'Einheiten im Monat', jeEinh: 'Lizenz je Einheit', einn: 'Einnahmen aus dem Bericht', erg: 'Ergebnis im Monat', einhM: 'Berichte im Monat', jeEinhM: 'Lizenz je Bericht',
+      gwK: 'Ihr Ergebnis nach Lizenz', einnJ: 'Einnahmen im Jahr', gwM: 'im Monat', gwJ: 'im Jahr', einh: 'Einheiten im Monat', jeEinh: 'Lizenz je Einheit', einn: 'Einnahmen aus dem Bericht', erg: 'Ergebnis im Monat', einhM: 'Berichte im Monat', jeEinhM: 'Lizenz je Bericht',
       traegtM: n => `Ab ${n} Messwertbericht${n === 1 ? '' : 'en'} im Monat decken die Einnahmen aus dem Bericht den Monatspreis.`, traegtNieM: 'Ohne eigenen Betrag gehört der Messwertbericht zu Ihrer Untersuchung; der Rechner zeigt dann nur die Lizenz.',
       traegt: (np, E) => `Ab ${np} Reha-Pferd${np === 1 ? '' : 'en'} mit ${E} Einheit${E === 1 ? '' : 'en'} je Woche decken die Einnahmen aus dem Bericht den Monatspreis.`, traegtNie: 'Mit diesem Betrag trägt der Bericht die Lizenz in keiner Stufe; ohne eigenen Betrag gehört er zu Ihrem Reha-Paket.',
       grafikT: 'Lizenz und Einnahmen nach Zahl der Reha-Pferde', grafikTG: 'Lizenz nach Zahl der Geräte', lizenz: 'Lizenz (Stufen)', einnahmen: 'Einnahmen aus dem Bericht', pferde: 'Reha-Pferde in 30 Tagen', geraeteAchse: 'Geräte',
@@ -49,7 +49,7 @@
       passt: 'Matching tier', imMonat: 'a month, excl. VAT', weil: 'Why this tier', test: 'Try for 14 days', zumAng: 'See tier',
       grundBasis: 'Smallest tier for your selection', grundGer: n => `${n} devices`, grundPf: n => `${n} rehab horses in 30 days`, grundTour: 'tour planning', grundStation: 'ward display',
       naechste: (was, s, p) => `Next step up: ${was} → ${s} at ${p} a month.`, abPf: n => `from ${n} rehab horses`, abGer: n => `from ${n} devices`, keinSprung: 'There is no further limit above this.',
-      einh: 'Sessions per month', jeEinh: 'Licence per session', einn: 'Income from the report', erg: 'Monthly balance', einhM: 'Reports per month', jeEinhM: 'Licence per report',
+      gwK: 'Your result after the licence', einnJ: 'Income per year', gwM: 'a month', gwJ: 'a year', einh: 'Sessions per month', jeEinh: 'Licence per session', einn: 'Income from the report', erg: 'Monthly balance', einhM: 'Reports per month', jeEinhM: 'Licence per report',
       traegtM: n => `From ${n} measurement report${n === 1 ? '' : 's'} a month, the report income covers the monthly price.`, traegtNieM: 'Without a separate charge the measurement report is part of your examination; the calculator then shows the licence only.',
       traegt: (np, E) => `From ${np} rehab horse${np === 1 ? '' : 's'} with ${E} session${E === 1 ? '' : 's'} per week, the report income covers the monthly price.`, traegtNie: 'At this charge the report does not cover the licence in any tier; without a separate charge it is part of your rehab package.',
       grafikT: 'Licence and income by number of rehab horses', grafikTG: 'Licence by number of devices', lizenz: 'Licence (tiers)', einnahmen: 'Income from the report', pferde: 'Rehab horses in 30 days', geraeteAchse: 'Devices',
@@ -100,6 +100,17 @@
 .st-ein output{float:right;color:var(--text-primary,#f4f4f4);font-weight:700;font-variant-numeric:tabular-nums}
 .st-ein input[type=range]{width:100%;accent-color:#3ECFB2;min-height:32px}
 .st-r [hidden],.st-ein [hidden]{display:none!important}
+.st-haupt label{font-size:15px;color:var(--text-primary,#f4f4f4);font-weight:600}
+.st-haupt output{font-size:20px;color:#3ECFB2}
+.st-haupt input[type=range]{min-height:40px;accent-color:#3ECFB2}
+.st-gewinn{display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 18px;margin:6px 0 18px;padding:16px 20px;border-radius:16px;border:1px solid rgba(62,207,178,.4);background:linear-gradient(135deg,rgba(62,207,178,.16),rgba(62,207,178,.04))}
+.st-gewinn.minus{border-color:rgba(224,164,88,.45);background:rgba(224,164,88,.08)}
+.st-gewinn .gw-k{flex-basis:100%;font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--text-secondary,#b8bec4)}
+.st-gewinn .gw-m{font-size:16px;color:var(--text-secondary,#b8bec4)}.st-gewinn .gw-m b{font-size:clamp(34px,5vw,48px);font-weight:700;color:#3ECFB2;font-variant-numeric:tabular-nums;margin-right:4px}
+.st-gewinn.minus .gw-m b{color:#E0A458}
+.st-gewinn .gw-j{font-size:17px;font-weight:600;color:var(--text-primary,#f4f4f4);font-variant-numeric:tabular-nums}
+.st-neben{opacity:.92}.st-neben label{font-size:12.5px}
+
 .st-bz{float:right;display:inline-flex;align-items:center;gap:4px;color:var(--text-primary,#f4f4f4);font-weight:700}
 .st-bz input{width:84px;min-height:36px;padding:4px 8px;border-radius:10px;border:1px solid var(--border-subtle,rgba(255,255,255,.18));background:#0b0c0d;color:inherit;font:inherit;text-align:right}
 .st-erg{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1.9fr);gap:16px;align-items:stretch}
@@ -162,12 +173,14 @@
         <label><input type="checkbox" data-w="tour"${start === 'tour' ? ' checked' : ''}> ${esc(t.tour)}</label>
         <label><input type="checkbox" data-w="station"> ${esc(t.station)}</label>
         <label><input type="checkbox" data-w="reha"${start === 'reha' ? ' checked' : ''}> ${esc(t.rehaE)}</label></div>
-      <div class="st-ein">
-        <label>${esc(t.gerL)} <output data-o="ger"></output><input type="range" data-i="ger" min="1" max="12" value="${start === 'reha' ? 3 : 2}"></label>
+      <div class="st-ein st-haupt">
         <label data-nur="reha">${esc(t.pfL)} <output data-o="pf"></output><input type="range" data-i="pf" min="1" max="80" value="12"></label>
-        <label data-nur="reha">${esc(t.eL)} <output data-o="e"></output><input type="range" data-i="e" min="1" max="7" value="3"></label>
         <label data-nur="mess">${esc(t.pmL)} <output data-o="pm"></output><input type="range" data-i="pm" min="1" max="150" value="6"></label>
         <label><span data-nur="reha">${esc(t.bL)}</span><span data-nur="mess">${esc(t.bLM)}</span> <span class="st-bz">${EN ? "€" : ""}<input type="number" data-i="bz" min="0" max="500" step="0.5" value="${start === 'reha' ? 5 : 10}" inputmode="decimal" aria-label="${esc(t.bL)}">${EN ? "" : " €"}</span><input type="range" data-i="b" min="0" max="80" step="1" value="${start === 'reha' ? 10 : 20}"></label></div>
+      <div class="st-gewinn" aria-live="polite"></div>
+      <div class="st-ein st-neben">
+        <label data-nur="reha">${esc(t.eL)} <output data-o="e"></output><input type="range" data-i="e" min="1" max="7" value="3"></label>
+        <label>${esc(t.gerL)} <output data-o="ger"></output><input type="range" data-i="ger" min="1" max="12" value="${start === 'reha' ? 3 : 2}"></label></div>
       <div class="st-erg"><div class="st-wahl" aria-live="polite"></div><div class="st-graf"><p class="st-gt"></p><div class="st-svg"></div></div></div>
       <div class="st-zahlen" aria-live="polite"></div>
       <p class="st-satz"></p><p class="st-fuss">${esc(t.fuss)} <span>${esc(t.fussReha)}</span></p>`;
@@ -191,6 +204,9 @@
       el.querySelectorAll('[data-nur="reha"]').forEach(x => x.hidden = !b.reha); el.querySelectorAll('[data-nur="mess"]').forEach(x => x.hidden = b.reha); $('[data-i="bz"]').setAttribute('aria-label', b.reha ? t.bL : t.bLM); $('[data-i="b"]').setAttribute('aria-label', b.reha ? t.bL : t.bLM); $('[data-o="pm"]').textContent = b.pm;
       $('[data-o="ger"]').textContent = b.ger >= 12 ? t.gerMehr : b.ger; $('[data-o="pf"]').textContent = b.pf; $('[data-o="e"]').textContent = b.e;
       const s = passend(b); insPlus(b, s);
+      { const einheiten = b.reha ? Math.round(b.pf * b.e * 52 / 12) : b.pm, G = Math.round(einheiten * b.bet - s.p), vz = G >= 0 ? '+' : '−';
+        $('.st-gewinn').className = 'st-gewinn ' + (G >= 0 ? 'plus' : 'minus');
+        $('.st-gewinn').innerHTML = `<span class="gw-k">${esc(t.gwK)}</span><span class="gw-m"><b>${vz}${t.eu(Math.abs(G))}</b> ${esc(t.gwM)}</span><span class="gw-j">${vz}${t.eu(Math.abs(G * 12))} ${esc(t.gwJ)}</span>`; }
       // Grund: welche Anforderung bindet
       const gr = [];
       if (b.ger > 2 || s.ger === b.ger) gr.push(t.grundGer(b.ger >= 12 ? '12+' : b.ger));
@@ -240,12 +256,12 @@
       $('.st-svg').innerHTML = `<svg viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" role="img" aria-label="${esc((b.reha ? t.grafikT : t.grafikTG) + ': ' + t.name[s.k] + ' ' + t.eu(s.p))}">${g}${leg}</svg>`;
       if (b.reha) {
         const N = Math.round(b.pf * b.e * 52 / 12), U = N * b.bet, G = U - s.p;
-        $('.st-zahlen').innerHTML = `<div><span>${esc(t.einh)}</span><b>${t.zahl(N)}</b></div><div><span>${esc(t.jeEinh)}</span><b>${N ? t.eu(Math.round(s.p / N * 100) / 100) : '–'}</b></div><div><span>${esc(t.einn)}</span><b>${t.eu(Math.round(U))}</b></div><div class="${G >= 0 ? 'st-gut' : 'st-neg'}"><span>${esc(t.erg)}</span><b>${G >= 0 ? '+' : '−'}${t.eu(Math.abs(Math.round(G)))}</b></div>`;
+        $('.st-zahlen').innerHTML = `<div><span>${esc(t.einh)}</span><b>${t.zahl(N)}</b></div><div><span>${esc(t.einnJ)}</span><b>${t.eu(Math.round(U * 12))}</b></div><div><span>${esc(t.einn)}</span><b>${t.eu(Math.round(U))}</b></div><div class="${G >= 0 ? 'st-gut' : 'st-neg'}"><span>${esc(t.erg)}</span><b>${G >= 0 ? '+' : '−'}${t.eu(Math.abs(Math.round(G)))}</b></div>`;
         let np = 0; for (let p = 1; p <= 400; p++) { if (p * b.e * 52 / 12 * b.bet >= passend({ ...b, pf: p }).p) { np = p; break; } }
         $('.st-satz').textContent = b.bet > 0 && np ? t.traegt(np, b.e) : t.traegtNie;
       } else {   /* 21.11.2026 (Jan): Fahrpraxis/Praxis – Einnahmen aus dem Messwertbericht je Pferd; die Lizenz hängt hier an den Geräten, nicht an der Pferdezahl */
         const N = b.pm, U = N * b.bet, G = U - s.p, np = b.bet > 0 ? Math.ceil(s.p / b.bet) : 0;
-        $('.st-zahlen').innerHTML = `<div><span>${esc(t.einhM)}</span><b>${t.zahl(N)}</b></div><div><span>${esc(t.jeEinhM)}</span><b>${N ? t.eu(Math.round(s.p / N * 100) / 100) : '–'}</b></div><div><span>${esc(t.einn)}</span><b>${t.eu(Math.round(U))}</b></div><div class="${G >= 0 ? 'st-gut' : 'st-neg'}"><span>${esc(t.erg)}</span><b>${G >= 0 ? '+' : '−'}${t.eu(Math.abs(Math.round(G)))}</b></div>`;
+        $('.st-zahlen').innerHTML = `<div><span>${esc(t.einhM)}</span><b>${t.zahl(N)}</b></div><div><span>${esc(t.einnJ)}</span><b>${t.eu(Math.round(U * 12))}</b></div><div><span>${esc(t.einn)}</span><b>${t.eu(Math.round(U))}</b></div><div class="${G >= 0 ? 'st-gut' : 'st-neg'}"><span>${esc(t.erg)}</span><b>${G >= 0 ? '+' : '−'}${t.eu(Math.abs(Math.round(G)))}</b></div>`;
         $('.st-satz').textContent = np ? t.traegtM(np) : t.traegtNieM;
       }
     }
