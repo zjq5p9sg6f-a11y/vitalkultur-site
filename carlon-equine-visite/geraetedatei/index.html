@@ -1,6 +1,6 @@
 <!doctype html>
 <html lang="de"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Gerätedatei prüfen · CARLON Equine Visite</title>
+<title>Gerätedaten prüfen · CARLON Equine Visite</title>
 <meta name="description" content="Für Hersteller und Betreiber von Laufband, Aquatrainer und Führanlage: Steuerungsdatei hineinziehen und sehen, welche Stufen CARLON Equine Visite daraus übernimmt. Läuft lokal im Browser, nichts wird hochgeladen.">
 <link rel="icon" href="/favicon.ico">
 <style>
@@ -27,13 +27,14 @@ table{width:100%;border-collapse:collapse;font-size:14.5px}th,td{text-align:left
 select{background:#14171a;color:var(--t);border:1px solid var(--r);border-radius:8px;padding:5px 8px;font:inherit;font-size:14px}
 .raster{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}@media(max-width:820px){.raster{grid-template-columns:1fr}}
 .raster>div{border:1px solid var(--r);border-radius:16px;padding:16px 18px;background:var(--k)}.raster b{display:block;margin-bottom:6px}.raster span{color:var(--t2);font-size:15px}
+code{font-size:.92em;color:#d7dde1;background:#0b0d0f;border:1px solid var(--r);border-radius:6px;padding:1px 5px;word-break:break-all}
 pre{background:#0b0d0f;border:1px solid var(--r);border-radius:12px;padding:12px 14px;overflow-x:auto;font-size:12.5px;line-height:1.5;color:#d7dde1}
 ul{padding-left:20px}li{margin:4px 0;color:var(--t2)}li b{color:var(--t)}
 .fuss{margin-top:56px;padding-top:18px;border-top:1px solid var(--r);color:var(--t3);font-size:13.5px}.fuss a{color:var(--t2)}
 </style></head><body><div class="w">
 <div class="kopf"><a class="marke" href="/carlon-equine-visite/reha/">CARLON · EQUINE VISITE</a><a href="/carlon-equine-visite/reha/#hersteller">← Für Gerätehersteller</a></div>
 
-<div class="eb">Gerätedatei prüfen</div>
+<div class="eb">Gerätedaten · Datei und live</div>
 <h1>Ihre Steuerungsdatei, <em>in Visite übernommen.</em></h1>
 <p class="lead">Ziehen Sie eine Protokolldatei Ihres Laufbands, Aquatrainers oder Ihrer Führanlage hierher. Sie sehen sofort, welche Spalten Visite erkennt und welche Stufen daraus werden. Die Datei bleibt auf Ihrem Gerät; nichts wird hochgeladen.</p>
 
@@ -67,13 +68,29 @@ ul{padding-left:20px}li{margin:4px 0;color:var(--t2)}li b{color:var(--t)}
   <li>Andere Spaltennamen, Komma als Dezimaltrennzeichen, m/s, mph oder °F erkennt Visite ebenfalls.</li>
 </ul>
 
+<h2>Live in Echtzeit</h2>
+<p style="color:var(--t2);margin:0 0 12px">Gibt Ihre Steuerung oder ein Gateway die Werte laufend aus, übernimmt Visite sie während der Einheit und legt die Stufen selbst an, sobald neue Werte 30 Sekunden stehen. Eingerichtet wird in der Aufnahme unter „Live-Werte aus der Steuerung übernehmen“: Weg wählen, Adresse eintragen, „Verbinden und testen“. Die ankommenden Werte erscheinen sofort mit Vorschlag der Bedeutung; ein Tipp speichert das für das Gerät.</p>
+<div class="raster">
+  <div><b>Netzwerk-Adresse</b><span>Visite fragt jede Sekunde eine Adresse im Betriebsnetz ab, etwa <code>http://192.168.0.10/werte.json</code>. Die Antwort braucht den Kopf <code>Access-Control-Allow-Origin</code>.</span></div>
+  <div><b>MQTT</b><span>Die Steuerung sendet an einen Broker im Betrieb (LOGO! 8.4 kann allgemeine MQTT-Broker); Visite liest über WebSocket, etwa <code>ws://192.168.0.5:9001</code>, Thema frei wählbar.</span></div>
+  <div><b>Bluetooth</b><span>Ein Gateway mit CARLON-Profil 1.0: Dienst <code>c4a7a000-5e2d-4f1c-9b6a-0e1e9a5c0001</code>, Wert mit Benachrichtigung <code>c4a7a001-…0001</code>, Inhalt als Text.</span></div>
+</div>
+<pre>{"speed_kmh": 4.8, "incline_pct": 2.0, "water_depth_cm": 40, "water_temp_c": 18.5}
+speed_kmh=4.8;incline_pct=2.0;water_depth_cm=40;water_temp_c=18.5</pre>
+<ul>
+  <li>Beide Schreibweisen gehen, auch verschachteltes JSON und eigene Namen; die Zuordnung prüfen Sie beim Einrichten.</li>
+  <li>Visite sendet nichts an die Steuerung: über das Netz nur Abfragen, bei MQTT nur ein Abonnement, bei Bluetooth nur Benachrichtigungen.</li>
+  <li>Die Herzschläge zeichnet weiter der Gurt auf. Bricht die Live-Verbindung ab, bleibt die Aufnahme vollständig, und die Stufen lassen sich aus der Datei nachtragen.</li>
+</ul>
+<div class="raster" style="grid-template-columns:1fr;margin-top:14px"><div style="border-color:rgba(62,207,178,.45)"><b>Gemeinsam ermöglichen</b><span>Klappt die Anbindung Ihrer Steuerung nicht auf Anhieb oder haben Sie eine weitere Idee, etwa einen anderen Weg oder zusätzliche Werte, erarbeiten wir die Lösung gemeinsam mit Ihnen. Eine Beispieldatei oder ein kurzer Mitschnitt der Live-Werte genügt für den Anfang.</span></div></div>
+
 <h2>Siemens LOGO! und S7-1200</h2>
 <ul>
   <li><b>LOGO! 8</b>: Ein Datenlog-Funktionsblock schreibt CSV mit Zeitstempel auf die microSD-Karte; Werte im Abstand von einer Sekunde aufzeichnen (Siemens nennt mindestens 500 ms). Ab LOGO! 8.4 lässt sich der Datenlog über den eingebauten Webserver herunterladen.</li>
   <li><b>S7-1200</b>: DataLogCreate und DataLogWrite legen eine CSV an; der Download geht über den Webserver der Steuerung.</li>
   <li>Visite liest nur. Es steuert nichts und greift nicht in Not-Aus oder Sicherheitskette ein. Änderungen am Steuerungsprogramm verantwortet der Gerätehersteller.</li>
 </ul>
-<p style="margin-top:16px"><a class="knopf" href="mailto:jan@vitalkultur.com?subject=CARLON%20Ger%C3%A4tedatei%20%C2%B7%20Hersteller">Beispieldatei Ihrer Steuerung schicken</a></p>
+<p style="margin-top:16px"><a class="knopf" href="mailto:jan@vitalkultur.com?subject=CARLON%20Ger%C3%A4tedatei%20%C2%B7%20Hersteller">Beispieldatei oder Live-Mitschnitt schicken</a></p>
 
 <div class="fuss">CARLON Equine Visite · Vitalkultur, Iffezheim · <a href="/impressum.html">Impressum</a> · <a href="/privacy.html">Datenschutz</a> · Die Prüfung läuft vollständig in Ihrem Browser.</div>
 </div>

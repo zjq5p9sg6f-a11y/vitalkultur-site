@@ -2241,6 +2241,7 @@ header.k7 #tierPill,header.k7 .post-pill{display:none}
 <script src="hrv-vorstufe.js"></script>
 <script src="reha-kern.js"></script>
 <script src="steuerung.js?v=3"></script>
+<script src="steuerung-live.js?v=1"></script>
 <script>/* 21.11.2026 Muttersprachler-Review: „water treadmill“ ist der übliche englische Fachbegriff. Nur Anzeige in Visite; reha-kern.js (gemeinsam mit Equine) bleibt unverändert, Equine-Session informiert. */
 try{ if(window.RehaKern&&RehaKern.GERAETE&&RehaKern.GERAETE.aquatrainer) RehaKern.GERAETE.aquatrainer.en='Water treadmill'; }catch(_){}</script>
 <script src="h10-speicher.js"></script>
@@ -3499,7 +3500,7 @@ const RehaLive={
     let letzt=null; try{ const ss=Reha.sitzungen(hid).filter(s=>s.rec.reha.log.some(m=>m.device===art)); if(ss.length){ const l=ss[ss.length-1].rec.reha.log.filter(m=>m.device===art); letzt=l[0]; } }catch(_){ }
     const akt=Object.assign({device:art},this.START[art]||{},letzt?Object.fromEntries((RehaKern.GERAETE[art].felder||[]).filter(k=>letzt[k]!=null).map(k=>[k,letzt[k]])):{});
     this._letzt=letzt; Object.assign(this,{h,art,akt,rr:[],log:[],luecken:[],start:null,dev:null,hrNow:null,lastBeat:0,aktiv:true,wakelock:null,sp:null,spText:'',phase:''});
-    this.zeichnen();
+    this.zeichnen(); try{ if(typeof SteuerLiveUI!=='undefined') SteuerLiveUI.aufnahme(this); }catch(_){ }   /* 22.11.: Live-Werte aus der Steuerung, falls für dieses Gerät eingerichtet */
     try{
       const dienste=['heart_rate','battery_service']; if(typeof H10Speicher!=='undefined') dienste.push(H10Speicher.UUID.dienst);
       /* GURT JE PFERD (20.11.2026, größere Reha-Betriebe): der zuletzt an diesem Pferd benutzte Gurt steht allein im Dialog;
@@ -3821,6 +3822,9 @@ const RehaLive={
     const G=RehaKern.GERAETE[this.art], en=this.en();
     o.innerHTML=`<div class="rl-wrap"><div class="rl-top"><div><div class="eyebrow">${en?'Rehab session':'Reha-Sitzung'} · ${esc(en?G.en:G.de)}${this.dev&&this.dev.name?` · <span class="rl-gurt">${esc(this.dev.name.replace(/^Polar H10 /,'H10 '))}</span>`:''}</div><h2>${esc(this.h.name)}</h2></div><button class="btn ghost" data-rl="abbrechen">${this._sicher==='abbrechen'?(en?'Discard? Tap again':'Verwerfen? Nochmal tippen'):(en?'Cancel':'Abbrechen')}</button></div>
       <label class="rl-modell"><span>${en?'Device on the report':'Gerät im Bericht'}</span><input data-rl-modell value="${esc((State.settings.rehaModelle||{})[this.art]||'')}" placeholder="${en?'Manufacturer and model, e.g. from the type plate':'Hersteller und Modell, z. B. vom Typenschild'}" maxlength="60" style="min-width:0;max-width:100%;flex:1 1 auto"></label>
+      ${typeof SteuerLiveUI!=='undefined'?(()=>{ const p=SteuerLiveUI.profil(this.art), frisch=this._liveZeit&&Date.now()-this._liveZeit<5000;
+        return p?`<div class="rl-live" style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;font-size:13.5px;margin:6px 0"><span style="color:${frisch?'var(--cyan)':'var(--text-dim)'}">● ${frisch?(en?'Live values from the controller':'Live-Werte aus der Steuerung'):(en?'Waiting for controller values':'Warte auf Werte der Steuerung')}${this._liveFehler&&!frisch?' · '+esc(this._liveFehler):''}</span><button class="btn ghost" style="font-size:12.5px" onclick="SteuerLiveUI.einrichten('${this.art}')">${en?'Settings':'Einstellungen'}</button></div>`
+        :`<div class="rl-live" style="margin:6px 0"><button class="btn ghost" style="font-size:12.5px" onclick="SteuerLiveUI.einrichten('${this.art}')">${en?'Take live values from the controller':'Live-Werte aus der Steuerung übernehmen'}</button></div>`; })():''}
       <div id="rlKopf" class="rl-kopf"></div>
       ${this.start?'':`<div class="chip rl-gurtwahl" style="display:block;margin:10px 0">${this.h.gurt?(en?`Strap of this horse: <b>${esc(this.h.gurt)}</b>. Select it in the browser dialog.`:`Gurt dieses Pferds: <b>${esc(this.h.gurt)}</b>. Im Browser-Dialog auswählen.`):(en?'Choose the Polar H10 in the browser dialog. Recording starts as soon as it is connected.':'Polar H10 im Browser-Dialog wählen. Die Aufnahme startet, sobald er verbunden ist.')}${this.h.gurt?` <button class="btn ghost" data-rl="gurtfrei" style="margin-left:8px">${en?'Choose another strap':'Anderen Gurt wählen'}</button>`:''}</div>`}
       <div class="rl-felder">${G.felder.map(f=>{ const F=RehaKern.FELD[f];
@@ -3841,7 +3845,7 @@ const RehaLive={
       <section class="rl-hrv" id="rlHrv" aria-label="${en?'Live heart rate and HRV':'Live-Puls und HRV'}">${this._hrvHtml||''}</section></div>`;
     this.kopf(); if(!this._hrvHtml) this.hrvZeichnen(true); else this._pzEinsetzen();
   },
-  async fertig(){
+  async fertig(){ try{ if(typeof SteuerLiveUI!=='undefined') SteuerLiveUI.aufnahmeEnde(this); }catch(_){ }
     if(this.phase==='ernte') return;
     const live=this.rr.slice(); if(!this.start||(live.length<30&&!(this.sp&&this.sp.laeuft))){ Toast.show('Noch zu wenige Schläge für eine Sitzung','warn'); return; }
     if(!this.log.some(m=>m.device!=='keines')) this.log.unshift(Object.assign({},this.akt,{startSec:0}));
@@ -3895,7 +3899,7 @@ const RehaLive={
         <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:14px"><button class="btn primary" onclick="UI.closeModal();Reha.drucken('${hid}','${id}','klinik')">${en?'Session report for the record':'Sitzungsbericht für die Akte'}</button><button class="btn ghost" onclick="UI.closeModal();Reha.drucken('${hid}','${id}','halter')">${en?'Report for the owner':'Bericht für die Halterin'}</button><button class="btn ghost" onclick="UI.closeModal()">${en?'Later':'Später'}</button></div></div>`);
     }catch(_){ } },450);
   },
-  schliessen(){ this.aktiv=false; clearInterval(this._takt); try{ this.sp&&this.sp.client&&this.sp.client.trennen(); }catch(_){ } try{ this.dev&&this.dev.gatt&&this.dev.gatt.connected&&this.dev.gatt.disconnect(); }catch(_){ } try{ this.wakelock&&this.wakelock.release(); }catch(_){ }
+  schliessen(){ this.aktiv=false; clearInterval(this._takt); try{ if(typeof SteuerLiveUI!=='undefined') SteuerLiveUI.aufnahmeEnde(this); }catch(_){ } try{ this.sp&&this.sp.client&&this.sp.client.trennen(); }catch(_){ } try{ this.dev&&this.dev.gatt&&this.dev.gatt.connected&&this.dev.gatt.disconnect(); }catch(_){ } try{ this.wakelock&&this.wakelock.release(); }catch(_){ }
     const o=document.getElementById('rehaLive'); if(o) o.remove(); },
 };
 
