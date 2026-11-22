@@ -69,7 +69,7 @@ ul{padding-left:20px}li{margin:4px 0;color:var(--t2)}li b{color:var(--t)}
 </ul>
 
 <h2>Live in Echtzeit</h2>
-<p style="color:var(--t2);margin:0 0 12px">Gibt Ihre Steuerung oder ein Gateway die Werte laufend aus, übernimmt Visite sie während der Einheit und legt die Stufen selbst an, sobald neue Werte 30 Sekunden stehen. Eingerichtet wird in der Aufnahme unter „Live-Werte aus der Steuerung übernehmen“: Weg wählen, Adresse eintragen, „Verbinden und testen“. Die ankommenden Werte erscheinen sofort mit Vorschlag der Bedeutung; ein Tipp speichert das für das Gerät.</p>
+<p style="color:var(--t2);margin:0 0 12px">Gibt Ihre Steuerung oder ein Gateway die Werte laufend aus, etwa eine Siemens S7 über ihren Webserver oder eine LOGO! 8.4 über MQTT, übernimmt Visite sie während der Einheit und legt die Stufen selbst an, sobald neue Werte 30 Sekunden stehen. Eingerichtet wird in der Aufnahme unter „Live-Werte aus der Steuerung übernehmen“: Weg wählen, Adresse eintragen, „Verbinden und testen“. Die ankommenden Werte erscheinen sofort mit Vorschlag der Bedeutung; ein Tipp speichert das für das Gerät.</p>
 <div class="raster">
   <div><b>Netzwerk-Adresse</b><span>Visite fragt jede Sekunde eine Adresse im Betriebsnetz ab, etwa <code>http://192.168.0.10/werte.json</code>. Die Antwort braucht den Kopf <code>Access-Control-Allow-Origin</code>.</span></div>
   <div><b>MQTT</b><span>Die Steuerung sendet an einen Broker im Betrieb (LOGO! 8.4 kann allgemeine MQTT-Broker); Visite liest über WebSocket, etwa <code>ws://192.168.0.5:9001</code>, Thema frei wählbar.</span></div>
@@ -88,6 +88,8 @@ speed_kmh=4.8;incline_pct=2.0;water_depth_cm=40;water_temp_c=18.5</pre>
 <ul>
   <li><b>LOGO! 8</b>: Ein Datenlog-Funktionsblock schreibt CSV mit Zeitstempel auf die microSD-Karte; Werte im Abstand von einer Sekunde aufzeichnen (Siemens nennt mindestens 500 ms). Ab LOGO! 8.4 lässt sich der Datenlog über den eingebauten Webserver herunterladen.</li>
   <li><b>S7-1200</b>: DataLogCreate und DataLogWrite legen eine CSV an; der Download geht über den Webserver der Steuerung.</li>
+  <li><b>S7-1200 ab Firmware V4.5 und S7-1500 live</b>: Visite liest direkt über die Web-Schnittstelle der Steuerung (Anmeldung mit einem Benutzer, der nur lesen darf, dann die Variablen, etwa <code>"Laufband".Tempo</code>). Ein Gateway ist dafür nicht nötig.</li>
+  <li><b>LOGO! 8.4 live</b>: Die LOGO! sendet an einen MQTT-Broker im Betrieb; Visite liest das LOGO!-Format (state.reported) direkt. Sendet die Steuerung ganze Zahlen, etwa 48 für 4,8 km/h, stellen Sie beim Einrichten den Faktor 0,1 ein.</li>
   <li>Visite liest nur. Es steuert nichts und greift nicht in Not-Aus oder Sicherheitskette ein. Änderungen am Steuerungsprogramm verantwortet der Gerätehersteller.</li>
 </ul>
 <p style="margin-top:16px"><a class="knopf" href="mailto:jan@vitalkultur.com?subject=CARLON%20Ger%C3%A4tedatei%20%C2%B7%20Hersteller">Beispieldatei oder Live-Mitschnitt schicken</a></p>
