@@ -24,7 +24,7 @@
       zeilen: [['Akte, Mess-Link, Messwertbericht mit Ihrem Briefkopf', [1, 1, 1, 1, 1]], ['Stallrunde und Langzeit im Gurt', [1, 1, 1, 1, 1]], ['Team-Ordner mit täglicher Sicherung', [1, 1, 1, 1, 1]], ['Export JSON, CSV, Kubios, FHIR R5', [1, 1, 1, 1, 1]], ['Tourenplanung mit Maps-Übergabe, Wegegeld', [1, 1, 0, 1, 1]], ['Stationswand und Nachsorge', [0, 1, 0, 1, 1]], ['Reha-Aufnahme, Sitzungsbericht, Verlauf', [0, 0, 1, 1, 1]], ['Audit-Mappe und Gerätebuch zum Geräteeinsatz', [0, 0, 0, 0, 1]], ['Rückbericht an Überweiser, Forschungs-Export', [0, 0, 0, 0, 1]]],
       rTitel: 'Welche Stufe passt zu Ihrem Betrieb?', rLead: 'Wählen Sie, was Sie nutzen. Der Rechner wählt die niedrigste Stufe, die Ihre Auswahl abdeckt, und zeigt, wo die nächste beginnt.',
       nutzen: 'Was Sie nutzen', tour: 'Tourenplanung', station: 'Stationswand über Nacht', rehaE: 'Reha-Einheiten am Gerät',
-      gerL: 'Geräte mit Cockpit', gerMehr: 'mehr als 8', pfL: 'Reha-Pferde in 30 Tagen', eL: 'Einheiten je Pferd und Woche', bL: 'Ihr Betrag für den Sitzungsbericht je Einheit', pmL: 'Pferde mit Messwertbericht im Monat', bLM: 'Ihr Betrag für den Messwertbericht je Pferd',
+      gerL: 'Geräte mit Cockpit', gerMehr: 'mehr als 8', pfL: 'Reha-Pferde in 30 Tagen', eL: 'Einheiten je Pferd und Woche', bL: 'Ihr Betrag für den Sitzungsbericht je Einheit', pmL: 'Pferde mit Messwertbericht im Monat', bLM: 'Ihr Betrag je Auswertung (Messwertbericht, Fernberatung)',
       passt: 'Passende Stufe', imMonat: 'netto im Monat', weil: 'Warum diese Stufe', test: '14 Tage testen', zumAng: 'Stufe ansehen',
       grundBasis: 'Kleinste Stufe für Ihre Auswahl', grundGer: n => `${n} Geräte`, grundPf: n => `${n} Reha-Pferde in 30 Tagen`, grundTour: 'Tourenplanung', grundStation: 'Stationswand',
       naechste: (was, s, p) => `Nächster Sprung: ${was} → ${s} für ${p} im Monat.`, abPf: n => `ab ${n} Reha-Pferden`, abGer: n => `ab ${n} Geräten`, keinSprung: 'Darüber gibt es keine Grenze mehr.',
@@ -45,7 +45,7 @@
       zeilen: [['Records, measurement link, measurement report on your letterhead', [1, 1, 1, 1, 1]], ['Yard round and long-term recording in the strap', [1, 1, 1, 1, 1]], ['Team folder with daily backup', [1, 1, 1, 1, 1]], ['Export JSON, CSV, Kubios, FHIR R5', [1, 1, 1, 1, 1]], ['Tour planning with Maps hand-off, mileage', [1, 1, 0, 1, 1]], ['Ward display and aftercare', [0, 1, 0, 1, 1]], ['Rehab recording, session report, progress report', [0, 0, 1, 1, 1]], ['Audit file and equipment log', [0, 0, 0, 0, 1]], ['Report back to the referring vet, research export', [0, 0, 0, 0, 1]]],
       rTitel: 'Which tier suits your business?', rLead: 'Choose what you use. The calculator picks the lowest tier that covers your selection and shows where the next one starts.',
       nutzen: 'What you use', tour: 'Tour planning', station: 'Overnight ward display', rehaE: 'Rehab sessions at the equipment',
-      gerL: 'Devices with the cockpit', gerMehr: 'more than 8', pfL: 'Rehab horses in 30 days', eL: 'Sessions per horse per week', bL: 'Your charge for the session report', pmL: 'Horses with a measurement report per month', bLM: 'Your charge for the measurement report per horse',
+      gerL: 'Devices with the cockpit', gerMehr: 'more than 8', pfL: 'Rehab horses in 30 days', eL: 'Sessions per horse per week', bL: 'Your charge for the session report', pmL: 'Horses with a measurement report per month', bLM: 'Your fee per review (measurement report, remote consultation)',
       passt: 'Matching tier', imMonat: 'a month, excl. VAT', weil: 'Why this tier', test: 'Try for 14 days', zumAng: 'See tier',
       grundBasis: 'Smallest tier for your selection', grundGer: n => `${n} devices`, grundPf: n => `${n} rehab horses in 30 days`, grundTour: 'tour planning', grundStation: 'ward display',
       naechste: (was, s, p) => `Next step up: ${was} → ${s} at ${p} a month.`, abPf: n => `from ${n} rehab horses`, abGer: n => `from ${n} devices`, keinSprung: 'There is no further limit above this.',
@@ -167,12 +167,12 @@
         <label data-nur="reha">${esc(t.pfL)} <output data-o="pf"></output><input type="range" data-i="pf" min="1" max="80" value="12"></label>
         <label data-nur="reha">${esc(t.eL)} <output data-o="e"></output><input type="range" data-i="e" min="1" max="7" value="3"></label>
         <label data-nur="mess">${esc(t.pmL)} <output data-o="pm"></output><input type="range" data-i="pm" min="1" max="150" value="20"></label>
-        <label><span data-nur="reha">${esc(t.bL)}</span><span data-nur="mess">${esc(t.bLM)}</span> <span class="st-bz">${EN ? "€" : ""}<input type="number" data-i="bz" min="0" max="500" step="0.5" value="${start === 'reha' ? 5 : 10}" inputmode="decimal" aria-label="${esc(t.bL)}">${EN ? "" : " €"}</span><input type="range" data-i="b" min="0" max="60" step="1" value="${start === 'reha' ? 10 : 20}"></label></div>
+        <label><span data-nur="reha">${esc(t.bL)}</span><span data-nur="mess">${esc(t.bLM)}</span> <span class="st-bz">${EN ? "€" : ""}<input type="number" data-i="bz" min="0" max="500" step="0.5" value="${start === 'reha' ? 5 : 10}" inputmode="decimal" aria-label="${esc(t.bL)}">${EN ? "" : " €"}</span><input type="range" data-i="b" min="0" max="80" step="1" value="${start === 'reha' ? 10 : 20}"></label></div>
       <div class="st-erg"><div class="st-wahl" aria-live="polite"></div><div class="st-graf"><p class="st-gt"></p><div class="st-svg"></div></div></div>
       <div class="st-zahlen" aria-live="polite"></div>
       <p class="st-satz"></p><p class="st-fuss">${esc(t.fuss)} <span>${esc(t.fussReha)}</span></p>`;
     const $ = s => el.querySelector(s), wert = n => +$(`[data-i="${n}"]`).value, an = w => $(`[data-w="${w}"]`).checked;
-    const zuBetrag = v => v <= 20 ? v / 2 : v - 10, zuRegler = b => b <= 10 ? Math.round(b * 2) : Math.min(60, Math.round(b + 10));
+    const zuBetrag = v => v <= 20 ? v / 2 : v <= 60 ? v - 10 : 50 + (v - 60) * 5, zuRegler = b => b <= 10 ? Math.round(b * 2) : b <= 50 ? Math.round(b + 10) : Math.min(80, 60 + Math.round((b - 50) / 5));
     let bet = start === 'reha' ? 5 : 10, betSelbst = false, pmSelbst = false;
     /* 22.11.2026 (Jan): Solange der Kunde Betrag/Berichte nicht selbst verstellt, startet jede Stufe im Plus (≥ 30 % über dem Monatspreis)
        mit dem kleinsten plausiblen Betrag der Leiter; reicht 25 € nicht, steigt bei Praxen die Zahl der Berichte. Eigene Eingaben bleiben unangetastet. */
