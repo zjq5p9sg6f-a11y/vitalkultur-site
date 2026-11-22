@@ -61,10 +61,18 @@
   }
   function ble(cfg, onText, onFehler) {
     let geraet = null, aus = false; const dienst = (cfg.dienst || BLE.dienst).toLowerCase(), kenn = (cfg.kennlinie || BLE.wert).toLowerCase(), dec = new TextDecoder();
+    const warte = ms => new Promise(r => setTimeout(r, ms));
+    /* 22.11.2026 (Prüfstand): Verbinden scheitert gelegentlich beim ersten Versuch (Stick frisch gestartet, macOS hält alte Verbindung).
+       Darum bis zu 5 Versuche mit Zeitlimit, und nach jeder Trennung (Reichweite, Stromausfall am Gateway) von selbst neu verbinden. */
+    const verbinde = async () => { for (let v = 1; v <= 5 && !aus; v++) { try {
+        const srv = await Promise.race([geraet.gatt.connect(), warte(10000).then(() => { throw new Error('Zeitüberschreitung beim Verbinden'); })]);
+        const d = await srv.getPrimaryService(dienst), k = await d.getCharacteristic(kenn);
+        k.addEventListener('characteristicvaluechanged', e => { if (!aus) onText(dec.decode(e.target.value)); }); await k.startNotifications(); return;
+      } catch (e) { onFehler && onFehler((e.message || String(e)) + ' · Versuch ' + v); try { geraet.gatt.disconnect(); } catch (_) {} await warte(1000 * v); } } };
     (async () => { try {
       geraet = await navigator.bluetooth.requestDevice({ filters: [{ services: [dienst] }], optionalServices: [dienst] });
-      const srv = await geraet.gatt.connect(), d = await srv.getPrimaryService(dienst), k = await d.getCharacteristic(kenn);
-      k.addEventListener('characteristicvaluechanged', e => { if (!aus) onText(dec.decode(e.target.value)); }); await k.startNotifications();
+      geraet.addEventListener('gattserverdisconnected', () => { if (!aus) { onFehler && onFehler('Gateway getrennt, verbinde neu'); verbinde(); } });
+      await verbinde();
     } catch (e) { onFehler && onFehler(e.message || String(e)); } })();
     return () => { aus = true; try { geraet && geraet.gatt.connected && geraet.gatt.disconnect(); } catch (_) {} };
   }
