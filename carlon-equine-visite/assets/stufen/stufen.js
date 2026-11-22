@@ -24,16 +24,16 @@
       zeilen: [['Akte, Mess-Link, Messwertbericht mit Ihrem Briefkopf', [1, 1, 1, 1, 1]], ['Stallrunde und Langzeit im Gurt', [1, 1, 1, 1, 1]], ['Team-Ordner mit täglicher Sicherung', [1, 1, 1, 1, 1]], ['Export JSON, CSV, Kubios, FHIR R5', [1, 1, 1, 1, 1]], ['Tourenplanung mit Maps-Übergabe, Wegegeld', [1, 1, 0, 1, 1]], ['Stationswand und Nachsorge', [0, 1, 0, 1, 1]], ['Reha-Aufnahme, Sitzungsbericht, Verlauf', [0, 0, 1, 1, 1]], ['Audit-Mappe und Gerätebuch zum Geräteeinsatz', [0, 0, 0, 0, 1]], ['Rückbericht an Überweiser, Forschungs-Export', [0, 0, 0, 0, 1]]],
       rTitel: 'Welche Stufe passt zu Ihrem Betrieb?', rLead: 'Wählen Sie, was Sie nutzen. Der Rechner wählt die niedrigste Stufe, die Ihre Auswahl abdeckt, und zeigt, wo die nächste beginnt.',
       nutzen: 'Was Sie nutzen', tour: 'Tourenplanung', station: 'Stationswand über Nacht', rehaE: 'Reha-Einheiten am Gerät',
-      gerL: 'Geräte mit Cockpit', gerMehr: '12 oder mehr', pfL: 'Reha-Pferde in 30 Tagen', eL: 'Einheiten je Pferd und Woche', bL: 'Ihr Betrag für den Sitzungsbericht je Einheit', pmL: 'Pferde mit Messwertbericht im Monat', bLM: 'Ihr Betrag je Auswertung (Messwertbericht, Fernberatung)',
+      gerL: 'Geräte mit Cockpit', gerMehr: '12 oder mehr', pfL: 'Reha-Pferde in 30 Tagen', artL: 'So rechnen Sie ab', artMon: 'Aufschlag je Pferd und Monat', artAbs: 'Je Abschlussbericht', dL: 'Reha-Dauer je Pferd in Wochen', bL: 'Ihr Aufschlag für die Dokumentation je Reha-Pferd und Monat', bLA: 'Ihr Betrag je Abschlussbericht', pmL: 'Pferde mit Messwertbericht im Monat', bLM: 'Ihr Betrag je Auswertung (Messwertbericht, Fernberatung)',
       passt: 'Passende Stufe', imMonat: 'netto im Monat', weil: 'Warum diese Stufe', test: '14 Tage testen', zumAng: 'Stufe ansehen',
       grundBasis: 'Kleinste Stufe für Ihre Auswahl', grundGer: n => `${n} Geräte`, grundPf: n => `${n} Reha-Pferde in 30 Tagen`, grundTour: 'Tourenplanung', grundStation: 'Stationswand',
       naechste: (was, s, p) => `Nächster Sprung: ${was} → ${s} für ${p} im Monat.`, abPf: n => `ab ${n} Reha-Pferden`, abGer: n => `ab ${n} Geräten`, keinSprung: 'Darüber gibt es keine Grenze mehr.',
-      gwK: 'Ihr Ergebnis nach Lizenz', einnJ: 'Einnahmen im Jahr', gwM: 'im Monat', gwJ: 'im Jahr', einh: 'Einheiten im Monat', jeEinh: 'Lizenz je Einheit', einn: 'Einnahmen aus dem Bericht', erg: 'Ergebnis im Monat', einhM: 'Berichte im Monat', jeEinhM: 'Lizenz je Bericht',
+      gwK: 'Ihr Ergebnis nach Lizenz', einnJ: 'Einnahmen im Jahr', gwM: 'im Monat', gwJ: 'im Jahr', einh: 'Reha-Pferde im Monat', einhA: 'Abschlussberichte im Monat', jeEinh: 'Lizenz je Einheit', einn: 'Einnahmen aus der Dokumentation', erg: 'Ergebnis im Monat', einhM: 'Berichte im Monat', jeEinhM: 'Lizenz je Bericht',
       traegtM: n => `Ab ${n} Messwertbericht${n === 1 ? '' : 'en'} im Monat decken die Einnahmen aus dem Bericht den Monatspreis.`, traegtNieM: 'Ohne eigenen Betrag gehört der Messwertbericht zu Ihrer Untersuchung; der Rechner zeigt dann nur die Lizenz.',
-      traegt: (np, E) => `Ab ${np} Reha-Pferd${np === 1 ? '' : 'en'} mit ${E} Einheit${E === 1 ? '' : 'en'} je Woche decken die Einnahmen aus dem Bericht den Monatspreis.`, traegtNie: 'Mit diesem Betrag trägt der Bericht die Lizenz in keiner Stufe; ohne eigenen Betrag gehört er zu Ihrem Reha-Paket.',
-      grafikT: 'Lizenz und Einnahmen nach Zahl der Reha-Pferde', grafikTG: 'Lizenz nach Zahl der Geräte', lizenz: 'Lizenz (Stufen)', einnahmen: 'Einnahmen aus dem Bericht', pferde: 'Reha-Pferde in 30 Tagen', geraeteAchse: 'Geräte',
+      traegt: (np, A) => `Ab ${np} Reha-Pferd${np === 1 ? '' : 'en'} im Monat decken die Einnahmen aus der Dokumentation den Monatspreis${A ? ' (ein Abschlussbericht je Reha)' : ''}.`, traegtNie: 'Mit diesem Betrag trägt die Dokumentation die Lizenz in keiner Stufe; ohne eigenen Betrag gehört sie zu Ihrem Reha-Paket.',
+      grafikT: 'Lizenz und Einnahmen nach Zahl der Reha-Pferde', grafikTG: 'Lizenz nach Zahl der Geräte', lizenz: 'Lizenz (Stufen)', einnahmen: 'Einnahmen aus der Dokumentation', pferde: 'Reha-Pferde in 30 Tagen', geraeteAchse: 'Geräte',
       fuss: 'Preise netto. Grenzen je Stufe wie in der Tabelle; über einer Grenze wechseln Sie unter „Abo verwalten“ selbst in die nächste Stufe.',
-      fussReha: 'Beispielrechnung ohne Sensoren (einmalig, Fachhandel). Ob und wie Sie den Bericht berechnen, entscheiden Sie; für tierärztliche Leistungen gelten die Gebührenregeln Ihres Landes.',
+      fussReha: 'Beispielrechnung ohne Sensoren (einmalig, Fachhandel). Stationäre Reha-Pakete liegen häufig über 1.300 € je Pferd und Monat; der Startwert ist ein Beispiel. Ob und wie Sie die Dokumentation berechnen, entscheiden Sie; für tierärztliche Leistungen gelten die Gebührenregeln Ihres Landes.',
       eu: v => v.toLocaleString('de-DE', { minimumFractionDigits: v % 1 ? 2 : 0, maximumFractionDigits: 2 }) + ' €', zahl: v => v.toLocaleString('de-DE')
     },
     en: {
@@ -45,16 +45,16 @@
       zeilen: [['Records, measurement link, measurement report on your letterhead', [1, 1, 1, 1, 1]], ['Yard round and long-term recording in the strap', [1, 1, 1, 1, 1]], ['Team folder with daily backup', [1, 1, 1, 1, 1]], ['Export JSON, CSV, Kubios, FHIR R5', [1, 1, 1, 1, 1]], ['Tour planning with Maps hand-off, mileage', [1, 1, 0, 1, 1]], ['Ward display and aftercare', [0, 1, 0, 1, 1]], ['Rehab recording, session report, progress report', [0, 0, 1, 1, 1]], ['Audit file and equipment log', [0, 0, 0, 0, 1]], ['Report back to the referring vet, research export', [0, 0, 0, 0, 1]]],
       rTitel: 'Which tier suits your business?', rLead: 'Choose what you use. The calculator picks the lowest tier that covers your selection and shows where the next one starts.',
       nutzen: 'What you use', tour: 'Tour planning', station: 'Overnight ward display', rehaE: 'Rehab sessions at the equipment',
-      gerL: 'Devices with the cockpit', gerMehr: '12 or more', pfL: 'Rehab horses in 30 days', eL: 'Sessions per horse per week', bL: 'Your charge for the session report', pmL: 'Horses with a measurement report per month', bLM: 'Your fee per review (measurement report, remote consultation)',
+      gerL: 'Devices with the cockpit', gerMehr: '12 or more', pfL: 'Rehab horses in 30 days', artL: 'How you charge', artMon: 'Surcharge per horse per month', artAbs: 'Per final report', dL: 'Rehab stay per horse in weeks', bL: 'Your documentation surcharge per rehab horse per month', bLA: 'Your charge per final report', pmL: 'Horses with a measurement report per month', bLM: 'Your fee per review (measurement report, remote consultation)',
       passt: 'Matching tier', imMonat: 'a month, excl. VAT', weil: 'Why this tier', test: 'Try for 14 days', zumAng: 'See tier',
       grundBasis: 'Smallest tier for your selection', grundGer: n => `${n} devices`, grundPf: n => `${n} rehab horses in 30 days`, grundTour: 'tour planning', grundStation: 'ward display',
       naechste: (was, s, p) => `Next step up: ${was} → ${s} at ${p} a month.`, abPf: n => `from ${n} rehab horses`, abGer: n => `from ${n} devices`, keinSprung: 'There is no further limit above this.',
-      gwK: 'Your result after the licence', einnJ: 'Income per year', gwM: 'a month', gwJ: 'a year', einh: 'Sessions per month', jeEinh: 'Licence per session', einn: 'Income from the report', erg: 'Monthly balance', einhM: 'Reports per month', jeEinhM: 'Licence per report',
+      gwK: 'Your result after the licence', einnJ: 'Income per year', gwM: 'a month', gwJ: 'a year', einh: 'Rehab horses per month', einhA: 'Final reports per month', jeEinh: 'Licence per session', einn: 'Income from documentation', erg: 'Monthly balance', einhM: 'Reports per month', jeEinhM: 'Licence per report',
       traegtM: n => `From ${n} measurement report${n === 1 ? '' : 's'} a month, the report income covers the monthly price.`, traegtNieM: 'Without a separate charge the measurement report is part of your examination; the calculator then shows the licence only.',
-      traegt: (np, E) => `From ${np} rehab horse${np === 1 ? '' : 's'} with ${E} session${E === 1 ? '' : 's'} per week, the report income covers the monthly price.`, traegtNie: 'At this charge the report does not cover the licence in any tier; without a separate charge it is part of your rehab package.',
-      grafikT: 'Licence and income by number of rehab horses', grafikTG: 'Licence by number of devices', lizenz: 'Licence (tiers)', einnahmen: 'Income from the report', pferde: 'Rehab horses in 30 days', geraeteAchse: 'Devices',
+      traegt: (np, A) => `From ${np} rehab horse${np === 1 ? '' : 's'} a month, the documentation income covers the monthly price${A ? ' (one final report per stay)' : ''}.`, traegtNie: 'At this charge the documentation does not cover the licence in any tier; without a separate charge it is part of your rehab package.',
+      grafikT: 'Licence and income by number of rehab horses', grafikTG: 'Licence by number of devices', lizenz: 'Licence (tiers)', einnahmen: 'Income from documentation', pferde: 'Rehab horses in 30 days', geraeteAchse: 'Devices',
       fuss: 'Prices excl. VAT. Limits per tier as in the table; above a limit you switch to the next tier yourself under “Manage subscription”.',
-      fussReha: 'Example calculation without sensors (one-off purchase from specialist retailers). Whether and how you charge for the report is your decision; veterinary fees follow the rules of your country.',
+      fussReha: 'Example calculation without sensors (one-off purchase from specialist retailers). Inpatient rehab packages are often above €1,300 per horse per month; the starting value is an example. Whether and how you charge for documentation is your decision; veterinary fees follow the rules of your country.',
       eu: v => '€' + v.toLocaleString('en-GB', { minimumFractionDigits: v % 1 ? 2 : 0, maximumFractionDigits: 2 }), zahl: v => v.toLocaleString('en-GB')
     }
   };
@@ -100,6 +100,10 @@
 .st-ein output{float:right;color:var(--text-primary,#f4f4f4);font-weight:700;font-variant-numeric:tabular-nums}
 .st-ein input[type=range]{width:100%;accent-color:#3ECFB2;min-height:32px}
 .st-r [hidden],.st-ein [hidden]{display:none!important}
+.st-art{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 4px}
+.st-art label{display:inline-flex!important;align-items:center;gap:8px;padding:8px 14px;border:1px solid var(--border-subtle,rgba(255,255,255,.18));border-radius:999px;cursor:pointer;font-size:14px;min-height:40px}
+.st-art label:has(input:checked){border-color:rgba(62,207,178,.7);background:rgba(62,207,178,.1);color:var(--text-primary,#f4f4f4)}
+.st-art input{accent-color:#3ECFB2;margin:0}
 .st-haupt label{font-size:15px;color:var(--text-primary,#f4f4f4);font-weight:600}
 .st-haupt output{font-size:20px;color:#3ECFB2}
 .st-haupt input[type=range]{min-height:40px;accent-color:#3ECFB2}
@@ -176,35 +180,41 @@
       <div class="st-ein st-haupt">
         <label data-nur="reha">${esc(t.pfL)} <output data-o="pf"></output><input type="range" data-i="pf" min="1" max="80" value="12"></label>
         <label data-nur="mess">${esc(t.pmL)} <output data-o="pm"></output><input type="range" data-i="pm" min="1" max="150" value="6"></label>
-        <label><span data-nur="reha">${esc(t.bL)}</span><span data-nur="mess">${esc(t.bLM)}</span> <span class="st-bz">${EN ? "€" : ""}<input type="number" data-i="bz" min="0" max="500" step="0.5" value="${start === 'reha' ? 5 : 10}" inputmode="decimal" aria-label="${esc(t.bL)}">${EN ? "" : " €"}</span><input type="range" data-i="b" min="0" max="80" step="1" value="${start === 'reha' ? 10 : 20}"></label></div>
+        <div class="st-art" data-nur="reha" role="radiogroup" aria-label="${esc(t.artL)}"><label><input type="radio" name="${id}a" data-art="mon" checked> ${esc(t.artMon)}</label><label><input type="radio" name="${id}a" data-art="abs"> ${esc(t.artAbs)}</label></div>
+        <label><span data-nur="mon">${esc(t.bL)}</span><span data-nur="abs">${esc(t.bLA)}</span><span data-nur="mess">${esc(t.bLM)}</span> <span class="st-bz">${EN ? "€" : ""}<input type="number" data-i="bz" min="0" max="500" step="0.5" value="${start === 'reha' ? 50 : 10}" inputmode="decimal" aria-label="${esc(t.bL)}">${EN ? "" : " €"}</span><input type="range" data-i="b" min="0" max="80" step="1" value="${start === 'reha' ? 40 : 20}"></label></div>
       <div class="st-gewinn" aria-live="polite"></div>
       <div class="st-ein st-neben">
-        <label data-nur="reha">${esc(t.eL)} <output data-o="e"></output><input type="range" data-i="e" min="1" max="7" value="3"></label>
+        <label data-nur="abs">${esc(t.dL)} <output data-o="d"></output><input type="range" data-i="d" min="1" max="16" value="4"></label>
         <label>${esc(t.gerL)} <output data-o="ger"></output><input type="range" data-i="ger" min="1" max="12" value="${start === 'reha' ? 3 : 2}"></label></div>
       <div class="st-erg"><div class="st-wahl" aria-live="polite"></div><div class="st-graf"><p class="st-gt"></p><div class="st-svg"></div></div></div>
       <div class="st-zahlen" aria-live="polite"></div>
       <p class="st-satz"></p><p class="st-fuss">${esc(t.fuss)} <span>${esc(t.fussReha)}</span></p>`;
     const $ = s => el.querySelector(s), wert = n => +$(`[data-i="${n}"]`).value, an = w => $(`[data-w="${w}"]`).checked;
     const zuBetrag = v => v <= 20 ? v / 2 : v <= 60 ? v - 10 : 50 + (v - 60) * 5, zuRegler = b => b <= 10 ? Math.round(b * 2) : b <= 50 ? Math.round(b + 10) : Math.min(80, 60 + Math.round((b - 50) / 5));
-    let bet = start === 'reha' ? 5 : 10, betSelbst = false, pmSelbst = false;
+    let bet = start === 'reha' ? 50 : 10, betSelbst = false, pmSelbst = false;
     /* 22.11.2026 (Jan): Solange der Kunde Betrag/Berichte nicht selbst verstellt, startet jede Stufe im Plus (≥ 30 % über dem Monatspreis)
        mit dem kleinsten plausiblen Betrag der Leiter; reicht 25 € nicht, steigt bei Praxen die Zahl der Berichte. Eigene Eingaben bleiben unangetastet. */
-    const LEITER = [5, 7.5, 10, 12.5, 15, 20, 25], LEITER_MESS = [50, 60, 75, 90, 100, 120, 150];   // Reha je Sitzung klein; Praxis je Auswertung/Fernberatung ab 50 € (Jan 22.11.)
+    const LEITER = { mon: [30, 40, 50, 60, 75], abs: [50, 60, 75, 90, 100, 120, 150] }, LEITER_MESS = [50, 60, 75, 90, 100, 120, 150];   // Praxis je Auswertung/Fernberatung ab 50 € (Jan 22.11.)
+    /* 22.11.2026 (Jan + Perplexity-Recherche, Anbieterpreise geprüft): Reha-Betriebe verkaufen Monats- oder Wochenpakete (stationär oft > 1.300 € je Pferd und Monat),
+       Berichte stecken im Paket; einen Marktpreis je Abschlussbericht gibt es nicht. Darum zwei Abrechnungsarten statt „je Sitzung“:
+       mon = Aufschlag je Reha-Pferd und Monat · abs = ein Abschlussbericht je Reha, Abschlüsse/Monat = Pferde × min(1, 4,35 / Dauer in Wochen). */
+    const ART = () => (el.querySelector('[data-art="abs"]') || {}).checked ? 'abs' : 'mon';
+    const zahlA = (b, pf) => b.art === 'abs' ? pf * Math.min(1, 4.35 / b.dauer) : pf, ein = (b, pf) => zahlA(b, pf) * b.bet;
     const PM = { fahrpraxis: 6, praxis: 12, reha: 6, kombi: 15, center: 20 };   // Auswertungen im Monat zum Start: wenige, realistisch (Jan 22.11.)
     const insPlus = (b, s) => { if (!b.reha && !pmSelbst) { b.pm = PM[s.k] || 20; $('[data-i="pm"]').value = b.pm; $('[data-o="pm"]').textContent = b.pm; }
-      const einheiten = b.reha ? Math.round(b.pf * b.e * 52 / 12) : b.pm, ziel = s.p * 1.6;
-      if (!betSelbst) { const L = b.reha ? LEITER : LEITER_MESS; const g = L.find(x => einheiten * x >= ziel); bet = g != null ? g : L[L.length - 1]; b.bet = bet; $('[data-i="bz"]').value = bet; $('[data-i="b"]').value = zuRegler(bet); }
+      const einheiten = b.reha ? zahlA(b, b.pf) : b.pm, ziel = s.p * 1.6;
+      if (!betSelbst) { const L = b.reha ? LEITER[b.art] : LEITER_MESS; const g = L.find(x => einheiten * x >= ziel); bet = g != null ? g : L[L.length - 1]; b.bet = bet; $('[data-i="bz"]').value = bet; $('[data-i="b"]').value = zuRegler(bet); }
       if (!b.reha && !pmSelbst && b.pm * b.bet < ziel) { const pm = Math.min(150, Math.ceil(ziel / b.bet)); b.pm = pm; $('[data-i="pm"]').value = pm; $('[data-o="pm"]').textContent = pm; } };
     el.addEventListener('input', ev => { const d = ev.target && ev.target.dataset && ev.target.dataset.i;
-      if (d === 'b' || d === 'bz') betSelbst = true; if (d === 'pm') pmSelbst = true;
+      if (d === 'b' || d === 'bz') betSelbst = true; if (d === 'pm') pmSelbst = true; if (ev.target && ev.target.dataset && ev.target.dataset.art) betSelbst = false;
       if (d === 'b') { bet = zuBetrag(+ev.target.value); $('[data-i="bz"]').value = bet; }
       if (d === 'bz') { const v = parseFloat(String(ev.target.value).replace(',', '.')); bet = isFinite(v) && v >= 0 ? v : 0; $('[data-i="b"]').value = zuRegler(bet); } }, true);
     function r() {
-      const b = { tour: an('tour'), station: an('station'), reha: an('reha'), ger: wert('ger'), pf: wert('pf'), e: wert('e'), pm: wert('pm'), bet };
-      el.querySelectorAll('[data-nur="reha"]').forEach(x => x.hidden = !b.reha); el.querySelectorAll('[data-nur="mess"]').forEach(x => x.hidden = b.reha); $('[data-i="bz"]').setAttribute('aria-label', b.reha ? t.bL : t.bLM); $('[data-i="b"]').setAttribute('aria-label', b.reha ? t.bL : t.bLM); $('[data-o="pm"]').textContent = b.pm;
-      $('[data-o="ger"]').textContent = b.ger >= 12 ? t.gerMehr : b.ger; $('[data-o="pf"]').textContent = b.pf; $('[data-o="e"]').textContent = b.e;
+      const b = { tour: an('tour'), station: an('station'), reha: an('reha'), ger: wert('ger'), pf: wert('pf'), dauer: wert('d'), art: ART(), pm: wert('pm'), bet };
+      el.querySelectorAll('[data-nur="reha"]').forEach(x => x.hidden = !b.reha); el.querySelectorAll('[data-nur="mon"]').forEach(x => x.hidden = !b.reha || b.art !== 'mon'); el.querySelectorAll('[data-nur="abs"]').forEach(x => x.hidden = !b.reha || b.art !== 'abs'); el.querySelectorAll('[data-nur="mess"]').forEach(x => x.hidden = b.reha); const bl = b.reha ? (b.art === 'abs' ? t.bLA : t.bL) : t.bLM; $('[data-i="bz"]').setAttribute('aria-label', bl); $('[data-i="b"]').setAttribute('aria-label', bl); $('[data-o="pm"]').textContent = b.pm;
+      $('[data-o="ger"]').textContent = b.ger >= 12 ? t.gerMehr : b.ger; $('[data-o="pf"]').textContent = b.pf; $('[data-o="d"]').textContent = b.dauer;
       const s = passend(b); insPlus(b, s);
-      { const einheiten = b.reha ? Math.round(b.pf * b.e * 52 / 12) : b.pm, G = Math.round(einheiten * b.bet - s.p), vz = G >= 0 ? '+' : '−';
+      { const G = Math.round((b.reha ? ein(b, b.pf) : b.pm * b.bet) - s.p), vz = G >= 0 ? '+' : '−';
         $('.st-gewinn').className = 'st-gewinn ' + (G >= 0 ? 'plus' : 'minus');
         $('.st-gewinn').innerHTML = `<span class="gw-k">${esc(t.gwK)}</span><span class="gw-m"><b>${vz}${t.eu(Math.abs(G))}</b> ${esc(t.gwM)}</span><span class="gw-j">${vz}${t.eu(Math.abs(G * 12))} ${esc(t.gwJ)}</span>`; }
       // Grund: welche Anforderung bindet
@@ -228,7 +238,7 @@
       if (b.reha) {
         xmax = 80; xs = Array.from({ length: xmax }, (_, i) => i + 1);
         lic = xs.map(p => passend({ ...b, pf: p }).p);
-        inc = xs.map(p => p * b.e * 52 / 12 * b.bet); xlab = t.pferde; $('.st-gt').textContent = t.grafikT;
+        inc = xs.map(p => ein(b, p)); xlab = t.pferde; $('.st-gt').textContent = t.grafikT;
       } else {
         xmax = 12; xs = Array.from({ length: xmax }, (_, i) => i + 1);
         lic = xs.map(n => passend({ ...b, ger: n }).p); xlab = t.geraeteAchse; $('.st-gt').textContent = t.grafikTG;
@@ -255,10 +265,10 @@
       const leg = `<g font-size="10.5"><rect x="${pl + 6}" y="${eng ? pt - 30 : pt - 14}" width="12" height="3" fill="#3ECFB2"/><text x="${pl + 22}" y="${eng ? pt - 26 : pt - 10}" fill="#cfd5da">${esc(t.lizenz)}</text>${inc ? `<rect x="${eng ? pl + 6 : pl + 130}" y="${eng ? pt - 30 + 14 : pt - 14}" width="12" height="3" fill="#F2C46B"/><text x="${eng ? pl + 22 : pl + 146}" y="${eng ? pt - 26 + 14 : pt - 10}" fill="#cfd5da">${esc(t.einnahmen)}</text>` : ''}</g>`;
       $('.st-svg').innerHTML = `<svg viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" role="img" aria-label="${esc((b.reha ? t.grafikT : t.grafikTG) + ': ' + t.name[s.k] + ' ' + t.eu(s.p))}">${g}${leg}</svg>`;
       if (b.reha) {
-        const N = Math.round(b.pf * b.e * 52 / 12), U = N * b.bet, G = U - s.p;
-        $('.st-zahlen').innerHTML = `<div><span>${esc(t.einh)}</span><b>${t.zahl(N)}</b></div><div><span>${esc(t.einnJ)}</span><b>${t.eu(Math.round(U * 12))}</b></div><div><span>${esc(t.einn)}</span><b>${t.eu(Math.round(U))}</b></div><div class="${G >= 0 ? 'st-gut' : 'st-neg'}"><span>${esc(t.erg)}</span><b>${G >= 0 ? '+' : '−'}${t.eu(Math.abs(Math.round(G)))}</b></div>`;
-        let np = 0; for (let p = 1; p <= 400; p++) { if (p * b.e * 52 / 12 * b.bet >= passend({ ...b, pf: p }).p) { np = p; break; } }
-        $('.st-satz').textContent = b.bet > 0 && np ? t.traegt(np, b.e) : t.traegtNie;
+        const N = Math.round(zahlA(b, b.pf)), U = ein(b, b.pf), G = U - s.p;
+        $('.st-zahlen').innerHTML = `<div><span>${esc(b.art === 'abs' ? t.einhA : t.einh)}</span><b>${t.zahl(N)}</b></div><div><span>${esc(t.einnJ)}</span><b>${t.eu(Math.round(U * 12))}</b></div><div><span>${esc(t.einn)}</span><b>${t.eu(Math.round(U))}</b></div><div class="${G >= 0 ? 'st-gut' : 'st-neg'}"><span>${esc(t.erg)}</span><b>${G >= 0 ? '+' : '−'}${t.eu(Math.abs(Math.round(G)))}</b></div>`;
+        let np = 0; for (let p = 1; p <= 400; p++) { if (ein(b, p) >= passend({ ...b, pf: p }).p) { np = p; break; } }
+        $('.st-satz').textContent = b.bet > 0 && np ? t.traegt(np, b.art === 'abs') : t.traegtNie;
       } else {   /* 21.11.2026 (Jan): Fahrpraxis/Praxis – Einnahmen aus dem Messwertbericht je Pferd; die Lizenz hängt hier an den Geräten, nicht an der Pferdezahl */
         const N = b.pm, U = N * b.bet, G = U - s.p, np = b.bet > 0 ? Math.ceil(s.p / b.bet) : 0;
         $('.st-zahlen').innerHTML = `<div><span>${esc(t.einhM)}</span><b>${t.zahl(N)}</b></div><div><span>${esc(t.einnJ)}</span><b>${t.eu(Math.round(U * 12))}</b></div><div><span>${esc(t.einn)}</span><b>${t.eu(Math.round(U))}</b></div><div class="${G >= 0 ? 'st-gut' : 'st-neg'}"><span>${esc(t.erg)}</span><b>${G >= 0 ? '+' : '−'}${t.eu(Math.abs(Math.round(G)))}</b></div>`;
