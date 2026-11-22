@@ -166,7 +166,7 @@
         <label>${esc(t.gerL)} <output data-o="ger"></output><input type="range" data-i="ger" min="1" max="12" value="${start === 'reha' ? 3 : 2}"></label>
         <label data-nur="reha">${esc(t.pfL)} <output data-o="pf"></output><input type="range" data-i="pf" min="1" max="80" value="12"></label>
         <label data-nur="reha">${esc(t.eL)} <output data-o="e"></output><input type="range" data-i="e" min="1" max="7" value="3"></label>
-        <label data-nur="mess">${esc(t.pmL)} <output data-o="pm"></output><input type="range" data-i="pm" min="1" max="150" value="20"></label>
+        <label data-nur="mess">${esc(t.pmL)} <output data-o="pm"></output><input type="range" data-i="pm" min="1" max="150" value="6"></label>
         <label><span data-nur="reha">${esc(t.bL)}</span><span data-nur="mess">${esc(t.bLM)}</span> <span class="st-bz">${EN ? "€" : ""}<input type="number" data-i="bz" min="0" max="500" step="0.5" value="${start === 'reha' ? 5 : 10}" inputmode="decimal" aria-label="${esc(t.bL)}">${EN ? "" : " €"}</span><input type="range" data-i="b" min="0" max="80" step="1" value="${start === 'reha' ? 10 : 20}"></label></div>
       <div class="st-erg"><div class="st-wahl" aria-live="polite"></div><div class="st-graf"><p class="st-gt"></p><div class="st-svg"></div></div></div>
       <div class="st-zahlen" aria-live="polite"></div>
@@ -176,11 +176,11 @@
     let bet = start === 'reha' ? 5 : 10, betSelbst = false, pmSelbst = false;
     /* 22.11.2026 (Jan): Solange der Kunde Betrag/Berichte nicht selbst verstellt, startet jede Stufe im Plus (≥ 30 % über dem Monatspreis)
        mit dem kleinsten plausiblen Betrag der Leiter; reicht 25 € nicht, steigt bei Praxen die Zahl der Berichte. Eigene Eingaben bleiben unangetastet. */
-    const LEITER = [5, 7.5, 10, 12.5, 15, 20, 25];
-    const PM = { fahrpraxis: 20, praxis: 40, reha: 20, kombi: 50, center: 80 };   // Berichte im Monat je Betriebsgröße (Startwert)
+    const LEITER = [5, 7.5, 10, 12.5, 15, 20, 25], LEITER_MESS = [50, 60, 75, 90, 100, 120, 150];   // Reha je Sitzung klein; Praxis je Auswertung/Fernberatung ab 50 € (Jan 22.11.)
+    const PM = { fahrpraxis: 6, praxis: 12, reha: 6, kombi: 15, center: 20 };   // Auswertungen im Monat zum Start: wenige, realistisch (Jan 22.11.)
     const insPlus = (b, s) => { if (!b.reha && !pmSelbst) { b.pm = PM[s.k] || 20; $('[data-i="pm"]').value = b.pm; $('[data-o="pm"]').textContent = b.pm; }
       const einheiten = b.reha ? Math.round(b.pf * b.e * 52 / 12) : b.pm, ziel = s.p * 1.6;
-      if (!betSelbst) { const g = LEITER.find(x => einheiten * x >= ziel); bet = g != null ? g : LEITER[LEITER.length - 1]; b.bet = bet; $('[data-i="bz"]').value = bet; $('[data-i="b"]').value = zuRegler(bet); }
+      if (!betSelbst) { const L = b.reha ? LEITER : LEITER_MESS; const g = L.find(x => einheiten * x >= ziel); bet = g != null ? g : L[L.length - 1]; b.bet = bet; $('[data-i="bz"]').value = bet; $('[data-i="b"]').value = zuRegler(bet); }
       if (!b.reha && !pmSelbst && b.pm * b.bet < ziel) { const pm = Math.min(150, Math.ceil(ziel / b.bet)); b.pm = pm; $('[data-i="pm"]').value = pm; $('[data-o="pm"]').textContent = pm; } };
     el.addEventListener('input', ev => { const d = ev.target && ev.target.dataset && ev.target.dataset.i;
       if (d === 'b' || d === 'bz') betSelbst = true; if (d === 'pm') pmSelbst = true;
