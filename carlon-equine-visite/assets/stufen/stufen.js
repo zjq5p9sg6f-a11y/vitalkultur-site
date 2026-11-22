@@ -173,15 +173,24 @@
       <p class="st-satz"></p><p class="st-fuss">${esc(t.fuss)} <span>${esc(t.fussReha)}</span></p>`;
     const $ = s => el.querySelector(s), wert = n => +$(`[data-i="${n}"]`).value, an = w => $(`[data-w="${w}"]`).checked;
     const zuBetrag = v => v <= 20 ? v / 2 : v - 10, zuRegler = b => b <= 10 ? Math.round(b * 2) : Math.min(60, Math.round(b + 10));
-    let bet = start === 'reha' ? 5 : 10;
+    let bet = start === 'reha' ? 5 : 10, betSelbst = false, pmSelbst = false;
+    /* 22.11.2026 (Jan): Solange der Kunde Betrag/Berichte nicht selbst verstellt, startet jede Stufe im Plus (≥ 30 % über dem Monatspreis)
+       mit dem kleinsten plausiblen Betrag der Leiter; reicht 25 € nicht, steigt bei Praxen die Zahl der Berichte. Eigene Eingaben bleiben unangetastet. */
+    const LEITER = [5, 7.5, 10, 12.5, 15, 20, 25];
+    const PM = { fahrpraxis: 20, praxis: 40, reha: 20, kombi: 50, center: 80 };   // Berichte im Monat je Betriebsgröße (Startwert)
+    const insPlus = (b, s) => { if (!b.reha && !pmSelbst) { b.pm = PM[s.k] || 20; $('[data-i="pm"]').value = b.pm; $('[data-o="pm"]').textContent = b.pm; }
+      const einheiten = b.reha ? Math.round(b.pf * b.e * 52 / 12) : b.pm, ziel = s.p * 1.6;
+      if (!betSelbst) { const g = LEITER.find(x => einheiten * x >= ziel); bet = g != null ? g : LEITER[LEITER.length - 1]; b.bet = bet; $('[data-i="bz"]').value = bet; $('[data-i="b"]').value = zuRegler(bet); }
+      if (!b.reha && !pmSelbst && b.pm * b.bet < ziel) { const pm = Math.min(150, Math.ceil(ziel / b.bet)); b.pm = pm; $('[data-i="pm"]').value = pm; $('[data-o="pm"]').textContent = pm; } };
     el.addEventListener('input', ev => { const d = ev.target && ev.target.dataset && ev.target.dataset.i;
+      if (d === 'b' || d === 'bz') betSelbst = true; if (d === 'pm') pmSelbst = true;
       if (d === 'b') { bet = zuBetrag(+ev.target.value); $('[data-i="bz"]').value = bet; }
       if (d === 'bz') { const v = parseFloat(String(ev.target.value).replace(',', '.')); bet = isFinite(v) && v >= 0 ? v : 0; $('[data-i="b"]').value = zuRegler(bet); } }, true);
     function r() {
       const b = { tour: an('tour'), station: an('station'), reha: an('reha'), ger: wert('ger'), pf: wert('pf'), e: wert('e'), pm: wert('pm'), bet };
       el.querySelectorAll('[data-nur="reha"]').forEach(x => x.hidden = !b.reha); el.querySelectorAll('[data-nur="mess"]').forEach(x => x.hidden = b.reha); $('[data-i="bz"]').setAttribute('aria-label', b.reha ? t.bL : t.bLM); $('[data-i="b"]').setAttribute('aria-label', b.reha ? t.bL : t.bLM); $('[data-o="pm"]').textContent = b.pm;
       $('[data-o="ger"]').textContent = b.ger > 8 ? t.gerMehr : b.ger; $('[data-o="pf"]').textContent = b.pf; $('[data-o="e"]').textContent = b.e;
-      const s = passend(b);
+      const s = passend(b); insPlus(b, s);
       // Grund: welche Anforderung bindet
       const gr = [];
       if (b.ger > 2 || s.ger === b.ger) gr.push(t.grundGer(b.ger > 8 ? '> 8' : b.ger));
