@@ -2,7 +2,7 @@
    App-Shell wird precached; Fonts & Leaflet lokal gebündelt (assets/) — keine externen CDNs,
    sodass die App nach dem ersten Online-Start vollständig offline läuft.
    Gesundheitsdaten liegen in IndexedDB — der SW cached nur Programm-Assets. */
-const VERSION = 'carlon-clinic-20261122-k';
+const VERSION = 'carlon-clinic-20261122-l';
 /* ACHTUNG: JEDE Datei in CORE wird ausgeliefert, bis VERSION sich aendert.
    Zweimal in dieser Nacht passiert — einmal beim Livegang-Schalter, einmal bei
    krypto.js: Datei geaendert, Version vergessen, und der Browser lieferte
@@ -174,10 +174,14 @@ self.addEventListener('fetch', (e) => {
 
 const LIZENZ_DIENST = 'https://lizenz.carlon.app/erneuern';
 
+/* 22.11.2026: NIE eine Datenbank anlegen. Früher open('carlon_clinic', 2): Gab es sie noch nicht (Erneuerung im Hintergrund vor dem
+   ersten App-Start), entstand eine LEERE Version 2 ohne Tabellen, und die App startete danach nie wieder („object stores was not found“).
+   Jetzt: ohne Versionsnummer öffnen, ein Anlegen sofort abbrechen, und nur weiterarbeiten, wenn die Tabelle settings da ist. */
 function dbOeffnen() {
   return new Promise((res, rej) => {
-    const r = indexedDB.open('carlon_clinic', 2);
-    r.onsuccess = () => res(r.result);
+    const r = indexedDB.open('carlon_clinic');
+    r.onupgradeneeded = () => { try { r.transaction.abort(); } catch (_) {} };
+    r.onsuccess = () => { const db = r.result; if (!db.objectStoreNames.contains('settings')) { db.close(); rej(new Error('Datenbank noch nicht angelegt')); return; } res(db); };
     r.onerror = () => rej(r.error);
   });
 }

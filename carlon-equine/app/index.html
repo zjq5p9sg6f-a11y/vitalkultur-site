@@ -3905,17 +3905,24 @@ const RehaLive={
 
 const DB = {
   _db:null, _c:{},
-  async open(){
+  /* 22.11.2026 SELBSTHEILUNG: Bricht ein Upgrade ab (Tab mitten im ersten Start geschlossen), bleibt eine Datenbank in Version 2
+     OHNE Tabellen zurück – die App kam danach nie wieder hoch („object stores was not found“, gefunden im Prüfprofil). Fehlt eine
+     Tabelle, öffnet sie die Datenbank mit der nächsten Version und legt nur die fehlenden an; vorhandene Daten bleiben unberührt. */
+  STORES:['horses','recordings','consults','settings','coherence'],
+  async open(version){
+    const name=location.search.includes('previewdb')?'carlon_verify':(location.search.includes('schaufenster')?'carlon_schaufenster':'carlon_clinic');
     return new Promise((res,rej)=>{
-      const r=indexedDB.open(location.search.includes('previewdb')?'carlon_verify':(location.search.includes('schaufenster')?'carlon_schaufenster':'carlon_clinic'),2);
+      const r=version?indexedDB.open(name,version):indexedDB.open(name);
       r.onupgradeneeded=e=>{
         const db=e.target.result;
-        ['horses','recordings','consults','settings','coherence'].forEach(s=>{
+        this.STORES.forEach(s=>{
           if(!db.objectStoreNames.contains(s)) db.createObjectStore(s,{keyPath:'id'});
         });
       };
       r.onblocked=()=>{Toast&&Toast.show&&Toast.show('Update blockiert — bitte andere CARLON-Tabs schließen','warn');};
-      r.onsuccess=e=>{this._db=e.target.result;this._db.onversionchange=()=>{try{this._db.close();}catch(_){}};res();};
+      r.onsuccess=e=>{ const db=e.target.result;
+        if(db.version<2||this.STORES.some(s=>!db.objectStoreNames.contains(s))){ const v=Math.max(2,db.version+1); db.close(); if((version||0)>=v){ rej(new Error('Datenbank ließ sich nicht reparieren')); return; } this.open(v).then(res,rej); return; }
+        this._db=db;this._db.onversionchange=()=>{try{this._db.close();}catch(_){}};res();};
       r.onerror=e=>rej(e.target.error);
     });
   },
