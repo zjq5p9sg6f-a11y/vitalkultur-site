@@ -1397,6 +1397,16 @@ section h2 em{font-style:normal;color:var(--cyan)}
 .wunsch p{margin:0;color:var(--text-secondary);font-size:15.5px;line-height:1.6}
 .wunsch .btn{justify-self:start;margin-top:8px}
 @media (max-width:560px){.wunsch{grid-template-columns:1fr}.wunsch-ico{grid-row:auto}}
+
+.rx-belege{margin-top:clamp(28px,4vw,44px)}
+.rx-belege h3{margin:0 0 14px;font-size:clamp(18px,2vw,22px)}
+.rx-bel-raster{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+@media (max-width:1000px){.rx-bel-raster{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:560px){.rx-bel-raster{grid-template-columns:1fr}}
+.rx-bel-raster>div{display:grid;gap:6px;align-content:start;padding:16px 18px;border:1px solid var(--border-subtle,rgba(255,255,255,.12));border-radius:16px;background:rgba(255,255,255,.015)}
+.rx-bel-raster>div:last-child{border-color:rgba(242,196,107,.35)}
+.rx-bel-raster b{color:var(--text-primary);font-size:15.5px}
+.rx-bel-raster span{color:var(--text-secondary);font-size:14.5px;line-height:1.55}
 </style>
 
 <section class="rx-hero hero" id="oben">
@@ -1512,6 +1522,24 @@ section h2 em{font-style:normal;color:var(--cyan)}
         <span class="rx-etikett demo">Sample with demo data</span><span class="rx-stapel-t">Night as an inpatient · 9 hours</span>
         <span class="rx-stapel-w">Long-duration recording from the strap memory, in every tier: the quietest period of the night, events such as feeding or a check round, Poincaré by time of day. The accompanying ward display is available from the Practice &amp; Clinic tier upwards.</span><span class="rx-stapel-k">View 4 pages →</span></button>
     </div>
+  </div>
+</section>
+
+<section id="rollen">
+  <div class="wrap">
+    <div class="sec-eyebrow">Benefits by role</div>
+    <h2>One record. <em>For the team, the vet and the owner, without compiling it again.</em></h2>
+    <div class="rx-kar rx-kar-raster" data-rxk><div class="rx-kbahn rx-rollen" tabindex="0" role="region" aria-roledescription="Karussell" aria-label="Benefits by role">
+      <article class="rx-rolle rx-kdia"><div class="rx-bild"><img src="../../assets/reha/en/berichte/echt-sitzung-s1-klein.jpg" alt="Session report on your practice letterhead" loading="lazy"></div>
+        <div class="rx-txt"><div class="rx-wer">Management</div><h3>Every session documented, with your name at the top</h3><p>The report shows the owner what is happening in rehab. It is in the horse’s record if anyone asks.</p></div></article>
+      <article class="rx-rolle rx-kdia"><div class="rx-bild dunkel"><img src="../../assets/reha/en/akte-reha-v1.jpg" alt="Demo horse record showing rehab progress across sessions" loading="lazy"></div>
+        <div class="rx-txt"><div class="rx-wer">Vet</div><h3>The same stage over the weeks</h3><p>For every session you see the heart rate at the end of the comparison stage, the same setting as in previous weeks, plus recovery and data quality. The report back goes to the referring practice as one PDF with a cover letter. The assessment stays with you.</p></div></article>
+      <article class="rx-rolle rx-kdia"><div class="rx-bild dunkel"><img src="../../assets/reha/en/rx-tafel-v1.jpg" alt="Live dashboard with large buttons for each stage" loading="lazy"></div>
+        <div class="rx-txt"><div class="rx-wer">Team operating the equipment</div><h3>Enter settings with large buttons or by voice</h3><p>No form to fill in after the session. Whatever was set on the equipment has already been logged as you worked.</p></div></article>
+      <article class="rx-rolle rx-kdia"><div class="rx-bild"><img src="../../assets/reha/en/berichte/verlauf-1.jpg" alt="Owner progress report (demo)" loading="lazy"></div>
+        <div class="rx-txt"><div class="rx-wer">Owner</div><h3>Progress in plain language</h3><p>The owner takes the progress report home and can import the sessions into their own CARLON Equine app.</p></div></article>
+    </div>
+    <div class="rx-ksteuer"><button class="rx-kpfeil" type="button" data-r="-1" aria-label="Back">‹</button><div class="rx-kpunkte"></div><button class="rx-kpfeil" type="button" data-r="1" aria-label="Next">›</button></div></div>
   </div>
 </section>
 
@@ -1634,6 +1662,15 @@ section h2 em{font-style:normal;color:var(--cyan)}
         </ul>
       </figcaption>
     </figure>
+    <div class="rx-belege">
+      <h3>What is established and what is not</h3>
+      <div class="rx-bel-raster">
+        <div><b>Real recordings</b><span>Horse walker and a racehorse under saddle, from the strap memory, marked as such on this page.</span></div>
+        <div><b>Sample data</b><span>The eight-week water treadmill trend and the demo horses are sample data and marked as demo.</span></div>
+        <div><b>Sensor study</b><span>Polar H10 system against ECG in 28 horses at rest and during groundwork (Kapteijn et al. 2022). This is not a test of this software.</span></div>
+        <div><b>Not yet established</b><span>Recordings in the water treadmill against ECG, a clinical benefit of the stage comparison and a measured time saving in daily work.</span></div>
+      </div>
+    </div>
   </div>
 </section>
 
@@ -1658,24 +1695,6 @@ section h2 em{font-style:normal;color:var(--cyan)}
   <div class="rx-a-seiten" id="rxASeiten"></div>
   <div class="rx-a-fuss"><button type="button" data-r="-1" aria-label="Previous page">‹</button><span id="rxAZahl"></span><button type="button" data-r="1" aria-label="Next page">›</button></div>
 </div>
-
-<section id="rollen">
-  <div class="wrap">
-    <div class="sec-eyebrow">Benefits by role</div>
-    <h2>One workflow. <em>Four roles that benefit.</em></h2>
-    <div class="rx-kar rx-kar-raster" data-rxk><div class="rx-kbahn rx-rollen" tabindex="0" role="region" aria-roledescription="Karussell" aria-label="Benefits by role">
-      <article class="rx-rolle rx-kdia"><div class="rx-bild"><img src="../../assets/reha/en/berichte/echt-sitzung-s1-klein.jpg" alt="Session report on your practice letterhead" loading="lazy"></div>
-        <div class="rx-txt"><div class="rx-wer">Management</div><h3>Every session documented, with your name at the top</h3><p>The report shows the owner what is happening in rehab. It is in the horse’s record if anyone asks.</p></div></article>
-      <article class="rx-rolle rx-kdia"><div class="rx-bild dunkel"><img src="../../assets/reha/en/akte-reha-v1.jpg" alt="Demo horse record showing rehab progress across sessions" loading="lazy"></div>
-        <div class="rx-txt"><div class="rx-wer">Vet</div><h3>The same stage over the weeks</h3><p>For each session, you see the heart rate at the end of the reference stage, the same setting as in previous weeks, along with recovery and data quality. The assessment remains yours.</p></div></article>
-      <article class="rx-rolle rx-kdia"><div class="rx-bild dunkel"><img src="../../assets/reha/en/rx-tafel-v1.jpg" alt="Live dashboard with large buttons for each stage" loading="lazy"></div>
-        <div class="rx-txt"><div class="rx-wer">Team operating the equipment</div><h3>Enter settings with large buttons or by voice</h3><p>No form to fill in after the session. Whatever was set on the equipment has already been logged as you worked.</p></div></article>
-      <article class="rx-rolle rx-kdia"><div class="rx-bild"><img src="../../assets/reha/en/berichte/verlauf-1.jpg" alt="Owner progress report (demo)" loading="lazy"></div>
-        <div class="rx-txt"><div class="rx-wer">Owner</div><h3>Progress in plain language</h3><p>The owner takes the progress report home and can import the sessions into their own CARLON Equine app.</p></div></article>
-    </div>
-    <div class="rx-ksteuer"><button class="rx-kpfeil" type="button" data-r="-1" aria-label="Back">‹</button><div class="rx-kpunkte"></div><button class="rx-kpfeil" type="button" data-r="1" aria-label="Next">›</button></div></div>
-  </div>
-</section>
 
 <section id="preis">
   <div class="wrap">

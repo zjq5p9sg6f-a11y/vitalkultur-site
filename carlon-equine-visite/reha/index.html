@@ -1397,6 +1397,16 @@ section h2 em{font-style:normal;color:var(--cyan)}
 .wunsch p{margin:0;color:var(--text-secondary);font-size:15.5px;line-height:1.6}
 .wunsch .btn{justify-self:start;margin-top:8px}
 @media (max-width:560px){.wunsch{grid-template-columns:1fr}.wunsch-ico{grid-row:auto}}
+
+.rx-belege{margin-top:clamp(28px,4vw,44px)}
+.rx-belege h3{margin:0 0 14px;font-size:clamp(18px,2vw,22px)}
+.rx-bel-raster{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+@media (max-width:1000px){.rx-bel-raster{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:560px){.rx-bel-raster{grid-template-columns:1fr}}
+.rx-bel-raster>div{display:grid;gap:6px;align-content:start;padding:16px 18px;border:1px solid var(--border-subtle,rgba(255,255,255,.12));border-radius:16px;background:rgba(255,255,255,.015)}
+.rx-bel-raster>div:last-child{border-color:rgba(242,196,107,.35)}
+.rx-bel-raster b{color:var(--text-primary);font-size:15.5px}
+.rx-bel-raster span{color:var(--text-secondary);font-size:14.5px;line-height:1.55}
 </style>
 
 <section class="rx-hero hero" id="oben">
@@ -1512,6 +1522,24 @@ section h2 em{font-style:normal;color:var(--cyan)}
         <span class="rx-etikett demo">Muster mit Demo-Daten</span><span class="rx-stapel-t">Nacht auf Station · 9 Stunden</span>
         <span class="rx-stapel-w">Langzeit aus dem Gurtspeicher in jeder Stufe: ruhigster Abschnitt der Nacht, Ereignisse wie Fütterung oder Kontrollgang, Poincaré nach Uhrzeit. Die Stationswand dazu gibt es ab Praxis &amp; Klinik.</span><span class="rx-stapel-k">4 Seiten ansehen →</span></button>
     </div>
+  </div>
+</section>
+
+<section id="rollen">
+  <div class="wrap">
+    <div class="sec-eyebrow">Nutzen je Rolle</div>
+    <h2>Eine Dokumentation. <em>Für Team, Tierarzt und Halterin, ohne neu zusammenzustellen.</em></h2>
+    <div class="rx-kar rx-kar-raster" data-rxk><div class="rx-kbahn rx-rollen" tabindex="0" role="region" aria-roledescription="Karussell" aria-label="Nutzen je Rolle">
+      <article class="rx-rolle rx-kdia"><div class="rx-bild"><img src="../assets/reha/berichte/echt-sitzung-s1-klein.jpg" alt="Sitzungsbericht mit Briefkopf" loading="lazy"></div>
+        <div class="rx-txt"><div class="rx-wer">Leitung</div><h3>Jede Einheit dokumentiert, mit Ihrem Namen oben</h3><p>Der Bericht zeigt der Halterin, was in der Reha geschieht. Er steht in der Akte, wenn jemand nachfragt.</p></div></article>
+      <article class="rx-rolle rx-kdia"><div class="rx-bild dunkel"><img src="../assets/reha/akte-reha-v1.jpg" alt="Akte eines Demo-Pferds mit Reha-Verlauf über die Einheiten" loading="lazy"></div>
+        <div class="rx-txt"><div class="rx-wer">Tierärztin, Tierarzt</div><h3>Dieselbe Stufe über die Wochen</h3><p>Sie sehen je Einheit die Herzfrequenz am Ende der Vergleichsstufe, also derselben Einstellung wie in den Vorwochen, dazu Erholung und Datenqualität. Der Rückbericht geht mit Begleitschreiben als ein PDF an die überweisende Praxis. Die Beurteilung bleibt bei Ihnen.</p></div></article>
+      <article class="rx-rolle rx-kdia"><div class="rx-bild dunkel"><img src="../assets/reha/rx-tafel-v1.jpg" alt="Live-Tafel mit großen Tasten für die Stufen" loading="lazy"></div>
+        <div class="rx-txt"><div class="rx-wer">Team am Gerät</div><h3>Eingabe über große Tasten oder per Sprache</h3><p>Kein Formular nach der Einheit. Was am Gerät eingestellt war, ist schon während der Arbeit festgehalten.</p></div></article>
+      <article class="rx-rolle rx-kdia"><div class="rx-bild"><img src="../assets/reha/berichte/verlauf-1.jpg" alt="Verlaufsdokumentation für die Halterin (Demo)" loading="lazy"></div>
+        <div class="rx-txt"><div class="rx-wer">Halterin</div><h3>Der Verlauf in Alltagssprache</h3><p>Sie nimmt die Verlaufsdokumentation mit und kann die Einheiten in ihre CARLON-Equine-App übernehmen.</p></div></article>
+    </div>
+    <div class="rx-ksteuer"><button class="rx-kpfeil" type="button" data-r="-1" aria-label="Zurück">‹</button><div class="rx-kpunkte"></div><button class="rx-kpfeil" type="button" data-r="1" aria-label="Weiter">›</button></div></div>
   </div>
 </section>
 
@@ -1634,6 +1662,15 @@ section h2 em{font-style:normal;color:var(--cyan)}
         </ul>
       </figcaption>
     </figure>
+    <div class="rx-belege">
+      <h3>Was belegt ist und was nicht</h3>
+      <div class="rx-bel-raster">
+        <div><b>Echte Aufnahmen</b><span>Führanlage und Rennpferd unter dem Sattel, aus dem Gurtspeicher, auf dieser Seite gekennzeichnet.</span></div>
+        <div><b>Beispieldaten</b><span>Der achtwöchige Aquatrainer-Verlauf und die Demo-Pferde sind Beispieldaten und als Demo gekennzeichnet.</span></div>
+        <div><b>Sensorstudie</b><span>Polar-H10-System gegen EKG bei 28 Pferden in Ruhe und bei Bodenarbeit (Kapteijn et al. 2022). Das ist keine Prüfung dieser Software.</span></div>
+        <div><b>Noch nicht belegt</b><span>Messungen im Aquatrainer gegen EKG, ein klinischer Nutzen des Stufenvergleichs und eine gemessene Zeitersparnis im Betrieb.</span></div>
+      </div>
+    </div>
   </div>
 </section>
 
@@ -1658,24 +1695,6 @@ section h2 em{font-style:normal;color:var(--cyan)}
   <div class="rx-a-seiten" id="rxASeiten"></div>
   <div class="rx-a-fuss"><button type="button" data-r="-1" aria-label="Vorige Seite">‹</button><span id="rxAZahl"></span><button type="button" data-r="1" aria-label="Nächste Seite">›</button></div>
 </div>
-
-<section id="rollen">
-  <div class="wrap">
-    <div class="sec-eyebrow">Nutzen je Rolle</div>
-    <h2>Ein Ablauf. <em>Vier Rollen, die davon profitieren.</em></h2>
-    <div class="rx-kar rx-kar-raster" data-rxk><div class="rx-kbahn rx-rollen" tabindex="0" role="region" aria-roledescription="Karussell" aria-label="Nutzen je Rolle">
-      <article class="rx-rolle rx-kdia"><div class="rx-bild"><img src="../assets/reha/berichte/echt-sitzung-s1-klein.jpg" alt="Sitzungsbericht mit Briefkopf" loading="lazy"></div>
-        <div class="rx-txt"><div class="rx-wer">Leitung</div><h3>Jede Einheit dokumentiert, mit Ihrem Namen oben</h3><p>Der Bericht zeigt der Halterin, was in der Reha geschieht. Er steht in der Akte, wenn jemand nachfragt.</p></div></article>
-      <article class="rx-rolle rx-kdia"><div class="rx-bild dunkel"><img src="../assets/reha/akte-reha-v1.jpg" alt="Akte eines Demo-Pferds mit Reha-Verlauf über die Einheiten" loading="lazy"></div>
-        <div class="rx-txt"><div class="rx-wer">Tierärztin, Tierarzt</div><h3>Dieselbe Stufe über die Wochen</h3><p>Sie sehen je Einheit die Herzfrequenz am Ende der Vergleichsstufe, also derselben Einstellung wie in den Vorwochen, dazu Erholung und Datenqualität. Die Beurteilung bleibt bei Ihnen.</p></div></article>
-      <article class="rx-rolle rx-kdia"><div class="rx-bild dunkel"><img src="../assets/reha/rx-tafel-v1.jpg" alt="Live-Tafel mit großen Tasten für die Stufen" loading="lazy"></div>
-        <div class="rx-txt"><div class="rx-wer">Team am Gerät</div><h3>Eingabe über große Tasten oder per Sprache</h3><p>Kein Formular nach der Einheit. Was am Gerät eingestellt war, ist schon während der Arbeit festgehalten.</p></div></article>
-      <article class="rx-rolle rx-kdia"><div class="rx-bild"><img src="../assets/reha/berichte/verlauf-1.jpg" alt="Verlaufsdokumentation für die Halterin (Demo)" loading="lazy"></div>
-        <div class="rx-txt"><div class="rx-wer">Halterin</div><h3>Der Verlauf in Alltagssprache</h3><p>Sie nimmt die Verlaufsdokumentation mit und kann die Einheiten in ihre CARLON-Equine-App übernehmen.</p></div></article>
-    </div>
-    <div class="rx-ksteuer"><button class="rx-kpfeil" type="button" data-r="-1" aria-label="Zurück">‹</button><div class="rx-kpunkte"></div><button class="rx-kpfeil" type="button" data-r="1" aria-label="Weiter">›</button></div></div>
-  </div>
-</section>
 
 <section id="preis">
   <div class="wrap">
