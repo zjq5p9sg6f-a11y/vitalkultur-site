@@ -1027,6 +1027,8 @@ h1,h2{text-wrap:balance}
 .vis-nav .crumb{text-decoration:none;cursor:pointer}.vis-nav .crumb b{font-family:var(--font-brand);letter-spacing:.14em}
 .vis-nav .crumb .zeile2{color:var(--cyan);letter-spacing:.12em}
 .vis-nav .lang{text-decoration:none}
+
+.rx-wisch,.rx-stapel-reihe,.rx-a-seiten,.rx-vl-schritte,.rx-rollen,.rx-ww-l,.rx-kbahn,.grafik,.hb-geraete,.shots.telefon{overflow-y:hidden}
 </style>
 <link rel="stylesheet" href="/assets/baukasten/baukasten.css?v=4">
 <link rel="stylesheet" href="/assets/app-tour/app-tour.css?v=10">
@@ -2332,7 +2334,7 @@ if(_lb) _lb.addEventListener('click', function(){
     var w=document.createElement('div'); w.className='pz-telefon';
     w.innerHTML='<figure class="pz" data-quelle="/carlon-equine/app/belege/poincare-ruhe.json" data-lang="'+(EN?'en':'de')+'"></figure><p class="pz-telefon-q">'+(EN?'Real resting recording of a horse · Polar H10 strap memory · 325 beats · 34/min · <a href="/carlon-equine/app/belege/ruheaufnahme-2026-06-24.csv">raw data (CSV)</a>':'Echte Ruheaufnahme eines Pferds · Polar H10 aus dem Gurtspeicher · 325 Schläge · 34/min · <a href="/carlon-equine/app/belege/ruheaufnahme-2026-06-24.csv">Rohdaten (CSV)</a>')+'</p>';
     t.parentNode.insertBefore(w,t); t.classList.add('nur-gross');
-    var s=document.createElement('script'); s.src='/carlon-equine-visite/assets/poincare-zeit.js?v=20261116d'; s.defer=true; document.body.appendChild(s); })();
+    var s=document.createElement('script'); s.src='/carlon-equine-visite/assets/poincare-zeit.js?v=20261122a'; s.defer=true; document.body.appendChild(s); })();
   
   (window.matchMedia&&matchMedia('(max-width:900px)').matches)&&(function(){ var f=document.querySelector('figure.grafik[aria-label^="Eine Aufnahme"],figure.grafik[aria-label^="One recording"]'); if(!f) return;
     var s=f.querySelector('svg'); if(!s) return; var tx=[].slice.call(s.querySelectorAll('text')).map(function(t){return {c:t.getAttribute('class')||'',t:t.textContent};});

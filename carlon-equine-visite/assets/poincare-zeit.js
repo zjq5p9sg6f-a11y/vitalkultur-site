@@ -42,7 +42,7 @@
 
     var dpr = 1, S = 0, M = { l: 62, r: 16, t: 16, b: 48 };
     var GMAX = fig.classList.contains('pz-gross') ? 820 : 560;
-    function groesse() { var b = cv.parentNode.getBoundingClientRect(); S = Math.max(300, Math.min(b.width, GMAX, (window.innerHeight || 900) - 230)); fig.querySelector('.pz-leiste').style.maxWidth = S + 'px'; dpr = window.devicePixelRatio || 1; cv.width = S * dpr; cv.height = S * dpr; cv.style.width = S + 'px'; cv.style.height = S + 'px'; }
+    function groesse() { var b = cv.parentNode.getBoundingClientRect(); S = Math.max(300, Math.min(b.width, GMAX, (window.innerHeight || 900) - 230)); fig.querySelector('.pz-leiste').style.maxWidth = S + 'px'; /* Plotfläche mittig (22.11.): Achsenrand l/r ausgleichen, Regler genau so breit wie die Plotfläche */ var vers = S >= 420 ? (M.l - M.r) / 2 : 0, ls = fig.querySelector('.pz-leiste'); fig.querySelector('.pz-buehne').style.transform = vers ? 'translateX(' + (-vers) + 'px)' : ''; ls.style.width = '100%'; ls.style.boxSizing = 'border-box'; ls.style.padding = vers ? '0 ' + M.r + 'px 0 ' + M.l + 'px' : ''; ls.style.transform = vers ? 'translateX(' + (-vers) + 'px)' : ''; dpr = window.devicePixelRatio || 1; cv.width = S * dpr; cv.height = S * dpr; cv.style.width = S + 'px'; cv.style.height = S + 'px'; }
     function X(v) { return M.l + (v - vlo) / (vhi - vlo) * (S - M.l - M.r); }
     function Y(v) { return S - M.b - (v - vlo) / (vhi - vlo) * (S - M.t - M.b); }
     function wert(px) { return vlo + (px - M.l) / (S - M.l - M.r) * (vhi - vlo); }
@@ -113,7 +113,7 @@
       vlo = w - a * neu; vhi = vlo + neu; if (vlo < lo - 200) { vlo = lo - 200; vhi = vlo + neu; } if (vhi > hi + 200) { vhi = hi + 200; vlo = vhi - neu; } zeichne(); }
     function schieb(dpx) { var d = dpx / (S - M.l - M.r) * (vhi - vlo); vlo -= d; vhi -= d; zeichne(); }
     function zurueck() { vlo = lo; vhi = hi; zeichne(); }
-    cv.addEventListener('wheel', function (e) { e.preventDefault(); var b = cv.getBoundingClientRect(); zoom(Math.exp(e.deltaY * 0.0016), e.clientX - b.left); }, { passive: false });
+    /* Mausrad scrollt die Seite (iPad mit Maus, 22.11.); Zoom nur mit Strg/Cmd oder Trackpad-Zusammenziehen (ctrlKey) */ cv.addEventListener('wheel', function (e) { if (!e.ctrlKey && !e.metaKey) return; e.preventDefault(); var b = cv.getBoundingClientRect(); zoom(Math.exp(e.deltaY * 0.0016), e.clientX - b.left); }, { passive: false });
     cv.addEventListener('dblclick', function (e) { e.preventDefault(); zurueck(); });
     // Zeiger: suchen beim Ziehen; kurzer Tipp auf ein stehendes Fadenkreuz blendet es aus. Gezoomt + Maus ziehen = verschieben.
     var druck = null, zwei = false;
@@ -143,7 +143,7 @@
     window.addEventListener('resize', function () { groesse(); zeichne(); });
   }
   var css = document.createElement('style');
-  css.textContent = '.pz{margin:0;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}.pz *{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}.pz-buehne{position:relative;display:flex;justify-content:center}.pz-c{touch-action:none;display:block;border-radius:14px;cursor:crosshair;-webkit-tap-highlight-color:transparent}' +
+  css.textContent = '.pz{margin:0;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}.pz *{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}.pz-buehne{position:relative;display:flex;justify-content:center}.pz-c{touch-action:pan-y;display:block;border-radius:14px;cursor:crosshair;-webkit-tap-highlight-color:transparent}' +
     '.pz-tipp{position:absolute;transform:translate(-50%,calc(-100% - 12px));padding:7px 11px;border-radius:10px;background:rgba(22,22,24,.96);border:1px solid rgba(255,255,255,.18);color:rgb(235,230,220);font:12px/1.4 system-ui,sans-serif;white-space:nowrap;pointer-events:none;box-shadow:0 10px 24px rgba(0,0,0,.5)}' +
     '.pz-leiste{display:flex;align-items:center;gap:12px;max-width:560px;margin:14px auto 0}.pz-regler{flex:1;accent-color:#3ECFB2;height:28px}' +
     '.pz-knopf{width:38px;height:38px;border-radius:50%;border:1px solid rgba(62,207,178,.5);background:rgba(62,207,178,.1);color:#3ECFB2;font-size:13px;cursor:pointer}' +

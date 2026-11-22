@@ -839,6 +839,8 @@ h1,h2{text-wrap:balance}
 .vis-nav .crumb{text-decoration:none;cursor:pointer}.vis-nav .crumb b{font-family:var(--font-brand);letter-spacing:.14em}
 .vis-nav .crumb .zeile2{color:var(--cyan);letter-spacing:.12em}
 .vis-nav .lang{text-decoration:none}
+
+.rx-wisch,.rx-stapel-reihe,.rx-a-seiten,.rx-vl-schritte,.rx-rollen,.rx-ww-l,.rx-kbahn,.grafik,.hb-geraete,.shots.telefon{overflow-y:hidden}
 </style>
 <link rel="stylesheet" href="/assets/baukasten/baukasten.css?v=4">
 <link rel="stylesheet" href="/assets/app-tour/app-tour.css?v=10">
@@ -1256,10 +1258,8 @@ section h2 em{font-style:normal;color:var(--cyan)}
 @media (max-width:860px){.rx-pz-buehne{grid-template-columns:1fr}}
 .rx-pz-tab{background:#020203;aspect-ratio:3/4;width:100%;box-sizing:border-box;min-width:0;max-width:600px;justify-self:center;display:flex}
 .rx-pz-tab .pz{margin:0;flex:1;display:flex;flex-direction:column;justify-content:center;background:#000;border-radius:clamp(13px,1.7vw,22px);padding:clamp(14px,2vw,28px) clamp(10px,1.4vw,18px)}
-
-.rx-pz-tab .pz-buehne{transform:translateX(-23px)}
-.rx-pz-tab .pz-leiste{width:100%;box-sizing:border-box;padding:0 16px 0 62px;transform:translateX(-23px);margin-top:18px}
-@media (max-width:520px){.rx-pz-tab{aspect-ratio:auto}.rx-pz-tab .pz{padding:20px 8px}.rx-pz-tab .pz-leiste{padding:0;transform:none}.rx-pz-tab .pz-zeit{min-width:0;white-space:nowrap}}
+.rx-pz-tab .pz-leiste{margin-top:18px}
+@media (max-width:520px){.rx-pz-tab{aspect-ratio:auto}.rx-pz-tab .pz{padding:20px 8px}.rx-pz-tab .pz-zeit{min-width:0;white-space:nowrap}}
 .rx-pz-txt p{color:var(--text-secondary);font-size:16px;line-height:1.6;margin:0 0 12px}
 .rx-haken{list-style:none;margin:0 0 14px;padding:0;display:grid;gap:8px}
 .rx-haken li{position:relative;padding-left:22px;color:var(--text-secondary);font-size:15px;line-height:1.5}
@@ -1372,6 +1372,8 @@ section h2 em{font-style:normal;color:var(--cyan)}
 #hersteller .hs-band b{font-size:18px;color:var(--text-primary,#f4f4f4)}#hersteller .hs-band span{font-size:14px;color:var(--text-secondary,#b8bec4)}
 #hersteller .hs-knoepfe{display:flex;flex-wrap:wrap;gap:10px}
 @media(max-width:760px){#hersteller .hs-raster{grid-template-columns:1fr}#hersteller .hs-knoepfe{width:100%}#hersteller .hs-knoepfe a{flex:1 1 100%;justify-content:center;text-align:center}}
+
+.rx-wisch,.rx-stapel-reihe,.rx-a-seiten,.rx-vl-schritte,.rx-rollen,.rx-ww-l,.rx-kbahn,.grafik,.hb-geraete,.shots.telefon{overflow-y:hidden}
 </style>
 
 <section class="rx-hero hero" id="oben">
@@ -1851,7 +1853,7 @@ section h2 em{font-style:normal;color:var(--cyan)}
   document.addEventListener('keydown',function(e){ if(A.hidden) return; if(e.key==='Escape') schliessen(); else if(e.key==='ArrowRight'||e.key==='ArrowLeft'){ var i=zahl()+(e.key==='ArrowRight'?1:-1); S.scrollTo({left:i*S.clientWidth,behavior:'smooth'}); } });
 })();
 </script>
-<script src="/carlon-equine/app/poincare-zeit.js?v=20261120b" defer></script>
+<script src="/carlon-equine/app/poincare-zeit.js?v=20261122a" defer></script>
 
 <footer>
   <div class="footer-brand">CARLON</div>
@@ -2019,7 +2021,7 @@ if(_lb) _lb.addEventListener('click', function(){
     var w=document.createElement('div'); w.className='pz-telefon';
     w.innerHTML='<figure class="pz" data-quelle="/carlon-equine/app/belege/poincare-ruhe.json" data-lang="'+(EN?'en':'de')+'"></figure><p class="pz-telefon-q">'+(EN?'Real resting recording of a horse · Polar H10 strap memory · 325 beats · 34/min · <a href="/carlon-equine/app/belege/ruheaufnahme-2026-06-24.csv">raw data (CSV)</a>':'Echte Ruheaufnahme eines Pferds · Polar H10 aus dem Gurtspeicher · 325 Schläge · 34/min · <a href="/carlon-equine/app/belege/ruheaufnahme-2026-06-24.csv">Rohdaten (CSV)</a>')+'</p>';
     t.parentNode.insertBefore(w,t); t.classList.add('nur-gross');
-    var s=document.createElement('script'); s.src='/carlon-equine-visite/assets/poincare-zeit.js?v=20261116d'; s.defer=true; document.body.appendChild(s); })();
+    var s=document.createElement('script'); s.src='/carlon-equine-visite/assets/poincare-zeit.js?v=20261122a'; s.defer=true; document.body.appendChild(s); })();
   
   (window.matchMedia&&matchMedia('(max-width:900px)').matches)&&(function(){ var f=document.querySelector('figure.grafik[aria-label^="Eine Aufnahme"],figure.grafik[aria-label^="One recording"]'); if(!f) return;
     var s=f.querySelector('svg'); if(!s) return; var tx=[].slice.call(s.querySelectorAll('text')).map(function(t){return {c:t.getAttribute('class')||'',t:t.textContent};});
