@@ -1356,6 +1356,17 @@ section h2 em{font-style:normal;color:var(--cyan)}
 .rx-geraetehinweis{margin:18px 0 0;padding:12px 16px;border-left:3px solid #3ECFB2;background:rgba(62,207,178,.06);border-radius:0 12px 12px 0;color:var(--text-secondary);font-size:15px;max-width:900px}.rx-geraetehinweis b{color:var(--text-primary)}
 
 .tarif-fuer{margin:2px 0 8px;color:var(--text-primary);font-size:14.5px;font-weight:600}.rx-zum-rechner{margin:16px 0 0;font-size:15px}.rx-zum-rechner a{color:#3ECFB2;text-decoration:none;border-bottom:1px solid rgba(62,207,178,.4)}
+
+#hersteller .hs-raster{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin-top:26px}
+#hersteller .hs-k{display:grid;grid-template-columns:44px 1fr;column-gap:14px;row-gap:4px;align-items:start;padding:20px 22px;border-radius:18px;border:1px solid rgba(255,255,255,.10);background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.015))}
+#hersteller .hs-k .ic{grid-row:span 2;width:44px;height:44px;padding:10px;border-radius:12px;background:rgba(62,207,178,.12);color:#3ECFB2}
+#hersteller .hs-k b{font-size:16px;font-weight:600;color:var(--text-primary,#f4f4f4)}
+#hersteller .hs-k span{font-size:14px;line-height:1.55;color:var(--text-secondary,#b8bec4)}
+#hersteller .hs-band{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:16px 24px;margin-top:18px;padding:22px 24px;border-radius:18px;border:1px solid rgba(62,207,178,.35);background:linear-gradient(135deg,rgba(62,207,178,.12),rgba(62,207,178,.03))}
+#hersteller .hs-band>div:first-child{display:flex;flex-direction:column;gap:4px;max-width:560px}
+#hersteller .hs-band b{font-size:18px;color:var(--text-primary,#f4f4f4)}#hersteller .hs-band span{font-size:14px;color:var(--text-secondary,#b8bec4)}
+#hersteller .hs-knoepfe{display:flex;flex-wrap:wrap;gap:10px}
+@media(max-width:760px){#hersteller .hs-raster{grid-template-columns:1fr}#hersteller .hs-knoepfe{width:100%}#hersteller .hs-knoepfe a{flex:1 1 100%;justify-content:center;text-align:center}}
 </style>
 
 <section class="rx-hero hero" id="oben">
@@ -1734,16 +1745,17 @@ section h2 em{font-style:normal;color:var(--cyan)}
 <section id="hersteller">
   <div class="wrap">
     <div class="sec-eyebrow">Für Gerätehersteller und Fachhändler</div>
-    <h2>Was Ihr Gerät leistet, wird sichtbar. <em>Woche für Woche, für Ihre Kunden und deren Halterinnen.</em></h2>
-    <div class="rx-hersteller">
-      <p>Visite dokumentiert jede Reha-Einheit an Ihrem Gerät: Einstellung, Dauer und Herzfrequenz, vergleichbar bei gleicher Einstellung über die Wochen. Der Betrieb gibt den Verlauf mit seinem Briefkopf schriftlich an die Halterin weiter.</p>
-      <ul class="enthalten">
-        <li><b>Keine Konkurrenz zur Steuerung:</b> Visite bedient und ersetzt keine Gerätesteuerung. Das Team erfasst die Einstellungen heute von Hand.</li>
-        <li><b>Schnittstelle nur lesend und nur mit Vereinbarung:</b> Eine Übernahme der Einstellungen aus der Steuerung prüfen wir mit Herstellern, die ihr Protokoll dafür freigeben. Das Protokoll bleibt Eigentum des Herstellers.</li>
-        <li><b>Daten beim Betrieb:</b> Aufnahmen und Berichte liegen beim Reha-Betrieb. Vitalkultur erhält keine Pferde- oder Messdaten.</li>
-        <li><b>Klare Verantwortung:</b> Betrieb und Sicherheit des Geräts bleiben bei Hersteller und Betreiber, die Beurteilung des Pferds bei der Tierärztin oder dem Tierarzt. Visite ist kein Medizinprodukt.</li>
-      </ul>
-      <p>Für Hersteller und Fachhändler ist eine Zusammenarbeit als Empfehlungs- oder Vertriebspartner möglich, zum Beispiel mit der Demo am eigenen Gerät auf Messen. Anfragen bitte schriftlich über die Kontaktadresse im <a href="/impressum.html">Impressum</a>.</p>
+    <h2>Ihr Gerät, im Verlauf sichtbar. <em>Für Ihre Kunden und deren Halterinnen.</em></h2>
+    <p class="sec-lead">Visite dokumentiert jede Reha-Einheit an Ihrem Gerät: Einstellung, Dauer und Herzfrequenz, vergleichbar bei gleicher Einstellung über die Wochen. Der Betrieb gibt den Verlauf mit seinem Briefkopf schriftlich an die Halterin weiter.</p>
+    <div class="hs-raster">
+      <div class="hs-k"><svg class="ic" aria-hidden="true"><use href="#i-schild"/></svg><b>Keine Konkurrenz zur Steuerung</b><span>Visite bedient und ersetzt keine Gerätesteuerung. Das Team erfasst die Einstellungen heute von Hand.</span></div>
+      <div class="hs-k"><svg class="ic" aria-hidden="true"><use href="#i-link"/></svg><b>Schnittstelle nur lesend, nur mit Vereinbarung</b><span>Eine Übernahme der Einstellungen aus der Steuerung prüfen wir mit Herstellern, die ihr Protokoll dafür freigeben. Das Protokoll bleibt Eigentum des Herstellers.</span></div>
+      <div class="hs-k"><svg class="ic" aria-hidden="true"><use href="#i-schloss"/></svg><b>Daten beim Betrieb</b><span>Aufnahmen und Berichte liegen beim Reha-Betrieb. Vitalkultur erhält keine Pferde- oder Messdaten.</span></div>
+      <div class="hs-k"><svg class="ic" aria-hidden="true"><use href="#i-check"/></svg><b>Klare Verantwortung</b><span>Betrieb und Sicherheit des Geräts bleiben bei Hersteller und Betreiber, die Beurteilung des Pferds bei der Tierärztin oder dem Tierarzt. Visite ist kein Medizinprodukt.</span></div>
+    </div>
+    <div class="hs-band">
+      <div><b>Partner werden</b><span>Als Empfehlungs- oder Vertriebspartner, zum Beispiel mit der Demo am eigenen Gerät auf Messen.</span></div>
+      <div class="hs-knoepfe"><a class="cta-primary" href="/carlon-equine/app/?demo=roster&amp;pferd=comet&amp;fokus=reha">Demo am Aquatrainer ansehen →</a><a class="btn btn-back" href="/impressum.html">Schriftlich anfragen</a></div>
     </div>
   </div>
 </section>
@@ -2063,7 +2075,7 @@ if(_lb) _lb.addEventListener('click', function(){
     clearTimeout(lz); if(hoch) lz=setTimeout(function(){ l.classList.add('weg'); },3500);},{passive:true});
 })();
 </script>
-<div class="leiste" id="leiste" hidden><span class="leiste-t">CARLON Equine Visite · Reha ab 349&nbsp;€ netto/Monat</span><a class="leiste-b2" href="#preis">Tarife</a><a class="leiste-b" href="/carlon-equine/app/?demo=today">Demo öffnen →</a></div>
+<div class="leiste" id="leiste" hidden><span class="leiste-t">CARLON Equine Visite · Reha · trägt sich ab 6 Reha-Pferden</span><a class="leiste-b2" href="#umlegen">Rechnen</a><a class="leiste-b" href="/carlon-equine/app/?demo=today">Demo öffnen →</a></div>
 
 <script src="/assets/app-tour/app-tour.js?v=15" defer></script>
 
