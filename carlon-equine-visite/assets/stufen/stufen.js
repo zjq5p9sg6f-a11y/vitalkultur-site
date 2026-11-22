@@ -24,7 +24,7 @@
       zeilen: [['Akte, Mess-Link, Messwertbericht mit Ihrem Briefkopf', [1, 1, 1, 1, 1]], ['Stallrunde und Langzeit im Gurt', [1, 1, 1, 1, 1]], ['Team-Ordner mit täglicher Sicherung', [1, 1, 1, 1, 1]], ['Export JSON, CSV, Kubios, FHIR R5', [1, 1, 1, 1, 1]], ['Tourenplanung mit Maps-Übergabe, Wegegeld', [1, 1, 0, 1, 1]], ['Stationswand und Nachsorge', [0, 1, 0, 1, 1]], ['Reha-Aufnahme, Sitzungsbericht, Verlauf', [0, 0, 1, 1, 1]], ['Audit-Mappe und Gerätebuch zum Geräteeinsatz', [0, 0, 0, 0, 1]], ['Rückbericht an Überweiser, Forschungs-Export', [0, 0, 0, 0, 1]]],
       rTitel: 'Welche Stufe passt zu Ihrem Betrieb?', rLead: 'Wählen Sie, was Sie nutzen. Der Rechner wählt die niedrigste Stufe, die Ihre Auswahl abdeckt, und zeigt, wo die nächste beginnt.',
       nutzen: 'Was Sie nutzen', tour: 'Tourenplanung', station: 'Stationswand über Nacht', rehaE: 'Reha-Einheiten am Gerät',
-      gerL: 'Geräte mit Cockpit', gerMehr: 'mehr als 8', pfL: 'Reha-Pferde in 30 Tagen', eL: 'Einheiten je Pferd und Woche', bL: 'Ihr Betrag für den Sitzungsbericht je Einheit', pmL: 'Pferde mit Messwertbericht im Monat', bLM: 'Ihr Betrag je Auswertung (Messwertbericht, Fernberatung)',
+      gerL: 'Geräte mit Cockpit', gerMehr: '12 oder mehr', pfL: 'Reha-Pferde in 30 Tagen', eL: 'Einheiten je Pferd und Woche', bL: 'Ihr Betrag für den Sitzungsbericht je Einheit', pmL: 'Pferde mit Messwertbericht im Monat', bLM: 'Ihr Betrag je Auswertung (Messwertbericht, Fernberatung)',
       passt: 'Passende Stufe', imMonat: 'netto im Monat', weil: 'Warum diese Stufe', test: '14 Tage testen', zumAng: 'Stufe ansehen',
       grundBasis: 'Kleinste Stufe für Ihre Auswahl', grundGer: n => `${n} Geräte`, grundPf: n => `${n} Reha-Pferde in 30 Tagen`, grundTour: 'Tourenplanung', grundStation: 'Stationswand',
       naechste: (was, s, p) => `Nächster Sprung: ${was} → ${s} für ${p} im Monat.`, abPf: n => `ab ${n} Reha-Pferden`, abGer: n => `ab ${n} Geräten`, keinSprung: 'Darüber gibt es keine Grenze mehr.',
@@ -45,7 +45,7 @@
       zeilen: [['Records, measurement link, measurement report on your letterhead', [1, 1, 1, 1, 1]], ['Yard round and long-term recording in the strap', [1, 1, 1, 1, 1]], ['Team folder with daily backup', [1, 1, 1, 1, 1]], ['Export JSON, CSV, Kubios, FHIR R5', [1, 1, 1, 1, 1]], ['Tour planning with Maps hand-off, mileage', [1, 1, 0, 1, 1]], ['Ward display and aftercare', [0, 1, 0, 1, 1]], ['Rehab recording, session report, progress report', [0, 0, 1, 1, 1]], ['Audit file and equipment log', [0, 0, 0, 0, 1]], ['Report back to the referring vet, research export', [0, 0, 0, 0, 1]]],
       rTitel: 'Which tier suits your business?', rLead: 'Choose what you use. The calculator picks the lowest tier that covers your selection and shows where the next one starts.',
       nutzen: 'What you use', tour: 'Tour planning', station: 'Overnight ward display', rehaE: 'Rehab sessions at the equipment',
-      gerL: 'Devices with the cockpit', gerMehr: 'more than 8', pfL: 'Rehab horses in 30 days', eL: 'Sessions per horse per week', bL: 'Your charge for the session report', pmL: 'Horses with a measurement report per month', bLM: 'Your fee per review (measurement report, remote consultation)',
+      gerL: 'Devices with the cockpit', gerMehr: '12 or more', pfL: 'Rehab horses in 30 days', eL: 'Sessions per horse per week', bL: 'Your charge for the session report', pmL: 'Horses with a measurement report per month', bLM: 'Your fee per review (measurement report, remote consultation)',
       passt: 'Matching tier', imMonat: 'a month, excl. VAT', weil: 'Why this tier', test: 'Try for 14 days', zumAng: 'See tier',
       grundBasis: 'Smallest tier for your selection', grundGer: n => `${n} devices`, grundPf: n => `${n} rehab horses in 30 days`, grundTour: 'tour planning', grundStation: 'ward display',
       naechste: (was, s, p) => `Next step up: ${was} → ${s} at ${p} a month.`, abPf: n => `from ${n} rehab horses`, abGer: n => `from ${n} devices`, keinSprung: 'There is no further limit above this.',
@@ -189,11 +189,11 @@
     function r() {
       const b = { tour: an('tour'), station: an('station'), reha: an('reha'), ger: wert('ger'), pf: wert('pf'), e: wert('e'), pm: wert('pm'), bet };
       el.querySelectorAll('[data-nur="reha"]').forEach(x => x.hidden = !b.reha); el.querySelectorAll('[data-nur="mess"]').forEach(x => x.hidden = b.reha); $('[data-i="bz"]').setAttribute('aria-label', b.reha ? t.bL : t.bLM); $('[data-i="b"]').setAttribute('aria-label', b.reha ? t.bL : t.bLM); $('[data-o="pm"]').textContent = b.pm;
-      $('[data-o="ger"]').textContent = b.ger > 8 ? t.gerMehr : b.ger; $('[data-o="pf"]').textContent = b.pf; $('[data-o="e"]').textContent = b.e;
+      $('[data-o="ger"]').textContent = b.ger >= 12 ? t.gerMehr : b.ger; $('[data-o="pf"]').textContent = b.pf; $('[data-o="e"]').textContent = b.e;
       const s = passend(b); insPlus(b, s);
       // Grund: welche Anforderung bindet
       const gr = [];
-      if (b.ger > 2 || s.ger === b.ger) gr.push(t.grundGer(b.ger > 8 ? '> 8' : b.ger));
+      if (b.ger > 2 || s.ger === b.ger) gr.push(t.grundGer(b.ger >= 12 ? '12+' : b.ger));
       if (b.reha) gr.push(t.grundPf(b.pf)); if (b.tour) gr.push(t.grundTour); if (b.station) gr.push(t.grundStation);
       // nächster Sprung
       let sprung = t.keinSprung;
@@ -221,8 +221,8 @@
       const X = v => pl + (v - 1) / (xmax - 1) * (W - pl - pr), Y = v => pt + (1 - v / ymax) * (H - pt - pb);
       const step = ymax > 4800 ? 1000 : ymax > 2400 ? 500 : 250;
       for (let v = 0; v <= ymax; v += step) g += `<line x1="${pl}" x2="${W - pr}" y1="${Y(v)}" y2="${Y(v)}" stroke="rgba(255,255,255,.08)"/><text x="${pl - 6}" y="${Y(v) + 3.5}" text-anchor="end" font-size="10" fill="#8a949c">${t.eu(v)}</text>`;
-      const tick = b.reha ? (W < 420 ? [1, 20, 40, 60, 80] : [1, 10, 20, 30, 40, 50, 60, 70, 80]) : (W < 420 ? [1, 2, 4, 6, 8, 12] : xs);
-      tick.forEach(v => g += `<text x="${X(v)}" y="${H - pb + 14}" text-anchor="middle" font-size="10" fill="#8a949c">${v === 12 && !b.reha ? '>8' : v}</text>`);
+      const tick = b.reha ? (W < 420 ? [1, 20, 40, 60, 80] : [1, 10, 20, 30, 40, 50, 60, 70, 80]) : (W < 420 ? [1, 3, 6, 9, 12] : xs);
+      tick.forEach(v => g += `<text x="${X(v)}" y="${H - pb + 14}" text-anchor="middle" font-size="10" fill="#8a949c">${v === 12 && !b.reha ? '12+' : v}</text>`);
       g += `<text x="${(pl + W - pr) / 2}" y="${H - 4}" text-anchor="middle" font-size="10.5" fill="#8a949c">${esc(xlab)}</text>`;
       if (inc) {   // Fläche, wo der Bericht die Lizenz trägt
         let pg = ''; xs.forEach((x, i) => { if (inc[i] >= lic[i]) pg += `<rect x="${X(x) - (W - pl - pr) / (xmax - 1) / 2}" y="${pt}" width="${(W - pl - pr) / (xmax - 1)}" height="${H - pt - pb}" fill="rgba(62,207,178,.07)"/>`; }); g += pg;
