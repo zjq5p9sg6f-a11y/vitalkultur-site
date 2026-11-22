@@ -9,46 +9,97 @@
   const FELDER = {
     speedKmh:       { re: /(tempo|geschw|speed|velocity|^v$|^v[_ ]|km\/?h|mph|m\/s|band)/i, schwelle: 0.2 },
     inclinePercent: { re: /(steig|neigung|incline|gradient|grade|slope|winkel)/i, schwelle: 0.5 },
-    waterHeightCm:  { re: /(wasser.*(h(ö|oe)he|stand|level)|f(ü|ue)llstand|water.*(height|level)|pegel|niveau)/i, schwelle: 2 },
+    waterHeightCm:  { re: /(wasser.*(h(ö|oe)he|stand|level|tiefe)|f(ü|ue)llstand|water.*(height|level|depth)|pegel|niveau)/i, schwelle: 2 },
     waterTempC:     { re: /(temp)/i, schwelle: 0.5 },
     vibrationHz:    { re: /(frequenz|frequency|hz|vibra)/i, schwelle: 1 },
     reverse:        { re: /(r(ü|ue)ckw|reverse|richtung|direction)/i, schwelle: 0.5 },
     radiusM:        { re: /(radius)/i, schwelle: 0.5 }
   };
-  const zahl = s => { if (s == null) return NaN; let t = String(s).trim().replace(/\s/g, ''); if (!t) return NaN;
-    if (/^-?\d{1,3}(\.\d{3})+(,\d+)?$/.test(t)) t = t.replace(/\./g, '').replace(',', '.'); else t = t.replace(',', '.');
-    const v = parseFloat(t); return isFinite(v) ? v : NaN; };
+  /* dez: ',' (deutsch, Punkt = Tausender) · '.' (englisch, Komma = Tausender) · null = raten je Zelle */
+  const zahl = (s, dez) => { if (s == null) return NaN; let t = String(s).trim().replace(/\s/g, ''); if (!t) return NaN;
+    if (dez === '.') t = t.replace(/,/g, ''); else if (dez === ',') t = t.replace(/\./g, '').replace(',', '.');
+    else if (/^-?\d{1,3}(\.\d{3})+(,\d+)?$/.test(t)) t = t.replace(/\./g, '').replace(',', '.'); else t = t.replace(',', '.');
+    if (!/^-?\d*\.?\d+(e-?\d+)?$/i.test(t)) return NaN; const v = parseFloat(t); return isFinite(v) ? v : NaN; };
   const wahr = s => /^(1|ja|yes|true|an|on|r(ü|ue)ckw|rev)/i.test(String(s).trim()) ? 1 : 0;
 
   /* Zeit einer Zelle in ms: ISO/Datum+Uhrzeit (absolut), HH:MM:SS[.ms] (Tageszeit, abs. mit Datum der Aufnahme), Sekunden/Millisekunden/Unix */
   function zeitArt(werte) {
     const w = werte.filter(x => String(x).trim()).slice(0, 20);
     if (!w.length) return null;
-    if (w.every(x => !isNaN(Date.parse(String(x).replace(' ', 'T'))) && /\d{4}-\d{2}-\d{2}|\d{1,2}\.\d{1,2}\.\d{4}/.test(x))) return 'datum';
+    if (w.every(x => /^(\d{4}[-/.]\d{1,2}[-/.]\d{1,2}|\d{1,2}[./]\d{1,2}[./]\d{2,4})[ T]\d{1,2}:\d{2}/.test(String(x).trim()))) return 'datum';
     if (w.every(x => /^\d{1,2}:\d{2}(:\d{2}([.,]\d+)?)?$/.test(String(x).trim()))) return 'uhrzeit';
     const n = w.map(zahl); if (n.some(isNaN)) return null;
     const max = Math.max(...n); if (max > 1e12) return 'unixMs'; if (max > 1e9) return 'unixS';
     return 'sekunden';
   }
-  function zeitMs(x, art, tagMs) {
+  function zeitMs(x, art, tagMs, mdy) {
     const s = String(x).trim();
-    if (art === 'datum') { const m = s.match(/^(\d{1,2})\.(\d{1,2})\.(\d{4})[ T](.*)$/); return m ? Date.parse(`${m[3]}-${m[2].padStart(2, '0')}-${m[1].padStart(2, '0')}T${m[4]}`) : Date.parse(s.replace(' ', 'T')); }
+    if (art === 'datum') { const y = s.match(/^(\d{4})[/.](\d{1,2})[/.](\d{1,2})[ T](.*)$/); if (y) return Date.parse(`${y[1]}-${y[2].padStart(2, '0')}-${y[3].padStart(2, '0')}T${y[4]}`.replace(',', '.'));
+      const m = s.match(/^(\d{1,2})[./](\d{1,2})[./](\d{2,4})[ T](.*)$/); const [tt, mm] = m && mdy && s.includes('/') ? [m[2], m[1]] : m ? [m[1], m[2]] : []; const iso = m ? `${m[3].length === 2 ? '20' + m[3] : m[3]}-${mm.padStart(2, '0')}-${tt.padStart(2, '0')}T${m[4]}` : s.replace(' ', 'T'); return Date.parse(iso.replace(',', '.')); }
+    if (art === 'excel') { return Math.round((zahl(s) - 25569) * 86400000 + new Date().getTimezoneOffset() * 60000); }
     if (art === 'uhrzeit') { const [h, mi, se] = s.split(':'); return tagMs + ((+h) * 3600 + (+mi) * 60 + zahl(se || 0)) * 1000; }
     const v = zahl(s); if (art === 'unixMs') return v; if (art === 'unixS') return v * 1000; return v * 1000;   // sekunden: relativ
   }
 
+  /* Bytes → Text: UTF-16 (BOM oder viele Nullbytes), UTF-8, sonst Windows-1252 (ältere Panels/Excel) */
+  function dekodieren(buf) {
+    const b = new Uint8Array(buf);
+    if (b[0] === 0xFF && b[1] === 0xFE) return new TextDecoder('utf-16le').decode(b.subarray(2));
+    if (b[0] === 0xFE && b[1] === 0xFF) return new TextDecoder('utf-16be').decode(b.subarray(2));
+    let nul = 0; for (let k = 1; k < Math.min(b.length, 400); k += 2) if (b[k] === 0) nul++;
+    if (nul > 60) return new TextDecoder('utf-16le').decode(b);
+    const u = new TextDecoder('utf-8').decode(b); return /�/.test(u) ? new TextDecoder('windows-1252').decode(b) : u;
+  }
+  function spalten(z, t) { const out = []; let cur = '', q = false;
+    for (let k = 0; k < z.length; k++) { const c = z[k];
+      if (c === '"') { if (q && z[k + 1] === '"') { cur += '"'; k++; } else q = !q; }
+      else if (c === t && !q) { out.push(cur.trim()); cur = ''; } else cur += c; }
+    out.push(cur.trim()); return out; }
+  const istZahlOderZeit = c => !isNaN(zahl(c)) || /^-?[\d.,]+$/.test(c) || /^\d{1,2}:\d{2}/.test(c) || /^\d{4}-\d{2}-\d{2}|^\d{1,2}[./]\d{1,2}[./]\d{2,4}/.test(c);
   function lesen(text) {
-    const zeilenRoh = String(text).replace(/^﻿/, '').split(/\r?\n/).filter(z => z.trim() && !/^\s*#/.test(z));
+    const zeilenRoh = String(text).replace(/^﻿/, '').split(/\r?\n/).filter(z => z.trim() && !/^\s*(#|\/\/)/.test(z));
     if (zeilenRoh.length < 2) return { fehler: 'Zu wenige Zeilen' };
-    const kand = ['\t', ';', ',', '|'];
-    const tz = kand.map(t => [t, zeilenRoh.slice(0, 10).map(z => z.split(t).length)]).filter(([, n]) => n[0] > 1 && n.every(x => x === n[0])).sort((a, b) => b[1][0] - a[1][0])[0];
-    const trenner = tz ? tz[0] : ';';
-    const teile = zeilenRoh.map(z => z.split(trenner).map(c => c.trim().replace(/^"|"$/g, '')));
-    const kopf = teile[0].some(c => isNaN(zahl(c)) && !/^\d{1,2}:\d{2}/.test(c)) ? teile[0] : teile[0].map((_, i) => 'Spalte ' + (i + 1));
-    const daten = kopf === teile[0] ? teile.slice(1) : teile;
-    let zeitIdx = kopf.findIndex(k => /(zeit|time|uhr|datum|date|stamp|^t$|sek|sec)/i.test(k));
+    /* Trennzeichen: das mit der häufigsten gleichbleibenden Spaltenzahl im Datenteil (Metadaten oben stören so nicht) */
+    let best = null;
+    for (const t of ['\t', ';', ',', '|']) { const n = zeilenRoh.map(z => spalten(z, t).length); const h = {};
+      n.slice(-Math.min(200, n.length)).forEach(x => { if (x > 1) h[x] = (h[x] || 0) + 1; });
+      const [anz, haeuf] = Object.entries(h).sort((a, b) => b[1] - a[1])[0] || [0, 0];
+      if (haeuf && (!best || haeuf > best.haeuf || (haeuf === best.haeuf && +anz > best.anz))) best = { t, anz: +anz, haeuf }; }
+    const trenner = best ? best.t : ';';
+    const teile = zeilenRoh.map(z => spalten(z, trenner)).filter(r => r.length === (best ? best.anz : r.length));
+    /* erste Datenzeile = erste Zeile, deren Zellen überwiegend Zahl/Zeit sind; davor: Kopf (+ evtl. Einheitenzeile) */
+    const datenAb = teile.findIndex(r => r.filter(istZahlOderZeit).length >= Math.ceil(r.length * 0.6));
+    if (datenAb < 0) return { fehler: 'Keine Datenzeilen' };
+    let kopf = datenAb > 0 ? teile[datenAb - 1].slice() : teile[0].map((_, i) => 'Spalte ' + (i + 1));
+    if (datenAb > 1 && teile[datenAb - 1].every(c => c.length <= 9 && /^[\[(]?[%°a-zA-Zµ/²:]*[\])]?$/.test(c)) && teile[datenAb - 2].some(c => c.length > 2))
+      kopf = teile[datenAb - 2].map((k, i) => (k + ' ' + (teile[datenAb - 1][i] || '')).trim());   // Einheitenzeile unter dem Kopf
+    let daten = teile.slice(datenAb).filter(r => r.filter(istZahlOderZeit).length >= Math.ceil(r.length * 0.5));
+    /* Langformat (Siemens WinCC Comfort/Advanced-Archiv: "VarName";"TimeString";"VarValue";"Validity";"Time_ms"; ähnlich viele Panels):
+       eine Zeile je Variable und Zeitpunkt → in Breitformat drehen (eine Spalte je Variable). Quelle: Siemens-Support, Archiv-CSV-Aufbau. */
+    const vn = kopf.findIndex(k => /^(var_?name|tag_?name|tag|variable|name|kanal|channel)$/i.test(k.replace(/\s/g, '')));
+    const vv = kopf.findIndex(k => /^(var_?value|value|wert|messwert)$/i.test(k.replace(/\s/g, '')));
+    const vt = kopf.findIndex(k => /(time_?string|zeit|time|datum|date|stamp)/i.test(k) && !/_ms$/i.test(k));
+    if (vn >= 0 && vv >= 0 && vt >= 0) {
+      const namen = [...new Set(daten.map(r => r[vn]))], zeilen = new Map();
+      for (const r of daten) { if (kopf.some(k => /validity|g(ü|ue)ltig/i.test(k)) && r[kopf.findIndex(k => /validity|g(ü|ue)ltig/i.test(k))] === '0') continue;
+        const t = r[vt]; if (!zeilen.has(t)) zeilen.set(t, [t, ...namen.map(() => '')]); zeilen.get(t)[1 + namen.indexOf(r[vn])] = r[vv]; }
+      kopf = [kopf[vt], ...namen]; daten = [...zeilen.values()];
+    }
+    /* Datum und Uhrzeit in zwei Spalten → zusammenführen */
+    const di = kopf.findIndex((_, i) => daten.slice(0, 5).every(r => /^(\d{4}-\d{2}-\d{2}|\d{1,2}[./]\d{1,2}[./]\d{2,4})$/.test(r[i])));
+    if (di >= 0 && daten.slice(0, 5).every(r => /^\d{1,2}:\d{2}/.test(r[di + 1] || ''))) {
+      daten = daten.map(r => { const d = r[di].replace(/\//g, '.'), m = d.match(/^(\d{1,2})\.(\d{1,2})\.(\d{2,4})$/), iso = m ? `${m[3].length === 2 ? '20' + m[3] : m[3]}-${m[2].padStart(2, '0')}-${m[1].padStart(2, '0')}` : d;
+        const n = r.slice(); n.splice(di, 2, iso + 'T' + r[di + 1]); return n; });
+      kopf = kopf.slice(); kopf.splice(di, 2, (kopf[di] + ' ' + kopf[di + 1]).trim());
+    }
+    let zeitIdx = kopf.findIndex(k => /(zeit|time|uhr|datum|date|stamp|^t$|sek|sec)/i.test(k) && !/(lauf|run|dauer|duration|elapsed)/i.test(k));
     if (zeitIdx < 0 || !zeitArt(daten.map(r => r[zeitIdx]))) zeitIdx = kopf.findIndex((_, i) => zeitArt(daten.map(r => r[i])));
-    return { trenner, kopf, daten, zeitIdx, zeitArt: zeitIdx >= 0 ? zeitArt(daten.map(r => r[zeitIdx])) : null };
+    const za = zeitIdx >= 0 ? zeitArt(daten.map(r => r[zeitIdx])) : null;
+    const zellen = daten.slice(0, 200).flatMap(r => r.filter((_, i) => i !== zeitIdx));
+    const dez = zellen.some(c => /^-?\d+,\d+$/.test(c)) ? ',' : zellen.some(c => /^-?\d+\.\d+$/.test(c)) ? '.' : (trenner === ',' ? '.' : ',');
+    const tm = daten.slice(0, 200).map(r => String(r[zeitIdx] || '').match(/^(\d{1,2})\/(\d{1,2})\/\d{2,4}/)).filter(Boolean);
+    const mdy = tm.length > 0 && !tm.some(m => +m[1] > 12) && (tm.some(m => +m[2] > 12) || true);
+    return { trenner, dez, mdy, kopf, daten, zeitIdx, zeitArt: za === 'sekunden' && /(datum|date)/i.test(kopf[zeitIdx] || '') && daten.every(r => zahl(r[zeitIdx]) > 30000 && zahl(r[zeitIdx]) < 80000) ? 'excel' : za };
   }
 
   /* Vorschlag Spalte → Feld; Einheit aus dem Kopf (m/s, mph → km/h; mm → cm; °F → °C) */
@@ -57,7 +108,7 @@
     kopf.forEach((k, i) => { if (i === zeitIdx) return;
       for (const [f, F] of Object.entries(FELDER)) if (!Object.values(map).some(m => m.feld === f) && F.re.test(k)) {
         if (f === 'waterTempC' && !/wasser|water/i.test(k) && Object.values(map).some(m => m.feld === 'waterTempC')) continue;
-        map[i] = { feld: f, faktor: /m\/s/i.test(k) ? 3.6 : /mph/i.test(k) ? 1.609344 : /\bmm\b/i.test(k) ? 0.1 : /\bm\b(?!\/)/i.test(k) && f === 'waterHeightCm' ? 100 : 1, f2c: /°?f\b|fahrenheit/i.test(k) && f === 'waterTempC' }; break; } });
+        map[i] = { feld: f, faktor: /m\/s/i.test(k) ? 3.6 : /mph/i.test(k) ? 1.609344 : /\bmm\b/i.test(k) ? 0.1 : /\bm\b(?!\/)/i.test(k) && f === 'waterHeightCm' ? 100 : 1, f2c: /°f\b|\(f\)|\bf\b|fahrenheit/i.test(k) && f === 'waterTempC' }; break; } });
     return map;
   }
 
@@ -68,13 +119,15 @@
     const tag = new Date(startMs); tag.setHours(0, 0, 0, 0);
     let t0 = null; const reihe = [];
     for (const r of p.daten) {
-      let ms = zeitMs(r[p.zeitIdx], p.zeitArt, tag.getTime()); if (!isFinite(ms)) continue;
+      let ms = zeitMs(r[p.zeitIdx], p.zeitArt, tag.getTime(), p.mdy); if (!isFinite(ms)) continue;
       if (p.zeitArt === 'sekunden') { if (t0 == null) t0 = ms; ms = startMs + (ms - t0); }
-      const w = {}; for (const [i, m] of Object.entries(map)) { const roh = r[i]; let v = m.feld === 'reverse' ? wahr(roh) : zahl(roh);
+      const w = {}; for (const [i, m] of Object.entries(map)) { const roh = r[i]; let v = m.feld === 'reverse' ? wahr(roh) : zahl(roh, p.dez);
         if (isNaN(v)) continue; if (m.f2c) v = (v - 32) * 5 / 9; else v *= m.faktor || 1; w[m.feld] = Math.round(v * 10) / 10; }
       reihe.push({ sec: (ms - startMs) / 1000 + versatzSec, w });
     }
     reihe.sort((a, b) => a.sec - b.sec);
+    /* Fehlender Wert (leeres Feld) heißt „nicht gemeldet“, nicht „geändert“: letzten bekannten Wert für die Stufenerkennung fortführen */
+    for (let k = 1; k < reihe.length; k++) for (const f of Object.keys(reihe[k - 1].w)) if (reihe[k].w[f] == null) reihe[k].w[f] = reihe[k - 1].w[f];
     const innen = reihe.filter(x => x.sec >= -5 && x.sec <= dauerSec + 5);
     const gleich = (a, b) => Object.keys(FELDER).every(f => (a[f] == null && b[f] == null) || (a[f] != null && b[f] != null && Math.abs(a[f] - b[f]) < FELDER[f].schwelle));
     const log = []; let akt = null, kand = null;
@@ -91,7 +144,9 @@
           : Object.assign({}, basis(x.sec), x.w, { startSec: Math.max(0, Math.round(x.sec)), device: geraet, quelle: 'steuerung' }); }) };
   }
 
-  g.Steuerung = { FELDER, lesen, zuordnen, stufen, zahl, zeitArt };
+  /* Zeitpunkt der ersten Zeile (für die Prüfseite ohne Aufnahme) */
+  function ersteZeit(p) { const tag = new Date(); tag.setHours(0, 0, 0, 0); for (const r of p.daten) { const ms = zeitMs(r[p.zeitIdx], p.zeitArt, tag.getTime(), p.mdy); if (isFinite(ms)) return p.zeitArt === 'sekunden' ? Date.now() : ms; } return null; }
+  g.Steuerung = { FELDER, lesen, zuordnen, stufen, zahl, zeitArt, dekodieren, ersteZeit };
 })(typeof window !== 'undefined' ? window : globalThis);
 
 /* ── Oberfläche im Cockpit: „Steuerungsprotokoll übernehmen“ je Reha-Sitzung ─────────────────────────────────
@@ -108,7 +163,7 @@
     async start(hid, rid) {
       const rec = State.recordings.find(r => r.id === rid); if (!rec || !rec.reha) return; this.rec = rec;
       const i = document.createElement('input'); i.type = 'file'; i.accept = '.csv,.txt,.tsv,.log,text/csv,text/plain';
-      i.onchange = async () => { const f = i.files && i.files[0]; if (!f) return; this.datei = f.name; this.p = S.lesen(await f.text());
+      i.onchange = async () => { const f = i.files && i.files[0]; if (!f) return; this.datei = f.name; this.p = S.lesen(S.dekodieren(await f.arrayBuffer()));
         if (this.p.fehler || this.p.zeitIdx < 0) { Toast.show(en() ? 'No time column found in this file' : 'In dieser Datei ist keine Zeitspalte erkennbar', 'warn'); return; }
         const art = this.art(), prof = ((State.settings.steuerProfile || {})[art]) || null;
         this.map = prof && prof.kopf === this.p.kopf.join('|') ? prof.map : S.zuordnen(this.p.kopf, this.p.zeitIdx);
