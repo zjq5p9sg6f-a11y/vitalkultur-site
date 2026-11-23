@@ -1054,6 +1054,9 @@ h1,h2{text-wrap:balance}
 .kl-raster b{color:var(--text-primary);font-size:15.5px}
 .kl-pdf{margin:16px 0 0}
 .kl-raster span{color:var(--text-secondary);font-size:14.5px;line-height:1.55}
+#steuerung .steuer-lead{max-width:760px;margin:16px 0 22px;color:var(--text-secondary);line-height:1.6}
+@media (min-width:901px){#steuerung .kl-raster{grid-template-columns:repeat(4,minmax(0,1fr))}}
+#steuerung .steuer-klein{display:inline-block;margin-left:12px;font-size:13px;color:var(--text-secondary)}
 </style>
 <link rel="stylesheet" href="/assets/baukasten/baukasten.css?v=4">
 <link rel="stylesheet" href="/assets/app-tour/app-tour.css?v=10">
@@ -1934,6 +1937,21 @@ try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; 
       </div>
       <p class="kl-pdf"><a class="btn btn-back" href="/carlon-equine-visite/assets/CARLON-Visite-Clinic-IT.pdf" target="_blank" rel="noopener">Document for administration and IT (PDF, 2 pages) →</a></p>
     </div>
+  </div>
+</section>
+
+<section id="steuerung">
+  <div class="wrap">
+    <div class="sec-eyebrow">Treadmill, aqua trainer, horse walker</div>
+    <h2>The values from your equipment controller, straight into the rehab record</h2>
+    <p class="steuer-lead">Speed, incline, water depth and water temperature come from the controller, not from a note on paper. Visite takes them from the log file after the session or live during the session and creates the stages itself.</p>
+    <div class="kl-raster">
+      <div><b>File after the session</b><span>CSV or TXT from a data log, operator panel or Excel. Visite recognises columns, units and decimal separators; you check the mapping once per device.</span></div>
+      <div><b>Live during the session</b><span>Via an address on your local network, via MQTT or via Bluetooth with a gateway. Siemens&nbsp;S7-1200 through its web server, LOGO!&nbsp;8.4 through MQTT.</span></div>
+      <div><b>Read only</b><span>Visite sends nothing to the controller. If the connection drops, the recording stays complete and the stages can be added from the file afterwards.</span></div>
+      <div><b>Open format for manufacturers</b><span>One row per second, semicolon, UTF-8. New exports use this format; Visite keeps reading existing exports.</span></div>
+    </div>
+    <p class="kl-pdf"><a class="cta-primary" href="/carlon-equine-visite/geraetedatei/">Check your own controller file now (page in German) →</a> <span class="steuer-klein">The file stays on your device.</span></p>
   </div>
 </section>
 

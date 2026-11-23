@@ -1054,6 +1054,9 @@ h1,h2{text-wrap:balance}
 .kl-raster b{color:var(--text-primary);font-size:15.5px}
 .kl-pdf{margin:16px 0 0}
 .kl-raster span{color:var(--text-secondary);font-size:14.5px;line-height:1.55}
+#steuerung .steuer-lead{max-width:760px;margin:16px 0 22px;color:var(--text-secondary);line-height:1.6}
+@media (min-width:901px){#steuerung .kl-raster{grid-template-columns:repeat(4,minmax(0,1fr))}}
+#steuerung .steuer-klein{display:inline-block;margin-left:12px;font-size:13px;color:var(--text-secondary)}
 </style>
 <link rel="stylesheet" href="/assets/baukasten/baukasten.css?v=4">
 <link rel="stylesheet" href="/assets/app-tour/app-tour.css?v=10">
@@ -1938,6 +1941,21 @@ try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; 
       </div>
       <p class="kl-pdf"><a class="btn btn-back" href="/carlon-equine-visite/assets/CARLON-Visite-Klinik-IT.pdf" target="_blank" rel="noopener">Unterlage für Verwaltung und IT (PDF, 2 Seiten) →</a></p>
     </div>
+  </div>
+</section>
+
+<section id="steuerung">
+  <div class="wrap">
+    <div class="sec-eyebrow">Laufband, Aquatrainer, Führanlage</div>
+    <h2>Die Werte Ihrer Gerätesteuerung, direkt in der Reha-Akte</h2>
+    <p class="steuer-lead">Tempo, Steigung, Wasserhöhe und Wassertemperatur kommen aus der Steuerung, nicht vom Notizzettel. Visite übernimmt sie aus der Protokolldatei nach der Einheit oder live während der Einheit und legt die Stufen selbst an.</p>
+    <div class="kl-raster">
+      <div><b>Datei nach der Einheit</b><span>CSV oder TXT aus Datenlog, Bedienpanel oder Excel. Spalten, Einheiten und Dezimaltrennzeichen erkennt Visite; die Zuordnung prüfen Sie einmal je Gerät.</span></div>
+      <div><b>Live während der Einheit</b><span>Über eine Adresse im Betriebsnetz, über MQTT oder über Bluetooth mit einem Gateway. Siemens&nbsp;S7-1200 über ihren Webserver, LOGO!&nbsp;8.4 über MQTT.</span></div>
+      <div><b>Nur lesend</b><span>Visite sendet nichts an die Steuerung. Bricht die Verbindung ab, bleibt die Aufnahme vollständig, und die Stufen lassen sich aus der Datei nachtragen.</span></div>
+      <div><b>Offenes Format für Hersteller</b><span>Eine Zeile je Sekunde, Semikolon, UTF-8. Wer neu exportiert, nimmt dieses Format; bestehende Exporte liest Visite weiter.</span></div>
+    </div>
+    <p class="kl-pdf"><a class="cta-primary" href="/carlon-equine-visite/geraetedatei/">Eigene Steuerungsdatei jetzt prüfen →</a> <span class="steuer-klein">Die Datei bleibt auf Ihrem Gerät.</span></p>
   </div>
 </section>
 
