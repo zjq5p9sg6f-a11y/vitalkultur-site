@@ -307,6 +307,7 @@ body.hoert .stimme-knopf{background:var(--cyan);color:#02130f;animation:hoertPul
 @keyframes hoertPuls{0%,100%{box-shadow:0 0 0 0 rgba(62,207,178,.55)}50%{box-shadow:0 0 0 14px rgba(62,207,178,0)}}
 @media print{.stimme-knopf{display:none}}
 a[href^="tel:"]{white-space:nowrap}
+@media (pointer:coarse),(any-pointer:coarse){button.icon-btn,.chart-zoombtn,.qa-btn,.btn,a.btn,.pill.paid{min-height:44px}button.icon-btn,.chart-zoombtn{min-width:44px}}   /* 23.11.: Touch-Ziel 44 px (Reha-Tablet, nasse Finger) */
 .pdf-senden{margin-top:14px;padding:14px;border-radius:14px;border:1px solid var(--cyan-deep);background:var(--cyan-g3)}.pdf-senden .ps-k{display:flex;justify-content:space-between;gap:10px;font-weight:600;margin-bottom:10px}.pdf-senden .ps-k span{font-weight:400;font-size:12.5px;color:var(--text-dim)}.pdf-senden .ps-k span.ok{color:var(--good)}.pdf-senden .ps-k span.warn{color:var(--amber)}.pdf-senden p{margin:8px 0 0;font-size:12.5px;color:var(--text-secondary)}.pdf-senden .btn svg{width:16px;height:16px;margin-right:6px;vertical-align:-3px}
 body:has(#modalBg) .stimme-knopf{bottom:calc(14px + env(safe-area-inset-bottom,0px));left:calc(14px + env(safe-area-inset-left,0px));width:46px;height:46px}   /* im Dialog bleibt Diktieren möglich, Knopf rückt in die Ecke */
 body:has(#stimmeKnopf) main{padding-bottom:calc(150px + env(safe-area-inset-bottom,0px))}   /* 22.11. Sichtprüfung: Mikrofon verdeckt den letzten Eintrag nicht, im Dialog klein in der Ecke */
