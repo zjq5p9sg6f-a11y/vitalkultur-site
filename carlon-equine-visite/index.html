@@ -1951,7 +1951,7 @@ try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; 
     <p class="steuer-lead">Tempo, Steigung, Wasserhöhe und Wassertemperatur kommen aus der Steuerung, nicht vom Notizzettel. Visite übernimmt sie aus der Protokolldatei nach der Einheit oder live während der Einheit und legt die Stufen selbst an.</p>
     <div class="kl-raster">
       <div><b>Datei nach der Einheit</b><span>CSV oder TXT aus Datenlog, Bedienpanel oder Excel. Spalten, Einheiten und Dezimaltrennzeichen erkennt Visite; die Zuordnung prüfen Sie einmal je Gerät.</span></div>
-      <div><b>Live während der Einheit</b><span>Über eine Adresse im Betriebsnetz, über MQTT oder über Bluetooth mit einem Gateway. Siemens&nbsp;S7-1200 über ihren Webserver, LOGO!&nbsp;8.4 über MQTT.</span></div>
+      <div><b>Live während der Einheit</b><span>Über eine Adresse im Betriebsnetz, über MQTT oder über Bluetooth mit einem Gateway. Siemens&nbsp;S7-1200 über ihren Webserver, LOGO!&nbsp;8.4 über MQTT, ältere LOGO! und andere Modbus-Steuerungen über unser Lese-Gateway.</span></div>
       <div><b>Nur lesend</b><span>Visite sendet nichts an die Steuerung. Bricht die Verbindung ab, bleibt die Aufnahme vollständig, und die Stufen lassen sich aus der Datei nachtragen.</span></div>
       <div><b>Offenes Format für Hersteller</b><span>Eine Zeile je Sekunde, Semikolon, UTF-8. Wer neu exportiert, nimmt dieses Format; bestehende Exporte liest Visite weiter.</span></div>
     </div>

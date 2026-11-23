@@ -84,12 +84,14 @@ speed_kmh=4.8;incline_pct=2.0;water_depth_cm=40;water_temp_c=18.5</pre>
 </ul>
 <div class="raster" style="grid-template-columns:1fr;margin-top:14px"><div style="border-color:rgba(62,207,178,.45)"><b>Gemeinsam ermöglichen</b><span>Klappt die Anbindung Ihrer Steuerung nicht auf Anhieb oder haben Sie eine weitere Idee, etwa einen anderen Weg oder zusätzliche Werte, erarbeiten wir die Lösung gemeinsam mit Ihnen. Eine Beispieldatei oder ein kurzer Mitschnitt der Live-Werte genügt für den Anfang.</span></div></div>
 
-<h2>Siemens LOGO! und S7-1200</h2>
+<h2>Siemens LOGO!, S7 und andere Steuerungen</h2>
 <ul>
   <li><b>LOGO! 8</b>: Ein Datenlog-Funktionsblock schreibt CSV mit Zeitstempel auf die microSD-Karte; Werte im Abstand von einer Sekunde aufzeichnen (Siemens nennt mindestens 500 ms). Ab LOGO! 8.4 lässt sich der Datenlog über den eingebauten Webserver herunterladen.</li>
   <li><b>S7-1200</b>: DataLogCreate und DataLogWrite legen eine CSV an; der Download geht über den Webserver der Steuerung.</li>
   <li><b>S7-1200 ab Firmware V4.5 und S7-1500 live</b>: Visite liest direkt über die Web-Schnittstelle der Steuerung (Anmeldung mit einem Benutzer, der nur lesen darf, dann die Variablen, etwa <code>"Laufband".Tempo</code>). Ein Gateway ist dafür nicht nötig.</li>
   <li><b>LOGO! 8.4 live</b>: Die LOGO! sendet an einen MQTT-Broker im Betrieb; Visite liest das LOGO!-Format (state.reported) direkt. Sendet die Steuerung ganze Zahlen, etwa 48 für 4,8 km/h, stellen Sie beim Einrichten den Faktor 0,1 ein.</li>
+  <li><b>LOGO! 8.1 bis 8.3 und andere Steuerungen mit Modbus TCP live</b>: Ein Browser kann Modbus nicht selbst lesen. Das <a href="carlon-lesegateway.py" download>CARLON Lese-Gateway</a> (eine Datei, Python 3, keine Zusatzpakete) läuft auf einem Rechner im Betriebsnetz, liest die eingestellten Register nur lesend und stellt sie unter <code>http://&lt;rechner&gt;:8090/werte.json</code> bereit. In Visite wählen Sie dann „Netzwerk-Adresse“. Welche Werte in welchen Registern liegen, legt der Gerätehersteller fest.</li>
+  <li><b>Andere Hersteller</b>: Steuerungen, die MQTT oder JSON über HTTP ausgeben, etwa viele aktuelle Steuerungen von Beckhoff oder WAGO, richten Sie über MQTT oder die Netzwerk-Adresse ein; die Spalten ordnet Visite beim Einrichten selbst zu.</li>
   <li>Visite liest nur. Es steuert nichts und greift nicht in Not-Aus oder Sicherheitskette ein. Änderungen am Steuerungsprogramm verantwortet der Gerätehersteller.</li>
 </ul>
 <p style="margin-top:16px"><a class="knopf" href="mailto:jan@vitalkultur.com?subject=CARLON%20Ger%C3%A4tedatei%20%C2%B7%20Hersteller">Beispieldatei oder Live-Mitschnitt schicken</a></p>
