@@ -12,8 +12,9 @@
   /* CSS-Variablen der App (Schriften, Farben) für die gezeichnete Kopie: sonst andere Schrift → anderes Layout als gemessen */
   const vars = () => { const cs = getComputedStyle(document.documentElement); const o = []; for (let i = 0; i < cs.length; i++) { const p = cs[i]; if (p.startsWith('--')) o.push(p + ':' + cs.getPropertyValue(p).trim().replace(/"/g, "'")); } return o.join(';'); };
   /* Wurzel- und Grundschrift wie in der App: rem bezieht sich in der Kopie auf <svg>, nicht auf <html> */
-  const wurzel = () => { const r = getComputedStyle(document.documentElement), b = getComputedStyle(document.body);
-    return { svg: `font-size:${r.fontSize}`, div: `font-family:${b.fontFamily.replace(/"/g, "'")};font-size:${b.fontSize};line-height:${b.lineHeight};letter-spacing:${b.letterSpacing};color:${b.color}` }; };
+  /* Zeilenhöhe RELATIV weitergeben (23.11.): getComputedStyle liefert „24px“; fest vererbt bekäme jede kleine Schrift 24-px-Zeilen → Seiten zu hoch */
+  const wurzel = () => { const r = getComputedStyle(document.documentElement), b = getComputedStyle(document.body), lh = parseFloat(b.lineHeight) / parseFloat(b.fontSize);
+    return { svg: `font-size:${r.fontSize}`, div: `font-family:${b.fontFamily.replace(/"/g, "'")};font-size:${b.fontSize};line-height:${isFinite(lh) && lh > 0 ? +lh.toFixed(4) : 'normal'};letter-spacing:${b.letterSpacing};color:${b.color}` }; };
   const ladeLib = () => _lib || (_lib = new Promise((res, rej) => { if (window.jspdf) return res(window.jspdf);
     const s = document.createElement('script'); s.src = 'lib/jspdf-4.2.1.umd.min.js'; s.onload = () => res(window.jspdf); s.onerror = () => { _lib = null; rej(new Error('jsPDF nicht geladen')); }; document.head.appendChild(s); }));
   const alsDataUrl = async (u) => { const b = await (await fetch(u)).blob(); return await new Promise(r => { const f = new FileReader(); f.onload = () => r(f.result); f.readAsDataURL(b); }); };
@@ -54,9 +55,9 @@
         const kl = el.cloneNode(true); for (const im of kl.querySelectorAll('img')) if (im.src && !im.src.startsWith('data:')) { try { im.src = await alsDataUrl(im.src); } catch (_) { } }
         if (kl.tagName === 'IMG' && kl.src && !kl.src.startsWith('data:')) { try { kl.src = await alsDataUrl(kl.src); } catch (_) { } }
         kl.style.margin = '0'; kl.style.width = b.width + 'px';
-        const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${W * F}" height="${Hp * F}" style="${wz.svg}"><foreignObject width="${W}" height="${Hp}" transform="scale(${F})"><div xmlns="http://www.w3.org/1999/xhtml" style="width:${W}px;background:#fff;${wz.div};${vv}"><style><![CDATA[${ff}${stil.replace(/\]\]>/g, ']] >')}]]></style><div id="printArea" style="padding-left:${x}px">${new XMLSerializer().serializeToString(kl)}</div></div></foreignObject></svg>`;
+        const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${Hp}" style="${wz.svg}"><foreignObject x="0" y="0" width="${W}" height="${Hp}"><div xmlns="http://www.w3.org/1999/xhtml" style="width:${W}px;background:#fff;${wz.div};${vv}"><style><![CDATA[${ff}${stil.replace(/\]\]>/g, ']] >')}]]></style><div id="printArea" style="padding-left:${x}px">${new XMLSerializer().serializeToString(kl)}</div></div></foreignObject></svg>`;
         const bild = new Image(); await new Promise((res, rej) => { bild.onload = res; bild.onerror = () => rej(new Error('Bericht nicht zeichenbar')); bild.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg); });
-        const cv = document.createElement('canvas'); cv.width = W * F; cv.height = Hp * F; const cx = cv.getContext('2d', { willReadFrequently: true }); cx.fillStyle = '#fff'; cx.fillRect(0, 0, cv.width, cv.height); cx.drawImage(bild, 0, 0);
+        const cv = document.createElement('canvas'); cv.width = W * F; cv.height = Hp * F; const cx = cv.getContext('2d', { willReadFrequently: true }); cx.fillStyle = '#fff'; cx.fillRect(0, 0, cv.width, cv.height); cx.drawImage(bild, 0, 0, cv.width, cv.height);
         cv.toDataURL('image/png').slice(0, 8);   /* wirft bei gesperrtem Zeichnen (Safari) → Rückfall Druck */
         const d = cx.getImageData(0, 0, cv.width, cv.height).data, leer = y => { for (let i = y * cv.width * 4, e = i + cv.width * 4; i < e; i += 4) if (d[i] < 245 || d[i + 1] < 245 || d[i + 2] < 245) return false; return true; };
         let h = cv.height; while (h > 1 && leer(h - 1)) h--; const hb = Math.max(h / F, b.height * 0.5);
@@ -92,7 +93,7 @@
         for (const t of seiten[i]) { const el = t.bk.el, b = t.bk.b, rt = t.bk.ratio || 1; const tw = document.createTreeWalker(el, NodeFilter.SHOW_TEXT); let tn;
           while ((tn = tw.nextNode())) { const s2 = tn.textContent.replace(/\s+/g, ' ').trim(); if (!s2 || !tn.parentElement) continue; const rg = document.createRange(); rg.selectNodeContents(tn); const bb = rg.getBoundingClientRect(); if (!bb.width) continue;
             const yb = (bb.bottom - b.top) * rt; if (yb <= t.von || yb > t.bis + 2) continue; const pt = parseFloat(getComputedStyle(tn.parentElement).fontSize) * mm * 72 / 25.4; doc.setFontSize(Math.max(1, pt));
-            try { doc.text(s2, R.l + (bb.left - q.left) * mm, R.o + (t.y + yb - t.von) * mm - pt * 0.09, { renderingMode: 'invisible', maxWidth: bb.width * mm + 2 }); } catch (_) { } } } }
+            try { doc.text(s2.replace(/[\u2212\u2013]/g, '-').replace(/\u2192/g, '->'), R.l + (bb.left - q.left) * mm, R.o + (t.y + yb - t.von) * mm - pt * 0.09, { renderingMode: 'invisible', maxWidth: bb.width * mm + 2 }); } catch (_) { } } } }
       return doc.output('blob');
     } finally { live.remove(); if (alt) pa.setAttribute('style', alt); else pa.removeAttribute('style'); }
   }
@@ -111,14 +112,22 @@
       for (let i = 0; i < seiten.length; i++) {
         const el = seiten[i], q = el.getBoundingClientRect(), W = Math.round(q.width), H = Math.round(q.height);
         if (i) doc.addPage('a4', quer ? 'landscape' : 'portrait');
-        const kl = el.cloneNode(true);
-        for (const im of kl.querySelectorAll('img')) if (im.src && !im.src.startsWith('data:')) { try { im.src = await alsDataUrl(im.src); } catch (_) { } }
-        const xhtml = new XMLSerializer().serializeToString(kl);
-        const wz = wurzel(); const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${W * F}" height="${H * F}" style="${wz.svg}"><foreignObject width="${W}" height="${H}" transform="scale(${F})"><div xmlns="http://www.w3.org/1999/xhtml" id="printArea" style="width:${W}px;${wz.div};${vars()}"><style><![CDATA[${ff}${(stil).replace(/\]\]>/g, "]] >")}]]></style>${xhtml}</div></foreignObject></svg>`;
-        const bild = new Image(); bild.decoding = 'sync';
-        await new Promise((res, rej) => { bild.onload = res; bild.onerror = () => rej(new Error('Seite nicht zeichenbar')); bild.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg); });
-        const cv = document.createElement('canvas'); cv.width = W * F; cv.height = H * F; const cx = cv.getContext('2d');
-        cx.fillStyle = '#fff'; cx.fillRect(0, 0, cv.width, cv.height); cx.drawImage(bild, 0, 0);
+        /* SELBSTPRÜFUNG (23.11.): Kopie bricht Text minimal anders um als die Seite → nach dem Zeichnen den Streifen über der Fußlinie
+           im BILD messen; liegt dort Inhalt, Seite 3 % kleiner neu zeichnen (höchstens 6×). Unabhängig von Browser und Schrift. */
+        const fu = el.querySelector('.rh-fuss'), fy = fu ? (fu.getBoundingClientRect().top - q.top) / q.height : 0, z0 = parseFloat((el.querySelector('.rh-inh') || {}).style?.zoom) || 1;
+        let cv, cx;
+        for (let v = 0; v < 7; v++) {
+          const kl = el.cloneNode(true); const ih = kl.querySelector('.rh-inh'); if (ih && v) ih.style.zoom = +(z0 * Math.pow(0.97, v)).toFixed(3);
+          for (const im of kl.querySelectorAll('img')) if (im.src && !im.src.startsWith('data:')) { try { im.src = await alsDataUrl(im.src); } catch (_) { } }
+          const xhtml = new XMLSerializer().serializeToString(kl);
+          const wz = wurzel(); const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}" style="${wz.svg}"><foreignObject x="0" y="0" width="${W}" height="${H}"><div xmlns="http://www.w3.org/1999/xhtml" id="printArea" style="width:${W}px;${wz.div};${vars()}"><style><![CDATA[${ff}${(stil).replace(/\]\]>/g, "]] >")}]]></style>${xhtml}</div></foreignObject></svg>`;
+          const bild = new Image(); bild.decoding = 'sync';
+          await new Promise((res, rej) => { bild.onload = res; bild.onerror = () => rej(new Error('Seite nicht zeichenbar')); bild.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg); });
+          cv = document.createElement('canvas'); cv.width = W * F; cv.height = H * F ; cx = cv.getContext('2d');
+          cx.fillStyle = '#fff'; cx.fillRect(0, 0, cv.width, cv.height); cx.drawImage(bild, 0, 0, cv.width, cv.height);
+          if (!fy) break; const y0 = Math.round(fy * cv.height), d = cx.getImageData(0, y0 - 5 * F, cv.width, 3 * F).data; let dk = 0;
+          for (let j = 0; j < d.length; j += 4) if (d[j] + d[j + 1] + d[j + 2] < 600) dk++; if (dk / (d.length / 4) < 0.01) break;
+        }
         const jpg = cv.toDataURL('image/jpeg', 0.86);   // wirft in Safari (foreignObject „verunreinigt“ die Fläche) → Rückfall Druck
         doc.addImage(jpg, 'JPEG', 0, 0, Bmm, Hmm, undefined, 'FAST');
         /* unsichtbare Textebene an derselben Stelle: PDF bleibt durchsuchbar und kopierbar */
@@ -127,7 +136,7 @@
         while ((n = tw.nextNode())) { const t = n.textContent.replace(/\s+/g, ' ').trim(); if (!t || !n.parentElement) continue;
           const rg = document.createRange(); rg.selectNodeContents(n); const b = rg.getBoundingClientRect(); if (!b.width || !b.height) continue;
           const pt = parseFloat(getComputedStyle(n.parentElement).fontSize) * mm * 72 / 25.4; doc.setFontSize(Math.max(1, pt));
-          try { doc.text(t, (b.left - q.left) * mm, (b.bottom - q.top) * mm - pt * 0.09, { renderingMode: 'invisible', maxWidth: b.width * mm + 2 }); } catch (_) { } }
+          try { doc.text(t.replace(/[\u2212\u2013]/g, '-').replace(/\u2192/g, '->'), (b.left - q.left) * mm, (b.bottom - q.top) * mm - pt * 0.09, { renderingMode: 'invisible', maxWidth: b.width * mm + 2 }); } catch (_) { } }
       }
       return doc.output('blob');
     } finally { if (alt) pa.setAttribute('style', alt); else pa.removeAttribute('style'); }

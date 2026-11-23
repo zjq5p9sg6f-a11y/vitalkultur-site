@@ -2249,7 +2249,7 @@ header.k7 #tierPill,header.k7 .post-pill{display:none}
 <script src="steuerung.js?v=4"></script>
 <script src="steuerung-live.js?v=4"></script>
 <script src="vorfuehrung.js?v=2"></script>
-<script src="bericht-pdf.js?v=2"></script>
+<script src="bericht-pdf.js?v=3"></script>
 <script>/* 21.11.2026 Muttersprachler-Review: „water treadmill“ ist der übliche englische Fachbegriff. Nur Anzeige in Visite; reha-kern.js (gemeinsam mit Equine) bleibt unverändert, Equine-Session informiert. */
 try{ if(window.RehaKern&&RehaKern.GERAETE&&RehaKern.GERAETE.aquatrainer) RehaKern.GERAETE.aquatrainer.en='Water treadmill'; }catch(_){}</script>
 <script src="h10-speicher.js"></script>
@@ -3015,9 +3015,10 @@ const Reha={
   /* Zwischenspeicher je Pferd: Schlüssel aus Kennung, Schlagzahl und Markenzahl jeder Aufnahme – ändert sich eine Aufnahme,
      ändert sich der Schlüssel, und es wird neu gerechnet (vorher: jede Verlaufsfrage rechnete alle Einheiten neu) */
   _sz:{},
-  sitzungen(hid){ const L=State.recsFor(hid).filter(r=>r.reha&&r.reha.log&&r.reha.log.length&&Array.isArray(r.rr)&&r.rr.length>30);
+  sitzungen(hid){ /* immer zeitlich aufsteigend (23.11.): Ablage kann neueste zuerst liefern → neueste Sitzung wurde „Einheit 1 von 8“ ohne Vergleich */
+    const L=State.recsFor(hid).filter(r=>r.reha&&r.reha.log&&r.reha.log.length&&Array.isArray(r.rr)&&r.rr.length>30).sort((a,b)=>new Date(a.startedAt)-new Date(b.startedAt));
     const k=L.map(r=>r.id+':'+r.rr.length+':'+r.reha.log.length+':'+(r.reha.log[r.reha.log.length-1]||{}).startSec).join('|'), c=this._sz[hid];
-    if(c&&c.k===k) return c.v; const v=L.map(r=>({rec:r, a:RehaKern.auswerten(r.rr.map(Number), r.reha.log)})); this._sz[hid]={k,v}; return v; },
+    if(c&&c.k===k) return [...c.v]; const v=L.map(r=>({rec:r, a:RehaKern.auswerten(r.rr.map(Number), r.reha.log)})); this._sz[hid]={k,v}; return [...v]; },   /* Kopie: ein .sort() beim Aufrufer verdreht sonst den Zwischenspeicher */
   geraet(s){ const d=(s.a.stufen.find(x=>x.device!=='keines')||{}).device||'keines'; const G=RehaKern.GERAETE[d]||{}; return (typeof Sprache!=='undefined'&&Sprache.cur==='en')?G.en:G.de; },
   mmss(x){ x=Math.max(0,Math.round(x)); return Math.floor(x/60)+':'+String(x%60).padStart(2,'0'); },
   z(v,d=0){ return v==null||!isFinite(v)?'–':(d?fmt1(v):fmt0(v)); },
@@ -3169,7 +3170,7 @@ const Reha={
     return {b,sd,n,se:sd/Math.sqrt(sxx),t,ki:t*sd/Math.sqrt(sxx),mdc:t*Math.SQRT2*sd,wochen:xs[n-1],mx,my,y0:my-b*mx,y1:my+b*(xs[n-1]-mx)}; },
   grenzeHF(hid,bis){ const tr=this.hfTrend(hid,bis); return tr&&tr.n>=6?{wert:tr.mdc,eigen:true}:{wert:this.RAUSCH.hf,eigen:false}; },
   /* Gleiche Rechnung für jede Reihe [{x,y}]: Trend je Woche, 95-%-Bereich (t), Reststreuung, kleinste sicher erkennbare Änderung */
-  reihenTrend(p){ const P=p.filter(q=>q.y!=null&&isFinite(q.y)); if(P.length<3) return null; const x0=+new Date(P[0].x), xs=P.map(q=>(+new Date(q.x)-x0)/6048e5), ys=P.map(q=>q.y), n=xs.length, mx=xs.reduce((a,b)=>a+b,0)/n, my=ys.reduce((a,b)=>a+b,0)/n; let sxy=0,sxx=0;
+  reihenTrend(p){ const P=p.filter(q=>q.y!=null&&isFinite(q.y)).sort((a,b)=>new Date(a.x)-new Date(b.x)); if(P.length<3) return null; const x0=+new Date(P[0].x), xs=P.map(q=>(+new Date(q.x)-x0)/6048e5), ys=P.map(q=>q.y), n=xs.length, mx=xs.reduce((a,b)=>a+b,0)/n, my=ys.reduce((a,b)=>a+b,0)/n; let sxy=0,sxx=0;
     for(let i=0;i<n;i++){ sxy+=(xs[i]-mx)*(ys[i]-my); sxx+=(xs[i]-mx)**2; } if(!sxx) return null; const b=sxy/sxx, sd=Math.sqrt(ys.reduce((a,y,i)=>a+(y-(my+b*(xs[i]-mx)))**2,0)/Math.max(1,n-2)), t=this._t(n-2);
     return {b,sd,n,ki:t*sd/Math.sqrt(sxx),mdc:t*Math.SQRT2*sd,wochen:xs[n-1],sicher:Math.abs(b)>t*sd/Math.sqrt(sxx)}; },
   /* ehrliche Rundung einer grob bestimmten Grenze (bei wenigen Freiheitsgraden): ganze Zahl mit „rund“ */
@@ -3233,9 +3234,11 @@ const Reha={
     /* Langzeittest 21.11.2026: bei 52 Einheiten lagen alle Datumsangaben übereinander – höchstens eine Beschriftung je ~70 px, erste und letzte immer */
     { const D=[...new Set(xs)].sort((a,b)=>a-b), maxN=Math.max(2,Math.floor(W/70)), schr=Math.ceil(D.length/maxN), F=D.length>maxN*1.5?{day:'numeric',month:'numeric'}:{day:'numeric',month:'short'};
       D.forEach((x,i)=>{ if(i%schr!==0&&i!==D.length-1) return; if(i!==D.length-1&&D.length-1-i<schr*0.6&&i!==0) return; g+=`<text x="${X(x).toFixed(1)}" y="${h-9-lh}" text-anchor="${i===0?'start':i===D.length-1?'end':'middle'}" font-size="10" fill="${C.achse}">${new Date(x).toLocaleDateString('de-DE',F)}</text>`; }); }
+    /* zeitlich aufsteigend (23.11.): neueste zuerst ergab „Trend +7 bpm in −7 Wochen“ und ein Band mit negativer Breite */
+    L.forEach(v=>{ v.p=[...v.p].sort((x,y)=>new Date(x.datum)-new Date(y.datum)); });
     L.forEach((v,k)=>{ const pts=v.p.map(q=>[X(+new Date(q.datum)),Y(q.hf),q.hf]); g+=`<polyline fill="none" stroke="${F[k]}" stroke-width="2.2" ${DA[k]?`stroke-dasharray="${DA[k]}"`:''} points="${pts.map(q=>q[0].toFixed(1)+','+q[1].toFixed(1)).join(' ')}"/>`+pts.map((q,i)=>k===1?`<rect x="${(q[0]-4).toFixed(1)}" y="${(q[1]-4).toFixed(1)}" width="8" height="8" fill="${F[k]}"/>`:`<circle cx="${q[0].toFixed(1)}" cy="${q[1].toFixed(1)}" r="${i===pts.length-1?5:3.6}" fill="${F[k]}"/>`).join('');
       const a=Math.round(v.p[0].hf), b=Math.round(v.p[v.p.length-1].hf), tr=this.reihenTrend(v.p.map(q=>({x:q.datum,y:q.hf}))), dd=this._d(a,b,this.grenzeHF(hid,bis).wert,'bpm');
-      const tw=tr&&tr.n>=4?tr.b*tr.wochen:null, tki=tr?tr.ki*tr.wochen:0, vz=x=>(x>0?'+':x<0?'−':'±')+fmt0(Math.abs(x)), ttxt=tw!=null?`Trend ${vz(tw)} bpm in ${fmt0(tr.wochen)} Wochen (95% CI ${vz(tw-tki)} bis ${vz(tw+tki)})`:dd.txt;
+      const tw=tr&&tr.n>=4?tr.b*tr.wochen:null, tki=tr?Math.abs(tr.ki*tr.wochen):0, vz=x=>(x>0?'+':x<0?'−':'±')+fmt0(Math.abs(x)), ttxt=tw!=null?`Trend ${vz(tw)} bpm in ${fmt0(tr.wochen)} Wochen (95% CI ${vz(tw-tki)} bis ${vz(tw+tki)})`:dd.txt;
       if(k===0&&tr&&tr.n>=4){ const x0=+new Date(v.p[0].datum), mx=v.p.reduce((s2,q)=>s2+(+new Date(q.datum)-x0)/6048e5,0)/v.p.length, my=v.p.reduce((s2,q)=>s2+q.hf,0)/v.p.length, yA=my+tr.b*(0-mx), yB=my+tr.b*(tr.wochen-mx), gr=this.grenzeHF(hid,bis).wert/2, xa=X(x0), xb=X(+new Date(v.p[v.p.length-1].datum));
         g+=`<rect x="${xa}" y="${Y(yA+gr*2)}" width="${xb-xa}" height="${Y(yA-gr*2)-Y(yA+gr*2)}" fill="${C.achse}" opacity=".13"/><line x1="${xa}" y1="${Y(yA)}" x2="${xb}" y2="${Y(yB)}" stroke="${C.achse}" stroke-width="1.4" stroke-dasharray="6 4"/>`; }
       const txt=`${esc(v.label)}: gemessen ${a} → ${b} bpm (${b-a>0?'+':b-a<0?'−':'±'}${Math.abs(b-a)}) · ${ttxt} · ${v.p.length} Einheiten`;
@@ -3343,10 +3346,10 @@ const Reha={
   _ueberlauf(){ const pa=document.getElementById('printArea'); if(!pa) return []; const alt=pa.style.cssText; pa.style.cssText='display:block;position:absolute;left:-10000px;top:0';
     const o=[...pa.querySelectorAll('.rh-seite')].map((x,i)=>{ const f=x.querySelector('.rh-fuss'); if(!f) return 0; const top=f.getBoundingClientRect().top; for(const c of x.querySelectorAll('*')){ if(f.contains(c)) continue; const r=c.getBoundingClientRect(); if(r.height>0&&r.bottom>top+1) return i+1; } return 0; }).filter(Boolean);
     pa.style.cssText=alt; return o; },
-  /* Jede Seite, die in den Fuß ragt, wird schrittweise verkleinert (höchstens auf 80 %), bis sie passt. Robust gegen
+  /* Jede Seite, die in den Fuß ragt, wird schrittweise verkleinert (höchstens auf 70 %; WebKit verkleinert mit zoom schwächer als Chrome, gemessen 23.11.), bis sie passt. Robust gegen
      beliebig lange Freitexte (Einschätzung, Befunde), ohne dass Inhalt abgeschnitten wird. */
   _einpassen(){ const pa=document.getElementById('printArea'); if(!pa) return; const seiten=[...pa.querySelectorAll('.rh-seite')];
-    for(let i=0;i<seiten.length;i++){ const inh=seiten[i].querySelector('.rh-inh'); if(!inh) continue; let z=1; while(this._ueberlauf().includes(i+1)&&z>0.8){ z=Math.round((z-0.03)*100)/100; inh.style.zoom=z; } } },
+    for(let i=0;i<seiten.length;i++){ const inh=seiten[i].querySelector('.rh-inh'); if(!inh) continue; let z=1; while(this._ueberlauf().includes(i+1)&&z>0.7){ z=Math.round((z-0.03)*100)/100; inh.style.zoom=z; } } },
   thema(t,el){ State.settings.rehaThema=t; State.saveSettings(); const g=el&&el.parentNode; if(g) [...g.children].forEach(b=>{ const an=b===el; b.setAttribute('aria-pressed',an); b.style.background=an?'var(--cyan)':'transparent'; b.style.color=an?'#04161a':'inherit'; }); },
   async drucken(hid,rid,art,thema,keinDruck){
     thema=thema||(State.settings&&State.settings.rehaThema)||'hell'; const dunkel=thema==='dunkel', P0=Report._P;
