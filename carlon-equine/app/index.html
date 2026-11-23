@@ -36,7 +36,7 @@
 .kauf-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;align-items:start}
 .kauf-grid.kauf-fuenf{grid-template-columns:repeat(auto-fit,minmax(230px,1fr))}
 @media(max-width:760px){.kauf-grid{grid-template-columns:1fr}}
-.kauf-grid .tier-opt{padding:12px 14px}.kauf-spalte.gewaehlt>.tier-opt.feat:first-child{border-color:var(--cyan);box-shadow:0 0 0 2px rgba(62,207,178,.28)}.kauf-kurz{font-size:12px;color:var(--text-dim);margin:-6px 0 14px 2px}.kauf-b2b{display:flex;gap:10px;align-items:flex-start;margin:0 0 14px;padding:10px 12px;border:1px solid rgba(62,207,178,.35);border-radius:10px;font-size:13px;color:var(--text-primary);cursor:pointer}.kauf-b2b input{margin-top:3px;accent-color:var(--cyan)}.kauf-b2b a{color:var(--cyan)}.kauf-link[aria-disabled=true]{opacity:.82}.kauf-spalte.gewaehlt>.tier-opt.feat:first-child h4::after{content:"Gewählt";margin-left:8px;padding:2px 8px;border-radius:999px;font-size:11px;background:rgba(62,207,178,.18);color:var(--cyan);vertical-align:middle}.kauf-grid .tier-table{gap:8px}.kauf-spalte{display:flex;flex-direction:column}.kauf-spalte>.tier-table{order:1;margin:10px 0 0!important}.kauf-grid .tier-opt ul{line-height:1.6}
+.kauf-grid .tier-opt{padding:12px 14px}.kauf-spalte.gewaehlt>.tier-opt.feat:first-child{border-color:var(--cyan);box-shadow:0 0 0 2px rgba(62,207,178,.28)}.kauf-kurz{font-size:12px;color:var(--text-dim);margin:-6px 0 14px 2px}.kauf-b2b{display:flex;gap:10px;align-items:flex-start;margin:0 0 14px;padding:10px 12px;border:1px solid rgba(62,207,178,.35);border-radius:10px;font-size:13px;color:var(--text-primary);cursor:pointer}.kauf-b2b input{margin-top:3px;accent-color:var(--cyan)}.kauf-b2b a{color:var(--cyan)}.kauf-link[aria-disabled=true]{opacity:.82}:lang(en) .kauf-spalte.gewaehlt>.tier-opt.feat:first-child h4::after{content:"Selected"}.kauf-spalte.gewaehlt>.tier-opt.feat:first-child h4::after{content:"Gewählt";margin-left:8px;padding:2px 8px;border-radius:999px;font-size:11px;background:rgba(62,207,178,.18);color:var(--cyan);vertical-align:middle}.kauf-grid .tier-table{gap:8px}.kauf-spalte{display:flex;flex-direction:column}.kauf-spalte>.tier-table{order:1;margin:10px 0 0!important}.kauf-grid .tier-opt ul{line-height:1.6}
 
 .vh-cta.ghost.hell,.verdict-hero .vh-cta.ghost.hell{color:#E8F8FF;border:1px solid rgba(62,207,178,.45);background:rgba(62,207,178,.08)}
 .pc-guete.lang{margin:10px 0 0;font-size:12.5px;color:var(--text-secondary)}
@@ -306,6 +306,9 @@ main{flex:1;overflow-y:auto;overflow-x:hidden;position:relative}
 body.hoert .stimme-knopf{background:var(--cyan);color:#02130f;animation:hoertPuls 1.2s ease-in-out infinite}
 @keyframes hoertPuls{0%,100%{box-shadow:0 0 0 0 rgba(62,207,178,.55)}50%{box-shadow:0 0 0 14px rgba(62,207,178,0)}}
 @media print{.stimme-knopf{display:none}}
+a[href^="tel:"]{white-space:nowrap}
+body:has(#modalBg) .stimme-knopf{bottom:calc(14px + env(safe-area-inset-bottom,0px));left:calc(14px + env(safe-area-inset-left,0px));width:46px;height:46px}   /* im Dialog bleibt Diktieren möglich, Knopf rückt in die Ecke */
+body:has(#stimmeKnopf) main{padding-bottom:calc(150px + env(safe-area-inset-bottom,0px))}   /* 22.11. Sichtprüfung: Mikrofon verdeckt den letzten Eintrag nicht, im Dialog klein in der Ecke */
 .rh-dg{display:grid;grid-template-columns:1fr 1fr;gap:8px 12px}.rh-dl{display:flex;flex-direction:column;gap:4px;font-size:12.5px;margin-bottom:6px}.rh-dl span{font-weight:600}.rh-dl input,.rh-dl select,.rh-dl textarea{width:100%}@media(max-width:600px){.rh-dg{grid-template-columns:1fr}}
 .rl-hin{grid-column:1/-1;font-size:15px;font-weight:600;color:var(--text);background:rgba(62,207,178,.08);border:1px solid rgba(62,207,178,.25);border-radius:12px;padding:8px 12px}.rl-hin b{color:var(--amber,#f6b73c)}
 .rl-sp{grid-column:1/-1;font-size:13px;color:var(--text-secondary);display:flex;align-items:center;gap:8px;min-height:20px}.rl-sp i{width:9px;height:9px;border-radius:50%;background:var(--cyan);box-shadow:0 0 0 4px rgba(62,207,178,.18)}.rl-sp[data-zustand=info]{color:var(--amber,#f6b73c)}
@@ -695,7 +698,7 @@ h2.sech svg{width:17px;height:17px;color:var(--cyan);flex:none}
 /* Sekundär-Aktionen: kompakt, leicht, klar UNTER dem Primär-CTA (Wahrnehmungs-Hierarchie) */
 .tstop .tacts-sec{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
 .tsec{display:inline-flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;padding:8px 4px;border-radius:10px;
-  background:transparent;border:1px solid var(--border-faint);color:var(--text-dim);font-size:11px;font-weight:600;cursor:pointer;transition:all .14s;-webkit-tap-highlight-color:transparent;min-height:44px}
+  background:transparent;border:1px solid var(--border);color:var(--text-secondary);font-size:11px;font-weight:600;cursor:pointer;transition:all .14s;-webkit-tap-highlight-color:transparent;min-height:44px}
 .tsec svg{width:17px;height:17px;opacity:.85}
 .tsec:hover{color:var(--text-primary);border-color:var(--border-strong);background:var(--bg-elev)}
 .tsec.call{color:color-mix(in srgb,var(--good) 82%,var(--text-dim))}
@@ -867,11 +870,12 @@ h2.sech svg{width:17px;height:17px;color:var(--cyan);flex:none}
 .rdy-band{margin-bottom:14px}
 .rb-track{position:relative;height:12px;border-radius:6px;overflow:hidden;background:var(--bg-elev)}
 .rb-zone{position:absolute;top:0;height:100%}
-.rb-zone.red{background:rgba(255,82,99,.34)} .rb-zone.amber{background:rgba(255,181,71,.34)} .rb-zone.green{background:rgba(63,224,164,.32)}
+.rb-zone.red{background:rgba(255,82,99,.34)} .rb-zone.amber{background:rgba(255,181,71,.34)} .rb-zone.green{background:rgba(63,224,164,.32)} .rb-zone.hoch{background:rgba(120,200,255,.16)}
 .rb-mean{position:absolute;top:-2px;height:16px;width:1px;background:var(--text-dim);opacity:.6}
 .rb-today{position:absolute;top:-3px;height:18px;width:3px;border-radius:2px;background:var(--text-primary);box-shadow:0 0 0 2px var(--bg-surface),0 0 8px rgba(255,255,255,.4);transform:translateX(-1px)}
-.rb-legend{display:flex;justify-content:space-between;margin-top:7px}
-.rb-l{font-size:10px;letter-spacing:.03em;color:var(--text-dim)}
+.rb-legend{position:relative;height:28px;margin-top:7px}
+.rb-l{position:absolute;top:0;transform:translateX(-50%);max-width:30%;text-align:center;line-height:1.2;font-size:10px;letter-spacing:.03em;color:var(--text-dim)}
+.rb-l.hoch{color:var(--text-secondary)}
 .rb-l.red{color:var(--red)} .rb-l.amber{color:var(--amber)} .rb-l.green{color:var(--good)}
 .rdy-rec{font-size:13.5px;line-height:1.5;color:var(--text-secondary);padding:11px 14px;background:var(--bg-deep);border:1px solid var(--border-faint);border-left:3px solid var(--good);border-radius:var(--r-m);margin-bottom:12px}
 .rdy-foot{display:flex;gap:8px;align-items:flex-start;font-size:11.5px;line-height:1.5;color:var(--text-dim)}
@@ -1278,7 +1282,7 @@ h2 svg.ic{width:20px;height:20px}
 .field input,.field select,.field textarea{width:100%;padding:11px 13px;background:var(--bg-deep);border:1px solid var(--border-subtle);
   border-radius:var(--r-s);color:var(--text-primary);outline:none;transition:border .16s}
 .field input:focus,.field select:focus,.field textarea:focus{border-color:var(--cyan-deep);box-shadow:0 0 0 3px var(--cyan-g3)}
-.field .hint{font-size:11px;color:var(--text-dim);margin-top:5px}
+.field .hint{font-size:12px;line-height:1.5;color:var(--text-secondary);margin-top:5px}
 .field-row{display:grid;grid-template-columns:1fr 1fr;gap:var(--s3)}
 /* ── Recents-Chips (Roster) ── */
 .recents-row{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:0 0 14px}
@@ -2245,7 +2249,7 @@ header.k7 #tierPill,header.k7 .post-pill{display:none}
 <script>/* 21.11.2026 Muttersprachler-Review: „water treadmill“ ist der übliche englische Fachbegriff. Nur Anzeige in Visite; reha-kern.js (gemeinsam mit Equine) bleibt unverändert, Equine-Session informiert. */
 try{ if(window.RehaKern&&RehaKern.GERAETE&&RehaKern.GERAETE.aquatrainer) RehaKern.GERAETE.aquatrainer.en='Water treadmill'; }catch(_){}</script>
 <script src="h10-speicher.js"></script>
-<script src="stall.js?v=20261120a"></script>
+<script src="stall.js?v=20261122a"></script>
 <script src="poincare-zeit.js?v=20261122a"></script>
 <script src="carlon-formate.js?v=20261116"></script>
 <script src="asthma.js"></script>
@@ -2781,8 +2785,8 @@ const Tag={
   },
   bereit(order){
     const fehlt=[];
-    if(!(navigator.serviceWorker&&navigator.serviceWorker.controller)) fehlt.push('Offline-Start noch nicht eingerichtet: Cockpit einmal mit Netz neu laden');
-    const b=State.settings.lastBackupAt; if(!b||Date.now()-new Date(b).getTime()>36*3600e3) fehlt.push('Sicherung älter als ein Tag');
+    if(navigator.serviceWorker&&!navigator.serviceWorker.controller&&window._swFehlt) fehlt.push('Offline-Start noch nicht eingerichtet: Cockpit einmal mit Netz neu laden');
+    const b=State.settings.lastBackupAt; if(!State.settings.isDemo&&(!b||Date.now()-new Date(b).getTime()>36*3600e3)) fehlt.push('Sicherung älter als ein Tag');
     const ohne=(order||[]).filter(x=>x.h.lat==null||x.h.lng==null).length; if(ohne) fehlt.push(ohne+' Halt ohne Standort');
     return fehlt;
   },
@@ -3044,7 +3048,7 @@ const Reha={
     const start=`<div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:10px">${RehaLive.LISTE.map(g=>`<button class="btn ghost" style="font-size:12.5px" onclick="RehaLive.starten('${h.id}','${g}')">${esc(RehaKern.GERAETE[g][lang?'en':'de'])}</button>`).join('')}</div>`;
     if(!S.length) return `<div class="panel" style="margin-bottom:var(--s4)" id="rehaAkte"><h2 style="font-size:16px">Reha</h2><p style="color:var(--text-dim);font-size:13px">Noch keine Reha-Sitzung. Sitzung starten mit Gerät:</p>${start}</div>`;
     const ver=this.verlauf(h.id).filter(v=>v.punkte.length>=2);
-    return `<div class="panel" style="margin-bottom:var(--s4)" id="rehaAkte"><h2 style="font-size:16px">Reha · ${S.length} Sitzung${S.length>1?'en':''}</h2>
+    return `<div class="panel" style="margin-bottom:var(--s4)" id="rehaAkte"><h2 style="font-size:16px">${Sprache.cur==='en'?`Rehab · ${S.length} session${S.length>1?'s':''}`:`Reha · ${S.length} Sitzung${S.length>1?'en':''}`}</h2>
       <div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin:6px 0 8px">${S.length>=2?`<button class="btn primary" style="font-size:12.5px" onclick="Reha.abschlussDialog('${h.id}')">Abschlussbericht · alle Einheiten</button>`:''}${S.length>=2&&License.can('rueckbericht')?`<button class="btn ghost" style="font-size:12.5px" onclick="Rueckbericht.oeffnen('${h.id}')">Rückbericht an Überweiser</button>`:''}<button class="btn ghost" style="font-size:12.5px" onclick="EquineApp.alle('${h.id}',true)">Für die CARLON Equine App</button><span class="rh-thema" role="group" aria-label="Druckfarbe" style="display:inline-flex;border:1px solid var(--border);border-radius:999px;overflow:hidden;font-size:12px">${['hell','dunkel'].map(t=>`<button type="button" aria-pressed="${(State.settings.rehaThema||'hell')===t}" onclick="Reha.thema('${t}',this)" style="border:0;padding:6px 12px;cursor:pointer;background:${(State.settings.rehaThema||'hell')===t?'var(--cyan)':'transparent'};color:${(State.settings.rehaThema||'hell')===t?'#04161a':'inherit'}">${t==='hell'?'Weiß (Druck)':'Dunkel'}</button>`).join('')}</span></div>
       ${ver.length?`<div style="font-size:12.5px;color:var(--text-secondary);margin:4px 0 6px">Verlauf bei gleicher Stufe (Herzfrequenz, letzte 60 s der Stufe):</div>${ver.slice(0,4).map(v=>`<div style="font-size:12.5px;font-weight:600;margin:8px 0 2px">${esc(v.label)} <span style="font-weight:400;color:var(--text-dim)">· ${v.punkte.length} ${(typeof Sprache!=='undefined'&&Sprache.cur==='en')?'sessions':'Einheiten'}</span></div><div style="display:flex;align-items:center;gap:10px;margin:0 0 4px">${this.spark(v.punkte)}<span class="mono" style="font-size:12.5px;white-space:nowrap">${fmt0(v.punkte[0].hf)} → <b>${fmt0(v.punkte[v.punkte.length-1].hf)}</b> bpm</span></div>`).join('')}`:''}
       <div class="rec-list" style="margin-top:8px">${S.slice().reverse().map(s=>`<details class="rec" style="display:block;padding:9px 11px"><summary style="cursor:pointer;list-style:none"><span class="rdate" style="font-size:12px">${fmtDate(s.rec.startedAt)}</span> <span class="rmeta">${esc(this.geraet(s))} · ${s.a.stufen.filter(x=>x.device!=='keines').length} Stufen${/gurtspeicher/.test(s.rec.rrQuelle||'')?' · Gurtspeicher':''}</span></summary>
@@ -5384,7 +5388,7 @@ const Importer = {
         subjectId:n.subjectId, name:n.name, breed:n.breed, sex:n.sex, age:n.age,
         weightKg:n.weightKg, heightCm:n.heightCm, baselineRMSSD:n.baselineRMSSD, baselineHR:n.baselineHR,
         species:n.species, isHuman:n.isHuman,
-        owner: seed?seed.owner:'', stable: seed?seed.stable:'', phone: seed?seed.phone:'',
+        owner: seed?seed.owner:'', stable: seed?(((typeof Sprache!=='undefined'&&Sprache.cur==='en')&&({'Klinik-Zuweisung':'Clinic referral','Nachsorge nach Klinikaufenthalt':'Aftercare after a clinic stay'})[seed.stable])||seed.stable):'',   /* 22.11.: beschreibende Demo-Ställe in EN */ phone: seed?seed.phone:'',
         lat: seed?seed.lat:null, lng: seed?seed.lng:null, place: seed?seed.place:'',
         needsVisit:false, notes:'', createdAt:new Date(n.startedAt||Date.now()).toISOString(),
       };
@@ -6739,7 +6743,8 @@ const Readiness={
     const swc=0.5*sd;                                   // SWC in lnRMSSD-Einheiten (= 0,5 × CV × Mittel)
     const z=sd>0?(today.v-mean)/sd:0;
     let state,label,rec;
-    if(today.v>=mean-swc){ state='ready'; label='Im Band'; rec='Die heutige lnRMSSD liegt im Band aus Mittel ± SWC der letzten Aufnahmen.'; }
+    if(today.v>mean+swc){ state='ready'; label='Über dem Band'; rec='Die heutige lnRMSSD liegt mehr als ein SWC über dem Band der letzten Aufnahmen. Beschreibend; Aufnahmeprotokoll und Umstände im Blick behalten.'; }   /* 22.11. Sichtprüfung: 86 ms bei Band 69–73 hieß „Im Band“ */
+    else if(today.v>=mean-swc){ state='ready'; label='Im Band'; rec='Die heutige lnRMSSD liegt im Band aus Mittel ± SWC der letzten Aufnahmen.'; }
     else if(today.v>=mean-2*swc){ state='moderate'; label='Knapp unter dem Band'; rec='Die heutige lnRMSSD liegt bis zu einem SWC unter dem Band.'; }
     else { state='recover'; label='Unter dem Band'; rec='Die heutige lnRMSSD liegt mehr als ein SWC unter dem Band. Protokoll und Umstände der Aufnahme prüfen; die Einordnung liegt bei Ihnen.'; }
     return {enough:true, n:recs.length, mean, sd, swc, z, state, label, rec,
@@ -7008,16 +7013,21 @@ const Views={
   readinessBand(R){
     const span=(R.hiMs-R.loMs)||1;
     const pct=ms=>Math.max(0,Math.min(100,(ms-R.loMs)/span*100));
-    const aLo=pct(Math.exp(R.mean-2*R.swc)), gLo=pct(R.bandLoMs), tX=pct(R.todayMs), mX=pct(R.meanMs);
+    const aLo=pct(Math.exp(R.mean-2*R.swc)), gLo=pct(R.bandLoMs), gHi=pct(R.bandHiMs), tX=pct(R.todayMs), mX=pct(R.meanMs);
+    /* 22.11. Sichtprüfung: Grün endete erst am Rand, der Wert an der Bandobergrenze stand darum „links im Grün“, und die
+       Beschriftung verteilte sich gleichmäßig statt unter ihrer Zone. Jetzt: Grün = Normband, darüber eigene Zone, jede
+       Beschriftung mittig unter ihrer Zone. */
+    const lab=(a,b,k,t)=>(b-a)<14&&k!=='green'?'':`<span class="rb-l ${k}" style="left:${Math.max(7,Math.min(93,(a+b)/2)).toFixed(1)}%">${t}</span>`;
     return `<div class="rdy-band">
       <div class="rb-track">
         <div class="rb-zone red" style="left:0;width:${aLo.toFixed(1)}%"></div>
         <div class="rb-zone amber" style="left:${aLo.toFixed(1)}%;width:${(gLo-aLo).toFixed(1)}%"></div>
-        <div class="rb-zone green" style="left:${gLo.toFixed(1)}%;width:${(100-gLo).toFixed(1)}%"></div>
+        <div class="rb-zone green" style="left:${gLo.toFixed(1)}%;width:${(gHi-gLo).toFixed(1)}%"></div>
+        <div class="rb-zone hoch" style="left:${gHi.toFixed(1)}%;width:${(100-gHi).toFixed(1)}%"></div>
         <div class="rb-mean" style="left:${mX.toFixed(1)}%" title="7-Tage-Mittel"></div>
         <div class="rb-today" style="left:${tX.toFixed(1)}%" title="Heute"></div>
       </div>
-      <div class="rb-legend"><span class="rb-l red">Unter dem Band</span><span class="rb-l amber">Knapp darunter</span><span class="rb-l green">Im Band ▸</span></div>
+      <div class="rb-legend">${lab(0,aLo,'red','Unter dem Band')}${lab(aLo,gLo,'amber','Knapp darunter')}${lab(gLo,gHi,'green','Im Band')}${lab(gHi,100,'hoch','Darüber')}</div>
     </div>`;
   },
   /* ---------------- KONDITIONS-VERLAUF (Trainer · Langzeit) ---------------- */
@@ -7063,7 +7073,7 @@ const Views={
       <div class="row2">
         <div class="metric"><b>${fmt0(m.rmssd)}</b><span>RMSSD ms</span></div>
         <div class="metric"><b>${fmt0(m.meanHR)}</b><span>HF bpm</span></div>
-        ${(Baseline.wert(h)&&m.rmssd!=null)?`<div class="metric"><b class="mdelta ${m.rmssd<Baseline.wert(h)*0.7?'bad':m.rmssd<Baseline.wert(h)*0.86?'warn':'ok'}">${m.rmssd>=Baseline.wert(h)?'+':''}${fmt0((m.rmssd-Baseline.wert(h))/Baseline.wert(h)*100)}%</b><span>vs Baseline</span></div>`:(m.dfa!=null?`<div class="metric"><b>${fmt2(m.dfa)}</b><span>DFA α1</span></div>`:(m.quality!=null?`<div class="metric"><b>${fmt0(m.quality)}</b><span>Signalqual.</span></div>`:''))}
+        ${(Baseline.wert(h)&&m.rmssd!=null)?`<div class="metric"><b class="mdelta ${m.rmssd<Baseline.wert(h)*0.7?'bad':m.rmssd<Baseline.wert(h)*0.86?'warn':'ok'}">${(()=>{ const v=Math.round((m.rmssd-Baseline.wert(h))/Baseline.wert(h)*100); return (v>0?'+':v<0?'−':'±')+Math.abs(v); })()}%</b><span>${Sprache.cur==='en'?'vs baseline':'ggü. Basis'}</span></div>`:(m.dfa!=null?`<div class="metric"><b>${fmt2(m.dfa)}</b><span>DFA α1</span></div>`:(m.quality!=null?`<div class="metric"><b>${fmt0(m.quality)}</b><span>Signalqual.</span></div>`:''))}
       </div>
       ${Views.gueteZeile(rec)}
       ${(tri.reasons&&tri.reasons[0])?`<div class="pc-grund" title="Aus diesem Wert folgt die Stufe – eine Messwert-Beschreibung, keine Einordnung des Gesundheitszustands">Grund: ${esc(Triage.zeig(tri.reasons[0]))}</div>`:''}
@@ -7241,7 +7251,7 @@ const Views={
     if(roh!=null&&isFinite(roh)&&m.rmssd!=null&&(lang||Math.abs(roh-m.rmssd)>=1)) teile.push(`RMSSD roh ${fmt0(roh)} ms`);
     const K={eigene_box:'eigene Box',anbindeplatz:'Anbindeplatz',fremder_stall:'fremder Stall',ruhe_2h:'≥ 2 h ohne Arbeit',nach_bewegung:'nach Bewegung',beim_fressen:'beim Fressen'};
     if(rec.kontext){ const k=rec.kontext; const s=[k.umgebung,k.vorbedingung].filter(Boolean).map(x=>K[x]||x); if(s.length) teile.push('Protokoll: '+s.join(', ')); }
-    teile.push(m.uncorrected?'Werte unkorrigiert':'bereinigt · Profil equine-v1');
+    teile.push(m.uncorrected?'Werte unkorrigiert':'bereinigt');
     return teile.length?`<div class="pc-guete${lang?' lang':''}">${teile.map(esc).join(' · ')}</div>`:'';
   },
   horseCard({h,rec,tri}){
@@ -7403,8 +7413,8 @@ const Views={
       return `<div class="view"><div class="view-head"><div><span class="eyebrow">Tagestour${doneToday?` · ${doneToday} erledigt`:''}</span><h1>Heute</h1></div></div>${Bindung.ruheHTML()}${doneMsg}${Tag.offenHTML()}</div>`;
     }
 
-    const driveMin=Math.round(optKm/45*60);            // reine Fahrzeit ~45 km/h
-    const dayMin=driveMin+order.length*20;             // + ~20 min je Besuch
+    const sch=Dispatch.schedule(order); const srows=sch.rows;
+    const dayMin=Math.max(0,Math.round(sch.end-sch.start));   // 22.11. Sichtprüfung: Tagesdauer = Abfahrt bis „Fertig ca.“, nicht eine eigene Schätzung
     const dayStr=dayMin>=60?(dayMin/60).toFixed(1).replace('.',',')+' h':dayMin+' min';
     const nextStop=order[0]?order[0].h:null;
     const hero=`<div class="today-hero">
@@ -7422,7 +7432,6 @@ const Views={
 
     const noLocHtml=noLoc.length?`<div class="chip amber" style="display:block;margin:2px 0 12px">${IC.warn} ${noLoc.length} Besuch${noLoc.length>1?'e':''} ohne Standort — Ort in der Akte ergänzen: ${noLoc.map(h=>esc(h.name)).join(', ')}</div>`:'';
 
-    const sch=Dispatch.schedule(order); const srows=sch.rows;
     const stops=order.map((x,i)=>{
       const h=x.h, lvl=x.tri.level, lbl=Triage.label(x.tri); const r=srows[i];
       const flag=(x.tri.flags&&x.tri.flags[0])?`<div class="tflag">${IC.warn} ${esc(x.tri.flags[0])}</div>`:'';
@@ -8587,7 +8596,7 @@ const Views={
        dieselben Werte wie bisher. */
     /* Kreistest 16.11.2026: Der Knopf hieß „Rohdaten (JSON)“, die Datei trug aber KEINE RR-Reihe – nur Kennwerte.
        Jetzt reist die ungerundete Reihe mit (rrIntervalsMs, vom eigenen Importer zuerst gelesen), dazu die Schlagklassen. */
-    let vk=null; try{ vk=HRVVorstufe.analysiere((r.rr||[]).map(Number)); }catch(e){}
+    const vk=Export.klassen((r.rr||[]).map(Number));
     const inhalt=Object.assign({}, r.metrics, { herkunft: Views.herkunft(r, pferd),
       rrIntervalsMs:(r.rr||[]).map(Number), beatAnnotations:(vk&&vk.beatAnnotations)||undefined, startedAt:r.startedAt, durationSec:r.durationSec });
     { const pw=await Pruefwert.rr(r.rr); if(pw) inhalt.pruefwert={ algorithmus:'SHA-256', ueber:Pruefwert.BESCHREIBUNG, wert:pw }; }
@@ -9295,13 +9304,30 @@ const Export={
   name(r){ const h=State.horses.find(x=>x.id===r.horseId)||{}; return ((h.name||'Pferd').replace(/[^\p{L}\p{N}_-]+/gu,'-'))+'_'+(r.startedAt||'').slice(0,10); },
   laden(name,inhalt,typ){ const b=new Blob([inhalt],{type:typ}); const a=document.createElement('a'); a.href=URL.createObjectURL(b); a.download=name; document.body.appendChild(a); a.click(); a.remove(); setTimeout(()=>URL.revokeObjectURL(a.href),4000); },
   zahl(v){ return String(Number(v)); },
+  /* 22.11. Gesamtkreis: Eine Reha-Einheit mit Belastung liegt über der Artefaktgrenze, die Auswertung gibt dann bewusst
+     kein Ergebnis. Der Export verlor dadurch die Schlagklassen und die bereinigte Spalte. Die Filterkette selbst klassiert
+     jeden Schlag trotzdem; diese Klassen reisen jetzt immer mit (Kennwerte bleiben weiter aus, wo die Grenze greift). */
+  /* Ebenfalls 22.11.: Die Filterkette verschmilzt eine T-Wellen-Doppelzählung (zwei kurze Intervalle = ein Schlag). Ihre
+     Klassen gelten für die VERSCHMOLZENE Reihe; der Export schrieb sie Zeile für Zeile neben die Rohschläge, ab der ersten
+     Verschmelzung um eine Zeile versetzt. Jetzt zurück auf die Rohschläge: erster Teil trägt Klasse und bereinigten Wert
+     des verschmolzenen Schlags, zweiter Teil die Klasse M (Erfassungsartefakt) und keinen bereinigten Wert. */
+  roh(rr,ann,kor){ if(ann.length===rr.length) return {beatAnnotations:ann,correctedRR:kor};
+    const st=HRVVorstufe.pipeline.stage1TWaveRefractoryFilter(rr,HRVVorstufe.Messprofil.equineV1); if(st.merged.length!==ann.length) return null;
+    const mset=new Set(st.mergedIndices), A=[], K=[]; let m=0;
+    for(let i=0;i<rr.length;i++){ A.push(ann[m]); K.push(kor[m]); if(mset.has(m)){ i++; if(i<rr.length){ A.push('M'); K.push(null); } } m++; }
+    return A.length===rr.length?{beatAnnotations:A,correctedRR:K,verschmolzen:st.mergeCount}:null; },
+  klassen(rr){ let ann=null, kor=null;
+    try{ const v=HRVVorstufe.analysiere(rr); if(v&&Array.isArray(v.beatAnnotations)){ ann=v.beatAnnotations; kor=v.correctedRR||[]; } }catch(_){ }
+    if(!ann) try{ if(rr.length>=2){ const p=HRVVorstufe.pipeline.process(rr,HRVVorstufe.Messprofil.equineV1); if(p&&Array.isArray(p.annotations)){ ann=p.annotations; kor=p.cleanRR||[]; } } }catch(_){ }
+    if(!ann) return null; try{ return Export.roh(rr,ann,kor); }catch(_){ return null; } },
   async csvText(r){
-    const rr=(r.rr||[]).map(Number); let v=null; try{ v=HRVVorstufe.analysiere(rr); }catch(e){}
+    const rr=(r.rr||[]).map(Number); const v=Export.klassen(rr);
     const lab=(v&&v.beatAnnotations)||[], kor=(v&&v.correctedRR)||[], sha=await Pruefwert.rr(rr);
     const h=State.horses.find(x=>x.id===r.horseId)||{};
     const kopf=['# carlon_equine_research_rr','# horse: '+(h.name||''),'# recorded_at: '+(r.startedAt||''),'# source: CARLON Equine Visite '+BUILD,
       '# species: horse','# n_beats: '+rr.length,'# rr_sha256: '+(sha||''),'# rr_sha256_input: UTF-8 bytes of the rr_ms values joined by "," (as in this file)','# rr_unit: ms (unrounded, as recorded)','# t_s: cumulative sum of rr_ms in seconds, end of each interval','# label: N normal; A artefact; E ectopic; M missed; ? unclear (CARLON pre-filter)',
-      '# rr_corrected_ms: series after the CARLON correction (corrected intervals in place, no beat inserted)'];
+      '# rr_corrected_ms: series after the CARLON correction (corrected intervals in place, no beat inserted)',
+      '# merged rows: two short intervals detected as one beat (T-wave double detection) carry the merged value in the first row; the second row has label M and no rr_corrected_ms'];
     let t=0; const zeilen=rr.map((x,i)=>{ t+=x/1000; return [i+1,t.toFixed(3),Export.zahl(x),(lab[i]||''),(kor[i]!=null?Export.zahl(kor[i]):'')].join(','); });
     return kopf.join('\n')+'\nbeat,t_s,rr_ms,label,rr_corrected_ms\n'+zeilen.join('\n')+'\n';
   },
@@ -10010,7 +10036,7 @@ const Report={
         <div class="logo-row"><div class="logo-prev" id="sLogoPrev">${s.logo?`<img src="${s.logo}" alt="Logo">`:'<span>kein Logo</span>'}</div>
           <button type="button" class="btn ghost" style="font-size:13px" onclick="UI.uploadLogo()">${IC.download||''} Logo hochladen</button></div>
         <div class="field-row"><div class="field"><label>Praxisname</label><input id="bfName" value="${esc(s.clinicName&&s.clinicName!=='Meine Pferdepraxis'?s.clinicName:'')}" placeholder="Pferdepraxis …"></div>
-          <div class="field"><label>Anschrift</label><input id="bfAddr" value="${esc(s.clinicAddr||'')}" placeholder="${Sprache.cur==='en'?'1 Sample Street, Sampletown':'Musterstraße 1, 12345 Musterstadt'}"></div></div>
+          <div class="field"><label>Anschrift</label><input id="bfAddr" value="${esc(s.clinicAddr||'')}" placeholder="${Sprache.cur==='en'?'1 Sample St, Sampletown':'Musterstr. 1, Musterstadt'}"></div></div>
         <div class="field-row"><div class="field"><label>Telefon</label><input id="bfPhone" value="${esc(s.clinicPhone||'')}" placeholder="07229 …"></div>
           <div class="field"><label>E-Mail</label><input id="bfMail" value="${esc(s.clinicMail||'')}" placeholder="praxis@…"></div>
           <div class="field"><label>Website</label><input id="bfWeb" value="${esc(s.clinicWeb||'')}" placeholder="www.…"></div></div>
@@ -10592,7 +10618,7 @@ const UI={
         <div class="field"><label>Telefon (erscheint auf dem Aushang)</label><input id="sPhone" value="${esc(s.clinicPhone||'')}" placeholder="07229 …"></div>
         <div class="field"><label>E-Mail</label><input id="sMail" value="${esc(s.clinicMail||'')}" placeholder="praxis@…"></div></div>
       <div class="field-row">
-        <div class="field"><label>Anschrift für den Aushang</label><input id="sAddr" value="${esc(s.clinicAddr||'')}" placeholder="${Sprache.cur==='en'?'1 Sample Street, Sampletown':'Musterstraße 1, 12345 Musterstadt'}"></div>
+        <div class="field"><label>Anschrift für den Aushang</label><input id="sAddr" value="${esc(s.clinicAddr||'')}" placeholder="${Sprache.cur==='en'?'1 Sample St, Sampletown':'Musterstr. 1, Musterstadt'}"></div>
         <div class="field"><label>Website (optional)</label><input id="sWeb" value="${esc(s.clinicWeb||'')}" placeholder="www.…"></div></div>
       <div class="field"><label>Einladungstext für Halter:innen <span style="color:var(--text-dim);font-weight:400">— geht mit jedem Mess-Link per WhatsApp, SMS oder Teilen</span></label>
         <textarea id="sEinl" rows="8" style="width:100%;font:inherit;font-size:13px;line-height:1.5;resize:vertical" oninput="UI.einlVorschau()">${esc(s.einladungText||Praxis.std())}</textarea>
@@ -10810,10 +10836,10 @@ const UI={
       </div>
       <div class="tier-table" style="margin-top:10px">
         <div class="tier-opt"><div style="flex:1"><h4>${E('Monatsabo','Monthly plan')} <span class="chip cyan">${E('14 Tage gratis','14 days free')}</span></h4>
-          <div style="font-size:12px;color:var(--text-dim)">${E('monatlich kündbar','cancel monthly')} · ${brutto(t.pm)} ${E('inkl. 19 % USt.','incl. 19% VAT')}</div></div>
+          <div style="font-size:12px;color:var(--text-dim)">${E('monatlich kündbar','cancel monthly')} · <span style="white-space:nowrap">${brutto(t.pm)} ${E('inkl. 19 % USt.','incl. 19% VAT')}</span></div></div>
           <div class="price"><b>${EN?'€':''}${t.pm.toLocaleString(LC)}</b><span>${E('€ netto / Monat','net / month')}</span>${knopf(t.m,E('Weiter zur Kasse →','Continue to checkout →'))}</div></div>
         <div class="tier-opt"><div style="flex:1"><h4>${E('Jahresabo','Annual plan')}</h4>
-          <div style="font-size:12px;color:var(--text-dim)">${E('11 Monatsbeiträge','11 monthly fees')} · ${brutto(t.py)} ${E('inkl. 19 % USt.','incl. 19% VAT')}</div></div>
+          <div style="font-size:12px;color:var(--text-dim)">${E('11 Monatsbeiträge','11 monthly fees')} · <span style="white-space:nowrap">${brutto(t.py)} ${E('inkl. 19 % USt.','incl. 19% VAT')}</span></div></div>
           <div class="price"><b>${EN?'€':''}${t.py.toLocaleString('de-DE')}</b><span>${E('€ netto / Jahr','net / year')}</span>${knopf(t.y,E('Weiter zur Kasse →','Continue to checkout →'))}</div></div>
       </div></div>`).join('')}</div>
       <p style="font-size:12.5px;color:var(--text-secondary);margin-top:12px">${E('Ein Abo gilt für einen Betrieb an einem Standort; beim Equine Center wählen Sie die Zahl der Standorte im Bezahlfenster. Geräte je Stufe: Fahrpraxis 3, Praxis &amp; Klinik 6, Reha 6, Klinik + Reha 8, Equine Center ohne Grenze; Reha-Pferde in 30 Tagen: Reha 20, Klinik + Reha 40. Über der Grenze schaltet sich ein weiteres Gerät oder Pferd mit der größeren Stufe frei; Ihre Daten bleiben nutzbar, nachberechnet wird nichts; nach einem Wechsel auf eine kleinere Stufe gelten deren Grenzen.','One subscription covers one business at one site; for Equine Center you choose the number of sites at checkout. Devices per tier: Ambulatory practice 3, Practice &amp; clinic 6, Rehab 6, Clinic + rehab 8, Equine Center no limit; rehab horses in 30 days: Rehab 20, Clinic + rehab 40. Above a limit, a further device or horse is unlocked with the larger tier; your data stay usable, nothing is charged retrospectively; after moving to a smaller tier, its limits apply.')}</p>
@@ -13200,7 +13226,7 @@ const Seed={
        Ein Alarm ohne Anlass entwertet jeden spaeteren — deshalb ist das
        keine Kosmetik. */
     if(typeof Safe!=='undefined' && Safe.renderBanner) await Safe.renderBanner();
-    Nav.refresh();Toast.show(`${cnt} Demo-Pferde geladen · inkl. synthetischem Verlauf`,'ok');
+    Nav.refresh();   /* 22.11.: kein Toast mehr – er verdeckte beim Öffnen der Demo Knöpfe (KI-Sichtprüfung); die Demo-Pille oben sagt es */
   },
   /* DEMO-FEINSCHLIFF (13.11.2026, Gemini Runde 2: „identische Güte auf jeder Karte“, „vor 5 Mon“,
      „Ruhe-HF 97/108 bpm sprengt den Ruhe-Rahmen“). Nur Demo-Daten: Zeitachse auf jetzt geschoben (Abstände
@@ -13948,7 +13974,7 @@ const Nav={
       const fnd=License.isFounder()||(rn&&rn.founder);
       if(rn&&rn.state==='expired'){ tl.textContent=(fnd?'Partner':'Lizenz')+' abgelaufen · verlängern'; tp.className='tier-pill expired'; tp.setAttribute('onclick','License.renew()'); }
       else if(rn&&rn.state==='expiring'){ tl.textContent=(t.name)+' · läuft in '+rn.days+'d ab'; tp.className='tier-pill expiring'; tp.setAttribute('onclick','License.renew()'); }
-      else { tl.textContent=paid?(fnd?'Gründungs-Partner':t.name):((State.settings&&State.settings.isDemo)?'Demo · ab 149 €/Monat freischalten':'14 Tage kostenlos testen'); tp.className='tier-pill '+(paid?'paid':'demo'); tp.setAttribute('onclick','License.isPaid()?UI.licenseInfo():UI.upgrade()'); }}
+      else { tl.textContent=paid?(fnd?'Gründungs-Partner':t.name):((State.settings&&State.settings.isDemo)?'Demo · ab 149 €':'14 Tage kostenlos testen'); tp.className='tier-pill '+(paid?'paid':'demo'); tp.setAttribute('onclick','License.isPaid()?UI.licenseInfo():UI.upgrade()'); }}
     UI.postStatus();
   }
 };
@@ -14180,7 +14206,8 @@ const PWA={
   iOS(){return /iphone|ipad|ipod/i.test(navigator.userAgent)&&!window.MSStream;},
   iPadDesktop(){return navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1;},
   standalone(){return matchMedia('(display-mode: standalone)').matches||navigator.standalone===true;},
-  async register(){if('serviceWorker' in navigator){try{await navigator.serviceWorker.register('sw.js');}catch(e){}}},
+  async register(){if('serviceWorker' in navigator){try{await navigator.serviceWorker.register('sw.js');}catch(e){ window._swFehlt=true; }   /* 22.11.: Hinweis „Offline-Start“ nur, wenn die Registrierung wirklich scheitert oder nach 20 s noch nichts aktiv ist */
+    setTimeout(()=>{ if(!navigator.serviceWorker.controller) window._swFehlt=true; },20000);}},
   async install(){
     if(this.deferred){this.deferred.prompt();const r=await this.deferred.userChoice;this.deferred=null;
       if(r&&r.outcome==='accepted'){await Persist.request();Toast.show('CARLON Equine installiert','ok');}return;}
@@ -14363,7 +14390,8 @@ const Sprache={
     "— geht mit jedem Mess-Link per WhatsApp, SMS oder Teilen":"— goes with every measuring link via WhatsApp, SMS or sharing",
     "– werden aus den Angaben oben gefüllt, leere fallen weg.":"– filled from the details above; empty ones are left out.",
     "Ansehen":"View",
-    'Im Band':'Within band','Knapp unter dem Band':'Just below the band','Unter dem Band':'Below band','Knapp darunter':'Just below','Im Band ▸':'Within band ▸','Lage zum Wochenband':'Position in the weekly band','lnRMSSD · Bandmethode':'lnRMSSD · band method',
+    'Im Band':'Within band','Knapp unter dem Band':'Just below the band','Unter dem Band':'Below band','Knapp darunter':'Just below','Im Band ▸':'Within band ▸','Darüber':'Above','Lage zum Wochenband':'Position in the weekly band','lnRMSSD · Bandmethode':'lnRMSSD · band method',
+    'Über dem Band':'Above the band','Die heutige lnRMSSD liegt mehr als ein SWC über dem Band der letzten Aufnahmen. Beschreibend; Aufnahmeprotokoll und Umstände im Blick behalten.':'Today\'s lnRMSSD lies more than one SWC above the band of recent recordings. Descriptive; keep recording protocol and circumstances in view.',
     'Die heutige lnRMSSD liegt im Band aus Mittel ± SWC der letzten Aufnahmen.':'Today\'s lnRMSSD lies within the band of mean ± SWC of recent recordings.','Die heutige lnRMSSD liegt bis zu einem SWC unter dem Band.':'Today\'s lnRMSSD lies up to one SWC below the band.','Die heutige lnRMSSD liegt mehr als ein SWC unter dem Band. Protokoll und Umstände der Aufnahme prüfen; die Einordnung liegt bei Ihnen.':'Today\'s lnRMSSD lies more than one SWC below the band. Check protocol and circumstances of the recording; the interpretation is yours.',
     /* 16.11.2026 – neutrale Panel- und Halter-Texte */
     'Ruhe-HF sinkt · RMSSD steigt':'Resting HR falling · RMSSD rising',
@@ -14560,6 +14588,7 @@ const Sprache={
     'Beratung':'Consultation',
     'Abfahrt':'Departure',
     'Fertig ca.':'Done approx.',
+    'Klinik-Zuweisung':'Clinic referral','Nachsorge nach Klinikaufenthalt':'Aftercare after a clinic stay','Seniorenweide Am Bach':'Senior pasture by the brook',
     'Tagesdauer':'Day length',
     'Fahrstrecke':'Distance',
     'Stopps':'Stops',
@@ -14702,7 +14731,7 @@ const Sprache={
 
     // Kauf / Lizenz
     'Demo-Modus':'Demo mode',
-    'Demo · ab 149 €/Monat freischalten':'Demo · full version from €149 a month',
+    'Demo · ab 149 €':'Demo · from €149',
     'Freischalten':'Unlock',
     'Ich habe einen Schlüssel':'I have a key',
     'Gründungs-Partner':'Founding partner',
@@ -15043,10 +15072,10 @@ const Sprache={
        Faellt die Art dort nicht auf, bleibt sie stehen statt zu
        verschwinden — ein halb uebersetzter Eintrag ist immer noch lesbar,
        ein leerer nicht. */
-    [/^(?:Aufnahme |Güte ).*(?:Profil equine-v1|Werte unkorrigiert)$/, m=>m.replace(/^Aufnahme /,'Recorded ').replace(/Güte /,'Quality ').replace(/Artefakte /,'Artefacts ').replace(/(\d+),(\d)/g,'$1.$2').replace(/keine lange RR-Pause/,'no long RR pause').replace(/(\d+) lange RR-Pausen?/,(x,n)=>n+' long RR pause'+(n==='1'?'':'s')).replace(/RMSSD roh/,'RMSSD raw').replace(/Protokoll: /,'Protocol: ').replace(/eigene Box/,'own stable').replace(/Anbindeplatz/,'tie-up').replace(/fremder Stall/,'other stable').replace(/≥ 2 h ohne Arbeit/,'≥ 2 h without work').replace(/nach Bewegung/,'after exercise').replace(/beim Fressen/,'while eating').replace(/bereinigt · Profil/,'corrected · profile').replace(/Werte unkorrigiert/,'values uncorrected')],
+    [/^(?:Aufnahme |Güte ).*(?:bereinigt|Werte unkorrigiert)$/, m=>m.replace(/^Aufnahme /,'Recorded ').replace(/Güte /,'Quality ').replace(/Artefakte /,'Artefacts ').replace(/(\d+),(\d)/g,'$1.$2').replace(/keine lange RR-Pause/,'no long RR pause').replace(/(\d+) lange RR-Pausen?/,(x,n)=>n+' long RR pause'+(n==='1'?'':'s')).replace(/RMSSD roh/,'RMSSD raw').replace(/Protokoll: /,'Protocol: ').replace(/eigene Box/,'own stable').replace(/Anbindeplatz/,'tie-up').replace(/fremder Stall/,'other stable').replace(/≥ 2 h ohne Arbeit/,'≥ 2 h without work').replace(/nach Bewegung/,'after exercise').replace(/beim Fressen/,'while eating').replace(/bereinigt · Profil/,'corrected · profile').replace(/Werte unkorrigiert/,'values uncorrected')],
     [/^(.+) · (\d+) Min$/, (_m,art,min)=>(Sprache.WB[art]||art)+' · '+min+' min'],
     [/^Abfahrroute planen · (\d+)$/,'Plan route · $1'],
-    [/^Zuerst: (.+) · (\d+) km$/,'First: $1 · $2 km'], [/^Zuerst: (.+) · ([\d.,]+) mi$/,'First: $1 · $2 mi'],
+    [/^Zuerst: (.+) · ([\d.,]+) km$/,'First: $1 · $2 km'], [/^Zuerst: (.+) · ([\d.,]+) mi$/,'First: $1 · $2 mi'],
     [/^Einsatzplan · (.+)$/,'Day plan · $1'],
     [/^Tagestour · (\d+) Stopps · (\d+) kritisch$/,'Day route · $1 stops · $2 critical'],
     [/^An der Kasse für Praxen in Deutschland inkl\.\s19\s%\sUSt\.: Praxis (.+?) im Monat bzw\. (.+?) im Jahr · Klinik (.+?) im Monat bzw\. (.+?) im Jahr\.$/,
