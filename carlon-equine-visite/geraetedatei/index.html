@@ -3,6 +3,7 @@
 <title>Gerätedaten prüfen · CARLON Equine Visite</title>
 <meta name="description" content="Für Hersteller und Betreiber von Laufband, Aquatrainer und Führanlage: Steuerungsdatei hineinziehen und sehen, welche Stufen CARLON Equine Visite daraus übernimmt. Läuft lokal im Browser, nichts wird hochgeladen.">
 <link rel="icon" href="/favicon.ico">
+<link rel="alternate" hreflang="de" href="https://vitalkultur.com/carlon-equine-visite/geraetedatei/"><link rel="alternate" hreflang="en" href="https://vitalkultur.com/carlon-equine-visite/geraetedatei/en/">
 <style>
 @font-face{font-family:Jost;src:url(/fonts/jost-variable.woff2) format("woff2");font-weight:100 900;font-display:swap}
 :root{--bg:#060708;--k:#0e1012;--t:#f1efe9;--t2:#b9bfc4;--t3:#8a949c;--c:#3ECFB2;--g:#F2C46B;--r:rgba(255,255,255,.12)}
@@ -32,7 +33,7 @@ pre{background:#0b0d0f;border:1px solid var(--r);border-radius:12px;padding:12px
 ul{padding-left:20px}li{margin:4px 0;color:var(--t2)}li b{color:var(--t)}
 .fuss{margin-top:56px;padding-top:18px;border-top:1px solid var(--r);color:var(--t3);font-size:13.5px}.fuss a{color:var(--t2)}
 </style></head><body><div class="w">
-<div class="kopf"><a class="marke" href="/carlon-equine-visite/reha/">CARLON · EQUINE VISITE</a><a href="/carlon-equine-visite/reha/#hersteller">← Für Gerätehersteller</a></div>
+<div class="kopf"><a class="marke" href="/carlon-equine-visite/reha/">CARLON · EQUINE VISITE</a><span><a href="/carlon-equine-visite/reha/#hersteller">← Für Gerätehersteller</a> · <a href="/carlon-equine-visite/geraetedatei/en/" hreflang="en" lang="en">English</a></span></div>
 
 <div class="eb">Gerätedaten · Datei und live</div>
 <h1>Ihre Steuerungsdatei, <em>in Visite übernommen.</em></h1>
@@ -68,18 +69,18 @@ ul{padding-left:20px}li{margin:4px 0;color:var(--t2)}li b{color:var(--t)}
   <li>Andere Spaltennamen, Komma als Dezimaltrennzeichen, m/s, mph oder °F erkennt Visite ebenfalls.</li>
 </ul>
 
-<h2>Live in Echtzeit</h2>
+<h2>Live im Sekundentakt</h2>
 <p style="color:var(--t2);margin:0 0 12px">Gibt Ihre Steuerung oder ein Gateway die Werte laufend aus, etwa eine Siemens S7 über ihren Webserver oder eine LOGO! 8.4 über MQTT, übernimmt Visite sie während der Einheit und legt die Stufen selbst an, sobald neue Werte 30 Sekunden stehen. Eingerichtet wird in der Aufnahme unter „Live-Werte aus der Steuerung übernehmen“: Weg wählen, Adresse eintragen, „Verbinden und testen“. Die ankommenden Werte erscheinen sofort mit Vorschlag der Bedeutung; ein Tipp speichert das für das Gerät.</p>
 <div class="raster">
-  <div><b>Netzwerk-Adresse</b><span>Visite fragt jede Sekunde eine Adresse im Betriebsnetz ab, etwa <code>http://192.168.0.10/werte.json</code>. Die Antwort braucht den Kopf <code>Access-Control-Allow-Origin</code>.</span></div>
-  <div><b>MQTT</b><span>Die Steuerung sendet an einen Broker im Betrieb (LOGO! 8.4 kann allgemeine MQTT-Broker); Visite liest über WebSocket, etwa <code>ws://192.168.0.5:9001</code>, Thema frei wählbar.</span></div>
-  <div><b>Bluetooth</b><span>Ein Gateway mit CARLON-Profil 1.0: Dienst <code>c4a7a000-5e2d-4f1c-9b6a-0e1e9a5c0001</code>, Wert mit Benachrichtigung <code>c4a7a001-…0001</code>, Inhalt als Text.</span></div>
+  <div><b>Netzwerk-Adresse</b><span>Visite fragt jede Sekunde eine Adresse im Betriebsnetz ab, etwa <code>http://192.168.0.10/werte.json</code>. Die Antwort braucht die Köpfe <code>Access-Control-Allow-Origin: https://vitalkultur.com</code> und <code>Access-Control-Allow-Private-Network: true</code>. Chrome und Edge fragen beim ersten Mal, ob Visite auf das lokale Netz zugreifen darf.</span></div>
+  <div><b>MQTT</b><span>Die Steuerung sendet an einen Broker im Betrieb (LOGO! 8.4 kann allgemeine MQTT-Broker). Visite liest über verschlüsselten WebSocket, etwa <code>wss://broker.betrieb.local:8884</code>, mit Zertifikat; unverschlüsseltes <code>ws://</code> lässt der Browser aus der Web-Fassung nicht zu. Eingetragen wird das Thema, auf das die LOGO! sendet. Den Broker mit Benutzern betreiben und im geschützten Maschinennetz halten.</span></div>
+  <div><b>Bluetooth</b><span>Nur Chrome oder Edge auf Android und am Rechner; Safari, iPhone und iPad unterstützen kein Bluetooth im Browser. Ein Gateway mit dem offenen CARLON-Profil 1.0: Dienst <code>c4a7a000-5e2d-4f1c-9b6a-0e1e9a5c0001</code>, Wert mit Benachrichtigung <code>c4a7a001-…0001</code>, Inhalt als Text.</span></div>
 </div>
 <pre>{"speed_kmh": 4.8, "incline_pct": 2.0, "water_depth_cm": 40, "water_temp_c": 18.5}
 speed_kmh=4.8;incline_pct=2.0;water_depth_cm=40;water_temp_c=18.5</pre>
 <ul>
   <li>Beide Schreibweisen gehen, auch verschachteltes JSON und eigene Namen; die Zuordnung prüfen Sie beim Einrichten.</li>
-  <li>Visite sendet nichts an die Steuerung: über das Netz nur Abfragen, bei MQTT nur ein Abonnement, bei Bluetooth nur Benachrichtigungen.</li>
+  <li>Visite ruft nur Lese-Methoden auf: über das Netz nur Abfragen, bei MQTT nur ein Abonnement, bei Bluetooth nur Benachrichtigungen. Technisch abgesichert wird das durch die Rechte in der Steuerung (Benutzer nur mit Leserecht) und ein getrenntes Maschinennetz.</li>
   <li>Die Herzschläge zeichnet weiter der Gurt auf. Bricht die Live-Verbindung ab, bleibt die Aufnahme vollständig, und die Stufen lassen sich aus der Datei nachtragen.</li>
 </ul>
 <div class="raster" style="grid-template-columns:1fr;margin-top:14px"><div style="border-color:rgba(62,207,178,.45)"><b>Gemeinsam ermöglichen</b><span>Klappt die Anbindung Ihrer Steuerung nicht auf Anhieb oder haben Sie eine weitere Idee, etwa einen anderen Weg oder zusätzliche Werte, erarbeiten wir die Lösung gemeinsam mit Ihnen. Eine Beispieldatei oder ein kurzer Mitschnitt der Live-Werte genügt für den Anfang.</span></div></div>
@@ -88,17 +89,28 @@ speed_kmh=4.8;incline_pct=2.0;water_depth_cm=40;water_temp_c=18.5</pre>
 <ul>
   <li><b>LOGO! 8</b>: Ein Datenlog-Funktionsblock schreibt CSV mit Zeitstempel auf die microSD-Karte; Werte im Abstand von einer Sekunde aufzeichnen (Siemens nennt mindestens 500 ms). Ab LOGO! 8.4 lässt sich der Datenlog über den eingebauten Webserver herunterladen.</li>
   <li><b>S7-1200</b>: DataLogCreate und DataLogWrite legen eine CSV an; der Download geht über den Webserver der Steuerung.</li>
-  <li><b>S7-1200 ab Firmware V4.5 und S7-1500 live</b>: Visite liest direkt über die Web-Schnittstelle der Steuerung (Anmeldung mit einem Benutzer, der nur lesen darf, dann die Variablen, etwa <code>"Laufband".Tempo</code>). Ein Gateway ist dafür nicht nötig.</li>
+  <li><b>S7-1200 ab Firmware V4.5 und S7-1500 live</b>: Visite liest über die Web-Schnittstelle der Steuerung (JSON-RPC, nur über HTTPS; Anmeldung mit einem Benutzer, der nur Variablen lesen darf, dann die Variablen, etwa <code>"Laufband".Tempo</code>). Das Zertifikat der Steuerung muss im Browser einmal bestätigt oder durch ein eigenes ersetzt sein. Wo das die Betriebs-IT nicht zulässt, geht der Weg über das Lese-Gateway.</li>
   <li><b>LOGO! 8.4 live</b>: Die LOGO! sendet an einen MQTT-Broker im Betrieb; Visite liest das LOGO!-Format (state.reported) direkt. Sendet die Steuerung ganze Zahlen, etwa 48 für 4,8 km/h, stellen Sie beim Einrichten den Faktor 0,1 ein.</li>
-  <li><b>LOGO! 8.1 bis 8.3 und andere Steuerungen mit Modbus TCP live</b>: Ein Browser kann Modbus nicht selbst lesen. Das <a href="carlon-lesegateway.py" download>CARLON Lese-Gateway</a> (eine Datei, Python 3, keine Zusatzpakete) läuft auf einem Rechner im Betriebsnetz, liest die eingestellten Register nur lesend und stellt sie unter <code>http://&lt;rechner&gt;:8090/werte.json</code> bereit. In Visite wählen Sie dann „Netzwerk-Adresse“. Welche Werte in welchen Registern liegen, legt der Gerätehersteller fest.</li>
-  <li><b>Andere Hersteller</b>: Steuerungen, die MQTT oder JSON über HTTP ausgeben, etwa viele aktuelle Steuerungen von Beckhoff oder WAGO, richten Sie über MQTT oder die Netzwerk-Adresse ein; die Spalten ordnet Visite beim Einrichten selbst zu.</li>
+  <li><b>LOGO! 8.1 bis 8.3 und andere Steuerungen mit Modbus TCP live</b>: Ein Browser kann Modbus nicht selbst lesen. Das <a href="carlon-lesegateway.py" download>CARLON Lese-Gateway</a> (eine Datei, Python 3, keine Zusatzpakete) läuft auf einem Rechner im Betriebsnetz, liest die eingestellten Register ausschließlich mit den Lesefunktionen 03 und 04 (Quelltext offen, rund 140 Zeilen) und stellt sie unter <code>http://&lt;rechner&gt;:8090/werte.json</code> bereit. In Visite wählen Sie dann „Netzwerk-Adresse“. Welche Werte in welchen Registern liegen, legt der Gerätehersteller fest.</li>
+  <li><b>Andere Hersteller</b>: Steuerungen, die MQTT oder JSON über HTTP ausgeben, richten Sie über MQTT oder die Netzwerk-Adresse ein; Visite schlägt die Zuordnung der Werte vor, Sie prüfen sie einmal. Steuerungen mit Modbus TCP gehen über das Lese-Gateway.</li>
   <li>Visite liest nur. Es steuert nichts und greift nicht in Not-Aus oder Sicherheitskette ein. Änderungen am Steuerungsprogramm verantwortet der Gerätehersteller.</li>
 </ul>
+<h2 id="it">Für Betriebs-IT und Hersteller</h2>
+<div style="overflow-x:auto"><table>
+<tr><th style="text-align:left">Thema</th><th style="text-align:left">So ist es</th></tr>
+<tr><td><b>Browser</b></td><td>Messen, Bluetooth und Live-Werte: Chrome oder Edge am Rechner oder auf Android. Safari, iPhone und iPad: Akten und Berichte ansehen, nicht messen.</td></tr>
+<tr><td><b>Datenweg</b></td><td>Die Werte gehen von der Steuerung, dem Broker oder dem Lese-Gateway direkt in den Browser im Betrieb. Sie gehen an keinen Server von Vitalkultur.</td></tr>
+<tr><td><b>Netz</b></td><td>Steuerung im getrennten Maschinennetz. Das Messgerät braucht nur Zugriff auf den einen Dienst, den Sie freigeben: Webserver der S7 (HTTPS, 443), Broker (WSS, Port nach Wahl) oder Lese-Gateway (HTTP, 8090). Modbus (502) spricht nur das Gateway.</td></tr>
+<tr><td><b>Rechte</b></td><td>S7: eigener Benutzer nur mit Leserecht für Variablen. LOGO! 8.4: sendet selbst an den Broker, Visite abonniert nur. Lese-Gateway: nur die Modbus-Lesefunktionen 03 und 04, antwortet nur der eingetragenen Adresse (Standard: vitalkultur.com).</td></tr>
+<tr><td><b>Sicherheit</b></td><td>Broker mit Benutzern und Zertifikat betreiben. Das Einschalten von Webserver, MQTT oder Modbus an der Maschine gehört in die Risikobeurteilung des Herstellers; Programmänderungen an der Steuerung nimmt nur der Hersteller vor.</td></tr>
+<tr><td><b>Ausfall</b></td><td>Fällt die Verbindung aus, zeichnet der Gurt weiter auf; die Stufen lassen sich aus der Datei nachtragen oder antippen. Das Lese-Gateway meldet eine nicht erreichbare Steuerung und liefert den letzten Stand mit Zeitstempel.</td></tr>
+<tr><td><b>Stufen</b></td><td>Eine Stufe beginnt, wenn die Werte 30 Sekunden stehen, und endet mit der ersten Änderung. Übergänge wie Füllen, Ablassen oder Bremsen zählen so nicht in die Auswertung der Stufe.</td></tr>
+</table></div>
 <p style="margin-top:16px"><a class="knopf" href="mailto:jan@vitalkultur.com?subject=CARLON%20Ger%C3%A4tedatei%20%C2%B7%20Hersteller">Beispieldatei oder Live-Mitschnitt schicken</a></p>
 
 <div class="fuss">CARLON Equine Visite · Vitalkultur, Iffezheim · <a href="/impressum.html">Impressum</a> · <a href="/privacy.html">Datenschutz</a> · Die Prüfung läuft vollständig in Ihrem Browser.</div>
 </div>
-<script src="/carlon-equine/app/steuerung.js?v=3"></script>
+<script src="/carlon-equine/app/steuerung.js?v=4"></script>
 <script>
 (function(){
   const S=window.Steuerung, $=s=>document.querySelector(s), esc=x=>String(x).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
@@ -116,7 +128,7 @@ speed_kmh=4.8;incline_pct=2.0;water_depth_cm=40;water_temp_c=18.5</pre>
       :`<tr><td><b>${esc(k)}</b></td><td><select data-i="${i}"><option value="">– nicht übernehmen –</option>${Object.keys(NAMEN).map(f=>`<option value="${f}"${(M[i]||{}).feld===f?' selected':''}>${NAMEN[f]}</option>`).join('')}</select></td><td>${esc(P.daten[0][i]||'')}</td></tr>`).join('');
     $('#eStT').textContent=`${r.log.length} erkannte Stufen`;
     $('#eSt').innerHTML=r.log.length?'<tr><th>Ab</th><th>Tempo</th><th>Steigung</th><th>Wasser</th><th>Temperatur</th></tr>'+r.log.map(m=>m.device==='keines'?`<tr><td>${mmss(m.startSec)}</td><td colspan="4">Belastung Ende</td></tr>`:`<tr><td>${mmss(m.startSec)}</td><td>${z(m.speedKmh,'km/h')}</td><td>${z(m.inclinePercent,'%')}</td><td>${z(m.waterHeightCm,'cm')}</td><td>${z(m.waterTempC,'°C')}</td></tr>`).join(''):'<tr><td>Keine Stufe erkannt. Prüfen Sie die Zuordnung oben.</td></tr>';
-    $('#eHin').textContent='Eine Stufe beginnt, wenn ein Wert mindestens 30 Sekunden hält; Tempo 0 heißt Belastung Ende. Zeiten ab der ersten Zeile der Datei; in Visite gelten sie ab Beginn der Aufnahme.';
+    $('#eHin').textContent='Eine Stufe beginnt, wenn ein Wert mindestens 30 Sekunden hält, und endet mit der ersten Änderung; Tempo 0 heißt Belastung Ende. Zeiten ab der ersten Zeile der Datei; in Visite gelten sie ab Beginn der Aufnahme.';
   }
   async function laden(f){ NAME=f.name; P=S.lesen(S.dekodieren(await f.arrayBuffer())); M=P.fehler?{}:S.zuordnen(P.kopf,P.zeitIdx); zeigen(); $('#erg').scrollIntoView({behavior:'smooth',block:'start'}); }
   const zone=$('#zone'), inp=$('#datei');

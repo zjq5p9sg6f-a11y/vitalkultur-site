@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Check controller data · CARLON Equine Visite</title>
+<meta name="description" content="For manufacturers and operators of treadmills, aqua trainers and horse walkers: drop in a controller file and see which stages CARLON Equine Visite takes from it. Runs locally in the browser, nothing is uploaded.">
+<link rel="icon" href="/favicon.ico">
+<link rel="alternate" hreflang="de" href="https://vitalkultur.com/carlon-equine-visite/geraetedatei/"><link rel="alternate" hreflang="en" href="https://vitalkultur.com/carlon-equine-visite/geraetedatei/en/">
+<style>
+@font-face{font-family:Jost;src:url(/fonts/jost-variable.woff2) format("woff2");font-weight:100 900;font-display:swap}
+:root{--bg:#060708;--k:#0e1012;--t:#f1efe9;--t2:#b9bfc4;--t3:#8a949c;--c:#3ECFB2;--g:#F2C46B;--r:rgba(255,255,255,.12)}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--t);font:16px/1.6 Jost,system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+.w{max-width:960px;margin:0 auto;padding:clamp(24px,5vw,56px) 20px 64px}
+.kopf{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:clamp(24px,4vw,44px)}
+.kopf a{color:var(--t2);text-decoration:none;font-size:14px}.marke{letter-spacing:.18em;font-weight:600;color:var(--t)!important}
+.eb{color:var(--c);letter-spacing:.2em;font-size:12px;text-transform:uppercase;font-weight:600}
+h1{font-weight:400;font-size:clamp(30px,5vw,48px);line-height:1.12;margin:10px 0 14px}h1 em{font-style:normal;color:var(--c)}
+h2{font-weight:500;font-size:clamp(21px,2.6vw,27px);margin:clamp(36px,5vw,56px) 0 12px}
+p.lead{color:var(--t2);font-size:18px;max-width:46em;margin:0 0 22px}
+.zone{border:1.5px dashed rgba(62,207,178,.55);border-radius:20px;padding:clamp(22px,4vw,36px);text-align:center;background:rgba(62,207,178,.04);cursor:pointer;transition:background .2s}
+.zone.ueber{background:rgba(62,207,178,.12)}.zone b{display:block;font-size:19px;font-weight:500;margin-bottom:6px}.zone span{color:var(--t3);font-size:14px}
+.knopf{display:inline-block;margin-top:14px;padding:11px 20px;border-radius:999px;background:var(--c);color:#04110e;font-weight:600;text-decoration:none;border:0;font:inherit;font-weight:600;cursor:pointer}
+.neben{display:inline-block;margin:14px 0 0 10px;color:var(--c);text-decoration:none;font-size:15px}
+.erg{margin-top:22px}.erg[hidden]{display:none}
+.karte{border:1px solid var(--r);border-radius:16px;background:var(--k);padding:16px 18px;margin-top:12px}
+.karte h3{margin:0 0 8px;font-size:16px;font-weight:600}
+table{width:100%;border-collapse:collapse;font-size:14.5px}th,td{text-align:left;padding:7px 8px;border-bottom:1px solid var(--r);vertical-align:top}th{color:var(--t3);font-weight:500}
+.tw{overflow-x:auto}
+.ok{color:var(--c)}.warn{color:var(--g)}
+select{background:#14171a;color:var(--t);border:1px solid var(--r);border-radius:8px;padding:5px 8px;font:inherit;font-size:14px}
+.raster{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}@media(max-width:820px){.raster{grid-template-columns:1fr}}
+.raster>div{border:1px solid var(--r);border-radius:16px;padding:16px 18px;background:var(--k)}.raster b{display:block;margin-bottom:6px}.raster span{color:var(--t2);font-size:15px}
+code{font-size:.92em;color:#d7dde1;background:#0b0d0f;border:1px solid var(--r);border-radius:6px;padding:1px 5px;word-break:break-all}
+pre{background:#0b0d0f;border:1px solid var(--r);border-radius:12px;padding:12px 14px;overflow-x:auto;font-size:12.5px;line-height:1.5;color:#d7dde1}
+ul{padding-left:20px}li{margin:4px 0;color:var(--t2)}li b{color:var(--t)}
+.fuss{margin-top:56px;padding-top:18px;border-top:1px solid var(--r);color:var(--t3);font-size:13.5px}.fuss a{color:var(--t2)}
+</style></head><body><div class="w">
+<div class="kopf"><a class="marke" href="/carlon-equine-visite/reha/en/">CARLON · EQUINE VISITE</a><span><a href="/carlon-equine-visite/reha/en/#hersteller">← For equipment manufacturers</a> · <a href="/carlon-equine-visite/geraetedatei/" hreflang="de" lang="de">Deutsch</a></span></div>
+
+<div class="eb">Controller data · file and live</div>
+<h1>Your controller file, <em>taken into Visite.</em></h1>
+<p class="lead">Drop a log file from your treadmill, aqua trainer or horse walker here. You immediately see which columns Visite recognises and which stages it creates. The file stays on your device; nothing is uploaded.</p>
+
+<div class="zone" id="zone" role="button" tabindex="0" aria-label="Choose a file or drop it here">
+  <b>Drop a file here or tap</b><span>CSV or TXT, e.g. from a data log, panel export or Excel</span>
+  <input type="file" id="datei" accept=".csv,.txt,.tsv,.log,text/csv,text/plain" hidden>
+</div>
+<a class="neben" href="/carlon-equine-visite/assets/carlon-geraetedatei-beispiel.csv">Load example file →</a>
+
+<div class="erg" id="erg" hidden>
+  <div class="karte"><h3 id="eTitel"></h3><div id="eInfo"></div></div>
+  <div class="karte"><h3>Columns</h3><div class="tw"><table id="eSp"></table></div></div>
+  <div class="karte"><h3 id="eStT">Detected stages</h3><div class="tw"><table id="eSt"></table></div><p id="eHin" style="color:var(--t3);font-size:14px;margin:10px 0 0"></p></div>
+</div>
+
+<h2>How it works for the facility</h2>
+<div class="raster">
+  <div><b>1 · Get the file</b><span>From the operator panel, the controller web server or a USB stick, after the session.</span></div>
+  <div><b>2 · Add it to the record</b><span>Under the rehab session tap “Import controller log” and choose the file. Check the mapping the first time.</span></div>
+  <div><b>3 · Done</b><span>Visite remembers the profile per device. After that one tap is enough; manual entry remains as a fallback.</span></div>
+</div>
+
+<h2>For manufacturers: the open format</h2>
+<p style="color:var(--t2);margin:0 0 12px">Visite reads many file formats itself. For a new export, this format is best: one row per second, semicolon, decimal point, UTF-8.</p>
+<pre>schema_version;machine_id;session_id;timestamp;elapsed_s;speed_kmh;incline_pct;water_depth_cm;water_temp_c
+1.0;aquatrainer-1;session-001;2026-11-23T09:05:00Z;300;4.5;0.0;40.0;18.0</pre>
+<ul>
+  <li><b>timestamp</b> with time zone (Z or +01:00); alternatively the controller date and time or seconds from start.</li>
+  <li><b>speed_kmh</b> belt speed in km/h, <b>incline_pct</b> incline in percent (not degrees), <b>water_depth_cm</b> water depth above the belt surface, <b>water_temp_c</b> in °C.</li>
+  <li>Missing value: empty field, never 0. No names of horses, owners or customers in the file.</li>
+  <li>Visite also recognises other column names, comma as decimal separator, m/s, mph or °F.</li>
+</ul>
+
+<h2>Live, every second</h2>
+<p style="color:var(--t2);margin:0 0 12px">If your controller or a gateway outputs the values continuously, for example a Siemens S7 through its web server or a LOGO! 8.4 through MQTT, Visite takes them during the session and creates the stages itself once new values hold for 30 seconds. Set it up in the recording under “Live values from the controller”: choose the route, enter the address, “Connect and test”. Incoming values appear with a suggested meaning; one tap saves it for the device.</p>
+<div class="raster">
+  <div><b>Network address</b><span>Visite polls an address on the facility network every second, e.g. <code>http://192.168.0.10/werte.json</code>. The response needs the headers <code>Access-Control-Allow-Origin: https://vitalkultur.com</code> and <code>Access-Control-Allow-Private-Network: true</code>. Chrome and Edge ask once whether Visite may access the local network.</span></div>
+  <div><b>MQTT</b><span>The controller publishes to a broker on site (LOGO! 8.4 supports general MQTT brokers). Visite reads via encrypted WebSocket, e.g. <code>wss://broker.facility.local:8884</code>, with a certificate; the browser does not allow unencrypted <code>ws://</code> from the web version. Enter the topic the LOGO! publishes to. Run the broker with user accounts inside the protected machine network.</span></div>
+  <div><b>Bluetooth</b><span>Only Chrome or Edge on Android and desktop; Safari, iPhone and iPad do not support Bluetooth in the browser. A gateway with the open CARLON profile 1.0: service <code>c4a7a000-5e2d-4f1c-9b6a-0e1e9a5c0001</code>, value with notification <code>c4a7a001-…0001</code>, content as text.</span></div>
+</div>
+<pre>{"speed_kmh": 4.8, "incline_pct": 2.0, "water_depth_cm": 40, "water_temp_c": 18.5}
+speed_kmh=4.8;incline_pct=2.0;water_depth_cm=40;water_temp_c=18.5</pre>
+<ul>
+  <li>Both notations work, including nested JSON and your own names; you check the mapping during setup.</li>
+  <li>Visite only calls read methods: polling over the network, a subscription for MQTT, notifications for Bluetooth. This is enforced technically by the rights in the controller (read-only user) and a separate machine network.</li>
+  <li>The strap keeps recording the heartbeats. If the live connection drops, the recording stays complete and the stages can be added from the file.</li>
+</ul>
+<div class="raster" style="grid-template-columns:1fr;margin-top:14px"><div style="border-color:rgba(62,207,178,.45)"><b>Making it work together</b><span>If connecting your controller does not work right away, or you have another idea such as a different route or additional values, we work out the solution with you. An example file or a short capture of the live values is enough to start.</span></div></div>
+
+<h2>Siemens LOGO!, S7 and other controllers</h2>
+<ul>
+  <li><b>LOGO! 8</b>: a data log function block writes CSV with timestamps to the microSD card; record values every second (Siemens states at least 500 ms). From LOGO! 8.4 the data log can be downloaded through the built-in web server.</li>
+  <li><b>S7-1200</b>: DataLogCreate and DataLogWrite create a CSV; download it through the controller web server.</li>
+  <li><b>S7-1200 from firmware V4.5 and S7-1500 live</b>: Visite reads through the controller Web API (JSON-RPC, HTTPS only; login with a user that may only read variables, then the variables, e.g. <code>"Treadmill".Speed</code>). The controller certificate must be accepted once in the browser or replaced with your own. Where facility IT does not allow this, use the read gateway.</li>
+  <li><b>LOGO! 8.4 live</b>: the LOGO! publishes to an MQTT broker on site; Visite reads the LOGO! format (state.reported) directly. If the controller sends integers, e.g. 48 for 4.8 km/h, set the factor 0.1 during setup.</li>
+  <li><b>LOGO! 8.1 to 8.3 and other controllers with Modbus TCP, live</b>: a browser cannot read Modbus itself. The <a href="../carlon-lesegateway.py" download>CARLON read gateway</a> (one file, Python 3, no extra packages) runs on a computer on the facility network, reads the configured registers only with the read functions 03 and 04 (open source, about 140 lines) and provides them at <code>http://&lt;computer&gt;:8090/werte.json</code>. In Visite choose “Network address”. Which values are in which registers is defined by the equipment manufacturer. Program comments are in German.</li>
+  <li><b>Other manufacturers</b>: controllers that output MQTT or JSON over HTTP are set up via MQTT or the network address; Visite suggests the mapping of the values and you check it once. Controllers with Modbus TCP use the read gateway.</li>
+  <li>Visite only reads. It controls nothing and does not interfere with the emergency stop or safety chain. Changes to the controller program are the responsibility of the equipment manufacturer.</li>
+</ul>
+<h2 id="it">For facility IT and manufacturers</h2>
+<div style="overflow-x:auto"><table>
+<tr><th style="text-align:left">Topic</th><th style="text-align:left">How it is</th></tr>
+<tr><td><b>Browser</b></td><td>Measuring, Bluetooth and live values: Chrome or Edge on desktop or Android. Safari, iPhone and iPad: view records and reports, no measuring.</td></tr>
+<tr><td><b>Data path</b></td><td>Values go from the controller, the broker or the read gateway directly into the browser on site. They do not go to any Vitalkultur server.</td></tr>
+<tr><td><b>Network</b></td><td>Controller in a separate machine network. The measuring device only needs access to the one service you allow: S7 web server (HTTPS, 443), broker (WSS, port of your choice) or read gateway (HTTP, 8090). Only the gateway speaks Modbus (502).</td></tr>
+<tr><td><b>Rights</b></td><td>S7: dedicated user with read rights for variables only. LOGO! 8.4: publishes to the broker itself, Visite only subscribes. Read gateway: only Modbus read functions 03 and 04, answers only the configured origin (default: vitalkultur.com).</td></tr>
+<tr><td><b>Security</b></td><td>Run the broker with user accounts and a certificate. Enabling the web server, MQTT or Modbus on the machine belongs in the manufacturer’s risk assessment; only the manufacturer changes the controller program.</td></tr>
+<tr><td><b>Outage</b></td><td>If the connection fails, the strap keeps recording; stages can be added from the file or tapped. The read gateway reports an unreachable controller and returns the last state with a timestamp.</td></tr>
+<tr><td><b>Stages</b></td><td>A stage begins when the values hold for 30 seconds and ends with the first change. Transitions such as filling, draining or braking are therefore not counted in the stage evaluation.</td></tr>
+</table></div>
+<p style="margin-top:16px"><a class="knopf" href="mailto:jan@vitalkultur.com?subject=CARLON%20controller%20file%20%C2%B7%20manufacturer">Send an example file or live capture</a></p>
+
+<div class="fuss">CARLON Equine Visite · Vitalkultur, Iffezheim · <a href="/impressum.html">Legal notice</a> · <a href="/privacy.html">Privacy</a> · The check runs entirely in your browser.</div>
+</div>
+<script src="/carlon-equine/app/steuerung.js?v=4"></script>
+<script>
+(function(){
+  const S=window.Steuerung, $=s=>document.querySelector(s), esc=x=>String(x).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+  const NAMEN={speedKmh:'Speed (km/h)',inclinePercent:'Incline (%)',waterHeightCm:'Water depth (cm)',waterTempC:'Water temperature (°C)',vibrationHz:'Frequency (Hz)',reverse:'Reverse',radiusM:'Radius (m)'};
+  const ZEIT={datum:'Date and time',uhrzeit:'Time of day',sekunden:'Seconds from start',unixS:'Unix seconds',unixMs:'Unix milliseconds',excel:'Excel date'};
+  let P=null,M=null,NAME='';
+  const mmss=x=>Math.floor(x/60)+':'+String(Math.round(x%60)).padStart(2,'0'), z=(v,e)=>v==null?'–':String(v)+' '+e;
+  function zeigen(){
+    const e=$('#erg'); e.hidden=false;
+    if(P.fehler||P.zeitIdx<0){ $('#eTitel').textContent=NAME; $('#eInfo').innerHTML='<span class="warn">No time column detected.</span> Please send us the file so we can add the format.'; $('#eSp').innerHTML=''; $('#eSt').innerHTML=''; $('#eHin').textContent=''; return; }
+    const start=S.ersteZeit(P), r=S.stufen(P,M,{startMs:start,dauerSec:86400,geraet:'laufband',haltSec:30});
+    $('#eTitel').textContent=NAME;
+    $('#eInfo').innerHTML=`<span class="ok">✓</span> ${P.daten.length} rows · time: ${esc(ZEIT[P.zeitArt]||P.zeitArt)} · separator ${P.trenner==='\t'?'Tab':esc(P.trenner)} · decimal ${P.dez===','?'comma':'point'}`;
+    $('#eSp').innerHTML='<tr><th>Column</th><th>Meaning in Visite</th><th>First value</th></tr>'+P.kopf.map((k,i)=>i===P.zeitIdx?`<tr><td><b>${esc(k)}</b></td><td>Time</td><td>${esc(P.daten[0][i]||'')}</td></tr>`
+      :`<tr><td><b>${esc(k)}</b></td><td><select data-i="${i}"><option value="">– do not import –</option>${Object.keys(NAMEN).map(f=>`<option value="${f}"${(M[i]||{}).feld===f?' selected':''}>${NAMEN[f]}</option>`).join('')}</select></td><td>${esc(P.daten[0][i]||'')}</td></tr>`).join('');
+    $('#eStT').textContent=`${r.log.length} detected stage${r.log.length===1?'':'s'}`;
+    $('#eSt').innerHTML=r.log.length?'<tr><th>From</th><th>Speed</th><th>Incline</th><th>Water</th><th>Temperature</th></tr>'+r.log.map(m=>m.device==='keines'?`<tr><td>${mmss(m.startSec)}</td><td colspan="4">End of exercise</td></tr>`:`<tr><td>${mmss(m.startSec)}</td><td>${z(m.speedKmh,'km/h')}</td><td>${z(m.inclinePercent,'%')}</td><td>${z(m.waterHeightCm,'cm')}</td><td>${z(m.waterTempC,'°C')}</td></tr>`).join(''):'<tr><td>No stage detected. Check the mapping above.</td></tr>';
+    $('#eHin').textContent='A stage begins when a value holds for at least 30 seconds and ends with the first change; speed 0 means end of exercise. Times from the first row of the file; in Visite they count from the start of the recording.';
+  }
+  async function laden(f){ NAME=f.name; P=S.lesen(S.dekodieren(await f.arrayBuffer())); M=P.fehler?{}:S.zuordnen(P.kopf,P.zeitIdx); zeigen(); $('#erg').scrollIntoView({behavior:'smooth',block:'start'}); }
+  const zone=$('#zone'), inp=$('#datei');
+  zone.addEventListener('click',()=>inp.click()); zone.addEventListener('keydown',e=>{ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); inp.click(); } });
+  inp.addEventListener('change',()=>{ if(inp.files[0]) laden(inp.files[0]); });
+  ['dragenter','dragover'].forEach(t=>zone.addEventListener(t,e=>{ e.preventDefault(); zone.classList.add('ueber'); }));
+  ['dragleave','drop'].forEach(t=>zone.addEventListener(t,e=>{ e.preventDefault(); zone.classList.remove('ueber'); }));
+  zone.addEventListener('drop',e=>{ const f=e.dataTransfer.files[0]; if(f) laden(f); });
+  document.addEventListener('change',e=>{ const s=e.target.closest('select[data-i]'); if(!s) return; const i=s.dataset.i; if(s.value) M[i]=Object.assign(S.zuordnen([P.kopf[i]],-1)[0]||{faktor:1},{feld:s.value}); else delete M[i]; zeigen(); });
+  /* Beispieldatei direkt prüfen statt herunterladen */
+  document.querySelector('.neben').addEventListener('click',async e=>{ e.preventDefault(); const r=await fetch(e.currentTarget.href); const b=await r.blob(); laden(new File([b],'carlon-geraetedatei-beispiel.csv')); });
+})();
+</script>
+</body></html>

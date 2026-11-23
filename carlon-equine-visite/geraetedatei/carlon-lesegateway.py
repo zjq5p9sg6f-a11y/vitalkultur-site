@@ -14,6 +14,7 @@ Beispiel gateway.json:
   "steuerung": {"host": "192.168.0.3", "port": 502, "unit": 1, "funktion": 3},
   "takt_s": 1,
   "port": 8090,
+  "erlaubt": ["https://vitalkultur.com"],
   "werte": {
     "speed_kmh":      {"register": 0, "faktor": 0.1},
     "incline_pct":    {"register": 1, "faktor": 0.1},
@@ -33,6 +34,7 @@ import time
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 
 STAND = {"werte": {}, "zeit": None, "fehler": "noch keine Antwort"}
+ERLAUBT = ["https://vitalkultur.com"]   # nur diese Webseiten dürfen die Werte im Browser lesen (Angabe "erlaubt" in gateway.json)
 SPERRE = threading.Lock()
 
 
@@ -93,7 +95,10 @@ class Antwort(BaseHTTPRequestHandler):
         self.send_response(code)
         self.send_header("Content-Type", "application/json; charset=utf-8")
         self.send_header("Cache-Control", "no-store")
-        self.send_header("Access-Control-Allow-Origin", "*")
+        herkunft = self.headers.get("Origin", "")
+        if herkunft in ERLAUBT:
+            self.send_header("Access-Control-Allow-Origin", herkunft)
+            self.send_header("Vary", "Origin")
         self.send_header("Access-Control-Allow-Private-Network", "true")   # Chrome: Zugriff aus dem Web ins Betriebsnetz
         self.send_header("Access-Control-Allow-Methods", "GET, OPTIONS")
         self.end_headers()
@@ -123,6 +128,7 @@ def main():
         print(__doc__)
         sys.exit(1)
     cfg = json.load(open(sys.argv[1], encoding="utf-8"))
+    ERLAUBT[:] = cfg.get("erlaubt", ERLAUBT)
     threading.Thread(target=schleife, args=(cfg,), daemon=True).start()
     port = int(cfg.get("port", 8090))
     print("CARLON Lese-Gateway: liest %s:%s, bereit unter http://<dieser-rechner>:%d/werte.json"

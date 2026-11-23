@@ -133,7 +133,8 @@
     const log = []; let akt = null, kand = null;
     for (const x of innen) {
       if (!akt) { akt = x; log.push(x); continue; }
-      if (gleich(x.w, akt.w)) { kand = null; continue; }
+      if (gleich(x.w, akt.w)) { kand = null; delete akt.ende; continue; }   /* kurzer Ausreißer: Stufe läuft weiter */
+      if (akt.ende == null) akt.ende = x.sec;   /* erste Abweichung = Ende der Stufe (23.11.2026), Übergang zählt nicht mit */
       if (!kand || !gleich(x.w, kand.w)) kand = x;
       if (x.sec - kand.sec >= haltSec || x === innen[innen.length - 1]) { akt = kand; log.push(kand); kand = null; }
     }
@@ -141,7 +142,7 @@
     return { reihe: innen.length, ausserhalb: reihe.length - innen.length,
       log: log.map(x => { const ruht = x.w.speedKmh != null && x.w.speedKmh < 0.3 && geraet !== 'vibration';
         return ruht ? { startSec: Math.max(0, Math.round(x.sec)), device: 'keines', quelle: 'steuerung' }
-          : Object.assign({}, basis(x.sec), x.w, { startSec: Math.max(0, Math.round(x.sec)), device: geraet, quelle: 'steuerung' }); }) };
+          : Object.assign({}, basis(x.sec), x.w, { startSec: Math.max(0, Math.round(x.sec)), device: geraet, quelle: 'steuerung' }, x.ende != null && x.ende > x.sec ? { endSec: Math.round(x.ende) } : {}); }) };
   }
 
   /* Zeitpunkt der ersten Zeile (für die Prüfseite ohne Aufnahme) */

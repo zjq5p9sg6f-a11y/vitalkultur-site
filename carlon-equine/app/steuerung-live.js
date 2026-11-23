@@ -51,6 +51,9 @@
   }
   /* Minimaler MQTT-3.1.1-Client über WebSocket: CONNECT, SUBSCRIBE (QoS 0), PUBLISH empfangen, PINGREQ – nur lesen */
   function mqtt(cfg, onText, onFehler) {
+    /* 23.11. (Prüfung Hersteller-Sicht): aus der https-Web-Fassung sperrt der Browser unverschlüsseltes ws:// – klar sagen statt still scheitern */
+    if (typeof location !== 'undefined' && location.protocol === 'https:' && /^ws:\/\//i.test(cfg.adresse || '') && !/^ws:\/\/(localhost|127\.0\.0\.1|\[::1\])(:|\/|$)/i.test(cfg.adresse || '')) { const E2 = typeof Sprache !== 'undefined' && Sprache.cur === 'en';
+      onFehler && onFehler(E2 ? 'From the web version the browser only allows encrypted wss:// (broker with certificate).' : 'Aus der Web-Fassung erlaubt der Browser nur verschlüsseltes wss:// (Broker mit Zertifikat).'); return () => {}; }
     const enc = new TextEncoder(), dec = new TextDecoder();
     const laenge = n => { const b = []; do { let x = n % 128; n = Math.floor(n / 128); if (n > 0) x |= 128; b.push(x); } while (n > 0); return b; };
     const str = s => { const u = enc.encode(s); return [u.length >> 8, u.length & 255, ...u]; };
@@ -112,13 +115,14 @@
 
   /* Stufen-Automat für die laufende Aufnahme: neue Werte → Einstellung setzen; stehen sie haltSec, Stufe anlegen; Tempo 0 → Belastung Ende */
   function automat(o) {
-    const { setze, stufe, ende, haltSec = 30, schwelle = f => (S().FELDER[f] || {}).schwelle || 0.5 } = o; let zuletzt = null, kand = null, kandAb = 0, beendet = false;
+    const { setze, stufe, ende, abweichung, zurueck, haltSec = 30, schwelle = f => (S().FELDER[f] || {}).schwelle || 0.5 } = o; let zuletzt = null, kand = null, kandAb = 0, beendet = false, weg = false;
     const gleich = (a, b) => a && b && Object.keys(Object.assign({}, a, b)).every(f => a[f] == null || b[f] == null || Math.abs(a[f] - b[f]) < schwelle(f));
     return function (w, jetztMs) { if (!Object.keys(w).length) return; setze(w);
-      if (gleich(w, zuletzt)) { kand = null; return; }
+      if (gleich(w, zuletzt)) { kand = null; if (weg) { weg = false; zurueck && zurueck(); } return; }
+      if (zuletzt && !weg) { weg = true; abweichung && abweichung(); }   /* erste Abweichung vom Stufenwert = Ende der Stufe (Übergang zählt nicht mit) */
       if (!kand || !gleich(w, kand)) { kand = Object.assign({}, w); kandAb = jetztMs; return; }
       if (jetztMs - kandAb >= haltSec * 1000) { if (w.speedKmh != null && w.speedKmh < 0.3) { if (zuletzt && !beendet) { ende(); beendet = true; } }
-        else { stufe(); beendet = false; } zuletzt = kand; kand = null; } };
+        else { stufe(); beendet = false; } zuletzt = kand; kand = null; weg = false; } };
   }
 
   g.SteuerLive = { BLE, flach, vorschlag, werte, QUELLEN, automat,
@@ -137,14 +141,14 @@
     einrichten(art) { this.art = art; const alt = this.profil(art) || {}; this.cfg = Object.assign({ art: 'http', adresse: '', thema: '', map: {}, haltSec: 30, auto: true }, alt); this.roh = {}; this.dialog(); },
     dialog() { const E = en(), c = this.cfg, n = f => NAMEN[f][E ? 1 : 0];
       const wege = [['http', E ? 'Network address' : 'Netzwerk-Adresse', E ? 'Controller or gateway in your Wi-Fi, e.g. http://192.168.0.10/werte.json' : 'Steuerung oder Gateway im WLAN, z. B. http://192.168.0.10/werte.json'],
-        ['mqtt', 'MQTT', E ? 'Broker in your business, e.g. ws://192.168.0.5:9001 and a topic' : 'Broker im Betrieb, z. B. ws://192.168.0.5:9001 und ein Thema'],
+        ['mqtt', 'MQTT', E ? 'Broker in your business, e.g. wss://broker.local:8884 and the topic' : 'Broker im Betrieb, z. B. wss://broker.local:8884 und das Thema'],
         ['s7', 'Siemens S7-1200 / S7-1500', E ? 'Directly via the controller’s web server (firmware V4.5 or later), user and variable names' : 'Direkt über den Webserver der Steuerung (ab Firmware V4.5), Benutzer und Variablennamen'],
         ['ble', 'Bluetooth', E ? 'Gateway with the CARLON profile, no address needed' : 'Gateway mit CARLON-Profil, keine Adresse nötig']];
       const keys = Object.keys(this.roh);
       UI.modal(`<div class="modal-head"><button class="closex" onclick="SteuerLiveUI.schliessen()">${IC.x}</button><h3>${E ? 'Live values from the controller' : 'Live-Werte aus der Steuerung'}</h3></div><div class="modal-body">
         <p style="margin:0 0 12px;color:var(--text-secondary)">${E ? 'Visite only reads. It sends nothing to the controller.' : 'Visite liest nur. Es sendet nichts an die Steuerung.'}</p>
         <div style="display:grid;gap:8px">${wege.map(([k, t, h]) => `<label style="display:flex;gap:10px;align-items:flex-start;border:1px solid ${c.art === k ? 'var(--cyan)' : 'var(--border-subtle)'};border-radius:12px;padding:10px 12px;cursor:pointer"><input type="radio" name="slArt" value="${k}" ${c.art === k ? 'checked' : ''} style="margin-top:4px"><span><b>${t}</b><br><span style="font-size:13px;color:var(--text-secondary)">${h}</span></span></label>`).join('')}</div>
-        ${c.art !== 'ble' ? `<label style="display:block;margin-top:12px">${E ? 'Address' : 'Adresse'}<input data-sl="adresse" value="${esc2(c.adresse || '')}" placeholder="${c.art === 'mqtt' ? 'ws://192.168.0.5:9001' : c.art === 's7' ? 'https://192.168.0.1' : 'http://192.168.0.10/werte.json'}" style="width:100%;padding:9px 10px;margin-top:4px"></label>` : ''}
+        ${c.art !== 'ble' ? `<label style="display:block;margin-top:12px">${E ? 'Address' : 'Adresse'}<input data-sl="adresse" value="${esc2(c.adresse || '')}" placeholder="${c.art === 'mqtt' ? 'wss://broker.local:8884' : c.art === 's7' ? 'https://192.168.0.1' : 'http://192.168.0.10/werte.json'}" style="width:100%;padding:9px 10px;margin-top:4px"></label>` : ''}
         ${c.art === 's7' ? `<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px"><label>${E ? 'User (read only)' : 'Benutzer (nur lesen)'}<input data-sl="benutzer" value="${esc2(c.benutzer || '')}" placeholder="Anonymous" style="width:100%;padding:9px 10px;margin-top:4px"></label><label>${E ? 'Password' : 'Passwort'}<input data-sl="passwort" type="password" value="${esc2(c.passwort || '')}" autocomplete="off" style="width:100%;padding:9px 10px;margin-top:4px"></label></div>
         <label style="display:block;margin-top:8px">${E ? 'Variables, one per line' : 'Variablen, eine je Zeile'}<textarea data-sl="variablen" rows="3" placeholder='"Laufband".Tempo&#10;"Laufband".Steigung' style="width:100%;padding:9px 10px;margin-top:4px;font-family:ui-monospace,Menlo,monospace">${esc2(c.variablen || '')}</textarea></label>` : ''}
         ${c.art === 'mqtt' ? `<label style="display:block;margin-top:8px">${E ? 'Topic' : 'Thema'}<input data-sl="thema" value="${esc2(c.thema || '')}" placeholder="laufband/werte" style="width:100%;padding:9px 10px;margin-top:4px"></label>` : ''}
@@ -178,7 +182,9 @@
       const auto = L.automat({ haltSec: p.haltSec || 30, setze: w => { const G = RehaKern.GERAETE[R.art]; let geaendert = false;
           for (const [f, v] of Object.entries(w)) if ((G.felder || []).includes(f) && R.akt[f] !== v) { R.akt[f] = v; geaendert = true; }
           R._liveZeit = Date.now(); if (geaendert && Date.now() - letzte > 500) { letzte = Date.now(); R.zeichnen(); } },
-        stufe: () => { if (p.auto !== false && R.start) R.stufe(); }, ende: () => { if (p.auto !== false && R.start) R.ende(); } });
+        stufe: () => { if (p.auto !== false && R.start) R.stufe(); }, ende: () => { if (p.auto !== false && R.start) R.ende(); },
+        abweichung: () => { const z = R.log[R.log.length - 1]; if (p.auto !== false && R.start && z && z.device !== 'keines' && z.endSec == null) { z.endSec = R.t(); try { R.entwurf(); } catch (_) {} } },
+        zurueck: () => { const z = R.log[R.log.length - 1]; if (z && z.endSec != null) { delete z.endSec; try { R.entwurf(); } catch (_) {} } } });
       /* Viele Steuerungen melden nur Änderungen (LOGO! MQTT: Delta + Herzschlag). Darum letzte Werte merken und jede Sekunde
          prüfen, ob sie lange genug stehen – nicht nur beim Eintreffen einer Nachricht. */
       let stand = null; const takt = setInterval(() => { if (stand) auto(Object.assign({}, stand), Date.now()); }, 1000);

@@ -155,7 +155,9 @@
     const t = zeitachse(rr), T = t[t.length - 1] || 0;
     const l = (log || []).slice().sort((a, b) => a.startSec - b.startSec);
     return l.map((m, i) => {
-      const s = m.startSec, e = i + 1 < l.length ? l[i + 1].startSec : T;
+      /* endSec (23.11.2026, optional): die Live-Anbindung setzt es, sobald die Steuerung den Stufenwert verlässt – der Übergang
+         (Wasser ablassen, Band bremst) zählt so nicht mehr in die letzten 60 s der Stufe. Ohne endSec wie bisher bis zur nächsten Stufe. */
+      const naechste = i + 1 < l.length ? l[i + 1].startSec : T, s = m.startSec, e = (m.endSec != null && m.endSec > s && m.endSec < naechste) ? m.endSec : naechste;
       const idx = fenster(rr, t, s, e), h = hf(rr, idx);
       const vor = hf(rr, fenster(rr, t, s - 20, s)), h0 = mittel(vor);
       const spaet = hf(rr, fenster(rr, t, s + 0.6 * (e - s), e));

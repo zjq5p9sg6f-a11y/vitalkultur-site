@@ -858,6 +858,9 @@ h1,h2{text-wrap:balance}
 .kl-raster b{color:var(--text-primary);font-size:15.5px}
 .kl-pdf{margin:16px 0 0}
 .kl-raster span{color:var(--text-secondary);font-size:14.5px;line-height:1.55}
+#steuerung .steuer-lead{max-width:760px;margin:16px 0 22px;color:var(--text-secondary);line-height:1.6}
+@media (min-width:901px){#steuerung .kl-raster{grid-template-columns:repeat(4,minmax(0,1fr))}}
+#steuerung .steuer-klein{display:inline-block;margin-left:12px;font-size:13px;color:var(--text-secondary)}
 </style>
 <link rel="stylesheet" href="/assets/baukasten/baukasten.css?v=4">
 <link rel="stylesheet" href="/assets/app-tour/app-tour.css?v=10">
@@ -1802,7 +1805,7 @@ section h2 em{font-style:normal;color:var(--cyan)}
     <p class="sec-lead">Visite documents every rehab session on your equipment: setting, duration and heart rate, comparable week by week at the same setting. The centre passes the progress report to the owner in writing, on its own letterhead.</p>
     <div class="hs-raster">
       <div class="hs-k"><svg class="ic" aria-hidden="true"><use href="#i-schild"/></svg><b>No competition with your controls</b><span>Visite neither operates nor replaces the equipment’s control unit. Today the team enters the settings by hand.</span></div>
-      <div class="hs-k"><svg class="ic" aria-hidden="true"><use href="#i-link"/></svg><b>Stages from your controller</b><span>Visite takes speed, incline and water values from your controller’s log file, for example a LOGO! or S7 data log, or live over the network, MQTT or Bluetooth. You can check straight away whether your file fits on the <a href="/carlon-equine-visite/geraetedatei/">check page for equipment data</a>. Visite only reads and controls nothing.</span></div>
+      <div class="hs-k"><svg class="ic" aria-hidden="true"><use href="#i-link"/></svg><b>Stages from your controller</b><span>Visite takes speed, incline and water values from your controller’s log file, for example a LOGO! or S7 data log, or live over the network, MQTT or Bluetooth. You can check straight away whether your file fits on the <a href="/carlon-equine-visite/geraetedatei/en/">check page for equipment data</a>. Visite only reads and controls nothing.</span></div>
       <div class="hs-k"><svg class="ic" aria-hidden="true"><use href="#i-schloss"/></svg><b>Data stays with the centre</b><span>Recordings and reports stay with the rehab centre. Vitalkultur receives no horse or measurement data.</span></div>
       <div class="hs-k"><svg class="ic" aria-hidden="true"><use href="#i-check"/></svg><b>Clear responsibility</b><span>Operation and safety of the equipment remain with the manufacturer and the operator, and assessment of the horse with the veterinary surgeon. In our assessment, Visite is not a medical device; the reasoning is in the FAQ.</span></div>
       <div class="hs-k"><svg class="ic" aria-hidden="true"><use href="#i-ekg"/></svg><b>Complements your motion analysis</b><span>Visite records heart rate, beat-to-beat intervals, settings and recovery. The manufacturer’s gait and motion analysis is not affected; together they show movement and workload.</span></div>
