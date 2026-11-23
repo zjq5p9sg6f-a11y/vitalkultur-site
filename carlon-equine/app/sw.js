@@ -2,7 +2,7 @@
    App-Shell wird precached; Fonts & Leaflet lokal gebündelt (assets/) — keine externen CDNs,
    sodass die App nach dem ersten Online-Start vollständig offline läuft.
    Gesundheitsdaten liegen in IndexedDB — der SW cached nur Programm-Assets. */
-const VERSION = 'carlon-clinic-20261123-c';
+const VERSION = 'carlon-clinic-20261123-e';
 /* ACHTUNG: JEDE Datei in CORE wird ausgeliefert, bis VERSION sich aendert.
    Zweimal in dieser Nacht passiert — einmal beim Livegang-Schalter, einmal bei
    krypto.js: Datei geaendert, Version vergessen, und der Browser lieferte
@@ -23,6 +23,8 @@ const CORE = [
   'steuerung.js',
   'steuerung-live.js',
   'vorfuehrung.js',
+  'bericht-pdf.js',
+  'lib/jspdf-4.2.1.umd.min.js',
   'h10-speicher.js',
   'stall.js',
   'poincare-zeit.js',

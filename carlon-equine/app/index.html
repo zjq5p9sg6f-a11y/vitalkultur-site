@@ -307,6 +307,7 @@ body.hoert .stimme-knopf{background:var(--cyan);color:#02130f;animation:hoertPul
 @keyframes hoertPuls{0%,100%{box-shadow:0 0 0 0 rgba(62,207,178,.55)}50%{box-shadow:0 0 0 14px rgba(62,207,178,0)}}
 @media print{.stimme-knopf{display:none}}
 a[href^="tel:"]{white-space:nowrap}
+.pdf-senden{margin-top:14px;padding:14px;border-radius:14px;border:1px solid var(--cyan-deep);background:var(--cyan-g3)}.pdf-senden .ps-k{display:flex;justify-content:space-between;gap:10px;font-weight:600;margin-bottom:10px}.pdf-senden .ps-k span{font-weight:400;font-size:12.5px;color:var(--text-dim)}.pdf-senden .ps-k span.ok{color:var(--good)}.pdf-senden .ps-k span.warn{color:var(--amber)}.pdf-senden p{margin:8px 0 0;font-size:12.5px;color:var(--text-secondary)}.pdf-senden .btn svg{width:16px;height:16px;margin-right:6px;vertical-align:-3px}
 body:has(#modalBg) .stimme-knopf{bottom:calc(14px + env(safe-area-inset-bottom,0px));left:calc(14px + env(safe-area-inset-left,0px));width:46px;height:46px}   /* im Dialog bleibt Diktieren möglich, Knopf rückt in die Ecke */
 body:has(#stimmeKnopf) main{padding-bottom:calc(150px + env(safe-area-inset-bottom,0px))}   /* 22.11. Sichtprüfung: Mikrofon verdeckt den letzten Eintrag nicht, im Dialog klein in der Ecke */
 .rh-dg{display:grid;grid-template-columns:1fr 1fr;gap:8px 12px}.rh-dl{display:flex;flex-direction:column;gap:4px;font-size:12.5px;margin-bottom:6px}.rh-dl span{font-weight:600}.rh-dl input,.rh-dl select,.rh-dl textarea{width:100%}@media(max-width:600px){.rh-dg{grid-template-columns:1fr}}
@@ -2247,6 +2248,7 @@ header.k7 #tierPill,header.k7 .post-pill{display:none}
 <script src="steuerung.js?v=4"></script>
 <script src="steuerung-live.js?v=4"></script>
 <script src="vorfuehrung.js?v=2"></script>
+<script src="bericht-pdf.js?v=2"></script>
 <script>/* 21.11.2026 Muttersprachler-Review: „water treadmill“ ist der übliche englische Fachbegriff. Nur Anzeige in Visite; reha-kern.js (gemeinsam mit Equine) bleibt unverändert, Equine-Session informiert. */
 try{ if(window.RehaKern&&RehaKern.GERAETE&&RehaKern.GERAETE.aquatrainer) RehaKern.GERAETE.aquatrainer.en='Water treadmill'; }catch(_){}</script>
 <script src="h10-speicher.js"></script>
@@ -3333,7 +3335,8 @@ const Reha={
     const setzen=(aufEins)=>{ const S2=seiten.slice(); S2[0]=S2[0].replace('%%VERLAUF%%',aufEins?verlaufBlock:''); if(!aufEins) S2[1]=S2[1].replace('<div class="rh-cap">Trainingsumfang',verlaufBlock+'<div class="rh-cap" style="margin-top:8px">Trainingsumfang'); $('#printArea').innerHTML=this._stil(dunkel)+S2.map((x,i)=>`<section class="rh-seite"><div class="rh-inh">${x}</div>${fuss(i+1,S2.length)}</section>`).join(''); };
     setzen(true); this._einpassen();
     try{ await Akte.notiere(h.id,'Reha-Abschlussbericht',{text:kern+' '+unter+(fazit?'\n\nEinschätzung: '+fazit:'')}); }catch(_){ }
-    const alt=document.title; document.title=`${h.name} · Reha-Verlaufsdokumentation`; setTimeout(()=>{ window.print(); document.title=alt; },150);
+    const alt=document.title, _t=`${h.name} · ${typeof Sprache!=='undefined'&&Sprache.cur==='en'?'Rehab progress documentation':'Reha-Verlaufsdokumentation'}`; document.title=_t; const _d=()=>setTimeout(()=>{ window.print(); document.title=alt; },150);
+    if(typeof BerichtPDF!=='undefined') BerichtPDF.ausgabe({titel:_t,text:_t,druck:_d}).finally(()=>{ document.title=alt; }); else _d();   /* 23.11.: senden oder drucken */
   },
   /* Seiten-Einpassung: misst jede Seite im echten Layout (Druckbereich kurz sichtbar); liefert die Seiten, die in den Fuß ragen */
   _ueberlauf(){ const pa=document.getElementById('printArea'); if(!pa) return []; const alt=pa.style.cssText; pa.style.cssText='display:block;position:absolute;left:-10000px;top:0';
@@ -3344,11 +3347,23 @@ const Reha={
   _einpassen(){ const pa=document.getElementById('printArea'); if(!pa) return; const seiten=[...pa.querySelectorAll('.rh-seite')];
     for(let i=0;i<seiten.length;i++){ const inh=seiten[i].querySelector('.rh-inh'); if(!inh) continue; let z=1; while(this._ueberlauf().includes(i+1)&&z>0.8){ z=Math.round((z-0.03)*100)/100; inh.style.zoom=z; } } },
   thema(t,el){ State.settings.rehaThema=t; State.saveSettings(); const g=el&&el.parentNode; if(g) [...g.children].forEach(b=>{ const an=b===el; b.setAttribute('aria-pressed',an); b.style.background=an?'var(--cyan)':'transparent'; b.style.color=an?'#04161a':'inherit'; }); },
-  async drucken(hid,rid,art,thema){
+  async drucken(hid,rid,art,thema,keinDruck){
     thema=thema||(State.settings&&State.settings.rehaThema)||'hell'; const dunkel=thema==='dunkel', P0=Report._P;
     this._C=dunkel?this._CD:this._CL; if(dunkel) Report._P=Object.assign({},P0,this._PD);
-    try{ await this._drucken(hid,rid,art,dunkel); } finally { Report._P=P0; }
+    this._keinDruck=!!keinDruck;   /* 23.11.: nur bauen (für das PDF zum Teilen), Druckdialog bleibt zu */
+    try{ await this._drucken(hid,rid,art,dunkel); } finally { Report._P=P0; this._keinDruck=false; }
   },
+  /* 23.11.2026: Bericht als PDF ins Teilen-Blatt (bericht-pdf.js); ohne Teilen → Datei, ohne Zeichnen → Druck */
+  pdfSchluessel(rid,art,thema){ return 'reha|'+rid+'|'+art+'|'+(thema||(State.settings&&State.settings.rehaThema)||'hell')+'|'+(typeof Sprache!=='undefined'?Sprache.cur:'de'); },
+  pdfTitel(hid,rid,art){ const h=State.horses.find(x=>x.id===hid)||{}, r=State.recordings.find(x=>x.id===rid)||{}, en=typeof Sprache!=='undefined'&&Sprache.cur==='en';
+    return `${h.name||'Pferd'} · ${art==='klinik'?(en?'Rehab session report':'Reha-Sitzungsbericht'):(en?'Rehab session':'Reha-Einheit')} ${r.startedAt?new Date(r.startedAt).toLocaleDateString(en?'en-GB':'de-DE',{day:'numeric',month:'short',year:'numeric'}):''}`; },
+  pdfVorbereiten(hid,rid,art){ if(typeof BerichtPDF==='undefined') return null; return BerichtPDF.vorbereiten(this.pdfSchluessel(rid,art),()=>this.drucken(hid,rid,art,null,true),this.pdfTitel(hid,rid,art)); },
+  async pdfSenden(hid,rid,art){ if(typeof BerichtPDF==='undefined'){ this.drucken(hid,rid,art); return; }
+    const en=typeof Sprache!=='undefined'&&Sprache.cur==='en', h=State.horses.find(x=>x.id===hid)||{};
+    const text=art==='klinik'?(en?`Rehab session report ${h.name||''}`:`Reha-Sitzungsbericht ${h.name||''}`):(en?`Today's rehab session with ${h.name||''}`:`Die heutige Reha-Einheit von ${h.name||''}`);
+    const r=await BerichtPDF.senden(this.pdfSchluessel(rid,art),()=>this.drucken(hid,rid,art,null,true),this.pdfTitel(hid,rid,art),text,()=>this.drucken(hid,rid,art));
+    const n=(this._notizen||{})[rid+'|'+art]; if(n&&(r==='geteilt'||r==='geladen')){ try{ await Akte.notiere(n[0],n[1]+(en?' (sent as PDF)':' (als PDF gesendet)'),n[2]); }catch(_){ } delete this._notizen[rid+'|'+art]; }
+    return r; },
   /* CO-BRANDING (20.11.2026, Jan: „Hof oder Klinik links oben, wir rechts oben“): Absender ist der Betrieb; CARLON klein als
      Wortmarke rechts, wie im Messwertbericht. Darunter Titel und Pferd mit Datum. Für alle Reha- und Langzeitberichte. */
   _kopf(titel,pferd,info){ const st=State.settings||{}, praxis=esc(st.clinicName||'Ihre Einrichtung'), zus=[st.clinicAddr,st.clinicPhone,st.clinicWeb].filter(Boolean).map(esc).join(' · ');
@@ -3477,8 +3492,10 @@ const Reha={
     }
     $('#printArea').innerHTML=this._stil(dunkel)+seiten.map((x,i)=>`<section class="rh-seite"><div class="rh-inh">${x}</div>${fuss(i+1,seiten.length)}</section>`).join('');
     this._einpassen();
-    try{ await Akte.notiere(hid, art==='klinik'?'Reha-Klinikbericht':'Reha-Bericht für die Halterin',{text:kern.join(' ')+(kern.length?'\n':'')+lastSt.map(x=>x.label).join('\n'),aufnahme:rid}); }catch(_){ }
-    const alt=document.title; document.title=`${h.name} · Reha ${fmtDate(r.startedAt)}`; setTimeout(()=>{ window.print(); document.title=alt; },150);
+    { const notiz=[hid, art==='klinik'?'Reha-Klinikbericht':'Reha-Bericht für die Halterin',{text:kern.join(' ')+(kern.length?'\n':'')+lastSt.map(x=>x.label).join('\n'),aufnahme:rid}];
+      if(this._keinDruck) (this._notizen=this._notizen||{})[rid+'|'+art]=notiz;   /* Vorbereiten ≠ ausgegeben: Akten-Eintrag erst nach dem Senden */
+      else try{ await Akte.notiere(...notiz); }catch(_){ } }
+    if(!this._keinDruck){ const alt=document.title; document.title=`${h.name} · Reha ${fmtDate(r.startedAt)}`; setTimeout(()=>{ window.print(); document.title=alt; },150); }
   },
 };
 
@@ -3901,7 +3918,13 @@ const RehaLive={
       UI.modal(`<div class="modal-head"><button class="closex" onclick="UI.closeModal()">${IC.x}</button><h3>${en?'Session saved':'Einheit gespeichert'} · ${esc(_name)}</h3></div><div class="modal-body">
         <p style="font-size:13.5px;color:var(--text-secondary);margin:0 0 10px">${Math.round(s.rec.durationSec/60)} min · ${fmt0(s.rec.beatCount)} ${en?'beats':'Schläge'} · ${ausSpeicher?(en?'from the strap memory':'aus dem Gurtspeicher'):(en?'live':'live')}</p>
         ${st.length?`<div class="table-scroll"><table class="tbl" style="width:100%;font-size:13px"><thead><tr><th>#</th><th>${en?'Stage':'Stufe'}</th><th style="text-align:right">${en?'Duration':'Dauer'}</th><th style="text-align:right">${en?'HR at stage end':'HF Stufenende'}</th></tr></thead><tbody>${zeile}</tbody></table></div>`:''}
-        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:14px"><button class="btn primary" onclick="UI.closeModal();Reha.drucken('${hid}','${id}','klinik')">${en?'Session report for the record':'Sitzungsbericht für die Akte'}</button><button class="btn ghost" onclick="UI.closeModal();Reha.drucken('${hid}','${id}','halter')">${en?'Report for the owner':'Bericht für die Halterin'}</button><button class="btn ghost" onclick="UI.closeModal()">${en?'Later':'Später'}</button></div></div>`);
+        ${typeof BerichtPDF!=='undefined'?`<div class="pdf-senden"><div class="ps-k">${en?'Send as PDF':'Als PDF senden'}<span id="psStand">${en?'preparing …':'wird vorbereitet …'}</span></div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn primary" onclick="Reha.pdfSenden('${hid}','${id}','halter')">${IC.share||''}${en?'To the owner':'An die Halterin'}</button><button class="btn primary" onclick="Reha.pdfSenden('${hid}','${id}','klinik')">${IC.share||''}${en?'Session report':'Sitzungsbericht'}</button></div>
+          <p>${en?'Opens the share sheet with the PDF attached: WhatsApp, mail, AirDrop.':'Öffnet das Teilen-Menü mit angehängtem PDF: WhatsApp, Mail, AirDrop.'}</p></div>`:''}
+        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:14px"><button class="btn ghost" onclick="UI.closeModal();Reha.drucken('${hid}','${id}','klinik')">${en?'Print session report':'Sitzungsbericht drucken'}</button><button class="btn ghost" onclick="UI.closeModal();Reha.drucken('${hid}','${id}','halter')">${en?'Print owner report':'Halterinnen-Bericht drucken'}</button><button class="btn ghost" onclick="UI.closeModal()">${en?'Later':'Später'}</button></div></div>`);
+      /* 23.11.: beide PDFs gleich vorbereiten, damit „Senden“ sofort das Teilen-Menü öffnet (die Geste verfällt nach Sekunden) */
+      if(typeof BerichtPDF!=='undefined'){ const st=()=>document.getElementById('psStand'); Promise.all([Reha.pdfVorbereiten(hid,id,'halter'),Reha.pdfVorbereiten(hid,id,'klinik')])
+        .then(()=>{ const e=st(); if(e){ e.textContent=en?'ready':'bereit'; e.className='ok'; } }).catch(()=>{ const e=st(); if(e){ e.textContent=en?'not possible on this device, use print':'auf diesem Gerät nicht möglich, bitte drucken'; e.className='warn'; } }); }
     }catch(_){ } },450);
   },
   schliessen(){ this.aktiv=false; clearInterval(this._takt); try{ if(typeof SteuerLiveUI!=='undefined') SteuerLiveUI.aufnahmeEnde(this); }catch(_){ } try{ this.sp&&this.sp.client&&this.sp.client.trennen(); }catch(_){ } try{ this.dev&&this.dev.gatt&&this.dev.gatt.connected&&this.dev.gatt.disconnect(); }catch(_){ } try{ this.wakelock&&this.wakelock.release(); }catch(_){ }
@@ -4575,7 +4598,8 @@ const AuditMappe={
     <table><thead><tr><th>Gerät</th><th class="r">Einheiten</th><th class="r">Belastung</th><th class="r">Pferde</th><th class="r">vollständig</th></tr></thead><tbody>${Object.entries(S.je).map(([k,g])=>`<tr><td>${esc(k)}</td><td class="r">${g.n}</td><td class="r">${Math.round(g.min/60*10)/10} h</td><td class="r">${g.pferde.size}</td><td class="r">${pz(g.vollst,g.n)}</td></tr>`).join('')}</tbody></table>
     <table><thead><tr><th>Datum</th><th>Pferd</th><th>Gerät</th><th class="r">Stufen</th><th class="r">Belastung</th><th>Einstellung</th><th>Erholung</th><th>Quelle</th><th class="r">ersetzt</th></tr></thead><tbody>${Z.map(r=>`<tr><td>${d(r.t)} ${r.t.toLocaleTimeString('de-DE',{hour:'2-digit',minute:'2-digit'})}</td><td>${esc(r.pferd)}</td><td>${esc(r.geraet)}${r.modell?' · '+esc(r.modell):''}</td><td class="r">${r.stufen}</td><td class="r">${Math.round(r.belMin)} min</td><td>${r.vollst?'vollständig':r.offen+' ohne Einstellung'}</td><td>${r.erh?'markiert':'–'}${r.endeErkannt?' (Ende erkannt)':''}</td><td>${r.quelle}</td><td class="r">${r.ers==null?'–':String(Math.round(r.ers*10)/10).replace('.',',')+' %'}</td></tr>`).join('')}</tbody></table>
     <div class="f">Erstellt mit CARLON Equine Visite aus den gespeicherten Reha-Einheiten. „Einstellung vollständig“: jede Stufe mit erfasster Geräteeinstellung. „ersetzt“: Anteil der von der Filterkette ersetzten Schläge. Kein Medizinprodukt; die Beurteilung trifft die Tierärztin oder der Tierarzt.</div></div>`;
-    const alt=document.title; document.title='Audit-Mappe'; setTimeout(()=>{ window.print(); document.title=alt; },150); }
+    const alt=document.title, _t=typeof Sprache!=='undefined'&&Sprache.cur==='en'?'Audit folder':'Audit-Mappe'; document.title=_t; const _d=()=>setTimeout(()=>{ window.print(); document.title=alt; },150);
+    if(typeof BerichtPDF!=='undefined') BerichtPDF.ausgabe({titel:_t,druck:_d}).finally(()=>{ document.title=alt; }); else _d(); }
 };
 
 /* ── GERÄTEBUCH (21.11.2026, Equine Center) ─────────────────────────────
@@ -4621,7 +4645,8 @@ const Geraetebuch={
 const CenterAus={
   datei(name,inhalt,typ){ const b=new Blob([inhalt],{type:typ}), u=URL.createObjectURL(b), a=document.createElement('a'); a.href=u; a.download=name; document.body.appendChild(a); a.click(); setTimeout(()=>{ URL.revokeObjectURL(u); a.remove(); },800); },
   druckStil(){ return `<style>.am{font-family:var(--font-ui);color:#1A1A1E;font-size:10.5px}.am h1{font-size:18px;margin:0 0 2px}.am h2{font-size:13px;margin:14px 0 2px}.am .s{color:#555;margin-bottom:8px}.am table{width:100%;border-collapse:collapse;margin:6px 0 12px}.am th,.am td{border-bottom:1px solid #ddd;padding:3px 5px;text-align:left;vertical-align:top}.am th{font-size:9.5px;text-transform:uppercase;letter-spacing:.04em;color:#555}.am .r{text-align:right}.am .k{display:flex;gap:18px;margin:6px 0 10px}.am .k b{font-size:15px;display:block}.am .f{color:#666;font-size:9px;margin-top:10px}.am .brief{font-size:12px;line-height:1.55;max-width:640px}.am .brief p{margin:0 0 9px}</style>`; },
-  druck(titel){ const alt=document.title; document.title=titel; setTimeout(()=>{ window.print(); document.title=alt; },150); }
+  druck(titel){ const alt=document.title; document.title=titel; const _d=()=>setTimeout(()=>{ window.print(); document.title=alt; },150);
+    if(typeof BerichtPDF!=='undefined') BerichtPDF.ausgabe({titel,druck:_d}).finally(()=>{ document.title=alt; }); else _d(); }
 };
 /* ── RÜCKBERICHT AN ÜBERWEISER (21.11.2026, Equine Center) ─────────────
    Begleitschreiben an die überweisende Praxis + die vollständige Verlaufsdokumentation in einem Druck.
@@ -10091,7 +10116,12 @@ const Report={
     this.render(hid,d);
     const altTitel=document.title; document.title=this.titel(hid);   // Dateiname/PDF-Titel = Pferd + Datum
     try{ Wert.zaehle('berichte'); }catch(_){ }
-    setTimeout(()=>{ window.print(); document.title=altTitel; if(typeof Nav!=='undefined'&&Nav.cur==='detail')Nav.refresh(); },160);
+    const _druck=()=>setTimeout(()=>{ window.print(); document.title=altTitel; if(typeof Nav!=='undefined'&&Nav.cur==='detail')Nav.refresh(); },160);
+    /* 23.11.2026: „Bericht fertig“ → als PDF senden (Teilen-Menü) oder drucken */
+    if(typeof BerichtPDF!=='undefined'){ const _h=State.horses.find(x=>x.id===hid)||{}, _en=typeof Sprache!=='undefined'&&Sprache.cur==='en';
+      BerichtPDF.ausgabe({titel:this.titel(hid), fuss:(_en?'Measurement report · ':'Messwertbericht · ')+(_h.name||'')+' · CARLON Equine Visite', text:_en?`Measurement report ${_h.name||''}`:`Messwertbericht ${_h.name||''}`, druck:_druck})
+        .finally(()=>{ document.title=altTitel; }); }
+    else _druck();
   },
   /* ═══ MESSWERTBERICHT C17 (16.11.2026) ═════════════════════════════════════════
      Maßstab: CARLON HRV Research-Bericht. Jede Abbildung nummeriert, mit Legende, die sagt,
@@ -10205,7 +10235,8 @@ const Report={
     return `<svg class="pr-svg" viewBox="0 0 ${w} ${h}">${g}</svg>`;
   },
   titel(hid){ const h=State.horses.find(x=>x.id===hid); const r=h&&State.recsFor(h.id).slice(-1)[0];
-    return `Messwertbericht ${h?h.name:''}${r?' · '+new Date(r.startedAt).toLocaleDateString('de-DE'):''} · CARLON Equine`; },
+    const en=typeof Sprache!=='undefined'&&Sprache.cur==='en';
+    return `${en?'Measurement report':'Messwertbericht'} ${h?h.name:''}${r?' · '+(en?new Date(r.startedAt).toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'}):new Date(r.startedAt).toLocaleDateString('de-DE')):''} · CARLON Equine`; },
   render(hid,d={}){
     const h=State.horses.find(x=>x.id===hid);
     const recs=State.recsFor(h.id); const rec=recs[recs.length-1];
