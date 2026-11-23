@@ -5528,7 +5528,7 @@ const Toast={
       actHtml=`<button class="toast-act" onclick="Toast.run('${aid}')">${esc(action.label||'Rückgängig')}</button>`; }
     const t=el('div','toast '+type,`<span class="st">${ic}</span><div>${esc(msg)}</div>${actHtml}`);
     $('#toasts').appendChild(t);
-    setTimeout(()=>{t.style.opacity='0';t.style.transform='translateX(40px)';setTimeout(()=>t.remove(),300);},action?6000:3600);
+    setTimeout(()=>{t.style.opacity='0';t.style.transform='translateX(40px)';setTimeout(()=>t.remove(),300);},action?12000:3600);   /* 23.11.: Aktion (z. B. Bericht an Halterin) länger erreichbar */
   },
   run(aid){ const fn=this._acts[aid]; delete this._acts[aid];
     const btn=document.querySelector(`#toasts [onclick*="${aid}"]`); const t=btn&&btn.closest('.toast'); if(t)t.remove();
@@ -7594,7 +7594,10 @@ const Views={
     const c={id:'c_visit_'+id+'_'+now.getTime(),horseId:id,date:now.toISOString(),type:'Praxisbesuch',
       durationMin:treatmentMin,fee,notes:note,billed:false,visit:true};
     await DB.put('consults',c); State.consults.push(c);
-    Toast.show(`✓ ${h.name} erledigt · Besuch dokumentiert · ${euro(fee)} abrechnungsbereit`,'ok');
+    /* 23.11.2026: direkt weiter zum Bericht für die Halterin (statt Akte öffnen und Knopf suchen); Einschätzung vorgeschlagen, Tierärztin prüft */
+    const _en=typeof Sprache!=='undefined'&&Sprache.cur==='en', _kann=!!rec&&(typeof License==='undefined'||License.can('pdf'));
+    Toast.show(`✓ ${h.name} ${_en?'done · visit documented':'erledigt · Besuch dokumentiert'} · ${euro(fee)} ${_en?'ready to bill':'abrechnungsbereit'}`,'ok',
+      _kann?{label:_en?'Report to owner':'Bericht an Halterin',fn:()=>Report.compose(id)}:null);
     Nav.refresh();
   },
   async applyManualOrder(ids){
