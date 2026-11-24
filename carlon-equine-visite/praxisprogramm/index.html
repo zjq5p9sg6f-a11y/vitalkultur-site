@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="de"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Praxisprogramm prüfen · CARLON Equine Visite</title>
+<meta name="description" content="Für Pferdepraxen und Hersteller von Praxisprogrammen: Patientenliste als CSV hineinziehen und sehen, welche Pferde und Halterinnen CARLON Equine Visite daraus übernimmt. Läuft lokal im Browser, nichts wird hochgeladen.">
+<link rel="icon" href="/favicon.ico">
+<link rel="alternate" hreflang="de" href="https://vitalkultur.com/carlon-equine-visite/praxisprogramm/"><link rel="alternate" hreflang="en" href="https://vitalkultur.com/carlon-equine-visite/praxisprogramm/en/">
+<style>
+@font-face{font-family:Jost;src:url(/fonts/jost-variable.woff2) format("woff2");font-weight:100 900;font-display:swap}
+:root{--bg:#060708;--k:#0e1012;--t:#f1efe9;--t2:#b9bfc4;--t3:#8a949c;--c:#3ECFB2;--g:#F2C46B;--r:rgba(255,255,255,.12)}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--t);font:16px/1.6 Jost,system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+.w{max-width:960px;margin:0 auto;padding:clamp(24px,5vw,56px) 20px 64px}
+.kopf{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:clamp(24px,4vw,44px)}
+.kopf a{color:var(--t2);text-decoration:none;font-size:14px}.marke{letter-spacing:.18em;font-weight:600;color:var(--t)!important}
+.eb{color:var(--c);letter-spacing:.2em;font-size:12px;text-transform:uppercase;font-weight:600}
+h1{font-weight:400;font-size:clamp(30px,5vw,48px);line-height:1.12;margin:10px 0 14px}h1 em{font-style:normal;color:var(--c)}
+h2{font-weight:500;font-size:clamp(21px,2.6vw,27px);margin:clamp(36px,5vw,56px) 0 12px}
+p.lead{color:var(--t2);font-size:18px;max-width:46em;margin:0 0 22px}
+.zone{border:1.5px dashed rgba(62,207,178,.55);border-radius:20px;padding:clamp(22px,4vw,36px);text-align:center;background:rgba(62,207,178,.04);cursor:pointer;transition:background .2s}
+.zone.ueber{background:rgba(62,207,178,.12)}.zone b{display:block;font-size:19px;font-weight:500;margin-bottom:6px}.zone span{color:var(--t3);font-size:14px}
+.knopf{display:inline-block;margin-top:14px;padding:11px 20px;border-radius:999px;background:var(--c);color:#04110e;font-weight:600;text-decoration:none;border:0;font:inherit;font-weight:600;cursor:pointer}
+.neben{display:inline-block;margin:14px 0 0 10px;color:var(--c);text-decoration:none;font-size:15px}
+.erg{margin-top:22px}.erg[hidden]{display:none}
+.karte{border:1px solid var(--r);border-radius:16px;background:var(--k);padding:16px 18px;margin-top:12px}
+.karte h3{margin:0 0 8px;font-size:16px;font-weight:600}
+table{width:100%;border-collapse:collapse;font-size:14.5px}th,td{text-align:left;padding:7px 8px;border-bottom:1px solid var(--r);vertical-align:top}th{color:var(--t3);font-weight:500}
+.tw{overflow-x:auto}
+.ok{color:var(--c)}.warn{color:var(--g)}
+select{background:#14171a;color:var(--t);border:1px solid var(--r);border-radius:8px;padding:5px 8px;font:inherit;font-size:14px}
+.raster{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}@media(max-width:820px){.raster{grid-template-columns:1fr}}
+.raster>div{border:1px solid var(--r);border-radius:16px;padding:16px 18px;background:var(--k)}.raster b{display:block;margin-bottom:6px}.raster span{color:var(--t2);font-size:15px}
+code{font-size:.92em;color:#d7dde1;background:#0b0d0f;border:1px solid var(--r);border-radius:6px;padding:1px 5px;word-break:break-all}
+pre{background:#0b0d0f;border:1px solid var(--r);border-radius:12px;padding:12px 14px;overflow-x:auto;font-size:12.5px;line-height:1.5;color:#d7dde1}
+ul{padding-left:20px}li{margin:4px 0;color:var(--t2)}li b{color:var(--t)}
+.fuss{margin-top:56px;padding-top:18px;border-top:1px solid var(--r);color:var(--t3);font-size:13.5px}.fuss a{color:var(--t2)}
+.stats{display:flex;gap:10px;flex-wrap:wrap;margin:6px 0 4px}.stats div{border:1px solid var(--r);border-radius:12px;padding:8px 14px;background:#0b0d0f}.stats b{display:block;font-size:22px;font-weight:500;color:var(--t)}.stats span{color:var(--t3);font-size:13px}
+input[type=text]{background:#14171a;color:var(--t);border:1px solid var(--r);border-radius:8px;padding:9px 12px;font:inherit;font-size:15px;width:min(100%,340px)}
+label.feld{display:block;color:var(--t2);font-size:14px;margin:12px 0 6px}
+</style></head><body><div class="w">
+<div class="kopf"><a class="marke" href="/carlon-equine-visite/">CARLON · EQUINE VISITE</a><span><a href="/carlon-equine-visite/">← Visite</a> · <a href="/carlon-equine-visite/praxisprogramm/en/" hreflang="en" lang="en">English</a></span></div>
+
+<div class="eb">Praxisprogramm · Datei prüfen</div>
+<h1>Ihre Patientenliste, <em>in Visite übernommen.</em></h1>
+<p class="lead">Ziehen Sie den CSV-Export Ihres Praxisprogramms hierher, etwa die Patienten- oder Tierliste mit den Halterinnen. Sie sehen sofort, welche Spalten Visite erkennt und wie viele Pferde und Halterinnen daraus werden. Die Datei bleibt auf Ihrem Gerät; nichts wird hochgeladen.</p>
+
+<div class="zone" id="zone" role="button" tabindex="0" aria-label="Datei wählen oder hierher ziehen">
+  <b>Datei hierher ziehen oder antippen</b><span>CSV oder TXT, Trennzeichen Semikolon, Komma oder Tab, auch aus Excel</span>
+  <input type="file" id="datei" accept=".csv,.txt,.tsv,text/csv,text/plain" hidden>
+</div>
+<a class="neben" id="bsp" href="/carlon-equine-visite/assets/carlon-praxisprogramm-beispiel.csv">Beispieldatei prüfen →</a>
+
+<div class="erg" id="erg" hidden>
+  <div class="karte"><h3 id="eTitel"></h3><div class="stats" id="eStats"></div><p id="eHin" style="color:var(--t2);font-size:14.5px;margin:10px 0 0"></p></div>
+  <div class="karte"><h3>Spalten</h3><div class="tw"><table id="eSp"></table></div></div>
+</div>
+
+<h2>So kommt der Bestand ins Cockpit</h2>
+<div class="raster"><div><b>1 · Export im Praxisprogramm</b><span>Patienten oder Tiere mit Halterinnen als CSV speichern; in Excel „Speichern unter → CSV“.</span></div><div><b>2 · In Visite „Bestand übernehmen“</b><span>Unter Pferde die Datei wählen. Sie sehen dieselbe Zuordnung wie hier und bestätigen sie.</span></div><div><b>3 · Fertig</b><span>Pferde, Halterinnen und Adressen stehen in der Akte; die Kartenpunkte für die Tour ermittelt Visite danach einmalig.</span></div></div>
+
+<h2 id="melden">Ihr Programm fehlt oder eine Spalte wird nicht erkannt?</h2>
+<p style="color:var(--t2);margin:0 0 4px">Dann nehmen wir das Format auf. Schicken Sie uns dafür nur die Kopfzeile Ihrer Datei, also die Spaltennamen, ohne Daten von Kundinnen oder Pferden. Mit dem Namen Ihres Programms richten wir die Erkennung so ein, dass der Export beim nächsten Mal ohne Zuordnen passt.</p>
+<label class="feld" for="prog">Name Ihres Praxisprogramms (freiwillig)</label><input type="text" id="prog" autocomplete="off">
+<p style="margin:4px 0 0"><a class="knopf" id="mailKopf" href="mailto:jan@vitalkultur.com?subject=CARLON Visite · Praxisprogramm">Kopfzeile an Vitalkultur schicken</a></p>
+<p id="mailHin" style="color:var(--t3);font-size:13.5px;margin:8px 0 0">Erst eine Datei prüfen, dann wird die Kopfzeile eingesetzt.</p>
+
+<h2>Zurück ins Praxisprogramm</h2>
+<p style="color:var(--t2);margin:0 0 8px">Visite schreibt keine Rechnungen. Die Leistungen eines Tages geben Sie als CSV an Ihr Praxisprogramm weiter und rechnen dort wie gewohnt ab. Das Format: Semikolon, UTF-8, eine Zeile je Besuch.</p>
+<ul><li><b>Leistungsliste je Tag</b>: Datum, Ankunft, Abfahrt, Pferd, Halter, Ort, Behandlung (min), Fahrt (km), Fahrt (min), Einstufung, Ist/Schätzung.</li><li><b>Wegegeld je Tag</b>: Datum, Halter, Pferde, Anteil Wegegeld (€), Hinweis; anteilig nach § 10 Abs. 2 GOT.</li><li><b>Je Pferd</b> außerdem JSON und FHIR&nbsp;R5 mit Messwerten und Rohdaten.</li></ul>
+
+<h2 id="hersteller">Für Hersteller von Praxisprogrammen</h2>
+<p style="color:var(--t2);margin:0 0 12px">Visite liest Exporte aus Praxisprogrammen selbst und ordnet die Spalten zu. Wer einen Export für Visite anbieten möchte, nimmt am besten diese Spalten, Semikolon und UTF-8:</p>
+<pre>Patienten-Nr.;Pferd;Rasse;Halterin;Telefon;E-Mail;Stall;Straße;PLZ;Ort;UELN;Mikrochip
+10234;Mistral;Hannoveraner;Anna Muster;+49 170 0000001;;Musterhof;Hofweg 3;12345;Musterstadt;276098765432109;276098106543210</pre>
+<ul><li>Andere Spaltennamen, Vor- und Nachname getrennt, Komma oder Tab als Trennzeichen und Windows-1252 erkennt Visite ebenfalls.</li><li>Die Patientennummer bleibt am Pferd gespeichert; damit lässt sich die Leistungsliste in Ihrem Programm wieder dem Patienten zuordnen.</li><li>Fälligkeiten für Impfung, Entwurmung und Zahnkontrolle übernimmt Visite, wenn sie als Datum in einer eigenen Spalte stehen.</li></ul>
+<div class="raster" style="grid-template-columns:1fr;margin-top:14px"><div style="border-color:rgba(62,207,178,.45)"><b>Gemeinsam ermöglichen</b><span>Sie möchten, dass Ihre Kundinnen und Kunden Visite ohne Zwischenschritt nutzen, oder brauchen den Rückweg der Leistungen in einem anderen Format? Wir stimmen den Weg gemeinsam mit Ihnen ab. Eine Beispieldatei mit erfundenen Daten genügt für den Anfang.</span></div></div>
+<p style="margin-top:16px"><a class="knopf" href="mailto:jan@vitalkultur.com?subject=CARLON Visite · Hersteller Praxisprogramm">Beispielexport schicken</a></p>
+
+<div class="fuss">CARLON Equine Visite · Vitalkultur, Iffezheim · <a href="/impressum.html">Impressum</a> · <a href="/privacy.html">Datenschutz</a> · Die Prüfung läuft vollständig in Ihrem Browser.</div>
+</div>
+<script src="/carlon-equine/app/bestand-kern.js?v=1"></script>
+<script>
+(function(){
+  const K=window.BestandKern, T={"spKopf": ["Spalte in Ihrer Datei", "Kommt in Visite nach", "Beispiel"], "nicht": "– nicht übernehmen –", "st": ["Zeilen", "Pferde", "Halterinnen", "mit Adresse für die Karte", "Spalten erkannt"], "ohneName": "Keine Spalte als „Pferd“ erkannt. Ordnen Sie die Spalte mit dem Pferdenamen unten zu, sonst übernimmt Visite nur die Halterinnen als Kontakte.", "leer": "Die Datei enthält keine Datenzeilen.", "ok": "Diese Datei übernimmt Visite so, wie Sie es hier sehen. Doppelte Pferde erkennt es an Patientennummer, Lebensnummer, Chip oder Name mit Halterin; vorhandene Pferde ergänzt es nur in leeren Feldern.", "mailBetreff": "CARLON Visite · Praxisprogramm", "mailText": "Praxisprogramm: {p}\nKopfzeile: {k}\nErkannt: {e} von {n} Spalten\n\nNur Spaltennamen, keine Kundendaten.", "mailOhne": "Erst eine Datei prüfen, dann wird die Kopfzeile eingesetzt.", "namen": null, "mail": "jan@vitalkultur.com"}, $=s=>document.querySelector(s), esc=x=>String(x).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+  const NAME=f=>(T.namen&&T.namen[f])||(K.FELDER.find(x=>x[0]===f)||[])[1]||f;
+  let Z=null,M=null,DN='';
+  function mailSetzen(){
+    const a=$('#mailKopf'); if(!Z){ a.href='mailto:'+T.mail+'?subject='+encodeURIComponent(T.mailBetreff); return; }
+    const n=Z[0].length, e=M.filter(Boolean).length, p=$('#prog').value.trim()||'–';
+    a.href='mailto:'+T.mail+'?subject='+encodeURIComponent(T.mailBetreff+(p!=='–'?' · '+p:''))+'&body='+encodeURIComponent(T.mailText.replace('{p}',p).replace('{k}',Z[0].join(';')).replace('{e}',e).replace('{n}',n));
+    $('#mailHin').textContent=Z[0].join(';');
+  }
+  function zeigen(){
+    $('#erg').hidden=false; $('#eTitel').textContent=DN;
+    if(Z.length<2){ $('#eStats').innerHTML=''; $('#eHin').innerHTML='<span class="warn">'+esc(T.leer)+'</span>'; $('#eSp').innerHTML=''; mailSetzen(); return; }
+    const d=K.zeilenZuDaten(Z.slice(1),M), pf=d.filter(x=>x.name), hal=new Set(d.map(x=>(x.owner||'').toLowerCase()).filter(Boolean));
+    const adr=pf.filter(x=>x.place||(x.lat&&x.lng)).length, erk=M.filter(Boolean).length;
+    $('#eStats').innerHTML=[[Z.length-1,T.st[0]],[pf.length,T.st[1]],[hal.size,T.st[2]],[adr,T.st[3]],[erk+' / '+Z[0].length,T.st[4]]].map(([b,s])=>`<div><b>${b}</b><span>${esc(s)}</span></div>`).join('');
+    $('#eHin').innerHTML=M.includes('name')?'<span class="ok">✓</span> '+esc(T.ok):'<span class="warn">'+esc(T.ohneName)+'</span>';
+    const bsp=i=>esc((Z.slice(1).find(z=>z[i])||[])[i]||'');
+    $('#eSp').innerHTML=`<tr><th>${esc(T.spKopf[0])}</th><th>${esc(T.spKopf[1])}</th><th>${esc(T.spKopf[2])}</th></tr>`+Z[0].map((h,i)=>`<tr><td><b>${esc(h||'–')}</b></td><td><select data-i="${i}"><option value="">${esc(T.nicht)}</option>${K.FELDER.map(([f])=>`<option value="${f}"${M[i]===f?' selected':''}>${esc(NAME(f))}</option>`).join('')}</select></td><td>${bsp(i)}</td></tr>`).join('');
+    mailSetzen();
+  }
+  async function laden(f){ DN=f.name; Z=K.zerlege(await K.text(f)); M=Z.length?K.zuordnen(Z[0]):[]; if(!Z.length) Z=[[]]; zeigen(); $('#erg').scrollIntoView({behavior:'smooth',block:'start'}); }
+  const zone=$('#zone'), inp=$('#datei');
+  zone.addEventListener('click',()=>inp.click()); zone.addEventListener('keydown',e=>{ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); inp.click(); } });
+  inp.addEventListener('change',()=>{ if(inp.files[0]) laden(inp.files[0]); });
+  ['dragenter','dragover'].forEach(t=>zone.addEventListener(t,e=>{ e.preventDefault(); zone.classList.add('ueber'); }));
+  ['dragleave','drop'].forEach(t=>zone.addEventListener(t,e=>{ e.preventDefault(); zone.classList.remove('ueber'); }));
+  zone.addEventListener('drop',e=>{ const f=e.dataTransfer.files[0]; if(f) laden(f); });
+  document.addEventListener('change',e=>{ const s=e.target.closest('select[data-i]'); if(!s) return; M[s.dataset.i]=s.value; zeigen(); });
+  $('#prog').addEventListener('input',mailSetzen);
+  $('#bsp').addEventListener('click',async e=>{ e.preventDefault(); const r=await fetch(e.currentTarget.href); laden(new File([await r.blob()],'carlon-praxisprogramm-beispiel.csv')); });
+})();
+</script>
+</body></html>

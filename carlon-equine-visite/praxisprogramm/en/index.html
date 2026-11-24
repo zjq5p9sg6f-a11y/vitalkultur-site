@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Check your practice software · CARLON Equine Visite</title>
+<meta name="description" content="For equine practices and practice software vendors: drop in your patient list as CSV and see which horses and owners CARLON Equine Visite takes over. Runs locally in the browser, nothing is uploaded.">
+<link rel="icon" href="/favicon.ico">
+<link rel="alternate" hreflang="de" href="https://vitalkultur.com/carlon-equine-visite/praxisprogramm/"><link rel="alternate" hreflang="en" href="https://vitalkultur.com/carlon-equine-visite/praxisprogramm/en/">
+<style>
+@font-face{font-family:Jost;src:url(/fonts/jost-variable.woff2) format("woff2");font-weight:100 900;font-display:swap}
+:root{--bg:#060708;--k:#0e1012;--t:#f1efe9;--t2:#b9bfc4;--t3:#8a949c;--c:#3ECFB2;--g:#F2C46B;--r:rgba(255,255,255,.12)}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--t);font:16px/1.6 Jost,system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+.w{max-width:960px;margin:0 auto;padding:clamp(24px,5vw,56px) 20px 64px}
+.kopf{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:clamp(24px,4vw,44px)}
+.kopf a{color:var(--t2);text-decoration:none;font-size:14px}.marke{letter-spacing:.18em;font-weight:600;color:var(--t)!important}
+.eb{color:var(--c);letter-spacing:.2em;font-size:12px;text-transform:uppercase;font-weight:600}
+h1{font-weight:400;font-size:clamp(30px,5vw,48px);line-height:1.12;margin:10px 0 14px}h1 em{font-style:normal;color:var(--c)}
+h2{font-weight:500;font-size:clamp(21px,2.6vw,27px);margin:clamp(36px,5vw,56px) 0 12px}
+p.lead{color:var(--t2);font-size:18px;max-width:46em;margin:0 0 22px}
+.zone{border:1.5px dashed rgba(62,207,178,.55);border-radius:20px;padding:clamp(22px,4vw,36px);text-align:center;background:rgba(62,207,178,.04);cursor:pointer;transition:background .2s}
+.zone.ueber{background:rgba(62,207,178,.12)}.zone b{display:block;font-size:19px;font-weight:500;margin-bottom:6px}.zone span{color:var(--t3);font-size:14px}
+.knopf{display:inline-block;margin-top:14px;padding:11px 20px;border-radius:999px;background:var(--c);color:#04110e;font-weight:600;text-decoration:none;border:0;font:inherit;font-weight:600;cursor:pointer}
+.neben{display:inline-block;margin:14px 0 0 10px;color:var(--c);text-decoration:none;font-size:15px}
+.erg{margin-top:22px}.erg[hidden]{display:none}
+.karte{border:1px solid var(--r);border-radius:16px;background:var(--k);padding:16px 18px;margin-top:12px}
+.karte h3{margin:0 0 8px;font-size:16px;font-weight:600}
+table{width:100%;border-collapse:collapse;font-size:14.5px}th,td{text-align:left;padding:7px 8px;border-bottom:1px solid var(--r);vertical-align:top}th{color:var(--t3);font-weight:500}
+.tw{overflow-x:auto}
+.ok{color:var(--c)}.warn{color:var(--g)}
+select{background:#14171a;color:var(--t);border:1px solid var(--r);border-radius:8px;padding:5px 8px;font:inherit;font-size:14px}
+.raster{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}@media(max-width:820px){.raster{grid-template-columns:1fr}}
+.raster>div{border:1px solid var(--r);border-radius:16px;padding:16px 18px;background:var(--k)}.raster b{display:block;margin-bottom:6px}.raster span{color:var(--t2);font-size:15px}
+code{font-size:.92em;color:#d7dde1;background:#0b0d0f;border:1px solid var(--r);border-radius:6px;padding:1px 5px;word-break:break-all}
+pre{background:#0b0d0f;border:1px solid var(--r);border-radius:12px;padding:12px 14px;overflow-x:auto;font-size:12.5px;line-height:1.5;color:#d7dde1}
+ul{padding-left:20px}li{margin:4px 0;color:var(--t2)}li b{color:var(--t)}
+.fuss{margin-top:56px;padding-top:18px;border-top:1px solid var(--r);color:var(--t3);font-size:13.5px}.fuss a{color:var(--t2)}
+.stats{display:flex;gap:10px;flex-wrap:wrap;margin:6px 0 4px}.stats div{border:1px solid var(--r);border-radius:12px;padding:8px 14px;background:#0b0d0f}.stats b{display:block;font-size:22px;font-weight:500;color:var(--t)}.stats span{color:var(--t3);font-size:13px}
+input[type=text]{background:#14171a;color:var(--t);border:1px solid var(--r);border-radius:8px;padding:9px 12px;font:inherit;font-size:15px;width:min(100%,340px)}
+label.feld{display:block;color:var(--t2);font-size:14px;margin:12px 0 6px}
+</style></head><body><div class="w">
+<div class="kopf"><a class="marke" href="/carlon-equine-visite/en/">CARLON · EQUINE VISITE</a><span><a href="/carlon-equine-visite/en/">← Visite</a> · <a href="/carlon-equine-visite/praxisprogramm/" hreflang="de" lang="de">Deutsch</a></span></div>
+
+<div class="eb">Practice software · check a file</div>
+<h1>Your patient list, <em>taken over in Visite.</em></h1>
+<p class="lead">Drop the CSV export of your practice software here, for example the patient or animal list with owners. You see straight away which columns Visite recognises and how many horses and owners it creates. The file stays on your device; nothing is uploaded.</p>
+
+<div class="zone" id="zone" role="button" tabindex="0" aria-label="Choose a file or drop it here">
+  <b>Drop a file here or tap</b><span>CSV or TXT, separated by semicolon, comma or tab, also from Excel</span>
+  <input type="file" id="datei" accept=".csv,.txt,.tsv,text/csv,text/plain" hidden>
+</div>
+<a class="neben" id="bsp" href="/carlon-equine-visite/assets/carlon-praxisprogramm-beispiel.csv">Check the sample file →</a>
+
+<div class="erg" id="erg" hidden>
+  <div class="karte"><h3 id="eTitel"></h3><div class="stats" id="eStats"></div><p id="eHin" style="color:var(--t2);font-size:14.5px;margin:10px 0 0"></p></div>
+  <div class="karte"><h3>Columns</h3><div class="tw"><table id="eSp"></table></div></div>
+</div>
+
+<h2>How your records get into the cockpit</h2>
+<div class="raster"><div><b>1 · Export from your software</b><span>Save patients or animals with owners as CSV; in Excel use “Save as → CSV”.</span></div><div><b>2 · “Import records” in Visite</b><span>Choose the file under Horses. You see the same mapping as here and confirm it.</span></div><div><b>3 · Done</b><span>Horses, owners and addresses are in the records; Visite then looks up the map points for the round once.</span></div></div>
+
+<h2 id="melden">Your software is missing or a column is not recognised?</h2>
+<p style="color:var(--t2);margin:0 0 4px">Then we add the format. Send us only the header row of your file, that is the column names, without any client or horse data. With the name of your software we set up recognition so the export fits next time without mapping.</p>
+<label class="feld" for="prog">Name of your practice software (optional)</label><input type="text" id="prog" autocomplete="off">
+<p style="margin:4px 0 0"><a class="knopf" id="mailKopf" href="mailto:jan@vitalkultur.com?subject=CARLON Visite · practice software">Send the header row to Vitalkultur</a></p>
+<p id="mailHin" style="color:var(--t3);font-size:13.5px;margin:8px 0 0">Check a file first; the header row is then filled in.</p>
+
+<h2>Back to your practice software</h2>
+<p style="color:var(--t2);margin:0 0 8px">Visite does not issue invoices. You pass a day’s services to your practice software as CSV and bill there as usual. Format: semicolon, UTF-8, one row per visit. The column names are German.</p>
+<ul><li><b>Daily service list</b>: date, arrival, departure, horse, owner, place, treatment (min), drive (km), drive (min), triage, actual/estimate.</li><li><b>Daily mileage</b>: date, owner, horses, share, note; with the German fee schedule (GOT § 10) split by owner.</li><li><b>Per horse</b> also JSON and FHIR&nbsp;R5 with measurements and raw data.</li></ul>
+
+<h2 id="hersteller">For practice software vendors</h2>
+<p style="color:var(--t2);margin:0 0 12px">Visite reads exports from practice software itself and maps the columns. If you want to offer an export for Visite, these columns work best, semicolon and UTF-8:</p>
+<pre>Patienten-Nr.;Pferd;Rasse;Halterin;Telefon;E-Mail;Stall;Straße;PLZ;Ort;UELN;Mikrochip
+10234;Mistral;Hanoverian;Anna Muster;+49 170 0000001;;Musterhof;Hofweg 3;12345;Musterstadt;276098765432109;276098106543210</pre>
+<ul><li>Visite also recognises English column names (horse, owner, phone, street, city …), first and last name in separate columns, comma or tab separators and Windows-1252.</li><li>The patient number stays with the horse, so the service list can be matched to the patient again in your software.</li><li>Due dates for vaccination, deworming and dental checks are imported when they are dates in their own column.</li></ul>
+<div class="raster" style="grid-template-columns:1fr;margin-top:14px"><div style="border-color:rgba(62,207,178,.45)"><b>Make it possible together</b><span>You want your customers to use Visite without an extra step, or you need the services sent back in another format? We agree the route together with you. A sample file with made-up data is enough to start.</span></div></div>
+<p style="margin-top:16px"><a class="knopf" href="mailto:jan@vitalkultur.com?subject=CARLON Visite · practice software vendor">Send a sample export</a></p>
+
+<div class="fuss">CARLON Equine Visite · Vitalkultur, Iffezheim · <a href="/impressum.html">Imprint</a> · <a href="/privacy-en.html">Privacy</a> · The check runs entirely in your browser.</div>
+</div>
+<script src="/carlon-equine/app/bestand-kern.js?v=1"></script>
+<script>
+(function(){
+  const K=window.BestandKern, T={"spKopf": ["Column in your file", "Goes to in Visite", "Example"], "nicht": "– do not import –", "st": ["Rows", "Horses", "Owners", "with an address for the map", "Columns recognised"], "ohneName": "No column recognised as “Horse”. Assign the column with the horse name below, otherwise Visite only imports the owners as contacts.", "leer": "The file contains no data rows.", "ok": "Visite imports this file exactly as shown here. It recognises duplicate horses by patient number, UELN, microchip or name with owner, and only fills empty fields of existing horses.", "mailBetreff": "CARLON Visite · practice software", "mailText": "Practice software: {p}\nHeader row: {k}\nRecognised: {e} of {n} columns\n\nColumn names only, no client data.", "mailOhne": "Check a file first; the header row is then filled in.", "namen": {"name": "Horse", "owner": "Owner", "vorname": "First name (owner)", "nachname": "Last name (owner)", "phone": "Phone", "mail": "Email", "stable": "Yard", "street": "Street", "plz": "Postcode", "ort": "Town", "breed": "Breed", "clinicPMS": "Patient no. (practice software)", "ueln": "UELN", "microchip": "Microchip", "passport": "Passport no.", "lat": "Latitude", "lng": "Longitude", "notes": "Note", "fr_impfung": "Vaccination due", "fr_wurm": "Deworming due", "fr_zahn": "Dental check due"}, "mail": "jan@vitalkultur.com"}, $=s=>document.querySelector(s), esc=x=>String(x).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+  const NAME=f=>(T.namen&&T.namen[f])||(K.FELDER.find(x=>x[0]===f)||[])[1]||f;
+  let Z=null,M=null,DN='';
+  function mailSetzen(){
+    const a=$('#mailKopf'); if(!Z){ a.href='mailto:'+T.mail+'?subject='+encodeURIComponent(T.mailBetreff); return; }
+    const n=Z[0].length, e=M.filter(Boolean).length, p=$('#prog').value.trim()||'–';
+    a.href='mailto:'+T.mail+'?subject='+encodeURIComponent(T.mailBetreff+(p!=='–'?' · '+p:''))+'&body='+encodeURIComponent(T.mailText.replace('{p}',p).replace('{k}',Z[0].join(';')).replace('{e}',e).replace('{n}',n));
+    $('#mailHin').textContent=Z[0].join(';');
+  }
+  function zeigen(){
+    $('#erg').hidden=false; $('#eTitel').textContent=DN;
+    if(Z.length<2){ $('#eStats').innerHTML=''; $('#eHin').innerHTML='<span class="warn">'+esc(T.leer)+'</span>'; $('#eSp').innerHTML=''; mailSetzen(); return; }
+    const d=K.zeilenZuDaten(Z.slice(1),M), pf=d.filter(x=>x.name), hal=new Set(d.map(x=>(x.owner||'').toLowerCase()).filter(Boolean));
+    const adr=pf.filter(x=>x.place||(x.lat&&x.lng)).length, erk=M.filter(Boolean).length;
+    $('#eStats').innerHTML=[[Z.length-1,T.st[0]],[pf.length,T.st[1]],[hal.size,T.st[2]],[adr,T.st[3]],[erk+' / '+Z[0].length,T.st[4]]].map(([b,s])=>`<div><b>${b}</b><span>${esc(s)}</span></div>`).join('');
+    $('#eHin').innerHTML=M.includes('name')?'<span class="ok">✓</span> '+esc(T.ok):'<span class="warn">'+esc(T.ohneName)+'</span>';
+    const bsp=i=>esc((Z.slice(1).find(z=>z[i])||[])[i]||'');
+    $('#eSp').innerHTML=`<tr><th>${esc(T.spKopf[0])}</th><th>${esc(T.spKopf[1])}</th><th>${esc(T.spKopf[2])}</th></tr>`+Z[0].map((h,i)=>`<tr><td><b>${esc(h||'–')}</b></td><td><select data-i="${i}"><option value="">${esc(T.nicht)}</option>${K.FELDER.map(([f])=>`<option value="${f}"${M[i]===f?' selected':''}>${esc(NAME(f))}</option>`).join('')}</select></td><td>${bsp(i)}</td></tr>`).join('');
+    mailSetzen();
+  }
+  async function laden(f){ DN=f.name; Z=K.zerlege(await K.text(f)); M=Z.length?K.zuordnen(Z[0]):[]; if(!Z.length) Z=[[]]; zeigen(); $('#erg').scrollIntoView({behavior:'smooth',block:'start'}); }
+  const zone=$('#zone'), inp=$('#datei');
+  zone.addEventListener('click',()=>inp.click()); zone.addEventListener('keydown',e=>{ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); inp.click(); } });
+  inp.addEventListener('change',()=>{ if(inp.files[0]) laden(inp.files[0]); });
+  ['dragenter','dragover'].forEach(t=>zone.addEventListener(t,e=>{ e.preventDefault(); zone.classList.add('ueber'); }));
+  ['dragleave','drop'].forEach(t=>zone.addEventListener(t,e=>{ e.preventDefault(); zone.classList.remove('ueber'); }));
+  zone.addEventListener('drop',e=>{ const f=e.dataTransfer.files[0]; if(f) laden(f); });
+  document.addEventListener('change',e=>{ const s=e.target.closest('select[data-i]'); if(!s) return; M[s.dataset.i]=s.value; zeigen(); });
+  $('#prog').addEventListener('input',mailSetzen);
+  $('#bsp').addEventListener('click',async e=>{ e.preventDefault(); const r=await fetch(e.currentTarget.href); laden(new File([await r.blob()],'carlon-praxisprogramm-beispiel.csv')); });
+})();
+</script>
+</body></html>
