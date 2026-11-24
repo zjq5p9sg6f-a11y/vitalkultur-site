@@ -1225,23 +1225,8 @@ const HAUS={ appImStore:false, appUrl:'https://carlon.app' };
       </div>
     </div>
 
-    <div class="share">
-      <div class="share-h">
-        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 21s-8-4.6-8-10.4A4.6 4.6 0 0112 7a4.6 4.6 0 018 3.6C20 16.4 12 21 12 21z"/></svg>
-        <span id="shareHtxt">Wenn es dir geholfen hat</span>
-      </div>
-      <div class="share-row">
-        <button class="btn ghost sh" id="shOwner">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M12 20.5s-7.2-4.2-7.2-9.4a4.2 4.2 0 017.2-2.9 4.2 4.2 0 017.2 2.9c0 5.2-7.2 9.4-7.2 9.4z"/><path d="M8.6 11.3h1.7l1 2.2 1.4-4 1 1.8h1.7"/></svg>
-          <span id="shOwnerTxt">Pferdefreunden zeigen</span>
-        </button>
-        <button class="btn ghost sh" id="shVet">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M6 3v6a4 4 0 008 0V3"/><path d="M10 13v2a5 5 0 0010 0v-2"/><circle cx="20" cy="10.5" r="2.2"/></svg>
-          <span id="shVetTxt">Deiner Praxis empfehlen</span>
-        </button>
-      </div>
-      <div class="share-note" id="shNote" role="status" aria-live="polite"></div>
-    </div>
+    <!-- 24.11.2026: „Deiner Praxis empfehlen“ und „Pferdefreunden zeigen“ entfernt. Vorformulierter Produkttext mit
+         Verkaufslink an Dritte ohne Einwilligung (BGH I ZR 208/12 „Empfehlungs-E-Mail“, § 7 Abs. 2 UWG). Prüfung Vertrieb 24.11. -->
   </div>
 
   <div class="hint" style="max-width:60ch;margin-left:auto;margin-right:auto;font-weight:600;color:var(--sec)" data-i18n="disclaimer">Keine Diagnose und kein Ersatz für eine Untersuchung.</div>
@@ -1582,11 +1567,10 @@ de:{
  /* Empfehlung AN die Praxis: gelesen wird sie von der Tierärztin (Sie-Form),
     und das Ziel ist die kanonische Visite-Verkaufsseite — nicht die
     Besitzer-Produktseite. */
- shVetMsg:'Ich habe die Ruhe-Herzrate meines Pferds im Browser mit dem Polar-Gurt gemessen. Die Aufnahme geht als Datei an meine Praxis. Vielleicht ist das auch etwas für Ihre Praxis. So lesen Tierärztinnen und Tierärzte solche Messungen:',
- shVetUrl:'https://vitalkultur.com/carlon-equine-visite/',
+
  /* Empfehlung an andere Halter + note()-Meldungen (share()) */
  shOwnerTitel:'Herzraten-Messung beim Pferd',
- shOwnerMsg:'So sieht der Herzschlag von {x} aus. Direkt im Browser mit dem Polar-Gurt gemessen, ohne App. Die Auswertung macht der Tierarzt:',
+
  horseFallback:'mein Pferd',
  noteDanke:'Danke. Das bedeutet uns viel',
  noteBild:'Bild gespeichert. Text ist kopiert',
@@ -1754,10 +1738,9 @@ en:{
  sendRecht:'The file is created on your device and leaves it only by a route you choose yourself. What this page does is set out in the <a href="/privacy-en.html">privacy policy</a>; use is governed by the <a href="/terms.html#handover">Terms</a>.',
  shareH:'If this helped you',
  shareOwner:'Show fellow horse people', shareVet:'Recommend to your practice',
- shVetMsg:'I measured my horse’s resting heart rate in the browser with the Polar strap. The recording goes to my practice as a file. This might be something for your practice too. This is how veterinarians read these recordings:',
- shVetUrl:'https://vitalkultur.com/carlon-equine-visite/en/',
+
  shOwnerTitel:'Equine heart rate recording',
- shOwnerMsg:'This is what {x}’s heartbeat looks like. Measured right in the browser with the Polar strap, no app. The assessment is made by the vet:',
+
  horseFallback:'my horse',
  noteDanke:'Thank you. That means a lot to us',
  noteBild:'Image saved. The text is copied',
@@ -3425,7 +3408,9 @@ async function ablageZeigen(){
     const dateien=off.map(e=>Ablage.datei(e));
     if(praxisAb && meinePraxen.length<=1){ hochladenFluss(dateien,off.map(e=>e.id),async()=>{ off.forEach(()=>Verlauf.hinzu({art:'gesendet'})); lageZeigen(); ablageZeigen(); }); return; }
     if(!(navigator.canShare && navigator.canShare({files:dateien}))){ dateien.forEach(dateiHerunterladen); return; }
-    try{ await navigator.share({title:t('shareTitel'), text:t('shareMsgVerschl'), files:dateien}); }
+    /* 24.11.2026: „versiegelt“ nur, wenn ALLE Dateien verschlüsselt sind (vorher immer). */
+    const alleZu=off.every(e=>e.verschluesselt===true);
+    try{ await navigator.share({title:t('shareTitel'), text: alleZu ? t('shareMsgVerschl') : t('shareMsgOffen').replace('{x}',(window.CARLON_KANON||new URL('index.html',location.href).toString())), files:dateien}); }
     catch(err){ return; }                       /* weggetippt = nicht gesendet; die Karte bleibt */
     await Ablage.markieren(off.map(e=>e.id),'gesendet');
     off.forEach(()=>Verlauf.hinzu({art:'gesendet'})); lageZeigen();
@@ -5312,48 +5297,8 @@ async function shareCardBlob(){
   return new Promise(res=>c.toBlob(res,'image/jpeg',0.94));
 }
 
-async function share(kind){
-  const horse=($('#horse').value||t('horseFallback')).trim();
-  const cfg = kind==='vet' ? {
-    title:'CARLON Equine',
-    /* Sie-Form aus dem Katalog (DE/EN) — es liest die Praxis. Ziel ist die
-       Visite-Seite in der Sprache der Besitzerin. */
-    text: t('shVetMsg'),
-    url: t('shVetUrl')
-  } : {
-    title:t('shOwnerTitel'),
-    text:t('shOwnerMsg').replace('{x}',horse),
-    url: SHARE_STATION
-  };
-  try{
-    // Bild mitgeben, wenn das Geraet es kann — sonst Text und Link.
-    let file=null;
-    try{
-      const blob=await shareCardBlob();
-      if(blob) file=new File([blob],`${horse.replace(/[^\p{L}\p{N}_-]+/gu,'-')}-Herzrate.png`,{type:'image/png'});
-    }catch(_){}
-    if(navigator.share && file && navigator.canShare && navigator.canShare({files:[file]})){
-      await navigator.share({...cfg, files:[file]}); note(t('noteDanke')); return;
-    }
-    if(navigator.share){ await navigator.share(cfg); note(t('noteDanke')); return; }
-    if(file){                                   // Desktop: Bild sichern + Text kopieren
-      const a=document.createElement('a'); a.href=URL.createObjectURL(file); a.download=file.name;
-      document.body.appendChild(a); a.click(); a.remove();
-      setTimeout(()=>URL.revokeObjectURL(a.href),4000);
-      try{ await navigator.clipboard.writeText(cfg.text+' '+cfg.url); }catch(_){}
-      note(t('noteBild')); return;
-    }
-    await navigator.clipboard.writeText(cfg.text+' '+cfg.url);
-    note(t('noteText'));
-  }catch(e){
-    if(e && e.name==='AbortError') return;
-    try{ await navigator.clipboard.writeText(cfg.url); note(t('linkKopiert')); }
-    catch(_){ note(cfg.url); }
-  }
-}
+/* share() (Werbe-Teilen an Praxis/Pferdefreunde) entfernt 24.11.2026, s. Kommentar am früheren Knopf. */
 function note(m){ const n=$('#shNote'); n.textContent=m; setTimeout(()=>{ if(n.textContent===m) n.textContent=''; },4000); }
-$('#shOwner').addEventListener('click',()=>share('owner'));
-$('#shVet').addEventListener('click',()=>share('vet'));
 
 $('#btnAgain').addEventListener('click',()=>{
   S.ablageId=null; S.ablageBereit=null; setTimeout(ablageZeigen,0);   /* eine ungesendete Vorgängerin bleibt sichtbar */
