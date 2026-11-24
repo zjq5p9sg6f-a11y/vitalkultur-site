@@ -13129,10 +13129,10 @@ const Logbook={
   },
   exportTimesheet(d){
     const r=this.forDate(d);
-    const rows=[['Datum','Ankunft','Abfahrt','Pferd','Halter','Ort','Behandlung (min)','Fahrt (km)','Fahrt (min)','Einstufung','Ist/Schätzung']];
-    r.visits.forEach(v=>rows.push([d,this._t(v.arriveAt),this._t(v.departAt),v.horseName,v.owner||'',v.place||'',v.treatmentMin||'',this._num(v.driveKm),v.driveMin||'',(Triage.LEVELS[v.triageLevel]||{}).label||v.triageLevel,v.estimated?'Schätzung':'Ist']));
-    rows.push([]); rows.push(['Summe','','','','','',r.treatMin,this._num(r.driveKm),r.driveMin,'','']);
-    rows.push(['Besuche',r.visits.length,'Arbeitszeit (min)',r.workMin,'Umsatz (€)',this._num(r.revenue),'','','','','']);
+    const rows=[['Datum','Ankunft','Abfahrt','Pferd','Patienten-Nr.','Halter','Ort','Behandlung (min)','Fahrt (km)','Fahrt (min)','Einstufung','Ist/Schätzung']];
+    r.visits.forEach(v=>rows.push([d,this._t(v.arriveAt),this._t(v.departAt),v.horseName,(((State.horses.find(x=>x.id===v.horseId)||{}).extIds||{}).clinicPMS)||'',v.owner||'',v.place||'',v.treatmentMin||'',this._num(v.driveKm),v.driveMin||'',(Triage.LEVELS[v.triageLevel]||{}).label||v.triageLevel,v.estimated?'Schätzung':'Ist']));
+    rows.push([]); rows.push(['Summe','','','','','','',r.treatMin,this._num(r.driveKm),r.driveMin,'','']);
+    rows.push(['Besuche',r.visits.length,'Arbeitszeit (min)',r.workMin,'Umsatz (€)',this._num(r.revenue),'','','','','','']);
     this.download('carlon-timesheet-'+d+'.csv',this.toCsv(rows));
     Toast.show('Timesheet-CSV exportiert','ok');
   },
