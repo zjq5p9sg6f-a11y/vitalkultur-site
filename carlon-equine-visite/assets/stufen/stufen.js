@@ -160,7 +160,7 @@
       + z(t.geraete, s => isFinite(s.ger) ? s.ger : esc(t.ohne))
       + z(t.rehaPf, s => s.reha === 0 ? '–' : (isFinite(s.reha) ? s.reha : esc(t.ohne)))
       + t.zeilen.map(([n, w]) => `<tr><th scope="row">${esc(n)}</th>${ST.map((s, i) => zelle(s, w[i] ? '✓' : '–')).join('')}</tr>`).join('')
-      + `<tr class="st-zum"><th scope="row">${esc(t.zum)}</th>${ST.map(s => zelle(s, `<a href="${ziel(seite, s.k)}">${esc(t.zumKurz)}</a>`)).join('')}</tr>`
+      + `<tr class="st-zum"><th scope="row">${esc(t.zum)}</th>${ST.map(s => zelle(s, `<a href="${ziel(seite, s.k)}" aria-label="${esc(t.zumKurz.replace(' →', ''))}: ${esc(t.name[s.k])}">${esc(t.zumKurz)}</a>`)).join('')}</tr>`
       + `</tbody></table></div>`;
   }
 
