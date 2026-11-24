@@ -50,27 +50,29 @@ async function laden(){
    sondern neu gesetzt: Wolke links, Wort rechts. Ein zugeschnittenes
    Quadrat verliert genau das, was die Karte trägt — die Ruhe um die Wolke. */
 function zeichne(sprache){
+  /* Fassung 2 (24.11.2026, Sitzung Website): QUADRAT-SICHER.
+     WhatsApp (kleine Vorschau), Signal und manche Mail-Programme schneiden das
+     Bild auf ein Quadrat aus der Mitte (x 285 bis 915). Fassung 1 hatte Wolke
+     links und Text rechts: im Quadrat blieb von beidem je eine Haelfte.
+     Jetzt traegt die Mitte allein die ganze Botschaft (Marke, Wolke, Satz,
+     Adresse). Die Seitenfluegel ergaenzen nur, was im Breitformat Platz hat.
+     Kein Gedankenstrich im Bildtext (Jans Regel). */
   const c=document.getElementById('c'), x=c.getContext('2d');
-  const W=1200,H=630,K=2;
+  const W=1200,H=630,K=2, SQ0=(W-H)/2, SQ1=SQ0+H;
   c.width=W*K; c.height=H*K;
   x.setTransform(K,0,0,K,0,0);
-  const CY='#3ECFB2', TXT='#EDEEF1', DIM='#7A7A86';
+  const CY='#3ECFB2', TXT='#EDEEF1', DIM='#A3A4AD';
   const brand='Jost, system-ui, sans-serif', ui='Inter, system-ui, sans-serif';
-
   x.fillStyle='#0A0A0C'; x.fillRect(0,0,W,H);
 
-  const MX=336, MY=H/2;                       // Mitte der Wolke
-  const gl=x.createRadialGradient(MX,MY,0,MX,MY,430);
-  gl.addColorStop(0,'rgba(62,207,178,0.17)'); gl.addColorStop(1,'rgba(62,207,178,0)');
+  const MX=W/2, MY=212;
+  const gl=x.createRadialGradient(MX,MY,0,MX,MY,520);
+  gl.addColorStop(0,'rgba(62,207,178,0.16)'); gl.addColorStop(1,'rgba(62,207,178,0)');
   x.fillStyle=gl; x.fillRect(0,0,W,H);
 
-  /* Blume des Lebens — dieselbe Konstruktion wie überall sonst in CARLON */
-  x.save(); x.globalAlpha=.15; x.strokeStyle=CY; x.lineWidth=1;
-  /* Der Radius ist GERECHNET, nicht geraten: die aeussersten Kreise liegen
-     2r vom Mittelpunkt und reichen nochmals r darueber hinaus — die Blume
-     braucht also 3r Platz nach jeder Seite. Bei r=104 blieben unten drei
-     Pixel, und genau so sah es auch aus. */
-  (function(){ const r=Math.floor(Math.min(MX, W-MX, MY, H-MY)/3) - 12;
+  /* Blume des Lebens, gerechnet: 3r nach jeder Seite muessen ins Bild */
+  x.save(); x.globalAlpha=.13; x.strokeStyle=CY; x.lineWidth=1;
+  (function(){ const r=Math.floor(Math.min(MY, H-MY)/3) - 8;
     const pts=[[MX,MY]];
     for(let i=0;i<6;i++){const a=Math.PI/3*i; pts.push([MX+r*Math.cos(a),MY+r*Math.sin(a)]);}
     for(let i=0;i<6;i++){const a=Math.PI/3*i; pts.push([MX+2*r*Math.cos(a),MY+2*r*Math.sin(a)]);}
@@ -79,78 +81,62 @@ function zeichne(sprache){
     pts.forEach(([px,py])=>{ x.beginPath(); x.arc(px,py,r,0,Math.PI*2); x.stroke(); });
   })(); x.restore();
 
-  /* Die Wolke: jeder Schlag gegen seinen Vorgänger.
-     Der Ausschnitt läuft vom 1. bis zum 99. Perzentil — ein einzelner
-     Artefakt-Schlag (hier 338 ms gegen einen Median von 1764 ms) würde die
-     Achsen sonst so weit aufziehen, dass die Wolke zu einem Punkt
-     zusammenfällt. Ausserhalb liegende Paare werden nicht versteckt,
-     sondern gezählt und unten genannt. */
+  /* Die Wolke (echte Aufnahme), Ausschnitt 1. bis 99. Perzentil wie Fassung 1 */
   const paare=[]; for(let i=1;i<RR.length;i++) paare.push([RR[i-1],RR[i]]);
   const alle=paare.flat().slice().sort((a,b)=>a-b);
   const lo=alle[Math.floor(alle.length*0.01)], hi=alle[Math.floor(alle.length*0.99)];
   const spanne=Math.max(1,hi-lo), pad=spanne*0.14;
-  const S0=352, ox=MX-S0/2, oy=MY-S0/2;
+  const S0=232, ox=MX-S0/2, oy=MY-S0/2;
   const abb=(v)=>((v-(lo-pad))/(spanne+2*pad));
   let draussen=0;
-  x.save();
   paare.forEach(([a,b])=>{
     const px=ox+abb(a)*S0, py=oy+S0-abb(b)*S0;
     if(px<ox-6||px>ox+S0+6||py<oy-6||py>oy+S0+6){ draussen++; return; }
-    x.beginPath(); x.arc(px,py,4.2,0,Math.PI*2);
-    x.fillStyle='rgba(62,207,178,0.90)'; x.fill();
+    x.beginPath(); x.arc(px,py,3.3,0,Math.PI*2);
+    x.fillStyle='rgba(62,207,178,0.92)'; x.fill();
   });
-  x.restore();
 
-  /* ── Wort ──────────────────────────────────────────────────────────── */
   const T = sprache==='en' ? {
-    kopf:'That is a heartbeat.',
-    unter:'Every dot: one beat against the one before it.',
-    zeile:'Measured on your own horse — in the browser, no app.',
+    kopf1:"Your horse's heart,", kopf2:'measured in your own stable.',
+    unter:'Polar H10 and a browser. No app, no account, free.',
+    links:['Every dot is one heartbeat,','plotted against the one before.','Real recording · Polar H10'],
+    rechts:['You send the recording','to your veterinary practice.','Android, or Chrome on a computer'],
   } : {
-    kopf:'Das ist ein Herzschlag.',
-    unter:'Jeder Punkt: ein Schlag gegen den vorherigen.',
-    zeile:'Gemessen am eigenen Pferd — im Browser, ohne App.',
+    kopf1:'Das Herz deines Pferdes,', kopf2:'im eigenen Stall gemessen.',
+    unter:'Polar H10 und Browser. Ohne App, ohne Konto, kostenlos.',
+    links:['Jeder Punkt ist ein Herzschlag,','gegen den Schlag davor.','Echte Aufnahme · Polar H10'],
+    rechts:['Die Aufnahme schickst du','deiner Tierarztpraxis.','Android oder Chrome am Rechner'],
   };
-  const LX=636, SPALTE=W-LX-56;               // rechte Spalte, mit Rand
-  x.textAlign='left';
 
-  /* Schreibt eine Zeile und verkleinert sie, BIS sie in die Spalte passt.
-     Der erste Entwurf setzte feste Groessen — im deutschen Satz lief
-     „Das ist ein Herzschlag." rechts aus dem Bild, und ein abgeschnittenes
-     Wort ist in einer Vorschau schlimmer als eine kleinere Schrift.
-     Gibt die tatsaechliche Groesse zurueck, damit nichts geraten wird. */
   const gesetzt=[];
-  function zeile(text, groesse, familie, gewicht, y, farbe, mindest){
-    let g=groesse;
-    do{ x.font=`${gewicht} ${g}px ${familie}`;
-        if(x.measureText(text).width<=SPALTE) break;
-        g-=1;
-    } while(g>(mindest||12));
-    x.fillStyle=farbe; x.fillText(text,LX,y);
-    gesetzt.push({text, groesse:g, breite:Math.round(x.measureText(text).width)});
+  /* Setzt eine Zeile in [x0,x1] (Ausrichtung a) und verkleinert, BIS sie passt.
+     Grenze wird mitgeschrieben: der Erzeuger bricht ab, wenn etwas uebersteht. */
+  function zeile(text, groesse, familie, gewicht, x0, x1, y, farbe, a, mindest){
+    let g=groesse; const breit=x1-x0;
+    do{ x.font=`${gewicht} ${g}px ${familie}`; if(x.measureText(text).width<=breit) break; g-=1; } while(g>(mindest||12));
+    x.textAlign=a; x.fillStyle=farbe;
+    x.fillText(text, a==='center'?(x0+x1)/2 : a==='right'?x1:x0, y);
+    gesetzt.push({text, groesse:g, breite:Math.round(x.measureText(text).width), spalte:breit});
     return g;
   }
+  const RAND=44; /* Innenrand des Quadrats */
+  x.fillStyle=CY; x.font=`600 14px ${brand}`; x.letterSpacing='6px'; x.textAlign='center';
+  x.fillText('CARLON EQUINE', MX+3, 56); x.letterSpacing='0px';
+  const g1=zeile(T.kopf1, 42, brand, 500, SQ0+RAND, SQ1-RAND, 404, TXT, 'center', 30);
+  zeile(T.kopf2, g1, brand, 500, SQ0+RAND, SQ1-RAND, 404+g1*1.18, TXT, 'center', 30);
+  zeile(T.unter, 18, ui, 400, SQ0+RAND, SQ1-RAND, 404+g1*1.18+44, DIM, 'center', 14);
+  x.strokeStyle='rgba(62,207,178,0.30)'; x.lineWidth=1;
+  x.beginPath(); x.moveTo(MX-90,540); x.lineTo(MX+90,540); x.stroke();
+  zeile('vitalkultur.com/messen', 23, ui, 600, SQ0+RAND, SQ1-RAND, 578, CY, 'center', 16);
 
-  x.fillStyle=CY; x.font=`600 16px ${brand}`; x.letterSpacing='7px';
-  x.fillText('CARLON EQUINE', LX, 208);
-  x.letterSpacing='0px';
+  /* Seitenfluegel: nur im Breitformat sichtbar, darum nichts Unverzichtbares */
+  const FL=34, FR=SQ0-18;
+  T.links.forEach((t,i)=>zeile(t, i<2?14:13, ui, i<2?400:500, FL, FR, MY-14+i*24+(i==2?14:0), i<2?DIM:CY, 'left', 11));
+  T.rechts.forEach((t,i)=>zeile(t, i<2?14:13, ui, i<2?400:500, SQ1+18, W-FL, MY-14+i*24+(i==2?14:0), i<2?DIM:CY, 'right', 11));
 
-  zeile(T.kopf, 54, brand, 500, 286, TXT, 34);
-  zeile(T.unter, 20, ui, 400, 330, DIM, 15);
-  zeile(T.zeile, 21, ui, 400, 394, TXT, 15);
-
-  /* Trennlinie: gibt der Adresse ein Fundament, ohne einen Kasten zu bauen */
-  x.strokeStyle='rgba(62,207,178,0.28)'; x.lineWidth=1;
-  x.beginPath(); x.moveTo(LX,432); x.lineTo(LX+276,432); x.stroke();
-
-  zeile('vitalkultur.com/messen', 25, ui, 500, 474, CY, 16);
-
-  /* Der Beweis, dass nichts abgeschnitten ist — steht in der Ausgabe des
-     Erzeugers, nicht im Bild. Ein Vorschaubild mit abgeschnittenem Wort
-     faellt sonst erst auf, wenn es geteilt ist. */
-  const zuBreit=gesetzt.filter(z=>z.breite>SPALTE);
+  const zuBreit=gesetzt.filter(z=>z.breite>z.spalte);
   return {draussen, paare:paare.length, lo:Math.round(lo), hi:Math.round(hi),
-          spalte:SPALTE, zeilen:gesetzt, zuBreit:zuBreit.length};
+          spalte:SQ1-SQ0-2*RAND, zeilen:gesetzt, zuBreit:zuBreit.length};
 }
 
 window.__og = async function(sprache){
