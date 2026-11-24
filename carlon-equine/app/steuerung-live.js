@@ -7,6 +7,8 @@
 (function (g) {
   'use strict';
   const S = () => g.Steuerung;
+  /* Web-Seite (https): Netzwege gesperrt, s. dialog(). Lokal (file:, http://localhost) für Entwicklung offen. */
+  const NETZ_GESPERRT = g.location && g.location.protocol === 'https:';
   /* Chrome Local Network Access (ab 142): die Zieladresse muss zum angegebenen Adressraum passen – eigener Rechner = loopback,
      Betriebsnetz (private IP, .local) = local, sonst nichts angeben. Falsche Angabe lässt die Anfrage scheitern (Prüfkreis 22.11.). */
   const raum = url => { try { const h = new URL(url).hostname.replace(/^\[|\]$/g, '');
@@ -127,6 +129,9 @@
 
   g.SteuerLive = { BLE, flach, vorschlag, werte, QUELLEN, automat,
     verbinden(profil, onWerte, onFehler, onRoh) { let kopf = null;
+      /* Gespeichertes Netz-Profil im Browser: klar melden statt still scheitern (CSP/Mixed Content, 24.11.2026). */
+      if (NETZ_GESPERRT && profil.art !== 'ble') { onFehler && onFehler(g.document && g.document.documentElement.lang === 'en'
+          ? 'In the browser only the Bluetooth gateway works.' : 'Im Browser funktioniert nur das Bluetooth-Gateway.'); return () => {}; }
       return QUELLEN[profil.art](profil, (text, k) => { if (k) kopf = k; const f = flach(text, kopf); onRoh && onRoh(f); onWerte(werte(f, profil.map), f); }, onFehler); } };
 })(typeof window !== 'undefined' ? window : globalThis);
 
@@ -143,10 +148,15 @@
       const wege = [['http', E ? 'Network address' : 'Netzwerk-Adresse', E ? 'Controller or gateway in your Wi-Fi, e.g. http://192.168.0.10/werte.json' : 'Steuerung oder Gateway im WLAN, z. B. http://192.168.0.10/werte.json'],
         ['mqtt', 'MQTT', E ? 'Broker in your business, e.g. wss://broker.local:8884 and the topic' : 'Broker im Betrieb, z. B. wss://broker.local:8884 und das Thema'],
         ['s7', 'Siemens S7-1200 / S7-1500', E ? 'Directly via the controller’s web server (firmware V4.5 or later), user and variable names' : 'Direkt über den Webserver der Steuerung (ab Firmware V4.5), Benutzer und Variablennamen'],
-        ['ble', 'Bluetooth', E ? 'Gateway with the CARLON profile, no address needed' : 'Gateway mit CARLON-Profil, keine Adresse nötig']];
+        ['ble', 'Bluetooth', E ? 'Gateway with the CARLON profile, no address needed' : 'Gateway mit CARLON-Profil, keine Adresse nötig']]
+        /* 24.11.2026 (Jan): Seit der CSP vom 24.11. (connect-src nur feste Hosts) und wegen Mixed Content (http im WLAN aus
+           einer https-Seite) erreichen WLAN-Abruf, MQTT und S7 im Browser keine Geräte. Im Web bleibt nur Bluetooth. */
+        .filter(([k]) => !NETZ_GESPERRT || k === 'ble');
+      if (NETZ_GESPERRT && c.art !== 'ble') c.art = 'ble';
       const keys = Object.keys(this.roh);
       UI.modal(`<div class="modal-head"><button class="closex" onclick="SteuerLiveUI.schliessen()">${IC.x}</button><h3>${E ? 'Live values from the controller' : 'Live-Werte aus der Steuerung'}</h3></div><div class="modal-body">
         <p style="margin:0 0 12px;color:var(--text-secondary)">${E ? 'Visite only reads. It sends nothing to the controller.' : 'Visite liest nur. Es sendet nichts an die Steuerung.'}</p>
+        ${NETZ_GESPERRT ? `<p style="margin:0 0 12px;color:var(--text-secondary)">${E ? 'In the browser only the Bluetooth gateway works. Network address, MQTT and S7 cannot be reached from a secure web page.' : 'Im Browser funktioniert nur das Bluetooth-Gateway. Netzwerk-Adresse, MQTT und S7 sind aus einer sicheren Webseite nicht erreichbar.'}</p>` : ''}
         <div style="display:grid;gap:8px">${wege.map(([k, t, h]) => `<label style="display:flex;gap:10px;align-items:flex-start;border:1px solid ${c.art === k ? 'var(--cyan)' : 'var(--border-subtle)'};border-radius:12px;padding:10px 12px;cursor:pointer"><input type="radio" name="slArt" value="${k}" ${c.art === k ? 'checked' : ''} style="margin-top:4px"><span><b>${t}</b><br><span style="font-size:13px;color:var(--text-secondary)">${h}</span></span></label>`).join('')}</div>
         ${c.art !== 'ble' ? `<label style="display:block;margin-top:12px">${E ? 'Address' : 'Adresse'}<input data-sl="adresse" value="${esc2(c.adresse || '')}" placeholder="${c.art === 'mqtt' ? 'wss://broker.local:8884' : c.art === 's7' ? 'https://192.168.0.1' : 'http://192.168.0.10/werte.json'}" style="width:100%;padding:9px 10px;margin-top:4px"></label>` : ''}
         ${c.art === 's7' ? `<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px"><label>${E ? 'User (read only)' : 'Benutzer (nur lesen)'}<input data-sl="benutzer" value="${esc2(c.benutzer || '')}" placeholder="Anonymous" style="width:100%;padding:9px 10px;margin-top:4px"></label><label>${E ? 'Password' : 'Passwort'}<input data-sl="passwort" type="password" value="${esc2(c.passwort || '')}" autocomplete="off" style="width:100%;padding:9px 10px;margin-top:4px"></label></div>
