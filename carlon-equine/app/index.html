@@ -2905,6 +2905,36 @@ const Bindung={
     if(b.berichte) teile.push(z(fmt0(b.berichte),'Messwertberichte'));
     if(!teile.length) return '';
     return `<div class="panel" style="margin:0 0 var(--s4)"><span class="eyebrow">Ihr Monat mit Visite · seit dem 1.</span><div class="log-sum" style="margin:8px 0 0">${teile.join('')}</div></div>`; },
+  /* WOCHENBILANZ (24.11.2026, Strategie „Verhalten statt Meinung“): nur gemessene Werte der letzten 7 Tage, lokal, nichts wird gesendet.
+     Vorhersagewert für Kauf = wiederholte Kernaktion (Li 2022, POM, doi 10.1111/poms.13672) → Berichte an wie vielen Tagen.
+     Zeit: Schreibdauer (Dialog offen → erstellt) und Abstand Abfahrt → Bericht. Gesparte Zeit nur, wenn die Praxis ihren
+     früheren Aufwand selbst angibt; Rechenweg offen (Buell & Norton 2011, doi 10.1287/mnsc.1110.1376). Keine Push-Hinweise
+     (Ascarza 2016, doi 10.1509/jmr.13.0483: proaktive Hinweise erhöhten Kündigungen). */
+  woche(){
+    const ab=Date.now()-7*864e5, med=l=>{ if(!l.length) return null; const v=[...l].sort((x,y)=>x-y), m=v.length>>1; return v.length%2?v[m]:(v[m-1]+v[m])/2; };
+    const tag=x=>new Date(x).toDateString();
+    const ber=[]; for(const h of State.horses) for(const e of (h.doku||[])) if(e.art==='Messwertbericht'&&new Date(e.datum).getTime()>=ab) ber.push({...e,hid:h.id});
+    const log=(State.daylog||[]).filter(e=>e.departAt&&new Date(e.departAt).getTime()>=ab);
+    const abst=[]; let mitBericht=0;
+    for(const v of log){ const d=new Date(v.departAt).getTime(); const b=ber.filter(e=>e.hid===v.horseId&&tag(e.datum)===tag(v.departAt)&&new Date(e.datum).getTime()>=d-30*6e4);
+      if(b.length){ mitBericht++; abst.push(Math.max(0,(Math.min(...b.map(e=>new Date(e.datum).getTime()))-d)/6e4)); } }
+    const dauer=ber.map(e=>e.dauerS).filter(x=>x>0&&x<3600).map(x=>x/60);
+    const vorher=+State.settings.berichtVorherMin||0, dm=med(dauer);
+    return { berichte:ber.length, tage:new Set(ber.map(e=>tag(e.datum))).size, besuche:log.length, mitBericht,
+      abstandMin:med(abst), dauerMin:dm, nDauer:dauer.length, vorher, gespart:(vorher&&dm!=null)?Math.max(0,Math.round(ber.length*(vorher-dm))):null };
+  },
+  wocheHTML(){ const w=this.woche(), en=Einh.en(); if(!w.berichte&&!w.besuche) return '';
+    const z=(n,t)=>`<div><b>${n}</b><span>${t}</span></div>`, mn=x=>x==null?'–':(x<10?(Math.round(x*10)/10).toString().replace('.',en?'.':','):fmt0(Math.round(x)))+' min';
+    const t=[z(fmt0(w.berichte),en?'reports to owners':'Berichte an Halterinnen'),z(fmt0(w.tage)+(en?' of 7':' von 7'),en?'days with a report':'Tage mit Bericht')];
+    if(w.besuche) t.push(z(fmt0(w.mitBericht)+'/'+fmt0(w.besuche),en?'visits with report the same day':'Besuche mit Bericht am selben Tag'));
+    if(w.abstandMin!=null) t.push(z(mn(w.abstandMin),en?'median from departure to report':'Median Abfahrt bis Bericht'));
+    if(w.dauerMin!=null) t.push(z(mn(w.dauerMin),en?'median writing time per report':'Median Schreibdauer je Bericht'));
+    if(w.gespart!=null) t.push(z(mn(w.gespart),en?'time saved (your estimate as baseline)':'gesparte Zeit (Ihre Angabe als Basis)'));
+    const weg=en?`Last 7 days, counted on this device only, nothing is sent. Writing time = report dialog opened until the report is created (${fmt0(w.nDauer)} measured). Departure = “visit done” on the tour. ${w.vorher?`Time saved = ${fmt0(w.berichte)} reports × (${fmt0(w.vorher)} min your earlier effort − ${mn(w.dauerMin)} measured).`:'Time saved appears once you enter how long a report took you before.'}`
+      :`Letzte 7 Tage, nur auf diesem Gerät gezählt, nichts wird gesendet. Schreibdauer = Berichtsdialog geöffnet bis Bericht erstellt (${fmt0(w.nDauer)} gemessen). Abfahrt = „Besuch fertig“ in der Tour. ${w.vorher?`Gesparte Zeit = ${fmt0(w.berichte)} Berichte × (${fmt0(w.vorher)} min Ihr früherer Aufwand − ${mn(w.dauerMin)} gemessen).`:'Gesparte Zeit erscheint, sobald Sie angeben, wie lange ein Bericht früher gedauert hat.'}`;
+    return `<div class="panel" id="wochenbilanz" style="margin:0 0 var(--s4)"><span class="eyebrow">${en?'Your week with Visite · measured':'Ihre Woche mit Visite · gemessen'}</span><div class="log-sum" style="margin:8px 0 0">${t.join('')}</div>
+      <details style="margin-top:8px;font-size:12.5px;color:var(--text-secondary);line-height:1.5"><summary style="cursor:pointer">${en?'How this is calculated':'So wird gerechnet'}</summary><p style="margin:6px 0">${weg}</p>
+      <label style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">${en?'Before Visite, one report to an owner took me about':'Vor Visite dauerte ein Bericht an die Halterin bei mir etwa'} <input type="number" min="0" max="240" step="1" value="${w.vorher||''}" style="width:72px" onchange="State.settings.berichtVorherMin=Math.max(0,Math.min(240,+this.value||0));State.saveSettings();Nav.refresh()"> min</label></details></div>`; },
   bilanzHTML(){ const b=this.bilanz(); const z=(n,w)=>`<div><b>${fmt0(n)}</b><span>${w}</span></div>`;
     return `<div class="log-sum" style="margin:6px 0 12px">${z(b.besuche,'Besuche dokumentiert')}${z(Einh.kmZ(b.km,0),Einh.kmE()+' Fahrtenbuch')}${z(b.aufnahmen,'Aufnahmen eingegangen')}${z(b.berichte,'Messwertberichte')}${z(b.nachrichten,'Nachrichten an Halterinnen')}${z(b.pferde,'Pferde in der Akte')}</div>`; },
   GRUENDE:['Zu wenig Zeit zum Einrichten','Halterinnen messen kaum','Eine Funktion fehlt','Zu kompliziert im Alltag','Zu teuer für unsere Praxis','Praxis ändert sich','Anderer Grund'],
@@ -8263,7 +8293,7 @@ const Views={
           ${(typeof Teilen==='undefined'||!Teilen.aktiv)?`<button class="btn ghost" onclick="Backup.abgleichSenden()" title="Teilen → im Eingangsordner der Praxis speichern; der Praxisrechner übernimmt es von selbst">${IC.upload} Abgleich an die Praxis</button>`:''}
         </div>
       </div>
-      ${Bindung.monatHTML()}
+      ${Bindung.wocheHTML()}${Bindung.monatHTML()}
       <div class="kpis">
         <div class="kpi good"><div class="lbl">Leistungen gesamt</div><div class="val">${cons.length}</div><div class="hint">dokumentierte Einträge</div></div>
         <div class="kpi"><div class="lbl">Diesen Monat</div><div class="val">${thisMonth.length}</div><div class="hint">Einträge seit dem 1.</div></div>
@@ -10068,7 +10098,7 @@ const Report={
     const h=State.horses.find(x=>x.id===hid); if(!h)return;
     const recs=State.recsFor(h.id); const rec=recs[recs.length-1];
     if(!rec){Toast.show('Für den Messwertbericht liegt noch keine Aufnahme vor','warn');return;}
-    this._hid=hid;
+    this._hid=hid; this._auf=Date.now();   /* Wochenbilanz: Schreibdauer wird gemessen, nicht geschätzt */
     const tri=rec.triage||{level:'stable',reasons:[]};
     const suggest=(tri.reasons&&tri.reasons.length)?('Messwert-Beobachtung: '+tri.reasons.slice(0,2).map(r=>Triage.zeig(r)).join('; ')+'. '):'Messwerte im Bereich der eigenen Basis. ';
     const s=State.settings; const fee=s.tariff||45;
@@ -10122,7 +10152,7 @@ const Report={
       if(d.vet&&!S.vetName&&d.vet!=='Meine Pferdepraxis'&&d.vet!==S.clinicName) S.vetName=d.vet;   /* 21.11.2026: Platzhalter/Praxisname nie als Tierarztname speichern */ try{ await State.saveSettings(); }catch(e){} }
     UI.closeModal();
     { const rc=State.recsFor(hid).slice(-1)[0];
-      try{ await Akte.notiere(hid,'Messwertbericht',{text:d.assess,empfehlung:d.recom,naechste:d.next||'',von:d.vet,untersucht:d.untersucht||'',aufnahme:rc?rc.id:null}); }catch(_){ } }
+      try{ await Akte.notiere(hid,'Messwertbericht',{text:d.assess,empfehlung:d.recom,naechste:d.next||'',von:d.vet,untersucht:d.untersucht||'',aufnahme:rc?rc.id:null,dauerS:this._auf?Math.round((Date.now()-this._auf)/1000):null}); }catch(_){ } this._auf=null; }
     if(bill){
       const c={id:'c_'+Math.abs(hashStr(hid+performance.now())).toString(36),horseId:hid,date:new Date().toISOString(),
         type:'Datensichtung (Aufnahme)',durationMin:0,fee,notes:d.assess?('Notiz: '+d.assess).slice(0,240):'Datensichtung (Aufnahme)',billed:!!paid,report:true};
@@ -13386,6 +13416,10 @@ const Seed={
           owner:h.owner||'',place:h.place||h.stable||'',arriveAt:mk(arrive),departAt:mk(depart),
           treatmentMin:treat,driveKm,driveMin,triageLevel:(rec?rec.triage.level:'stable'),estimated:false};
         DB.put('settings',entry);
+        /* Demo-Wochenbilanz (24.11.2026): an 3 von 5 Besuchen ging der Bericht noch am selben Tag raus, Schreibdauer 2–4 min */
+        if(idx%5!==1&&idx%5!==3&&rec){ h.doku=h.doku||[]; const ab=new Date(mk(depart)).getTime()+(12+idx*9)*6e4;
+          h.doku.push({id:'d_demo_'+dateStr+'_'+h.id,datum:new Date(ab).toISOString(),art:'Messwertbericht',text:'Messwerte im Bereich der eigenen Basis. (Demo)',aufnahme:rec.id,dauerS:140+idx*35,_seed:true});
+          DB.put('horses',h); }
         cur={lat:h.lat,lng:h.lng};
       });
     }
