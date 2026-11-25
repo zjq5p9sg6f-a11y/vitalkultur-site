@@ -21,7 +21,7 @@
     .legal .legal-product h3 { margin-top: 0; margin-bottom: 4px; color: rgba(240,236,228,0.92); }
     .legal .legal-product .product-meta {
       font-size: 0.78rem;
-      color: rgba(240,236,228,0.45);
+      color: rgba(240,236,228,0.62);
       letter-spacing: 0.04em;
       text-transform: uppercase;
       margin: 0 0 14px 0;
@@ -46,7 +46,7 @@
 
   <div class="container legal">
     <h1>Privacy Policy</h1>
-    <p class="subtitle">Vitalkultur · Effective: 24 November 2026 · Version 3.1 — portfolio-wide (all iOS apps + vitalkultur.com)</p>
+    <p class="subtitle">Vitalkultur · Effective: 25 November 2026 · Version 3.2 — portfolio-wide (all iOS apps + vitalkultur.com)</p>
     <p><em>This is the English version. The
     German version at <a href="/privacy.html">vitalkultur.com/privacy.html</a>
     is the legally binding master document under EU/GDPR jurisdiction.</em></p>
@@ -102,7 +102,7 @@
       <li>In-app usage statistics or analytics
         (for the website, see section 8)</li>
       <li>Behavioural profiles, telemetry, crash reports to external services</li>
-      <li>Movement or location profiles, GPS traces</li>
+      <li>Movement or location profiles, GPS traces (CARLON Equine records a GPS track of your ride if you choose to. It stays on your device and never reaches us, see 3.2.)</li>
       <li>Device identifiers, ad IDs, IP addresses during app use</li>
       <li>Usernames, email addresses, accounts — the apps have no login</li>
     </ul>
@@ -204,29 +204,21 @@
     <!-- ===== CARLON Equine ===== -->
     <div class="legal-product">
       <h3>3.2 CARLON Equine</h3>
-      <p class="product-meta">iOS app + web viewer · equine HRV analysis via Polar H10</p>
+      <p class="product-meta">iOS app + web viewer · Polar H10, RaceBox Mini S</p>
 
-      <p><strong>Sensor data (local, no server):</strong></p>
+      <p><strong>CARLON Equine (iOS app):</strong> No account, no server, no analytics. Everything stays on your device unless you share it yourself or turn on one of the features below.</p>
       <ul>
-        <li>RR intervals from the Polar H10 sensor via Bluetooth (live stream + on-device offline recording with later sync)</li>
-        <li>HRV metrics (RMSSD, SDNN, pNN50, DFA-α₁, Welch PSD, Stress Index, Symbolic Dynamics, Multi-Scale Entropy, etc.)</li>
-        <li>Optional: ECG live stream (130 Hz, local, <strong>not intended for diagnosis</strong>)</li>
+        <li><strong>Heart data:</strong> RR intervals and heart rate from the chest strap (Polar H10) via Bluetooth, live and from the strap’s memory. Optionally a person wears a second strap (rider and horse measurement). Like the horse’s data, this person’s heart data is stored only on the device. It is health data of that person (Art.&nbsp;9 GDPR); it is recorded only with their explicit consent, which they can withdraw at any time.</li>
+        <li><strong>Location:</strong> The app records a GPS track only during a ride that you start. It keeps running in the background for this, and iOS shows the blue location indicator. The track stays on the device with the recording. For the map view, iOS requests map images from Apple Maps.</li>
+        <li><strong>Speed and acceleration:</strong> optionally from the RaceBox Mini S via Bluetooth.</li>
+        <li><strong>Video:</strong> optionally with the device camera and microphone, stored only on the device.</li>
+        <li><strong>Horse data:</strong> name, breed, age, weight and the notes you enter.</li>
+        <li><strong>Backup (optional, only after you decide):</strong> The app saves a backup to your own iCloud Drive folder “CARLON Equine”. We have no access to it. You can turn it off under Settings › Backup.</li>
+        <li><strong>Live sharing (optional):</strong> During a FaceTime call you can send live values, and afterwards the recording, to your trainer’s device via SharePlay. Apple passes the data through end-to-end encrypted. No Vitalkultur server is involved.</li>
+        <li><strong>Barn notice to your own address (optional):</strong> If you enter your own webhook address (for example Slack), the barn monitor sends its observation notices there, and only there: horse name, difference from resting heart rate and time.</li>
+        <li><strong>Sharing and export:</strong> PDF, CSV, JSON and EDF leave the device only through the share sheet that you open.</li>
+        <li><strong>Subscriptions:</strong> Apple handles purchase and renewal. We receive no payment data and no Apple ID.</li>
       </ul>
-
-      <p><strong>Subject/horse metadata (local):</strong></p>
-      <ul>
-        <li>Horse name, age, breed, weight, height, sex <span class=nw>— user-entered</span></li>
-        <li>Session context: intent (rest / trot / canter / follow-up), duration, start timestamp</li>
-        <li>Optional: veterinarian contact, owner contact</li>
-      </ul>
-
-      <p><strong>GDPR note on personal data:</strong> Horse data per se is not
-      personal data under GDPR. However, as soon as owner or veterinarian names,
-      addresses or contact details are entered into notes or subject profile,
-      this becomes personal data under Art.&nbsp;4(1) GDPR. These fields stay
-      exclusively on your device; when exporting JSON, <strong>owner names and
-      veterinarian contacts are excluded by Privacy-by-Design</strong> from the
-      export (data minimisation, Art.&nbsp;5(1)(c) GDPR).</p>
 
       <p><strong>Web viewer at vitalkultur.com/carlon-equine/:</strong> JSON exports
       can be opened locally in the browser (drag-drop or file picker). <strong>No
@@ -238,10 +230,6 @@
       <code>/carlon-equine/app/messen.html</code>, which lets you hand a recording
       over to a veterinary practice <strong>in encrypted form</strong> on your own
       initiative — see section&nbsp;3.4.</p>
-
-      <p><strong>SHA-256 integrity hash:</strong> every export carries an
-      integrity hash and a W3C-PROV provenance chain for reproducibility and
-      audit-grade documentation.</p>
     </div>
 
     <!-- ===== CARLON HRV Research ===== -->
@@ -456,7 +444,7 @@
     <h2>7. Bluetooth sensor connection (Polar H10, Movesense)</h2>
     <p>
       CARLON Equine and CARLON HRV Research use Bluetooth Low Energy (BLE) to connect
-      to Polar H10 chest straps (CARLON HRV Research also to Movesense sensors). iOS asks for
+      to Polar H10 chest straps (CARLON HRV Research also to Movesense sensors). CARLON Equine can additionally connect a RaceBox Mini S for speed and acceleration, also directly and without a manufacturer cloud. iOS asks for
       the Bluetooth permission when the app first uses Bluetooth. No Bluetooth connection data is transmitted to Vitalkultur. Polar
       Electro Oy is the manufacturer of the H10 and independent controller for
       any Polar-operated cloud services (Polar Flow). Vitalkultur apps use
