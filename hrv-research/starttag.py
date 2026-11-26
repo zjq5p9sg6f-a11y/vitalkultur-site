@@ -78,6 +78,31 @@ if '"downloadUrl"' not in s:
 # 6. Smart App Banner (Kampagnenpapier 28.10.): native Store-Leiste in Safari, erst ab Starttag
 if 'name="apple-itunes-app"' not in s:
     ersetze("Smart App Banner", r'(<meta name="viewport"[^>]*>)', r'\1\n  <meta name="apple-itunes-app" content="app-id=6826010655">', 1)
+# 7. Beta-Sätze, die nach dem ersten Skript dazukamen (Research-Probe 26.11.2026: 33 Reste). Leerraum flexibel,
+#    weil typo-binden geschützte Leerzeichen und <span class=nw> setzt; jede Stelle muss treffen.
+def flex(t):
+    return r"(?:\s|&nbsp;|\xa0)+".join(re.escape(w) for w in t.split())
+BETA_SAETZE = [
+    ("Nav Anwendung EN", "Use cases · Kubios workflow · beta feedback", "Use cases · Kubios workflow · field reports"),
+    ("Nav Anwendung DE", "Einsatzbereiche · Kubios-Workflow · Erfahrungen aus der Beta", "Einsatzbereiche · Kubios-Workflow · Erfahrungsberichte"),
+    ("Nav FAQ EN", "FAQ · beta access", "FAQ · price and data"),
+    ("Nav FAQ DE", "FAQ <span class=nw>· Beta-Zugang</span>", "FAQ <span class=nw>· Preis und Daten</span>"),
+    ("Vergleich EN", "; during the beta, Apple’s TestFlight terms apply", ""),
+    ("Vergleich DE", "; in der Beta gelten Apples TestFlight-Bedingungen", ""),
+    ("Methoden EN", " While the app is distributed as a beta through TestFlight, Apple collects crash logs and usage information – which may include the tester’s name and email address – and any feedback testers send (which can include screenshots of the app), and shares them with the developer.", ""),
+    ("Methoden DE", " Solange die App als Beta über TestFlight verteilt wird, erhebt Apple Absturzprotokolle und Nutzungsinformationen – gegebenenfalls mit Name und E-Mail-Adresse der testenden Person – sowie gesendetes Feedback (auch Bildschirmfotos der App) und teilt sie mit dem Entwickler.", ""),
+    ("FAQ Daten EN", "During the beta, Apple’s TestFlight shares crash reports, usage information and any feedback you send with us.",
+     "Crash reports reach us through Apple only if you allow sharing with app developers in the iPhone settings."),
+    ("FAQ Daten DE", "In der Beta teilt Apples TestFlight Absturzberichte, Nutzungsinformationen und von Ihnen gesendetes Feedback mit uns.",
+     "Absturzberichte erhalten wir über Apple nur, wenn Sie in den iPhone-Einstellungen das Teilen mit App-Entwicklern erlauben."),
+    ("FAQ Abschluss EN", " During the beta, simply export after each session or switch on the study folder – each TestFlight build runs for 90 days, and new builds follow regularly.", ""),
+    ("FAQ Abschluss DE", " In der Beta einfach nach jeder Messung exportieren oder den Studienordner einschalten – jeder TestFlight-Build läuft 90 Tage, neue Builds folgen regelmäßig.", ""),
+    ("Marke EN", "iPhone and TestFlight are trademarks of Apple Inc.", "iPhone is a trademark of Apple Inc."),
+    ("Marke DE", "iPhone und TestFlight sind Marken von Apple Inc.", "iPhone ist eine Marke von Apple Inc."),
+]
+for name, alt, ersatz in BETA_SAETZE:
+    muster = (r"\s?" if alt.startswith(" ") else "") + flex(alt)
+    ersetze(name, muster, lambda m, e=ersatz: (" " if e and m.group(0).startswith(" ") else "") + e.strip() if e else "", 1, 0)
 rest = re.findall(r"beta|TestFlight", s)
 llms = LLMS.read_text(encoding="utf-8")
 llms_neu = re.sub(r"In beta via Apple TestFlight \([^)]*\), a one-time App Store purchase at launch;",
@@ -91,4 +116,8 @@ if probe:
 SEITE.write_text(s, encoding="utf-8"); LLMS.write_text(llms_neu, encoding="utf-8")
 # Bau wie jeden Tag: DE erzeugen, Satzregeln, FAQ-Markup je Sprache aus der sichtbaren FAQ (02.11.2026)
 subprocess.run(["bash", str(Path.home() / "Developer/website-werkstatt/research/bau.sh")], check=True)
+for f in (SEITE, HIER / "de" / "index.html"):
+    r = [x for x in re.findall(r"[^<>\"]{0,40}(?:[Bb]eta|TestFlight)[^<>\"]{0,40}", f.read_text(encoding="utf-8")) if "Betatest" not in x]
+    if r:
+        raise SystemExit(f"🔴 {f.relative_to(HIER.parent)}: {len(r)} Beta-Reste nach dem Bau, z. B. {r[:3]}")
 print(f"✓ Starttag gesetzt — Store-Links auf der Seite: {s.count(STORE)}")
