@@ -4411,7 +4411,6 @@ const Triage = {
     baselineWarnUnter:  0.70,   // RMSSD/Baseline darunter → „auffällig"
     baselineAlarmUnter: 0.50,   // darunter → „deutlich unter der eigenen Baseline"
     trendSchwelle:      0.08,   // ±8 % gegenüber der Vor-Aufnahme → ▲ / ▼
-    fallendeReiheAb:    3,      // so viele fallende Messungen in Folge → Frühwarnung
   },
 
   // Frühwarn-Ampel gegen individuelle RMSSD-Baseline
@@ -4470,14 +4469,8 @@ const Triage = {
     if(ratio<this.PARAMETER.baselineWarnUnter) return {level:'warn',ratio,pct,eigen:b.eigenstaendig,text:`RMSSD ${pct} % unter ${b.name} (${fmt0(rm)} vs. ${fmt0(base)} ms) — engmaschig beobachten${b.zusatz}`};
     return null;
   },
-  // Wie viele Messungen in Folge ist RMSSD gefallen? (Trend-Frühwarnung ab 3)
-  fallingStreak(hid){
-    const recs=State.recsFor(hid).filter(r=>r.metrics&&r.metrics.rmssd!=null);
-    if(recs.length<this.PARAMETER.fallendeReiheAb) return 0;
-    let streak=0;
-    for(let i=recs.length-1;i>0;i--){ if(recs[i].metrics.rmssd<recs[i-1].metrics.rmssd) streak++; else break; }
-    return streak;
-  }
+  /* fallingStreak (3 fallende Messungen in Folge) entfernt 26.11.2026 (Equine): bei stabilen Pferden 4,2 % der Aufnahmen
+     (Browserprobe 75/1800), ohne Streuung und Größe des Abfalls. Die anhaltende Abweichung zeigt die Ampel über den Verlauf. */
 };
 
 /* ════════════════════════════════════════════════════════════════════════
@@ -7008,13 +7001,12 @@ const Views={
     const mon=State.horses.filter(h=>State.latestFor(h.id)).map(h=>{
       const rec=State.latestFor(h.id);
       const tri=rec.triage||Triage.score({metrics:rec.metrics,clinical:rec.clinical,baselineRMSSD:Baseline.wert(h)});
-      const amp=Triage.baselineAmpel(h,rec); const streak=Triage.fallingStreak(h.id);
+      const amp=Triage.baselineAmpel(h,rec);
       const m=rec.metrics;
       const hrHigh=(h.baselineHR&&m.meanHR!=null)?m.meanHR>h.baselineHR*1.2:false;
-      const hint=(amp&&(amp.level==='crit'||amp.level==='warn'))||streak>=3||hrHigh||tri.level==='crit';
+      const hint=(amp&&(amp.level==='crit'||amp.level==='warn'))||hrHigh||tri.level==='crit';
       const reasons=[];
       if(amp)reasons.push(amp.text);
-      if(streak>=3)reasons.push(`RMSSD ${streak}× in Folge fallend`);
       if(hrHigh)reasons.push('Ruhe-HF über Baseline');
       return {h,rec,tri,hint,reasons};
     });
@@ -7987,7 +7979,7 @@ const Views={
           ${typeof Reha!=='undefined'&&Reha.hauptbereich?Reha.hauptbereich(h):''}
           <div class="panel" id="kernwerteAkte" style="margin-bottom:var(--s4)">
             <h2 style="font-size:13px;color:var(--text-dim);letter-spacing:.06em;text-transform:uppercase"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12h4l3 8 4-16 3 8h4"/></svg>Kernwerte &amp; Begründung</h2>
-            ${(()=>{const amp=Triage.baselineAmpel(h,rec);const streak=Triage.fallingStreak(h.id);if(!amp&&streak<3)return'';const lvl=amp?amp.level:'warn';const parts=[];if(amp)parts.push(amp.text);if(streak>=3)parts.push(`RMSSD ${streak}× in Folge fallend`);return `<div class="warnbanner ${lvl}">${IC.bolt}<div><b>Auffällig · gegen ${amp&&amp.eigen===false?'den angegebenen Ausgangswert':'die individuelle Baseline'}</b><span>${parts.map(esc).join(' · ')}</span></div></div>`;})()}
+            ${(()=>{const amp=Triage.baselineAmpel(h,rec);if(!amp)return'';const lvl=amp.level;const parts=[amp.text];return `<div class="warnbanner ${lvl}">${IC.bolt}<div><b>${amp.eigen===false?'Unter dem angegebenen Ausgangswert':'Verlauf unter der eigenen Basis'}</b><span>${parts.map(esc).join(' · ')}</span></div></div>`;})()}
             ${rec&&rec.reha?`<div style="font-size:12.5px;color:var(--text-dim);margin:-2px 0 8px">${m.ohneRuhe?'Letzte Aufnahme ist eine Reha-Einheit ohne 5 min Ruhe vor der ersten Stufe: keine Ruhekennzahlen (unter Belastung nicht stationär).':(m.rmssd==null?'Ruhephase der letzten Reha-Einheit nicht auswertbar (zu viele unsichere Schläge): keine Ruhekennzahlen.':'Aus der Ruhephase vor der ersten Stufe der letzten Reha-Einheit.')}</div>`:''}
             <div class="stat-row">
               ${Views.stat('RMSSD','ms',m.rmssd,Views.clsRMSSD(m.rmssd))}
@@ -8124,13 +8116,12 @@ const Views={
     const HEAD={crit:'Deutliche Abweichung von der Eigenbasis',elev:'Mäßige Abweichung von der Eigenbasis',watch:'Geringe Abweichung',stable:'Im Eigenbereich'};
     const m=rec?rec.metrics:{};
     const reason=(tri.ohneBasis&&lvl==='stable')?'Die eigene Basis dieses Pferds entsteht aus drei Ruheaufnahmen innerhalb von 30 Tagen. Bis dahin zeigt CARLON die Werte ohne Einstufung.':(tri.reasons&&tri.reasons[0])?tri.reasons[0]:(lvl==='stable'?'RMSSD im Bereich der eigenen Basis dieses Pferds. Die Einordnung liegt bei Ihnen.':'Beobachtung gegen die individuelle Baseline empfohlen.');
-    const streak=Triage.fallingStreak?Triage.fallingStreak(h.id):0;
     // Kontextuelle Primär-Aktion je Dringlichkeit
     const act=(lvl==='crit'||lvl==='elev')
       ? `<button class="vh-cta" onclick="Report.print('${h.id}')">${IC.check||''} Messwertbericht erstellen</button>`
       : `<button class="vh-cta ghost hell" onclick="Views.ownerFeedback('${h.id}')">Rückmeldung für Halter</button>`;
     return `<div class="verdict-hero v-${lvl}" style="--vc:${col}">
-      <div class="vh-top"><span class="vh-dot"></span><span class="vh-lvl">${tri.ohneBasis?L.label:(HEAD[lvl]||L.label)}</span>${m.rmssd!=null?`<span class="vh-vital">RMSSD <b>${fmt0(m.rmssd)}</b><small> ms</small>${streak>=3?` · <span style="color:var(--red)">${streak}× fallend</span>`:''}</span>`:''}</div>
+      <div class="vh-top"><span class="vh-dot"></span><span class="vh-lvl">${tri.ohneBasis?L.label:(HEAD[lvl]||L.label)}</span>${m.rmssd!=null?`<span class="vh-vital">RMSSD <b>${fmt0(m.rmssd)}</b><small> ms</small></span>`:''}</div>
       ${m.meanHR>60?`<div class="vh-hinweis">${Sprache.cur==='en'?`Heart rate ${fmt0(m.meanHR)}/min is above the resting range of adult horses (about 28–44/min). These are not resting values: at this heart rate a low RMSSD is expected arithmetically and is not a finding on its own. Assessment of the cause lies with you.`:`Herzfrequenz ${fmt0(m.meanHR)}/min liegt über dem Ruhebereich erwachsener Pferde (etwa 28–44/min). Das sind keine Ruhewerte: Bei dieser Frequenz ist ein niedriger RMSSD rechnerisch zu erwarten und kein eigenständiger Befund. Die Beurteilung der Ursache liegt bei Ihnen.`}</div>`:''}
       <div class="vh-reason">${esc(Triage.zeig(reason))}</div>
       ${Views.gueteZeile(State.latestFor(h.id),true)}
@@ -8703,8 +8694,7 @@ const Views={
       parameterBedeutung: {
         baselineWarnUnter:  'RMSSD geteilt durch individuelle Baseline; darunter „auffällig"',
         baselineAlarmUnter: 'dasselbe Verhältnis; darunter „deutlich unter der eigenen Baseline"',
-        trendSchwelle:      'relative Änderung gegenüber der Vor-Aufnahme für ▲/▼',
-        fallendeReiheAb:    'so viele fallende Messungen in Folge lösen die Frühwarnung aus'
+        trendSchwelle:      'relative Änderung gegenüber der Vor-Aufnahme für ▲/▼'
       },
       verwendeteBaseline: base != null
         ? { rmssdMs: base, quelle: 'individuelle Baseline dieses Pferdes aus der Praxisakte' }
