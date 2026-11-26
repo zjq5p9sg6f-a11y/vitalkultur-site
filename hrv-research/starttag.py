@@ -24,6 +24,9 @@ if unbekannt:
 probe = "--schreiben" not in sys.argv
 s = SEITE.read_text(encoding="utf-8")
 zaehler = {}
+# Schon gesetzt (kein data-beta mehr, Kauf-Angebot da): nichts zu tun. Sonst sperrt die Probe in vor-push jeden Push NACH dem Starttag.
+if "data-beta" not in s and '"downloadUrl"' in s:
+    print("✓ Starttag ist schon gesetzt – nichts zu tun"); raise SystemExit(0)
 
 
 def ersetze(name, muster, neu, mindestens=1, flags=re.S):
@@ -114,6 +117,12 @@ print(f"Rest „beta/TestFlight“ auf der Seite: {len(rest)} (Danksagung an Bet
 if probe:
     raise SystemExit(0)
 SEITE.write_text(s, encoding="utf-8"); LLMS.write_text(llms_neu, encoding="utf-8")
+# Sitemap: lastmod der beiden Sprachseiten auf heute (sonst sperrt die SEO-Prüfung in vor-push den Starttag-Push)
+import datetime
+SITEMAP = HIER.parent / "sitemap.xml"; heute = datetime.date.today().isoformat()
+sm, k = re.subn(r"(<loc>https://vitalkultur\.com/hrv-research/(?:de/)?</loc>\s*<lastmod>)[0-9-]+(</lastmod>)", lambda m: m.group(1) + heute + m.group(2), SITEMAP.read_text(encoding="utf-8"))
+if k != 2: raise SystemExit(f"🔴 Sitemap: {k} hrv-research-Einträge (erwartet 2)")
+SITEMAP.write_text(sm, encoding="utf-8")
 # Bau wie jeden Tag: DE erzeugen, Satzregeln, FAQ-Markup je Sprache aus der sichtbaren FAQ (02.11.2026)
 subprocess.run(["bash", str(Path.home() / "Developer/website-werkstatt/research/bau.sh")], check=True)
 for f in (SEITE, HIER / "de" / "index.html"):
