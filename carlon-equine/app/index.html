@@ -4282,13 +4282,16 @@ const Triage = {
     const ohneBasis=(rm!=null && !rmRoh) && (n.einzel ? n.einzel.lage==='basisImAufbau' : (!eigen || !(base>0)));
     const ez=n.einzel;
     if(rm!=null && !rmRoh && ez){
-      const fz=v=>String(Math.round(Math.abs(v))), gr=ez.grenzeUntenPct;
+      const fz=v=>String(Math.round(Math.abs(v))), gr=ez.grenzeUntenPct, k=ez.ohneAngabe||0;
+      const basisTxt=`Basis: ${ez.nBasis} Tage in 60${k?`, davon ${k} ohne Angabe zum Störanteil`:''}`;
+      const grenzeTxt=gr!=null?`Nachweisgrenze −${fz(gr)} %: kleinere Abfälle sind mit diesen Daten nicht von Zufall zu trennen`:'';
+      const unbek=k>ez.nBasis/2?' · Signalgüte der Basis teilweise unbekannt':'';
       if(ez.lage==='darunter'){
         const d=ez.aenderungPct/100;
         score+= d<=-0.5?50:(d<=-0.35?25:10);
-        reasons.push(`RMSSD liegt ${fz(ez.aenderungPct)} % unter der eigenen Basis (${ez.nBasis} Tage in 60) · Nachweisgrenze −${fz(gr)} %`);
+        reasons.push(`RMSSD liegt ${fz(ez.aenderungPct)} % unter der eigenen Basis · ${basisTxt}${unbek} · ${grenzeTxt}`);
       } else if(ez.lage==='innerhalb'){
-        reasons.push(`RMSSD ${ez.aenderungPct<0?'−':'+'}${fz(ez.aenderungPct)} % gegen die eigene Basis (${ez.nBasis} Tage in 60), innerhalb der eigenen Streuung · Nachweisgrenze −${fz(gr)} %`);
+        reasons.push(`RMSSD ${ez.aenderungPct<0?'−':'+'}${fz(ez.aenderungPct)} % gegen die eigene Basis, innerhalb der eigenen Streuung · ${basisTxt}${unbek} · ${grenzeTxt}`);
         if(ez.aenderungPct>=80) reasons.push('Deutlich höheres RMSSD kann auf unregelmäßige Schlagfolge oder Pausen hinweisen, Tachogramm ansehen');   /* Hinweis ohne Stufe: der Kern ist einseitig, sonst kämen 2,5 % Fehlalarm dazu */
       } else if(ez.lage==='zuWenigAktuell' || n.lzGeeignet===false){
         reasons.push('Kein Basisvergleich: Aufnahme erfüllt die Messbedingungen nicht (Ruhe, mindestens 5 min, höchstens 5 % Störungen)');
@@ -4450,6 +4453,16 @@ const Triage = {
     };
   },
   baselineAmpel(h,rec){
+    /* 26.11.2026 (Equine): Ampel = Episode im Verlauf (rechnen() 7 gegen 28 Tage, an 3 Tagen in Folge darunter),
+       dieselbe Logik wie die Langzeitkarte der App. Die alte Regel −30/−50 % gegen das 30-Tage-Mittel bleibt nur
+       ohne Kern. Kein Urteilswort: die Ampel nennt Lage, Änderung und Nachweisgrenze. */
+    if(typeof LangzeitKern!=='undefined'&&h&&rec&&rec.startedAt){
+      const ms=State.recsFor(h.id).map(r=>Baseline.lzMessung(r)).filter(Boolean), t=new Date(rec.startedAt).getTime();
+      const v=Baseline.lzVerlauf(ms,t), r=v.heute;
+      if(v.episode!=='darunter'||!r||r.aenderungPct==null) return null;
+      const pct=Math.round(-r.aenderungPct);
+      return {level:'warn',ratio:1+r.aenderungPct/100,pct,eigen:true,text:`Ruhe-RMSSD der letzten 7 Tage ${pct} % unter den 28 Tagen davor, an 3 Tagen in Folge (Nachweisgrenze −${Math.round(r.grenzeUntenPct)} %, ${r.nAktuell} + ${r.nBasis} Messtage)`};
+    }
     const b=this.basisHerkunft(h), rm=rec&&rec.metrics?rec.metrics.rmssd:null;
     if(!b||rm==null) return null;
     const base=b.wert, ratio=rm/base, pct=Math.round((1-ratio)*100);
@@ -4514,11 +4527,26 @@ const Baseline={
   wert(h,bis){ const b=this.fuer(h,bis); return b?b.wert:null; },
   /* Aufnahme → Messung für langzeit-kern.js. Ruhe = Ruhewerte vorhanden und nicht „nach Bewegung“; ohne
      Artefaktangabe zählt 0 % (ältere Exporte tragen sie nicht); unkorrigiertes RMSSD zählt nicht. */
+  /* Offenlegung (Equine 26.11.): Basistage, an denen eine zählende Aufnahme keine Angabe zum Störanteil trug.
+     Unbekannt zählt rechnerisch als 0 %, darf aber nicht still als „sauber“ gelten. */
+  lzUnbekannt(ms, heuteMs){
+    const K=LangzeitKern, P=K.PROFIL.pferd, t0=K.ortsTag(heuteMs), tage=new Set();
+    for(const x of ms){ if(!x||!x.stoerUnbekannt) continue; const v=t0-K.ortsTag(x.zeitMs);
+      if(v>=1&&v<=K.EINZEL.basisTage&&x.ruhe&&x.dauerSek>=P.mindestDauerSek&&x.stoerPct<=P.maxStoerPct&&x.rmssdMs>0) tage.add(v); }
+    return tage.size;
+  },
+  /* Verlauf wie die Langzeitkarte der App: rechnen() je Kalendertag (7 gegen 28 Tage), Episode = hinweis(Verlauf, 3). */
+  lzVerlauf(ms, heuteMs){
+    const K=LangzeitKern, verlauf=[]; let heute=null;
+    const tagEnde=ms0=>{ const x=new Date(ms0); x.setHours(23,59,59,999); return x.getTime(); };
+    for(let d=2;d>=0;d--){ const h=d?tagEnde(heuteMs-d*864e5):heuteMs, r=K.rechnen(ms.filter(x=>x.zeitMs<=h),h); verlauf.push(r.lage); if(d===0) heute=r; }
+    return {heute, episode:K.hinweis(verlauf,3)};
+  },
   lzMessung(r){
     const m=r&&r.metrics; if(!m||!(m.rmssd>0)) return null;
     if(m.provenance&&/uncorrected$/.test(String(m.provenance.rmssd))) return null;
     const ruhe=!m.ohneRuhe&&!(r.kontext&&r.kontext.vorbedingung==='nach_bewegung');
-    return {zeitMs:new Date(r.startedAt).getTime(), rmssdMs:m.rmssd, dauerSek:r.durationSec!=null?r.durationSec:0, stoerPct:m.artifactPct!=null?m.artifactPct:0, ruhe};
+    return {zeitMs:new Date(r.startedAt).getTime(), rmssdMs:m.rmssd, dauerSek:r.durationSec!=null?r.durationSec:0, stoerPct:m.artifactPct!=null?m.artifactPct:0, ruhe, stoerUnbekannt:m.artifactPct==null};
   },
   /* Nach jedem Laden: die Dringlichkeit jeder Aufnahme gegen die Baseline
      IHRES Zeitpunkts neu beurteilen (nur im Speicher). Die beim Import
@@ -4541,7 +4569,7 @@ const Baseline={
         let base=null, eigen=false;
         if(n>=this.MIN){ base=sum/n; eigen=true; } else if(h&&h.baselineRMSSD) base=h.baselineRMSSD;
         let einzel=null;
-        if(lz&&recs[i].metrics){ const bis=[]; for(let j=0;j<recs.length&&t[j]<=t[i];j++) if(lz[j]) bis.push(lz[j]); try{ einzel=LangzeitKern.einzel(bis,t[i]); }catch(_){ einzel=null; } }
+        if(lz&&recs[i].metrics){ const bis=[]; for(let j=0;j<recs.length&&t[j]<=t[i];j++) if(lz[j]) bis.push(lz[j]); try{ einzel=LangzeitKern.einzel(bis,t[i]); if(einzel) einzel.ohneAngabe=this.lzUnbekannt(bis,t[i]); }catch(_){ einzel=null; } }
         if(recs[i].metrics) recs[i].triage=Triage.score({metrics:recs[i].metrics,clinical:recs[i].clinical,durationSec:recs[i].durationSec,
           baselineRMSSD:base, baselineEigen:eigen, baselineN:n, baselineHR:(eigen&&hn>=this.MIN)?hs/hn:null, einzel, lzGeeignet:!!(lz&&lz[i]&&LangzeitKern.tageswerte([lz[i]]).length)});
         const m=recs[i].metrics||{}; const v=m.rmssd; if(v>0){sum+=v;sq+=v*v;n++;} if(m.meanHR>0){hs+=m.meanHR;hn++;}
