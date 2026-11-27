@@ -5,8 +5,9 @@
 (function (wurzel) {
   'use strict';
   const PROFIL = {
-    pferd:  { name: 'pferd-v2', mindestDauerSek: 300, maxStoerPct: 5, tageAktuell: 7, mindestAktuell: 3, tageBasis: 28, mindestBasis: 14, sigma0: 0.30, kSchrumpf: 3, sTech: 0.03, rhoMax: 0.7 },
-    mensch: { name: 'mensch-v2-vorlaeufig', mindestDauerSek: 60, maxStoerPct: 5, tageAktuell: 7, mindestAktuell: 3, tageBasis: 28, mindestBasis: 14, sigma0: 0.30, kSchrumpf: 3, sTech: 0.02, rhoMax: 0.7 },
+    // 27.11.2026 R&D EQ-EPISODE Rang 1 (algorithmen-pruefstand c4bbcc5): 14 gegen 56 Tage, ohne Schrumpfung, Hinweis ab 1,9·Grenze am selben Tag.
+    pferd:  { name: 'pferd-v3', mindestDauerSek: 300, maxStoerPct: 5, tageAktuell: 14, mindestAktuell: 3, tageBasis: 56, mindestBasis: 14, sigma0: 0.30, kSchrumpf: 0, sTech: 0.03, rhoMax: 0.7, hinweisFaktor: 1.9 },
+    mensch: { name: 'mensch-v2-vorlaeufig', mindestDauerSek: 60, maxStoerPct: 5, tageAktuell: 7, mindestAktuell: 3, tageBasis: 28, mindestBasis: 14, sigma0: 0.30, kSchrumpf: 3, sTech: 0.02, rhoMax: 0.7, hinweisFaktor: 1 },
   };
   const ortsTag = ms => { const d = new Date(ms); return Math.round(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()) / 864e5); };
   const mittel = x => x.reduce((a, b) => a + b, 0) / Math.max(1, x.length);
@@ -47,9 +48,10 @@
     let varD = 0; for (const [di, ci] of tage) for (const [dj, cj] of tage) varD += ci * cj * Math.pow(rho, Math.abs(di - dj));
     const dMin = tQuantil975(Math.max(1, nB2 - 1)) * sEff * Math.sqrt(Math.max(0, varD));
     const grenze = Math.max(dMin, 0.5 * sEff), d = ma - mb;
-    const lage = d > grenze ? 'darueber' : (d < -grenze ? 'darunter' : 'innerhalb');
+    const schwelle = (P.hinweisFaktor ?? 1) * grenze;
+    const lage = d > schwelle ? 'darueber' : (d < -schwelle ? 'darunter' : 'innerhalb');
     return { lage, tageswerte: tw, nAktuell: akt.length, nBasis: bas.length, rho, aenderungPct: (Math.exp(d) - 1) * 100,
-             grenzeUntenPct: (1 - Math.exp(-grenze)) * 100, grenzeObenPct: (Math.exp(grenze) - 1) * 100, sEff };
+             grenzeUntenPct: (1 - Math.exp(-schwelle)) * 100, grenzeObenPct: (Math.exp(schwelle) - 1) * 100, sEff, dLn: d, grenzeLn: grenze };
   }
   function hinweis(verlauf, k = 3) {
     const b = verlauf.filter(l => l === 'innerhalb' || l === 'darueber' || l === 'darunter').slice(-k);
