@@ -56,8 +56,8 @@
     if (b.length !== k || b[0] === 'innerhalb' || !b.every(l => l === b[0])) return null; return b[0];
   }
   /* Einzelaufnahme gegen eigene Basis (R&D-Rangtabelle EQ-EINZEL, Sieger: einseitiges t-Vorhersageintervall, α 3 %).
-     Gleich EquineLangzeitV2.einzel (Swift). Basis = Tageswerte [heute − 60 d, heute), n ≥ 3. */
-  const EINZEL = { alpha: 0.03, basisTage: 60, mindestBasis: 3 };
+     Gleich EquineLangzeitV2.einzel (Swift). Basis = Tageswerte [heute − 60 d, heute), n ≥ 10. */
+  const EINZEL = { alpha: 0.03, basisTage: 60, mindestBasis: 10 };   // 27.11.2026 R&D EQ-EINZEL-N
   function lgamma(x) { const c = [76.18009172947146, -86.50532032941677, 24.01409824083091, -1.231739572450155, 0.1208650973866179e-2, -0.5395239384953e-5];
     let y = x, t = x + 5.5; t -= (x + 0.5) * Math.log(t); let s = 1.000000000190015; for (const ci of c) { y += 1; s += ci / y; } return -t + Math.log(2.5066282746310005 * s / x); }
   function betacf(a, b, x) { const qab = a + b, qap = a + 1, qam = a - 1; let c = 1, d = 1 - qab * x / qap; if (Math.abs(d) < 1e-300) d = 1e-300; d = 1 / d; let h = d;
