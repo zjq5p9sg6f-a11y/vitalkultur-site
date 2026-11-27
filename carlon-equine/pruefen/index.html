@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self'; base-uri 'none'; form-action 'none'">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="referrer" content="no-referrer">
+<meta name="robots" content="noindex">
+<title>Bericht prüfen · CARLON Equine</title>
+<link rel="stylesheet" href="pruefen.css">
+</head>
+<body>
+<main>
+  <p class="eyebrow">CARLON EQUINE · HERKUNFTSSIEGEL</p>
+  <h1 data-t="titel">Bericht prüfen</h1>
+  <p data-t="intro">Wählen Sie einen Bericht (HTML) oder Export (JSON) aus der CARLON Equine Visite. Die Prüfung läuft nur in diesem Browser, die Datei verlässt Ihr Gerät nicht.</p>
+  <label class="datei"><span data-t="waehlen">Datei wählen</span><input type="file" id="datei" accept=".html,.htm,.json,text/html,application/json"></label>
+  <section id="ergebnis" hidden aria-live="polite">
+    <p id="stufe" class="stufe"></p>
+    <p id="grund" class="grund"></p>
+    <div id="daten" hidden>
+      <h2 data-t="datenT">Signierte Messwerte</h2>
+      <p class="hinweis" data-t="datenH">Neu dargestellt aus dem signierten Datenblock, nicht aus der Ansicht des Berichts.</p>
+      <dl id="felder"></dl>
+      <table><thead><tr><th data-t="kennwert">Kennwert</th><th data-t="wert">Wert</th></tr></thead><tbody id="kw"></tbody></table>
+    </div>
+  </section>
+  <p class="fuss" data-t="fuss">Kein Medizinprodukt, keine Diagnose. Geprüft werden Herkunft und Unverändertheit, nicht die Messung selbst.</p>
+  <p class="sprache"><a href="?lang=de">DE</a> · <a href="?lang=en">EN</a></p>
+</main>
+<script src="../app/siegel.js"></script>
+<script src="pruefen.js"></script>
+</body>
+</html>
