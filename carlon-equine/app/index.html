@@ -13276,10 +13276,15 @@ const Logbook={
    SEED loader
    ════════════════════════════════════════════════════════════════════════ */
 const Seed={
+  /* Zuordnung der Demo-Befunde über den Namen: „Sample horse“ (EN) ist dasselbe Pferd wie „Beispielpferd“. */
+  nameKey(n){ const k=String(n||'').toLowerCase(); return k==='sample horse'?'beispielpferd':k; },
   async load(){
     if(!window.CARLON_SEED){Toast.show('Seed-Bibliothek nicht gefunden','warn');return;}
     let cnt=0;
-    for(const s of window.CARLON_SEED){
+    /* Beispielpferd je Sprache benannt wie in der App (sampleName(de:), F1127-097, 27.11.2026). */
+    const en=typeof Sprache!=='undefined'&&Sprache.cur==='en';
+    for(const s0 of window.CARLON_SEED){
+      const s=en&&s0.raw&&s0.raw.subject&&s0.raw.subject.nameAtTime==='Beispielpferd'?{...s0,raw:{...s0.raw,subject:{...s0.raw.subject,nameAtTime:'Sample horse'}}}:s0;
       const n=Normalizer.normalize(s.raw);
       // Besitzer/Standort aus Seed
       n._seed=s; const r=await Importer.ingest(n); if(!r.dup)cnt++;
@@ -13474,7 +13479,7 @@ const Seed={
     const map=[['beispielpferd',{triggered:true,severity:'low',criteriaMet:2,criteriaTotal:5,indicators:{sd2_sd1_ratio_low:true,sd2_low:true,rmssd_low:false,sdnn_low:false}}],
       ['stardust',{triggered:true,severity:'moderate',criteriaMet:4,criteriaTotal:5,indicators:{sd2_sd1_ratio_low:true,sd2_low:true,rmssd_low:true,sdnn_low:true}}]];
     for(const [name,screen] of map){
-      const h=State.horses.find(x=>(x.name||'').toLowerCase().includes(name));if(!h)continue;
+      const h=State.horses.find(x=>Seed.nameKey(x.name).includes(name));if(!h)continue;
       for(const r of State.recsFor(h.id)){r.clinical={...(r.clinical||{}),asthma:screen};await DB.put('recordings',r);}
     }
   },
@@ -13500,7 +13505,7 @@ const Seed={
       {match:'comet',drift:[1.04,0.96,1.02,1.0],gap:8},
     ];
     for(const st of stories){
-      const h=State.horses.find(x=>(x.name||'').toLowerCase().includes(st.match));
+      const h=State.horses.find(x=>Seed.nameKey(x.name).includes(st.match));
       if(!h)continue;const base=State.latestFor(h.id);if(!base)continue;
       const baseDate=new Date(base.startedAt||Date.now());const gap=st.gap||9;
       for(let i=0;i<st.drift.length-1;i++){
