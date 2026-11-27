@@ -1,5 +1,5 @@
 Patientennr;Tiername;Rasse;Besitzer Vorname;Besitzer Nachname;Straße;PLZ;Ort;Mobil;Chipnummer;Bemerkung
-10234;Mistral;Hannoveraner;Anna;Muster;Hofweg 3;12345;Musterstadt;+49 170 0000001;276098106543210;Beispieldaten
+10234;Beispielpferd;Hannoveraner;Anna;Muster;Hofweg 3;12345;Musterstadt;+49 170 0000001;276098106543210;Beispieldaten
 10235;Lotte;Haflinger;Anna;Muster;Hofweg 3;12345;Musterstadt;+49 170 0000001;276098106543211;Beispieldaten
 10236;Sunny;Trakehner;Ben;Beispiel;Am Feld 7;12346;Beispieldorf;+49 170 0000002;276098106543212;Beispieldaten
 10237;Fino;Pony;Clara;Probe;Weide 1;12347;Probehausen;+49 170 0000003;;Beispieldaten

@@ -23,7 +23,7 @@
   "hinweis_zu_B": "B ist mit dem Code-Stand vom 14.08.2026 nachgerechnet. Die Zahl in der Exportdatei selbst stammt vom Aufnahmetag; bei der 1h47-Aufnahme weicht sie um 0,006 ms ab, weil die Ausschlussmenge heute 197 statt 195 Schlaege umfasst — der Klassifikator hat sich seitdem bewegt.",
   "aufnahmen": [
     {
-      "datei": "CARLON_MISTRAL_HRV-Session_2026-05-24T16-04-52Z_1m_n56.json",
+      "datei": "CARLON_PARTNERPFERD_HRV-Session_2026-05-24T16-04-52Z_1m_n56.json",
       "sha256_16": "dfadc29890718ed7",
       "n": 56,
       "A_roh": 21.394, "B_schlagzeile_app": 21.394, "C_droppair_vollstaendig": 21.394,
@@ -31,7 +31,7 @@
       "port_gleich_swift": true
     },
     {
-      "datei": "CARLON_MISTRAL_HRV-Session_2026-07-04T20-25-38Z_9m_n642.json",
+      "datei": "CARLON_PARTNERPFERD_HRV-Session_2026-07-04T20-25-38Z_9m_n642.json",
       "sha256_16": "f41d0b0eb1a2606c",
       "n": 642,
       "A_roh": 55.5266, "B_schlagzeile_app": 24.1591, "C_droppair_vollstaendig": 24.1591,
@@ -39,7 +39,7 @@
       "port_gleich_swift": true
     },
     {
-      "datei": "CARLON_MISTRAL_HRV-Session_2026-07-06T11-40-19Z_21m_n1738.json",
+      "datei": "CARLON_PARTNERPFERD_HRV-Session_2026-07-06T11-40-19Z_21m_n1738.json",
       "sha256_16": "3f87bf304206499a",
       "n": 1738,
       "A_roh": 23.0546, "B_schlagzeile_app": 18.2734, "C_droppair_vollstaendig": 8.084,
@@ -47,7 +47,7 @@
       "port_gleich_swift": true
     },
     {
-      "datei": "CARLON_MISTRAL_HRV-Session_2026-07-15T16-57-31Z_1h47m_n10965.json",
+      "datei": "CARLON_PARTNERPFERD_HRV-Session_2026-07-15T16-57-31Z_1h47m_n10965.json",
       "sha256_16": "821086ccf1379cc1",
       "n": 10965,
       "A_roh": 24.4383, "B_schlagzeile_app": 17.5536, "C_droppair_vollstaendig": 8.4003,

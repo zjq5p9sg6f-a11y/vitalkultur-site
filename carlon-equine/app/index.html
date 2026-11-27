@@ -4157,7 +4157,7 @@ const Normalizer = {
       avBlock: num(eq.avBlockCount) ?? num(q.avBlockCount) ?? 0,
       motion: eq.motionContext||sess.intent||null,
     };
-    /* HERKUNFT JEDER KENNZAHL — an echten Aufnahmen gemessen (Mistral,
+    /* HERKUNFT JEDER KENNZAHL — an echten Aufnahmen gemessen (Partnerpferd,
        12j Hannoveraner): der Rueckfall auf die Rohserie ueberschaetzt RMSSD
        um bis zu 130 % (9-min-Aufnahme: 24,2 ms artefaktkorrigiert gegen
        55,5 ms roh), weil beim Pferd der physiologische AV-Block 2. Grades
@@ -11871,7 +11871,7 @@ const Bestand={
   },
   vorlage(){
     const t='﻿Pferd;Halterin;Telefon;Stall;Straße;PLZ;Ort;Rasse;Patienten-Nr.;UELN;Mikrochip\r\n'
-           +'Mistral;Anna Muster;+49 170 1234567;Reitstall Musterhof;Hofweg 3;12345;Musterstadt;Hannoveraner;10234;276098765432109;276098106543210\r\n';
+           +'Beispielpferd;Anna Muster;+49 170 1234567;Reitstall Musterhof;Hofweg 3;12345;Musterstadt;Hannoveraner;10234;276098765432109;276098106543210\r\n';
     const a=document.createElement('a'); a.href=URL.createObjectURL(new Blob([t],{type:'text/csv;charset=utf-8'}));
     a.download='CARLON-Bestand-Vorlage.csv'; document.body.appendChild(a); a.click(); a.remove();
   },
@@ -13471,7 +13471,7 @@ const Seed={
     return out;
   },
   async synthAsthma(){
-    const map=[['mistral',{triggered:true,severity:'low',criteriaMet:2,criteriaTotal:5,indicators:{sd2_sd1_ratio_low:true,sd2_low:true,rmssd_low:false,sdnn_low:false}}],
+    const map=[['beispielpferd',{triggered:true,severity:'low',criteriaMet:2,criteriaTotal:5,indicators:{sd2_sd1_ratio_low:true,sd2_low:true,rmssd_low:false,sdnn_low:false}}],
       ['stardust',{triggered:true,severity:'moderate',criteriaMet:4,criteriaTotal:5,indicators:{sd2_sd1_ratio_low:true,sd2_low:true,rmssd_low:true,sdnn_low:true}}]];
     for(const [name,screen] of map){
       const h=State.horses.find(x=>(x.name||'').toLowerCase().includes(name));if(!h)continue;
@@ -13486,7 +13486,7 @@ const Seed={
   async synthHistory(){
     // Für 3 Pferde einen 4-Punkte-Verlauf erzeugen (verbessernd/verschlechternd/stabil)
     const stories=[
-      {match:'mistral',drift:[0.7,0.8,0.9,1.0]},   // Asthma: Erholung
+      {match:'beispielpferd',drift:[0.7,0.8,0.9,1.0]},   // Asthma: Erholung
       {match:'tempest',drift:[1.6,1.3,1.1,1.0]},   // Kolik: Verschlechterung bis heute
       {match:'champion',drift:[0.95,1.02,0.98,1.0]},// Senior: stabil
       // VORZEIGE-PFERD: reiche 8-Punkt-Historie über 28 Tage — gesunde Baseline → kritischer Abfall.
