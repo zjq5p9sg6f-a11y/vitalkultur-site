@@ -9456,14 +9456,14 @@ const Versiegeln={
     return JSON.stringify(await Siegel.jsonVersiegeln(o,await this.opt()),null,2); }catch(_){ return text; } },
   async html(h){ try{ return typeof Siegel==='undefined'?h:await Siegel.htmlVersiegeln(h,await this.opt()); }catch(_){ return h; } },
   /* Anzeige des Prüfergebnisses, eine Stelle für Import-Vorschau und Akte */
-  TEXT:{geprueft:['Herkunft geprüft','Origin verified'],nichtLizenziert:['Herkunft nicht lizenziert','Origin not licensed'],veraendert:['Nach dem Export verändert','Changed after export'],unlesbar:['Herkunftssiegel ungültig','Origin seal invalid'],ohneSiegel:['Ohne Herkunftssiegel','No origin seal']},
-  GRUND:{'Ohne Lizenz exportiert':'exported without a licence','Lizenz nicht von CARLON ausgestellt':'licence not issued by CARLON','Kein Laufzeit-Schlüssel':'not a runtime licence',
-    'Lizenz gehört zu einer anderen Praxis':'licence belongs to another practice','Lizenz ohne Praxisbindung':'licence not bound to a practice','Lizenz war zum Exportzeitpunkt nicht gültig':'licence was not valid at export time',
-    'Inhalt wurde nach dem Export verändert':'content was changed after export','Signatur des Siegels ungültig':'seal signature invalid','Siegel unvollständig':'seal incomplete','Siegel unlesbar':'seal unreadable','Kein Herkunftssiegel':'no origin seal'},
+  TEXT:{geprueft:['Herkunft geprüft','Origin verified'],nichtLizenziert:['Lizenznachweis nicht bestätigt','Licence proof not confirmed'],veraendert:['Inhalt passt nicht zum Siegel','Content does not match the seal'],unlesbar:['Herkunftssiegel ungültig','Origin seal invalid'],ohneSiegel:['Ohne Herkunftssiegel','No origin seal']},
+  GRUND:{'Siegel enthält keinen Lizenznachweis':'seal carries no licence proof','Lizenz nicht von CARLON ausgestellt':'licence not issued by CARLON','Kein Laufzeit-Schlüssel':'not a runtime licence',
+    'Lizenz passt nicht zum Schlüssel des Siegels':'licence does not match the seal key','Lizenz ohne Praxisbindung':'licence not bound to a practice','Lizenz deckt das angegebene Exportdatum nicht ab':'licence does not cover the stated export date',
+    'Inhalt weicht vom versiegelten Stand ab':'content differs from the sealed version','Signatur des Siegels ungültig':'seal signature invalid','Siegel unvollständig':'seal incomplete','Siegel unlesbar':'seal unreadable','Kein Herkunftssiegel':'no origin seal'},
   zeile(e){ if(!e) return ''; const en=typeof Sprache!=='undefined'&&Sprache.cur==='en', d=e.zeit?new Date(e.zeit*1000).toLocaleDateString(en?'en-GB':'de-DE'):'';
     const t=this.TEXT[e.stufe]||[e.stufe,e.stufe], st=e.tier&&License.TIERS[e.tier]?' ('+License.TIERS[e.tier].name+')':'';
-    if(e.stufe==='geprueft') return en?`${t[1]}: ${e.praxis||'practice'}${st}${d?', exported '+d:''}`:`${t[0]}: ${e.praxis||'Praxis'}${st}${d?', exportiert am '+d:''}`;
-    return en?`${t[1]}: ${this.GRUND[e.grund]||e.grund}${d?' (export date '+d+')':''}`:`${t[0]}: ${e.grund}${d?' (Exportdatum '+d+')':''}`; }
+    if(e.stufe==='geprueft') return en?`${t[1]}: ${e.praxis||'practice'}${st}${d?', export date stated by sender '+d:''}`:`${t[0]}: ${e.praxis||'Praxis'}${st}${d?', Exportdatum laut Absender '+d:''}`;
+    return en?`${t[1]}: ${this.GRUND[e.grund]||e.grund}${d?' (export date stated by sender '+d+')':''}`:`${t[0]}: ${e.grund}${d?' (Exportdatum laut Absender '+d+')':''}`; }
 };
 const Export={
   name(r){ const h=State.horses.find(x=>x.id===r.horseId)||{}; return ((h.name||'Pferd').replace(/[^\p{L}\p{N}_-]+/gu,'-'))+'_'+(r.startedAt||'').slice(0,10); },

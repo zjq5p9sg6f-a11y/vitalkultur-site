@@ -28,6 +28,7 @@ const daten = { schema: { name: 'carlon_equine_v1' }, metrics: { rmssd: 42.5, me
 const html = '<!doctype html><html><head><title>Bericht</title></head><body><h1>Bericht Bella</h1><p>RMSSD 42,5 ms</p></body></html>';
 const opt = (p, l) => ({ signKey: p.k.privateKey, signPubRoh: p.roh, lizenz: l });
 
+// Siegel v2: Lizenz nach dem Signieren getauscht → Signatur ungültig („unlesbar“), in v1 erst „nichtLizenziert“. Nie „geprueft“.
 const faelle = [];
 const fall = (name, soll, ist) => faelle.push({ name, soll, ist: ist.stufe, grund: ist.grund, praxis: ist.praxis });
 fall('echt JSON', 'geprueft', await S.jsonPruefen(await S.jsonVersiegeln(daten, opt(A, licA)), PUB));
@@ -40,12 +41,15 @@ fall('Lizenz zum Exportzeitpunkt abgelaufen', 'nichtLizenziert', await S.jsonPru
 { const v = await S.jsonVersiegeln(daten, opt(A, licA)); v.metrics = { ...v.metrics, rmssd: 21.0 }; fall('JSON nach Export verändert', 'veraendert', await S.jsonPruefen(v, PUB)); }
 { const v = (await S.htmlVersiegeln(html, opt(A, licA))).replace('42,5', '21,0'); fall('HTML nach Export verändert', 'veraendert', await S.htmlPruefen(v, PUB)); }
 { const v = await S.jsonVersiegeln(daten, opt(A, licA)); delete v.carlonSiegel; fall('Siegel entfernt', 'ohneSiegel', await S.jsonPruefen(v, PUB)); }
-{ const v = await S.jsonVersiegeln(daten, opt(A, licA)); v.carlonSiegel = { ...v.carlonSiegel, lizenz: licFake }; fall('Lizenz im Siegel ausgetauscht', 'nichtLizenziert', await S.jsonPruefen(v, PUB)); }
+{ const v = await S.jsonVersiegeln(daten, opt(A, licA)); v.carlonSiegel = { ...v.carlonSiegel, lizenz: licFake }; fall('Lizenz im Siegel ausgetauscht', 'unlesbar', await S.jsonPruefen(v, PUB)); }
 { const v = await S.jsonVersiegeln(daten, opt(H, null)); const s = await S.jsonVersiegeln(daten, opt(A, licA));
-  v.carlonSiegel = { ...v.carlonSiegel, lizenz: licA }; fall('Hacker setzt A-Lizenz in eigenes Siegel', 'nichtLizenziert', await S.jsonPruefen(v, PUB));
+  v.carlonSiegel = { ...v.carlonSiegel, lizenz: licA }; fall('Hacker setzt A-Lizenz in eigenes Siegel', 'unlesbar', await S.jsonPruefen(v, PUB));
   const w = { ...s, carlonSiegel: { ...s.carlonSiegel, pk: b64u(H.roh) } }; fall('Hacker setzt eigenen Schlüssel in A-Siegel', 'unlesbar', await S.jsonPruefen(w, PUB)); }
 { const v = await S.jsonVersiegeln(JSON.parse(JSON.stringify(await S.jsonVersiegeln(daten, opt(A, licA)))), opt(B, licA)); fall('B versiegelt A-Export neu mit A-Lizenz', 'nichtLizenziert', await S.jsonPruefen(v, PUB)); }
 { const v = JSON.parse(JSON.stringify(await S.jsonVersiegeln(daten, opt(A, licA)))); fall('echt nach Speichern und Laden (Text)', 'geprueft', await S.jsonPruefen(v, PUB)); }
+// Lizenz ist mitsigniert (Perplexity-Kreis 27.11.: „Exportsignatur muss die konkret verwendete Lizenz mitbinden“):
+{ const v = await S.jsonVersiegeln(daten, opt(A, null)); v.carlonSiegel = { ...v.carlonSiegel, lizenz: licA }; fall('Lizenz nachträglich in lizenzloses A-Siegel gesetzt', 'unlesbar', await S.jsonPruefen(v, PUB)); }
+{ const v = await S.jsonVersiegeln(daten, opt(A, licAlt)); v.carlonSiegel = { ...v.carlonSiegel, lizenz: licA }; fall('A-Lizenz gegen andere A-Lizenz getauscht', 'unlesbar', await S.jsonPruefen(v, PUB)); }
 
 let rot = 0;
 for (const f of faelle) { const ok = f.soll === f.ist; if (!ok) rot++; console.log(`${ok ? '✓' : '✗'} ${f.name}: ${f.ist}${f.praxis ? ' (' + f.praxis + ')' : ''} · ${f.grund}${ok ? '' : '  SOLL ' + f.soll}`); }

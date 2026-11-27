@@ -17,19 +17,23 @@
      · Eine zahlende Praxis gibt ihre Sicherung samt Schlüssel weiter → das Siegel nennt die zahlende Praxis.
    Grenze: Eine gekündigte Praxis kann mit ihrer letzten Lizenz weiter siegeln, wenn sie die Exportzeit in deren
    Laufzeit zurückdatiert. Der Empfänger sieht dann ein altes Exportdatum. Keine Pferdedaten verlassen das Gerät.
+   v2 (27.11.2026, Perplexity-Kreis Fable): signiert wird `carlon-siegel-v2.<Inhalts-Hash>.<Zeit>.<Hash der Lizenz>`,
+   damit die beigelegte Lizenz weder getauscht noch nachträglich eingesetzt werden kann. Anzeige sachlich (§ 824 BGB):
+   „Lizenznachweis nicht bestätigt“ statt „nicht lizenziert“, Exportdatum immer „laut Absender“.
    Formate: JSON → Feld `carlonSiegel` (zuletzt), Hash über JSON.stringify ohne das Feld.
             HTML → <script type="application/carlon-siegel+json" id="carlon-siegel">…</script> vor </body>,
             Hash über den Text ohne dieses Element. */
 (function (wurzel) {
   'use strict';
-  const V = 1, KULANZ_S = 14 * 86400;                    // Kulanz wie License: abgelaufen, aber nie abgesagt
+  const V = 2, KULANZ_S = 14 * 86400;                    // Kulanz wie License: abgelaufen, aber nie abgesagt
   const HTML_RE = /<script type="application\/carlon-siegel\+json" id="carlon-siegel">([\s\S]*?)<\/script>\n?/;
   const enc = new TextEncoder();
   const b64u = b => { const u = new Uint8Array(b); let s = ''; for (let i = 0; i < u.length; i++) s += String.fromCharCode(u[i]); return btoa(s).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, ''); };
   const unb64u = s => { s = String(s).replace(/-/g, '+').replace(/_/g, '/'); while (s.length % 4) s += '='; const b = atob(s), u = new Uint8Array(b.length); for (let i = 0; i < b.length; i++) u[i] = b.charCodeAt(i); return u; };
   const sha = async t => b64u(await crypto.subtle.digest('SHA-256', enc.encode(t)));
   const fingerabdruck = async rohPub => b64u((await crypto.subtle.digest('SHA-256', rohPub)).slice(0, 16));
-  const nachricht = (h, zeit) => enc.encode(`carlon-siegel-v${V}.${h}.${zeit}`);
+  /* v2 (27.11.2026): die beigelegte Lizenz ist mitsigniert (Hash), sonst ließe sie sich austauschen oder nachträglich einsetzen. */
+  const nachricht = (h, zeit, lh) => enc.encode(`carlon-siegel-v${V}.${h}.${zeit}.${lh}`);
 
   /* Lizenz lesen und prüfen (dieselbe Regel wie License.verify, hier ohne Zeitwächter, weil der Exportzeitpunkt zählt). */
   async function lizenzLesen(key, pubJwk) {
@@ -47,7 +51,7 @@
      öffentlicher Teil (raw). lizenz: der aktuelle Laufzeit-Lizenzschlüssel (String) oder null. */
   async function siegelFuer(inhaltOhne, { signKey, signPubRoh, lizenz, zeit }) {
     const z = Math.floor(zeit != null ? zeit : Date.now() / 1000), h = await sha(inhaltOhne);
-    const sig = await crypto.subtle.sign({ name: 'ECDSA', hash: 'SHA-256' }, signKey, nachricht(h, z));
+    const sig = await crypto.subtle.sign({ name: 'ECDSA', hash: 'SHA-256' }, signKey, nachricht(h, z, await sha(lizenz || '')));
     return { v: V, zeit: z, h, pk: b64u(signPubRoh), sig: b64u(sig), lizenz: lizenz || null };
   }
 
@@ -74,15 +78,15 @@
       if (s.v !== V || !s.pk || !s.sig || !s.h || typeof s.zeit !== 'number') return { stufe: 'unlesbar', grund: 'Siegel unvollständig' };
       const roh = unb64u(s.pk);
       const pub = await crypto.subtle.importKey('raw', roh, { name: 'ECDSA', namedCurve: 'P-256' }, false, ['verify']);
-      if (!await crypto.subtle.verify({ name: 'ECDSA', hash: 'SHA-256' }, pub, unb64u(s.sig), nachricht(s.h, s.zeit)))
+      if (!await crypto.subtle.verify({ name: 'ECDSA', hash: 'SHA-256' }, pub, unb64u(s.sig), nachricht(s.h, s.zeit, await sha(s.lizenz || ''))))
         return { stufe: 'unlesbar', grund: 'Signatur des Siegels ungültig' };
       const zeit = s.zeit;
-      if (await sha(inhaltOhne) !== s.h) return { stufe: 'veraendert', grund: 'Inhalt wurde nach dem Export verändert', zeit };
+      if (await sha(inhaltOhne) !== s.h) return { stufe: 'veraendert', grund: 'Inhalt weicht vom versiegelten Stand ab', zeit };
       const l = s.lizenz ? await lizenzLesen(s.lizenz, pubJwk) : null;
-      if (!l) return { stufe: 'nichtLizenziert', grund: s.lizenz ? 'Lizenz nicht von CARLON ausgestellt' : 'Ohne Lizenz exportiert', zeit };
+      if (!l) return { stufe: 'nichtLizenziert', grund: s.lizenz ? 'Lizenz nicht von CARLON ausgestellt' : 'Siegel enthält keinen Lizenznachweis', zeit };
       if (l.typ && l.typ !== 'lic') return { stufe: 'nichtLizenziert', grund: 'Kein Laufzeit-Schlüssel', zeit };
-      if (l.pk !== await fingerabdruck(roh)) return { stufe: 'nichtLizenziert', grund: l.pk ? 'Lizenz gehört zu einer anderen Praxis' : 'Lizenz ohne Praxisbindung', zeit };
-      if (zeit < (l.iat || 0) - 3600 || zeit > l.exp + KULANZ_S) return { stufe: 'nichtLizenziert', grund: 'Lizenz war zum Exportzeitpunkt nicht gültig', zeit };
+      if (l.pk !== await fingerabdruck(roh)) return { stufe: 'nichtLizenziert', grund: l.pk ? 'Lizenz passt nicht zum Schlüssel des Siegels' : 'Lizenz ohne Praxisbindung', zeit };
+      if (zeit < (l.iat || 0) - 3600 || zeit > l.exp + KULANZ_S) return { stufe: 'nichtLizenziert', grund: 'Lizenz deckt das angegebene Exportdatum nicht ab', zeit };
       return { stufe: 'geprueft', grund: 'Herkunft geprüft', praxis: l.lic || '', tier: l.tier || '', zeit };
     } catch (e) { return { stufe: 'unlesbar', grund: 'Siegel unlesbar' }; }
   }
