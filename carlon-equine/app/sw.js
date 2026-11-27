@@ -2,7 +2,7 @@
    App-Shell wird precached; Fonts & Leaflet lokal gebündelt (assets/) — keine externen CDNs,
    sodass die App nach dem ersten Online-Start vollständig offline läuft.
    Gesundheitsdaten liegen in IndexedDB — der SW cached nur Programm-Assets. */
-const VERSION = 'carlon-clinic-20261127-siegel2';
+const VERSION = 'carlon-clinic-20261127-siegel3';
 /* ACHTUNG: JEDE Datei in CORE wird ausgeliefert, bis VERSION sich aendert.
    Zweimal in dieser Nacht passiert — einmal beim Livegang-Schalter, einmal bei
    krypto.js: Datei geaendert, Version vergessen, und der Browser lieferte
@@ -201,11 +201,14 @@ function einstellungen(db, schreiben) {
   });
 }
 
-async function praxisFp(daten) {
-  try { const p = daten && daten.praxisIdentitaet; if (!p || !p.signPub) return undefined;
-    let s = p.signPub.replace(/-/g, '+').replace(/_/g, '/'); while (s.length % 4) s += '=';
-    const roh = Uint8Array.from(atob(s), c => c.charCodeAt(0)), h = new Uint8Array(await crypto.subtle.digest('SHA-256', roh)).slice(0, 16);
-    let b = ''; for (const x of h) b += String.fromCharCode(x); return btoa(b).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+/* Besitznachweis für den Praxisschlüssel (Herkunftssiegel, 27.11.2026), gleiche Rechenvorschrift wie License.praxisBeweis */
+async function praxisBeweis(daten, bindung) {
+  try { const p = daten && daten.praxisIdentitaet; if (!p || !p.sign || !p.signPub) return undefined;
+    const u = b => { let t = ''; for (const x of new Uint8Array(b)) t += String.fromCharCode(x); return btoa(t).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, ''); };
+    const key = await crypto.subtle.importKey('jwk', p.sign, { name: 'ECDSA', namedCurve: 'P-256' }, false, ['sign']);
+    const zeit = Math.floor(Date.now() / 1000), e = new TextEncoder();
+    const h = u(await crypto.subtle.digest('SHA-256', e.encode(String(bindung))));
+    return { pub: p.signPub, zeit, sig: u(await crypto.subtle.sign({ name: 'ECDSA', hash: 'SHA-256' }, key, e.encode(`carlon-pk-v1.${h}.${zeit}`))) };
   } catch { return undefined; }
 }
 
@@ -222,7 +225,7 @@ async function lizenzImHintergrundErneuern() {
     const r = await fetch(LIZENZ_DIENST, {
       method: 'POST', headers: { 'Content-Type': 'application/json' },
       /* praxis: Fingerabdruck des Praxis-Signierschlüssels (Herkunftssiegel, 27.11.2026), sonst käme eine Lizenz ohne Bindung zurück */
-      body: JSON.stringify({ token: liz.sub, praxis: await praxisFp(daten) }),
+      body: JSON.stringify({ token: liz.sub, praxisBeweis: await praxisBeweis(daten, liz.sub) }),
     });
     const d = await r.json().catch(() => ({}));
     const jetzt = Math.floor(Date.now() / 1000);

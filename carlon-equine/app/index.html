@@ -12783,7 +12783,7 @@ const License={
     try{
       const r=await fetch(this.DIENST+'/aktivieren',{method:'POST',
         headers:{'Content-Type':'application/json'},
-        body:JSON.stringify({session_id:sid,geraet:this.geraetId(),praxis:await this.praxisFp()})});
+        body:JSON.stringify({session_id:sid,geraet:this.geraetId(),praxisBeweis:await this.praxisBeweis(sid)})});
       License.ZEIT.ausAntwort(r);   // Serverzeit ernten, kostet keine Anfrage
       const d=await r.json().catch(()=>({}));
       /* Testphase schon genutzt (gleiche Karte/E-Mail): Abo läuft, freigeschaltet wird mit der ersten Zahlung.
@@ -12853,15 +12853,21 @@ const License={
      Kaufmodal). In einem Objektliteral gewinnt die spaetere Eigenschaft — die
      erste Fassung dieser Methode wurde davon lautlos ueberschrieben und gab
      undefined zurueck, was erst der Aktivierungs-Test zeigte. */
-  /* Herkunftssiegel (27.11.2026): Fingerabdruck des Praxis-Signierschlüssels, der Lizenzdienst schreibt ihn als pk in die Lizenz. */
-  async praxisFp(){ try{ return (await Praxis.ich()).fach; }catch(_){ return undefined; } },
+  /* Herkunftssiegel (27.11.2026): BESITZNACHWEIS für den Praxis-Signierschlüssel. Der Lizenzdienst rechnet pk selbst aus dem
+     öffentlichen Schlüssel, aber nur, wenn die Signatur über „carlon-pk-v1.<SHA-256 der Bindung>.<Zeit>“ stimmt (Bindung =
+     Abo-Token bzw. Checkout-Sitzung). Ein bloß angegebener Fingerabdruck erzeugt keine Bindung (Vertrieb-Review 27.11.). */
+  async praxisBeweis(bindung){ try{ const ich=await Praxis.ich(), zeit=Math.floor(this.ZEIT.jetzt()/1000), e=new TextEncoder();
+      const u=b=>{ const a=new Uint8Array(b); let t=''; for(const x of a) t+=String.fromCharCode(x); return btoa(t).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,''); };
+      const h=u(await crypto.subtle.digest('SHA-256',e.encode(String(bindung))));
+      const sig=await crypto.subtle.sign({name:'ECDSA',hash:'SHA-256'},ich.sign.privateKey,e.encode(`carlon-pk-v1.${h}.${zeit}`));
+      return {pub:ich.signPub,zeit,sig:u(sig)}; }catch(_){ return undefined; } },
   async lizenzHolen(grund){
     const s=State.settings.license||{};
     if(!s.sub) return {ok:false,grund:'kein Abo-Token'};
     try{
       const r=await fetch(this.RENEW_URL,{method:'POST',
         headers:{'Content-Type':'application/json'},
-        body:JSON.stringify({token:s.sub,geraet:this.geraetId(),praxis:await this.praxisFp()})});
+        body:JSON.stringify({token:s.sub,geraet:this.geraetId(),praxisBeweis:await this.praxisBeweis(s.sub)})});
       License.ZEIT.ausAntwort(r);   // Serverzeit ernten, kostet keine Anfrage
       const d=await r.json().catch(()=>({}));
       if(!d.ok){
