@@ -910,14 +910,14 @@ section[id]{scroll-margin-top:76px}
 footer{border-top:1px solid var(--border-faint);padding:var(--sp-55) 24px var(--sp-55);text-align:center;margin-top:var(--sp-34)}
 .footer-brand{font-family:var(--font-brand);font-weight:400;letter-spacing:0.16em;font-size:16px}
 .footer-tagline{font-family:var(--font-mono);font-size:10px;letter-spacing:0.24em;text-transform:uppercase;color:var(--cyan);margin-top:6px}
-.footer-madein{font-family:var(--font-mono);font-size:var(--t-mark);letter-spacing:0.22em;text-transform:uppercase;color:rgba(255,255,255,0.4);margin-top:var(--sp-13)}
+.footer-madein{font-family:var(--font-mono);font-size:var(--t-mark);letter-spacing:0.22em;text-transform:uppercase;color:rgba(255,255,255,0.62);margin-top:var(--sp-13)}
 .footer-links{display:flex;gap:20px;justify-content:center;margin:22px 0;flex-wrap:wrap}
 .footer-links a{font-size:14px;color:var(--text-dim)}
 .footer-links a:hover{color:var(--cyan)}
 .footer-family{margin-top:18px}
-.fam-label{font-size:11px;color:var(--text-faint);margin-bottom:8px}
+.fam-label{font-size:11px;color:#8f8c86;margin-bottom:8px}
 .footer-family a{font-size:var(--t-klein);color:var(--text-dim);margin:0 8px}
-.copyright{font-size:11px;color:var(--text-faint);margin-top:22px;line-height:1.7}
+.copyright{font-size:11px;color:#8f8c86;margin-top:22px;line-height:1.7}
 
 .rev{opacity:1;transform:none}
 html.rev-an .rev{opacity:0;transform:translateY(16px);transition:opacity .6s ease,transform .6s ease}
@@ -1306,7 +1306,7 @@ try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; 
 </nav>
 <div class="kap-dimm" aria-hidden="true"></div>
 
-<section class="hero">
+<section class="hero" id="oben">
   <div class="wrap">
     <span class="hero-signet" aria-hidden="true"><img src="/assets/equine-mark-512.png" width="512" height="512" alt="" fetchpriority="high"></span>
     <p class="hero-marke">CARLON<small>EQUINE VISITE</small></p>
@@ -1503,7 +1503,7 @@ try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; 
        everything you need to check the maths.</p>
 
     <div class="feature">
-      <div class="f-shot"><img src="../assets/visite-shots/10-uebersicht-v2.jpg" loading="lazy"
+      <div class="f-shot"><img width="1600" height="1113" src="../assets/visite-shots/10-uebersicht-v2.jpg" loading="lazy"
         alt="Overview: each horse as a card with its deviation from its own history, with a call button for the owner"></div>
       <div class="f-txt">
         <div class="f-k">Overview</div>
@@ -1526,7 +1526,7 @@ try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; 
           <li class="mit-ic"><svg class="ic li-ic" aria-hidden="true"><use href="#i-bericht"/></svg><b>Observation note and measurement report</b>, without leaving the record.</li>
         </ul>
       </div>
-      <div class="f-shot"><img src="../assets/visite-shots/09-akte-v2.jpg" loading="lazy"
+      <div class="f-shot"><img width="1600" height="1113" src="../assets/visite-shots/09-akte-v2.jpg" loading="lazy"
         alt="Horse record: values against its own history, signal quality, trend and observation note"></div>
     </div>
 
@@ -1548,7 +1548,7 @@ try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; 
     <ul class="muster-mehr">
       <li><a href="../assets/muster/en/langzeit-stallrunde.pdf" target="_blank" rel="noopener"><b>Yard round summary report</b><span>Ambulatory practice · three horses, 30 minutes each · PDF, 10 pages ↗</span></a></li>
       <li><a href="../assets/muster/en/langzeit-nacht-station.pdf" target="_blank" rel="noopener"><b>Overnight inpatient monitoring report</b><span>Clinic · 9 hours from the strap memory · PDF, 4 pages ↗</span></a></li>
-      <li><a href="/carlon-equine-visite/reha/en/#muster"><b>Rehab reports</b><span>Session report and progress documentation · on the rehab page →</span></a></li>
+      <li><a href="/carlon-equine-visite/reha/en/#berichte"><b>Rehab reports</b><span>Session report and progress documentation · on the rehab page →</span></a></li>
     </ul>
 
     <details class="mehr gross" data-spur-auf="mehr-was-im-cockpit-steht"><summary><span>Full clinical record features at a glance</span></summary>
@@ -1908,12 +1908,27 @@ try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; 
   </div>
 </section>
 
+<section id="zusammenhang">
+  <div class="wrap">
+    <div class="sec-eyebrow">What only CARLON shows</div>
+    <h2>The horse in context, not as a single number.</h2>
+    <p class="sec-lead">Visite keeps the record. The CARLON Equine app on iPhone and iPad adds what only shows in the stable, the arena and on the equipment. Both document and make visible. Neither makes a diagnosis.</p>
+    <div class="tour-punkte m-wisch">
+      <div class="tp"><svg class="ic li-ic" aria-hidden="true"><use href="#i-ekg"/></svg><h3>Video and heartbeat on one timeline</h3><p>Film with the app, and the picture runs on the same clock as the measurements. A video shot elsewhere is fine-aligned once. As you scrub, heart rate and speed follow the moment, together with a breathing curve derived from the heart rhythm. “Moment&nbsp;+” keeps a labelled moment, and you cut the clip out frame-accurately.</p></div>
+      <div class="tp"><svg class="ic li-ic" aria-hidden="true"><use href="#i-wand"/></svg><h3>Several horses, one start</h3><p>Chest strap and RaceBox on several horses start with one tap, the app collects the data afterwards, and every recording lands with the right horse. The stable monitor shows the heart rate of every horse wearing a strap at a glance, and the station wall in Visite shows every stall sorted by deviation from that horse’s own baseline.</p></div>
+      <div class="tp"><svg class="ic li-ic" aria-hidden="true"><use href="#i-gurt"/></svg><h3>Horse and human together</h3><p>With a second chest strap, horse and person start together on one timeline. The app makes the synchrony of the two heart rhythms visible and shows how closely the two straps started together. The view says nothing about the person’s health. A person is recorded only with their consent, which they can withdraw at any time.</p></div>
+      <div class="tp"><svg class="ic li-ic" aria-hidden="true"><use href="#i-verlauf"/></svg><h3>Rehab as a measured process</h3><p>Five minutes of rest as the reference, then every session on the treadmill, water treadmill or horse walker with the values from the equipment controller. This produces the session report, the progress record over the weeks and the report back to the referring vet. The veterinary assessment belongs in the report and stays with you.</p></div>
+    </div>
+    <p class="sec-lead"><a href="/carlon-equine-visite/reha/en/">See the rehab page&nbsp;→</a></p>
+  </div>
+</section>
+
 <section id="klinik">
   <div class="wrap">
     <div class="sec-eyebrow">For equine clinics</div>
     <h2>For clinics: a shared ward overview and the trend after discharge</h2>
     <div class="feature">
-      <div class="f-shot"><img src="../assets/visite-shots/11-station-v2.jpg" loading="lazy"
+      <div class="f-shot"><img width="1600" height="1113" src="../assets/visite-shots/11-station-v2.jpg" loading="lazy"
         alt="Inpatient display board: all monitored horses shown as tiles with cleaned RMSSD, resting HR, deviation from their own baseline, signal quality and protocol"></div>
       <div class="f-txt">
         <div class="f-k">Ward wall · clinic folder</div>
@@ -2242,7 +2257,7 @@ try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; 
     <a href="/impressum.html">Legal notice (Impressum)</a>
   </div>
   <div class="footer-family">
-    <a href="/" aria-label="Vitalkultur" style="display:inline-block;margin-bottom:11px"><img src="/assets/vitalkultur-wordmark.png" alt="Vitalkultur" style="height:26px;width:auto;opacity:0.82"></a>
+    <a href="/" aria-label="Vitalkultur" style="display:inline-block;margin-bottom:11px"><img width="609" height="156" src="/assets/vitalkultur-wordmark.png" alt="Vitalkultur" style="height:26px;width:auto;opacity:0.82"></a>
     <div class="fam-label" data-en="Part of the Vitalkultur app family" data-de="Part of the Vitalkultur app family">Part of the Vitalkultur app family</div>
   </div>
   <div class="copyright">© 2026 Vitalkultur · <span data-en="Iffezheim, Germany" data-de="Iffezheim, Deutschland">Iffezheim, Germany</span></div>

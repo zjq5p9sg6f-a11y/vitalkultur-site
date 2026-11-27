@@ -910,14 +910,14 @@ section[id]{scroll-margin-top:76px}
 footer{border-top:1px solid var(--border-faint);padding:var(--sp-55) 24px var(--sp-55);text-align:center;margin-top:var(--sp-34)}
 .footer-brand{font-family:var(--font-brand);font-weight:400;letter-spacing:0.16em;font-size:16px}
 .footer-tagline{font-family:var(--font-mono);font-size:10px;letter-spacing:0.24em;text-transform:uppercase;color:var(--cyan);margin-top:6px}
-.footer-madein{font-family:var(--font-mono);font-size:var(--t-mark);letter-spacing:0.22em;text-transform:uppercase;color:rgba(255,255,255,0.4);margin-top:var(--sp-13)}
+.footer-madein{font-family:var(--font-mono);font-size:var(--t-mark);letter-spacing:0.22em;text-transform:uppercase;color:rgba(255,255,255,0.62);margin-top:var(--sp-13)}
 .footer-links{display:flex;gap:20px;justify-content:center;margin:22px 0;flex-wrap:wrap}
 .footer-links a{font-size:14px;color:var(--text-dim)}
 .footer-links a:hover{color:var(--cyan)}
 .footer-family{margin-top:18px}
-.fam-label{font-size:11px;color:var(--text-faint);margin-bottom:8px}
+.fam-label{font-size:11px;color:#8f8c86;margin-bottom:8px}
 .footer-family a{font-size:var(--t-klein);color:var(--text-dim);margin:0 8px}
-.copyright{font-size:11px;color:var(--text-faint);margin-top:22px;line-height:1.7}
+.copyright{font-size:11px;color:#8f8c86;margin-top:22px;line-height:1.7}
 
 .rev{opacity:1;transform:none}
 html.rev-an .rev{opacity:0;transform:translateY(16px);transition:opacity .6s ease,transform .6s ease}
@@ -1306,7 +1306,7 @@ try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; 
 </nav>
 <div class="kap-dimm" aria-hidden="true"></div>
 
-<section class="hero">
+<section class="hero" id="oben">
   <div class="wrap">
     <span class="hero-signet" aria-hidden="true"><img src="/assets/equine-mark-512.png" width="512" height="512" alt="" fetchpriority="high"></span>
     <p class="hero-marke">CARLON<small>EQUINE VISITE</small></p>
@@ -1503,7 +1503,7 @@ try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; 
        was Sie zum Nachrechnen brauchen.</p>
 
     <div class="feature">
-      <div class="f-shot"><img src="assets/visite-shots/10-uebersicht-v2.jpg" loading="lazy"
+      <div class="f-shot"><img width="1600" height="1113" src="assets/visite-shots/10-uebersicht-v2.jpg" loading="lazy"
         alt="Übersicht: jedes Pferd als Karte mit seiner Abweichung von der eigenen Vorgeschichte, mit Anruf-Knopf beim Halter"></div>
       <div class="f-txt">
         <div class="f-k">Übersicht</div>
@@ -1526,7 +1526,7 @@ try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; 
           <li class="mit-ic"><svg class="ic li-ic" aria-hidden="true"><use href="#i-bericht"/></svg><b>Beobachtungsnotiz und Messwertbericht</b>, ohne die Akte zu verlassen.</li>
         </ul>
       </div>
-      <div class="f-shot"><img src="assets/visite-shots/09-akte-v2.jpg" loading="lazy"
+      <div class="f-shot"><img width="1600" height="1113" src="assets/visite-shots/09-akte-v2.jpg" loading="lazy"
         alt="Pferde-Akte: Messwerte gegen die eigene Vorgeschichte, Signalgüte, Verlauf und Beobachtungsnotiz"></div>
     </div>
 
@@ -1548,7 +1548,7 @@ try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; 
     <ul class="muster-mehr">
       <li><a href="assets/muster/langzeit-stallrunde.pdf" target="_blank" rel="noopener"><b>Sammelbericht Stallrunde</b><span>Fahrpraxis · drei Pferde je 30 Minuten · PDF, 10 Seiten ↗</span></a></li>
       <li><a href="assets/muster/langzeit-nacht-station.pdf" target="_blank" rel="noopener"><b>Langzeitbericht Nacht auf Station</b><span>Klinik · 9 Stunden aus dem Gurtspeicher · PDF, 4 Seiten ↗</span></a></li>
-      <li><a href="/carlon-equine-visite/reha/#muster"><b>Reha-Berichte</b><span>Sitzungsbericht und Verlaufsdokumentation · auf der Reha-Seite →</span></a></li>
+      <li><a href="/carlon-equine-visite/reha/#berichte"><b>Reha-Berichte</b><span>Sitzungsbericht und Verlaufsdokumentation · auf der Reha-Seite →</span></a></li>
     </ul>
 
     <details class="mehr gross" data-spur-auf="mehr-was-im-cockpit-steht"><summary><span>Alle Funktionen der Akte im Überblick</span></summary>
@@ -1912,12 +1912,27 @@ try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; 
   </div>
 </section>
 
+<section id="zusammenhang">
+  <div class="wrap">
+    <div class="sec-eyebrow">Was nur CARLON zeigt</div>
+    <h2>Das Pferd im Zusammenhang, nicht als Einzelwert.</h2>
+    <p class="sec-lead">Visite führt die Akte. Die App CARLON Equine auf iPhone und iPad nimmt dazu auf, was sich nur im Stall, in der Halle und am Gerät zeigt. Beides dokumentiert und macht sichtbar. Es stellt keine Diagnose.</p>
+    <div class="tour-punkte m-wisch">
+      <div class="tp"><svg class="ic li-ic" aria-hidden="true"><use href="#i-ekg"/></svg><h3>Video und Herzschlag auf einer Zeitachse</h3><p>Filmen Sie mit der App, läuft das Bild auf derselben Uhr wie die Messwerte. Ein anderswo gedrehtes Video legen Sie per Feinabgleich an. Beim Durchscrollen folgen Herzfrequenz und Tempo dem Moment, dazu eine aus dem Herzrhythmus abgeleitete Atemkurve. Mit „Moment&nbsp;+“ halten Sie eine Stelle mit Bezeichnung fest und schneiden den Ausschnitt bildgenau heraus.</p></div>
+      <div class="tp"><svg class="ic li-ic" aria-hidden="true"><use href="#i-wand"/></svg><h3>Mehrere Pferde, ein Start</h3><p>Brustgurt und RaceBox mehrerer Pferde starten mit einem Tipp, danach sammelt die App die Daten ein, und jede Aufnahme landet beim richtigen Pferd. Der Stallmonitor zeigt die Herzfrequenz aller Pferde mit Gurt auf einen Blick, die Stationswand in Visite alle Boxen sortiert nach Abweichung von der eigenen Basis.</p></div>
+      <div class="tp"><svg class="ic li-ic" aria-hidden="true"><use href="#i-gurt"/></svg><h3>Pferd und Mensch zusammen</h3><p>Mit einem zweiten Brustgurt starten Pferd und Person gemeinsam auf einer Zeitachse. Die App macht den Gleichlauf der beiden Herzrhythmen sichtbar und zeigt dabei, wie gleichzeitig beide Gurte gestartet sind. Die Ansicht sagt nichts über die Gesundheit der Person. Aufgezeichnet wird nur mit ihrer Einwilligung, widerrufbar jederzeit.</p></div>
+      <div class="tp"><svg class="ic li-ic" aria-hidden="true"><use href="#i-verlauf"/></svg><h3>Reha als Messprozess</h3><p>Fünf Minuten Ruhe als Bezug, dann jede Einheit am Laufband, Aquatrainer oder an der Führanlage mit den Werten der Gerätesteuerung. Daraus entstehen Sitzungsbericht, Verlaufsdokumentation über die Wochen und der Rückbericht an Überweiser. Die tierärztliche Beurteilung gehört in den Bericht und bleibt bei Ihnen.</p></div>
+    </div>
+    <p class="sec-lead"><a href="/carlon-equine-visite/reha/">Reha-Seite ansehen&nbsp;→</a></p>
+  </div>
+</section>
+
 <section id="klinik">
   <div class="wrap">
     <div class="sec-eyebrow">Für Pferdekliniken</div>
     <h2>Für Kliniken: gemeinsame Stationsübersicht und Verlauf nach der Entlassung</h2>
     <div class="feature">
-      <div class="f-shot"><img src="assets/visite-shots/11-station-v2.jpg" loading="lazy"
+      <div class="f-shot"><img width="1600" height="1113" src="assets/visite-shots/11-station-v2.jpg" loading="lazy"
         alt="Stationswand: alle aufgenommenen Pferde als Kacheln mit bereinigter RMSSD, Ruhe-HF, Abweichung von der eigenen Basis, Signalgüte und Protokoll"></div>
       <div class="f-txt">
         <div class="f-k">Stationswand · Klinik-Ordner</div>
@@ -2244,7 +2259,7 @@ try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; 
     <a href="/impressum.html">Impressum</a>
   </div>
   <div class="footer-family">
-    <a href="/" aria-label="Vitalkultur" style="display:inline-block;margin-bottom:11px"><img src="/assets/vitalkultur-wordmark.png" alt="Vitalkultur" style="height:26px;width:auto;opacity:0.82"></a>
+    <a href="/" aria-label="Vitalkultur" style="display:inline-block;margin-bottom:11px"><img width="609" height="156" src="/assets/vitalkultur-wordmark.png" alt="Vitalkultur" style="height:26px;width:auto;opacity:0.82"></a>
     <div class="fam-label" data-en="Part of the Vitalkultur app family" data-de="Teil der Vitalkultur-App-Familie">Teil der Vitalkultur-App-Familie</div>
   </div>
   <div class="copyright">© 2026 Vitalkultur · <span data-en="Iffezheim, Germany" data-de="Iffezheim, Deutschland">Iffezheim, Deutschland</span></div>
