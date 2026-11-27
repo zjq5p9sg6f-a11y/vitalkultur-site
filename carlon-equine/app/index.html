@@ -9244,6 +9244,15 @@ const Handoff={
           || r.rrIntervalsMs || []);
     const {font,logo}=await Handoff.assets();
     const praxis=(State.settings&&State.settings.clinicName)||'';
+    /* SIGNIERTER DATENBLOCK (27.11.2026, Voraussetzung Prüfseite /pruefen): die Messwerte noch einmal maschinenlesbar,
+       ihr Hash ist im Herkunftssiegel mitsigniert (siegel.js). Eine Prüfung stellt daraus die Originalwerte neu dar,
+       auch wenn jemand die sichtbare Ansicht verfälscht. Halterin bewusst nicht enthalten (Datensparsamkeit). */
+    const KW={meanHR:'bpm',minHR:'bpm',maxHR:'bpm',rmssd:'ms',sdnn:'ms',quality:'%'}, kennwerte={};
+    for(const [k,e] of Object.entries(KW)) if(typeof m[k]==='number'&&Number.isFinite(m[k])) kennwerte[k]={wert:m[k],einheit:e,...((m.provenance||{})[k]?{herkunft:String(m.provenance[k])}:{})};
+    const datenBlock=typeof Siegel!=='undefined'?Siegel.datenBlock({art:'carlon-bericht',v:1,sprache:sprache==='en'?'en':'de',
+      pferd:{name:String(h.name||''),...(h.breed?{rasse:String(h.breed)}:{})},...(praxis?{praxis:String(praxis)}:{}),
+      aufnahme:{beginn:r.startedAt||null,...(typeof r.durationSec==='number'?{dauerS:r.durationSec}:{}),...(typeof r.beatCount==='number'?{schlaege:r.beatCount}:{})},
+      kennwerte}):'';
     const when=new Date(r.startedAt||Date.now());
     const dstr=when.toLocaleDateString(L.loc,{day:'2-digit',month:'long',year:'numeric'});
     const tstr=when.toLocaleTimeString(L.loc,{hour:'2-digit',minute:'2-digit'});
@@ -9430,6 +9439,7 @@ svg .hov-cross,svg .hov-focus{display:none}
     <div class="fu"><a href="https://vitalkultur.com/carlon-equine/">vitalkultur.com/carlon-equine</a></div>
   </div>
 </div>
+${datenBlock}
 </html>`;
 
     const blob=new Blob([await Versiegeln.html(html)],{type:'text/html;charset=utf-8'});

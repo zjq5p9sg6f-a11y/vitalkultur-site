@@ -22,14 +22,19 @@
    „Lizenznachweis nicht bestätigt“ statt „nicht lizenziert“, Exportdatum immer „laut Absender“.
    Formate: JSON → Feld `carlonSiegel` (zuletzt), Hash über JSON.stringify ohne das Feld.
             HTML → <script type="application/carlon-siegel+json" id="carlon-siegel">…</script> vor </body>,
-            Hash über den Text ohne dieses Element. */
+            Hash über den Text ohne dieses Element.
+   Datenblock (27.11.2026, Voraussetzung Prüfseite /pruefen): ein Bericht trägt zusätzlich GENAU EINEN
+   <script type="application/carlon-bericht+json" id="carlon-bericht">…</script> mit den Messwerten in kanonischer Form.
+   Dessen Hash `d` ist mitsigniert. So kann eine Prüfung die Originalwerte neu darstellen, auch wenn jemand die
+   sichtbare Ansicht verfälscht hat (Stufe „veraendert“, datenEcht true). Fremdes HTML wird nie dargestellt. */
 (function (wurzel) {
   'use strict';
   const V = 2, KULANZ_S = 14 * 86400;                    // Kulanz wie License: abgelaufen, aber nie abgesagt
   const HTML_RE = /<script type="application\/carlon-siegel\+json" id="carlon-siegel">([\s\S]*?)<\/script>\n?/;
   const enc = new TextEncoder();
   /* Nur diese Felder; alles Weitere wäre unsigniert (Paarrunde 27.11., B1: Markup im HTML-Siegel neben „geprüft“). */
-  const FELDER = ['v', 'zeit', 'h', 'pk', 'sig', 'lizenz'];
+  const FELDER = ['v', 'zeit', 'h', 'pk', 'sig', 'lizenz', 'd'];
+  const DATEN_RE = /<script type="application\/carlon-bericht\+json" id="carlon-bericht">([\s\S]*?)<\/script>/g;
   const HTML_RE_ALLE = new RegExp(HTML_RE.source, 'g');
   const kanonisch = s => JSON.stringify(s).replace(/</g, '\\u003c');
   const b64u = b => { const u = new Uint8Array(b); let s = ''; for (let i = 0; i < u.length; i++) s += String.fromCharCode(u[i]); return btoa(s).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, ''); };
@@ -37,7 +42,16 @@
   const sha = async t => b64u(await crypto.subtle.digest('SHA-256', enc.encode(t)));
   const fingerabdruck = async rohPub => b64u((await crypto.subtle.digest('SHA-256', rohPub)).slice(0, 16));
   /* v2 (27.11.2026): die beigelegte Lizenz ist mitsigniert (Hash), sonst ließe sie sich austauschen oder nachträglich einsetzen. */
-  const nachricht = (h, zeit, lh) => enc.encode(`carlon-siegel-v${V}.${h}.${zeit}.${lh}`);
+  const nachricht = (h, zeit, lh, d) => enc.encode(`carlon-siegel-v${V}.${h}.${zeit}.${lh}${d ? '.' + d : ''}`);
+  /* Datenblock: kanonisch (JSON.stringify, '<' maskiert), damit er den Script-Kontext nie verlassen kann. */
+  const datenBlock = obj => `<script type="application/carlon-bericht+json" id="carlon-bericht">${kanonisch(obj)}</script>`;
+  const datenTexte = html => [...String(html).matchAll(DATEN_RE)].map(m => m[1]);
+  async function datenLesen(s, text) {
+    if (s.d == null) return {};
+    try { if (typeof text !== 'string' || await sha(text) !== s.d) return { datenEcht: false };
+      const o = JSON.parse(text); return o && typeof o === 'object' && kanonisch(o) === text ? { datenEcht: true, daten: o } : { datenEcht: false };
+    } catch (_) { return { datenEcht: false }; }
+  }
 
   /* Lizenz lesen und prüfen (dieselbe Regel wie License.verify, hier ohne Zeitwächter, weil der Exportzeitpunkt zählt). */
   async function lizenzLesen(key, pubJwk) {
@@ -53,11 +67,11 @@
 
   /* inhaltOhne: der Text, über den gehasht wird. signKey: privater ECDSA-Schlüssel der Praxis, signPubRoh: dessen
      öffentlicher Teil (raw). lizenz: der aktuelle Laufzeit-Lizenzschlüssel (String) oder null. */
-  async function siegelFuer(inhaltOhne, { signKey, signPubRoh, lizenz, zeit }) {
+  async function siegelFuer(inhaltOhne, { signKey, signPubRoh, lizenz, zeit }, d) {
     const z = Math.floor(zeit != null ? zeit : Date.now() / 1000), h = await sha(inhaltOhne);
     if (!Number.isFinite(z) || z > 1e11) throw new RangeError('zeit: Unix-Sekunden erwartet');
-    const sig = await crypto.subtle.sign({ name: 'ECDSA', hash: 'SHA-256' }, signKey, nachricht(h, z, await sha(lizenz || '')));
-    return { v: V, zeit: z, h, pk: b64u(signPubRoh), sig: b64u(sig), lizenz: lizenz || null };
+    const sig = await crypto.subtle.sign({ name: 'ECDSA', hash: 'SHA-256' }, signKey, nachricht(h, z, await sha(lizenz || ''), d));
+    return { v: V, zeit: z, h, pk: b64u(signPubRoh), sig: b64u(sig), lizenz: lizenz || null, ...(d ? { d } : {}) };
   }
 
   /* ── JSON ── */
@@ -70,7 +84,9 @@
   /* ── HTML ── */
   async function htmlVersiegeln(html, opt) {
     const ohne = String(html).replace(HTML_RE_ALLE, '');
-    const s = await siegelFuer(ohne, opt);
+    const dt = datenTexte(ohne);
+    if (dt.length > 1) throw new RangeError('htmlVersiegeln: höchstens ein Datenblock');
+    const s = await siegelFuer(ohne, opt, dt.length ? await sha(dt[0]) : null);
     const tag = `<script type="application/carlon-siegel+json" id="carlon-siegel">${kanonisch(s)}</script>\n`;
     const i = ohne.lastIndexOf('</body>');
     return i < 0 ? ohne + tag : ohne.slice(0, i) + tag + ohne.slice(i);
@@ -78,28 +94,28 @@
 
   /* Prüfen. Ergebnis: { stufe, grund, praxis, tier, zeit }
      stufe: 'geprueft' | 'nichtLizenziert' | 'veraendert' | 'ohneSiegel' | 'unlesbar' */
-  async function pruefeSiegel(s, inhaltOhne, pubJwk) {
+  async function pruefeSiegel(s, inhaltOhne, pubJwk, datenText) {
     if (!s || typeof s !== 'object') return { stufe: 'ohneSiegel', grund: 'Kein Herkunftssiegel' };
     try {
       if (s.v !== V || !s.pk || !s.sig || !s.h || typeof s.zeit !== 'number') return { stufe: 'unlesbar', grund: 'Siegel unvollständig' };
-      if (Object.keys(s).some(k => !FELDER.includes(k)) || (s.lizenz != null && typeof s.lizenz !== 'string')) return { stufe: 'unlesbar', grund: 'Siegel enthält fremde Felder' };
+      if (Object.keys(s).some(k => !FELDER.includes(k)) || (s.lizenz != null && typeof s.lizenz !== 'string') || (s.d != null && typeof s.d !== 'string')) return { stufe: 'unlesbar', grund: 'Siegel enthält fremde Felder' };
       try { await crypto.subtle.importKey('jwk', pubJwk, { name: 'ECDSA', namedCurve: 'P-256' }, false, ['verify']); }
       catch (_) { return { stufe: 'unlesbar', grund: 'Prüfschlüssel dieser Visite fehlt' }; }
       const roh = unb64u(s.pk);
       const pub = await crypto.subtle.importKey('raw', roh, { name: 'ECDSA', namedCurve: 'P-256' }, false, ['verify']);
-      if (!await crypto.subtle.verify({ name: 'ECDSA', hash: 'SHA-256' }, pub, unb64u(s.sig), nachricht(s.h, s.zeit, await sha(s.lizenz || ''))))
+      if (!await crypto.subtle.verify({ name: 'ECDSA', hash: 'SHA-256' }, pub, unb64u(s.sig), nachricht(s.h, s.zeit, await sha(s.lizenz || ''), s.d)))
         return { stufe: 'unlesbar', grund: 'Signatur des Siegels ungültig' };
-      const zeit = s.zeit;
-      if (await sha(inhaltOhne) !== s.h) return { stufe: 'veraendert', grund: 'Inhalt weicht vom versiegelten Stand ab', zeit };
+      const zeit = s.zeit, D = await datenLesen(s, datenText), r = o => ({ ...o, ...D });
+      if (await sha(inhaltOhne) !== s.h) return r({ stufe: 'veraendert', grund: 'Inhalt weicht vom versiegelten Stand ab', zeit });
       const l = s.lizenz ? await lizenzLesen(s.lizenz, pubJwk) : null;
-      if (!l) return { stufe: 'nichtLizenziert', grund: s.lizenz ? 'Lizenz nicht von CARLON ausgestellt' : 'Siegel enthält keinen Lizenznachweis', zeit };
-      if (l.typ !== 'lic') return { stufe: 'nichtLizenziert', grund: 'Kein Laufzeit-Schlüssel', zeit };
-      if (l.pk !== await fingerabdruck(roh)) return { stufe: 'nichtLizenziert', grund: l.pk ? 'Lizenz passt nicht zum Schlüssel des Siegels' : 'Lizenz ohne Praxisbindung', zeit };
-      if (zeit < (l.iat || 0) - 3600 || zeit > l.exp + KULANZ_S) return { stufe: 'nichtLizenziert', grund: 'Lizenz deckt das angegebene Exportdatum nicht ab', zeit };
+      if (!l) return r({ stufe: 'nichtLizenziert', grund: s.lizenz ? 'Lizenz nicht von CARLON ausgestellt' : 'Siegel enthält keinen Lizenznachweis', zeit });
+      if (l.typ !== 'lic') return r({ stufe: 'nichtLizenziert', grund: 'Kein Laufzeit-Schlüssel', zeit });
+      if (l.pk !== await fingerabdruck(roh)) return r({ stufe: 'nichtLizenziert', grund: l.pk ? 'Lizenz passt nicht zum Schlüssel des Siegels' : 'Lizenz ohne Praxisbindung', zeit });
+      if (zeit < (l.iat || 0) - 3600 || zeit > l.exp + KULANZ_S) return r({ stufe: 'nichtLizenziert', grund: 'Lizenz deckt das angegebene Exportdatum nicht ab', zeit });
       /* Praxisname kommt aus dem Checkout (Kundenangabe): Steuer- und Formatzeichen (Bidi, unsichtbare) entfernen,
          sonst kann der Name die Anzeige umordnen (Perplexity-Kreis Runde 2, 27.11.). */
       const name = String(l.lic || ''), praxis = name.replace(/[\p{Cc}\p{Cf}]/gu, '').trim();
-      return { stufe: 'geprueft', grund: 'Herkunft geprüft', praxis, tier: l.tier || '', zeit, ...(praxis !== name.trim() ? { praxisBereinigt: true } : {}) };
+      return r({ stufe: 'geprueft', grund: 'Herkunft geprüft', praxis, tier: l.tier || '', zeit, ...(praxis !== name.trim() ? { praxisBereinigt: true } : {}) });
     } catch (e) { return { stufe: 'unlesbar', grund: 'Siegel unlesbar' }; }
   }
   async function jsonPruefen(obj, pubJwk) {
@@ -111,8 +127,9 @@
     const m = String(html).match(HTML_RE); if (!m) return { stufe: 'ohneSiegel', grund: 'Kein Herkunftssiegel' };
     let s = null; try { s = JSON.parse(m[1]); } catch (_) { return { stufe: 'unlesbar', grund: 'Siegel unlesbar' }; }
     if (!s || typeof s !== 'object' || m[1] !== kanonisch(s)) return { stufe: 'unlesbar', grund: 'Siegel enthält fremde Felder' };
-    return pruefeSiegel(s, String(html).replace(HTML_RE, ''), pubJwk);
+    const ohne = String(html).replace(HTML_RE, ''), dt = datenTexte(ohne);
+    return pruefeSiegel(s, ohne, pubJwk, dt.length === 1 ? dt[0] : null);
   }
-  const api = { V, KULANZ_S, fingerabdruck, jsonVersiegeln, htmlVersiegeln, jsonPruefen, htmlPruefen, lizenzLesen };
+  const api = { V, KULANZ_S, fingerabdruck, datenBlock, jsonVersiegeln, htmlVersiegeln, jsonPruefen, htmlPruefen, lizenzLesen };
   if (typeof module !== 'undefined' && module.exports) module.exports = api; else wurzel.Siegel = api;
 })(typeof globalThis !== 'undefined' ? globalThis : this);
