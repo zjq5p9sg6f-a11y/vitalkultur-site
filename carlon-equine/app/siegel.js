@@ -96,7 +96,10 @@
       if (l.typ !== 'lic') return { stufe: 'nichtLizenziert', grund: 'Kein Laufzeit-Schlüssel', zeit };
       if (l.pk !== await fingerabdruck(roh)) return { stufe: 'nichtLizenziert', grund: l.pk ? 'Lizenz passt nicht zum Schlüssel des Siegels' : 'Lizenz ohne Praxisbindung', zeit };
       if (zeit < (l.iat || 0) - 3600 || zeit > l.exp + KULANZ_S) return { stufe: 'nichtLizenziert', grund: 'Lizenz deckt das angegebene Exportdatum nicht ab', zeit };
-      return { stufe: 'geprueft', grund: 'Herkunft geprüft', praxis: l.lic || '', tier: l.tier || '', zeit };
+      /* Praxisname kommt aus dem Checkout (Kundenangabe): Steuer- und Formatzeichen (Bidi, unsichtbare) entfernen,
+         sonst kann der Name die Anzeige umordnen (Perplexity-Kreis Runde 2, 27.11.). */
+      const name = String(l.lic || ''), praxis = name.replace(/[\p{Cc}\p{Cf}]/gu, '').trim();
+      return { stufe: 'geprueft', grund: 'Herkunft geprüft', praxis, tier: l.tier || '', zeit, ...(praxis !== name.trim() ? { praxisBereinigt: true } : {}) };
     } catch (e) { return { stufe: 'unlesbar', grund: 'Siegel unlesbar' }; }
   }
   async function jsonPruefen(obj, pubJwk) {
