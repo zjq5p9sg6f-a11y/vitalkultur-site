@@ -9451,7 +9451,8 @@ svg .hov-cross,svg .hov-focus{display:none}
 const Versiegeln={
   async opt(){ const ich=await Praxis.ich(), s=State.settings.license||{};
     const roh=Uint8Array.from(atob(ich.signPub.replace(/-/g,'+').replace(/_/g,'/')+'=='.slice(0,(4-ich.signPub.length%4)%4)),c=>c.charCodeAt(0));
-    return {signKey:ich.sign.privateKey, signPubRoh:roh, lizenz:s.key||null}; },
+    /* Zeit wie die Lizenzprüfung (Hochwassermarke aus Serverzeit): eine nachgehende Geräteuhr gäbe sonst direkt nach der Erneuerung einen Fehlalarm. */
+    return {signKey:ich.sign.privateKey, signPubRoh:roh, lizenz:s.key||null, zeit:Math.floor(License.ZEIT.jetzt()/1000)}; },
   async json(text){ try{ if(typeof Siegel==='undefined') return text; const o=JSON.parse(text); if(!o||typeof o!=='object'||Array.isArray(o)) return text;
     return JSON.stringify(await Siegel.jsonVersiegeln(o,await this.opt()),null,2); }catch(_){ return text; } },
   async html(h){ try{ return typeof Siegel==='undefined'?h:await Siegel.htmlVersiegeln(h,await this.opt()); }catch(_){ return h; } },
@@ -9459,7 +9460,7 @@ const Versiegeln={
   TEXT:{geprueft:['Herkunft geprüft','Origin verified'],nichtLizenziert:['Lizenznachweis nicht bestätigt','Licence proof not confirmed'],veraendert:['Inhalt passt nicht zum Siegel','Content does not match the seal'],unlesbar:['Herkunftssiegel ungültig','Origin seal invalid'],ohneSiegel:['Ohne Herkunftssiegel','No origin seal']},
   GRUND:{'Siegel enthält keinen Lizenznachweis':'seal carries no licence proof','Lizenz nicht von CARLON ausgestellt':'licence not issued by CARLON','Kein Laufzeit-Schlüssel':'not a runtime licence',
     'Lizenz passt nicht zum Schlüssel des Siegels':'licence does not match the seal key','Lizenz ohne Praxisbindung':'licence not bound to a practice','Lizenz deckt das angegebene Exportdatum nicht ab':'licence does not cover the stated export date',
-    'Inhalt weicht vom versiegelten Stand ab':'content differs from the sealed version','Signatur des Siegels ungültig':'seal signature invalid','Siegel unvollständig':'seal incomplete','Siegel unlesbar':'seal unreadable','Kein Herkunftssiegel':'no origin seal'},
+    'Inhalt weicht vom versiegelten Stand ab':'content differs from the sealed version','Signatur des Siegels ungültig':'seal signature invalid','Siegel unvollständig':'seal incomplete','Siegel unlesbar':'seal unreadable','Kein Herkunftssiegel':'no origin seal','Siegel enthält fremde Felder':'seal contains unknown fields','Prüfschlüssel dieser Visite fehlt':'this Visite lacks the verification key'},
   zeile(e){ if(!e) return ''; const en=typeof Sprache!=='undefined'&&Sprache.cur==='en', d=e.zeit?new Date(e.zeit*1000).toLocaleDateString(en?'en-GB':'de-DE'):'';
     const t=this.TEXT[e.stufe]||[e.stufe,e.stufe], st=e.tier&&License.TIERS[e.tier]?' ('+License.TIERS[e.tier].name+')':'';
     if(e.stufe==='geprueft') return en?`${t[1]}: ${e.praxis||'practice'}${st}${d?', export date stated by sender '+d:''}`:`${t[0]}: ${e.praxis||'Praxis'}${st}${d?', Exportdatum laut Absender '+d:''}`;
