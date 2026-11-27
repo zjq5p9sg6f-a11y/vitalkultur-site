@@ -2,7 +2,7 @@
    App-Shell wird precached; Fonts & Leaflet lokal gebündelt (assets/) — keine externen CDNs,
    sodass die App nach dem ersten Online-Start vollständig offline läuft.
    Gesundheitsdaten liegen in IndexedDB — der SW cached nur Programm-Assets. */
-const VERSION = 'carlon-clinic-20261127-siegel1';
+const VERSION = 'carlon-clinic-20261127-siegel2';
 /* ACHTUNG: JEDE Datei in CORE wird ausgeliefert, bis VERSION sich aendert.
    Zweimal in dieser Nacht passiert — einmal beim Livegang-Schalter, einmal bei
    krypto.js: Datei geaendert, Version vergessen, und der Browser lieferte
@@ -20,6 +20,7 @@ const CORE = [
      lieferte den alten Rechenkern unbegrenzt aus dem Runtime-Cache. */
   'hrv-vorstufe.js',
   'langzeit/langzeit-kern.js',   /* 26.11.2026: Einzelaufnahme mit dem App-Kern (Equine 9462afc) */
+  'siegel.js',   /* 27.11.2026: Herkunftssiegel */
   'reha-kern.js',
   'bestand-kern.js',
   'steuerung.js',
@@ -200,6 +201,14 @@ function einstellungen(db, schreiben) {
   });
 }
 
+async function praxisFp(daten) {
+  try { const p = daten && daten.praxisIdentitaet; if (!p || !p.signPub) return undefined;
+    let s = p.signPub.replace(/-/g, '+').replace(/_/g, '/'); while (s.length % 4) s += '=';
+    const roh = Uint8Array.from(atob(s), c => c.charCodeAt(0)), h = new Uint8Array(await crypto.subtle.digest('SHA-256', roh)).slice(0, 16);
+    let b = ''; for (const x of h) b += String.fromCharCode(x); return btoa(b).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+  } catch { return undefined; }
+}
+
 async function lizenzImHintergrundErneuern() {
   let db;
   try { db = await dbOeffnen(); } catch { return; }
@@ -212,7 +221,8 @@ async function lizenzImHintergrundErneuern() {
   try {
     const r = await fetch(LIZENZ_DIENST, {
       method: 'POST', headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ token: liz.sub }),
+      /* praxis: Fingerabdruck des Praxis-Signierschlüssels (Herkunftssiegel, 27.11.2026), sonst käme eine Lizenz ohne Bindung zurück */
+      body: JSON.stringify({ token: liz.sub, praxis: await praxisFp(daten) }),
     });
     const d = await r.json().catch(() => ({}));
     const jetzt = Math.floor(Date.now() / 1000);

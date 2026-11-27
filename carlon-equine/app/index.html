@@ -2251,6 +2251,7 @@ header.k7 #tierPill,header.k7 .post-pill{display:none}
 <script src="aufnahme-herkunft.js"></script>
 <script src="hrv-vorstufe.js"></script>
 <script src="langzeit/langzeit-kern.js"></script>
+<script src="siegel.js"></script>
 <script src="reha-kern.js"></script>
 <script src="bestand-kern.js?v=1"></script>
 <script src="steuerung.js?v=4"></script>
@@ -5339,7 +5340,12 @@ const Importer = {
     catch(e){ return {ok:false, grund:'Entschlüsselt, aber der Inhalt ist kein gültiger Datensatz'}; }
   },
   async scan(files){
-    const skipped=[],jsonFiles=[],htmlFiles=[];
+    const skipped=[],jsonFiles=[],htmlFiles=[], siegel={};
+    /* Herkunftssiegel je Datei prüfen, bevor ein Format-Leser sie umbaut (siegel.js, offline gegen License.PUB). */
+    if(typeof Siegel!=='undefined') for(const f of files){ if(!/\.(json|html?)$/i.test(f.name||'')) continue;
+      try{ const t=await f.text(); if(!/carlonSiegel|carlon-siegel/.test(t)) continue;
+        siegel[f.name]=/\.html?$/i.test(f.name)?await Siegel.htmlPruefen(t,License.PUB):await Siegel.jsonPruefen(JSON.parse(t),License.PUB); }catch(_){ } }
+    this._siegel=siegel;
     for(const f of files){
       /* JEDE APP-DATEI ÖFFNET (05.11.2026): .carlon, Forschungs-Zip, CSV und Roh-JSON
          der App laufen über carlon-formate.js in dieselbe Form wie ein JSON-Export —
@@ -5385,7 +5391,7 @@ const Importer = {
           const det=Normalizer.detect(raw);
           if(!det.ok){skipped.push({name:f.name,reason:det.reason});continue;}
           if(det.isCoherence){const cn=Coherence.normalize(raw);parsed.push({kind:'coh',file:f.name,raw,label:`${cn.beingA} ↔ ${cn.beingB}`,score:cn.score,startedAt:cn.startedAt});}
-          else parsed.push({kind:'horse',file:f.name,raw,n:Normalizer.normalize(raw)});
+          else { const n=Normalizer.normalize(raw); if(siegel[f.name]) n.herkunftSiegel=siegel[f.name]; parsed.push({kind:'horse',file:f.name,raw,n,siegel:siegel[f.name]||null}); }
         }
       }catch(e){skipped.push({name:f.name,reason:'Die Datei ist unvollständig oder beschädigt – meist eine abgebrochene Übertragung. Bitte die Aufnahme in der CARLON-App bzw. Messstation erneut senden.'});}
     }
@@ -5406,6 +5412,8 @@ const Importer = {
     });
     return {groups,coh,skipped};
   },
+  siegelHtml(){ const e=Object.entries(this._siegel||{}); if(!e.length) return '';
+    return `<div class="imp-siegel" style="margin:12px 0">${e.map(([n,r])=>`<div class="ilog ${r.stufe==='geprueft'?'ok':'err'}"><span class="st">${r.stufe==='geprueft'?IC.check||'✓':IC.x}</span><div class="fn">${esc(n)}</div><span class="msg">${esc(Versiegeln.zeile(r))}</span></div>`).join('')}</div>`; },
   renderPreview(){
     const {groups,coh,skipped}=this._preview;
     const gArr=Object.values(groups);
@@ -5427,6 +5435,7 @@ const Importer = {
         ${gArr.map(g=>this.folderHtml(g)).join('')}
         ${coh.map(c=>this.cohHtml(c)).join('')}
       </div>
+      ${this.siegelHtml()}
       ${this.skipHtml(skipped)}`;
     $('#impFoot').innerHTML=`<button class="btn ghost" onclick="Importer.renderDrop()">Abbrechen</button>
       <button class="btn primary" ${newRecs?'':'disabled'} onclick="Importer.commit()">${newRecs?newRecs+' Aufnahme'+(newRecs>1?'n':'')+' importieren':'Nichts Neues'}</button>`;
@@ -5563,6 +5572,7 @@ const Importer = {
          wen man fragen kann. Der Gerätename kommt dazu, weil in einer Klinik
          dasselbe Konto an mehreren Stationen laeuft. */
       erfasstVon: Herkunft.jetzt(),
+      herkunftSiegel: n.herkunftSiegel||null,   /* 27.11.2026: Prüfergebnis des Siegels beim Import */
     };
     await DB.put('recordings',rec); State.recordings.push(rec);
     // Auto-Flag Besuch bei kritisch/erhöht
@@ -7381,6 +7391,9 @@ const Views={
     teile.push(m.uncorrected?'Werte unkorrigiert':'bereinigt');
     return teile.length?`<div class="pc-guete${lang?' lang':''}">${teile.map(esc).join(' · ')}</div>`:'';
   },
+  /* Herkunftssiegel der Aufnahme (27.11.2026): nur bei importierten Dateien, die ein Siegel tragen. */
+  siegelZeile(rec){ const e=rec&&rec.herkunftSiegel; if(!e) return '';
+    return `<div class="pc-guete lang" style="color:${e.stufe==='geprueft'?'var(--text-secondary)':'var(--amber,#d9a441)'}">${esc(Versiegeln.zeile(e))}</div>`; },
   horseCard({h,rec,tri}){
     const recs=State.recsFor(h.id);
     return `<div class="pcard" onclick="Views.openHorse('${h.id}')" style="cursor:pointer">
@@ -8134,7 +8147,7 @@ const Views={
       <div class="vh-top"><span class="vh-dot"></span><span class="vh-lvl">${tri.ohneBasis?L.label:(HEAD[lvl]||L.label)}</span>${m.rmssd!=null?`<span class="vh-vital">RMSSD <b>${fmt0(m.rmssd)}</b><small> ms</small></span>`:''}</div>
       ${m.meanHR>60?`<div class="vh-hinweis">${Sprache.cur==='en'?`Heart rate ${fmt0(m.meanHR)}/min is above the resting range of adult horses (about 28–44/min). These are not resting values: at this heart rate a low RMSSD is expected arithmetically and is not a finding on its own. Assessment of the cause lies with you.`:`Herzfrequenz ${fmt0(m.meanHR)}/min liegt über dem Ruhebereich erwachsener Pferde (etwa 28–44/min). Das sind keine Ruhewerte: Bei dieser Frequenz ist ein niedriger RMSSD rechnerisch zu erwarten und kein eigenständiger Befund. Die Beurteilung der Ursache liegt bei Ihnen.`}</div>`:''}
       <div class="vh-reason">${esc(Triage.zeig(reason))}</div>
-      ${Views.gueteZeile(State.latestFor(h.id),true)}
+      ${Views.gueteZeile(State.latestFor(h.id),true)}${Views.siegelZeile(State.latestFor(h.id))}
       ${(tri.flags&&tri.flags.length)?`<div class="vh-flags">${tri.flags.map(f=>`<span class="vh-flag">${esc(Triage.zeig(f))}</span>`).join('')}</div>`:''}
       <div class="vh-act">${act}</div>
       ${Views.aktePyramide(h)}
@@ -9419,7 +9432,7 @@ svg .hov-cross,svg .hov-focus{display:none}
 </div>
 </html>`;
 
-    const blob=new Blob([html],{type:'text/html;charset=utf-8'});
+    const blob=new Blob([await Versiegeln.html(html)],{type:'text/html;charset=utf-8'});
     const a=document.createElement('a'); a.href=URL.createObjectURL(blob);
     a.download=`CARLON_${L.datei}_${(h.name||'Pferd').replace(/[^\p{L}\p{N}_-]+/gu,'-')}_${when.toISOString().slice(0,10)}.html`;
     document.body.appendChild(a); a.click(); a.remove();
@@ -9432,9 +9445,29 @@ svg .hov-cross,svg .hov-focus{display:none}
    JSON, CSV, Kubios-kompatibel und FHIR R5; CSV und Kubios fehlten bis heute im Cockpit. Formate wie die iOS-App
    (carlon-formate.js liest beide zurück): Forschungs-CSV mit Kopf „# carlon_equine_research_rr“, Kubios-CSV „RR_ms“.
    Kein Runden: Polar H10 liefert 1/1024-s-Schritte (s. FHIR-Bundle), Rundung bräche die Bit-Identität. */
+/* HERKUNFTSSIEGEL (27.11.2026, Jan): jeder JSON- und Bericht-Export trägt Lizenz + Signatur der Praxis (siegel.js).
+   Jede andere Visite prüft beim Import offline, ob die Datei aus einer lizenzierten Praxis kommt und unverändert ist.
+   Scheitert das Siegeln, geht der Export unversiegelt hinaus: lieber ohne Siegel als gar nicht. */
+const Versiegeln={
+  async opt(){ const ich=await Praxis.ich(), s=State.settings.license||{};
+    const roh=Uint8Array.from(atob(ich.signPub.replace(/-/g,'+').replace(/_/g,'/')+'=='.slice(0,(4-ich.signPub.length%4)%4)),c=>c.charCodeAt(0));
+    return {signKey:ich.sign.privateKey, signPubRoh:roh, lizenz:s.key||null}; },
+  async json(text){ try{ if(typeof Siegel==='undefined') return text; const o=JSON.parse(text); if(!o||typeof o!=='object'||Array.isArray(o)) return text;
+    return JSON.stringify(await Siegel.jsonVersiegeln(o,await this.opt()),null,2); }catch(_){ return text; } },
+  async html(h){ try{ return typeof Siegel==='undefined'?h:await Siegel.htmlVersiegeln(h,await this.opt()); }catch(_){ return h; } },
+  /* Anzeige des Prüfergebnisses, eine Stelle für Import-Vorschau und Akte */
+  TEXT:{geprueft:['Herkunft geprüft','Origin verified'],nichtLizenziert:['Herkunft nicht lizenziert','Origin not licensed'],veraendert:['Nach dem Export verändert','Changed after export'],unlesbar:['Herkunftssiegel ungültig','Origin seal invalid'],ohneSiegel:['Ohne Herkunftssiegel','No origin seal']},
+  GRUND:{'Ohne Lizenz exportiert':'exported without a licence','Lizenz nicht von CARLON ausgestellt':'licence not issued by CARLON','Kein Laufzeit-Schlüssel':'not a runtime licence',
+    'Lizenz gehört zu einer anderen Praxis':'licence belongs to another practice','Lizenz ohne Praxisbindung':'licence not bound to a practice','Lizenz war zum Exportzeitpunkt nicht gültig':'licence was not valid at export time',
+    'Inhalt wurde nach dem Export verändert':'content was changed after export','Signatur des Siegels ungültig':'seal signature invalid','Siegel unvollständig':'seal incomplete','Siegel unlesbar':'seal unreadable','Kein Herkunftssiegel':'no origin seal'},
+  zeile(e){ if(!e) return ''; const en=typeof Sprache!=='undefined'&&Sprache.cur==='en', d=e.zeit?new Date(e.zeit*1000).toLocaleDateString(en?'en-GB':'de-DE'):'';
+    const t=this.TEXT[e.stufe]||[e.stufe,e.stufe], st=e.tier&&License.TIERS[e.tier]?' ('+License.TIERS[e.tier].name+')':'';
+    if(e.stufe==='geprueft') return en?`${t[1]}: ${e.praxis||'practice'}${st}${d?', exported '+d:''}`:`${t[0]}: ${e.praxis||'Praxis'}${st}${d?', exportiert am '+d:''}`;
+    return en?`${t[1]}: ${this.GRUND[e.grund]||e.grund}${d?' (export date '+d+')':''}`:`${t[0]}: ${e.grund}${d?' (Exportdatum '+d+')':''}`; }
+};
 const Export={
   name(r){ const h=State.horses.find(x=>x.id===r.horseId)||{}; return ((h.name||'Pferd').replace(/[^\p{L}\p{N}_-]+/gu,'-'))+'_'+(r.startedAt||'').slice(0,10); },
-  laden(name,inhalt,typ){ const b=new Blob([inhalt],{type:typ}); const a=document.createElement('a'); a.href=URL.createObjectURL(b); a.download=name; document.body.appendChild(a); a.click(); a.remove(); setTimeout(()=>URL.revokeObjectURL(a.href),4000); },
+  async laden(name,inhalt,typ){ if(/json/.test(typ||'')) inhalt=await Versiegeln.json(inhalt); const b=new Blob([inhalt],{type:typ}); const a=document.createElement('a'); a.href=URL.createObjectURL(b); a.download=name; document.body.appendChild(a); a.click(); a.remove(); setTimeout(()=>URL.revokeObjectURL(a.href),4000); },
   zahl(v){ return String(Number(v)); },
   /* 22.11. Gesamtkreis: Eine Reha-Einheit mit Belastung liegt über der Artefaktgrenze, die Auswertung gibt dann bewusst
      kein Ergebnis. Der Export verlor dadurch die Schlagklassen und die bereinigte Spalte. Die Filterkette selbst klassiert
@@ -12750,7 +12783,7 @@ const License={
     try{
       const r=await fetch(this.DIENST+'/aktivieren',{method:'POST',
         headers:{'Content-Type':'application/json'},
-        body:JSON.stringify({session_id:sid,geraet:this.geraetId()})});
+        body:JSON.stringify({session_id:sid,geraet:this.geraetId(),praxis:await this.praxisFp()})});
       License.ZEIT.ausAntwort(r);   // Serverzeit ernten, kostet keine Anfrage
       const d=await r.json().catch(()=>({}));
       /* Testphase schon genutzt (gleiche Karte/E-Mail): Abo läuft, freigeschaltet wird mit der ersten Zahlung.
@@ -12820,13 +12853,15 @@ const License={
      Kaufmodal). In einem Objektliteral gewinnt die spaetere Eigenschaft — die
      erste Fassung dieser Methode wurde davon lautlos ueberschrieben und gab
      undefined zurueck, was erst der Aktivierungs-Test zeigte. */
+  /* Herkunftssiegel (27.11.2026): Fingerabdruck des Praxis-Signierschlüssels, der Lizenzdienst schreibt ihn als pk in die Lizenz. */
+  async praxisFp(){ try{ return (await Praxis.ich()).fach; }catch(_){ return undefined; } },
   async lizenzHolen(grund){
     const s=State.settings.license||{};
     if(!s.sub) return {ok:false,grund:'kein Abo-Token'};
     try{
       const r=await fetch(this.RENEW_URL,{method:'POST',
         headers:{'Content-Type':'application/json'},
-        body:JSON.stringify({token:s.sub,geraet:this.geraetId()})});
+        body:JSON.stringify({token:s.sub,geraet:this.geraetId(),praxis:await this.praxisFp()})});
       License.ZEIT.ausAntwort(r);   // Serverzeit ernten, kostet keine Anfrage
       const d=await r.json().catch(()=>({}));
       if(!d.ok){
